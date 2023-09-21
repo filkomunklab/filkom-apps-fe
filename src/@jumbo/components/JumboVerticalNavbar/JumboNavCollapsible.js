@@ -14,7 +14,6 @@ import { SIDEBAR_VIEWS } from "@jumbo/utils/constants/layout";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useTranslation } from "react-i18next";
-import { mainTheme } from "app/themes/main/default";
 
 const menuBefore = {
   left: 0,
@@ -84,7 +83,7 @@ const JumboNavCollapsible = ({ item, translate }) => {
             : {}),
           overflow: "hidden",
           "&:hover": {
-            color: mainTheme.palette.primary.light,
+            color: (theme) => theme.palette.primary.light,
             backgroundColor: (theme) => theme.palette.nav.background.hover,
             ...(!isMiniAndClosed
               ? {

@@ -77,7 +77,7 @@ const SidebarHeader = () => {
         <Div>
           <Typography variant={"h5"}>{`Darell Yuhu`}</Typography>
           <Typography variant={""} color="text.secondary">
-            Admin Ganteng
+            Mahasiswa Ganteng :v
           </Typography>
         </Div>
       </Div>

@@ -8,7 +8,6 @@ import CircleIcon from "@mui/icons-material/Circle";
 import useJumboLayoutSidebar from "@jumbo/hooks/useJumboLayoutSidebar";
 import { SIDEBAR_VIEWS } from "@jumbo/utils/constants/layout";
 import { useTranslation } from "react-i18next";
-import { mainTheme } from "app/themes/main/default";
 
 const menuBefore = {
   left: 0,
@@ -51,7 +50,7 @@ const JumboNavItem = ({ item, isNested, translate }) => {
           : {}),
         ...(!isMiniAndClosed ? { "&::before": menuBefore } : {}),
         "&:hover": {
-          color: mainTheme.palette.primary.light,
+          color: (theme) => theme.palette.primary.light,
           backgroundColor: (theme) => theme.palette.nav.background.hover,
           ...(!isMiniAndClosed
             ? {
@@ -64,13 +63,13 @@ const JumboNavItem = ({ item, isNested, translate }) => {
         },
         ...(location.pathname === item.uri
           ? {
-              color: mainTheme.palette.primary.main,
-              backgroundColor: mainTheme.palette.primary.lowContrast,
+              color: (theme) => theme.palette.primary.main,
+              backgroundColor: (theme) => theme.palette.primary.lowContrast,
               ...(!isMiniAndClosed
                 ? {
                     "&::before": {
                       ...menuBefore,
-                      backgroundColor: mainTheme.palette.primary.main,
+                      backgroundColor: (theme) => theme.palette.primary.main,
                     },
                   }
                 : {}),

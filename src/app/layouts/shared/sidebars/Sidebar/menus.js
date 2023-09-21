@@ -1,6 +1,4 @@
 import React from "react";
-import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
@@ -11,59 +9,47 @@ import LoginIcon from "@mui/icons-material/Login";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import PasswordOutlinedIcon from "@mui/icons-material/PasswordOutlined";
-import GraphicEqIcon from "@mui/icons-material/GraphicEq";
-import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
-import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
-import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import InsertChartOutlinedIcon from "@mui/icons-material/InsertChartOutlined";
-import NewspaperIcon from "@mui/icons-material/Newspaper";
+import PeopleIcon from "@mui/icons-material/People";
+import PublicIcon from "@mui/icons-material/Public";
+import SchoolIcon from "@mui/icons-material/School";
+import InsertCommentIcon from "@mui/icons-material/InsertComment";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 
 const menus = [
   {
-    label: "sidebar.menu.home",
+    label: "Klabat Bridge",
     type: "section",
     children: [
       {
-        uri: "/dashboards/misc",
-        label: "sidebar.menuItem.misc",
+        uri: "/klabat-bridge/daftar-alumni",
+        label: "Dafter Alumni",
         type: "nav-item",
-        icon: <GraphicEqIcon sx={{ fontSize: 20 }} />,
+        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/dashboards/crypto",
-        label: "sidebar.menuItem.crypto",
+        uri: "/klabat-bridge/persebaran-alumni",
+        label: "Persebaran Alumni",
         type: "nav-item",
-        icon: <CurrencyExchangeOutlinedIcon sx={{ fontSize: 20 }} />,
+        icon: <PublicIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/dashboards/listing",
-        label: "sidebar.menuItem.listing",
+        uri: "/klabat-bridge/total-lulusan",
+        label: "Total Lulusan",
         type: "nav-item",
-        icon: <ListAltOutlinedIcon sx={{ fontSize: 20 }} />,
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/dashboards/crm",
-        label: "sidebar.menuItem.crm",
+        uri: "/klabat-bridge/pengisian-spt",
+        label: "Pengisian SPT",
         type: "nav-item",
-        icon: <SupportAgentOutlinedIcon sx={{ fontSize: 20 }} />,
+        icon: <InsertCommentIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/dashboards/intranet",
-        label: "sidebar.menuItem.intranet",
+        uri: "/klabat-bridge/form-tracer-study",
+        label: "Form Tracer Study",
         type: "nav-item",
-        icon: <PieChartOutlineOutlinedIcon sx={{ fontSize: 20 }} />,
-      },
-      {
-        uri: "/dashboards/ecommerce",
-        label: "sidebar.menuItem.eCommerce",
-        type: "nav-item",
-        icon: <ShoppingCartOutlinedIcon sx={{ fontSize: 20 }} />,
-      },
-      {
-        uri: "/dashboards/news",
-        label: "sidebar.menuItem.news",
-        type: "nav-item",
-        icon: <NewspaperIcon sx={{ fontSize: 20 }} />,
+        icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
       },
     ],
   },
