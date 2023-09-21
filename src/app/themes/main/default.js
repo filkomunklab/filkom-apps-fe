@@ -16,6 +16,7 @@ export const mainTheme = {
       main: "#006AF5",
       light: "#006CFAC2",
       dark: "#005FDB",
+      lowContrast: "#338CFF21",
       contrastText: "#FFF",
     },
     secondary: {
