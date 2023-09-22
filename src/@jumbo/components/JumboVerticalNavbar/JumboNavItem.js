@@ -8,6 +8,7 @@ import CircleIcon from "@mui/icons-material/Circle";
 import useJumboLayoutSidebar from "@jumbo/hooks/useJumboLayoutSidebar";
 import { SIDEBAR_VIEWS } from "@jumbo/utils/constants/layout";
 import { useTranslation } from "react-i18next";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 
 const menuBefore = {
   left: 0,
@@ -96,7 +97,11 @@ const JumboNavItem = ({ item, isNested, translate }) => {
         <ListItemIcon
           sx={{ minWidth: isMiniAndClosed ? 20 : 32, color: "inherit" }}
         >
-          {isNested ? <CircleIcon sx={{ fontSize: 6, ml: 1 }} /> : item.icon}
+          {isNested ? (
+            <KeyboardArrowRightIcon sx={{ fontSize: 16, ml: 1 }} />
+          ) : (
+            item.icon
+          )}
         </ListItemIcon>
         {!isMiniAndClosed && (
           <ListItemText
