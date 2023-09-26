@@ -5,10 +5,18 @@ import { sidebarTheme } from "../themes/sidebar/filkom";
 import { footerTheme } from "../themes/footer/default";
 import LAYOUT_NAMES from "../layouts/layouts";
 import { createJumboTheme } from "@jumbo/utils";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import authService from "app/services/Auth/auth.service";
 
 const config = {
   defaultLayout: LAYOUT_NAMES.VERTICAL_DEFAULT,
   containerStyle: LAYOUT_CONTAINER_STYLES.FLUID,
+  authSetting: {
+    axiosObject: jwtAuthAxios,
+    fallbackPath: "/login",
+    getAuthUserService: authService.getCurrentUser,
+    redirectNotAuthenticatedPath: "/",
+  },
 
   theme: createJumboTheme(mainTheme, headerTheme, sidebarTheme, footerTheme),
 };

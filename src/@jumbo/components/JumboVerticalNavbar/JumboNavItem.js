@@ -40,6 +40,7 @@ const JumboNavItem = ({ item, isNested, translate }) => {
 
   return (
     <ListItemButton
+      onClick={item.onClick && item.onClick}
       component={"li"}
       sx={{
         p: 0,

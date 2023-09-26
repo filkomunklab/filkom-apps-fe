@@ -12,6 +12,8 @@ import { authUser } from "app/shared/widgets/AuthUserDropdown/fake-db";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import JumboNavSection from "@jumbo/components/JumboVerticalNavbar/JumboNavSection";
+import useJumboAuth from "@jumbo/hooks/useJumboAuth";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   return (
@@ -86,6 +88,8 @@ const SidebarHeader = () => {
 };
 
 const SidebarFooter = () => {
+  const { setAuthToken } = useJumboAuth();
+  const navigate = useNavigate();
   const footer = {
     label: "Settings",
     type: "section",
@@ -97,7 +101,11 @@ const SidebarFooter = () => {
         icon: <VpnKeyIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/logout",
+        onClick: () => {
+          localStorage.clear();
+          setAuthToken(null);
+          navigate("/login");
+        },
         label: "Logout",
         type: "nav-item",
         color: "error.main",
