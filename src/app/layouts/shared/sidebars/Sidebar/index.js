@@ -15,7 +15,18 @@ import JumboNavSection from "@jumbo/components/JumboVerticalNavbar/JumboNavSecti
 import useJumboAuth from "@jumbo/hooks/useJumboAuth";
 import { useNavigate } from "react-router-dom";
 
+const permissionCheck = (permission, programs) => {
+  if (typeof permission === "function") {
+    return permission(programs) === true;
+  } else {
+    return true;
+  }
+};
+
 const Sidebar = () => {
+  // const [validatedMenus, setValidatedMenus] = React.useState([])
+
+  // const programs = JSON.parse(localStorage.getItem('user'))?.department
   return (
     <React.Fragment>
       <SidebarHeader />

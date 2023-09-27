@@ -16,6 +16,7 @@ const config = {
     fallbackPath: "/login",
     getAuthUserService: authService.getCurrentUser,
     redirectNotAuthenticatedPath: "/",
+    redirectNoAccess: "/unauthorized",
   },
 
   theme: createJumboTheme(mainTheme, headerTheme, sidebarTheme, footerTheme),

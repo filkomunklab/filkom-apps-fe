@@ -61,7 +61,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   const onSignIn = async (formdata) => {
-    console.log("fire");
     const { accessToken, user } = await authService.signIn(formdata);
     setAuthToken(accessToken);
 
@@ -85,8 +84,8 @@ const Login = () => {
           validateOnChange={true}
           validationSchema={signInSchema}
           initialValues={{
-            username: "",
-            password: "",
+            username: "admin",
+            password: "123456",
           }}
           onSubmit={(data, { setSubmitting }) => {
             console.log(data);

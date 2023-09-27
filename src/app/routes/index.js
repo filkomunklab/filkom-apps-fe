@@ -4,11 +4,15 @@ import Page from "@jumbo/shared/Page";
 import Login from "app/pages/Login";
 import mahasiswaRoutes from "./mahasiswaRoutes";
 import NotFound from "../pages/404";
+import Unauthorized from "app/pages/unauthorized";
 
 /**
  routes which you want to make accessible to both authenticated and anonymous users
  **/
-const routesForPublic = [{ path: "/notfound", element: <NotFound /> }];
+const routesForPublic = [
+  { path: "/notfound", element: <NotFound /> },
+  { path: "/unauthorized", element: <Unauthorized /> },
+];
 
 /**
  routes only accessible to authenticated users
