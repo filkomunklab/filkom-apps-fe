@@ -20,12 +20,14 @@ import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import PeopleIcon from "@mui/icons-material/People";
 import PublicIcon from "@mui/icons-material/Public";
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import GroupsIcon from '@mui/icons-material/Groups';
-import HomeIcon from '@mui/icons-material/Home';
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import GroupsIcon from "@mui/icons-material/Groups";
+import HomeIcon from "@mui/icons-material/Home";
+import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
+import PersonIcon from "@mui/icons-material/Person";
 
 // Student Menu
 // const menus = [
@@ -402,10 +404,64 @@ const menus = [
     type: "section",
     children: [
       {
-        label: "Panduan Kurikulum",
+        label: "Academic Guide",
         type: "nav-item",
         icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/panduan-kurikulum",
+        uri: "/bimbingan-akademik/academic-guide",
+      },
+      {
+        label: "Vision Mission Goals",
+        type: "nav-item",
+        icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/vision-mission-goals",
+      },
+      {
+        label: "Curriculum",
+        type: "nav-item",
+        icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/curriculum",
+      },
+      {
+        label: "Grades",
+        type: "nav-item",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/grades",
+      },
+      {
+        label: "Certificates",
+        type: "nav-item",
+        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/certificates",
+      },
+      {
+        label: "History",
+        type: "nav-item",
+        icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/history",
+      },
+      {
+        label: "Grade Submission",
+        type: "nav-item",
+        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/grade-submission",
+      },
+      {
+        label: "Pre-registration",
+        type: "nav-item",
+        icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/vision-mission-goals",
+      },
+      {
+        label: "Consultation",
+        type: "nav-item",
+        icon: <PermContactCalendarIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/consultation",
+      },
+      {
+        label: "Profile",
+        type: "nav-item",
+        icon: <PersonIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/profile",
       },
     ],
   },
