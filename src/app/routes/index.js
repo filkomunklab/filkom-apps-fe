@@ -23,8 +23,8 @@ const routesForAuthenticatedOnly = [
     path: "/",
     element: <Page component={Home} />,
   },
-  // ...mahasiswaRoutes,
-  ...operatorRoutes,
+  ...mahasiswaRoutes,
+  //...operatorRoutes,
 ];
 
 /**
