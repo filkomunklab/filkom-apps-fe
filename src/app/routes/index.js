@@ -27,6 +27,8 @@ const routesForAuthenticatedOnly = [
   // ...mahasiswaRoutes,
   ...operatorRoutes,
   // ...calonTamatanRoutes,
+  ...mahasiswaRoutes,
+  //...operatorRoutes,
 ];
 
 /**
