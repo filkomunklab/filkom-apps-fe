@@ -389,7 +389,7 @@ const menus = [
         label: "Pre-registration",
         type: "nav-item",
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/vision-mission-goals",
+        uri: "/bimbingan-akademik/pre-registration",
       },
       {
         label: "Consultation",
