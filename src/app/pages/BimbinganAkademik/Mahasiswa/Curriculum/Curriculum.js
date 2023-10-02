@@ -1295,30 +1295,7 @@ const Curriculum = () => {
   );
 };
 
-export default Curriculum; 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default Curriculum;
 
 // import React, { useState, useEffect } from "react";
 // import {
@@ -1340,7 +1317,7 @@ export default Curriculum;
 //   const [selectedCurriculum, setSelectedCurriculum] = useState("");
 
 //   useEffect(() => {
-//     // dpe URL API endpoint 
+//     // dpe URL API endpoint
 //     const apiUrl = process.env.REACT_APP_BASE_URL_API + "/curriculum";
 
 //     // Fetch dpe data dari API
