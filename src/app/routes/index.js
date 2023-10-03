@@ -7,6 +7,7 @@ import NotFound from "../pages/404";
 import Unauthorized from "app/pages/unauthorized";
 import operatorRoutes from "./operatorRoutes";
 // import calonTamatanRoutes from "./calonTamatanRoutes";
+import dosenPembimbingRoutes from "./dosenPembimbingRoutes";
 
 /**
  routes which you want to make accessible to both authenticated and anonymous users
@@ -28,6 +29,7 @@ const routesForAuthenticatedOnly = [
   ...operatorRoutes,
   // ...calonTamatanRoutes,
   ...mahasiswaRoutes,
+  ...dosenPembimbingRoutes,
   //...operatorRoutes,
 ];
 
