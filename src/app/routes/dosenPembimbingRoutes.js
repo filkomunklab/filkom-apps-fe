@@ -1,6 +1,7 @@
-import Page from "@jumbo/shared/Page";
-import StudentInformation from "app/pages/BimbinganAkademik/DesenPembimbing/StudentInformation";
-import StudentProfile from "app/pages/BimbinganAkademik/DesenPembimbing/StudentInformation/StudentProfile";
+import StudentInformation from "../pages/BimbinganAkademik/DosenPembimbing/StudentInformation";
+import StudentProfile from "../pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentProfile";
+
+const { default: Page } = require("@jumbo/shared/Page");
 
 const dosenPembimbingRoutes = [
   {
