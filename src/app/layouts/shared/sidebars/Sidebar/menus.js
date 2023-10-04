@@ -22,6 +22,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import PublicIcon from "@mui/icons-material/Public";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import PersonIcon from "@mui/icons-material/Person";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 
 // Student Menu
 // const menus = [
@@ -336,6 +337,12 @@ const menus = [
         type: "nav-item",
         icon: <PublicIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/grafik-alumni",
+      },
+      {
+        label: "Form Tracer Study",
+        type: "nav-item",
+        icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/form-tracer-study",
       },
     ],
   },
