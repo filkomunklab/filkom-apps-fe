@@ -1,127 +1,63 @@
-import Div from "@jumbo/shared/Div";
+import React, { useState, useEffect } from "react";
 import {
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
-  Pagination,
+  TextField,
+  Stack,
+  Grid,
+  FormControl,
+  Box,
+  Button,
+  Input,
+  IconButton,
 } from "@mui/material";
-import ActionButton from "app/shared/ActionButton";
-import SearchGlobal from "app/shared/SearchGlobal";
-import React, { useState } from "react";
-import CreateIcon from "@mui/icons-material/Create";
-import MarkunreadIcon from "@mui/icons-material/Markunread";
-import SearchLocal from "./SearchLocal";
-import AddIcon from "@mui/icons-material/Add";
+import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
+import Modal from "@mui/material/Modal";
+import CloseIcon from "@mui/icons-material/Close";
 
-const Certificate = () => {
-  const [page, setPage] = useState(1);
-
-  const handleChange = (e, p) => {
-    setPage(p);
-  };
-
-  const TableItem = ({ index }) => (
-    <TableRow
-      style={{ textDecoration: "none" }}
-      component={Link}
-      to="/bimbingan-akademik/certificates/student-certificate-waiting"
-    >
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>10 May 2000</TableCell>
-      <TableCell>Menang lomba desain prototype</TableCell>
-      <TableCell>Faculty</TableCell>
-      <TableCell>Sertifikat menang lomba.pdf</TableCell>
-      <TableCell>Approved</TableCell>
-    </TableRow>
-  );
-
-  return (
-    <Div>
-      <Div
-        sx={{
-          display: "flex",
-          direction: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          paddingBottom: "24px",
-        }}
-      >
-        <Typography sx={{ fontSize: "24px", fontWeight: 500, gap: "24px" }}>
-          All Certifications
-        </Typography>
-        <Div
-          sx={{
-            display: "flex",
-            direction: "row",
-            gap: 3,
-            alignItems: "center",
-          }}
-        >
-          <SearchLocal />
-          <Link
-            style={{ textDecoration: "none", color: "white" }}
-            to="/bimbingan-akademik/certificates/add-new"
-          >
-            <Button
-              sx={{
-                backgroundColor: "#006AF5",
-                borderRadius: "24px",
-                color: "white",
-                whiteSpace: "nowrap",
-                minWidth: "132px",
-                fontSize: "12px",
-                padding: "10px",
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-
-                "&:hover": {
-                  backgroundColor: "#025ED8",
-                },
-              }}
-            >
-              {" "}
-              <AddIcon sx={{ fontSize: "medium" }} />
-              Add New
-            </Button>
-          </Link>
-        </Div>
-      </Div>
-      <TableContainer
-        sx={{
-          overflow: "auto",
-          marginBottom: "30px",
-        }}
-      >
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
-            <TableRow>
-              <TableCell>Number</TableCell>
-              <TableCell>Submission Date</TableCell>
-              <TableCell>Title</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Certificate</TableCell>
-              <TableCell>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {[...Array(10)].map((item, index) => (
-              <TableItem index={index} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <div>
-        <Pagination count={10} color="primary" onChange={handleChange} />
-      </div>
-    </Div>
-  );
+const requiredStyle = {
+  color: "red",
+  marginLeft: "4px",
 };
 
-export default Certificate;
+function RTypography({ children, sx }) {
+  return (
+    <Typography variant="body1" sx={sx}>
+      {children}
+      <span style={requiredStyle}>*</span>
+    </Typography>
+  );
+}
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  padding: 24,
+  backgroundColor: "white",
+  borderRadius: 10,
+  maxWidth: "90%",
+  "@media (max-width: 768px)": {
+    maxWidth: "80%",
+  },
+  "@media (max-width: 480px)": {
+    maxWidth: "80%",
+  },
+};
+
+const style2 = {
+  position: "fixed",
+  top: "15%",
+  right: "2%",
+  width: 400,
+  // bgcolor: "background.paper",
+  boxShadow: 24,
+  padding: 24,
+  backgroundColor: "white",
+  borderRadius: 10,
+};
