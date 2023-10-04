@@ -175,8 +175,7 @@ function DaftarMahasiswa() {
                   <Chip label={"Belum"} />
                 </TableCell>
                 <TableCell>
-                  <Link
-                    to="./BerandaMahasiswa.js"
+                  <Link href="/sistem-informasi-skripsi/daftar-pengajuan/beranda-pengajuan-judul"
                     style={{
                       textDecoration: "none",
                       color: "blue",
