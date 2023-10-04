@@ -5,7 +5,7 @@ import DaftarPengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarP
 import DaftarBimbinganProposalAdvisor from "app/pages/ThesisApps/Dosen/DaftarBimbinganProposalAdvisor";
 import DaftarBimbinganProposalCoAdvisor from "app/pages/ThesisApps/Dosen/DaftarBimbinganProposalCoAdvisor";
 import CatatKonsultasiAdvisor from "app/pages/ThesisApps/Dosen/CatatKonsultasiAdvisor";
-// import CatatKonsultasiCoAdvisor from "app/pages/ThesisApps/Dosen/CatatKonsultasiCoAdvisor";
+import CatatKonsultasiCoAdvisor from "app/pages/ThesisApps/Dosen/CatatKonsultasiCoAdvisor";
 
 // import DaftarDosen from "app/pages/ThesisApps/Dosen/DaftarDosen";
 
@@ -54,10 +54,10 @@ const dosenRoutes = [
     path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor",
     element: <Page component={DaftarBimbinganProposalCoAdvisor} />,
   },
-  // {
-  //   path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor/catat-konsultasi-co-advisor",
-  //   element: <Page component={CatatKonsultasiCoAdvisor} />,
-  // },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor/catat-konsultasi-co-advisor",
+    element: <Page component={CatatKonsultasiCoAdvisor} />,
+  },
 ];
 
 export default dosenRoutes;
