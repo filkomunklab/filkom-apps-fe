@@ -3,6 +3,10 @@ import Page from "@jumbo/shared/Page";
 import DaftarAlumni from "app/pages/KlabatBridge/DaftarAlumni";
 import AcademicGuide from "app/pages/BimbinganAkademik/Mahasiswa/AcademicGuide";
 import Certificate from "app/pages/BimbinganAkademik/Mahasiswa/Certificate";
+import AddNewCertificate from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/AddNewCertificate/AddNewCertificate";
+import CertificateWaiting from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/CertificateWaiting";
+import CertificateApproved from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/CertificateApproved";
+import CertificateRejected from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/CertificateRejected";
 import Consultation from "app/pages/BimbinganAkademik/Mahasiswa/Consultation";
 import Curriculum from "app/pages/BimbinganAkademik/Mahasiswa/Curriculum";
 import Grades from "app/pages/BimbinganAkademik/Mahasiswa/Grades";
@@ -24,6 +28,22 @@ const mahasiswaRoutes = [
   {
     path: "/bimbingan-akademik/certificates",
     element: <Page component={Certificate} />,
+  },
+  {
+    path: "/bimbingan-akademik/certificates/add-new",
+    element: <Page component={AddNewCertificate} />,
+  },
+  {
+    path: "/bimbingan-akademik/certificates/student-certificate-waiting",
+    element: <Page component={CertificateWaiting} />,
+  },
+  {
+    path: "/bimbingan-akademik/certificates/student-certificate-approved",
+    element: <Page component={CertificateApproved} />,
+  },
+  {
+    path: "/bimbingan-akademik/certificates/student-certificate-rejected",
+    element: <Page component={CertificateRejected} />,
   },
   {
     path: "/bimbingan-akademik/consultation",
