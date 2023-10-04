@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const yearList = [
   {
@@ -211,11 +212,20 @@ const TableHeading = ({ index }) => {
 };
 
 const TableItem = ({ item, index }) => {
+  const navigate = useNavigate();
+  const handleStudentNavigate = () => {
+    navigate(`/bimbingan-akademik/student-information/${item.nim}`);
+  };
   return (
     <TableRow>
       <TableCell>{index + 1}</TableCell>
       <TableCell>{`105022010000`}</TableCell>
-      <TableCell>{`Yuhu, Christopher Darell`}</TableCell>
+      <TableCell>
+        <Button
+          sx={{ textTransform: "capitalize" }}
+          onClick={handleStudentNavigate}
+        >{`Yuhu, Christopher Darell`}</Button>
+      </TableCell>
       <TableCell>{`Informatika`}</TableCell>
       <TableCell>{`2021`}</TableCell>
 
