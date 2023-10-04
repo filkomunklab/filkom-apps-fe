@@ -15,6 +15,7 @@ import History from "app/pages/BimbinganAkademik/Mahasiswa/History";
 import PreRegistration from "app/pages/BimbinganAkademik/Mahasiswa/PreRegistration";
 import Profile from "app/pages/BimbinganAkademik/Mahasiswa/Profile";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/Mahasiswa/VisionMisionGoals";
+import StudentGrade from "app/pages/BimbinganAkademik/Mahasiswa/Grades/StudentGrade";
 
 const mahasiswaRoutes = [
   {
@@ -56,6 +57,10 @@ const mahasiswaRoutes = [
   {
     path: "/bimbingan-akademik/grades",
     element: <Page component={Grades} />,
+  },
+  {
+    path: "/bimbingan-akademik/grades/studentgrade",
+    element: <Page component={StudentGrade} />,
   },
   {
     path: "/bimbingan-akademik/grade-submission",
