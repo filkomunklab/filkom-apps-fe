@@ -213,8 +213,21 @@ const TableHeading = ({ index }) => {
 
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
-  const handleStudentNavigate = () => {
+  const handleButtonNavigate = (event) => {
+    const { name } = event.currentTarget;
     navigate(`/bimbingan-akademik/student-information/${item.nim}`);
+
+    switch (name) {
+      case "profile":
+        navigate(`/bimbingan-akademik/student-information/${item.nim}`);
+        break;
+      case "grade":
+        navigate(`/bimbingan-akademik/student-information/${item.nim}/grade`);
+        break;
+
+      default:
+        console.log("Path not found");
+    }
   };
   return (
     <TableRow>
@@ -222,18 +235,31 @@ const TableItem = ({ item, index }) => {
       <TableCell>{`105022010000`}</TableCell>
       <TableCell>
         <Button
+          name="profile"
           sx={{ textTransform: "capitalize" }}
-          onClick={handleStudentNavigate}
+          onClick={handleButtonNavigate}
         >{`Yuhu, Christopher Darell`}</Button>
       </TableCell>
       <TableCell>{`Informatika`}</TableCell>
       <TableCell>{`2021`}</TableCell>
 
       <TableCell>
-        <Button sx={{ textTransform: "capitalize" }}>View Grades</Button>
+        <Button
+          name="grade"
+          onClick={handleButtonNavigate}
+          sx={{ textTransform: "capitalize" }}
+        >
+          View Grades
+        </Button>
       </TableCell>
       <TableCell>
-        <Button sx={{ textTransform: "capitalize" }}>View Certificates</Button>
+        <Button
+          name="certificate"
+          onClick={handleButtonNavigate}
+          sx={{ textTransform: "capitalize" }}
+        >
+          View Certificates
+        </Button>
       </TableCell>
       <TableCell>
         <Chip label={"Active"} variant="filled" color={"success"} />
