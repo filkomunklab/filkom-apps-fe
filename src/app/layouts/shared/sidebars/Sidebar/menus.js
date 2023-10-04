@@ -31,6 +31,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 
 // Student Menu
 // const menus = [
