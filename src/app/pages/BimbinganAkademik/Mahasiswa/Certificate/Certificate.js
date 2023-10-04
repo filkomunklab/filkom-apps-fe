@@ -113,7 +113,7 @@ const Certificate = () => {
         sx={{
           fontSize: "24px",
           fontWeight: 500,
-          paddingBottom: "24px",
+          paddingBottom: "15px",
         }}
       >
         Add New Certificate
@@ -224,7 +224,6 @@ const Certificate = () => {
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",
-                marginTop: "20px",
               }}
             >
               <Link
