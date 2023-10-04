@@ -93,12 +93,7 @@ const CertificateWaiting = () => {
         <Typography variant="h5" sx={{ fontWeight: 600 }}>
           Comments from Supervisor
         </Typography>
-        <Paper
-          elevation={0}
-          variant="outlined"
-          fullWidth
-          sx={{ backgroundColor: "#D1E5F4" }}
-        >
+        <Paper elevation={0} variant="outlined" fullWidth>
           <Typography variant="body1" sx={{ p: 2 }}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
             commodo nunc in ligula tempus, sed feugiat justo vestibulum. Etiam
