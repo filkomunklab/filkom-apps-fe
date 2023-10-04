@@ -1017,7 +1017,7 @@ const Curriculum = () => {
       >
         Curriculum Informatika 2020
       </Typography>
-      <TableContainer sx={{ overflow: "auto" }}>
+      <TableContainer sx={{ overflow: "auto", backgroundColor: "white" }}>
         <Table>
           <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
             <TableRow>
