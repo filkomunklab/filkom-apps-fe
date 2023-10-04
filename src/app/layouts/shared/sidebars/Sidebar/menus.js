@@ -1,12 +1,34 @@
 import React from "react";
-import PersonIcon from '@mui/icons-material/Person';
-import AttachEmailIcon from '@mui/icons-material/AttachEmail';
-import MailIcon from '@mui/icons-material/Mail';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
-import SchoolIcon from '@mui/icons-material/School';
-import ScheduleTwoToneIcon from '@mui/icons-material/ScheduleTwoTone';
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
+import LoginIcon from "@mui/icons-material/Login";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import LockResetIcon from "@mui/icons-material/LockReset";
+import PasswordOutlinedIcon from "@mui/icons-material/PasswordOutlined";
+import InsertChartOutlinedIcon from "@mui/icons-material/InsertChartOutlined";
+import InsertCommentIcon from "@mui/icons-material/InsertComment";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import ImportContactsIcon from "@mui/icons-material/ImportContacts";
+import SchoolIcon from "@mui/icons-material/School";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
+import PeopleIcon from "@mui/icons-material/People";
+import PublicIcon from "@mui/icons-material/Public";
+import PersonIcon from "@mui/icons-material/Person";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import { EmailOutlined } from "@mui/icons-material";
+import AttachEmailIcon from "@mui/icons-material/AttachEmail";
+import MailIcon from "@mui/icons-material/Mail";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
+import ScheduleTwoToneIcon from "@mui/icons-material/ScheduleTwoTone";
+
 
 // Menu Mahasiswa
 const menus = [
