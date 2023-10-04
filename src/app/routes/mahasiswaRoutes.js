@@ -3,7 +3,7 @@ import Page from "@jumbo/shared/Page";
 import DaftarAlumni from "app/pages/KlabatBridge/DaftarAlumni";
 import AcademicGuide from "app/pages/BimbinganAkademik/Mahasiswa/AcademicGuide";
 import Certificate from "app/pages/BimbinganAkademik/Mahasiswa/Certificate";
-import AddNewCertificate from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/AddNewCertificate/AddNewCertificate";
+import AddNewCertificate from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/";
 import CertificateWaiting from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/CertificateWaiting";
 import CertificateApproved from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/CertificateApproved";
 import CertificateRejected from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/CertificateRejected";
