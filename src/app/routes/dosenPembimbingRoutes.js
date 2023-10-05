@@ -4,6 +4,7 @@ import StudentProfile from "../pages/BimbinganAkademik/DosenPembimbing/StudentIn
 import StudentGrade from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentGradeDashboard/StudentGrade";
 import StudentCertificate from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentCertificate";
 import History from "app/pages/BimbinganAkademik/DesenPembimbing/History";
+import Page from "@jumbo/shared/Page";
 
 const { default: Page } = require("@jumbo/shared/Page");
 

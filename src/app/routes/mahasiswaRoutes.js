@@ -8,6 +8,9 @@ import CertificateWaiting from "app/pages/BimbinganAkademik/Mahasiswa/Certificat
 import CertificateApproved from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/CertificateApproved";
 import CertificateRejected from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/CertificateRejected";
 import Consultation from "app/pages/BimbinganAkademik/Mahasiswa/Consultation";
+import ConsultationWaiting from "app/pages/BimbinganAkademik/Mahasiswa/Consultation/ConsultationWaiting";
+import consultationOnProcess from "app/pages/BimbinganAkademik/Mahasiswa/Consultation/ConsultationOnProcess";
+import ConsultationComplete from "app/pages/BimbinganAkademik/Mahasiswa/Consultation/ConsultationComplete";
 import Curriculum from "app/pages/BimbinganAkademik/Mahasiswa/Curriculum";
 import Grades from "app/pages/BimbinganAkademik/Mahasiswa/Grades";
 import GradeSubmission from "app/pages/BimbinganAkademik/Mahasiswa/GradeSubmission";
@@ -49,6 +52,18 @@ const mahasiswaRoutes = [
   {
     path: "/bimbingan-akademik/consultation",
     element: <Page component={Consultation} />,
+  },
+  {
+    path: "/bimbingan-akademik/consultation/consultationWaiting",
+    element: <Page component={ConsultationWaiting} />,
+  },
+  {
+    path: "/bimbingan-akademik/consultation/consultationOnProcess",
+    element: <Page component={consultationOnProcess} />,
+  },
+  {
+    path: "/bimbingan-akademik/consultation/consultationComplete",
+    element: <Page component={ConsultationComplete} />,
   },
   {
     path: "/bimbingan-akademik/curriculum",
