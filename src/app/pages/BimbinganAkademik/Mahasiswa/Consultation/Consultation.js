@@ -39,13 +39,6 @@ const style = {
   padding: 24,
   backgroundColor: "white",
   borderRadius: 10,
-  maxWidth: "90%",
-  "@media (max-width: 768px)": {
-    maxWidth: "80%",
-  },
-  "@media (max-width: 480px)": {
-    maxWidth: "80%",
-  },
 };
 
 const style2 = {
@@ -58,67 +51,11 @@ const style2 = {
   backgroundColor: "white",
   borderRadius: 10,
 };
-import React, { useState, useEffect } from "react";
-import {
-  Typography,
-  TextField,
-  Stack,
-  Grid,
-  FormControl,
-  Box,
-  Button,
-  Input,
-  IconButton,
-} from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import { Link } from "react-router-dom";
-import SaveAltIcon from "@mui/icons-material/SaveAlt";
-import Modal from "@mui/material/Modal";
-import CloseIcon from "@mui/icons-material/Close";
-
-function RTypography({ children, sx }) {
-  return (
-    <Typography variant="body1" sx={sx}>
-      {children}
-      <span style={requiredStyle}>*</span>
-    </Typography>
-  );
-}
-
-// const style = {
-//   position: "absolute",
-//   top: "50%",
-//   left: "50%",
-//   transform: "translate(-50%, -50%)",
-//   width: 400,
-//   bgcolor: "background.paper",
-//   boxShadow: 24,
-//   padding: 24,
-//   backgroundColor: "white",
-//   borderRadius: 10,
-//   maxWidth: "90%",
-//   "@media (max-width: 768px)": {
-//     maxWidth: "80%",
-//   },
-//   "@media (max-width: 480px)": {
-//     maxWidth: "80%",
-//   },
-// };
-
-// const style2 = {
-//   position: "fixed",
-//   top: "15%",
-//   right: "2%",
-//   width: 400,
-//   boxShadow: 24,
-//   padding: 24,
-//   backgroundColor: "white",
-//   borderRadius: 10,
-// };
 
 const Consultation = () => {
   const [topic, setTopic] = useState("");
   const [receiver, setReceiver] = useState("");
+  const [message, setMessage] = useState("");
   const [showLabel, setShowLabel] = useState(true);
   const [showLabel2, setShowLabel2] = useState(true);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -160,6 +97,13 @@ const Consultation = () => {
 
   const handleSubmitFirstModal = () => {
     handleCloseFirstModal();
+
+    setTopic("");
+    setReceiver("");
+    setShowLabel(true);
+    setShowLabel2(true);
+    setMessage("");
+
     handleOpenSecondModal();
   };
 
@@ -170,54 +114,58 @@ const Consultation = () => {
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
-          <Stack spacing={2} sx={{ paddingBottom: 3, paddingTop: 4 }}>
-            <RTypography>Student Name</RTypography>
-            <TextField
-              id="outlined-basic-1"
-              variant="outlined"
-              placeholder="Akan di isi otomatis"
-              fullWidth
-              sx={{ height: "48px" }}
-            />
+          <Stack spacing={2} sx={{ paddingTop: 3 }}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
+              <RTypography>Student Name</RTypography>
+            </Grid>
+
+            <Paper elevation={0} variant="outlined" fullWidth>
+              <Typography variant="body1" sx={{ p: 2 }}>
+                Siregar, Marchelino Feraldy
+              </Typography>
+            </Paper>
           </Stack>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Stack spacing={2} sx={{ paddingBottom: 3, paddingTop: 4 }}>
-            <RTypography>Supervisor Name</RTypography>
-            <TextField
-              id="outlined-basic-1"
-              variant="outlined"
-              placeholder="Akan di isi otomatis"
-              fullWidth
-              sx={{ height: "48px" }}
-            />
+          <Stack spacing={2} sx={{ paddingTop: 3 }}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
+              <RTypography>Supervisor Name</RTypography>
+            </Grid>
+
+            <Paper elevation={0} variant="outlined" fullWidth>
+              <Typography variant="body1" sx={{ p: 2 }}>
+                Poluan, Jeremy Kenny, S.Kom, MBA
+              </Typography>
+            </Paper>
           </Stack>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Stack spacing={2} sx={{ paddingBottom: 3 }}>
-            <RTypography>Major</RTypography>
-            <TextField
-              id="outlined-basic-1"
-              variant="outlined"
-              placeholder="Akan di isi otomatis"
-              fullWidth
-              sx={{ height: "48px" }}
-            />
+          <Stack spacing={2}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
+              <RTypography>Major</RTypography>
+            </Grid>
+
+            <Paper elevation={0} variant="outlined" fullWidth>
+              <Typography variant="body1" sx={{ p: 2 }}>
+                Informatics
+              </Typography>
+            </Paper>
           </Stack>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Stack spacing={2} sx={{ paddingBottom: 3 }}>
-            <RTypography>Arrival Year</RTypography>
-            <TextField
-              id="outlined-basic-1"
-              variant="outlined"
-              placeholder="Akan di isi otomatis"
-              fullWidth
-              sx={{ height: "48px" }}
-            />
+          <Stack spacing={2}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
+              <RTypography>Arrival Year</RTypography>
+            </Grid>
+
+            <Paper elevation={0} variant="outlined" fullWidth>
+              <Typography variant="body1" sx={{ p: 2 }}>
+                2020
+              </Typography>
+            </Paper>
           </Stack>
         </Grid>
 
@@ -282,6 +230,10 @@ const Consultation = () => {
               placeholder="Enter message ..."
               fullWidth
               multiline
+              value={message}
+              onChange={(event) => {
+                setMessage(event.target.value);
+              }}
             />
           </Stack>
         </Grid>
@@ -362,8 +314,8 @@ const Consultation = () => {
                     id="modal-modal-description"
                     style={{ marginTop: "16px", marginBottom: "20px" }}
                   >
-                    Are you sure you want to submit this? Forms that have been
-                    submitted cannot be edited again.
+                    Are you sure you want to submit this request? Forms that
+                    have been submitted cannot be edited again.
                   </Typography>
 
                   <Grid container spacing={1} justifyContent="flex-end">
