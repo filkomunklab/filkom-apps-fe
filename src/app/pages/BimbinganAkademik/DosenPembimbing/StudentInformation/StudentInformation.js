@@ -224,6 +224,11 @@ const TableItem = ({ item, index }) => {
       case "grade":
         navigate(`/bimbingan-akademik/student-information/${item.nim}/grade`);
         break;
+      case "certificate":
+        navigate(
+          `/bimbingan-akademik/student-information/${item.nim}/certificate`
+        );
+        break;
 
       default:
         console.log("Path not found");
