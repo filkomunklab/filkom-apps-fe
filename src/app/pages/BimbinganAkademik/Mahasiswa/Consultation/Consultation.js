@@ -4,15 +4,13 @@ import {
   TextField,
   Stack,
   Grid,
-  FormControl,
   Box,
   Button,
-  Input,
   IconButton,
+  Paper,
 } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
-import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -64,11 +62,9 @@ const style2 = {
 const Consultation = () => {
   const [topic, setTopic] = useState("");
   const [receiver, setReceiver] = useState("");
+  const [message, setMessage] = useState("");
   const [showLabel, setShowLabel] = useState(true);
   const [showLabel2, setShowLabel2] = useState(true);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedFileName, setSelectedFileName] = useState("");
-
   const [openFirstModal, setOpenFirstModal] = React.useState(false);
   const [openSecondModal, setOpenSecondModal] = React.useState(false);
 
@@ -87,24 +83,15 @@ const Consultation = () => {
     };
   }, [handleOpenSecondModal]);
 
-  const handleFileInputChange = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
-
-    const labelElement = document.getElementById("certificate-label");
-    if (labelElement) {
-      labelElement.style.border = "0.5px solid #BCBCBC";
-    }
-
-    if (file) {
-      setSelectedFileName(file.name);
-    } else {
-      setSelectedFileName("");
-    }
-  };
-
   const handleSubmitFirstModal = () => {
     handleCloseFirstModal();
+
+    setTopic("");
+    setReceiver("");
+    setShowLabel(true);
+    setShowLabel2(true);
+    setMessage("");
+
     handleOpenSecondModal();
   };
 
@@ -115,54 +102,58 @@ const Consultation = () => {
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
-          <Stack spacing={2} sx={{ paddingBottom: 3, paddingTop: 4 }}>
-            <RTypography>Student Name</RTypography>
-            <TextField
-              id="outlined-basic-1"
-              variant="outlined"
-              placeholder="Akan di isi otomatis"
-              fullWidth
-              sx={{ height: "48px" }}
-            />
+          <Stack spacing={2} sx={{ paddingTop: 3 }}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
+              <RTypography>Student Name</RTypography>
+            </Grid>
+
+            <Paper elevation={0} variant="outlined" fullWidth>
+              <Typography variant="body1" sx={{ p: 2 }}>
+                Siregar, Marchelino Feraldy
+              </Typography>
+            </Paper>
           </Stack>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Stack spacing={2} sx={{ paddingBottom: 3, paddingTop: 4 }}>
-            <RTypography>Supervisor Name</RTypography>
-            <TextField
-              id="outlined-basic-1"
-              variant="outlined"
-              placeholder="Akan di isi otomatis"
-              fullWidth
-              sx={{ height: "48px" }}
-            />
+          <Stack spacing={2} sx={{ paddingTop: 3 }}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
+              <RTypography>Supervisor Name</RTypography>
+            </Grid>
+
+            <Paper elevation={0} variant="outlined" fullWidth>
+              <Typography variant="body1" sx={{ p: 2 }}>
+                Poluan, Jeremy Kenny, S.Kom, MBA
+              </Typography>
+            </Paper>
           </Stack>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Stack spacing={2} sx={{ paddingBottom: 3 }}>
-            <RTypography>Major</RTypography>
-            <TextField
-              id="outlined-basic-1"
-              variant="outlined"
-              placeholder="Akan di isi otomatis"
-              fullWidth
-              sx={{ height: "48px" }}
-            />
+          <Stack spacing={2}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
+              <RTypography>Major</RTypography>
+            </Grid>
+
+            <Paper elevation={0} variant="outlined" fullWidth>
+              <Typography variant="body1" sx={{ p: 2 }}>
+                Informatics
+              </Typography>
+            </Paper>
           </Stack>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Stack spacing={2} sx={{ paddingBottom: 3 }}>
-            <RTypography>Arrival Year</RTypography>
-            <TextField
-              id="outlined-basic-1"
-              variant="outlined"
-              placeholder="Akan di isi otomatis"
-              fullWidth
-              sx={{ height: "48px" }}
-            />
+          <Stack spacing={2}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
+              <RTypography>Arrival Year</RTypography>
+            </Grid>
+
+            <Paper elevation={0} variant="outlined" fullWidth>
+              <Typography variant="body1" sx={{ p: 2 }}>
+                2020
+              </Typography>
+            </Paper>
           </Stack>
         </Grid>
 
@@ -224,9 +215,13 @@ const Consultation = () => {
             <TextField
               id="outlined-basic"
               variant="outlined"
-              placeholder="Enter message ..."
+              placeholder="Enter message..."
               fullWidth
+              value={message}
               multiline
+              onChange={(event) => {
+                setMessage(event.target.value);
+              }}
             />
           </Stack>
         </Grid>

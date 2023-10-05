@@ -3,6 +3,7 @@ import StudentInformation from "../pages/BimbinganAkademik/DosenPembimbing/Stude
 import StudentProfile from "../pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentProfile";
 import StudentGrade from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentGradeDashboard/StudentGrade";
 import History from "app/pages/BimbinganAkademik/DesenPembimbing/History";
+import Page from "@jumbo/shared/Page";
 
 const dosenPembimbingRoutes = [
   {
