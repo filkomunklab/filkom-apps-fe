@@ -7,7 +7,6 @@ import Dashboard from "app/pages/KlabatBridge/Operator/Dashboard";
 
 // calon tamatan
 import PengisianSPT from "app/pages/KlabatBridge/Operator/PengisianSPT";
-import FormTracerStudy from "app/pages/KlabatBridge/Operator/Form Tracer Study";
 
 const operatorRoutes = [
   {
