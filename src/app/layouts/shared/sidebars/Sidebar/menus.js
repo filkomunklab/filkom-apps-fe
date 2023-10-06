@@ -21,6 +21,7 @@ import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import PeopleIcon from "@mui/icons-material/People";
 import PublicIcon from "@mui/icons-material/Public";
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 // Student Menu
 // const menus = [
@@ -325,6 +326,12 @@ const menus = [
     type: "section",
     children: [
       {
+        label: "Dashboard",
+        type: "nav-item",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/dashboard",
+      },
+      {
         label: "Dafter Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
@@ -353,12 +360,6 @@ const menus = [
         type: "nav-item",
         icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
         uri: "/bimbingan-akademik/panduan-kurikulum",
-      },
-      {
-        label: "Grafik Alumni",
-        type: "nav-item",
-        icon: <PublicIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/grafik-alumni",
       },
     ],
   },
