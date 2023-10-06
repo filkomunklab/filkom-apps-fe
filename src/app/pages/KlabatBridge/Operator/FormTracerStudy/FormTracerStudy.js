@@ -461,7 +461,6 @@ const FormTracerSTudy = () => {
               </Grid>
             </Grid>
           </Grid>
-
           {/* FIX: CONNECT TEXTFIELD TO RADIO OPTION */}
           <Grid item container xs={12} spacing={4}>
             <Grid item md={12}>

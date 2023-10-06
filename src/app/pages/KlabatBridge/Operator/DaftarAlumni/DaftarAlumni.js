@@ -100,11 +100,20 @@ const DaftarAlumni = () => {
 
               "&:hover": {
                 backgroundColor: "#006AF5",
-              },
-            }}
-          >
-            + Import Data
-          </Button>
+                borderRadius: "24px",
+                color: "white",
+                whiteSpace: "nowrap",
+                width: "100%",
+                pr:3,
+                pl:3,
+
+                "&:hover": {
+                    backgroundColor: "#006AF5",
+                },
+                }}
+            >
+                + Import Data
+            </Button>
         </Div>
       </Div>
       <TableContainer sx={{ overflow: "auto" }}>
