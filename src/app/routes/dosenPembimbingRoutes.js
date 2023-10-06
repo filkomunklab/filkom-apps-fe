@@ -4,6 +4,8 @@ import StudentProfile from "../pages/BimbinganAkademik/DosenPembimbing/StudentIn
 import StudentGrade from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentGradeDashboard/StudentGrade";
 import StudentCertificate from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentCertificate";
 import History from "app/pages/BimbinganAkademik/DesenPembimbing/History";
+import CertificateDetail from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentCertificate/CertificateDetail";
+
 
 const { default: Page } = require("@jumbo/shared/Page");
 
@@ -28,6 +30,10 @@ const dosenPembimbingRoutes = [
   {
     path: "/bimbingan-akademik/student-information/:id/certificate",
     element: <Page component={StudentCertificate} />,
+  },
+  {
+    path: "/bimbingan-akademik/student-information/:id/certificate/:id",
+    element: <Page component={CertificateDetail} />,
   },
   {
     path: "/bimbingan-akademik/dospem/history",
