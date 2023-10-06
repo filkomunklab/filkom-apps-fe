@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import {
   TextField,
   Radio,
@@ -15,15 +15,15 @@ import {
   Paper,
   Stack,
   Form,
-  Checkbox, 
+  Checkbox,
   FormGroup,
-  InputAdornment, 
+  InputAdornment,
   Divider,
   List,
-  ListItem, 
+  ListItem,
   ListItemText,
   FormLabel,
-  TableCell, 
+  TableCell,
   TableBody,
   TableRow,
   Table,
@@ -32,9 +32,9 @@ import {
 } from "@mui/material";
 import Div from "@jumbo/shared/Div";
 import JumboDemoCard from "@jumbo/components/JumboDemoCard";
-import {LocalizationProvider} from "@mui/x-date-pickers";
-import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
-import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 const FormTracerSTudy = () => {
   const [checked, setChecked] = React.useState(false);
@@ -45,7 +45,6 @@ const FormTracerSTudy = () => {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-
 
   const [identityData, setIdentityData] = useState({
     nim: "",
@@ -160,31 +159,30 @@ const FormTracerSTudy = () => {
       ...questionnaireData,
       [event.target.name]: event.target.value,
 
-    // const { name, value } = event.target;
-    // setQuestionnaireData({
-    //   ...questionnaireData,
-    //   [name]: value,
-    // });
-
+      // const { name, value } = event.target;
+      // setQuestionnaireData({
+      //   ...questionnaireData,
+      //   [name]: value,
+      // });
 
       //for checkbox
       //[event.target.name]: event.target.checked,
 
       // checkbox with textfield
-        // if (name === 'f415' && checked) {
-        //     setQuestionnaireData({
-        //         ...questionnaireData,
-        //         questionnaireData.f415: checked,
-        //         [name]: value
-        //     });
-        // } else {
-        //     setQuestionnaireData({
-        //         ...state,
-        //         questionnaireData.f415: checked,
-        //         [name]: checked ? value : false,
-        //         questionnaireData.f416: ''
-        //     });
-        // }
+      // if (name === 'f415' && checked) {
+      //     setQuestionnaireData({
+      //         ...questionnaireData,
+      //         questionnaireData.f415: checked,
+      //         [name]: value
+      //     });
+      // } else {
+      //     setQuestionnaireData({
+      //         ...state,
+      //         questionnaireData.f415: checked,
+      //         [name]: checked ? value : false,
+      //         questionnaireData.f416: ''
+      //     });
+      // }
     });
   };
 
@@ -192,8 +190,8 @@ const FormTracerSTudy = () => {
     setQuestionnaireData({
       ...questionnaireData,
       [event.target.name]: event.target.checked,
-    })
-  }
+    });
+  };
   // const handleSubmit = (event) => {
   //   event.preventDefault();
   //   // Handle form submission logic here
@@ -203,23 +201,29 @@ const FormTracerSTudy = () => {
 
   // };
 
-
   return (
     <Div>
-      <Box p={8} sx={{
-        backgroundColor: 'white',
-        borderRadius: 5,
-        boxShadow: 3,
-      }} >
+      <Box
+        p={8}
+        sx={{
+          backgroundColor: "white",
+          borderRadius: 5,
+          boxShadow: 3,
+        }}
+      >
         {/* Identity Details */}
         {/* <Typography variant="h1" style={{marginBottom:"2em", fontWeight: 500}}>Formulir Tracer Study</Typography> */}
-        <Typography mb={5} sx={{ fontSize: "24px", fontWeight: 500, }}>
+        <Typography mb={5} sx={{ fontSize: "24px", fontWeight: 500 }}>
           Formulir Tracer Study
         </Typography>
-        <Typography mb={3} variant="h2">Identitas Diri</Typography>
+        <Typography mb={3} variant="h2">
+          Identitas Diri
+        </Typography>
         <Grid container spacing={4}>
           <Grid item sm={12} md={6}>
-            <Typography variant="subtitle1">Nomor Induk Mahasiswa (NIM)</Typography>
+            <Typography variant="subtitle1">
+              Nomor Induk Mahasiswa (NIM)
+            </Typography>
             <TextField
               fullWidth
               variant="outlined"
@@ -300,7 +304,9 @@ const FormTracerSTudy = () => {
             />
           </Grid>
           <Grid item sm={12} md={6}>
-            <Typography variant="subtitle1">Nomor Induk Kependudukan (NIK)</Typography>
+            <Typography variant="subtitle1">
+              Nomor Induk Kependudukan (NIK)
+            </Typography>
             <TextField
               fullWidth
               variant="outlined"
@@ -326,7 +332,10 @@ const FormTracerSTudy = () => {
         </Grid>
 
         {/* Questionnaire */}
-        <Typography variant="h2" style={{ marginBottom: "16px", marginTop: "75px" }}>
+        <Typography
+          variant="h2"
+          style={{ marginBottom: "16px", marginTop: "75px" }}
+        >
           Questionnaire
         </Typography>
         <Grid container spacing={4}>
@@ -340,18 +349,39 @@ const FormTracerSTudy = () => {
                 value={questionnaireData.f8}
                 onChange={handleQuestionnaireChange}
               >
-                <FormControlLabel value="1" control={<Radio />} label="Bekerja (full time / part time)" />
-                <FormControlLabel value="2" control={<Radio />} label="Belum memungkinkan bekerja" />
-                <FormControlLabel value="3" control={<Radio />} label="Wiraswasta" />
-                <FormControlLabel value="4" control={<Radio />} label="Melanjutkan Pendidikan" />
-                <FormControlLabel value="5" control={<Radio />} label="Tidak kerja tetapi sedang mencari kerja" />
+                <FormControlLabel
+                  value="1"
+                  control={<Radio />}
+                  label="Bekerja (full time / part time)"
+                />
+                <FormControlLabel
+                  value="2"
+                  control={<Radio />}
+                  label="Belum memungkinkan bekerja"
+                />
+                <FormControlLabel
+                  value="3"
+                  control={<Radio />}
+                  label="Wiraswasta"
+                />
+                <FormControlLabel
+                  value="4"
+                  control={<Radio />}
+                  label="Melanjutkan Pendidikan"
+                />
+                <FormControlLabel
+                  value="5"
+                  control={<Radio />}
+                  label="Tidak kerja tetapi sedang mencari kerja"
+                />
               </RadioGroup>
             </FormControl>
           </Grid>
           <Grid item xs={12}>
             <FormControl component="fieldset">
               <Typography variant="subtitle1">
-                2. Apakah Anda telah mendapatkan pekerjaan &lt;= 6 bulan / termasuk bekerja sebelum lulus?
+                2. Apakah Anda telah mendapatkan pekerjaan &lt;= 6 bulan /
+                termasuk bekerja sebelum lulus?
               </Typography>
               <RadioGroup
                 row
@@ -379,7 +409,7 @@ const FormTracerSTudy = () => {
           </Grid>
           <Grid item md={6}>
             <Typography variant="subtitle3">
-              Berapa rata-rata pendapatan Anda per bulan (take home pay)? 
+              Berapa rata-rata pendapatan Anda per bulan (take home pay)?
             </Typography>
             <TextField
               fullWidth
@@ -391,14 +421,12 @@ const FormTracerSTudy = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="subtitle1" style={{marginBottom:'14px'}}>
+            <Typography variant="subtitle1" style={{ marginBottom: "14px" }}>
               3. Di mana lokasi tempat Anda bekerja
             </Typography>
-            <Grid container spacing={4} >
-              <Grid item xs={12} md={6} >
-                <Typography variant="subtitle3">
-                  Provinsi
-                </Typography>
+            <Grid container spacing={4}>
+              <Grid item xs={12} md={6}>
+                <Typography variant="subtitle3">Provinsi</Typography>
                 <Select
                   fullWidth
                   variant="outlined"
@@ -415,9 +443,7 @@ const FormTracerSTudy = () => {
                 </Select>
               </Grid>
               <Grid item xs={12} md={6}>
-                <Typography variant="subtitle3">
-                  Kabupaten/Kota
-                </Typography>
+                <Typography variant="subtitle3">Kabupaten/Kota</Typography>
                 <Select
                   fullWidth
                   variant="outlined"
@@ -435,34 +461,63 @@ const FormTracerSTudy = () => {
               </Grid>
             </Grid>
           </Grid>
-          
+
           {/* FIX: CONNECT TEXTFIELD TO RADIO OPTION */}
           <Grid item container xs={12} spacing={4}>
             <Grid item md={12}>
               <FormControl component="fieldset">
                 <Typography variant="subtitle1">
-                  4. Apa jenis perusahaan/intansi/institusi tempat anda bekerja sekarang?
+                  4. Apa jenis perusahaan/intansi/institusi tempat anda bekerja
+                  sekarang?
                 </Typography>
                 <RadioGroup
                   name="f1101"
                   value={questionnaireData.f1101}
                   onChange={handleQuestionnaireChange}
                 >
-                  <FormControlLabel value="1" control={<Radio />} label="Instansi pemerintah" />
-                  <FormControlLabel value="6" control={<Radio />} label="BUMN/BUMD" />
-                  <FormControlLabel value="7" control={<Radio />} label="Institusi/Organisasi Multilateral" />
-                  <FormControlLabel value="2" control={<Radio />} label="Organisasi non-profit/Lembaga Swadaya Masyarakat" />
-                  <FormControlLabel value="3" control={<Radio />} label="Perusahaan swasta" />
-                  <FormControlLabel value="4" control={<Radio />} label="Wiraswasta/perusahaan sendiri" />
-                  <FormControlLabel value="5" control={<Radio />} label="Lainnya, tuliskan" />
+                  <FormControlLabel
+                    value="1"
+                    control={<Radio />}
+                    label="Instansi pemerintah"
+                  />
+                  <FormControlLabel
+                    value="6"
+                    control={<Radio />}
+                    label="BUMN/BUMD"
+                  />
+                  <FormControlLabel
+                    value="7"
+                    control={<Radio />}
+                    label="Institusi/Organisasi Multilateral"
+                  />
+                  <FormControlLabel
+                    value="2"
+                    control={<Radio />}
+                    label="Organisasi non-profit/Lembaga Swadaya Masyarakat"
+                  />
+                  <FormControlLabel
+                    value="3"
+                    control={<Radio />}
+                    label="Perusahaan swasta"
+                  />
+                  <FormControlLabel
+                    value="4"
+                    control={<Radio />}
+                    label="Wiraswasta/perusahaan sendiri"
+                  />
+                  <FormControlLabel
+                    value="5"
+                    control={<Radio />}
+                    label="Lainnya, tuliskan"
+                  />
                 </RadioGroup>
               </FormControl>
             </Grid>
             <Grid item md={6}>
-              <TextField 
-                fullWidth 
-                id="outlined-basic" 
-                placeholder="lainnya" 
+              <TextField
+                fullWidth
+                id="outlined-basic"
+                placeholder="lainnya"
                 variant="outlined"
               />
 
@@ -498,12 +553,15 @@ const FormTracerSTudy = () => {
 
           <Grid item xs={12}>
             <Typography variant="subtitle1" style={{ marginBottom: "8px" }}>
-              6. Bila berwiraswasta, apa posisi/jabatan Anda saat ini? (Apabila 1 Menjawab [3] wiraswasta)
+              6. Bila berwiraswasta, apa posisi/jabatan Anda saat ini? (Apabila
+              1 Menjawab [3] wiraswasta)
             </Typography>
             <Grid container spacing={4}>
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Silahkan Pilih</InputLabel>
+                  <InputLabel id="demo-simple-select-label">
+                    Silahkan Pilih
+                  </InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
@@ -529,22 +587,27 @@ const FormTracerSTudy = () => {
             <Grid container spacing={4}>
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Silahkan Pilih</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={questionnaireData.f5d}
-                      label="Silahkan Pilih"
-                      name="f5d"
-                      onChange={handleQuestionnaireChange}
-                    >
-                      <MenuItem value={1}>Lokal/Wilayah/Wiraswasta/tidak berbadan hukum</MenuItem>
-                      <MenuItem value={2}>Nasional/Wiraswasta berbadan hukum</MenuItem>
-                      <MenuItem value={3}>Mulitnasional/Internasional</MenuItem>
-                    </Select>
+                  <InputLabel id="demo-simple-select-label">
+                    Silahkan Pilih
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={questionnaireData.f5d}
+                    label="Silahkan Pilih"
+                    name="f5d"
+                    onChange={handleQuestionnaireChange}
+                  >
+                    <MenuItem value={1}>
+                      Lokal/Wilayah/Wiraswasta/tidak berbadan hukum
+                    </MenuItem>
+                    <MenuItem value={2}>
+                      Nasional/Wiraswasta berbadan hukum
+                    </MenuItem>
+                    <MenuItem value={3}>Mulitnasional/Internasional</MenuItem>
+                  </Select>
                 </FormControl>
               </Grid>
-              
             </Grid>
           </Grid>
 
@@ -556,7 +619,9 @@ const FormTracerSTudy = () => {
               <Grid item xs={12} md={6}>
                 <Typography mb={1}>Sumber biaya</Typography>
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Silahkan Pilih</InputLabel>
+                  <InputLabel id="demo-simple-select-label">
+                    Silahkan Pilih
+                  </InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
@@ -572,28 +637,28 @@ const FormTracerSTudy = () => {
               </Grid>
               <Grid item xs={12} md={6}>
                 <Typography mb={1}>Perguruan Tinggi</Typography>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    name="f18b"
-                    placeholder="Universitas Klabat"
-                    value={questionnaireData.f18b}
-                    onChange={handleQuestionnaireChange}
-                  />
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  name="f18b"
+                  placeholder="Universitas Klabat"
+                  value={questionnaireData.f18b}
+                  onChange={handleQuestionnaireChange}
+                />
               </Grid>
               <Grid item xs={12} md={6}>
                 <Typography mb={1}>Program Studi</Typography>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    name="f18c"
-                    placeholder="Informatika"
-                    value={questionnaireData.f18c}
-                    onChange={handleQuestionnaireChange}
-                  />
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  name="f18c"
+                  placeholder="Informatika"
+                  value={questionnaireData.f18c}
+                  onChange={handleQuestionnaireChange}
+                />
               </Grid>
               <Grid item xs={12} md={6}>
-              <Typography mb={1}>Tanggal Masuk</Typography>
+                <Typography mb={1}>Tanggal Masuk</Typography>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     label="Select Date"
@@ -602,7 +667,7 @@ const FormTracerSTudy = () => {
                     // onChange={(event, newValue) => setValue(newValue)}
                     onChange={handleDateChange}
                     renderInput={(params) => <TextField {...params} />}
-                    sx={{ width: '100%' }}
+                    sx={{ width: "100%" }}
                   />
                 </LocalizationProvider>
               </Grid>
@@ -614,38 +679,66 @@ const FormTracerSTudy = () => {
             <Grid item md={12}>
               <FormControl component="fieldset">
                 <Typography variant="subtitle1">
-                  9. Sebutkan sumberdana dalam pembiayaan kuliah? * (bukan ketika Studi Lanjut)
+                  9. Sebutkan sumberdana dalam pembiayaan kuliah? * (bukan
+                  ketika Studi Lanjut)
                 </Typography>
                 <RadioGroup
                   name="f1201"
                   value={questionnaireData.f1201}
                   onChange={handleQuestionnaireChange}
                 >
-                  <FormControlLabel value="1" control={<Radio />} label="Biaya Sendiri/Keluarga" />
-                  <FormControlLabel value="2" control={<Radio />} label="Beasiswa ADIK" />
-                  <FormControlLabel value="3" control={<Radio />} label="Beasiswa BIDIKMISI" />
-                  <FormControlLabel value="4" control={<Radio />} label="Beasiswa PPA" />
-                  <FormControlLabel value="5" control={<Radio />} label="Beasiswa AFIRMASI" />
-                  <FormControlLabel value="6" control={<Radio />} label="Beasiswa Perusahaan/Swasta" />
-                  <FormControlLabel value="7" control={<Radio />} label="Lainnya, tuliskan" />
+                  <FormControlLabel
+                    value="1"
+                    control={<Radio />}
+                    label="Biaya Sendiri/Keluarga"
+                  />
+                  <FormControlLabel
+                    value="2"
+                    control={<Radio />}
+                    label="Beasiswa ADIK"
+                  />
+                  <FormControlLabel
+                    value="3"
+                    control={<Radio />}
+                    label="Beasiswa BIDIKMISI"
+                  />
+                  <FormControlLabel
+                    value="4"
+                    control={<Radio />}
+                    label="Beasiswa PPA"
+                  />
+                  <FormControlLabel
+                    value="5"
+                    control={<Radio />}
+                    label="Beasiswa AFIRMASI"
+                  />
+                  <FormControlLabel
+                    value="6"
+                    control={<Radio />}
+                    label="Beasiswa Perusahaan/Swasta"
+                  />
+                  <FormControlLabel
+                    value="7"
+                    control={<Radio />}
+                    label="Lainnya, tuliskan"
+                  />
                 </RadioGroup>
                 <Grid item md={6}>
-              <TextField 
-                fullWidth 
-                id="outlined-basic" 
-                label="lainnya" 
-                variant="outlined"
-                name="f1202"
-                value={questionnaireData.f1202}
-                onChange={handleQuestionnaireChange}
-              />
-              {/* fix: hubungin ke radio button */}
-              {/* {questionnaireData.f1201 === '7' && (
-              )} */} 
-            </Grid>
+                  <TextField
+                    fullWidth
+                    id="outlined-basic"
+                    label="lainnya"
+                    variant="outlined"
+                    name="f1202"
+                    value={questionnaireData.f1202}
+                    onChange={handleQuestionnaireChange}
+                  />
+                  {/* fix: hubungin ke radio button */}
+                  {/* {questionnaireData.f1201 === '7' && (
+              )} */}
+                </Grid>
               </FormControl>
             </Grid>
-            
           </Grid>
 
           <Grid item xs={12}>
@@ -660,11 +753,27 @@ const FormTracerSTudy = () => {
                 value={questionnaireData.f14}
                 onChange={handleQuestionnaireChange}
               >
-                <FormControlLabel value="1" control={<Radio />} label="Sangat Erat" />
+                <FormControlLabel
+                  value="1"
+                  control={<Radio />}
+                  label="Sangat Erat"
+                />
                 <FormControlLabel value="2" control={<Radio />} label="Erat" />
-                <FormControlLabel value="3" control={<Radio />} label="Cukup Erat" />
-                <FormControlLabel value="4" control={<Radio />} label="Kurang Erat" />
-                <FormControlLabel value="5" control={<Radio />} label="Tidak Sama Sekali" />
+                <FormControlLabel
+                  value="3"
+                  control={<Radio />}
+                  label="Cukup Erat"
+                />
+                <FormControlLabel
+                  value="4"
+                  control={<Radio />}
+                  label="Kurang Erat"
+                />
+                <FormControlLabel
+                  value="5"
+                  control={<Radio />}
+                  label="Tidak Sama Sekali"
+                />
               </RadioGroup>
             </FormControl>
           </Grid>
@@ -673,7 +782,8 @@ const FormTracerSTudy = () => {
             <FormControl component="fieldset">
               {/* <FormLabel component="legend">Answer the first question</FormLabel> */}
               <Typography variant="subtitle1">
-                11. Tingkat pendidikan apa yang paling tepat/sesuai untuk pekerjaan anda saat ini? *
+                11. Tingkat pendidikan apa yang paling tepat/sesuai untuk
+                pekerjaan anda saat ini? *
               </Typography>
               <RadioGroup
                 // aria-label="answer"
@@ -681,10 +791,26 @@ const FormTracerSTudy = () => {
                 value={questionnaireData.f15}
                 onChange={handleQuestionnaireChange}
               >
-                <FormControlLabel value="1" control={<Radio />} label="Setingkat Lebih Tinggi" />
-                <FormControlLabel value="2" control={<Radio />} label="Setingkat yang Sama" />
-                <FormControlLabel value="3" control={<Radio />} label="Setingkat Lebih Rendah" />
-                <FormControlLabel value="4" control={<Radio />} label="Tidak Perlu Pendidikan Tinggi" />
+                <FormControlLabel
+                  value="1"
+                  control={<Radio />}
+                  label="Setingkat Lebih Tinggi"
+                />
+                <FormControlLabel
+                  value="2"
+                  control={<Radio />}
+                  label="Setingkat yang Sama"
+                />
+                <FormControlLabel
+                  value="3"
+                  control={<Radio />}
+                  label="Setingkat Lebih Rendah"
+                />
+                <FormControlLabel
+                  value="4"
+                  control={<Radio />}
+                  label="Tidak Perlu Pendidikan Tinggi"
+                />
               </RadioGroup>
             </FormControl>
           </Grid>
@@ -692,21 +818,22 @@ const FormTracerSTudy = () => {
           {/* no. 12 skip dulu */}
           <Grid item xs={12}>
             <Typography variant="subtitle1">
-              12. Pada saat lulus, pada tingkat mana kompetensi di bawah ini anda : kuasai? (A) Pada
-              saat ini, pada tingkat mana kompetensi di bawah ini diperlukan dalam pekerjaan? (B)*
+              12. Pada saat lulus, pada tingkat mana kompetensi di bawah ini
+              anda : kuasai? (A) Pada saat ini, pada tingkat mana kompetensi di
+              bawah ini diperlukan dalam pekerjaan? (B)*
             </Typography>
-            <TableContainer sx={{marginY: 2}}>
-              <Table 
-                aria-label="simple table" 
-                //sx={{ border: "1px solid #ddd" }} 
+            <TableContainer sx={{ marginY: 2 }}>
+              <Table
+                aria-label="simple table"
+                //sx={{ border: "1px solid #ddd" }}
               >
                 <TableHead>
-                  <TableRow 
-                    //sx={{backgroundColor: "#f5f5f5"}}
+                  <TableRow
+                  //sx={{backgroundColor: "#f5f5f5"}}
                   >
-                    <TableCell style={{ width: '400px' }}>A</TableCell>
-                    <TableCell style={{ width: '200px' }}></TableCell>
-                    <TableCell style={{ width: '400px' }}>B</TableCell>
+                    <TableCell style={{ width: "400px" }}>A</TableCell>
+                    <TableCell style={{ width: "200px" }}></TableCell>
+                    <TableCell style={{ width: "400px" }}>B</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>
@@ -721,7 +848,7 @@ const FormTracerSTudy = () => {
                     </TableCell>
                     <TableCell></TableCell>
                     <TableCell>
-                    <Grid container justifyContent="space-between">
+                      <Grid container justifyContent="space-between">
                         <Grid item>
                           <Typography>Sangat Rendah</Typography>
                         </Grid>
@@ -738,38 +865,63 @@ const FormTracerSTudy = () => {
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', // Ensure the Box takes full height of the TableCell
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%", // Ensure the Box takes full height of the TableCell
                         }}
                       >
                         {/* Your component here */}
                         <FormControl>
-                            <RadioGroup
-                                row
-                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                name="row-radio-buttons-group"
-                                //value={questionnaireData.f1761}
-                                //onChange={handleQuestionnaireChange}
-                            >
-                                <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
-                                <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
-                                <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
-                                <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
-                                <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
-                            </RadioGroup>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            //value={questionnaireData.f1761}
+                            //onChange={handleQuestionnaireChange}
+                          >
+                            <FormControlLabel
+                              value="1"
+                              control={<Radio size="small" />}
+                              label="1"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="2"
+                              control={<Radio size="small" />}
+                              label="2"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="3"
+                              control={<Radio size="small" />}
+                              label="3"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="4"
+                              control={<Radio size="small" />}
+                              label="4"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="5"
+                              control={<Radio size="small" />}
+                              label="5"
+                              labelPlacement="bottom"
+                            />
+                          </RadioGroup>
                         </FormControl>
                       </Box>
                     </TableCell>
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', 
-                          textAlign: 'center', // Center align text inside TableCell
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
+                          textAlign: "center", // Center align text inside TableCell
                         }}
                       >
                         Etika
@@ -778,10 +930,10 @@ const FormTracerSTudy = () => {
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', 
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
                         }}
                       >
                         {/* Your component here */}
@@ -793,53 +945,103 @@ const FormTracerSTudy = () => {
                             //value={questionnaireData.f1761}
                             //onChange={handleQuestionnaireChange}
                           >
-                            <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
-                            <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
-                            <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
-                            <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
-                            <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                            <FormControlLabel
+                              value="1"
+                              control={<Radio size="small" />}
+                              label="1"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="2"
+                              control={<Radio size="small" />}
+                              label="2"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="3"
+                              control={<Radio size="small" />}
+                              label="3"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="4"
+                              control={<Radio size="small" />}
+                              label="4"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="5"
+                              control={<Radio size="small" />}
+                              label="5"
+                              labelPlacement="bottom"
+                            />
                           </RadioGroup>
                         </FormControl>
                       </Box>
-                  </TableCell>
+                    </TableCell>
                   </TableRow>
                   {/* 2nd row */}
                   <TableRow>
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', // Ensure the Box takes full height of the TableCell
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%", // Ensure the Box takes full height of the TableCell
                         }}
                       >
                         {/* Your component here */}
                         <FormControl>
-                            <RadioGroup
-                                row
-                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                name="row-radio-buttons-group"
-                                //value={questionnaireData.f1761}
-                                //onChange={handleQuestionnaireChange}
-                            >
-                                <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
-                                <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
-                                <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
-                                <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
-                                <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
-                            </RadioGroup>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            //value={questionnaireData.f1761}
+                            //onChange={handleQuestionnaireChange}
+                          >
+                            <FormControlLabel
+                              value="1"
+                              control={<Radio size="small" />}
+                              label="1"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="2"
+                              control={<Radio size="small" />}
+                              label="2"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="3"
+                              control={<Radio size="small" />}
+                              label="3"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="4"
+                              control={<Radio size="small" />}
+                              label="4"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="5"
+                              control={<Radio size="small" />}
+                              label="5"
+                              labelPlacement="bottom"
+                            />
+                          </RadioGroup>
                         </FormControl>
                       </Box>
                     </TableCell>
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', 
-                          textAlign: 'center', // Center align text inside TableCell
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
+                          textAlign: "center", // Center align text inside TableCell
                         }}
                       >
                         Keahlian berdasarkan bidang ilmu
@@ -848,10 +1050,10 @@ const FormTracerSTudy = () => {
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', 
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
                         }}
                       >
                         {/* Your component here */}
@@ -863,53 +1065,103 @@ const FormTracerSTudy = () => {
                             //value={questionnaireData.f1761}
                             //onChange={handleQuestionnaireChange}
                           >
-                            <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
-                            <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
-                            <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
-                            <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
-                            <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                            <FormControlLabel
+                              value="1"
+                              control={<Radio size="small" />}
+                              label="1"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="2"
+                              control={<Radio size="small" />}
+                              label="2"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="3"
+                              control={<Radio size="small" />}
+                              label="3"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="4"
+                              control={<Radio size="small" />}
+                              label="4"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="5"
+                              control={<Radio size="small" />}
+                              label="5"
+                              labelPlacement="bottom"
+                            />
                           </RadioGroup>
                         </FormControl>
                       </Box>
-                  </TableCell>
+                    </TableCell>
                   </TableRow>
                   {/* 3rd row */}
                   <TableRow>
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', // Ensure the Box takes full height of the TableCell
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%", // Ensure the Box takes full height of the TableCell
                         }}
                       >
                         {/* Your component here */}
                         <FormControl>
-                            <RadioGroup
-                                row
-                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                name="row-radio-buttons-group"
-                                //value={questionnaireData.f1761}
-                                //onChange={handleQuestionnaireChange}
-                            >
-                                <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
-                                <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
-                                <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
-                                <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
-                                <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
-                            </RadioGroup>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            //value={questionnaireData.f1761}
+                            //onChange={handleQuestionnaireChange}
+                          >
+                            <FormControlLabel
+                              value="1"
+                              control={<Radio size="small" />}
+                              label="1"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="2"
+                              control={<Radio size="small" />}
+                              label="2"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="3"
+                              control={<Radio size="small" />}
+                              label="3"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="4"
+                              control={<Radio size="small" />}
+                              label="4"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="5"
+                              control={<Radio size="small" />}
+                              label="5"
+                              labelPlacement="bottom"
+                            />
+                          </RadioGroup>
                         </FormControl>
                       </Box>
                     </TableCell>
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', 
-                          textAlign: 'center', // Center align text inside TableCell
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
+                          textAlign: "center", // Center align text inside TableCell
                         }}
                       >
                         Bahasa Inggris
@@ -918,10 +1170,10 @@ const FormTracerSTudy = () => {
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', 
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
                         }}
                       >
                         {/* Your component here */}
@@ -933,53 +1185,103 @@ const FormTracerSTudy = () => {
                             //value={questionnaireData.f1761}
                             //onChange={handleQuestionnaireChange}
                           >
-                            <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
-                            <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
-                            <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
-                            <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
-                            <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                            <FormControlLabel
+                              value="1"
+                              control={<Radio size="small" />}
+                              label="1"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="2"
+                              control={<Radio size="small" />}
+                              label="2"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="3"
+                              control={<Radio size="small" />}
+                              label="3"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="4"
+                              control={<Radio size="small" />}
+                              label="4"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="5"
+                              control={<Radio size="small" />}
+                              label="5"
+                              labelPlacement="bottom"
+                            />
                           </RadioGroup>
                         </FormControl>
                       </Box>
-                  </TableCell>
+                    </TableCell>
                   </TableRow>
                   {/* 4th row */}
                   <TableRow>
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', // Ensure the Box takes full height of the TableCell
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%", // Ensure the Box takes full height of the TableCell
                         }}
                       >
                         {/* Your component here */}
                         <FormControl>
-                            <RadioGroup
-                                row
-                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                name="row-radio-buttons-group"
-                                //value={questionnaireData.f1761}
-                                //onChange={handleQuestionnaireChange}
-                            >
-                                <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
-                                <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
-                                <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
-                                <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
-                                <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
-                            </RadioGroup>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            //value={questionnaireData.f1761}
+                            //onChange={handleQuestionnaireChange}
+                          >
+                            <FormControlLabel
+                              value="1"
+                              control={<Radio size="small" />}
+                              label="1"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="2"
+                              control={<Radio size="small" />}
+                              label="2"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="3"
+                              control={<Radio size="small" />}
+                              label="3"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="4"
+                              control={<Radio size="small" />}
+                              label="4"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="5"
+                              control={<Radio size="small" />}
+                              label="5"
+                              labelPlacement="bottom"
+                            />
+                          </RadioGroup>
                         </FormControl>
                       </Box>
                     </TableCell>
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', 
-                          textAlign: 'center', // Center align text inside TableCell
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
+                          textAlign: "center", // Center align text inside TableCell
                         }}
                       >
                         Penggunaan Teknologi Informasi
@@ -988,10 +1290,10 @@ const FormTracerSTudy = () => {
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', 
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
                         }}
                       >
                         {/* Your component here */}
@@ -1003,53 +1305,103 @@ const FormTracerSTudy = () => {
                             //value={questionnaireData.f1761}
                             //onChange={handleQuestionnaireChange}
                           >
-                            <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
-                            <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
-                            <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
-                            <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
-                            <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                            <FormControlLabel
+                              value="1"
+                              control={<Radio size="small" />}
+                              label="1"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="2"
+                              control={<Radio size="small" />}
+                              label="2"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="3"
+                              control={<Radio size="small" />}
+                              label="3"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="4"
+                              control={<Radio size="small" />}
+                              label="4"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="5"
+                              control={<Radio size="small" />}
+                              label="5"
+                              labelPlacement="bottom"
+                            />
                           </RadioGroup>
                         </FormControl>
                       </Box>
-                  </TableCell>
+                    </TableCell>
                   </TableRow>
                   {/* 5th row */}
                   <TableRow>
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', // Ensure the Box takes full height of the TableCell
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%", // Ensure the Box takes full height of the TableCell
                         }}
                       >
                         {/* Your component here */}
                         <FormControl>
-                            <RadioGroup
-                                row
-                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                name="row-radio-buttons-group"
-                                //value={questionnaireData.f1761}
-                                //onChange={handleQuestionnaireChange}
-                            >
-                                <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
-                                <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
-                                <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
-                                <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
-                                <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
-                            </RadioGroup>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            //value={questionnaireData.f1761}
+                            //onChange={handleQuestionnaireChange}
+                          >
+                            <FormControlLabel
+                              value="1"
+                              control={<Radio size="small" />}
+                              label="1"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="2"
+                              control={<Radio size="small" />}
+                              label="2"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="3"
+                              control={<Radio size="small" />}
+                              label="3"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="4"
+                              control={<Radio size="small" />}
+                              label="4"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="5"
+                              control={<Radio size="small" />}
+                              label="5"
+                              labelPlacement="bottom"
+                            />
+                          </RadioGroup>
                         </FormControl>
                       </Box>
                     </TableCell>
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', 
-                          textAlign: 'center', // Center align text inside TableCell
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
+                          textAlign: "center", // Center align text inside TableCell
                         }}
                       >
                         Komunikasi
@@ -1058,10 +1410,10 @@ const FormTracerSTudy = () => {
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', 
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
                         }}
                       >
                         {/* Your component here */}
@@ -1073,53 +1425,103 @@ const FormTracerSTudy = () => {
                             //value={questionnaireData.f1761}
                             //onChange={handleQuestionnaireChange}
                           >
-                            <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
-                            <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
-                            <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
-                            <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
-                            <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                            <FormControlLabel
+                              value="1"
+                              control={<Radio size="small" />}
+                              label="1"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="2"
+                              control={<Radio size="small" />}
+                              label="2"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="3"
+                              control={<Radio size="small" />}
+                              label="3"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="4"
+                              control={<Radio size="small" />}
+                              label="4"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="5"
+                              control={<Radio size="small" />}
+                              label="5"
+                              labelPlacement="bottom"
+                            />
                           </RadioGroup>
                         </FormControl>
                       </Box>
-                  </TableCell>
+                    </TableCell>
                   </TableRow>
                   {/* 6th row */}
                   <TableRow>
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', // Ensure the Box takes full height of the TableCell
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%", // Ensure the Box takes full height of the TableCell
                         }}
                       >
                         {/* Your component here */}
                         <FormControl>
-                            <RadioGroup
-                                row
-                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                name="row-radio-buttons-group"
-                                //value={questionnaireData.f1761}
-                                //onChange={handleQuestionnaireChange}
-                            >
-                                <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
-                                <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
-                                <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
-                                <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
-                                <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
-                            </RadioGroup>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            //value={questionnaireData.f1761}
+                            //onChange={handleQuestionnaireChange}
+                          >
+                            <FormControlLabel
+                              value="1"
+                              control={<Radio size="small" />}
+                              label="1"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="2"
+                              control={<Radio size="small" />}
+                              label="2"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="3"
+                              control={<Radio size="small" />}
+                              label="3"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="4"
+                              control={<Radio size="small" />}
+                              label="4"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="5"
+                              control={<Radio size="small" />}
+                              label="5"
+                              labelPlacement="bottom"
+                            />
+                          </RadioGroup>
                         </FormControl>
                       </Box>
                     </TableCell>
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', 
-                          textAlign: 'center', // Center align text inside TableCell
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
+                          textAlign: "center", // Center align text inside TableCell
                         }}
                       >
                         Kerja sama tim
@@ -1128,10 +1530,10 @@ const FormTracerSTudy = () => {
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', 
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
                         }}
                       >
                         {/* Your component here */}
@@ -1143,53 +1545,103 @@ const FormTracerSTudy = () => {
                             //value={questionnaireData.f1761}
                             //onChange={handleQuestionnaireChange}
                           >
-                            <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
-                            <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
-                            <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
-                            <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
-                            <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                            <FormControlLabel
+                              value="1"
+                              control={<Radio size="small" />}
+                              label="1"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="2"
+                              control={<Radio size="small" />}
+                              label="2"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="3"
+                              control={<Radio size="small" />}
+                              label="3"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="4"
+                              control={<Radio size="small" />}
+                              label="4"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="5"
+                              control={<Radio size="small" />}
+                              label="5"
+                              labelPlacement="bottom"
+                            />
                           </RadioGroup>
                         </FormControl>
                       </Box>
-                  </TableCell>
+                    </TableCell>
                   </TableRow>
                   {/* 7th row */}
                   <TableRow>
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', // Ensure the Box takes full height of the TableCell
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%", // Ensure the Box takes full height of the TableCell
                         }}
                       >
                         {/* Your component here */}
                         <FormControl>
-                            <RadioGroup
-                                row
-                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                name="row-radio-buttons-group"
-                                //value={questionnaireData.f1761}
-                                //onChange={handleQuestionnaireChange}
-                            >
-                                <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
-                                <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
-                                <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
-                                <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
-                                <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
-                            </RadioGroup>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            //value={questionnaireData.f1761}
+                            //onChange={handleQuestionnaireChange}
+                          >
+                            <FormControlLabel
+                              value="1"
+                              control={<Radio size="small" />}
+                              label="1"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="2"
+                              control={<Radio size="small" />}
+                              label="2"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="3"
+                              control={<Radio size="small" />}
+                              label="3"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="4"
+                              control={<Radio size="small" />}
+                              label="4"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="5"
+                              control={<Radio size="small" />}
+                              label="5"
+                              labelPlacement="bottom"
+                            />
+                          </RadioGroup>
                         </FormControl>
                       </Box>
                     </TableCell>
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', 
-                          textAlign: 'center', // Center align text inside TableCell
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
+                          textAlign: "center", // Center align text inside TableCell
                         }}
                       >
                         Pengembangan
@@ -1198,10 +1650,10 @@ const FormTracerSTudy = () => {
                     <TableCell>
                       <Box
                         sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: '100%', 
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "100%",
                         }}
                       >
                         {/* Your component here */}
@@ -1213,15 +1665,40 @@ const FormTracerSTudy = () => {
                             //value={questionnaireData.f1761}
                             //onChange={handleQuestionnaireChange}
                           >
-                            <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
-                            <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
-                            <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
-                            <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
-                            <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                            <FormControlLabel
+                              value="1"
+                              control={<Radio size="small" />}
+                              label="1"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="2"
+                              control={<Radio size="small" />}
+                              label="2"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="3"
+                              control={<Radio size="small" />}
+                              label="3"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="4"
+                              control={<Radio size="small" />}
+                              label="4"
+                              labelPlacement="bottom"
+                            />
+                            <FormControlLabel
+                              value="5"
+                              control={<Radio size="small" />}
+                              label="5"
+                              labelPlacement="bottom"
+                            />
                           </RadioGroup>
                         </FormControl>
                       </Box>
-                  </TableCell>
+                    </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -1231,43 +1708,79 @@ const FormTracerSTudy = () => {
           <Grid item xs={12}>
             <FormControl component="fieldset">
               {/* <FormLabel component="legend">Answer the first question</FormLabel> */}
-              <Typography variant="subtitle1" style={{marginBottom:"14px"}} >
-                13. Menurut anda seberapa besar penekanan pada metode pembelajaran dibawah ini
-                dilaksanakan di program studi anda?
+              <Typography variant="subtitle1" style={{ marginBottom: "14px" }}>
+                13. Menurut anda seberapa besar penekanan pada metode
+                pembelajaran dibawah ini dilaksanakan di program studi anda?
               </Typography>
-              <Grid container xs={12} spacing={2}> 
+              <Grid container xs={12} spacing={2}>
                 <Grid item xs={6} md={6}>
-                <Typography variant="subtitle1">
-                  Perkuliahan
-                </Typography>
+                  <Typography variant="subtitle1">Perkuliahan</Typography>
                   <RadioGroup
                     // aria-label="answer"
                     name="f21"
                     value={questionnaireData.f21}
                     onChange={handleQuestionnaireChange}
                   >
-                    <FormControlLabel value="1" control={<Radio />} label="Sangat Besar" />
-                    <FormControlLabel value="2" control={<Radio />} label="Besar" />
-                    <FormControlLabel value="3" control={<Radio />} label="Cukup Besar" />
-                    <FormControlLabel value="4" control={<Radio />} label="Kurang Besar" />
-                    <FormControlLabel value="5" control={<Radio />} label="Tidak Sama Sekali" />
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio />}
+                      label="Sangat Besar"
+                    />
+                    <FormControlLabel
+                      value="2"
+                      control={<Radio />}
+                      label="Besar"
+                    />
+                    <FormControlLabel
+                      value="3"
+                      control={<Radio />}
+                      label="Cukup Besar"
+                    />
+                    <FormControlLabel
+                      value="4"
+                      control={<Radio />}
+                      label="Kurang Besar"
+                    />
+                    <FormControlLabel
+                      value="5"
+                      control={<Radio />}
+                      label="Tidak Sama Sekali"
+                    />
                   </RadioGroup>
                 </Grid>
                 <Grid item xs={6} md={6}>
-                  <Typography variant="subtitle1">
-                    Demonstrasi
-                  </Typography>
+                  <Typography variant="subtitle1">Demonstrasi</Typography>
                   <RadioGroup
                     // aria-label="answer"
                     name="f22"
                     value={questionnaireData.f22}
                     onChange={handleQuestionnaireChange}
                   >
-                    <FormControlLabel value="1" control={<Radio />} label="Sangat Besar" />
-                    <FormControlLabel value="2" control={<Radio />} label="Besar" />
-                    <FormControlLabel value="3" control={<Radio />} label="Cukup Besar" />
-                    <FormControlLabel value="4" control={<Radio />} label="Kurang Besar" />
-                    <FormControlLabel value="5" control={<Radio />} label="Tidak Sama Sekali" />
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio />}
+                      label="Sangat Besar"
+                    />
+                    <FormControlLabel
+                      value="2"
+                      control={<Radio />}
+                      label="Besar"
+                    />
+                    <FormControlLabel
+                      value="3"
+                      control={<Radio />}
+                      label="Cukup Besar"
+                    />
+                    <FormControlLabel
+                      value="4"
+                      control={<Radio />}
+                      label="Kurang Besar"
+                    />
+                    <FormControlLabel
+                      value="5"
+                      control={<Radio />}
+                      label="Tidak Sama Sekali"
+                    />
                   </RadioGroup>
                 </Grid>
                 <Grid item xs={6} md={6}>
@@ -1280,79 +1793,171 @@ const FormTracerSTudy = () => {
                     value={questionnaireData.f23}
                     onChange={handleQuestionnaireChange}
                   >
-                    <FormControlLabel value="1" control={<Radio />} label="Sangat Besar" />
-                    <FormControlLabel value="2" control={<Radio />} label="Besar" />
-                    <FormControlLabel value="3" control={<Radio />} label="Cukup Besar" />
-                    <FormControlLabel value="4" control={<Radio />} label="Kurang Besar" />
-                    <FormControlLabel value="5" control={<Radio />} label="Tidak Sama Sekali" />
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio />}
+                      label="Sangat Besar"
+                    />
+                    <FormControlLabel
+                      value="2"
+                      control={<Radio />}
+                      label="Besar"
+                    />
+                    <FormControlLabel
+                      value="3"
+                      control={<Radio />}
+                      label="Cukup Besar"
+                    />
+                    <FormControlLabel
+                      value="4"
+                      control={<Radio />}
+                      label="Kurang Besar"
+                    />
+                    <FormControlLabel
+                      value="5"
+                      control={<Radio />}
+                      label="Tidak Sama Sekali"
+                    />
                   </RadioGroup>
                 </Grid>
                 <Grid item xs={6} md={6}>
-                  <Typography variant="subtitle1">
-                    Magang
-                  </Typography>
+                  <Typography variant="subtitle1">Magang</Typography>
                   <RadioGroup
                     // aria-label="answer"
                     name="f24"
                     value={questionnaireData.f24}
                     onChange={handleQuestionnaireChange}
                   >
-                    <FormControlLabel value="1" control={<Radio />} label="Sangat Besar" />
-                    <FormControlLabel value="2" control={<Radio />} label="Besar" />
-                    <FormControlLabel value="3" control={<Radio />} label="Cukup Besar" />
-                    <FormControlLabel value="4" control={<Radio />} label="Kurang Besar" />
-                    <FormControlLabel value="5" control={<Radio />} label="Tidak Sama Sekali" />
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio />}
+                      label="Sangat Besar"
+                    />
+                    <FormControlLabel
+                      value="2"
+                      control={<Radio />}
+                      label="Besar"
+                    />
+                    <FormControlLabel
+                      value="3"
+                      control={<Radio />}
+                      label="Cukup Besar"
+                    />
+                    <FormControlLabel
+                      value="4"
+                      control={<Radio />}
+                      label="Kurang Besar"
+                    />
+                    <FormControlLabel
+                      value="5"
+                      control={<Radio />}
+                      label="Tidak Sama Sekali"
+                    />
                   </RadioGroup>
                 </Grid>
                 <Grid item xs={6} md={6}>
-                  <Typography variant="subtitle1">
-                    Praktikum
-                  </Typography>
+                  <Typography variant="subtitle1">Praktikum</Typography>
                   <RadioGroup
                     // aria-label="answer"
                     name="f25"
                     value={questionnaireData.f25}
                     onChange={handleQuestionnaireChange}
                   >
-                    <FormControlLabel value="1" control={<Radio />} label="Sangat Besar" />
-                    <FormControlLabel value="2" control={<Radio />} label="Besar" />
-                    <FormControlLabel value="3" control={<Radio />} label="Cukup Besar" />
-                    <FormControlLabel value="4" control={<Radio />} label="Kurang Besar" />
-                    <FormControlLabel value="5" control={<Radio />} label="Tidak Sama Sekali" />
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio />}
+                      label="Sangat Besar"
+                    />
+                    <FormControlLabel
+                      value="2"
+                      control={<Radio />}
+                      label="Besar"
+                    />
+                    <FormControlLabel
+                      value="3"
+                      control={<Radio />}
+                      label="Cukup Besar"
+                    />
+                    <FormControlLabel
+                      value="4"
+                      control={<Radio />}
+                      label="Kurang Besar"
+                    />
+                    <FormControlLabel
+                      value="5"
+                      control={<Radio />}
+                      label="Tidak Sama Sekali"
+                    />
                   </RadioGroup>
                 </Grid>
                 <Grid item xs={6} md={6}>
-                  <Typography variant="subtitle1">
-                    Kerja Lapangan
-                  </Typography>
+                  <Typography variant="subtitle1">Kerja Lapangan</Typography>
                   <RadioGroup
                     // aria-label="answer"
                     name="f26"
                     value={questionnaireData.f26}
                     onChange={handleQuestionnaireChange}
                   >
-                    <FormControlLabel value="1" control={<Radio />} label="Sangat Besar" />
-                    <FormControlLabel value="2" control={<Radio />} label="Besar" />
-                    <FormControlLabel value="3" control={<Radio />} label="Cukup Besar" />
-                    <FormControlLabel value="4" control={<Radio />} label="Kurang Besar" />
-                    <FormControlLabel value="5" control={<Radio />} label="Tidak Sama Sekali" />
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio />}
+                      label="Sangat Besar"
+                    />
+                    <FormControlLabel
+                      value="2"
+                      control={<Radio />}
+                      label="Besar"
+                    />
+                    <FormControlLabel
+                      value="3"
+                      control={<Radio />}
+                      label="Cukup Besar"
+                    />
+                    <FormControlLabel
+                      value="4"
+                      control={<Radio />}
+                      label="Kurang Besar"
+                    />
+                    <FormControlLabel
+                      value="5"
+                      control={<Radio />}
+                      label="Tidak Sama Sekali"
+                    />
                   </RadioGroup>
                 </Grid>
                 <Grid item xs={6} md={6}>
-                  <Typography variant="subtitle1">
-                   Diskusi
-                  </Typography>
+                  <Typography variant="subtitle1">Diskusi</Typography>
                   <RadioGroup
                     // aria-label="answer"
                     name="f27"
                     value={questionnaireData.f27}
                     onChange={handleQuestionnaireChange}
                   >
-                    <FormControlLabel value="1" control={<Radio />} label="Sangat Besar" />
-                    <FormControlLabel value="2" control={<Radio />} label="Besar" />
-                    <FormControlLabel value="3" control={<Radio />} label="Cukup Besar" />
-                    <FormControlLabel value="4" control={<Radio />} label="Kurang Besar" />
-                    <FormControlLabel value="5" control={<Radio />} label="Tidak Sama Sekali" />
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio />}
+                      label="Sangat Besar"
+                    />
+                    <FormControlLabel
+                      value="2"
+                      control={<Radio />}
+                      label="Besar"
+                    />
+                    <FormControlLabel
+                      value="3"
+                      control={<Radio />}
+                      label="Cukup Besar"
+                    />
+                    <FormControlLabel
+                      value="4"
+                      control={<Radio />}
+                      label="Kurang Besar"
+                    />
+                    <FormControlLabel
+                      value="5"
+                      control={<Radio />}
+                      label="Tidak Sama Sekali"
+                    />
                   </RadioGroup>
                 </Grid>
               </Grid>
@@ -1363,7 +1968,8 @@ const FormTracerSTudy = () => {
             <FormControl component="fieldset">
               {/* <FormLabel component="legend">Answer the first question</FormLabel> */}
               <Typography variant="subtitle1">
-                14. Kapan anda mulai mencari pekerjaan? Mohon pekerjaan sambilan tidak dimasukkan
+                14. Kapan anda mulai mencari pekerjaan? Mohon pekerjaan sambilan
+                tidak dimasukkan
               </Typography>
               <RadioGroup
                 // aria-label="answer"
@@ -1375,7 +1981,7 @@ const FormTracerSTudy = () => {
                   value="1"
                   control={<Radio />}
                   label={
-                    <div style={{display: 'flex', alignItems: 'center'}}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
                       <span>Kira-kira</span>
                       <TextField
                         placeholder="Custom Textfield"
@@ -1385,18 +1991,18 @@ const FormTracerSTudy = () => {
                         name="f302"
                         value={questionnaireData.f302}
                         onChange={handleQuestionnaireChange}
-                        style={{ marginLeft: '10px', marginRight: '10px' }} // Adjust spacing between label and TextField
+                        style={{ marginLeft: "10px", marginRight: "10px" }} // Adjust spacing between label and TextField
                       />
                       <span>bulan sebelum lulus</span>
                     </div>
                   }
-                  style={{ marginBottom: '10px' }} // Adjust spacing between radio options
+                  style={{ marginBottom: "10px" }} // Adjust spacing between radio options
                 />
                 <FormControlLabel
                   value="2"
                   control={<Radio />}
                   label={
-                    <div style={{display: 'flex', alignItems: 'center'}}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
                       <span>Kira-kira</span>
                       <TextField
                         placeholder="Custom Textfield"
@@ -1406,120 +2012,184 @@ const FormTracerSTudy = () => {
                         name="f303"
                         value={questionnaireData.f303}
                         onChange={handleQuestionnaireChange}
-                        style={{ marginLeft: '10px', marginRight: '10px' }} // Adjust spacing between label and TextField
+                        style={{ marginLeft: "10px", marginRight: "10px" }} // Adjust spacing between label and TextField
                       />
                       <span>bulan sesudah lulus</span>
                     </div>
                   }
-                  style={{ marginBottom: '10px' }} // Adjust spacing between radio options
+                  style={{ marginBottom: "10px" }} // Adjust spacing between radio options
                 />
-                <FormControlLabel value="3" control={<Radio />} label="Saya tidak mencari kerja" />
+                <FormControlLabel
+                  value="3"
+                  control={<Radio />}
+                  label="Saya tidak mencari kerja"
+                />
               </RadioGroup>
             </FormControl>
           </Grid>
 
           <Grid item>
             <FormControl component="fieldset" variant="standard">
-              <Typography variant="subtitle1" style={{marginBottom:"14px"}} >
-                15. Bagaimana anda mencari pekerjaan tersebut? 
-                Jawaban bisa lebih dari satu.
+              <Typography variant="subtitle1" style={{ marginBottom: "14px" }}>
+                15. Bagaimana anda mencari pekerjaan tersebut? Jawaban bisa
+                lebih dari satu.
               </Typography>
               <FormGroup>
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f401} onChange={handleCheckbox} name="f401"/>
+                    <Checkbox
+                      checked={questionnaireData.f401}
+                      onChange={handleCheckbox}
+                      name="f401"
+                    />
                   }
                   label="Melalui iklan di koran/majalah, brosur"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f402} onChange={handleCheckbox} name="f402"/>
+                    <Checkbox
+                      checked={questionnaireData.f402}
+                      onChange={handleCheckbox}
+                      name="f402"
+                    />
                   }
                   label="Melamar ke perusahaan tanpa mengetahui lowongan yang ada"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f403} onChange={handleCheckbox} name="f403"/>
+                    <Checkbox
+                      checked={questionnaireData.f403}
+                      onChange={handleCheckbox}
+                      name="f403"
+                    />
                   }
                   label="Pergi ke bursa/pameran kerja"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f404} onChange={handleCheckbox} name="f404"/>
+                    <Checkbox
+                      checked={questionnaireData.f404}
+                      onChange={handleCheckbox}
+                      name="f404"
+                    />
                   }
                   label="Mencari lewat internet/iklan online/milis"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f405} onChange={handleCheckbox} name="f405"/>
+                    <Checkbox
+                      checked={questionnaireData.f405}
+                      onChange={handleCheckbox}
+                      name="f405"
+                    />
                   }
                   label="Dihubungi oleh perusahaan"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f406} onChange={handleCheckbox} name="f406"/>
+                    <Checkbox
+                      checked={questionnaireData.f406}
+                      onChange={handleCheckbox}
+                      name="f406"
+                    />
                   }
                   label="Menghubungi Kemenakertrans"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f407} onChange={handleCheckbox} name="f407"/>
+                    <Checkbox
+                      checked={questionnaireData.f407}
+                      onChange={handleCheckbox}
+                      name="f407"
+                    />
                   }
                   label="Menghubungi agen tenaga kerja komersial/swasta"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f408} onChange={handleCheckbox} name="f408"/>
+                    <Checkbox
+                      checked={questionnaireData.f408}
+                      onChange={handleCheckbox}
+                      name="f408"
+                    />
                   }
                   label="Memeroleh informasi dari pusat/kantor pengembangan karir fakultas/universitas"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f409} onChange={handleCheckbox} name="f409"/>
+                    <Checkbox
+                      checked={questionnaireData.f409}
+                      onChange={handleCheckbox}
+                      name="f409"
+                    />
                   }
                   label="Menghubungi kantor kemahasiswaan/hubungan alumni"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f410} onChange={handleCheckbox} name="f410"/>
+                    <Checkbox
+                      checked={questionnaireData.f410}
+                      onChange={handleCheckbox}
+                      name="f410"
+                    />
                   }
                   label="Membangun jejaring (network) sejak masih kuliah"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f411} onChange={handleCheckbox} name="f411"/>
+                    <Checkbox
+                      checked={questionnaireData.f411}
+                      onChange={handleCheckbox}
+                      name="f411"
+                    />
                   }
                   label="Melalui relasi (misalnya dosen, orang tua, saudara, teman, dll.)"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f412} onChange={handleCheckbox} name="f412"/>
+                    <Checkbox
+                      checked={questionnaireData.f412}
+                      onChange={handleCheckbox}
+                      name="f412"
+                    />
                   }
                   label="Membangun bisnis sendiri"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f413} onChange={handleCheckbox} name="f413"/>
+                    <Checkbox
+                      checked={questionnaireData.f413}
+                      onChange={handleCheckbox}
+                      name="f413"
+                    />
                   }
                   label="Melalui penempatan kerja atau magang"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f414} onChange={handleCheckbox} name="f414"/>
+                    <Checkbox
+                      checked={questionnaireData.f414}
+                      onChange={handleCheckbox}
+                      name="f414"
+                    />
                   }
                   label="Bekerja di tempat yang sama dengan tempat kerja semasa kuliah"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f415} onChange={handleCheckbox} name="f415"/>
+                    <Checkbox
+                      checked={questionnaireData.f415}
+                      onChange={handleCheckbox}
+                      name="f415"
+                    />
                   }
                   label="Lainnya"
                 />
 
-                <TextField 
-                  fullWidth 
-                  id="outlined-basic" 
-                  label="lainnya" 
+                <TextField
+                  fullWidth
+                  id="outlined-basic"
+                  label="lainnya"
                   variant="outlined"
                   name="f4016"
                   value={questionnaireData.f4016}
@@ -1551,8 +2221,10 @@ const FormTracerSTudy = () => {
           </Grid>
 
           <Grid item xs={12}>
-            <Typography variant="subtitle1" style={{marginBottom:"14px"}}>
-              16. Berapa perusahaan/instansi/institusi yang sudah anda lamar (lewat surat atau e-mail) sebelum anda memeroleh pekerjaan pertama? 
+            <Typography variant="subtitle1" style={{ marginBottom: "14px" }}>
+              16. Berapa perusahaan/instansi/institusi yang sudah anda lamar
+              (lewat surat atau e-mail) sebelum anda memeroleh pekerjaan
+              pertama?
             </Typography>
             <Box display="flex" alignItems="center">
               <TextField
@@ -1570,8 +2242,9 @@ const FormTracerSTudy = () => {
           </Grid>
 
           <Grid item xs={12}>
-            <Typography variant="subtitle1" style={{marginBottom:"14px"}}>
-              17. Berapa banyak perusahaan/instansi/institusi yang merespons lamaran anda?
+            <Typography variant="subtitle1" style={{ marginBottom: "14px" }}>
+              17. Berapa banyak perusahaan/instansi/institusi yang merespons
+              lamaran anda?
             </Typography>
             <Box display="flex" alignItems="center">
               <TextField
@@ -1589,8 +2262,9 @@ const FormTracerSTudy = () => {
           </Grid>
 
           <Grid item xs={12}>
-            <Typography variant="subtitle1" style={{marginBottom:"14px"}}>
-              18. Berapa banyak perusahaan/instansi/institusi yang mengundang anda untuk wawancara?
+            <Typography variant="subtitle1" style={{ marginBottom: "14px" }}>
+              18. Berapa banyak perusahaan/instansi/institusi yang mengundang
+              anda untuk wawancara?
             </Typography>
             <Box display="flex" alignItems="center">
               <TextField
@@ -1606,131 +2280,202 @@ const FormTracerSTudy = () => {
               </InputAdornment>
             </Box>
           </Grid>
-          
-           {/* FIX: CONNECT TEXTFIELD TO RADIO OPTION */}
-           <Grid item xs={12} spacing={4}>
-              <FormControl component="fieldset">
-                <Typography variant="subtitle1">
-                  19. Apakah anda aktif mencari pekerjaan dalam 4 minggu terakhir? Pilihlah satu jawaban.
-                </Typography>
-                <RadioGroup
-                  name="f1001"
-                  value={questionnaireData.f1001}
+
+          {/* FIX: CONNECT TEXTFIELD TO RADIO OPTION */}
+          <Grid item xs={12} spacing={4}>
+            <FormControl component="fieldset">
+              <Typography variant="subtitle1">
+                19. Apakah anda aktif mencari pekerjaan dalam 4 minggu terakhir?
+                Pilihlah satu jawaban.
+              </Typography>
+              <RadioGroup
+                name="f1001"
+                value={questionnaireData.f1001}
+                onChange={handleQuestionnaireChange}
+              >
+                <FormControlLabel value="1" control={<Radio />} label="Tidak" />
+                <FormControlLabel
+                  value="2"
+                  control={<Radio />}
+                  label="Tidak, tapi saya sedang menunggu hasil lamaran kerja"
+                />
+                <FormControlLabel
+                  value="3"
+                  control={<Radio />}
+                  label="Ya, saya akan mulai bekerja dalam 2 minggu ke depan"
+                />
+                <FormControlLabel
+                  value="4"
+                  control={<Radio />}
+                  label="Ya, tapi saya belum pasti akan bekerja dalam 2 minggu ke depan"
+                />
+                <FormControlLabel
+                  value="5"
+                  control={<Radio />}
+                  label="lainnya"
+                />
+              </RadioGroup>
+              <Box xs={{ width: "50ch" }}>
+                <TextField
+                  id="outlined-basic"
+                  label="lainnya..."
+                  variant="outlined"
+                  name="f1002"
+                  value={questionnaireData.f1002}
                   onChange={handleQuestionnaireChange}
-                >
-                  <FormControlLabel value="1" control={<Radio />} label="Tidak" />
-                  <FormControlLabel value="2" control={<Radio />} label="Tidak, tapi saya sedang menunggu hasil lamaran kerja" />
-                  <FormControlLabel value="3" control={<Radio />} label="Ya, saya akan mulai bekerja dalam 2 minggu ke depan" />
-                  <FormControlLabel value="4" control={<Radio />} label="Ya, tapi saya belum pasti akan bekerja dalam 2 minggu ke depan" />
-                  <FormControlLabel value="5" control={<Radio />} label="lainnya" />
-                </RadioGroup>
-                <Box xs={{width: "50ch"}}  >
-                  <TextField
-                    id="outlined-basic" 
-                    label="lainnya..." 
-                    variant="outlined"
-                    name="f1002"
-                    value={questionnaireData.f1002}
-                    onChange={handleQuestionnaireChange}
-                  />
-                </Box>
-              </FormControl>
+                />
+              </Box>
+            </FormControl>
           </Grid>
 
           <Grid item xs={12}>
             <FormControl component="fieldset" variant="standard">
-              <Typography variant="subtitle1" style={{marginBottom:"14px"}} >
-                20. Jika menurut anda pekerjaan anda saat ini tidak sesuai dengan : pendidikan anda, mengapa anda mengambilnya? Jawaban bisa lebih dari satu.
+              <Typography variant="subtitle1" style={{ marginBottom: "14px" }}>
+                20. Jika menurut anda pekerjaan anda saat ini tidak sesuai
+                dengan : pendidikan anda, mengapa anda mengambilnya? Jawaban
+                bisa lebih dari satu.
               </Typography>
               <FormGroup>
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1601} onChange={handleCheckbox} name="f1601"/>
+                    <Checkbox
+                      checked={questionnaireData.f1601}
+                      onChange={handleCheckbox}
+                      name="f1601"
+                    />
                   }
                   label="Pertanyaan tidak sesuai; pekerjaan saya sekarang sudah sesuai dengan pendidikan saya."
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1602} onChange={handleCheckbox} name="f1602"/>
+                    <Checkbox
+                      checked={questionnaireData.f1602}
+                      onChange={handleCheckbox}
+                      name="f1602"
+                    />
                   }
                   label="Saya belum mendapatkan pekerjaan yang lebih sesuai."
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1603} onChange={handleCheckbox} name="f1603"/>
+                    <Checkbox
+                      checked={questionnaireData.f1603}
+                      onChange={handleCheckbox}
+                      name="f1603"
+                    />
                   }
                   label="Di pekerjaan ini saya memeroleh prospek karir yang baik. "
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1604} onChange={handleCheckbox} name="f1604"/>
+                    <Checkbox
+                      checked={questionnaireData.f1604}
+                      onChange={handleCheckbox}
+                      name="f1604"
+                    />
                   }
                   label="Saya lebih suka bekerja di area pekerjaan yang tidak ada hubungannya dengan pendidikan saya."
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1605} onChange={handleCheckbox} name="f1605"/>
+                    <Checkbox
+                      checked={questionnaireData.f1605}
+                      onChange={handleCheckbox}
+                      name="f1605"
+                    />
                   }
                   label="Saya dipromosikan ke posisi yang kurang berhubungan dengan pendidikan saya dibanding posisi sebelumnya."
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1606} onChange={handleCheckbox} name="f1606"/>
+                    <Checkbox
+                      checked={questionnaireData.f1606}
+                      onChange={handleCheckbox}
+                      name="f1606"
+                    />
                   }
                   label="Saya dapat memeroleh pendapatan yang lebih tinggi di pekerjaan ini. "
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1607} onChange={handleCheckbox} name="f1607"/>
+                    <Checkbox
+                      checked={questionnaireData.f1607}
+                      onChange={handleCheckbox}
+                      name="f1607"
+                    />
                   }
                   label="Pekerjaan saya saat ini lebih aman/terjamin/secure"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1608} onChange={handleCheckbox} name="f1608"/>
+                    <Checkbox
+                      checked={questionnaireData.f1608}
+                      onChange={handleCheckbox}
+                      name="f1608"
+                    />
                   }
                   label="Pekerjaan saya saat ini lebih menarik"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1609} onChange={handleCheckbox} name="f1609"/>
+                    <Checkbox
+                      checked={questionnaireData.f1609}
+                      onChange={handleCheckbox}
+                      name="f1609"
+                    />
                   }
                   label="Pekerjaan saya saat ini lebih memungkinkan saya mengambil pekerjaan tambahan/jadwal yang fleksibel, dll."
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1610} onChange={handleCheckbox} name="f1610"/>
+                    <Checkbox
+                      checked={questionnaireData.f1610}
+                      onChange={handleCheckbox}
+                      name="f1610"
+                    />
                   }
                   label="Pekerjaan saya saat ini lokasinya lebih dekat dari rumah saya."
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1611} onChange={handleCheckbox} name="f1611"/>
+                    <Checkbox
+                      checked={questionnaireData.f1611}
+                      onChange={handleCheckbox}
+                      name="f1611"
+                    />
                   }
                   label="Pekerjaan saya saat ini dapat lebih menjamin kebutuhan keluarga saya."
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1612} onChange={handleCheckbox} name="f1612"/>
+                    <Checkbox
+                      checked={questionnaireData.f1612}
+                      onChange={handleCheckbox}
+                      name="f1612"
+                    />
                   }
                   label="Pada awal meniti karir ini, saya harus menerima pekerjaan yang tidak berhubungan dengan pendidikan saya"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1613} onChange={handleCheckbox} name="f1613"/>
+                    <Checkbox
+                      checked={questionnaireData.f1613}
+                      onChange={handleCheckbox}
+                      name="f1613"
+                    />
                   }
                   label="lainnya"
                 />
-                <Grid item md={6} style={{marginTop:"10px"}}>
-                <TextField 
-                  fullWidth 
-                  id="outlined-basic" 
-                  label="lainnya" 
-                  variant="outlined"
-                  name="f1614"
-                  value={questionnaireData.f1614}
-                  onChange={handleQuestionnaireChange}
-                />
+                <Grid item md={6} style={{ marginTop: "10px" }}>
+                  <TextField
+                    fullWidth
+                    id="outlined-basic"
+                    label="lainnya"
+                    variant="outlined"
+                    name="f1614"
+                    value={questionnaireData.f1614}
+                    onChange={handleQuestionnaireChange}
+                  />
                 </Grid>
                 {/* FIX: check the fill in checkbox */}
                 {/* <FormControlLabel
@@ -1756,13 +2501,16 @@ const FormTracerSTudy = () => {
             </FormControl>
           </Grid>
 
-          
           {/* Questionnaire above!!! */}
         </Grid>
 
         {/* Submit and Cancel Buttons */}
         <Box mt={8} display="flex" justifyContent="flex-end">
-          <Button variant="outlined" color="primary" style={{ marginRight: "10px" }}>
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ marginRight: "10px" }}
+          >
             Batal
           </Button>
           <Button type="submit" variant="contained" color="primary">
@@ -1775,5 +2523,3 @@ const FormTracerSTudy = () => {
 };
 
 export default FormTracerSTudy;
-
-
