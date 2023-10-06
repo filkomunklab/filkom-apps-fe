@@ -3,7 +3,7 @@ import StudentInformation from "../pages/BimbinganAkademik/DosenPembimbing/Stude
 import StudentProfile from "../pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentProfile";
 import StudentGrade from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentGradeDashboard/StudentGrade";
 import StudentCertificate from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentCertificate";
-import History from "app/pages/BimbinganAkademik/DesenPembimbing/History";
+import History from "../pages/BimbinganAkademik/DosenPembimbing/History";
 import CertificateDetail from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentCertificate/CertificateDetail";
 
 
