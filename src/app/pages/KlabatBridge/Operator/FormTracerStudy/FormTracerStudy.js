@@ -17,7 +17,11 @@ import {
   Form,
   Checkbox, 
   FormGroup,
-  InputAdornment
+  InputAdornment, 
+  Divider,
+  List,
+  ListItem, 
+  ListItemText,
 } from "@mui/material";
 import Div from "@jumbo/shared/Div";
 import JumboDemoCard from "@jumbo/components/JumboDemoCard";
@@ -61,6 +65,7 @@ const FormTracerSTudy = () => {
     f5a1: "",
     f5a2: "",
     f1101: "",
+    f1102: "", //delete later
     f5b: "",
     f5c: "",
     f5d: "",
@@ -153,6 +158,13 @@ const FormTracerSTudy = () => {
       ...questionnaireData,
       [event.target.name]: event.target.value,
 
+    // const { name, value } = event.target;
+    // setQuestionnaireData({
+    //   ...questionnaireData,
+    //   [name]: value,
+    // });
+
+
       //for checkbox
       //[event.target.name]: event.target.checked,
 
@@ -174,6 +186,12 @@ const FormTracerSTudy = () => {
     });
   };
 
+  const handleCheckbox = (event) => {
+    setQuestionnaireData({
+      ...questionnaireData,
+      [event.target.name]: event.target.checked,
+    })
+  }
   // const handleSubmit = (event) => {
   //   event.preventDefault();
   //   // Handle form submission logic here
@@ -185,36 +203,10 @@ const FormTracerSTudy = () => {
 
   return (
     <Div 
-      style={{backgroundColor: "white"}}
-      // title={"Date Pickers"}
-      // demoCode={code}
-      //wrapperSx={{backgroundColor: 'background.color', pt: 0}}
-      // wrapperSx={{backgroundColor: 'background.color', pt: 0}}
     >
-       {/* <TextField
-            id="date"
-            label="Birthday"
-            type="date"
-            defaultValue="2017-05-24"
-            sx={{width: 220}}
-            InputLabelProps={{
-                shrink: true,
-            }}
-        /> */}
-      {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Stack spacing={3}>
-            <DesktopDatePicker
-                label="Date desktop"
-                inputFormat="MM/dd/yyyy"
-                value={value}
-                onChange={(event, newValue) => setValue(newValue)}
-                renderInput={(params) => <TextField {...params} />}
-            />
-        </Stack>
-      </LocalizationProvider> */}
-      <Typography variant="h1" style={{marginTop:"3em", marginLeft:'3em'}}>Formulir Tracer Study</Typography>
-      <Box p={12} >
+      <Box p={8} >
         {/* Identity Details */}
+        <Typography variant="h1" style={{marginBottom:"2em", fontWeight: 500}}>Formulir Tracer Study</Typography>
         <Typography variant="h2">Identitas Diri</Typography>
         <Grid container spacing={4}>
           <Grid item sm={12} md={6}>
@@ -222,6 +214,7 @@ const FormTracerSTudy = () => {
             <TextField
               fullWidth
               variant="outlined"
+              type="number"
               name="nim"
               placeholder="12345678910"
               value={identityData.nim}
@@ -244,6 +237,7 @@ const FormTracerSTudy = () => {
             <TextField
               fullWidth
               variant="outlined"
+              type="number"
               name="tahunLulus"
               placeholder="2020"
               value={identityData.tahunLulus}
@@ -277,6 +271,7 @@ const FormTracerSTudy = () => {
             <TextField
               fullWidth
               variant="outlined"
+              type="number"
               name="noTelp"
               placeholder="+6281712394395"
               value={identityData.noTelp}
@@ -288,6 +283,7 @@ const FormTracerSTudy = () => {
             <TextField
               fullWidth
               variant="outlined"
+              type="email"
               name="email"
               placeholder="stenlyadam@gmail.com"
               value={identityData.email}
@@ -299,6 +295,7 @@ const FormTracerSTudy = () => {
             <TextField
               fullWidth
               variant="outlined"
+              type="number"
               name="nik"
               placeholder="12345678910"
               value={identityData.nik}
@@ -310,6 +307,7 @@ const FormTracerSTudy = () => {
             <TextField
               fullWidth
               variant="outlined"
+              type="number"
               name="npwp"
               placeholder="12345678910"
               value={identityData.npwp}
@@ -318,7 +316,6 @@ const FormTracerSTudy = () => {
           </Grid>
         </Grid>
 
-        
         {/* Questionnaire */}
         <Typography variant="h2" style={{ marginBottom: "16px", marginTop: "75px" }}>
           Questionnaire
@@ -326,12 +323,10 @@ const FormTracerSTudy = () => {
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <FormControl component="fieldset">
-              {/* <FormLabel component="legend">Answer the first question</FormLabel> */}
               <Typography variant="subtitle1">
                 1. Jelaskan status Anda saat ini?
               </Typography>
               <RadioGroup
-                // aria-label="answer"
                 name="f8"
                 value={questionnaireData.f8}
                 onChange={handleQuestionnaireChange}
@@ -393,7 +388,7 @@ const FormTracerSTudy = () => {
             <Grid container spacing={4} >
               <Grid item xs={12} md={6} >
                 <Typography variant="subtitle3">
-                  Province
+                  Provinsi
                 </Typography>
                 <Select
                   fullWidth
@@ -412,7 +407,7 @@ const FormTracerSTudy = () => {
               </Grid>
               <Grid item xs={12} md={6}>
                 <Typography variant="subtitle3">
-                  City
+                  Kabupaten/Kota
                 </Typography>
                 <Select
                   fullWidth
@@ -455,15 +450,26 @@ const FormTracerSTudy = () => {
               </FormControl>
             </Grid>
             <Grid item md={6}>
-              <TextField 
+              {/* <TextField 
                 fullWidth 
                 id="outlined-basic" 
                 placeholder="lainnya" 
                 variant="outlined"
-              />
+              /> */}
+
               {/* fix: hubungin ke radio button */}
               {/* {questionnaireData.f1101 === '5' && (
               )} */} 
+              {questionnaireData.f1101 === '5' && (
+                <TextField
+                  fullwidth
+                  label="Text Field"
+                  variant="outlined"
+                  name="f1102"
+                  value={questionnaireData.f1102}
+                  onChange={handleQuestionnaireChange}
+                />
+              )}
             </Grid>
           </Grid>
 
@@ -475,6 +481,7 @@ const FormTracerSTudy = () => {
               <TextField
                 fullWidth
                 variant="outlined"
+                placeholder="PT Tekno Klabat"
                 name="f5b"
                 value={questionnaireData.f5b}
                 onChange={handleQuestionnaireChange}
@@ -488,22 +495,23 @@ const FormTracerSTudy = () => {
             </Typography>
             <Grid container spacing={4}>
               <Grid item xs={12} md={6}>
-                {/* fix: belum bisa di select */}
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">Silahkan Pilih</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={questionnaireData.f5c}
-                      onChange={handleQuestionnaireChange}
-                    >
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={questionnaireData.f5c}
+                    label="Silahkan Pilih"
+                    name="f5c"
+                    onChange={handleQuestionnaireChange}
+                  >
+                    <MenuItem value={1}>Founder</MenuItem>
+                    <MenuItem value={2}>Co-Founder</MenuItem>
+                    <MenuItem value={3}>Staff</MenuItem>
+                    <MenuItem value={4}>Freelance/Kerja Lepas</MenuItem>
+                  </Select>
                 </FormControl>
               </Grid>
-              
             </Grid>
           </Grid>
 
@@ -513,18 +521,19 @@ const FormTracerSTudy = () => {
             </Typography>
             <Grid container spacing={4}>
               <Grid item xs={12} md={6}>
-                {/* fix: belum bisa di select */}
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">Silahkan Pilih</InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       value={questionnaireData.f5d}
+                      label="Silahkan Pilih"
+                      name="f5d"
                       onChange={handleQuestionnaireChange}
                     >
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      <MenuItem value={1}>Lokal/Wilayah/Wiraswasta/tidak berbadan hukum</MenuItem>
+                      <MenuItem value={2}>Nasional/Wiraswasta berbadan hukum</MenuItem>
+                      <MenuItem value={3}>Mulitnasional/Internasional</MenuItem>
                     </Select>
                 </FormControl>
               </Grid>
@@ -543,12 +552,12 @@ const FormTracerSTudy = () => {
                     fullWidth
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
+                    name="f18a"
                     value={questionnaireData.f18a}
                     onChange={handleQuestionnaireChange}
                   >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    <MenuItem value={1}>Biaya Sendiri</MenuItem>
+                    <MenuItem value={2}>Beasiswa</MenuItem>
                   </Select>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -591,7 +600,7 @@ const FormTracerSTudy = () => {
                     labelId="demo-simple-select-label"
                     variant="outlined"
                     name="f18d"
-                    placeholder="masih error..."
+                    placeholder="date picker error...."
                     value={questionnaireData.f18d}
                     onChange={handleQuestionnaireChange}
                   />
@@ -607,7 +616,7 @@ const FormTracerSTudy = () => {
                   9. Sebutkan sumberdana dalam pembiayaan kuliah? * (bukan ketika Studi Lanjut)
                 </Typography>
                 <RadioGroup
-                  name="f1101"
+                  name="f1201"
                   value={questionnaireData.f1201}
                   onChange={handleQuestionnaireChange}
                 >
@@ -619,19 +628,23 @@ const FormTracerSTudy = () => {
                   <FormControlLabel value="6" control={<Radio />} label="Beasiswa Perusahaan/Swasta" />
                   <FormControlLabel value="7" control={<Radio />} label="Lainnya, tuliskan" />
                 </RadioGroup>
-              </FormControl>
-            </Grid>
-            <Grid item md={6}>
+                <Grid item md={6}>
               <TextField 
                 fullWidth 
                 id="outlined-basic" 
-                placeholder="lainnya" 
+                label="lainnya" 
                 variant="outlined"
+                name="f1202"
+                value={questionnaireData.f1202}
+                onChange={handleQuestionnaireChange}
               />
               {/* fix: hubungin ke radio button */}
               {/* {questionnaireData.f1201 === '7' && (
               )} */} 
             </Grid>
+              </FormControl>
+            </Grid>
+            
           </Grid>
 
           <Grid item xs={12}>
@@ -642,7 +655,7 @@ const FormTracerSTudy = () => {
               </Typography>
               <RadioGroup
                 // aria-label="answer"
-                name="f15"
+                name="f14"
                 value={questionnaireData.f14}
                 onChange={handleQuestionnaireChange}
               >
@@ -681,6 +694,38 @@ const FormTracerSTudy = () => {
               12. Pada saat lulus, pada tingkat mana kompetensi di bawah ini anda : kuasai? (A) Pada
               saat ini, pada tingkat mana kompetensi di bawah ini diperlukan dalam pekerjaan? (B)*
             </Typography>
+            <List
+                sx={{width: '100%'}}
+                component="nav"
+                aria-label="mailbox folders"
+            >
+                <ListItem >
+                    <ListItemText primary="A"/>
+                    <ListItemText primary=""/>
+                    <ListItemText primary="B"/>
+                </ListItem>
+                <Divider/>
+                <ListItem divider>
+                    <ListItemText primary="Sangat Rendah"/>
+                    <ListItemText primary="Sangat Tinggi"/>
+                    <ListItemText primary=""/>
+                    <ListItemText primary=""/>
+                    <ListItemText primary="Sangat Rendah"/>
+                    <ListItemText primary="Sangat Rendah"/>
+                </ListItem>
+                <ListItem>
+                   
+                    <ListItemText primary="1"/>
+                    <ListItemText primary="1"/>
+                    <ListItemText primary="1"/>
+                    <ListItemText primary="1"/>
+                    <ListItemText primary="1"/>
+                </ListItem>
+                <Divider/>
+                <ListItem>
+                    <ListItemText primary="Spam"/>
+                </ListItem>
+            </List>
           </Grid>
 
           <Grid item xs={12}>
@@ -873,7 +918,7 @@ const FormTracerSTudy = () => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item>
             <FormControl component="fieldset" variant="standard">
               <Typography variant="subtitle1" style={{marginBottom:"14px"}} >
                 15. Bagaimana anda mencari pekerjaan tersebut? 
@@ -882,93 +927,103 @@ const FormTracerSTudy = () => {
               <FormGroup>
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f401} onChange={handleQuestionnaireChange} name="f401"/>
+                    <Checkbox checked={questionnaireData.f401} onChange={handleCheckbox} name="f401"/>
                   }
                   label="Melalui iklan di koran/majalah, brosur"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f402} onChange={handleQuestionnaireChange} name="f402"/>
+                    <Checkbox checked={questionnaireData.f402} onChange={handleCheckbox} name="f402"/>
                   }
                   label="Melamar ke perusahaan tanpa mengetahui lowongan yang ada"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f403} onChange={handleQuestionnaireChange} name="f403"/>
+                    <Checkbox checked={questionnaireData.f403} onChange={handleCheckbox} name="f403"/>
                   }
-                  label="Pergikebursa/pamerankerja"
+                  label="Pergi ke bursa/pameran kerja"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f404} onChange={handleQuestionnaireChange} name="f404"/>
+                    <Checkbox checked={questionnaireData.f404} onChange={handleCheckbox} name="f404"/>
                   }
                   label="Mencari lewat internet/iklan online/milis"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f405} onChange={handleQuestionnaireChange} name="f405"/>
+                    <Checkbox checked={questionnaireData.f405} onChange={handleCheckbox} name="f405"/>
                   }
                   label="Dihubungi oleh perusahaan"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f406} onChange={handleQuestionnaireChange} name="f406"/>
+                    <Checkbox checked={questionnaireData.f406} onChange={handleCheckbox} name="f406"/>
                   }
                   label="Menghubungi Kemenakertrans"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f407} onChange={handleQuestionnaireChange} name="f407"/>
+                    <Checkbox checked={questionnaireData.f407} onChange={handleCheckbox} name="f407"/>
                   }
                   label="Menghubungi agen tenaga kerja komersial/swasta"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f408} onChange={handleQuestionnaireChange} name="f408"/>
+                    <Checkbox checked={questionnaireData.f408} onChange={handleCheckbox} name="f408"/>
                   }
                   label="Memeroleh informasi dari pusat/kantor pengembangan karir fakultas/universitas"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f409} onChange={handleQuestionnaireChange} name="f409"/>
+                    <Checkbox checked={questionnaireData.f409} onChange={handleCheckbox} name="f409"/>
                   }
                   label="Menghubungi kantor kemahasiswaan/hubungan alumni"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f410} onChange={handleQuestionnaireChange} name="f410"/>
+                    <Checkbox checked={questionnaireData.f410} onChange={handleCheckbox} name="f410"/>
                   }
                   label="Membangun jejaring (network) sejak masih kuliah"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f411} onChange={handleQuestionnaireChange} name="f411"/>
+                    <Checkbox checked={questionnaireData.f411} onChange={handleCheckbox} name="f411"/>
                   }
                   label="Melalui relasi (misalnya dosen, orang tua, saudara, teman, dll.)"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f412} onChange={handleQuestionnaireChange} name="f412"/>
+                    <Checkbox checked={questionnaireData.f412} onChange={handleCheckbox} name="f412"/>
                   }
                   label="Membangun bisnis sendiri"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f413} onChange={handleQuestionnaireChange} name="f413"/>
+                    <Checkbox checked={questionnaireData.f413} onChange={handleCheckbox} name="f413"/>
                   }
                   label="Melalui penempatan kerja atau magang"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f414} onChange={handleQuestionnaireChange} name="f414"/>
+                    <Checkbox checked={questionnaireData.f414} onChange={handleCheckbox} name="f414"/>
                   }
                   label="Bekerja di tempat yang sama dengan tempat kerja semasa kuliah"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f415} onChange={handleQuestionnaireChange} name="f415"/>
+                    <Checkbox checked={questionnaireData.f415} onChange={handleCheckbox} name="f415"/>
                   }
                   label="Lainnya"
+                />
+
+                <TextField 
+                  fullWidth 
+                  id="outlined-basic" 
+                  label="lainnya" 
+                  variant="outlined"
+                  name="f4016"
+                  value={questionnaireData.f4016}
+                  onChange={handleQuestionnaireChange}
                 />
 
                 {/* FIX: check the fill in checkbox */}
@@ -1053,8 +1108,7 @@ const FormTracerSTudy = () => {
           </Grid>
           
            {/* FIX: CONNECT TEXTFIELD TO RADIO OPTION */}
-           <Grid item container xs={12} spacing={4}>
-            <Grid item md={12}>
+           <Grid item xs={12} spacing={4}>
               <FormControl component="fieldset">
                 <Typography variant="subtitle1">
                   19. Apakah anda aktif mencari pekerjaan dalam 4 minggu terakhir? Pilihlah satu jawaban.
@@ -1070,22 +1124,17 @@ const FormTracerSTudy = () => {
                   <FormControlLabel value="4" control={<Radio />} label="Ya, tapi saya belum pasti akan bekerja dalam 2 minggu ke depan" />
                   <FormControlLabel value="5" control={<Radio />} label="lainnya" />
                 </RadioGroup>
+                <Box xs={{width: "50ch"}}  >
+                  <TextField
+                    id="outlined-basic" 
+                    label="lainnya..." 
+                    variant="outlined"
+                    name="f1002"
+                    value={questionnaireData.f1002}
+                    onChange={handleQuestionnaireChange}
+                  />
+                </Box>
               </FormControl>
-            </Grid>
-            <Grid item md={6}>
-              <TextField 
-                fullWidth 
-                id="outlined-basic" 
-                placeholder="lainnya" 
-                variant="outlined"
-                name="f1002"
-                value={questionnaireData.f1002}
-                onChange={handleQuestionnaireChange}
-              />
-              {/* fix: hubungin ke radio button */}
-              {/* {questionnaireData.f1201 === '7' && (
-              )} */} 
-            </Grid>
           </Grid>
 
           <Grid item xs={12}>
@@ -1096,82 +1145,93 @@ const FormTracerSTudy = () => {
               <FormGroup>
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1601} onChange={handleQuestionnaireChange} name="f1601"/>
+                    <Checkbox checked={questionnaireData.f1601} onChange={handleCheckbox} name="f1601"/>
                   }
                   label="Pertanyaan tidak sesuai; pekerjaan saya sekarang sudah sesuai dengan pendidikan saya."
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1602} onChange={handleQuestionnaireChange} name="f1602"/>
+                    <Checkbox checked={questionnaireData.f1602} onChange={handleCheckbox} name="f1602"/>
                   }
                   label="Saya belum mendapatkan pekerjaan yang lebih sesuai."
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1603} onChange={handleQuestionnaireChange} name="f1603"/>
+                    <Checkbox checked={questionnaireData.f1603} onChange={handleCheckbox} name="f1603"/>
                   }
                   label="Di pekerjaan ini saya memeroleh prospek karir yang baik. "
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1604} onChange={handleQuestionnaireChange} name="f1604"/>
+                    <Checkbox checked={questionnaireData.f1604} onChange={handleCheckbox} name="f1604"/>
                   }
                   label="Saya lebih suka bekerja di area pekerjaan yang tidak ada hubungannya dengan pendidikan saya."
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1605} onChange={handleQuestionnaireChange} name="f1605"/>
+                    <Checkbox checked={questionnaireData.f1605} onChange={handleCheckbox} name="f1605"/>
                   }
                   label="Saya dipromosikan ke posisi yang kurang berhubungan dengan pendidikan saya dibanding posisi sebelumnya."
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1606} onChange={handleQuestionnaireChange} name="f1606"/>
+                    <Checkbox checked={questionnaireData.f1606} onChange={handleCheckbox} name="f1606"/>
                   }
                   label="Saya dapat memeroleh pendapatan yang lebih tinggi di pekerjaan ini. "
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1607} onChange={handleQuestionnaireChange} name="f1607"/>
+                    <Checkbox checked={questionnaireData.f1607} onChange={handleCheckbox} name="f1607"/>
                   }
                   label="Pekerjaan saya saat ini lebih aman/terjamin/secure"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1608} onChange={handleQuestionnaireChange} name="f1608"/>
+                    <Checkbox checked={questionnaireData.f1608} onChange={handleCheckbox} name="f1608"/>
                   }
                   label="Pekerjaan saya saat ini lebih menarik"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1609} onChange={handleQuestionnaireChange} name="f1609"/>
+                    <Checkbox checked={questionnaireData.f1609} onChange={handleCheckbox} name="f1609"/>
                   }
                   label="Pekerjaan saya saat ini lebih memungkinkan saya mengambil pekerjaan tambahan/jadwal yang fleksibel, dll."
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1610} onChange={handleQuestionnaireChange} name="f1610"/>
+                    <Checkbox checked={questionnaireData.f1610} onChange={handleCheckbox} name="f1610"/>
                   }
                   label="Pekerjaan saya saat ini lokasinya lebih dekat dari rumah saya."
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1611} onChange={handleQuestionnaireChange} name="f1611"/>
+                    <Checkbox checked={questionnaireData.f1611} onChange={handleCheckbox} name="f1611"/>
                   }
                   label="Pekerjaan saya saat ini dapat lebih menjamin kebutuhan keluarga saya."
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1612} onChange={handleQuestionnaireChange} name="f1612"/>
+                    <Checkbox checked={questionnaireData.f1612} onChange={handleCheckbox} name="f1612"/>
                   }
                   label="Pada awal meniti karir ini, saya harus menerima pekerjaan yang tidak berhubungan dengan pendidikan saya"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={questionnaireData.f1613} onChange={handleQuestionnaireChange} name="f1613"/>
+                    <Checkbox checked={questionnaireData.f1613} onChange={handleCheckbox} name="f1613"/>
                   }
                   label="lainnya"
                 />
+                <Grid item md={6} style={{marginTop:"10px"}}>
+                <TextField 
+                  fullWidth 
+                  id="outlined-basic" 
+                  label="lainnya" 
+                  variant="outlined"
+                  name="f1614"
+                  value={questionnaireData.f1614}
+                  onChange={handleQuestionnaireChange}
+                />
+                </Grid>
                 {/* FIX: check the fill in checkbox */}
                 {/* <FormControlLabel
                   control={
@@ -1196,7 +1256,7 @@ const FormTracerSTudy = () => {
             </FormControl>
           </Grid>
 
-
+          
           {/* Questionnaire above!!! */}
         </Grid>
 

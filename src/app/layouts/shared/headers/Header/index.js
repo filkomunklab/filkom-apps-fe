@@ -76,7 +76,7 @@ const Header = () => {
 
         <Div sx={{ display: "flex", alignItems: "center", gap: "24px" }}>
           <NotificationsDropdown />
-          <SearchGlobal sx={{ maxWidth: { xs: 240, md: 320 } }} />
+          <SearchGlobal sx={{ maxWidth: { xs: 120, sm: 120, md: 320 } }} />
         </Div>
       </Div>
     </React.Fragment>
