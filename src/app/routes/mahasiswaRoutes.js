@@ -15,6 +15,9 @@ import Curriculum from "app/pages/BimbinganAkademik/Mahasiswa/Curriculum";
 import Grades from "app/pages/BimbinganAkademik/Mahasiswa/Grades";
 import GradeSubmission from "app/pages/BimbinganAkademik/Mahasiswa/GradeSubmission";
 import History from "app/pages/BimbinganAkademik/Mahasiswa/History";
+import ApprovedHistoryGrade from "app/pages/BimbinganAkademik/Mahasiswa/History/HistoryGrade/ApprovedHistoryGrade";
+import RejectedHistoryGrade from "app/pages/BimbinganAkademik/Mahasiswa/History/HistoryGrade/RejectedHistoryGrade";
+import WaitingHistoryGrade from "app/pages/BimbinganAkademik/Mahasiswa/History/HistoryGrade/WaitingHistoryGrade";
 import PreRegistration from "app/pages/BimbinganAkademik/Mahasiswa/PreRegistration";
 import PreRegistrationClosedCase from "app/pages/BimbinganAkademik/Mahasiswa/PreRegistration/PreRegistrationClosedCase";
 import PreRegistrationSubmitted from "app/pages/BimbinganAkademik/Mahasiswa/PreRegistration/PreRegistrationSubmitted";
@@ -43,15 +46,15 @@ const mahasiswaRoutes = [
     element: <Page component={AddNewCertificate} />,
   },
   {
-    path: "/bimbingan-akademik/certificates/student-certificate-waiting",
+    path: "/bimbingan-akademik/history/student-certificate-waiting",
     element: <Page component={CertificateWaiting} />,
   },
   {
-    path: "/bimbingan-akademik/certificates/student-certificate-approved",
+    path: "/bimbingan-akademik/history/student-certificate-approved",
     element: <Page component={CertificateApproved} />,
   },
   {
-    path: "/bimbingan-akademik/certificates/student-certificate-rejected",
+    path: "/bimbingan-akademik/history/student-certificate-rejected",
     element: <Page component={CertificateRejected} />,
   },
   {
@@ -109,6 +112,18 @@ const mahasiswaRoutes = [
   {
     path: "/bimbingan-akademik/pre-registration/pre-registrationApproved",
     element: <Page component={PreRegistrationApproved} />,
+  },
+  {
+    path: "/bimbingan-akademik/history/grade-approved",
+    element: <Page component={ApprovedHistoryGrade} />,
+  },
+  {
+    path: "/bimbingan-akademik/history/grade-rejected",
+    element: <Page component={RejectedHistoryGrade} />,
+  },
+  {
+    path: "/bimbingan-akademik/history/grade-waiting",
+    element: <Page component={WaitingHistoryGrade} />,
   },
   {
     path: "/bimbingan-akademik/pre-registration",
