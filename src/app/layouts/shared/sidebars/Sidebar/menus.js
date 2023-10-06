@@ -23,6 +23,7 @@ import PublicIcon from "@mui/icons-material/Public";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import PersonIcon from "@mui/icons-material/Person";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 
 // Student Menu
 // const menus = [
@@ -326,6 +327,12 @@ const menus = [
     label: "Klabat Bridge",
     type: "section",
     children: [
+      {
+        label: "Dashboard",
+        type: "nav-item",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/dashboard",
+      },
       {
         label: "Dafter Alumni",
         type: "nav-item",
