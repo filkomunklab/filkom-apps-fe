@@ -1,8 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Stack, Grid, Paper } from "@mui/material";
+import {
+  Typography,
+  Stack,
+  Grid,
+  Breadcrumbs,
+  experimentalStyled as styled,
+  Paper,
+} from "@mui/material";
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const ConsultationComplete = () => {
+  const handleClick = (event) => {
+    event.preventDefault();
+  };
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileName, setSelectedFileName] = useState("");
 
@@ -26,7 +45,15 @@ const ConsultationComplete = () => {
 
   return (
     <div>
-      <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink to="/bimbingan-akademik/history">History</StyledLink>
+          <Typography color="text.primary">Consultation</Typography>
+        </Breadcrumbs>
+      </div>
+      <Typography
+        sx={{ fontSize: "24px", fontWeight: 500, paddingTop: "20px" }}
+      >
         Consultation
       </Typography>
       <Grid container spacing={2}>
@@ -191,7 +218,7 @@ const ConsultationComplete = () => {
               elevation={0}
               variant="outlined"
               fullWidth
-              sx={{ borderColor: "#005FDB" }}
+              sx={{ borderColor: "#192434" }}
             >
               <div
                 style={{
@@ -221,6 +248,115 @@ const ConsultationComplete = () => {
 
               <Typography variant="body1" sx={{ padding: "8px" }}>
                 Baik sir. Terima kasih.
+              </Typography>
+            </Paper>
+            <Paper
+              elevation={0}
+              variant="outlined"
+              fullWidth
+              sx={{ borderColor: "#192434" }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{
+                    padding: "8px",
+                    fontWeight: 600,
+                  }}
+                >
+                  Siregar, Marchelino Feraldy
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    padding: "8px",
+                  }}
+                >
+                  {currentDate}
+                </Typography>
+              </div>
+
+              <Typography variant="body1" sx={{ padding: "8px" }}>
+                Maaf sebelumnya, kira-kira bisa hari apa ya sir saya buka konsul
+                lagi dengan sir?
+              </Typography>
+            </Paper>
+            <Paper
+              elevation={0}
+              variant="outlined"
+              fullWidth
+              sx={{ borderColor: "#005FDB" }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{
+                    padding: "8px",
+                    fontWeight: 600,
+                  }}
+                >
+                  Poluan, Jeremy Kenny
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    padding: "8px",
+                  }}
+                >
+                  {currentDate}
+                </Typography>
+              </div>
+
+              <Typography variant="body1" sx={{ padding: "8px" }}>
+                Nanti hari Kamis saya kabari lagi.
+              </Typography>
+            </Paper>
+            <Paper
+              elevation={0}
+              variant="outlined"
+              fullWidth
+              sx={{ borderColor: "#192434" }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{
+                    padding: "8px",
+                    fontWeight: 600,
+                  }}
+                >
+                  Siregar, Marchelino Feraldy
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    padding: "8px",
+                  }}
+                >
+                  {currentDate}
+                </Typography>
+              </div>
+
+              <Typography variant="body1" sx={{ padding: "8px" }}>
+                Oh Iya baik sir. Terima kasih.
               </Typography>
             </Paper>
             <Typography
