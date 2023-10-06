@@ -7,11 +7,21 @@ import {
   Button,
   IconButton,
   Paper,
+  Breadcrumbs,
+  experimentalStyled as styled,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import SendIcon from "@mui/icons-material/Send";
 import { format } from "date-fns";
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const style = {
   position: "absolute",
@@ -52,6 +62,9 @@ const ConsultationOnProcess = () => {
   const handleIconClick = () => {
     handleSubmit();
   };
+  const handleClick = (event) => {
+    event.preventDefault();
+  };
 
   const handleSubmitFirstModal = () => {
     handleCloseFirstModal();
@@ -85,7 +98,15 @@ const ConsultationOnProcess = () => {
 
   return (
     <div>
-      <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink to="/bimbingan-akademik/history">History</StyledLink>
+          <Typography color="text.primary">Consultation</Typography>
+        </Breadcrumbs>
+      </div>
+      <Typography
+        sx={{ fontSize: "24px", fontWeight: 500, paddingTop: "20px" }}
+      >
         Consultation
       </Typography>
       <Grid container spacing={2}>
@@ -262,7 +283,7 @@ const ConsultationOnProcess = () => {
                       variant="outlined"
                       fullWidth
                       sx={{
-                        borderColor: "#005FDB",
+                        borderColor: "#192434",
                         padding: "12px",
                         borderRadius: "4px",
                         backgroundColor: "#FFFFFF",
@@ -351,7 +372,7 @@ const ConsultationOnProcess = () => {
                           <Grid item>
                             <Link
                               style={{ textDecoration: "none", color: "white" }}
-                              to="/bimbingan-akademik/consultation/consultationComplete"
+                              to="/bimbingan-akademik/history/consultationComplete"
                             >
                               <Button
                                 onClick={handleSubmitFirstModal}
