@@ -1,10 +1,37 @@
-import React, { useState, useEffect } from "react";
-import { Typography, Stack, Grid, Paper } from "@mui/material";
+import React from "react";
+import {
+  Typography,
+  Stack,
+  Grid,
+  Breadcrumbs,
+  experimentalStyled as styled,
+  Paper,
+} from "@mui/material";
+import { Link } from "react-router-dom";
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const ConsultationWaiting = () => {
+  const handleClick = (event) => {
+    event.preventDefault();
+  };
   return (
     <div>
-      <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink to="/bimbingan-akademik/history">History</StyledLink>
+          <Typography color="text.primary">Consultation</Typography>
+        </Breadcrumbs>
+      </div>
+      <Typography
+        sx={{ fontSize: "24px", fontWeight: 500, paddingTop: "20px" }}
+      >
         Consultation
       </Typography>
       <Grid container spacing={2}>

@@ -8,13 +8,14 @@ import CertificateWaiting from "app/pages/BimbinganAkademik/Mahasiswa/Certificat
 import CertificateApproved from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/CertificateApproved";
 import CertificateRejected from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/CertificateRejected";
 import Consultation from "app/pages/BimbinganAkademik/Mahasiswa/Consultation";
-import ConsultationWaiting from "app/pages/BimbinganAkademik/Mahasiswa/Consultation/ConsultationWaiting";
-import consultationOnProcess from "app/pages/BimbinganAkademik/Mahasiswa/Consultation/ConsultationOnProcess";
-import ConsultationComplete from "app/pages/BimbinganAkademik/Mahasiswa/Consultation/ConsultationComplete";
 import Curriculum from "app/pages/BimbinganAkademik/Mahasiswa/Curriculum";
 import Grades from "app/pages/BimbinganAkademik/Mahasiswa/Grades";
 import GradeSubmission from "app/pages/BimbinganAkademik/Mahasiswa/GradeSubmission";
 import History from "app/pages/BimbinganAkademik/Mahasiswa/History";
+import Activity from "app/pages/BimbinganAkademik/Mahasiswa/History/HIstoryActivity/HistoryActivity";
+import ConsultationWaiting from "app/pages/BimbinganAkademik/Mahasiswa/History/HistoryConsultation/ConsultationWaiting";
+import consultationOnProcess from "app/pages/BimbinganAkademik/Mahasiswa/History/HistoryConsultation/ConsultationOnProcess";
+import ConsultationComplete from "app/pages/BimbinganAkademik/Mahasiswa/History/HistoryConsultation/ConsultationComplete";
 import ApprovedHistoryGrade from "app/pages/BimbinganAkademik/Mahasiswa/History/HistoryGrade/ApprovedHistoryGrade";
 import RejectedHistoryGrade from "app/pages/BimbinganAkademik/Mahasiswa/History/HistoryGrade/RejectedHistoryGrade";
 import WaitingHistoryGrade from "app/pages/BimbinganAkademik/Mahasiswa/History/HistoryGrade/WaitingHistoryGrade";
@@ -57,18 +58,6 @@ const mahasiswaRoutes = [
     element: <Page component={Consultation} />,
   },
   {
-    path: "/bimbingan-akademik/consultation/consultationWaiting",
-    element: <Page component={ConsultationWaiting} />,
-  },
-  {
-    path: "/bimbingan-akademik/consultation/consultationOnProcess",
-    element: <Page component={consultationOnProcess} />,
-  },
-  {
-    path: "/bimbingan-akademik/consultation/consultationComplete",
-    element: <Page component={ConsultationComplete} />,
-  },
-  {
     path: "/bimbingan-akademik/curriculum",
     element: <Page component={Curriculum} />,
   },
@@ -87,6 +76,22 @@ const mahasiswaRoutes = [
   {
     path: "/bimbingan-akademik/history",
     element: <Page component={History} />,
+  },
+  {
+    path: "/bimbingan-akademik/history/activity",
+    element: <Page component={Activity} />,
+  },
+  {
+    path: "/bimbingan-akademik/history/consultationWaiting",
+    element: <Page component={ConsultationWaiting} />,
+  },
+  {
+    path: "/bimbingan-akademik/history/consultationOnProcess",
+    element: <Page component={consultationOnProcess} />,
+  },
+  {
+    path: "/bimbingan-akademik/history/consultationComplete",
+    element: <Page component={ConsultationComplete} />,
   },
   {
     path: "/bimbingan-akademik/history/grade-approved",
