@@ -6,7 +6,9 @@ import StudentCertificate from "app/pages/BimbinganAkademik/DosenPembimbing/Stud
 import History from "app/pages/BimbinganAkademik/DesenPembimbing/History";
 import CertificateDetail from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentCertificate/CertificateDetail";
 
+
 const { default: Page } = require("@jumbo/shared/Page");
+
 
 const dosenPembimbingRoutes = [
   {
