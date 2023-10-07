@@ -532,6 +532,12 @@ export const dekanMenus = [
         icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/form-tracer-study",
       },
+      {
+        label: "Pengisian SPT",
+        type: "nav-item",
+        icon: <InsertCommentIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/pengisian-spt",
+      },
     ],
   },
   {

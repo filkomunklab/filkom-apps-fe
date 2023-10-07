@@ -34,14 +34,9 @@ import FormHelperText from "@mui/material/FormHelperText";
 // import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 // import code from "../Pickers/demo-code/date-picker.txt";
 
-const label = {inputProps: {'aria-label': 'Checkbox demo'}};
-
 const FormTracerSTudy = () => {
   const [checked, setChecked] = React.useState(false);
 
-  const handleCheckboxChange = (event) => {
-    setChecked(event.target.checked);
-  };
   //for date pickers
   //const [value, setValue] = React.useState(new Date('2022-06-04T21:11:54'));
 

@@ -1,8 +1,12 @@
+// operator
 import Page from "@jumbo/shared/Page";
 import DaftarAlumni from "app/pages/KlabatBridge/Operator/DaftarAlumni";
 import FormTracerStudy from "app/pages/KlabatBridge/Operator/FormTracerStudy";
 import GrafikAlumni from "app/pages/KlabatBridge/Operator/GrafikAlumni";
 import Dashboard from "app/pages/KlabatBridge/Operator/Dashboard";
+
+// calon tamatan
+import PengisianSPT from "app/pages/KlabatBridge/Operator/PengisianSPT";
 
 const operatorRoutes = [
   {
@@ -20,6 +24,10 @@ const operatorRoutes = [
   {
     path: "klabat-bridge/grafik-alumni",
     element: <Page component={GrafikAlumni} />,
+  },
+  {
+    path: "klabat-bridge/pengisian-spt",
+    element: <Page component={PengisianSPT} />,
   },
 ];
 
