@@ -1,26 +1,328 @@
 import Div from "@jumbo/shared/Div";
 import {
   Button,
-  Chip,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  InputAdornment,
   Menu,
   MenuItem,
+  Select,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const BerandaPengajuanJudul = () => {
+const TimAnggotaPenelis = ({
+  anggotaPenelis,
+  setAnggotaPenelis,
+  isEditing,
+}) => {
+  const daftarPengguna = [
+    { id: "-", nama: "-" },
+    { id: 10, nama: "Andrew T. Liem, MT, PhD" },
+    { id: 20, nama: "Green Mandias, SKom, MCs" },
+    { id: 30, nama: "Stenly R. Pungus, MT, PhD" },
+    { id: 40, nama: "Debby E. Sondakh, MT, PhD" },
+    { id: 50, nama: "Ir. Edson Y. Putra, MKom" },
+    { id: 60, nama: "Green A. Sandag, SKom, MS" },
+    { id: 70, nama: "Jacquline M. S. Waworundeng, ST, MT" },
+    { id: 80, nama: "Jimmy H. Moedjahedy, SKom, MKom, MM" },
+    { id: 90, nama: "Joe Y. Mambu, BSIT, MCIS" },
+    { id: 100, nama: "Lidya C. Laoh, SKom, MMSi" },
+    { id: 110, nama: "Marshal Tombeng," },
+    { id: 120, nama: "Oktoverano H. Lengkong, SKom, MDs, MM" },
+    { id: 130, nama: "Reymon Rotikan, SKom, MS, MM" },
+    { id: 140, nama: "Reynoldus A. Sahulata, SKom, MM" },
+    { id: 150, nama: "Rolly Lontaan, MKom" },
+    { id: 160, nama: "Semmy W. Taju, SKom" },
+    { id: 170, nama: "Senly I. Adam, SKom, MSc" },
+  ];
+  return (
+    <Container>
+      <Typography variant="subtitle2">Anggota Penelis</Typography>
+      {isEditing ? (
+        <Select
+          labelId="anggota-penelis-label"
+          id="anggota-penelis-select"
+          fullWidth
+          value={anggotaPenelis}
+          onChange={(e) => setAnggotaPenelis(e.target.value)}
+          size="small"
+          sx={{ maxWidth: "250px" }} // Menambahkan batas lebar maksimum
+        >
+          {daftarPengguna.map((pengguna) => (
+            <MenuItem key={pengguna.id} value={pengguna.id}>
+              {pengguna.nama}
+            </MenuItem>
+          ))}
+        </Select>
+      ) : (
+        <Typography>
+          {daftarPengguna.find((pengguna) => pengguna.id === anggotaPenelis)
+            ?.nama || "-"}
+        </Typography>
+      )}
+    </Container>
+  );
+};
+
+const TimKetuaPenelis = ({ ketuaPenelis, setKetuaPenelis, isEditing }) => {
+  const daftarPengguna = [
+    { id: "-", nama: "-" },
+    { id: 10, nama: "Andrew T. Liem, MT, PhD" },
+    { id: 20, nama: "Green Mandias, SKom, MCs" },
+    { id: 30, nama: "Stenly R. Pungus, MT, PhD" },
+    { id: 40, nama: "Debby E. Sondakh, MT, PhD" },
+    { id: 50, nama: "Ir. Edson Y. Putra, MKom" },
+    { id: 60, nama: "Green A. Sandag, SKom, MS" },
+    { id: 70, nama: "Jacquline M. S. Waworundeng, ST, MT" },
+    { id: 80, nama: "Jimmy H. Moedjahedy, SKom, MKom, MM" },
+    { id: 90, nama: "Joe Y. Mambu, BSIT, MCIS" },
+    { id: 100, nama: "Lidya C. Laoh, SKom, MMSi" },
+    { id: 110, nama: "Marshal Tombeng," },
+    { id: 120, nama: "Oktoverano H. Lengkong, SKom, MDs, MM" },
+    { id: 130, nama: "Reymon Rotikan, SKom, MS, MM" },
+    { id: 140, nama: "Reynoldus A. Sahulata, SKom, MM" },
+    { id: 150, nama: "Rolly Lontaan, MKom" },
+    { id: 160, nama: "Semmy W. Taju, SKom" },
+    { id: 170, nama: "Senly I. Adam, SKom, MSc" },
+  ];
+  return (
+    <Container>
+      <Typography variant="subtitle2">Ketua Penelis</Typography>
+      {isEditing ? (
+        <Select
+          labelId="ketua-penelis-label"
+          id="ketua-penelis-select"
+          fullWidth
+          value={ketuaPenelis}
+          onChange={(e) => setKetuaPenelis(e.target.value)}
+          size="small"
+          sx={{ maxWidth: "250px" }} // Menambahkan batas lebar maksimum
+        >
+          {daftarPengguna.map((pengguna) => (
+            <MenuItem key={pengguna.id} value={pengguna.id}>
+              {pengguna.nama}
+            </MenuItem>
+          ))}
+        </Select>
+      ) : (
+        <Typography>
+          {daftarPengguna.find((pengguna) => pengguna.id === ketuaPenelis)
+            ?.nama || "-"}
+        </Typography>
+      )}
+    </Container>
+  );
+};
+
+const JadwalSidang = ({
+  startTime,
+  endTime,
+  tanggal,
+  ruangan,
+  setStartTime,
+  setEndTime,
+  setTanggal,
+  setRuangan,
+  isEditing,
+  handleConfirm,
+  handleCancelConfirmation,
+  isConfirmationOpen,
+}) => {
+  return (
+    <Container>
+      <Typography variant="subtitle2" sx={{ marginTop: "20px" }}>
+        Jadwal Sidang
+      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <Typography variant="subtitle2">Mulai</Typography>
+          {isEditing ? (
+            <TextField
+              id="start-time"
+              type="time"
+              fullWidth
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              size="small"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start"></InputAdornment>
+                ),
+              }}
+              inputProps={{
+                step: 300, // 5 minute intervals
+              }}
+            />
+          ) : (
+            <Typography>{startTime}</Typography>
+          )}
+        </Grid>
+        <Grid item xs={6}>
+          <Typography variant="subtitle2">Selesai</Typography>
+          {isEditing ? (
+            <TextField
+              id="end-time"
+              type="time"
+              fullWidth
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              size="small"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start"></InputAdornment>
+                ),
+              }}
+              inputProps={{
+                step: 300, // 5 minute intervals
+              }}
+            />
+          ) : (
+            <Typography>{endTime}</Typography>
+          )}
+        </Grid>
+        <Grid item xs={6}>
+          <Typography variant="subtitle2">Tanggal</Typography>
+          {isEditing ? (
+            <TextField
+              id="start-date"
+              type="date"
+              fullWidth
+              value={tanggal}
+              onChange={(e) => setTanggal(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              size="small"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start"></InputAdornment>
+                ),
+              }}
+            />
+          ) : (
+            <Typography>{tanggal}</Typography>
+          )}
+        </Grid>
+        <Grid item xs={6}>
+          <Typography variant="subtitle2">Ruangan</Typography>
+          {isEditing ? (
+            <TextField
+              id="room-name"
+              fullWidth
+              value={ruangan}
+              onChange={(e) => setRuangan(e.target.value)}
+              size="small"
+            />
+          ) : (
+            <Typography>{ruangan}</Typography>
+          )}
+        </Grid>
+      </Grid>
+      <Dialog
+        open={isConfirmationOpen}
+        onClose={handleCancelConfirmation}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "24px",
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: "20px",
+              fontWeight: 500,
+              lineHeight: "24px",
+            }}
+          >
+            Perbarui Jadwal
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Typography gutterBottom>
+            Apakah Anda yakin ingin perbarui jadwal?
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+          <Button
+            onClick={handleCancelConfirmation}
+            sx={{
+              background: "white",
+              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+              textTransform: "none",
+              color: "black",
+            }}
+          >
+            Batal
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleConfirm}
+            sx={{ textTransform: "none" }}
+          >
+            Perbarui
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Container>
+  );
+};
+
+const PerbaruiJadwalSidang = () => {
+  // menu horizontal
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open1 = Boolean(anchorEl);
   const [anchorE2, setAnchorE2] = React.useState(null);
   const open2 = Boolean(anchorE2);
 
+  const [ketuaPenelis, setKetuaPenelis] = useState("-");
+  const [anggotaPenelis, setAnggotaPenelis] = useState("-");
+  const [startTime, setStartTime] = useState("-");
+  const [endTime, setEndTime] = useState("-");
+  const [tanggal, setTanggal] = useState("-");
+  const [ruangan, setRuangan] = useState("-");
+  const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleConfirmClick = () => {
+    setIsConfirmationOpen(true);
+  };
+
+  const handleConfirm = () => {
+    setIsEditing(false);
+    setIsConfirmationOpen(false);
+  };
+
+  const handleCancelConfirmation = () => {
+    setIsConfirmationOpen(false);
+  };
   return (
     <Div>
       <Div
@@ -34,7 +336,7 @@ const BerandaPengajuanJudul = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Beranda
+          Jadwal Sidang
         </Typography>
       </Div>
 
@@ -119,7 +421,7 @@ const BerandaPengajuanJudul = () => {
                 -
               </Div>
             </Div>
-            {/* Co-Advisor 1*/}
+            {/* Ketua Penelis*/}
             <Div
               sx={{
                 display: "flex",
@@ -154,7 +456,7 @@ const BerandaPengajuanJudul = () => {
                 -
               </Div>
             </Div>
-            {/* Co-Advisor 2*/}
+            {/* Anggota Penelis*/}
             <Div
               sx={{
                 display: "flex",
@@ -197,7 +499,6 @@ const BerandaPengajuanJudul = () => {
         {/* Element 2 Start */}
         <Div
           sx={{
-            direction: "row",
             display: "flex",
             width: "1050px",
             paddingBottom: "0px",
@@ -262,7 +563,7 @@ const BerandaPengajuanJudul = () => {
                       },
                     }}
                   >
-                    Pengajuan Judul
+                    Jadwal Sidang
                   </Button>
                 </Link>
               </Div>
@@ -277,7 +578,6 @@ const BerandaPengajuanJudul = () => {
               <Div sx={{ margin: "auto" }}>
                 <Link to="#">
                   <Button
-                    disabled
                     sx={{
                       // width: "130px",
                       fontSize: "13px",
@@ -303,7 +603,6 @@ const BerandaPengajuanJudul = () => {
               ></Div>
               <Div sx={{ margin: "auto" }}>
                 <Button
-                  disabled
                   onClick={(event) => setAnchorEl(event.currentTarget)}
                   sx={{
                     fontSize: "13px",
@@ -318,7 +617,6 @@ const BerandaPengajuanJudul = () => {
                   Pengajuan Proposal
                 </Button>
                 <Menu
-                  disabled
                   anchorEl={anchorEl}
                   open={open1}
                   onClose={() => setAnchorEl(null)}
@@ -333,6 +631,9 @@ const BerandaPengajuanJudul = () => {
                 >
                   <MenuItem onClick={() => setAnchorEl(null)}>
                     Upload Proposal
+                  </MenuItem>
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Berita Acara
                   </MenuItem>
                   <MenuItem onClick={() => setAnchorEl(null)}>
                     Upload Revisi Proposal
@@ -350,7 +651,6 @@ const BerandaPengajuanJudul = () => {
               {/* Menu Pengajuan Skripsi */}
               <Div>
                 <Button
-                  disabled
                   onClick={(event) => setAnchorE2(event.currentTarget)}
                   sx={{
                     fontSize: "13px",
@@ -365,9 +665,8 @@ const BerandaPengajuanJudul = () => {
                   Pengajuan Skripsi
                 </Button>
                 <Menu
-                  disabled
                   anchorEl={anchorE2}
-                  open2={open2}
+                  open={open2}
                   onClose={() => setAnchorE2(null)}
                   anchorOrigin={{
                     vertical: "bottom",
@@ -379,10 +678,13 @@ const BerandaPengajuanJudul = () => {
                   }}
                 >
                   <MenuItem onClick={() => setAnchorE2(null)}>
-                    Upload Skripsi
+                    Dokumen Skripsi
                   </MenuItem>
                   <MenuItem onClick={() => setAnchorE2(null)}>
-                    Upload Revisi Skripsi
+                    Berita Acara Skripsi
+                  </MenuItem>
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Revisi Skripsi
                   </MenuItem>
                 </Menu>
               </Div>
@@ -477,37 +779,129 @@ const BerandaPengajuanJudul = () => {
                 sx={{
                   padding: "14px 16px",
                   background: "rgba(26, 56, 96, 0.10)",
-                  borderRadius: "6px 6px 0 0",
+                  borderRadius: "6px",
                   border: "1px",
+                  marginBottom: "25px",
                 }}
               >
-                Status Pengajuan Judul
+                Menentukan Tim Penelis
               </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
-                <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ width: "50%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "50%" }}>Dosen Skripsi</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>
-                        <Chip
-                          label="Menunggu"
-                          sx={{
-                            background: "rgba(255, 204, 0, 0.10)",
-                            color: "#985211",
-                          }}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Pengajuan Proposal End */}
+              {/* input select Tim Penelis Start */}
+              <Container
+                sx={{
+                  display: "flex",
+                  padding: "0px 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                  marginBottom: "25px",
+                }}
+              >
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: "25px",
+                    alignSelf: "stretch",
+                  }}
+                >
+                  <Div
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      flex: "1 0 0",
+                    }}
+                  >
+                    <TimKetuaPenelis
+                      ketuaPenelis={ketuaPenelis}
+                      setKetuaPenelis={setKetuaPenelis}
+                      isEditing={isEditing}
+                    />
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+
+                      flex: "1 0 0",
+                    }}
+                  >
+                    <TimAnggotaPenelis
+                      anggotaPenelis={anggotaPenelis}
+                      setAnggotaPenelis={setAnggotaPenelis}
+                      isEditing={isEditing}
+                    />
+                  </Div>
+                </Div>
+              </Container>
+              {/* input select Tim Penelis End */}
+
+              {/* Table Status Siap Maju Sidang Start*/}
+              <Typography
+                sx={{
+                  padding: "14px 16px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  borderRadius: "6px",
+                  border: "1px",
+                  marginBottom: "25px",
+                }}
+              >
+                Menyusun Jadwal Sidang
+              </Typography>
+
+              <Container>
+                <JadwalSidang
+                  startTime={startTime}
+                  endTime={endTime}
+                  tanggal={tanggal}
+                  ruangan={ruangan}
+                  setStartTime={setStartTime}
+                  setEndTime={setEndTime}
+                  setTanggal={setTanggal}
+                  setRuangan={setRuangan}
+                  isEditing={isEditing}
+                  handleConfirmClick={handleConfirmClick}
+                  handleEditClick={handleEditClick}
+                  handleConfirm={handleConfirm}
+                  handleCancelConfirmation={handleCancelConfirmation}
+                  isConfirmationOpen={isConfirmationOpen}
+                />
+              </Container>
+
+              <Div
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  padding: "5px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  borderRadius: "6px",
+                  marginTop: "25px",
+                }}
+              >
+                {isEditing ? (
+                  <Button
+                    size="small"
+                    onClick={handleConfirmClick}
+                    color="primary"
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                  >
+                    Simpan Perubahan
+                  </Button>
+                ) : (
+                  <Button
+                    size="small"
+                    onClick={handleEditClick}
+                    color="primary"
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                  >
+                    Perubahan Jadwal
+                  </Button>
+                )}
+              </Div>
             </Div>
           </Div>
         </Div>
@@ -517,4 +911,4 @@ const BerandaPengajuanJudul = () => {
   );
 };
 
-export default BerandaPengajuanJudul;
+export default PerbaruiJadwalSidang;

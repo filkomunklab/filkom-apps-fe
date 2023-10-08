@@ -27,7 +27,7 @@ import {
 import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
 
-function DaftarMahasiswa() {
+function DaftarPengajuan() {
   const [judulPengajuan, setJudulPengajuan] = useState([]);
   const [judulPengajuanBaru, setJudulPengajuanBaru] = useState(""); // State untuk judul yang dimasukkan
   const [selectedOptions, setSelectedOptions] = useState([""]);
@@ -176,6 +176,7 @@ function DaftarMahasiswa() {
                 </TableCell>
                 <TableCell>
                   <Link
+                    href="#"
                     to="./BerandaMahasiswa.js"
                     style={{
                       textDecoration: "none",
@@ -612,4 +613,4 @@ function DaftarMahasiswa() {
   );
 }
 
-export default DaftarMahasiswa;
+export default DaftarPengajuan;

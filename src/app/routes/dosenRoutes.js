@@ -10,21 +10,16 @@ import BuatKonsultasiAdvisor from "app/pages/ThesisApps/Dosen/BuatKonsultasiAdvi
 import BeritaAcaraProposal from "app/pages/ThesisApps/Dosen/BukaBeritaAcaraProposalKetuaPenelis";
 import BukaBeritaAcaraProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/BukaBeritaAcaraProposalKetuaPenelis";
 import MengisiBeritaAcaraProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/MengisiBeritaAcaraProposalKetuaPenelis";
+import DaftarBimbinganSkripsiAdvisor from "app/pages/ThesisApps/Dosen/DaftarBimbinganSkripsiAdvisor";
+import DaftarPengajuan from "app/pages/ThesisApps/Mahasiswa/DaftarPengajuan";
+import MengisiBeritaAcaraProposalAnggotaPenelis from "app/pages/ThesisApps/Dosen/MengisiBeritaAcaraProposalAnggotaPenelis";
+import ErrorBeritaAcaraProposal from "app/pages/ThesisApps/Dosen/ErrorBeritaAcaraProposal";
 
 const dosenRoutes = [
   {
     // Thesis Apps Dosen
-    // DosenSkripsi
-    path: "/sistem-informasi-skripsi/pengajuan-judul-dosen-skripsi",
-    element: <Page component={DaftarPengajuanJudulDosenSkripsi} />,
-
-    // Advisor
-    path: "/sistem-informasi-skripsi/bimbingan-proposal-advisor",
-    element: <Page component={DaftarBimbinganProposalAdvisor} />,
-
-    // Co-Advisor
     path: "/sistem-informasi-skripsi/bimbingan-proposal-co-advisor",
-    element: <Page component={MengisiBeritaAcaraProposalKetuaPenelis} />,
+    element: <Page component={ErrorBeritaAcaraProposal} />,
   },
 ];
 

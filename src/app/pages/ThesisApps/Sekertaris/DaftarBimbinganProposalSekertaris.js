@@ -2,7 +2,6 @@ import Div from "@jumbo/shared/Div";
 import React, { useState } from "react";
 import PeopleIcon from "@mui/icons-material/People";
 import {
-  Button,
   Chip,
   Table,
   TableBody,

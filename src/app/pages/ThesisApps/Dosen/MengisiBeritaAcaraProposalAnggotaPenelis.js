@@ -7,7 +7,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
   Menu,
   MenuItem,
   Table,
@@ -18,14 +17,12 @@ import {
   TableRow,
   Typography,
   Radio,
-  RadioGroup,
-  FormControlLabel,
   DialogContentText,
   TextareaAutosize,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const MengisiBeritaAcaraProposalKetuaPenelis = () => {
+const MengisiBeritaAcaraProposalAnggotaPenelis = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open1 = Boolean(anchorEl);
   const [anchorE2, setAnchorE2] = useState(null);
@@ -36,77 +33,29 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [viewedChanges, setViewedChanges] = useState("");
-  const [status, setStatus] = useState(""); // State untuk menyimpan status
 
-  const handleStatusChange = (event) => {
-    setStatus(event.target.value); // Mengubah status saat radio button berubah
-  };
-
-  const [nilai, setNilai] = useState(""); // Nilai awal kosong, Anda dapat mengatur nilai default jika diperlukan
-
-  const handleNilaiChange = (event) => {
-    setNilai(event.target.value); // Mengubah nilai saat radio button berubah
-  };
-
-  const [perubahan, setPerubahan] = useState(""); // Defaultnya adalah "Major"
-
-  const handlePerubahanChange = (event) => {
-    setPerubahan(event.target.value); // Mengubah jenis perubahan saat radio button berubah
-  };
-
-  const [deskripsi, setDeskripsi] = useState(""); // Ubah nama state menjadi 'deskripsi'
-
-  const handleDeskripsiChange = (event) => {
-    setDeskripsi(event.target.value); // Ubah nama state saat radio button berubah
-  };
-
-  const [
-    openConfirmationBeritaAcaraDialog,
-    setOpenConfirmationBeritaAcaraDialog,
-  ] = useState(false);
-
-  const handleOpenConfirmationBeritaAcaraDialog = () => {
-    setOpenConfirmationBeritaAcaraDialog(true);
-  };
-
-  const handleCloseConfirmationBeritaAcaraDialog = () => {
-    setOpenConfirmationBeritaAcaraDialog(false);
-  };
-
-  // const history = useHistory();
-
-  // Fungsi yang akan dijalankan ketika pengguna mengklik tombol "Ya" di dialog konfirmasi
-  const handleSubmitData = () => {
-    // Di sini Anda dapat menambahkan logika untuk mengirim data atau tindakan yang diperlukan
-
-    // Setelah tindakan selesai, tutup dialog konfirmasi
-    handleCloseConfirmationBeritaAcaraDialog();
-
-    // Navigasi ke halaman lain
-    // history.push("/halaman-lain"); // Gantilah "/halaman-lain" dengan URL halaman yang sesuai
-  };
-
-  const [ketuaPenelisStatusBeritaAcara, setKetuaPenelisStatusBeritaAcara] =
+  const [AnggotaPenelisStatusBeritaAcara, setAnggotaPenelisStatusBeritaAcara] =
     useState("Belum");
-  const [KetuaPenelisStatusPerubahan, setKetuaPenelisStatusPerubahan] =
+
+  const [AnggotaPenelisStatusPerubahan, setAnggotaPenelisStatusPerubahan] =
     useState("Belum");
 
   const [isSigned, setIsSigned] = useState(false);
-  const [isSudmit, setIsSudmited] = useState(false);
+  const [isSudmit, setIsSudmit] = useState(false);
 
   const handleSignClick = () => {
-    // Logika untuk mengubah status
+    // Logika untuk mengubah status Berita Acara
     if (!isSigned) {
-      setKetuaPenelisStatusBeritaAcara("Sudah");
+      setAnggotaPenelisStatusBeritaAcara("Sudah");
       setIsSigned(true);
     }
   };
 
   const handleSudmitClick = () => {
-    // Logika untuk mengubah status
+    // Logika untuk mengubah status perubahan
     if (!isSudmit) {
-      setKetuaPenelisStatusPerubahan("Sudah");
-      setIsSudmited(true);
+      setAnggotaPenelisStatusPerubahan("Sudah");
+      setIsSudmit(true);
     }
   };
 
@@ -128,10 +77,12 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
     handleCloseRevisionDialog();
   };
 
+  // Fungsi untuk membuka dialog konfirmasi
   const handleOpenConfirmDialog = () => {
     setOpenConfirmDialog(true);
   };
 
+  // Fungsi untuk menutup dialog konfirmasi
   const handleCloseConfirmDialog = () => {
     setOpenConfirmDialog(false);
   };
@@ -221,9 +172,10 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
     // Simpan teks revisi yang diisi oleh pengguna
     setViewedChanges(revisionText);
 
-    // Setelah tindakan selesai, tutup dialog revisi
-    handleCloseRevisionDialog();
+    // Setelah tindakan selesai, tutup dialog revisi    handleCloseRevisionDialog();
+
     handleCloseConfirmationDialog();
+    handleCloseRevisionDialog();
   };
 
   return (
@@ -655,8 +607,8 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
                   <TableRow>
                     <TableCell>1</TableCell>
                     <TableCell>Frances Rully Yong</TableCell>
-                    <TableCell>{scoreSubmitted ? total : "-"}</TableCell>
                     <TableCell>-</TableCell>
+                    <TableCell>{scoreSubmitted ? total : "-"}</TableCell>
                     <TableCell>-</TableCell>
                     <TableCell>
                       <span
@@ -704,8 +656,11 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
                   <TableRow>
                     <TableCell>1</TableCell>
                     <TableCell>
+                      <Chip label="Belum" size="small" />
+                    </TableCell>
+                    <TableCell>
                       <Chip
-                        label={KetuaPenelisStatusPerubahan}
+                        label={AnggotaPenelisStatusPerubahan}
                         size="small"
                         sx={{
                           background: isSudmit
@@ -714,9 +669,6 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
                           color: isSudmit ? "#0A7637" : undefined,
                         }}
                       />
-                    </TableCell>
-                    <TableCell>
-                      <Chip label="Belum" size="small" />
                     </TableCell>
                     <TableCell>
                       <Chip label="Belum" size="small" />
@@ -785,8 +737,11 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
                       <Chip label="Belum" size="small" />
                     </TableCell>
                     <TableCell>
+                      <Chip label="Belum" size="small" />
+                    </TableCell>
+                    <TableCell>
                       <Chip
-                        label={ketuaPenelisStatusBeritaAcara}
+                        label={AnggotaPenelisStatusBeritaAcara}
                         size="small"
                         sx={{
                           background: isSigned
@@ -795,9 +750,6 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
                           color: isSigned ? "#0A7637" : undefined,
                         }}
                       />
-                    </TableCell>
-                    <TableCell>
-                      <Chip label="Belum" size="small" />
                     </TableCell>
                     <TableCell>
                       <Chip label="Belum" size="small" />
@@ -830,192 +782,8 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
             </TableContainer>
             {/* Table Berita Acara End */}
             {/* Radio Button Penilaian Akhir Start */}
-            <Div
-              sx={{
-                display: "flex",
-                padding: "0px 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-              }}
-            >
-              <Typography variant="subtitle2">
-                Kesimpulan Ujian Proposal
-              </Typography>
-              <Div>
-                <FormControl component="fieldset">
-                  <RadioGroup
-                    row
-                    aria-label="status"
-                    name="status"
-                    value={status}
-                    onChange={handleStatusChange}
-                  >
-                    <FormControlLabel
-                      value="Diterima"
-                      control={<Radio />}
-                      label="Diterima"
-                    />
-                    <FormControlLabel
-                      value="Ditolak"
-                      control={<Radio />}
-                      label="Ditolak"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Div>
-            </Div>
-            <Div
-              sx={{
-                display: "flex",
-                padding: "0px 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-              }}
-            >
-              <Typography variant="subtitle2">Perubahan</Typography>
-              <Div>
-                <FormControl component="fieldset">
-                  <RadioGroup
-                    row
-                    aria-label="perubahan"
-                    name="perubahan"
-                    value={perubahan}
-                    onChange={handlePerubahanChange}
-                  >
-                    <FormControlLabel
-                      value="Major"
-                      control={<Radio />}
-                      label="Major"
-                    />
-                    <FormControlLabel
-                      value="Minor"
-                      control={<Radio />}
-                      label="Minor"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Div>
-            </Div>
-            <Div
-              sx={{
-                display: "flex",
-                padding: "0px 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-              }}
-            >
-              <Typography variant="subtitle2">
-                Nilai Kesimpulan Ujian Proposal
-              </Typography>
-              <Div>
-                <FormControl component="fieldset">
-                  <RadioGroup
-                    row
-                    aria-label="nilai"
-                    name="nilai"
-                    value={nilai}
-                    onChange={handleNilaiChange}
-                  >
-                    <FormControlLabel value="A" control={<Radio />} label="A" />
-                    <FormControlLabel
-                      value="A-"
-                      control={<Radio />}
-                      label="A-"
-                    />
-                    <FormControlLabel
-                      value="B+"
-                      control={<Radio />}
-                      label="B+"
-                    />
-                    <FormControlLabel value="B" control={<Radio />} label="B" />
-                    <FormControlLabel
-                      value="B-"
-                      control={<Radio />}
-                      label="B-"
-                    />
-                    <FormControlLabel
-                      value="C+"
-                      control={<Radio />}
-                      label="C+"
-                    />
-                    <FormControlLabel value="C" control={<Radio />} label="C" />
-                    <FormControlLabel
-                      value="C-"
-                      control={<Radio />}
-                      label="C-"
-                    />
-                    <FormControlLabel
-                      value="D+"
-                      control={<Radio />}
-                      label="D+"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Div>
-            </Div>
-            <Div
-              sx={{
-                display: "flex",
-                padding: "0px 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-              }}
-            >
-              <Typography variant="subtitle2">Deskripsi</Typography>
-              <Div>
-                <FormControl component="fieldset">
-                  <RadioGroup
-                    row
-                    aria-label="deskripsi"
-                    name="deskripsi"
-                    value={deskripsi}
-                    onChange={handleDeskripsiChange}
-                  >
-                    <FormControlLabel
-                      value="Lulus"
-                      control={<Radio />}
-                      label="Lulus"
-                    />
-                    <FormControlLabel
-                      value="Tidak Lulus"
-                      control={<Radio />}
-                      label="Tidak Lulus"
-                    />
-                    <FormControlLabel
-                      value="Mengulang"
-                      control={<Radio />}
-                      label="Mengulang"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Div>
-            </Div>
+
             {/* Radio Button Penilaian Akhir End */}
-            <Div
-              sx={{
-                display: "flex",
-                width: "100%",
-                height: "59.43px",
-                padding: "12px 24px 12px 0px",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                gap: "12px",
-                background: "#F5F5F5",
-              }}
-            >
-              <Button
-                variant="contained"
-                sx={{ textTransform: "none" }}
-                color="primary"
-                onClick={handleOpenConfirmationBeritaAcaraDialog}
-              >
-                Submit
-              </Button>
-            </Div>
           </Div>
         </Div>
         {/* Element 2 End */}
@@ -1767,9 +1535,7 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
                   border: "2px solid #F5F5F5",
                 }}
               >
-                <Typography sx={{ whiteSpace: "pre-line" }}>
-                  {viewedChanges}
-                </Typography>
+                <Typography sx={{ whiteSpace: "pre-line" }}>-</Typography>
               </Div>
             </Div>
             <Div
@@ -1804,7 +1570,9 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
                   alignSelf: "stretch",
                 }}
               >
-                <Typography sx={{ whiteSpace: "pre-line" }}>-</Typography>
+                <Typography sx={{ whiteSpace: "pre-line" }}>
+                  {viewedChanges}
+                </Typography>
               </Div>
             </Div>
             <Div
@@ -1889,50 +1657,13 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
               color: "black",
             }}
           >
-            Tutup
+            Kembali
           </Button>
         </DialogActions>
       </Dialog>
       {/* Melihat Perubahan End */}
-
-      {/* Konfirmasi Sidang Proposal Start*/}
-      <Dialog
-        open={openConfirmationBeritaAcaraDialog}
-        onClose={handleCloseConfirmationBeritaAcaraDialog}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Sidang Proposal</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Apakah Anda yakin ingin menyetujui hasil sidang ini?
-          </Typography>
-        </DialogContent>
-        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-          <Button
-            onClick={handleCloseConfirmationBeritaAcaraDialog}
-            sx={{
-              background: "white",
-              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-              textTransform: "none",
-              color: "black",
-            }}
-          >
-            Batal
-          </Button>
-          <Button
-            onClick={handleSubmitData} // Anda perlu membuat fungsi handleSubmitData sesuai dengan kebutuhan Anda
-            variant="contained"
-            sx={{ textTransform: "none" }}
-            color="primary"
-          >
-            Setuju
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* konfrimasi Sidang Proposal End */}
     </Div>
   );
 };
 
-export default MengisiBeritaAcaraProposalKetuaPenelis;
+export default MengisiBeritaAcaraProposalAnggotaPenelis;
