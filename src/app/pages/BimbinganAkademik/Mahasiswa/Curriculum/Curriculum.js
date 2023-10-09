@@ -1023,7 +1023,7 @@ const Curriculum = () => {
             <TableRow>
               <TableCell sx={{ width: "80px" }}>Number</TableCell>
               <TableCell sx={{ width: "110px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Name</TableCell>
+              <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
               <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
               <TableCell sx={{ width: "120px" }}>Type</TableCell>
               <TableCell sx={{ width: "288px" }}>Prerequisite</TableCell>
