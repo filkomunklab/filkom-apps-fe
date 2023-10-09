@@ -1,3 +1,4 @@
+import Dashboard from "../pages/BimbinganAkademik/DosenPembimbing/Dashboard";
 import StudentGradeDashboard from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentGradeDashboard";
 import StudentInformation from "../pages/BimbinganAkademik/DosenPembimbing/StudentInformation";
 import StudentProfile from "../pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentProfile";
@@ -9,6 +10,10 @@ import CertificateDetail from "app/pages/BimbinganAkademik/DosenPembimbing/Stude
 const { default: Page } = require("@jumbo/shared/Page");
 
 const dosenPembimbingRoutes = [
+  {
+    path: "/bimbingan-akademik/dashboard",
+    element: <Page component={Dashboard} />,
+  },
   {
     path: "/bimbingan-akademik/student-information",
     element: <Page component={StudentInformation} />,
