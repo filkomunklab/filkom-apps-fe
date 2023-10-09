@@ -16,6 +16,11 @@ import Grades from "app/pages/BimbinganAkademik/Mahasiswa/Grades";
 import GradeSubmission from "app/pages/BimbinganAkademik/Mahasiswa/GradeSubmission";
 import History from "app/pages/BimbinganAkademik/Mahasiswa/History";
 import PreRegistration from "app/pages/BimbinganAkademik/Mahasiswa/PreRegistration";
+import PreRegistrationClosedCase from "app/pages/BimbinganAkademik/Mahasiswa/PreRegistration/PreRegistrationClosedCase";
+import PreRegistrationSubmitted from "app/pages/BimbinganAkademik/Mahasiswa/PreRegistration/PreRegistrationSubmitted";
+import PreRegistrationWaiting from "app/pages/BimbinganAkademik/Mahasiswa/PreRegistration/PreRegistrationWaiting";
+import PreRegistrationRejected from "app/pages/BimbinganAkademik/Mahasiswa/PreRegistration/PreRegistrationRejected";
+import PreRegistrationApproved from "app/pages/BimbinganAkademik/Mahasiswa/PreRegistration/PreRegistrationApproved";
 import Profile from "app/pages/BimbinganAkademik/Mahasiswa/Profile";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/Mahasiswa/VisionMisionGoals";
 import StudentGrade from "app/pages/BimbinganAkademik/Mahasiswa/Grades/StudentGrade";
@@ -84,6 +89,26 @@ const mahasiswaRoutes = [
   {
     path: "/bimbingan-akademik/history",
     element: <Page component={History} />,
+  },
+  {
+    path: "/bimbingan-akademik/pre-registration/pre-registrationClosedCase",
+    element: <Page component={PreRegistrationClosedCase} />,
+  },
+  {
+    path: "/bimbingan-akademik/pre-registration/pre-registrationSubmitted",
+    element: <Page component={PreRegistrationSubmitted} />,
+  },
+  {
+    path: "/bimbingan-akademik/pre-registration/pre-registrationWaiting",
+    element: <Page component={PreRegistrationWaiting} />,
+  },
+  {
+    path: "/bimbingan-akademik/pre-registration/pre-registrationRejected",
+    element: <Page component={PreRegistrationRejected} />,
+  },
+  {
+    path: "/bimbingan-akademik/pre-registration/pre-registrationApproved",
+    element: <Page component={PreRegistrationApproved} />,
   },
   {
     path: "/bimbingan-akademik/pre-registration",
