@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import SearchLocal from "app/shared/SearchLocal";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const data = [...Array(15)].map(() => ({
   submissionDate: "10 May 2000",
@@ -118,6 +119,7 @@ const TableHeading = () => {
 };
 
 const TableItem = ({ item, index }) => {
+  const navigate = useNavigate();
   let statusColor;
 
   switch (item.status) {
@@ -131,8 +133,27 @@ const TableItem = ({ item, index }) => {
       statusColor = "#E21D12";
       break;
   }
+
+  const handleNavigate = () => {
+    navigate(
+      "/bimbingan-akademik/student-information/10000002/certificate/1000001"
+    );
+  };
+
   return (
-    <TableRow>
+    <TableRow
+      onClick={handleNavigate}
+      sx={{
+        ":hover": {
+          cursor: "pointer",
+          backgroundColor: "#338CFF21",
+          transition: "0.3s",
+          transitionTimingFunction: "ease-in-out",
+          transitionDelay: "0s",
+          transitionProperty: "all",
+        },
+      }}
+    >
       <TableCell>{index + 1}</TableCell>
       <TableCell>{item.submissionDate}</TableCell>
       <TableCell>{item.title}</TableCell>
