@@ -35,9 +35,11 @@ import {
     DialogContentText, 
     DialogTitle,
   } from "@mui/material";
-  import React, { useState } from "react";
-import SearchGlobal from 'app/shared/SearchGlobal';
-import JumboDemoCard from '@jumbo/components/JumboDemoCard';
+import React, { useState } from "react";
+import {LocalizationProvider} from "@mui/x-date-pickers";
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
+import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
+import { makeStyles } from '@mui/styles';
 
 const rows = [
     { id: 1, name: 'Row 1', mk: 'Robotics', sks: '3', keterangan: 'Summer 2023' },
@@ -49,17 +51,17 @@ const rows = [
     // Add more rows as needed
   ];
 
-    const faculties = [
-        'ASMIK',
-        'Fakultas Ekonomi dan Bisnis',
-        'Fakultas Filsafat',
-        'Fakultas Ilmu Komputer',
-        'Fakultas Keguruan dan Ilmu Pendidikan',
-        'Fakultas Keperawatan',
-        'Fakultas Pertanian',
-    ];
+const faculties = [
+    'ASMIK',
+    'Fakultas Ekonomi dan Bisnis',
+    'Fakultas Filsafat',
+    'Fakultas Ilmu Komputer',
+    'Fakultas Keguruan dan Ilmu Pendidikan',
+    'Fakultas Keperawatan',
+    'Fakultas Pertanian',
+];
 
-  const majorsByFaculty = {
+const majorsByFaculty = {
     'ASMIK': ['Sekretaris'],
     'Fakultas Ekonomi dan Bisnis': ['Akuntansi', 'Management'],
     'Fakultas Filsafat': ['Ilmu Filsafat'],
@@ -67,7 +69,7 @@ const rows = [
     'Fakultas Keguruan dan Ilmu Pendidikan': ['Pendidikan Agama', 'Pendidikan Bahasa Inggris', 'Pendidkan Ekonomi', 'Pendidkan Luar Sekolah'],
     'Fakultas Keperawatan': ['Ilmu Keperawatan'],
     'Fakultas Pertanian': ['Agroteknologi'],
-  };
+    };
 
 const PengisianSPT = () => {
     const [data, setData] = useState(rows);
@@ -97,6 +99,10 @@ const PengisianSPT = () => {
 
     // alert dialog
     const [open, setOpen] = React.useState(false);
+
+
+    // date picker
+    const [value, setValue] = React.useState(new Date);
 
     return (
         <Box
@@ -152,14 +158,16 @@ const PengisianSPT = () => {
                     </Grid>
                     <Grid item sm={12} md={6}>
                         <Typography variant="subtitle1" mb={1}>Tanggal Lahir</Typography>
-                        <TextField
-                        fullWidth
-                        variant="outlined"
-                        name="tglLahir"
-                        placeholder="put the date picker here!!"
-                        //   value={identityData.tahunLulus}
-                        //   onChange={handleIdentityChange}
-                        />
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DesktopDatePicker
+                                label="Select Date"
+                                inputFormat="MM/dd/yyyy"
+                                value={value}
+                                onChange={(event, newValue) => setValue(newValue)}
+                                renderInput={(params) => <TextField {...params} />}
+                                sx={{ width: '100%' }}
+                            />
+                        </LocalizationProvider>
                     </Grid>
                     <Grid item sm={12} md={6}>
                     <FormControl>

@@ -22,11 +22,14 @@ import {
   List,
   ListItem, 
   ListItemText,
+  FormLabel,
 } from "@mui/material";
 import Div from "@jumbo/shared/Div";
 import JumboDemoCard from "@jumbo/components/JumboDemoCard";
-import FormLabel from "@mui/material/FormLabel";
-import FormHelperText from "@mui/material/FormHelperText";
+import {LocalizationProvider} from "@mui/x-date-pickers";
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
+import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
+
 
 //import code from "../Pickers/demo-code/native-picker.txt";
 // import {LocalizationProvider} from "@mui/x-date-pickers";
@@ -38,7 +41,7 @@ const FormTracerSTudy = () => {
   const [checked, setChecked] = React.useState(false);
 
   //for date pickers
-  //const [value, setValue] = React.useState(new Date('2022-06-04T21:11:54'));
+  const [value, setValue] = React.useState(new Date('2022-06-04T21:11:54'));
 
   const [identityData, setIdentityData] = useState({
     nim: "",
@@ -445,17 +448,15 @@ const FormTracerSTudy = () => {
               </FormControl>
             </Grid>
             <Grid item md={6}>
-              {/* <TextField 
+              <TextField 
                 fullWidth 
                 id="outlined-basic" 
                 placeholder="lainnya" 
                 variant="outlined"
-              /> */}
+              />
 
               {/* fix: hubungin ke radio button */}
               {/* {questionnaireData.f1101 === '5' && (
-              )} */} 
-              {questionnaireData.f1101 === '5' && (
                 <TextField
                   fullwidth
                   label="Text Field"
@@ -464,7 +465,7 @@ const FormTracerSTudy = () => {
                   value={questionnaireData.f1102}
                   onChange={handleQuestionnaireChange}
                 />
-              )}
+              )} */}
             </Grid>
           </Grid>
 
@@ -542,10 +543,9 @@ const FormTracerSTudy = () => {
             </Typography>
             <Grid container spacing={4}>
               <Grid item xs={12} md={6}>
-                <InputLabel id="demo-simple-select-label">Sumber biaya</InputLabel>
+                <Typography mb={1}>Sumber biaya</Typography>
                   <Select
                     fullWidth
-                    labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     name="f18a"
                     value={questionnaireData.f18a}
@@ -556,10 +556,9 @@ const FormTracerSTudy = () => {
                   </Select>
               </Grid>
               <Grid item xs={12} md={6}>
-                <InputLabel id="demo-simple-select-label">Perguruan Tinggi</InputLabel>
+                <Typography mb={1}>Perguruan Tinggi</Typography>
                   <TextField
                     fullWidth
-                    labelId="demo-simple-select-label"
                     variant="outlined"
                     name="f18b"
                     placeholder="Universitas Klabat"
@@ -568,10 +567,9 @@ const FormTracerSTudy = () => {
                   />
               </Grid>
               <Grid item xs={12} md={6}>
-                <InputLabel id="demo-simple-select-label">Program Studi</InputLabel>
+                <Typography mb={1}>Program Studi</Typography>
                   <TextField
                     fullWidth
-                    labelId="demo-simple-select-label"
                     variant="outlined"
                     name="f18c"
                     placeholder="Informatika"
@@ -580,16 +578,18 @@ const FormTracerSTudy = () => {
                   />
               </Grid>
               <Grid item xs={12} md={6}>
-                {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <Typography mb={1}>Tanggal Masuk</Typography>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
-                    label="Date desktop"
+                    label="Select Date"
                     inputFormat="MM/dd/yyyy"
                     value={value}
                     onChange={(event, newValue) => setValue(newValue)}
                     renderInput={(params) => <TextField {...params} />}
+                    sx={{ width: '100%' }}
                   />
-                </LocalizationProvider> */}
-                <InputLabel id="demo-simple-select-label">Tanggal Masuk</InputLabel>
+                </LocalizationProvider>
+                {/* <InputLabel id="demo-simple-select-label">Tanggal Masuk</InputLabel>
                   <TextField
                     fullWidth
                     labelId="demo-simple-select-label"
@@ -598,7 +598,7 @@ const FormTracerSTudy = () => {
                     placeholder="date picker error...."
                     value={questionnaireData.f18d}
                     onChange={handleQuestionnaireChange}
-                  />
+                  /> */}
               </Grid>
             </Grid>
           </Grid>
