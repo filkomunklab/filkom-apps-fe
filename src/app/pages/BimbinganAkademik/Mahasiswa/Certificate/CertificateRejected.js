@@ -57,13 +57,13 @@ const CertificateWaiting = () => {
             Supervisor Name
           </Typography>
           <Typography variant="h5" sx={{ marginBottom: 2 }}>
+            Category
+          </Typography>
+          <Typography variant="h5" sx={{ marginBottom: 2 }}>
             Submission Date
           </Typography>
           <Typography variant="h5" sx={{ marginBottom: 2 }}>
             Status
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Category
           </Typography>
         </Box>
         <Box sx={{ flex: 0.04 }}>
@@ -97,13 +97,13 @@ const CertificateWaiting = () => {
             Adzanu, Shaliha Alifyaa
           </Typography>
           <Typography variant="h5" sx={{ marginBottom: 2 }}>
+            Local
+          </Typography>
+          <Typography variant="h5" sx={{ marginBottom: 2 }}>
             10 May 2000
           </Typography>
           <Typography variant="h5" sx={{ marginBottom: 2, color: "red" }}>
             Rejected
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Local
           </Typography>
         </Box>
         <Box sx={{ flex: 1 }}>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -44,6 +44,17 @@ function a11yProps(index) {
 const History = (props) => {
   const [value, setValue] = React.useState(0);
 
+  useEffect(() => {
+    const storedValue = localStorage.getItem("historyTabValue");
+    if (storedValue !== null) {
+      setValue(parseInt(storedValue));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("historyTabValue", value);
+  }, [value]);
+
   return (
     <div>
       <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
@@ -66,7 +77,13 @@ const History = (props) => {
 
       <SearchLocal />
       <div sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={value} onChange={(event, newValue) => setValue(newValue)}>
+        <Tabs
+          value={value}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
+          onChange={(event, newValue) => setValue(newValue)}
+        >
           <Tab label="Activity" {...a11yProps(0)} />
           <Tab label="Pre-registration" {...a11yProps(1)} />
           <Tab label="Certificate" {...a11yProps(2)} />
@@ -324,7 +341,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/grades/studentgrade/"
+                to="/bimbingan-akademik/history/preregis/"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -377,7 +394,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/grades/studentgrade/"
+                to="/bimbingan-akademik/history/preregis/"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
