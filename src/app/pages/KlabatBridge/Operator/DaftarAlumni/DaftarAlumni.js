@@ -10,6 +10,9 @@ import {
   TableHead,
   TableRow,
   Typography,
+  FormControl,
+  InputLabel,
+  Pagination,
 } from "@mui/material";
 import ActionButton from "app/shared/ActionButton";
 import SearchGlobal from "app/shared/SearchGlobal";
@@ -49,6 +52,7 @@ const DaftarAlumni = () => {
           direction: "row",
           justifyContent: "space-between",
           alignItems: "center",
+          mb: 2,
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
@@ -62,36 +66,44 @@ const DaftarAlumni = () => {
             alignItems: "center",
           }}
         >
-          <SearchGlobal />
-          <Select
-            sx={{ borderRadius: "50px", minWidth: "150px" }}
-            value={sortBy}
-            onChange={(event) => setSortBy(event.target.value)}
-            displayEmpty
-            inputProps={{ "aria-label": "Without label" }}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem value={"namalengkap"}>Nama Lengkap</MenuItem>
-            <MenuItem value={"nim"}>NIM</MenuItem>
-            <MenuItem value={"prodi"}>Prodi</MenuItem>
-          </Select>
-          <Button
-            sx={{
-              backgroundColor: "#006AF5",
-              borderRadius: "24px",
-              color: "white",
-              whiteSpace: "nowrap",
-              width: "100%",
-
-              "&:hover": {
+          <SearchGlobal sx={{ minWidth: { xs: 100, md: 300 } }} />
+          <FormControl sx={{minWidth: 150}} size="small">
+              <InputLabel id="demo-select-small">Sort by</InputLabel>
+              <Select
+                sx={{ borderRadius: "50px", minWidth: "150px"}}
+                labelId="demo-select-small"
+                id="demo-select-small"
+                value={sortBy}
+                label="Sort by"
+                onChange={(event) => setSortBy(event.target.value)}
+              >
+                <MenuItem value="">
+                    <em>None</em>
+                </MenuItem>
+                <MenuItem value={"Nama"}>Nama</MenuItem>
+                <MenuItem value={"Fakultas"}>Fakultas</MenuItem>
+                <MenuItem value={"Prodi"}>Prodi</MenuItem>
+                <MenuItem value={"NIM"}>NIM</MenuItem>
+                <MenuItem value={"Tahun Lulus"}>Tahun Lulus</MenuItem>
+              </Select>
+            </FormControl>
+            <Button
+                sx={{
                 backgroundColor: "#006AF5",
-              },
-            }}
-          >
-            + Import Data
-          </Button>
+                borderRadius: "24px",
+                color: "white",
+                whiteSpace: "nowrap",
+                width: "100%",
+                pr:3,
+                pl:3,
+
+                "&:hover": {
+                    backgroundColor: "#006AF5",
+                },
+                }}
+            >
+                + Import Data
+            </Button>
         </Div>
       </Div>
       <TableContainer sx={{ overflow: "auto" }}>
@@ -115,6 +127,7 @@ const DaftarAlumni = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Pagination count={10} color="primary" sx={{mt:3}}/>
     </Div>
   );
 };
