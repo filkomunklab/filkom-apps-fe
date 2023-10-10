@@ -4,6 +4,7 @@ import DaftarAlumni from "app/pages/KlabatBridge/Operator/DaftarAlumni";
 import FormTracerStudy from "app/pages/KlabatBridge/Operator/FormTracerStudy";
 import GrafikAlumni from "app/pages/KlabatBridge/Operator/GrafikAlumni";
 import Dashboard from "app/pages/KlabatBridge/Operator/Dashboard";
+import ViewDetailStudent from "app/pages/KlabatBridge/Operator/ViewDetailStudent";
 
 // calon tamatan
 import PengisianSPT from "app/pages/KlabatBridge/Operator/PengisianSPT";
@@ -28,6 +29,10 @@ const operatorRoutes = [
   {
     path: "klabat-bridge/pengisian-spt",
     element: <Page component={PengisianSPT} />,
+  },
+  {
+    path: "klabat-bridge/view-detail-student",
+    element: <Page component={ViewDetailStudent} />,
   },
 ];
 

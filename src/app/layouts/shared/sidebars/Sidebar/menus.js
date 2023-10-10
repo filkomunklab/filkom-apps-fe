@@ -355,6 +355,12 @@ const menus = [
         icon: <InsertCommentIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/pengisian-spt",
       },
+      {
+        label: "View Detail Student",
+        type: "nav-item",
+        icon: <InsertCommentIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/view-detail-student",
+      },
     ],
   },
   {
