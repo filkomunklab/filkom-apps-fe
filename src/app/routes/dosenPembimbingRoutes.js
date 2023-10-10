@@ -1,16 +1,20 @@
+import Dashboard from "../pages/BimbinganAkademik/DosenPembimbing/Dashboard";
 import StudentGradeDashboard from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentGradeDashboard";
 import StudentInformation from "../pages/BimbinganAkademik/DosenPembimbing/StudentInformation";
 import StudentProfile from "../pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentProfile";
 import StudentGrade from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentGradeDashboard/StudentGrade";
 import StudentCertificate from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentCertificate";
+import ReviewPreReg from "app/pages/BimbinganAkademik/DosenPembimbing/ReviewPreReg";
 import History from "../pages/BimbinganAkademik/DosenPembimbing/History";
 import CertificateDetail from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentCertificate/CertificateDetail";
 
-
 const { default: Page } = require("@jumbo/shared/Page");
 
-
 const dosenPembimbingRoutes = [
+  {
+    path: "/bimbingan-akademik/dashboard",
+    element: <Page component={Dashboard} />,
+  },
   {
     path: "/bimbingan-akademik/student-information",
     element: <Page component={StudentInformation} />,
@@ -34,6 +38,10 @@ const dosenPembimbingRoutes = [
   {
     path: "/bimbingan-akademik/student-information/:id/certificate/:id",
     element: <Page component={CertificateDetail} />,
+  },
+  {
+    path: "/bimbingan-akademik/review-pre-registration",
+    element: <Page component={ReviewPreReg} />,
   },
   {
     path: "/bimbingan-akademik/dospem/history",
