@@ -126,7 +126,7 @@ const Certificate = () => {
           variant="outlined"
           placeholder="Ex. Menang lomba desain prototype"
           fullWidth
-          sx={{ height: "48px" }}
+          sx={{ backgroundColor: "white" }}
         />
       </Stack>
 
@@ -135,7 +135,7 @@ const Certificate = () => {
           <Stack spacing={2} sx={{ paddingBottom: 3 }}>
             <RTypography sx={{ paddingBottom: "10px" }}>Category</RTypography>
             <TextField
-              sx={{ width: "100%" }}
+              sx={{ width: "100%", backgroundColor: "white" }}
               id="outlined-select-category"
               select
               label={showLabel ? "Select Certificate Category" : ""}
@@ -160,7 +160,11 @@ const Certificate = () => {
             <RTypography sx={{ paddingBottom: "10px" }}>
               Certificate Photo
             </RTypography>
-            <FormControl fullWidth variant="outlined">
+            <FormControl
+              fullWidth
+              variant="outlined"
+              sx={{ backgroundColor: "white" }}
+            >
               <Input
                 type="file"
                 accept=".jpg, .jpeg, .png"
@@ -206,6 +210,7 @@ const Certificate = () => {
           <Stack spacing={2} sx={{ paddingBottom: 3 }}>
             <Typography>Descriptions</Typography>
             <TextField
+              sx={{ backgroundColor: "white" }}
               id="outlined-basic"
               variant="outlined"
               placeholder="Add Descriptions"

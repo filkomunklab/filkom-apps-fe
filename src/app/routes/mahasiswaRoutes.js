@@ -11,6 +11,7 @@ import Consultation from "app/pages/BimbinganAkademik/Mahasiswa/Consultation";
 import Curriculum from "app/pages/BimbinganAkademik/Mahasiswa/Curriculum";
 import Grades from "app/pages/BimbinganAkademik/Mahasiswa/Grades";
 import GradeSubmission from "app/pages/BimbinganAkademik/Mahasiswa/GradeSubmission";
+import GradeSubmissionClosed from "app/pages/BimbinganAkademik/Mahasiswa/GradeSubmission/GradeSubmissionClosed";
 import History from "app/pages/BimbinganAkademik/Mahasiswa/History";
 import Activity from "app/pages/BimbinganAkademik/Mahasiswa/History/HIstoryActivity/HistoryActivity";
 import ConsultationWaiting from "app/pages/BimbinganAkademik/Mahasiswa/History/HistoryConsultation/ConsultationWaiting";
@@ -72,6 +73,11 @@ const mahasiswaRoutes = [
   {
     path: "/bimbingan-akademik/grade-submission",
     element: <Page component={GradeSubmission} />,
+  },
+
+  {
+    path: "/bimbingan-akademik/grade-submission-closed",
+    element: <Page component={GradeSubmissionClosed} />,
   },
   {
     path: "/bimbingan-akademik/history",
