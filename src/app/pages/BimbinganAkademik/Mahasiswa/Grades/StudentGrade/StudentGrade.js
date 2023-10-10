@@ -8,16 +8,16 @@ import {
   TableHead,
   TableRow,
   Breadcrumbs,
-  experimentalStyled as styled, 
+  experimentalStyled as styled,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
-  textDecoration: 'none',
-  color: 'rgba(27, 43, 65, 0.69)',
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
 
-  '&:hover': {
-    textDecoration: 'underline',
+  "&:hover": {
+    textDecoration: "underline",
   },
 }));
 
@@ -78,7 +78,7 @@ const tableData1 = [
     grade: "B (70)",
     retrieval: 2,
   },
-]
+];
 
 const TableItem = ({ data }) => (
   <TableRow>
@@ -92,26 +92,34 @@ const TableItem = ({ data }) => (
 );
 
 const StudentGrade = () => {
-
   const handleClick = (event) => {
-      event.preventDefault();
+    event.preventDefault();
   };
-  
 
   return (
     <div>
       <div role="presentation" onClick={handleClick}>
-          <Breadcrumbs aria-label="breadcrumb">
-              <StyledLink to="/bimbingan-akademik/grades" >
-                  Grades
-              </StyledLink> 
-              <Typography color="text.primary">Student Grades</Typography>
-          </Breadcrumbs>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink to="/bimbingan-akademik/grades">Grades</StyledLink>
+          <Typography color="text.primary">Student Grades</Typography>
+        </Breadcrumbs>
       </div>
-      <Typography sx={{ fontSize: "24px", fontWeight: 500, paddingTop:"20px" }}>
+      <Typography
+        sx={{ fontSize: "24px", fontWeight: 500, paddingTop: "20px" }}
+      >
         Student Grades
       </Typography>
-      <Typography sx={{ paddingTop: "20px", paddingBottom: "26px", fontSize: "19px", fontWeight: 400, color: "rgba(27, 43, 65, 0.69)" }}>Semester 1</Typography>
+      <Typography
+        sx={{
+          paddingTop: "20px",
+          paddingBottom: "26px",
+          fontSize: "19px",
+          fontWeight: 400,
+          color: "rgba(27, 43, 65, 0.69)",
+        }}
+      >
+        Semester 1
+      </Typography>
       <TableContainer sx={{ overflow: "auto" }}>
         <Table>
           <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
@@ -131,10 +139,19 @@ const StudentGrade = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Typography sx={{ paddingTop:"40px", paddingBottom: "80px",fontSize: "14px", fontWeight: 500 }}>
+      <Typography
+        sx={{
+          paddingTop: "40px",
+          paddingBottom: "80px",
+          fontSize: "14px",
+          fontWeight: 500,
+        }}
+      >
         Semester I, Academic Year 2022/2023
-        <br />Total Grade: 3.92
-        <br />Total Major Grade: 3.96
+        <br />
+        Total Grade: 3.92
+        <br />
+        Total Major Grade: 3.96
       </Typography>
     </div>
   );

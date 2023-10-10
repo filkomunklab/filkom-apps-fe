@@ -58,8 +58,6 @@ const Consultation = () => {
   const [message, setMessage] = useState("");
   const [showLabel, setShowLabel] = useState(true);
   const [showLabel2, setShowLabel2] = useState(true);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedFileName, setSelectedFileName] = useState("");
 
   const [openFirstModal, setOpenFirstModal] = React.useState(false);
   const [openSecondModal, setOpenSecondModal] = React.useState(false);
@@ -78,22 +76,6 @@ const Consultation = () => {
       clearTimeout(timer);
     };
   }, [handleOpenSecondModal]);
-
-  const handleFileInputChange = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
-
-    const labelElement = document.getElementById("certificate-label");
-    if (labelElement) {
-      labelElement.style.border = "0.5px solid #BCBCBC";
-    }
-
-    if (file) {
-      setSelectedFileName(file.name);
-    } else {
-      setSelectedFileName("");
-    }
-  };
 
   const handleSubmitFirstModal = () => {
     handleCloseFirstModal();
@@ -173,7 +155,7 @@ const Consultation = () => {
           <Stack spacing={2} sx={{ paddingBottom: 3 }}>
             <RTypography>Topic of Discussion</RTypography>
             <TextField
-              sx={{ width: "100%" }}
+              sx={{ width: "100%", backgroundColor: "white" }}
               id="outlined-select-topic"
               select
               label={showLabel ? "Select Topic" : ""}
@@ -197,7 +179,7 @@ const Consultation = () => {
           <Stack spacing={2} sx={{ paddingBottom: 3 }}>
             <RTypography>Consultation receiver</RTypography>
             <TextField
-              sx={{ width: "100%" }}
+              sx={{ width: "100%", backgroundColor: "white" }}
               id="outlined-select-receiver"
               select
               label={showLabel2 ? "Select Receiver" : ""}
@@ -225,6 +207,7 @@ const Consultation = () => {
           <Stack spacing={2}>
             <Typography>Message</Typography>
             <TextField
+              sx={{ backgroundColor: "white" }}
               id="outlined-basic"
               variant="outlined"
               placeholder="Enter message ..."

@@ -161,7 +161,7 @@ const ApprovedHistoryGrade = () => {
           <Typography variant="h5" sx={{ marginBottom: 2 }}>
             10 May 2000
           </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2, color: "blue" }}>
+          <Typography variant="h5" sx={{ marginBottom: 2, color: "#006AF5" }}>
             Approved
           </Typography>
         </Box>
