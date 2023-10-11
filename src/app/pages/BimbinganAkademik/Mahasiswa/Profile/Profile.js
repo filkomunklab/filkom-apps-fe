@@ -4,12 +4,10 @@ import {
   AccordionDetails,
   AccordionSummary,
   Grid,
-  IconButton,
   Stack,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
 
 const StudentProfile = () => {
   return (
@@ -58,9 +56,6 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Stack direction={"row"} gap={1} justifyContent={"space-between"}>
                 <Typography variant="h5">Student Status</Typography>
-                <IconButton size="small">
-                  <BorderColorIcon fontSize="inherit" />
-                </IconButton>
               </Stack>
               <Typography variant="h6" sx={textSyle}>
                 Active
@@ -262,7 +257,7 @@ const textSyle = {
   borderColor: "#00000029",
   borderStyle: "solid",
   paddingX: "24px",
-  paddingY: "16px",
+  paddingY: "13px",
   borderRadius: "8px",
 };
 
