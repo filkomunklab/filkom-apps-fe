@@ -87,6 +87,9 @@ const GradeSubmission = () => {
   const [retrieval, setRetrieval] = useState(Array(row).fill(""));
   const [showLabel, setShowLabel] = useState(true);
   const [showLabel2, setShowLabel2] = useState(true);
+  const [showLabel3, setShowLabel3] = useState(true);
+  const [showLabel4, setShowLabel4] = useState(true);
+  const [showLabel5, setShowLabel5] = useState(true);
 
   const handleSemesterChange = (event) => {
     setSemester(event.target.value);
