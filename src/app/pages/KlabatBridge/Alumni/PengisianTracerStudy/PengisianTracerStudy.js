@@ -41,7 +41,7 @@ import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
 // import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 // import code from "../Pickers/demo-code/date-picker.txt";
 
-const FormTracerSTudy = () => {
+const PengisianTracerStudy = () => {
   const [checked, setChecked] = React.useState(false);
 
   //for date pickers
@@ -1419,6 +1419,6 @@ const FormTracerSTudy = () => {
   );
 };
 
-export default FormTracerSTudy;
+export default PengisianTracerStudy;
 
 

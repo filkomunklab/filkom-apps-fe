@@ -22,6 +22,9 @@ import PeopleIcon from "@mui/icons-material/People";
 import PublicIcon from "@mui/icons-material/Public";
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 // Student Menu
 // const menus = [
@@ -352,15 +355,27 @@ const menus = [
       {
         label: "Pengisian SPT",
         type: "nav-item",
-        icon: <InsertCommentIcon sx={{ fontSize: 20 }} />,
+        icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/pengisian-spt",
       },
       {
         label: "View Detail Student",
         type: "nav-item",
-        icon: <InsertCommentIcon sx={{ fontSize: 20 }} />,
+        icon: <AccountBoxIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/view-detail-student",
       },
+      {
+        label: "Daftar Calon Tamatan",
+        type: "nav-item",
+        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-calon-tamatan",
+      },
+      // {
+      //   label: "Pengisian Tracer Study",
+      //   type: "nav-item",
+      //   icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
+      //   uri: "/klabat-bridge/pengisian-tracer-study",
+      // },
     ],
   },
   {
