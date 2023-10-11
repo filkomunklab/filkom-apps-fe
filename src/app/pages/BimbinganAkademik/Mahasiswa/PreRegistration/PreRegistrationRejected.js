@@ -1,4 +1,3 @@
-import Div from "@jumbo/shared/Div";
 import {
   Grid,
   Stack,
@@ -9,8 +8,20 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Breadcrumbs,
+  experimentalStyled as styled,
   Paper,
 } from "@mui/material";
+import { Link } from "react-router-dom";
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const tableData1 = [
   {
@@ -106,9 +117,22 @@ const TableItem = ({ data }) => (
 );
 
 const PreRegistrationRejected = () => {
+  const handleClick = (event) => {
+    event.preventDefault();
+  };
   return (
-    <Div>
-      <Typography fontSize={"24px"} fontWeight="500" sx={{ marginBottom: 2 }}>
+    <div>
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink to="/bimbingan-akademik/history">History</StyledLink>
+          <Typography color="text.primary">Pre-registration</Typography>
+        </Breadcrumbs>
+      </div>
+      <Typography
+        fontSize={"24px"}
+        fontWeight="500"
+        sx={{ marginBottom: 2, paddingTop: "20px" }}
+      >
         Courses Pre-registration
       </Typography>
       <Grid container>
@@ -193,8 +217,8 @@ const PreRegistrationRejected = () => {
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      <Stack spacing={2} sx={{ marginTop: 4 }}>
+      </Grid>{" "}
+      <Stack spacing={2} sx={{ marginTop: 3, paddingBottom: 2 }}>
         <Typography variant="h5" sx={{ fontWeight: 600 }}>
           Comments from Supervisor
         </Typography>
@@ -208,7 +232,7 @@ const PreRegistrationRejected = () => {
         </Paper>
       </Stack>
       <TableContainer
-        sx={{ overflow: "auto", marginTop: 6, backgroundColor: "white" }}
+        sx={{ overflow: "auto", marginTop: 4, backgroundColor: "white" }}
       >
         <Table>
           <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
@@ -230,7 +254,7 @@ const PreRegistrationRejected = () => {
           </TableBody>
         </Table>
       </TableContainer>
-    </Div>
+    </div>
   );
 };
 
