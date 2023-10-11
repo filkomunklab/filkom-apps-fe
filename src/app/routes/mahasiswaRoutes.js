@@ -97,15 +97,15 @@ const mahasiswaRoutes = [
     element: <Page component={PreRegistrationSubmitted} />,
   },
   {
-    path: "/bimbingan-akademik/pre-registration/pre-registrationWaiting",
+    path: "/bimbingan-akademik/history/pre-registrationWaiting",
     element: <Page component={PreRegistrationWaiting} />,
   },
   {
-    path: "/bimbingan-akademik/pre-registration/pre-registrationRejected",
+    path: "/bimbingan-akademik/history/pre-registrationRejected",
     element: <Page component={PreRegistrationRejected} />,
   },
   {
-    path: "/bimbingan-akademik/pre-registration/pre-registrationApproved",
+    path: "/bimbingan-akademik/history/pre-registrationApproved",
     element: <Page component={PreRegistrationApproved} />,
   },
   {

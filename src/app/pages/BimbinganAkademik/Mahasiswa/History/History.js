@@ -341,7 +341,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/preregis/"
+                to="/bimbingan-akademik/history/pre-registrationwaiting/"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -394,7 +394,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/preregis/"
+                to="/bimbingan-akademik/history/pre-registrationapproved/"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -423,6 +423,58 @@ const History = (props) => {
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Preregistrasi semester I tahun ajaran 2023/2024
                       </Typography>{" "}
+                    </>
+                  }
+                />
+                <Box sx={{ marginLeft: "auto" }}>
+                  <ListItemText secondary="Aug 6, 2023" />
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+              <Box
+                sx={{
+                  height: "50px",
+                  backgroundColor: "rgba(235, 235, 235, 1)",
+                  display: "flex",
+                  alignItems: "center",
+                  paddingLeft: "35px",
+                }}
+              >
+                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
+                  Sunday, Mar 12, 2023
+                </Typography>
+              </Box>
+              <ListItem
+                button
+                component={Link}
+                to="/bimbingan-akademik/history/pre-registrationrejected/"
+                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
+              >
+                <ListItemText
+                  primary={
+                    <Chip
+                      size={"small"}
+                      label={"Pre-registration"}
+                      sx={{
+                        backgroundColor: "rgba(21, 131, 67, 0.1)",
+                        color: "rgba(21, 131, 67, 1)",
+                      }}
+                    />
+                  }
+                  secondary={
+                    <>
+                      <Typography
+                        sx={{
+                          color: "rgba(0, 0, 0, 1)",
+                          paddingLeft: "8px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        Pre-registrasi Adzana, Shaliha Gracia
+                      </Typography>{" "}
+                      <Typography sx={{ paddingLeft: "8px" }}>
+                        Preregistrasi semester II tahun ajaran 2022/2023
+                      </Typography>
                     </>
                   }
                 />
