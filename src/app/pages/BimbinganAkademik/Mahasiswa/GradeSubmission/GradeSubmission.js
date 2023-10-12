@@ -87,9 +87,6 @@ const GradeSubmission = () => {
   const [retrieval, setRetrieval] = useState(Array(row).fill(""));
   const [showLabel, setShowLabel] = useState(true);
   const [showLabel2, setShowLabel2] = useState(true);
-  const [showLabel3, setShowLabel3] = useState(true);
-  const [showLabel4, setShowLabel4] = useState(true);
-  const [showLabel5, setShowLabel5] = useState(true);
 
   const handleSemesterChange = (event) => {
     setSemester(event.target.value);
@@ -105,21 +102,18 @@ const GradeSubmission = () => {
     const newSubjectName = [...subjectName];
     newSubjectName[index] = event.target.value;
     setSubjectName(newSubjectName);
-    setShowLabel3(false);
   };
 
   const handleParallelChange = (event, index) => {
     const newParallel = [...parallel];
     newParallel[index] = event.target.value;
     setParallel(newParallel);
-    setShowLabel4(false);
   };
 
   const handleLecturerChange = (event, index) => {
     const newLecturer = [...lecturer];
     newLecturer[index] = event.target.value;
     setLecturer(newLecturer);
-    setShowLabel5(false);
   };
 
   const handleGradeChange = (event, index) => {
@@ -267,7 +261,7 @@ const GradeSubmission = () => {
                       }}
                       shrink={false}
                     >
-                      {showLabel3 ? "Select Subject Name" : ""}
+                      {!subjectName[index] ? "Select Subject Name" : ""}
                     </InputLabel>
                     <Select
                       value={subjectName[index]}
@@ -322,7 +316,7 @@ const GradeSubmission = () => {
                       }}
                       shrink={false}
                     >
-                      {showLabel4 ? "Parallel" : ""}
+                      {!parallel[index] ? "Parallel" : ""}
                     </InputLabel>
                     <Select
                       value={parallel[index]}
@@ -357,7 +351,7 @@ const GradeSubmission = () => {
                       }}
                       shrink={false}
                     >
-                      {showLabel5 ? "Select Lecturer" : ""}
+                      {!lecturer[index] ? "Select Lecturer" : ""}
                     </InputLabel>
                     <Select
                       value={lecturer[index]}
