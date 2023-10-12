@@ -120,7 +120,7 @@ const StudentGrade = () => {
       >
         Semester 1
       </Typography>
-      <TableContainer sx={{ overflow: "auto" }}>
+      <TableContainer sx={{ overflow: "auto", background: "white" }}>
         <Table>
           <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
             <TableRow>

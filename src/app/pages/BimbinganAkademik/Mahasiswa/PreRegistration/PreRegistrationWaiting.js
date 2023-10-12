@@ -1,4 +1,3 @@
-import Div from "@jumbo/shared/Div";
 import {
   Grid,
   Stack,
@@ -9,7 +8,19 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Breadcrumbs,
+  experimentalStyled as styled,
 } from "@mui/material";
+import { Link } from "react-router-dom";
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const tableData1 = [
   {
@@ -105,9 +116,22 @@ const TableItem = ({ data }) => (
 );
 
 const PreRegistrationWaiting = () => {
+  const handleClick = (event) => {
+    event.preventDefault();
+  };
   return (
-    <Div>
-      <Typography fontSize={"24px"} fontWeight="500" sx={{ marginBottom: 2 }}>
+    <div>
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink to="/bimbingan-akademik/history">History</StyledLink>
+          <Typography color="text.primary">Pre-registration</Typography>
+        </Breadcrumbs>
+      </div>
+      <Typography
+        fontSize={"24px"}
+        fontWeight="500"
+        sx={{ marginBottom: 2, paddingTop: "20px" }}
+      >
         Courses Pre-registration
       </Typography>
       <Grid container>
@@ -219,7 +243,7 @@ const PreRegistrationWaiting = () => {
           </TableBody>
         </Table>
       </TableContainer>
-    </Div>
+    </div>
   );
 };
 
