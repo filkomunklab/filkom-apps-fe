@@ -7,7 +7,7 @@ import StudentGrade from "app/pages/BimbinganAkademik/Dekan/StudentInformation/S
 import StudentCertificate from "app/pages/BimbinganAkademik/Dekan/StudentInformation/StudentCertificate";
 import StudentGradeDashboard from "app/pages/BimbinganAkademik/Dekan/StudentInformation/StudentGradeDashboard";
 import CertificateDetail from "app/pages/BimbinganAkademik/Dekan/StudentInformation/StudentCertificate/CertificateDetail";
-import SupervisorInformation from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation";
+//import SupervisorInformation from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation";
 
 const { default: Page } = require("@jumbo/shared/Page");
 
@@ -48,10 +48,10 @@ const dekanRoutes = [
     path: "/bimbingan-akademik/dekan/student-information/:id/certificate/:id",
     element: <Page component={CertificateDetail} />,
   },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information",
-    element: <Page component={SupervisorInformation} />,
-  },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information",
+  //   element: <Page component={SupervisorInformation} />,
+  // },
 ];
 
 export default dekanRoutes;

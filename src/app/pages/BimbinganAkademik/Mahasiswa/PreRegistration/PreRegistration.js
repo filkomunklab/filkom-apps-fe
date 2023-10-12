@@ -74,10 +74,14 @@ const TableItem = ({ data, selectedRows, handleCheckboxChange }) => (
   </TableRow>
 );
 
-const PreviewPopup = ({ open, onClose, previewRows }) => {
+const PreviewPopup = ({ open, onClose, previewRows, totalCredits }) => {
+  console.log("hula", previewRows);
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Preview</DialogTitle>
+      <p>
+        {previewRows.length} course selected {totalCredits} credits
+      </p>
       <DialogContent>
         {previewRows.length > 0 ? (
           <div>
@@ -139,16 +143,14 @@ const PreviewPopup = ({ open, onClose, previewRows }) => {
   );
 };
 
-const Popup = ({ open, onClose, selectedRows, totalCredits, tableData }) => {
+const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
   const [previewRows, setPreviewRows] = useState([]);
   const [showPreviewPopup, setShowPreviewPopup] = useState(false);
   const [divVisible, setDivVisible] = useState(false);
 
   const handleShowPreview = () => {
-    const selectedData = tableData.filter((data) =>
-      selectedRows.includes(data)
-    );
-    setPreviewRows(selectedData);
+    console.log("ahem", selectedRows);
+    setPreviewRows(selectedRows);
     setDivVisible(true);
   };
 
@@ -229,6 +231,7 @@ const Popup = ({ open, onClose, selectedRows, totalCredits, tableData }) => {
               open={showPreviewPopup}
               onClose={() => setShowPreviewPopup(false)}
               previewRows={previewRows}
+              totalCredits={totalCredits}
             />
           </div>
         </div>
@@ -1372,7 +1375,6 @@ const PreRegistration = () => {
           onClose={() => setShowPopup(false)}
           selectedRows={selectedRows}
           totalCredits={totalCredits}
-          tableData={tableData1}
         />
       </div>
       <div sx={{ paddingTop: "2" }}>
