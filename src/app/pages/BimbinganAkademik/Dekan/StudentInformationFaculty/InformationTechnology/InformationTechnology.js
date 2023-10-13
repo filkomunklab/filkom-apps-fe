@@ -18,10 +18,20 @@ import {
   Card,
   CardHeader,
   CardContent,
+  Breadcrumbs,
+  experimentalStyled as styled,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const yearList = [
   {
@@ -77,11 +87,10 @@ const data = Array.from(Array(15).keys()).map((item, index) => ({
   status: `Active`,
 }));
 
-const StudentInformationFaculty = () => {
+const InformationTechnology = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -92,123 +101,24 @@ const StudentInformationFaculty = () => {
     setPage(0);
   };
 
+  const handleClick = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <Div>
-      <Div>
-        <Typography variant="h1" sx={{ mb: 3 }}>
-          Student Information
-        </Typography>
-        <Typography variant="h6" sx={{ mb: 3 }}>
-          Currently, you are on the Student Information page, where you can
-          easily view all information about your mentored students, including
-          the number, status, and other detailed and comprehensive information.
-        </Typography>
-      </Div>
-      <Grid container spacing={2} sx={{ paddingBottom: 4, paddingTop: 2 }}>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/dekan/student-information-faculty/informatics"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Informatics Student " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`11 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/dekan/student-information-faculty/information-system"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Information System Student" />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`12 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/dekan/student-information-faculty/information-technology"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Information Technology Student " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`8 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-      </Grid>
-      <Grid container spacing={2}>
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink to="/bimbingan-akademik/dekan/student-information-faculty">
+            Faculty Student
+          </StyledLink>
+          <Typography color="text.primary">Information Technology</Typography>
+        </Breadcrumbs>
+      </div>
+      <Grid container spacing={2} paddingTop={1}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
           <Typography variant="h2">
-            Computer Sciences Faculty Students List
+            Information Technology Students List
           </Typography>
         </Grid>
         <Grid item md={3}>
@@ -320,7 +230,6 @@ const TableHeading = ({ index }) => {
 
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
-
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
     navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
@@ -383,4 +292,4 @@ const TableItem = ({ item, index }) => {
   );
 };
 
-export default StudentInformationFaculty;
+export default InformationTechnology;
