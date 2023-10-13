@@ -2,12 +2,13 @@ import React from "react";
 import Home from "../pages/home";
 import Page from "@jumbo/shared/Page";
 import Login from "app/pages/Login";
-import mahasiswaRoutes from "./mahasiswaRoutes";
+import mahasiswaRoutes from "./BA-mahasiswaRoutes";
 import NotFound from "../pages/404";
 import Unauthorized from "app/pages/unauthorized";
 import operatorRoutes from "./operatorRoutes";
-import dosenPembimbingRoutes from "./dosenPembimbingRoutes";
-import dekanRoutes from "./dekanRoutes";
+import dosenPembimbingRoutes from "./BA-dosenPembimbingRoutes";
+import dekanRoutes from "./BA-dekanRoutes";
+import kepalaProgramStudiRoutes from "./BA-kepalaProgramStudiRoutes";
 
 /**
  routes which you want to make accessible to both authenticated and anonymous users
@@ -28,6 +29,7 @@ const routesForAuthenticatedOnly = [
   ...mahasiswaRoutes,
   ...dosenPembimbingRoutes,
   ...dekanRoutes,
+  ...kepalaProgramStudiRoutes,
   //...operatorRoutes,
 ];
 
