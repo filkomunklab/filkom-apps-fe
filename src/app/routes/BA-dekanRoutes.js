@@ -10,6 +10,8 @@ import StudentGrade from "app/pages/BimbinganAkademik/Dekan/StudentInformation/S
 import StudentCertificate from "app/pages/BimbinganAkademik/Dekan/StudentInformation/StudentCertificate";
 import StudentGradeDashboard from "app/pages/BimbinganAkademik/Dekan/StudentInformation/StudentGradeDashboard";
 import CertificateDetail from "app/pages/BimbinganAkademik/Dekan/StudentInformation/StudentCertificate/CertificateDetail";
+import ReviewPreRegistration from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/ReviewPreRegistration";
+import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/ReviewPreRegistration/ReviewPreRegistrationStudent";
 import AcademicGuide from "app/pages/BimbinganAkademik/Dekan/AcademicGuide";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/Dekan/VisionMisionGoals";
 import SupervisorInformation from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation";
@@ -66,6 +68,14 @@ const dekanRoutes = [
   {
     path: "/bimbingan-akademik/dekan/student-information/:id/certificate/:id",
     element: <Page component={CertificateDetail} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/review-activities/pre-registration",
+    element: <Page component={ReviewPreRegistration} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/review-activities/pre-registration/:id",
+    element: <Page component={ReviewPreRegistrationStudent} />,
   },
   {
     path: "/bimbingan-akademik/dekan/supervisor-information",
