@@ -12,7 +12,7 @@ const mahasiswaRoutes = [
   {
     // Thesis Apps Mahasiswa
     path: "/sistem-informasi-skripsi/daftar-pengajuan",
-    element: <Page component={DaftarPengajuan} />,
+    element: <Page component={UploadProposal} />,
   },
 ];
 

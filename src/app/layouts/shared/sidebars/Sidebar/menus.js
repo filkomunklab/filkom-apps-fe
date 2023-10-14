@@ -369,21 +369,21 @@ import ScheduleTwoToneIcon from "@mui/icons-material/ScheduleTwoTone";
 // ];
 
 // Mahasiswa Menu System Informasi Skripsi
-// // Menu Mahasiswa
-// const menus = [
-//   {
-//     label: "Sistem Informasi Skripsi",
-//     type: "section",
-//     children: [
-//       {
-//         label: "Pengajuan Skripsi",
-//         type: "nav-item",
-//         icon: <PersonIcon sx={{ fontSize: 20 }} />,
-//         uri: "/sistem-informasi-skripsi/daftar-pengajuan",
-//       },
-//     ],
-//   },
-// ];
+// Menu Mahasiswa
+const menus = [
+  {
+    label: "Sistem Informasi Skripsi",
+    type: "section",
+    children: [
+      {
+        label: "Pengajuan Skripsi",
+        type: "nav-item",
+        icon: <PersonIcon sx={{ fontSize: 20 }} />,
+        uri: "/sistem-informasi-skripsi/daftar-pengajuan",
+      },
+    ],
+  },
+];
 
 // // Menu Dosen
 // const menus = [
@@ -518,66 +518,66 @@ import ScheduleTwoToneIcon from "@mui/icons-material/ScheduleTwoTone";
 //   },
 // ];
 
-// Menu Sekretaris
-const menus = [
-  {
-    label: "Sistem Informasi Skripsi",
-    type: "section",
-    children: [
-      {
-        label: "Pengajuan",
-        type: "collapsible",
-        icon: <MailIcon sx={{ fontSize: 20 }} />,
-        children: [
-          {
-            uri: "/sistem-informasi-skripsi/daftar-pengajuan-proposal",
-            label: "Pengajuan Proposal",
-            type: "nav-item",
-            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
-          },
-          {
-            uri: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi",
-            label: "Pengajuan Skripsi",
-            type: "nav-item",
-            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-          },
-        ],
-      },
-      {
-        uri: "/sistem-informasi-skripsi/manajemen-jadwal",
-        label: "Kelola Jadwal",
-        type: "nav-item",
-        icon: <ScheduleTwoToneIcon sx={{ fontSize: 20 }} />,
-        children: [
-          {
-            uri: "/sistem-informasi-skripsi/jadwal-proposal",
-            label: "Jadwal Proposal",
-            type: "nav-item",
-            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
-          },
-          {
-            uri: "/sistem-informasi-skripsi/jadwal-proposal",
-            label: "Jadwal Skripsi",
-            type: "nav-item",
-            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-          },
-        ],
-      },
-      {
-        uri: "/sistem-informasi-skripsi/manajamen-dosen-skripsi",
-        label: "Dosen Skripsi",
-        type: "nav-item",
-        icon: <PersonIcon sx={{ fontSize: 20 }} />,
-      },
-      {
-        uri: "/sistem-informasi-skripsi/manajamen-dosen",
-        label: "Dosen",
-        type: "nav-item",
-        icon: <PersonIcon sx={{ fontSize: 20 }} />,
-      },
-    ],
-  },
-];
+// // Menu Sekretaris
+// const menus = [
+//   {
+//     label: "Sistem Informasi Skripsi",
+//     type: "section",
+//     children: [
+//       {
+//         label: "Pengajuan",
+//         type: "collapsible",
+//         icon: <MailIcon sx={{ fontSize: 20 }} />,
+//         children: [
+//           {
+//             uri: "/sistem-informasi-skripsi/daftar-pengajuan-proposal",
+//             label: "Pengajuan Proposal",
+//             type: "nav-item",
+//             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+//           },
+//           {
+//             uri: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi",
+//             label: "Pengajuan Skripsi",
+//             type: "nav-item",
+//             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+//           },
+//         ],
+//       },
+//       {
+//         uri: "/sistem-informasi-skripsi/manajemen-jadwal",
+//         label: "Kelola Jadwal",
+//         type: "nav-item",
+//         icon: <ScheduleTwoToneIcon sx={{ fontSize: 20 }} />,
+//         children: [
+//           {
+//             uri: "/sistem-informasi-skripsi/jadwal-proposal",
+//             label: "Jadwal Proposal",
+//             type: "nav-item",
+//             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+//           },
+//           {
+//             uri: "/sistem-informasi-skripsi/jadwal-proposal",
+//             label: "Jadwal Skripsi",
+//             type: "nav-item",
+//             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+//           },
+//         ],
+//       },
+//       {
+//         uri: "/sistem-informasi-skripsi/manajamen-dosen-skripsi",
+//         label: "Dosen Skripsi",
+//         type: "nav-item",
+//         icon: <PersonIcon sx={{ fontSize: 20 }} />,
+//       },
+//       {
+//         uri: "/sistem-informasi-skripsi/manajamen-dosen",
+//         label: "Dosen",
+//         type: "nav-item",
+//         icon: <PersonIcon sx={{ fontSize: 20 }} />,
+//       },
+//     ],
+//   },
+// ];
 
 // // Menu Kaprpodi
 // const menus = [

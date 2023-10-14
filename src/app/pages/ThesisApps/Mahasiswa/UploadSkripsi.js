@@ -19,10 +19,10 @@ import { pdfjs } from "react-pdf";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 // View Document Proposal
-const PDFViewerProposal = ({ proposalFile }) => {
-  const viewPDFProposal = () => {
+const PDFViewerSkripsi = ({ skripsiFile }) => {
+  const viewPDFSkripsi = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(proposalFile);
+    const pdfURL = URL.createObjectURL(skripsiFile);
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -30,7 +30,7 @@ const PDFViewerProposal = ({ proposalFile }) => {
 
   return (
     <div>
-      <span sx={{ fontSize: "10px" }} onClick={viewPDFProposal}>
+      <span sx={{ fontSize: "10px" }} onClick={viewPDFSkripsi}>
         View
       </span>
     </div>
@@ -71,16 +71,16 @@ const PDFViewerCekPlagiat = ({ plagiarismFile }) => {
   );
 };
 
-const UploadProposal = () => {
+const UploadSkipsi = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [anchorE2, setAnchorE2] = React.useState(null);
   const open2 = Boolean(anchorE2);
 
-  // state untuk Upload Proposal
-  const [proposalUploadedFiles, setProposalUploadedFiles] = useState([]);
-  const [selectedProposalFileName, setSelectedProposalFileName] = useState("");
-  const [proposalFile, setProposalFile] = useState(null);
+  // state untuk Upload Skripsi
+  const [SkripsiUploadedFiles, setSkripsiUploadedFiles] = useState([]);
+  const [selectedSkripsiFileName, setSelectedSkripsiFileName] = useState("");
+  const [SkripsiFile, setSkripsiFile] = useState(null);
 
   // State untuk Bukti Pembayaran
   const [paymentFile, setPaymentFile] = useState(null);
@@ -96,9 +96,9 @@ const UploadProposal = () => {
   const onProposalFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      if (proposalUploadedFiles.length === 0) {
-        setProposalFile(file);
-        setSelectedProposalFileName(file.name);
+      if (SkripsiUploadedFiles.length === 0) {
+        setSkripsiFile(file);
+        setSelectedSkripsiFileName(file.name);
 
         const newFileData = {
           name: file.name,
@@ -109,7 +109,7 @@ const UploadProposal = () => {
           coAdvisor2: "",
         };
 
-        setProposalUploadedFiles([newFileData]);
+        setSkripsiUploadedFiles([newFileData]);
       }
     }
   };
@@ -130,9 +130,9 @@ const UploadProposal = () => {
 
         setPaymentUploadedFiles([newFileData]);
       } else {
-        alert(
-          "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-        );
+        // alert(
+        //   "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
+        // );
       }
     }
   };
@@ -153,20 +153,20 @@ const UploadProposal = () => {
 
         setPlagiarismUploadedFiles([newFileData]);
       } else {
-        alert(
-          "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-        );
+        // alert(
+        //   "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
+        // );
       }
     }
   };
 
   // fungsi untuk menghapus file Proposal
   const handleDeleteProposalFile = (index) => {
-    const updatedFiles = [...proposalUploadedFiles];
+    const updatedFiles = [...SkripsiUploadedFiles];
     updatedFiles.splice(index, 1);
-    setProposalUploadedFiles(updatedFiles);
-    setProposalFile(null);
-    setSelectedProposalFileName("");
+    setSkripsiUploadedFiles(updatedFiles);
+    setSkripsiFile(null);
+    setSelectedSkripsiFileName("");
   };
 
   // Fungsi untuk menghapus file bukti pembayaran
@@ -200,7 +200,7 @@ const UploadProposal = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Upload Proposal
+          Upload Skripsi
         </Typography>
       </Div>
 
@@ -578,7 +578,7 @@ const UploadProposal = () => {
                 fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
               }}
             >
-              Unggah Dokumen Proposal
+              Unggah Dokumen Skripsi
             </Typography>
 
             {/* Table 1 Start*/}
@@ -628,7 +628,7 @@ const UploadProposal = () => {
                   autoComplete="off"
                   disabled
                   readOnly
-                  value={selectedProposalFileName || "No file uploaded"}
+                  value={selectedSkripsiFileName || "No file uploaded"}
                 />
               </Div>
               {/* file upload end */}
@@ -699,7 +699,7 @@ const UploadProposal = () => {
                   </TableHead>
 
                   <TableBody>
-                    {proposalUploadedFiles.map((file, index) => (
+                    {SkripsiUploadedFiles.map((file, index) => (
                       <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
@@ -754,10 +754,8 @@ const UploadProposal = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {proposalFile && (
-                                <PDFViewerProposal
-                                  proposalFile={proposalFile}
-                                />
+                              {SkripsiFile && (
+                                <PDFViewerSkripsi skripsiFile={SkripsiFile} />
                               )}
                             </span>
                             <Div
@@ -1127,4 +1125,4 @@ const UploadProposal = () => {
   );
 };
 
-export default UploadProposal;
+export default UploadSkipsi;
