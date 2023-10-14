@@ -15,9 +15,6 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  Card,
-  CardHeader,
-  CardContent,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { useState } from "react";
@@ -77,11 +74,10 @@ const data = Array.from(Array(15).keys()).map((item, index) => ({
   status: `Active`,
 }));
 
-const StudentInformationFaculty = () => {
+const StudentInformationMentored = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -104,112 +100,9 @@ const StudentInformationFaculty = () => {
           the number, status, and other detailed and comprehensive information.
         </Typography>
       </Div>
-      <Grid container spacing={2} sx={{ paddingBottom: 4, paddingTop: 2 }}>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/dekan/student-information-faculty/informatics"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Informatics Student " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`11 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/dekan/student-information-faculty/information-system"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Information System Student" />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`12 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/dekan/student-information-faculty/information-technology"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Information Technology Student " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`8 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-      </Grid>
       <Grid container spacing={2}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">
-            Computer Sciences Faculty Students List
-          </Typography>
+          <Typography variant="h2">List of mentored students</Typography>
         </Grid>
         <Grid item md={3}>
           <SearchGlobal sx={{ height: "100%" }} />
@@ -320,23 +213,26 @@ const TableHeading = ({ index }) => {
 
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
-
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+    navigate(
+      `/bimbingan-akademik/kaprodi/student-information/mentored-student/${item.nim}`
+    );
 
     switch (name) {
       case "profile":
-        navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+        navigate(
+          `/bimbingan-akademik/kaprodi/student-information/mentored-student/${item.nim}`
+        );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/grade`
+          `/bimbingan-akademik/kaprodi/student-information/mentored-student/${item.nim}/grade`
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/certificate`
+          `/bimbingan-akademik/kaprodi/student-information/mentored-student/${item.nim}/certificate`
         );
         break;
 
@@ -383,4 +279,4 @@ const TableItem = ({ item, index }) => {
   );
 };
 
-export default StudentInformationFaculty;
+export default StudentInformationMentored;
