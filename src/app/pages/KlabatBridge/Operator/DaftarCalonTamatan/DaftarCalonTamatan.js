@@ -68,9 +68,6 @@ const DaftarCalonTamatan = () => {
   const [terimaSPT, setTerimaSPT] = React.useState(false);
 
   // open modal box to see form SPT of student
-  // const [openModal, setOpenModal] = React.useState(false);
-  // const handleOpenModal = () => setOpenModal(true);
-  // const handleCloseModal = () => setOpenModal(false);
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -85,149 +82,149 @@ const DaftarCalonTamatan = () => {
   // modal content to see student's SPT 
   const viewDetailSPT = (
     <Div>
-          <Typography id="modal-modal-title" mb={2} sx={{ fontSize: "24px", fontWeight: 500, }}>
-              Surat Permohonan Tamat
+      <Typography id="modal-modal-title" mb={2} sx={{ fontSize: "24px", fontWeight: 500, }}>
+          Surat Permohonan Tamat
+      </Typography>
+      <Box sx={{paddingX: 5}}>
+        <Typography variant="body1" sx={{lineHeight: 2.5}}>
+            Saya yang bertanda tangan di bawah ini, bermohon untuk dapat wisuda pada semester 1 2022/2023 dengan sisa SKS yang harus diambil
+                <Chip label={"15"} variant={"outlined"} sx={{marginX: "5px", borderRadius: "5px"}}/>
+            sks.
+        </Typography>
+        <Typography id="modal-modal-description" sx={{mt: 2}}>
+            Nama Sesuai Ijazah: Shyereal Saerang
+        </Typography>
+        <Typography id="modal-modal-description" sx={{mt: 2}}>
+            No. Regis: S2200131
+        </Typography>
+        <Typography id="modal-modal-description" sx={{mt: 2}}>
+            Tanggal Lahir: 18 Agustus 2002
+        </Typography>
+        <Typography id="modal-modal-description" sx={{mt: 2}}>
+            Jenis Kelamin: Perempuan
+        </Typography>
+        <Typography id="modal-modal-description" sx={{mt: 2}}>
+            Nomor Induk Kependudukan (NIK): 1000200381384
+        </Typography>
+        <Typography id="modal-modal-description" sx={{mt: 2}}>
+            Nomor Induk Mahasiswa (NIM): 10202000131
+        </Typography>
+        <Typography id="modal-modal-description" sx={{mt: 2}}>
+            Email: shyereal@gmail.com
+        </Typography>
+        <Typography id="modal-modal-description" sx={{mt: 2}}>
+            Prodi: Informatika
+        </Typography>
+        <Typography id="modal-modal-description" sx={{mt: 2}}>
+            Minor/Konsentrasi: -
+        </Typography>
+        <Typography id="modal-modal-description" sx={{mt: 2}}>
+            No. Telp: 0812239292832
+        </Typography>
+        <Typography id="modal-modal-description" sx={{mt: 2}}>
+            Nama Ibu Kandung: Regina Latun
+        </Typography>
+
+
+        {/* table */}
+        <Typography mt={5} sx={{ fontSize: "24px", fontWeight: 500, }}>
+            Sisa mata kuliah yang harus diambil:
+        </Typography>
+        <Box sx={{marginY:2}}>
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                      <TableRow style={{ backgroundColor: '#f5f5f5' }}>
+                          <TableCell sx={{ width: '10px' }}>No.</TableCell>
+                          <TableCell sx={{ width: '300px' }}>Mata kuliah</TableCell>
+                          <TableCell sx={{ width: '200px' }}>SKS</TableCell>
+                          <TableCell sx={{ width: '400px' }}>Keterangan</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {rows.map((row) => (
+                      <TableRow key={row.id}>
+                          <TableCell>{row.id}</TableCell>
+                          <TableCell>{row.mk}</TableCell>
+                          <TableCell>{row.sks}</TableCell>
+                          <TableCell>{row.keterangan}</TableCell>
+                      </TableRow>
+                      ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Box>
+
+        <Div sx={{
+            display: "flex",
+            direction: "row",
+            justifyContent: "space-between",
+            marginTop:'30px',
+        }}>
+          {/* upload pdf sertifikat */}
+          <Div
+            sx={{
+                // display: 'flex',
+                // flexWrap: 'wrap',
+                '& > :not(style)': {
+                    width: 245,
+                    height: 130,
+                    backgroundColor:'red',
+                },
+            }}
+          >
+            <Paper elevation={3}/>
+          </Div>
+
+          {/* total sks */}
+          <Typography variant="body1" sx={{lineHeight: 2.5}}>
+            Total SKS yang diambil: 15 sks.
           </Typography>
-          <Box sx={{paddingX: 5}}>
-            <Typography variant="body1" sx={{lineHeight: 2.5}}>
-                Saya yang bertanda tangan di bawah ini, bermohon untuk dapat wisuda pada semester 1 2022/2023 dengan sisa SKS yang harus diambil
-                    <Chip label={"15"} variant={"outlined"} sx={{marginX: "5px", borderRadius: "5px"}}/>
-                sks.
-            </Typography>
-            <Typography id="modal-modal-description" sx={{mt: 2}}>
-                Nama Sesuai Ijazah: Shyereal Saerang
-            </Typography>
-            <Typography id="modal-modal-description" sx={{mt: 2}}>
-                No. Regis: S2200131
-            </Typography>
-            <Typography id="modal-modal-description" sx={{mt: 2}}>
-                Tanggal Lahir: 18 Agustus 2002
-            </Typography>
-            <Typography id="modal-modal-description" sx={{mt: 2}}>
-                Jenis Kelamin: Perempuan
-            </Typography>
-            <Typography id="modal-modal-description" sx={{mt: 2}}>
-                Nomor Induk Kependudukan (NIK): 1000200381384
-            </Typography>
-            <Typography id="modal-modal-description" sx={{mt: 2}}>
-                Nomor Induk Mahasiswa (NIM): 10202000131
-            </Typography>
-            <Typography id="modal-modal-description" sx={{mt: 2}}>
-                Email: shyereal@gmail.com
-            </Typography>
-            <Typography id="modal-modal-description" sx={{mt: 2}}>
-                Prodi: Informatika
-            </Typography>
-            <Typography id="modal-modal-description" sx={{mt: 2}}>
-                Minor/Konsentrasi: -
-            </Typography>
-            <Typography id="modal-modal-description" sx={{mt: 2}}>
-                No. Telp: 0812239292832
-            </Typography>
-            <Typography id="modal-modal-description" sx={{mt: 2}}>
-                Nama Ibu Kandung: Regina Latun
-            </Typography>
-
-
-            {/* table */}
-            <Typography mt={5} sx={{ fontSize: "24px", fontWeight: 500, }}>
-                Sisa mata kuliah yang harus diambil:
-            </Typography>
-            <Box sx={{marginY:2}}>
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead>
-                          <TableRow style={{ backgroundColor: '#f5f5f5' }}>
-                              <TableCell sx={{ width: '10px' }}>No.</TableCell>
-                              <TableCell sx={{ width: '300px' }}>Mata kuliah</TableCell>
-                              <TableCell sx={{ width: '200px' }}>SKS</TableCell>
-                              <TableCell sx={{ width: '400px' }}>Keterangan</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {rows.map((row) => (
-                          <TableRow key={row.id}>
-                              <TableCell>{row.id}</TableCell>
-                              <TableCell>{row.mk}</TableCell>
-                              <TableCell>{row.sks}</TableCell>
-                              <TableCell>{row.keterangan}</TableCell>
-                          </TableRow>
-                          ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Box>
-
-            <Div sx={{
-               display: "flex",
-               direction: "row",
-               justifyContent: "space-between",
-               marginTop:'30px',
-            }}>
-              {/* upload pdf sertifikat */}
-              <Div
-                sx={{
-                    // display: 'flex',
-                    // flexWrap: 'wrap',
-                    '& > :not(style)': {
-                        width: 245,
-                        height: 130,
-                        backgroundColor:'red',
-                    },
-                }}
-              >
-                <Paper elevation={3}/>
-              </Div>
-
-              {/* total sks */}
-              <Typography variant="body1" sx={{lineHeight: 2.5}}>
-                Total SKS yang diambil: 15 sks.
-              </Typography>
-            </Div>
-            
-            <Divider sx={{ marginY: 3 }} />
-           
-            <Box display="flex" justifyContent="flex-end">
-                <Button variant="outlined" color="primary" onClick={() => setModalOpen(false)} style={{ marginRight: "10px" }}>
-                  Tolak
+        </Div>
+        
+        <Divider sx={{ marginY: 3 }} />
+        
+        <Box display="flex" justifyContent="flex-end">
+            <Button variant="outlined" color="primary" onClick={() => setModalOpen(false)} style={{ marginRight: "10px" }}>
+              Tolak
+            </Button>
+            <Div >
+                <Button variant="contained" onClick={() => setTerimaSPT(true)}>
+                  Terima
                 </Button>
-                <Div >
-                    <Button variant="contained" onClick={() => setTerimaSPT(true)}>
-                      Terima
-                    </Button>
-                    <Dialog
-                        open={terimaSPT}
-                        onClose={() => {
+                <Dialog
+                    open={terimaSPT}
+                    onClose={() => {
+                      setTerimaSPT(false);
+                      setModalOpen(false);
+                    }}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        {"Berhasil!"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Data berhasil ditambahkan
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button 
+                        onClick={() => {
                           setTerimaSPT(false);
                           setModalOpen(false);
-                        }}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">
-                            {"Berhasil!"}
-                        </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                Data berhasil ditambahkan
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button 
-                            onClick={() => {
-                              setTerimaSPT(false);
-                              setModalOpen(false);
-                            }} 
-                            autoFocus>
-                                Confirm
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                </Div>
-            </Box>
+                        }} 
+                        autoFocus>
+                            Confirm
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Div>
+        </Box>
 
-          </Box>
-        </Div>
+      </Box>
+    </Div>
   );
 
   // table data (temporary)
@@ -361,7 +358,13 @@ const DaftarCalonTamatan = () => {
       </Dialog>
 
       {/* below the table Data Calon Tamatan */}
-      <Pagination count={10} color="primary" sx={{mt:3}}/>
+      <Grid container justifyContent="flex-end" >
+        <Grid item>
+          {/* Content you want to position on the right side */}
+          <Pagination count={10} color="primary" sx={{marginY:5}}/>
+        </Grid>
+      </Grid>
+
       <Box display="flex" justifyContent="flex-end">
         <Button variant="outlined" color="primary" style={{ marginRight: "10px" }}>
           Batal

@@ -13,6 +13,7 @@ import {
   FormControl,
   InputLabel,
   Pagination,
+  Grid,
 } from "@mui/material";
 import ActionButton from "app/shared/ActionButton";
 import SearchGlobal from "app/shared/SearchGlobal";
@@ -127,7 +128,12 @@ const DaftarAlumni = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Pagination count={10} color="primary" sx={{mt:3}}/>
+      <Grid container justifyContent="flex-end" >
+        <Grid item>
+          {/* Content you want to position on the right side */}
+          <Pagination count={10} color="primary" sx={{marginY:5}}/>
+        </Grid>
+      </Grid>
     </Div>
   );
 };
