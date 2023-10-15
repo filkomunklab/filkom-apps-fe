@@ -24,12 +24,12 @@ const Grades = () => {
   return (
     <div>
       <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>Student Grades</Typography>
-      <Typography sx={{ paddingTop: "22px", paddingBottom: "26px", fontSize: "15px", fontWeight: 400, color: "rgba(27, 43, 65, 0.69)" }}>Select a semester to view grades.</Typography>
+      <Typography sx={{ paddingTop: "22px", paddingBottom: "28px", fontSize: "15px", fontWeight: 400, color: "rgba(27, 43, 65, 0.69)" }}>Select a semester to view grades.</Typography>
       <div sx={{ flexGrow: 1 }}>
         <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
           {semesterNames.map((semester, index) => (
             <Grid item xs={2} sm={4} md={4} key={index}>
-              <Link to={`/semester/${index + 1}`} style={{ textDecoration: "none" }}>
+              <Link to="/bimbingan-akademik/grades/studentgrade/" style={{ textDecoration: "none" }}>
                 <Item>
                   <Typography  sx={{ fontSize: "11px", fontWeight: "400", color: "rgba(27, 43, 65, 0.69)", textAlign: "left"  }}>
                     Student Grades

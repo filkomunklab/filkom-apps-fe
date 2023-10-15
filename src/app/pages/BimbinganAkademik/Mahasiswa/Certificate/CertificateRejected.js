@@ -1,14 +1,49 @@
 import React from "react";
-import { Container, Typography, Box, Stack, Paper } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Box,
+  Stack,
+  Paper,
+  Breadcrumbs,
+  experimentalStyled as styled,
+} from "@mui/material";
+import { Link } from "react-router-dom";
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const CertificateWaiting = () => {
+  const handleClick = (event) => {
+    event.preventDefault();
+  };
+
   const imageUrl =
     "https://i.pinimg.com/originals/fc/fa/29/fcfa2911e796d71f1bf6aa25ee1d8d89.jpg";
 
   return (
     <div>
-      <Typography sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: 2 }}>
-        Academic Guide
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink to="/bimbingan-akademik/history">History</StyledLink>
+          <Typography color="text.primary">Certificate</Typography>
+        </Breadcrumbs>
+      </div>
+      <Typography
+        sx={{
+          fontSize: "24px",
+          fontWeight: 500,
+          paddingBottom: 2,
+          paddingTop: "20px",
+        }}
+      >
+        Certificate
       </Typography>
       <Container sx={{ display: "flex", alignItems: "center" }}>
         <Box sx={{ flex: 0.4 }}>
@@ -22,13 +57,13 @@ const CertificateWaiting = () => {
             Supervisor Name
           </Typography>
           <Typography variant="h5" sx={{ marginBottom: 2 }}>
+            Category
+          </Typography>
+          <Typography variant="h5" sx={{ marginBottom: 2 }}>
             Submission Date
           </Typography>
           <Typography variant="h5" sx={{ marginBottom: 2 }}>
             Status
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Category
           </Typography>
         </Box>
         <Box sx={{ flex: 0.04 }}>
@@ -62,13 +97,13 @@ const CertificateWaiting = () => {
             Adzanu, Shaliha Alifyaa
           </Typography>
           <Typography variant="h5" sx={{ marginBottom: 2 }}>
+            Local
+          </Typography>
+          <Typography variant="h5" sx={{ marginBottom: 2 }}>
             10 May 2000
           </Typography>
           <Typography variant="h5" sx={{ marginBottom: 2, color: "red" }}>
             Rejected
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Local
           </Typography>
         </Box>
         <Box sx={{ flex: 1 }}>
@@ -93,12 +128,7 @@ const CertificateWaiting = () => {
         <Typography variant="h5" sx={{ fontWeight: 600 }}>
           Comments from Supervisor
         </Typography>
-        <Paper
-          elevation={0}
-          variant="outlined"
-          fullWidth
-          sx={{ backgroundColor: "#D1E5F4" }}
-        >
+        <Paper elevation={0} variant="outlined" fullWidth>
           <Typography variant="body1" sx={{ p: 2 }}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
             commodo nunc in ligula tempus, sed feugiat justo vestibulum. Etiam

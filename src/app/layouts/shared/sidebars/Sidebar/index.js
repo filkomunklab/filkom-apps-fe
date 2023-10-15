@@ -1,11 +1,7 @@
 import React, { Suspense } from "react";
 import { Avatar, Typography } from "@mui/material";
-import menus from "./menus";
 import JumboVerticalNavbar from "@jumbo/components/JumboVerticalNavbar/JumboVerticalNavbar";
 import JumboScrollbar from "@jumbo/components/JumboScrollbar";
-import useJumboLayoutSidebar from "@jumbo/hooks/useJumboLayoutSidebar";
-import useJumboSidebarTheme from "@jumbo/hooks/useJumboSidebarTheme";
-import { SIDEBAR_VIEWS } from "@jumbo/utils/constants/layout";
 import Div from "@jumbo/shared/Div";
 import SidebarSkeleton from "./SidebarSkeleton";
 import { authUser } from "app/shared/widgets/AuthUserDropdown/fake-db";
@@ -14,19 +10,29 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import JumboNavSection from "@jumbo/components/JumboVerticalNavbar/JumboNavSection";
 import useJumboAuth from "@jumbo/hooks/useJumboAuth";
 import { useNavigate } from "react-router-dom";
+import { ROLES } from "app/utils/constants/roles";
+import { dekanMenus, dosenMenus } from "./menus";
 
-const permissionCheck = (permission, programs) => {
-  if (typeof permission === "function") {
-    return permission(programs) === true;
-  } else {
-    return true;
+const roleCheck = () => {
+  const role = JSON.parse(localStorage.getItem("user"))?.role;
+  switch (role) {
+    case ROLES.DOSEN:
+      return dosenMenus;
+    case ROLES.DEKAN:
+      return dekanMenus;
+    default:
+      return [];
   }
 };
 
 const Sidebar = () => {
-  // const [validatedMenus, setValidatedMenus] = React.useState([])
+  const [validatedMenus, setValidatedMenus] = React.useState([]);
 
-  // const programs = JSON.parse(localStorage.getItem('user'))?.department
+  React.useEffect(() => {
+    const menus = roleCheck();
+    setValidatedMenus(menus);
+  });
+
   return (
     <React.Fragment>
       <SidebarHeader />
@@ -46,7 +52,7 @@ const Sidebar = () => {
             </Div>
           }
         >
-          <JumboVerticalNavbar translate items={menus} />
+          <JumboVerticalNavbar translate items={validatedMenus} />
         </Suspense>
         <Div
           sx={{
