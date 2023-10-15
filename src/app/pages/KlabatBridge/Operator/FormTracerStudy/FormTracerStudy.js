@@ -36,18 +36,16 @@ import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
 
-
-//import code from "../Pickers/demo-code/native-picker.txt";
-// import {LocalizationProvider} from "@mui/x-date-pickers";
-// import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
-// import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
-// import code from "../Pickers/demo-code/date-picker.txt";
-
 const FormTracerSTudy = () => {
   const [checked, setChecked] = React.useState(false);
 
   //for date pickers
-  const [value, setValue] = React.useState(new Date('2022-06-04T21:11:54'));
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
 
   const [identityData, setIdentityData] = useState({
     nim: "",
@@ -596,23 +594,14 @@ const FormTracerSTudy = () => {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     label="Select Date"
-                    inputFormat="MM/dd/yyyy"
-                    value={value}
-                    onChange={(event, newValue) => setValue(newValue)}
+                    format="dd/MM/yyyy"
+                    value={selectedDate}
+                    // onChange={(event, newValue) => setValue(newValue)}
+                    onChange={handleDateChange}
                     renderInput={(params) => <TextField {...params} />}
                     sx={{ width: '100%' }}
                   />
                 </LocalizationProvider>
-                {/* <InputLabel id="demo-simple-select-label">Tanggal Masuk</InputLabel>
-                  <TextField
-                    fullWidth
-                    labelId="demo-simple-select-label"
-                    variant="outlined"
-                    name="f18d"
-                    placeholder="date picker error...."
-                    value={questionnaireData.f18d}
-                    onChange={handleQuestionnaireChange}
-                  /> */}
               </Grid>
             </Grid>
           </Grid>

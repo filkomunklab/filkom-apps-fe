@@ -103,7 +103,11 @@ const PengisianSPT = () => {
 
 
     // date picker
-    const [value, setValue] = React.useState(new Date);
+    const [selectedDate, setSelectedDate] = useState(null);
+
+    const handleDateChange = (date) => {
+        setSelectedDate(date);
+    };
 
     return (
         <Box
@@ -142,6 +146,7 @@ const PengisianSPT = () => {
                         variant="outlined"
                         name="namaLengkap"
                         placeholder="Aurelea Saerang"
+                       
                         //   value={identityData.nim}
                         //   onChange={handleIdentityChange}
                         />
@@ -152,7 +157,7 @@ const PengisianSPT = () => {
                         fullWidth
                         variant="outlined"
                         name="noRegis"
-                        placeholder="12345678910"
+                        placeholder="1234567890"
                         //   value={identityData.kodePT}
                         //   onChange={handleIdentityChange}
                         />
@@ -162,9 +167,9 @@ const PengisianSPT = () => {
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DesktopDatePicker
                                 label="Select Date"
-                                inputFormat="MM/dd/yyyy"
-                                value={value}
-                                onChange={(event, newValue) => setValue(newValue)}
+                                format="dd/MM/yyyy"
+                                value={selectedDate}
+                                onChange={handleDateChange}
                                 renderInput={(params) => <TextField {...params} />}
                                 sx={{ width: '100%' }}
                             />
