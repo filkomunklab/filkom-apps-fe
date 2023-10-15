@@ -130,7 +130,6 @@ const DaftarAlumni = () => {
       </TableContainer>
       <Grid container justifyContent="flex-end" >
         <Grid item>
-          {/* Content you want to position on the right side */}
           <Pagination count={10} color="primary" sx={{marginY:5}}/>
         </Grid>
       </Grid>

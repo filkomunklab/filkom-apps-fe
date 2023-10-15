@@ -27,6 +27,8 @@ import {
   TableBody,
   TableRow,
   Table,
+  TableContainer,
+  TableHead,
 } from "@mui/material";
 import Div from "@jumbo/shared/Div";
 import JumboDemoCard from "@jumbo/components/JumboDemoCard";
@@ -203,13 +205,14 @@ const FormTracerSTudy = () => {
 
   // };
 
-  //no. 12
-  const numbers = [1, 2, 3, 4, 5];
 
   return (
-    <Div 
-    >
-      <Box p={8} >
+    <Div>
+      <Box p={8} sx={{
+        backgroundColor: 'white',
+        borderRadius: 5,
+        boxShadow: 3,
+      }} >
         {/* Identity Details */}
         <Typography variant="h1" style={{marginBottom:"2em", fontWeight: 500}}>Formulir Tracer Study</Typography>
         <Typography variant="h2">Identitas Diri</Typography>
@@ -551,9 +554,12 @@ const FormTracerSTudy = () => {
             <Grid container spacing={4}>
               <Grid item xs={12} md={6}>
                 <Typography mb={1}>Sumber biaya</Typography>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Silahkan Pilih</InputLabel>
                   <Select
-                    fullWidth
+                    labelId="demo-simple-select-label"
                     id="demo-simple-select"
+                    label="Silahkan Pilih"
                     name="f18a"
                     value={questionnaireData.f18a}
                     onChange={handleQuestionnaireChange}
@@ -561,6 +567,7 @@ const FormTracerSTudy = () => {
                     <MenuItem value={1}>Biaya Sendiri</MenuItem>
                     <MenuItem value={2}>Beasiswa</MenuItem>
                   </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12} md={6}>
                 <Typography mb={1}>Perguruan Tinggi</Typography>
@@ -683,8 +690,8 @@ const FormTracerSTudy = () => {
                 onChange={handleQuestionnaireChange}
               >
                 <FormControlLabel value="1" control={<Radio />} label="Setingkat Lebih Tinggi" />
-                <FormControlLabel value="2" control={<Radio />} label="Setignkat yang Sama" />
-                <FormControlLabel value="3" control={<Radio />} label="Setngkat Lebih Rendah" />
+                <FormControlLabel value="2" control={<Radio />} label="Setingkat yang Sama" />
+                <FormControlLabel value="3" control={<Radio />} label="Setingkat Lebih Rendah" />
                 <FormControlLabel value="4" control={<Radio />} label="Tidak Perlu Pendidikan Tinggi" />
               </RadioGroup>
             </FormControl>
@@ -696,181 +703,532 @@ const FormTracerSTudy = () => {
               12. Pada saat lulus, pada tingkat mana kompetensi di bawah ini anda : kuasai? (A) Pada
               saat ini, pada tingkat mana kompetensi di bawah ini diperlukan dalam pekerjaan? (B)*
             </Typography>
-            {/* <List
-                sx={{width: '100%'}}
-                component="nav"
-                aria-label="mailbox folders"
-            >
-                <ListItem >
-                    <ListItemText primary="A"/>
-                    <ListItemText primary=""/>
-                    <ListItemText primary="B"/>
-                </ListItem>
-                <Divider/>
-                <ListItem divider>
-                    <ListItemText primary="Sangat Rendah"/>
-                    <ListItemText primary="Sangat Tinggi"/>
-                    <ListItemText primary=""/>
-                    <ListItemText primary=""/>
-                    <ListItemText primary="Sangat Rendah"/>
-                    <ListItemText primary="Sangat Rendah"/>
-                </ListItem>
-                <ListItem>
-                   
-                    <ListItemText primary="1"/>
-                    <ListItemText primary="1"/>
-                    <ListItemText primary="1"/>
-                    <ListItemText primary="1"/>
-                    <ListItemText primary="1"/>
-                </ListItem>
-                <Divider/>
-                <ListItem>
-                    <ListItemText primary="Spam"/>
-                </ListItem>
-            </List> */}
-
-            {/* <Grid container>
-              <Grid item md={5}>A</Grid>
-              <Grid item md={2}></Grid>
-              <Grid item md={5}>B</Grid>
-              <Grid item md={12}>
-                <Divider sx={{marginY: 2}} />
-              </Grid>
-              <Grid item md={3}>Sangat Rendah</Grid>
-              <Grid item md={2}>Sangat Tinggi</Grid>
-              <Grid item md={2}></Grid>
-              <Grid item md={3}>Sangat Rendah</Grid>
-              <Grid item md={2}>Sangat Tinggi</Grid>
-              <Grid item md={12}>
-                <Divider sx={{marginY: 2}} />
-              </Grid>
-              <Grid item md={1}><Typography>1</Typography></Grid>
-              <Grid item md={1}><Typography>2</Typography></Grid>
-              <Grid item md={1}><Typography>3</Typography></Grid>
-              <Grid item md={1}><Typography>4</Typography></Grid>
-              <Grid item md={1}><Typography>5</Typography></Grid>
-              <Grid item md={2}></Grid>
-              <Grid item md={1}><Typography>1</Typography></Grid>
-              <Grid item md={1}><Typography>2</Typography></Grid>
-              <Grid item md={1}><Typography>3</Typography></Grid>
-              <Grid item md={1}><Typography>4</Typography></Grid>
-              <Grid item md={1}><Typography>5</Typography></Grid>
-              <Grid item md={12}>
-                <Divider sx={{marginY: 2}} />
-              </Grid>
-              <Grid item md={5}>
-                <FormControl>
-                  <RadioGroup
-                      row
-                      aria-labelledby="demo-row-radio-buttons-group-label"
-                      name="row-radio-buttons-group"
-                  >
-                    <FormControlLabel value="1" control={<Radio/>} label="" sx={{marginRight: '50px'}} />
-                    <FormControlLabel value="2" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                    <FormControlLabel value="3" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                    <FormControlLabel value="4" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                    <FormControlLabel value="5" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                  </RadioGroup>
-              </FormControl>
-              </Grid>
-              <Grid item md={2}>
-                <Box
-                    sx={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                  <Typography>Etika</Typography>
-                </Box>
-              </Grid>
-              <Grid item md={5}>
-                <FormControl>
-                    <RadioGroup
-                        row
-                        aria-labelledby="demo-row-radio-buttons-group-label"
-                        name="row-radio-buttons-group"
-                    >
-                      <FormControlLabel value="1" control={<Radio/>} label="" sx={{marginRight: '50px'}} />
-                      <FormControlLabel value="2" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                      <FormControlLabel value="3" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                      <FormControlLabel value="4" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                      <FormControlLabel value="5" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                    </RadioGroup>
-                </FormControl>
-              </Grid>
-              <Grid item md={12}>
-                <Divider sx={{marginY: 2}} />
-              </Grid>
-              <Grid item container md={5}>
-                <FormControl>
-                  <RadioGroup
-                      row
-                      aria-labelledby="demo-row-radio-buttons-group-label"
-                      name="row-radio-buttons-group"
-                  >
-                    <FormControlLabel value="1" control={<Radio/>} label="" sx={{marginRight: '50px'}} />
-                    <FormControlLabel value="2" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                    <FormControlLabel value="3" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                    <FormControlLabel value="4" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                    <FormControlLabel value="5" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                  </RadioGroup>
-              </FormControl>
-              </Grid>
-              <Grid item md={2}>
-                <Box
-                  sx={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    textAlign: 'center' 
-                  }}
-                >
-                  <Typography>Keahlian berdasarkan bidang ilmu</Typography>
-                </Box>
-              </Grid>
-              <Grid item md={5}>
-                <FormControl>
-                    <RadioGroup
-                        row
-                        aria-labelledby="demo-row-radio-buttons-group-label"
-                        name="row-radio-buttons-group"
-                    >
-                      <FormControlLabel value="1" control={<Radio/>} label="" sx={{marginRight: '50px'}} />
-                      <FormControlLabel value="2" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                      <FormControlLabel value="3" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                      <FormControlLabel value="4" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                      <FormControlLabel value="5" control={<Radio/>} label="" sx={{marginRight: '50px'}}/>
-                    </RadioGroup>
-                </FormControl>
-              </Grid>
-              <Grid item md={12}>
-                <Divider sx={{marginY: 2}} />
-              </Grid>
-              
-            </Grid> */}
-
-            <Table>
-              <TableBody>
-                {/* Numbers Row */}
-                <TableRow>
-                  <TableCell align="center" colSpan={5}>
-                    {numbers.map((number, index) => (
-                      <Typography variant="body2" key={index}>
-                        {number}
-                      </Typography>
-                    ))}
+            <TableContainer component={Paper} sx={{marginY: 2}}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell style={{ width: '400px' }}>A</TableCell>
+                    <TableCell style={{ width: '200px' }}></TableCell>
+                    <TableCell style={{ width: '400px' }}>B</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      <Grid container justifyContent="space-between">
+                        <Grid item>
+                          <Typography>Sangat Rendah</Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography>Sangat Tinggi</Typography>
+                        </Grid>
+                      </Grid>
+                    </TableCell>
+                    <TableCell></TableCell>
+                    <TableCell>
+                    <Grid container justifyContent="space-between">
+                        <Grid item>
+                          <Typography>Sangat Rendah</Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography>Sangat Tinggi</Typography>
+                        </Grid>
+                      </Grid>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {/* 1st row */}
+                  <TableRow>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', // Ensure the Box takes full height of the TableCell
+                        }}
+                      >
+                        {/* Your component here */}
+                        <FormControl>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                                //value={questionnaireData.f1761}
+                                //onChange={handleQuestionnaireChange}
+                            >
+                                <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
+                                <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
+                                <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
+                                <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
+                                <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                            </RadioGroup>
+                        </FormControl>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', 
+                          textAlign: 'center', // Center align text inside TableCell
+                        }}
+                      >
+                        Etika
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', 
+                        }}
+                      >
+                        {/* Your component here */}
+                        <FormControl>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            //value={questionnaireData.f1761}
+                            //onChange={handleQuestionnaireChange}
+                          >
+                            <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
+                            <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
+                            <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
+                            <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
+                            <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                          </RadioGroup>
+                        </FormControl>
+                      </Box>
                   </TableCell>
-                </TableRow>
-
-                {/* Radio Buttons Row */}
-                <TableRow>
-                  <TableCell align="center" colSpan={5}>
-                    {numbers.map((number, index) => (
-                      <Radio key={index} />
-                    ))}
+                  </TableRow>
+                  {/* 2nd row */}
+                  <TableRow>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', // Ensure the Box takes full height of the TableCell
+                        }}
+                      >
+                        {/* Your component here */}
+                        <FormControl>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                                //value={questionnaireData.f1761}
+                                //onChange={handleQuestionnaireChange}
+                            >
+                                <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
+                                <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
+                                <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
+                                <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
+                                <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                            </RadioGroup>
+                        </FormControl>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', 
+                          textAlign: 'center', // Center align text inside TableCell
+                        }}
+                      >
+                        Keahlian berdasarkan bidang ilmu
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', 
+                        }}
+                      >
+                        {/* Your component here */}
+                        <FormControl>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            //value={questionnaireData.f1761}
+                            //onChange={handleQuestionnaireChange}
+                          >
+                            <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
+                            <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
+                            <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
+                            <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
+                            <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                          </RadioGroup>
+                        </FormControl>
+                      </Box>
                   </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+                  </TableRow>
+                  {/* 3rd row */}
+                  <TableRow>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', // Ensure the Box takes full height of the TableCell
+                        }}
+                      >
+                        {/* Your component here */}
+                        <FormControl>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                                //value={questionnaireData.f1761}
+                                //onChange={handleQuestionnaireChange}
+                            >
+                                <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
+                                <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
+                                <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
+                                <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
+                                <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                            </RadioGroup>
+                        </FormControl>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', 
+                          textAlign: 'center', // Center align text inside TableCell
+                        }}
+                      >
+                        Bahasa Inggris
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', 
+                        }}
+                      >
+                        {/* Your component here */}
+                        <FormControl>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            //value={questionnaireData.f1761}
+                            //onChange={handleQuestionnaireChange}
+                          >
+                            <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
+                            <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
+                            <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
+                            <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
+                            <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                          </RadioGroup>
+                        </FormControl>
+                      </Box>
+                  </TableCell>
+                  </TableRow>
+                  {/* 4th row */}
+                  <TableRow>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', // Ensure the Box takes full height of the TableCell
+                        }}
+                      >
+                        {/* Your component here */}
+                        <FormControl>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                                //value={questionnaireData.f1761}
+                                //onChange={handleQuestionnaireChange}
+                            >
+                                <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
+                                <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
+                                <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
+                                <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
+                                <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                            </RadioGroup>
+                        </FormControl>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', 
+                          textAlign: 'center', // Center align text inside TableCell
+                        }}
+                      >
+                        Penggunaan Teknologi Informasi
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', 
+                        }}
+                      >
+                        {/* Your component here */}
+                        <FormControl>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            //value={questionnaireData.f1761}
+                            //onChange={handleQuestionnaireChange}
+                          >
+                            <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
+                            <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
+                            <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
+                            <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
+                            <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                          </RadioGroup>
+                        </FormControl>
+                      </Box>
+                  </TableCell>
+                  </TableRow>
+                  {/* 5th row */}
+                  <TableRow>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', // Ensure the Box takes full height of the TableCell
+                        }}
+                      >
+                        {/* Your component here */}
+                        <FormControl>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                                //value={questionnaireData.f1761}
+                                //onChange={handleQuestionnaireChange}
+                            >
+                                <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
+                                <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
+                                <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
+                                <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
+                                <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                            </RadioGroup>
+                        </FormControl>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', 
+                          textAlign: 'center', // Center align text inside TableCell
+                        }}
+                      >
+                        Komunikasi
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', 
+                        }}
+                      >
+                        {/* Your component here */}
+                        <FormControl>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            //value={questionnaireData.f1761}
+                            //onChange={handleQuestionnaireChange}
+                          >
+                            <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
+                            <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
+                            <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
+                            <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
+                            <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                          </RadioGroup>
+                        </FormControl>
+                      </Box>
+                  </TableCell>
+                  </TableRow>
+                  {/* 6th row */}
+                  <TableRow>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', // Ensure the Box takes full height of the TableCell
+                        }}
+                      >
+                        {/* Your component here */}
+                        <FormControl>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                                //value={questionnaireData.f1761}
+                                //onChange={handleQuestionnaireChange}
+                            >
+                                <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
+                                <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
+                                <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
+                                <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
+                                <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                            </RadioGroup>
+                        </FormControl>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', 
+                          textAlign: 'center', // Center align text inside TableCell
+                        }}
+                      >
+                        Kerja sama tim
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', 
+                        }}
+                      >
+                        {/* Your component here */}
+                        <FormControl>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            //value={questionnaireData.f1761}
+                            //onChange={handleQuestionnaireChange}
+                          >
+                            <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
+                            <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
+                            <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
+                            <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
+                            <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                          </RadioGroup>
+                        </FormControl>
+                      </Box>
+                  </TableCell>
+                  </TableRow>
+                  {/* 7th row */}
+                  <TableRow>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', // Ensure the Box takes full height of the TableCell
+                        }}
+                      >
+                        {/* Your component here */}
+                        <FormControl>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                                //value={questionnaireData.f1761}
+                                //onChange={handleQuestionnaireChange}
+                            >
+                                <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
+                                <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
+                                <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
+                                <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
+                                <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                            </RadioGroup>
+                        </FormControl>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', 
+                          textAlign: 'center', // Center align text inside TableCell
+                        }}
+                      >
+                        Pengembangan
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: '100%', 
+                        }}
+                      >
+                        {/* Your component here */}
+                        <FormControl>
+                          <RadioGroup
+                            row
+                            aria-labelledby="demo-row-radio-buttons-group-label"
+                            name="row-radio-buttons-group"
+                            //value={questionnaireData.f1761}
+                            //onChange={handleQuestionnaireChange}
+                          >
+                            <FormControlLabel value="1" control={<Radio size="small"/>} label="1" labelPlacement="bottom"/>
+                            <FormControlLabel value="2" control={<Radio size="small"/>} label="2" labelPlacement="bottom"/>
+                            <FormControlLabel value="3" control={<Radio size="small"/>} label="3" labelPlacement="bottom"/>
+                            <FormControlLabel value="4" control={<Radio size="small"/>} label="4" labelPlacement="bottom"/>
+                            <FormControlLabel value="5" control={<Radio size="small"/>} label="5" labelPlacement="bottom"/>
+                          </RadioGroup>
+                        </FormControl>
+                      </Box>
+                  </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Grid>
 
           <Grid item xs={12}>
