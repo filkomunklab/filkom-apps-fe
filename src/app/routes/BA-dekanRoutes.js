@@ -14,7 +14,7 @@ import ReviewPreRegistration from "app/pages/BimbinganAkademik/Dekan/ReviewActiv
 import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/ReviewPreRegistration/ReviewPreRegistrationStudent";
 import AcademicGuide from "app/pages/BimbinganAkademik/Dekan/AcademicGuide";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/Dekan/VisionMisionGoals";
-import SupervisorInformation from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation";
+// import SupervisorInformation from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation";
 
 const { default: Page } = require("@jumbo/shared/Page");
 
@@ -77,10 +77,10 @@ const dekanRoutes = [
     path: "/bimbingan-akademik/dekan/review-activities/pre-registration/:id",
     element: <Page component={ReviewPreRegistrationStudent} />,
   },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information",
-    element: <Page component={SupervisorInformation} />,
-  },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information",
+  //   element: <Page component={SupervisorInformation} />,
+  // },
   {
     path: "/bimbingan-akademik/dekan/academic-guide",
     element: <Page component={AcademicGuide} />,
