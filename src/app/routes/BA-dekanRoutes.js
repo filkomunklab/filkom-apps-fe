@@ -15,7 +15,7 @@ import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/Dekan/Revi
 //import SupervisorInformation from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation";
 import AcademicGuide from "app/pages/BimbinganAkademik/Dekan/AcademicGuide";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/Dekan/VisionMisionGoals";
-import SupervisorInformation from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation";
+// import SupervisorInformation from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation";
 
 const { default: Page } = require("@jumbo/shared/Page");
 

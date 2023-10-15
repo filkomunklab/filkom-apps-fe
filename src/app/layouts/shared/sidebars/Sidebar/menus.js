@@ -30,6 +30,7 @@ import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import PersonIcon from "@mui/icons-material/Person";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
+import RecentActorsIcon from "@mui/icons-material/RecentActors";
 
 // Student Menu
 // const menus = [
