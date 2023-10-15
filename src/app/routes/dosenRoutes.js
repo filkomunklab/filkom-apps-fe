@@ -20,12 +20,14 @@ import DocumentRevisiProposalAdvisor from "app/pages/ThesisApps/Dosen/DocumentRe
 import DocumentRevisiSkripsiKetuaPenelis from "app/pages/ThesisApps/Dosen/DocumentRevisiSkripsiKetuaPenelis";
 import DocumentRevisiSkripsiAnggotaPenelis from "app/pages/ThesisApps/Dosen/DocumentRevisiSkripsiAnggotaPenelis";
 import DocumentRevisiSkripsiAdvisor from "app/pages/ThesisApps/Dosen/DocumentRevisiSkripsiAdvisor";
+import PerubahanProposalCoAvisor from "app/pages/ThesisApps/Dosen/PerubahanProposalCoAdvisor";
+import PerubahanSkripsiCoAvisor from "app/pages/ThesisApps/Dosen/PerubahanSkripsiCoAdvisor";
 
 const dosenRoutes = [
   {
     // Thesis Apps Dosen
     path: "/sistem-informasi-skripsi/bimbingan-proposal-co-advisor",
-    element: <Page component={DocumentRevisiSkripsiAdvisor} />,
+    element: <Page component={PerubahanSkripsiCoAvisor} />,
   },
 ];
 
