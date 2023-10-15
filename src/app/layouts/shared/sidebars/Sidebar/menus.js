@@ -24,6 +24,7 @@ import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import PersonIcon from "@mui/icons-material/Person";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupIcon from "@mui/icons-material/Group";
+import RecentActorsIcon from "@mui/icons-material/RecentActors";
 
 // Student Menu
 // const menus = [
@@ -500,7 +501,7 @@ import GroupIcon from "@mui/icons-material/Group";
 // ];
 
 // Dekan Bimbingan Akademik Menus
-const menus = [
+export const dekanMenus = [
   {
     label: "Klabat Bridge",
     type: "section",
@@ -620,6 +621,91 @@ const menus = [
         type: "nav-item",
         icon: <PermContactCalendarIcon sx={{ fontSize: 20 }} />,
         uri: "/bimbingan-akademik/dekan/profile",
+      },
+    ],
+  },
+];
+
+export const dosenMenus = [
+  {
+    label: "Bimbingan Akademik",
+    type: "section",
+    children: [
+      {
+        label: "Dashboard",
+        type: "nav-item",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dashboard",
+      },
+      {
+        label: "Academic Guide",
+        type: "nav-item",
+        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/academic-guide",
+      },
+      {
+        label: "Vision, Mission and Goals",
+        type: "nav-item",
+        icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/vision-mission-goals",
+      },
+      {
+        label: "Curriculum",
+        type: "nav-item",
+        icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/curriculum",
+      },
+      {
+        label: "Student Information",
+        type: "nav-item",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/student-information",
+      },
+      {
+        label: "Review Activity",
+        type: "collapsible",
+        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Review Pre-Registration",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/review-pre-registration",
+          },
+          {
+            label: "Review Certificate",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/review-certificate",
+          },
+          {
+            label: "Student Consultation",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/student-consultation",
+          },
+        ],
+      },
+      {
+        label: "Recent Activities",
+        type: "nav-item",
+        icon: <RecentActorsIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/recent-activities",
+      },
+      {
+        label: "Activity History",
+        type: "nav-item",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/activity-history",
+      },
+      {
+        label: "Add Activity",
+        type: "nav-item",
+        icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/add-activity",
+      },
+      {
+        label: "Profile",
+        type: "nav-item",
+        icon: <PersonIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/profile",
       },
     ],
   },
@@ -750,5 +836,3 @@ const menus = [
 //     ],
 //   },
 // ];
-
-export default menus;
