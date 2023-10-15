@@ -22,6 +22,8 @@ import PeopleIcon from "@mui/icons-material/People";
 import PublicIcon from "@mui/icons-material/Public";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import PersonIcon from "@mui/icons-material/Person";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 
 // Student Menu
 // const menus = [
@@ -326,6 +328,12 @@ const menus = [
     type: "section",
     children: [
       {
+        label: "Dashboard",
+        type: "nav-item",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/dashboard",
+      },
+      {
         label: "Dafter Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
@@ -336,6 +344,18 @@ const menus = [
         type: "nav-item",
         icon: <PublicIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/grafik-alumni",
+      },
+      {
+        label: "Form Tracer Study",
+        type: "nav-item",
+        icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/form-tracer-study",
+      },
+      {
+        label: "Pengisian SPT",
+        type: "nav-item",
+        icon: <InsertCommentIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/pengisian-spt",
       },
     ],
   },
