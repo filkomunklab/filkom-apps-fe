@@ -1,4 +1,4 @@
-/* import React from "react";
+import React from "react";
 import {
   Typography,
   Table,
@@ -1005,17 +1005,25 @@ const TableItem = ({ data }) => (
   </TableRow>
 );
 
-const Curriculum = () => {
+const CurriculumInformatika = () => {
   return (
     <div>
       <Typography
         sx={{
           fontSize: "24px",
           fontWeight: 500,
-          paddingBottom: "24px",
+          paddingTop: "25px",
+        }}
+      ></Typography>
+      <Typography
+        sx={{
+          fontSize: "14px",
+          fontWeight: 500,
+          margin: "18px",
+          width: "100%",
         }}
       >
-        Curriculum Informatika 2020
+        PREREQUISITE
       </Typography>
       <TableContainer sx={{ overflow: "auto" }}>
         <Table>
@@ -1295,4 +1303,4 @@ const Curriculum = () => {
   );
 };
 
-export default Curriculum; */
+export default CurriculumInformatika;

@@ -1,4 +1,4 @@
-/* import React from "react";
+import React from "react";
 import {
   Typography,
   Table,
@@ -19,7 +19,7 @@ const tableData1 = [
     prerequisite: "-",
   },
   {
-    number: 2,    
+    number: 2,
     code: "MATH000",
     name: "Matematika/ Mathematics",
     credits: 2,
@@ -120,7 +120,8 @@ const tableData3 = [
     name: "Kehidupan Teladan II/ The Exemplary Living II",
     credits: 2,
     type: "General",
-    prerequisite: "- [FILG181] Kehidupan Teladan Yesus I/ The Exemplary Living of Jesus I - 2 credit(s)",
+    prerequisite:
+      "- [FILG181] Kehidupan Teladan Yesus I/ The Exemplary Living of Jesus I - 2 credit(s)",
   },
   {
     number: 4,
@@ -128,8 +129,7 @@ const tableData3 = [
     name: "Matematika Diskrit/ Discrete Mathematics",
     credits: 3,
     type: "Major",
-    prerequisite:
-      "- [MATH000] Matematika/ Mathematics - 2 credit(s)",
+    prerequisite: "- [MATH000] Matematika/ Mathematics - 2 credit(s)",
   },
   {
     number: 5,
@@ -137,8 +137,7 @@ const tableData3 = [
     name: "Pengantar Akuntansi Keuangan/ Introduction to Financial Accounting",
     credits: 3,
     type: "Basic",
-    prerequisite:
-      "-",
+    prerequisite: "-",
   },
   {
     number: 6,
@@ -155,7 +154,8 @@ const tableData3 = [
     name: "Struktur Data dan Algoritma/ Data Structure and Algorithms",
     credits: 3,
     type: "Major",
-    prerequisite: "- [IS1113] Pemrograman Komputer/ Computer Programming - 6 credit(s)",
+    prerequisite:
+      "- [IS1113] Pemrograman Komputer/ Computer Programming - 6 credit(s)",
   },
   {
     number: 8,
@@ -175,8 +175,8 @@ const tableData4 = [
     name: "Bahasa Inggris Pra Menengah I / Pre-Inter English I",
     credits: 3,
     type: "General",
-    prerequisite: 
-        "- [GEN002] Bahasa Inggris Dasar II/ Elementary English II - 3 credit(s)",
+    prerequisite:
+      "- [GEN002] Bahasa Inggris Dasar II/ Elementary English II - 3 credit(s)",
   },
   {
     number: 2,
@@ -203,8 +203,10 @@ const tableData4 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS1111] Dasar Infrastruktur IT/ Fundamental of IT Infrastructure - 3 credit(s) 
-        <br />- [IS1112] Manajemen Proses Bisnis/ Business Process Management - 3 credit(s)"
+        - [IS1111] Dasar Infrastruktur IT/ Fundamental of IT Infrastructure - 3
+        credit(s)
+        <br />- [IS1112] Manajemen Proses Bisnis/ Business Process Management -
+        3 credit(s)"
       </div>
     ),
   },
@@ -232,7 +234,8 @@ const tableData4 = [
     name: "Statistik dan Probabilitas/ Statistics and Probability",
     credits: 3,
     type: "Basic",
-    prerequisite: "- [IS1221] Matematika Diskrit/ Discrete Mathematics - 3 credit(s)",
+    prerequisite:
+      "- [IS1221] Matematika Diskrit/ Discrete Mathematics - 3 credit(s)",
   },
   {
     number: 8,
@@ -254,7 +257,8 @@ const tableData5 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [GEN101] Bahasa Inggris Pra Menengah I / Pre-Inter English I - 3 credit(s)
+        - [GEN101] Bahasa Inggris Pra Menengah I / Pre-Inter English I - 3
+        credit(s)
       </div>
     ),
   },
@@ -266,7 +270,8 @@ const tableData5 = [
     type: "General",
     prerequisite: (
       <div>
-        - [FILG283] Dasar-Dasar Nilai Kristiani/ The Principles of Christian Values - 2 credit(s)
+        - [FILG283] Dasar-Dasar Nilai Kristiani/ The Principles of Christian
+        Values - 2 credit(s)
       </div>
     ),
   },
@@ -290,7 +295,8 @@ const tableData5 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS1112] Manajemen Proses Bisnis/ Business Process Management - 3 credit(s)
+        - [IS1112] Manajemen Proses Bisnis/ Business Process Management - 3
+        credit(s)
       </div>
     ),
   },
@@ -314,7 +320,8 @@ const tableData5 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS1111] Dasar Infrastruktur IT/ Fundamental of IT Infrastructure - 3 credit(s)
+        - [IS1111] Dasar Infrastruktur IT/ Fundamental of IT Infrastructure - 3
+        credit(s)
       </div>
     ),
   },
@@ -326,7 +333,8 @@ const tableData5 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS1111] Dasar Infrastruktur IT/ Fundamental of IT Infrastructure - 3 credit(s)
+        - [IS1111] Dasar Infrastruktur IT/ Fundamental of IT Infrastructure - 3
+        credit(s)
       </div>
     ),
   },
@@ -338,7 +346,8 @@ const tableData5 = [
     type: "General",
     prerequisite: (
       <div>
-        - [BIU203] Bahasa Inggris Pra Menengah I / Pre-Intermediate English I - 3 credit(s)
+        - [BIU203] Bahasa Inggris Pra Menengah I / Pre-Intermediate English I -
+        3 credit(s)
       </div>
     ),
   },
@@ -352,7 +361,7 @@ const tableData6 = [
     credits: 2,
     type: "General",
     prerequisite:
-        "- [FILG284] Pemuda dan Dunia/ Youth and the World - 2 credit(s)"
+      "- [FILG284] Pemuda dan Dunia/ Youth and the World - 2 credit(s)",
   },
 
   {
@@ -361,8 +370,7 @@ const tableData6 = [
     name: "Pengembangan Web Front-End/ Front-End Web Development",
     credits: 3,
     type: "Major",
-    prerequisite:
-        "- [IS2132] Perancangan Web/ Web Design - 3 credit(s)"
+    prerequisite: "- [IS2132] Perancangan Web/ Web Design - 3 credit(s)",
   },
 
   {
@@ -372,11 +380,12 @@ const tableData6 = [
     credits: 3,
     type: "Major",
     prerequisite: (
-        <div>
-            - [IS1113] Pemrograman Komputer/ Computer Programming - 6 credit(s)
-            <br />- [IS2131] Sistem Informasi Manajemen/ Management Information System - 3 credit(s)
-        </div>
-    )
+      <div>
+        - [IS1113] Pemrograman Komputer/ Computer Programming - 6 credit(s)
+        <br />- [IS2131] Sistem Informasi Manajemen/ Management Information
+        System - 3 credit(s)
+      </div>
+    ),
   },
 
   {
@@ -386,7 +395,7 @@ const tableData6 = [
     credits: 3,
     type: "Major",
     prerequisite:
-        "- [IS1223] Jaringan Komputer/ Computer Network - 3 credit(s)"
+      "- [IS1223] Jaringan Komputer/ Computer Network - 3 credit(s)",
   },
 
   {
@@ -396,7 +405,7 @@ const tableData6 = [
     credits: 3,
     type: "Major",
     prerequisite:
-        "- [IS2241] Sistem Manajemen Basisdata/ Database Management System - 3 credit(s)"
+      "- [IS2241] Sistem Manajemen Basisdata/ Database Management System - 3 credit(s)",
   },
 
   {
@@ -406,11 +415,13 @@ const tableData6 = [
     credits: 3,
     type: "Major",
     prerequisite: (
-        <div>
-            - [IS1222] Pengantar Akuntansi Keuangan/ Introduction to Financial Accounting - 3 credit(s)
-            <br />- [IS2131] Sistem Informasi Manajemen/ Management Information System - 3 credit(s)
-        </div>
-    )
+      <div>
+        - [IS1222] Pengantar Akuntansi Keuangan/ Introduction to Financial
+        Accounting - 3 credit(s)
+        <br />- [IS2131] Sistem Informasi Manajemen/ Management Information
+        System - 3 credit(s)
+      </div>
+    ),
   },
 
   {
@@ -420,13 +431,13 @@ const tableData6 = [
     credits: 3,
     type: "Major",
     prerequisite: (
-        <div>
-            - [IS1112] Manajemen Proses Bisnis/ Business Process Management - 3 credit(s)
-            <br />- [IS2132] Perancangan Web/ Web Design - 3 credit(s)
-        </div>
-    )
+      <div>
+        - [IS1112] Manajemen Proses Bisnis/ Business Process Management - 3
+        credit(s)
+        <br />- [IS2132] Perancangan Web/ Web Design - 3 credit(s)
+      </div>
+    ),
   },
-
 ];
 
 const tableData7 = [
@@ -437,9 +448,7 @@ const tableData7 = [
     credits: 2,
     type: "General",
     prerequisite: (
-      <div>
-        - [FILG385] Kehidupan Rumah Tangga/ Family Living - 2 credit(s)
-      </div>
+      <div>- [FILG385] Kehidupan Rumah Tangga/ Family Living - 2 credit(s)</div>
     ),
   },
 
@@ -451,7 +460,8 @@ const tableData7 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS2243] Pemrograman Berorientasi Objek/ Object Oriented Programming - 3 credit(s)
+        - [IS2243] Pemrograman Berorientasi Objek/ Object Oriented Programming -
+        3 credit(s)
       </div>
     ),
   },
@@ -464,7 +474,8 @@ const tableData7 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS3152] Analisis dan Perancangan Sistem/ System Analysis and Design - 3 credit(s)
+        - [IS3152] Analisis dan Perancangan Sistem/ System Analysis and Design -
+        3 credit(s)
       </div>
     ),
   },
@@ -477,7 +488,8 @@ const tableData7 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS2241] Sistem Manajemen Basisdata/ Database Management System - 3 credit(s)
+        - [IS2241] Sistem Manajemen Basisdata/ Database Management System - 3
+        credit(s)
       </div>
     ),
   },
@@ -490,7 +502,8 @@ const tableData7 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS3152] Analisis dan Perancangan Sistem/ System Analysis and Design - 3 credit(s)
+        - [IS3152] Analisis dan Perancangan Sistem/ System Analysis and Design -
+        3 credit(s)
       </div>
     ),
   },
@@ -503,7 +516,8 @@ const tableData7 = [
     type: "Basic",
     prerequisite: (
       <div>
-        - [IS2134] Statistik dan Probabilitas/ Statistics and Probability - 3 credit(s)
+        - [IS2134] Statistik dan Probabilitas/ Statistics and Probability - 3
+        credit(s)
       </div>
     ),
   },
@@ -516,11 +530,11 @@ const tableData7 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS3154] Penambangan dan Pergudangan Data/ Data Mining and Warehousing - 3 credit(s)
+        - [IS3154] Penambangan dan Pergudangan Data/ Data Mining and Warehousing
+        - 3 credit(s)
       </div>
     ),
   },
-
 ];
 
 const tableData8 = [
@@ -531,9 +545,7 @@ const tableData8 = [
     credits: 3,
     type: "Major",
     prerequisite: (
-      <div>
-        - [IS3265] Metodologi Penelitian/ Research Method - 3 credit(s)
-      </div>
+      <div>- [IS3265] Metodologi Penelitian/ Research Method - 3 credit(s)</div>
     ),
   },
 
@@ -545,7 +557,8 @@ const tableData8 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS1112] Manajemen Proses Bisnis/ Business Process Management - 3 credit(s)
+        - [IS1112] Manajemen Proses Bisnis/ Business Process Management - 3
+        credit(s)
       </div>
     ),
   },
@@ -558,7 +571,8 @@ const tableData8 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS3154] Penambangan dan Pergudangan Data/ Data Mining and Warehousing - 3 credit(s)
+        - [IS3154] Penambangan dan Pergudangan Data/ Data Mining and Warehousing
+        - 3 credit(s)
       </div>
     ),
   },
@@ -571,7 +585,8 @@ const tableData8 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS3262] Interaksi Manusia dan Komputer/ Human and Computer Interaction - 3 credit(s)
+        - [IS3262] Interaksi Manusia dan Komputer/ Human and Computer
+        Interaction - 3 credit(s)
       </div>
     ),
   },
@@ -584,11 +599,11 @@ const tableData8 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS3152] Analisis dan Perancangan Sistem/ System Analysis and Design - 3 credit(s)
+        - [IS3152] Analisis dan Perancangan Sistem/ System Analysis and Design -
+        3 credit(s)
       </div>
     ),
   },
-
 ];
 
 const tableData9 = [
@@ -599,9 +614,7 @@ const tableData9 = [
     credits: 3,
     type: "Major",
     prerequisite: (
-      <div>
-        - [IS4171] Skripsi I/ Research Project I - 3 credit(s)
-      </div>
+      <div>- [IS4171] Skripsi I/ Research Project I - 3 credit(s)</div>
     ),
   },
 
@@ -613,8 +626,10 @@ const tableData9 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS1222] Pengantar Akuntansi Keuangan/ Introduction to Financial Accounting - 3 credit(s) 
-        <br />- [IS3153] Keamanan Sistem Informasi/ Information System Security - 3 credit(s)
+        - [IS1222] Pengantar Akuntansi Keuangan/ Introduction to Financial
+        Accounting - 3 credit(s)
+        <br />- [IS3153] Keamanan Sistem Informasi/ Information System Security
+        - 3 credit(s)
       </div>
     ),
   },
@@ -627,7 +642,8 @@ const tableData9 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS3154] Penambangan dan Pergudangan Data/ Data Mining and Warehousing - 3 credit(s)
+        - [IS3154] Penambangan dan Pergudangan Data/ Data Mining and Warehousing
+        - 3 credit(s)
       </div>
     ),
   },
@@ -640,11 +656,11 @@ const tableData9 = [
     type: "Major",
     prerequisite: (
       <div>
-        - [IS3155] Rekayasa Proses Bisnis/ Business Process Reengineering - 3 credit(s)
+        - [IS3155] Rekayasa Proses Bisnis/ Business Process Reengineering - 3
+        credit(s)
       </div>
     ),
   },
-
 ];
 
 const tableData10 = [
@@ -656,7 +672,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [IS3153] Keamanan Sistem Informasi/ Information System Security - 3 credit(s)
+        - [IS3153] Keamanan Sistem Informasi/ Information System Security - 3
+        credit(s)
       </div>
     ),
   },
@@ -668,7 +685,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [IS3155] Rekayasa Proses Bisnis/ Business Process Reengineering - 3 credit(s)
+        - [IS3155] Rekayasa Proses Bisnis/ Business Process Reengineering - 3
+        credit(s)
       </div>
     ),
   },
@@ -680,7 +698,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [IS2131] Sistem Informasi Manajemen/ Management Information System - 3 credit(s)
+        - [IS2131] Sistem Informasi Manajemen/ Management Information System - 3
+        credit(s)
       </div>
     ),
   },
@@ -692,7 +711,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [IS1112] Manajemen Proses Bisnis/ Business Process Management - 3 credit(s)
+        - [IS1112] Manajemen Proses Bisnis/ Business Process Management - 3
+        credit(s)
       </div>
     ),
   },
@@ -704,7 +724,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [IS3261] Pengembangan Perangkat Bergerak/ Mobile Application Development - 3 credit(s)
+        - [IS3261] Pengembangan Perangkat Bergerak/ Mobile Application
+        Development - 3 credit(s)
       </div>
     ),
   },
@@ -716,7 +737,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [IS3156] Bisnis Elektronik/ Electronic Business (E-Business) - 3 credit(s)
+        - [IS3156] Bisnis Elektronik/ Electronic Business (E-Business) - 3
+        credit(s)
       </div>
     ),
   },
@@ -728,7 +750,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [IS3156] Bisnis Elektronik/ Electronic Business (E-Business) - 3 credit(s)
+        - [IS3156] Bisnis Elektronik/ Electronic Business (E-Business) - 3
+        credit(s)
       </div>
     ),
   },
@@ -800,7 +823,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3 credit(s)
+        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3
+        credit(s)
       </div>
     ),
   },
@@ -812,7 +836,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3 credit(s)
+        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3
+        credit(s)
       </div>
     ),
   },
@@ -824,7 +849,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3 credit(s)
+        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3
+        credit(s)
       </div>
     ),
   },
@@ -836,7 +862,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3 credit(s)
+        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3
+        credit(s)
       </div>
     ),
   },
@@ -848,7 +875,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [BIU204] Bahasa Inggris Pra Menengah II/ Pre-Intermediate English II - 3 credit(s)
+        - [BIU204] Bahasa Inggris Pra Menengah II/ Pre-Intermediate English II -
+        3 credit(s)
       </div>
     ),
   },
@@ -860,7 +888,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3 credit(s)
+        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3
+        credit(s)
       </div>
     ),
   },
@@ -872,7 +901,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [BIU204] Bahasa Inggris Pra Menengah II/ Pre-Intermediate English II - 3 credit(s)
+        - [BIU204] Bahasa Inggris Pra Menengah II/ Pre-Intermediate English II -
+        3 credit(s)
       </div>
     ),
   },
@@ -884,7 +914,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3 credit(s)
+        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3
+        credit(s)
       </div>
     ),
   },
@@ -896,7 +927,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [BIU204] Bahasa Inggris Pra Menengah II/ Pre-Intermediate English II - 3 credit(s)
+        - [BIU204] Bahasa Inggris Pra Menengah II/ Pre-Intermediate English II -
+        3 credit(s)
       </div>
     ),
   },
@@ -908,7 +940,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3 credit(s)
+        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3
+        credit(s)
       </div>
     ),
   },
@@ -920,7 +953,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [BIU204] Bahasa Inggris Pra Menengah II/ Pre-Intermediate English II - 3 credit(s)
+        - [BIU204] Bahasa Inggris Pra Menengah II/ Pre-Intermediate English II -
+        3 credit(s)
       </div>
     ),
   },
@@ -932,7 +966,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3 credit(s)
+        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3
+        credit(s)
       </div>
     ),
   },
@@ -944,7 +979,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [BIU204] Bahasa Inggris Pra Menengah II/ Pre-Intermediate English II - 3 credit(s)
+        - [BIU204] Bahasa Inggris Pra Menengah II/ Pre-Intermediate English II -
+        3 credit(s)
       </div>
     ),
   },
@@ -956,7 +992,8 @@ const tableData10 = [
     type: "Elective",
     prerequisite: (
       <div>
-        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3 credit(s)
+        - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3
+        credit(s)
       </div>
     ),
   },
@@ -981,30 +1018,28 @@ const TableItem = ({ data }) => (
   </TableRow>
 );
 
-const Curriculum = () => {
+const CurriculumSistemInformasi = () => {
   return (
     <div>
       <Typography
         sx={{
           fontSize: "24px",
           fontWeight: 500,
-          paddingBottom: "24px",
+          paddingTop: "25px",
         }}
-      >
-        Curriculum Sistem Informasi 2020-2024
-      </Typography>
+      ></Typography>
 
       <TableContainer sx={{ overflow: "auto" }}>
-      <Typography
-        sx={{
-          fontSize: "14px",
-          fontWeight: 500,
-          margin: "18px",
-          width: "100%",
-        }}
-      >
-        PREREQUISITE
-      </Typography>
+        <Typography
+          sx={{
+            fontSize: "14px",
+            fontWeight: 500,
+            margin: "18px",
+            width: "100%",
+          }}
+        >
+          PREREQUISITE
+        </Typography>
         <Table>
           <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
             <TableRow>
@@ -1282,4 +1317,4 @@ const Curriculum = () => {
   );
 };
 
-export default Curriculum; */
+export default CurriculumSistemInformasi;
