@@ -372,6 +372,12 @@ const menus = [
         uri: "/klabat-bridge/daftar-calon-tamatan",
       },
       {
+        label: "Daftar Calon Tamatan Fakultas",
+        type: "nav-item",
+        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-calon-tamatan-fakultas",
+      },
+      {
         label: "Home (Alumni)",
         type: "nav-item",
         icon: <HomeIcon sx={{ fontSize: 20 }} />,
