@@ -11,13 +11,15 @@ import JumboNavSection from "@jumbo/components/JumboVerticalNavbar/JumboNavSecti
 import useJumboAuth from "@jumbo/hooks/useJumboAuth";
 import { useNavigate } from "react-router-dom";
 import { ROLES } from "app/utils/constants/roles";
-import { dosenMenus } from "./menus";
+import { dekanMenus, dosenMenus } from "./menus";
 
 const roleCheck = () => {
   const role = JSON.parse(localStorage.getItem("user"))?.role;
   switch (role) {
     case ROLES.DOSEN:
       return dosenMenus;
+    case ROLES.DEKAN:
+      return dekanMenus;
     default:
       return [];
   }
