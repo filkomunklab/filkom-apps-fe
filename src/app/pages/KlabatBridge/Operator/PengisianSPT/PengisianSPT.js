@@ -72,6 +72,7 @@ const majorsByFaculty = {
     };
 
 const PengisianSPT = () => {
+    // table
     const [data, setData] = useState(rows);
 
     const handleInputChange = (e, id, columnName) => {
@@ -287,7 +288,7 @@ const PengisianSPT = () => {
             <Typography mt={5} sx={{ fontSize: "24px", fontWeight: 500, }}>
                 Sisa mata kuliah yang harus diambil:
             </Typography>
-        <Box m={2}>
+            <Box m={2}>
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
@@ -334,8 +335,8 @@ const PengisianSPT = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-        </Box>
-        <Typography variant="body1" sx={{lineHeight: 2.5}}>
+            </Box>
+            <Typography variant="body1" sx={{lineHeight: 2.5}}>
                 Total SKS yang diambil:
                     <span style={{ display: 'inline-block', minWidth: '30px' }}>
                         <TextField
