@@ -212,8 +212,11 @@ const FormTracerSTudy = () => {
         boxShadow: 3,
       }} >
         {/* Identity Details */}
-        <Typography variant="h1" style={{marginBottom:"2em", fontWeight: 500}}>Formulir Tracer Study</Typography>
-        <Typography variant="h2">Identitas Diri</Typography>
+        {/* <Typography variant="h1" style={{marginBottom:"2em", fontWeight: 500}}>Formulir Tracer Study</Typography> */}
+        <Typography mb={5} sx={{ fontSize: "24px", fontWeight: 500, }}>
+          Formulir Tracer Study
+        </Typography>
+        <Typography mb={3} variant="h2">Identitas Diri</Typography>
         <Grid container spacing={4}>
           <Grid item sm={12} md={6}>
             <Typography variant="subtitle1">Nomor Induk Mahasiswa (NIM)</Typography>
@@ -692,10 +695,15 @@ const FormTracerSTudy = () => {
               12. Pada saat lulus, pada tingkat mana kompetensi di bawah ini anda : kuasai? (A) Pada
               saat ini, pada tingkat mana kompetensi di bawah ini diperlukan dalam pekerjaan? (B)*
             </Typography>
-            <TableContainer component={Paper} sx={{marginY: 2}}>
-              <Table aria-label="simple table">
+            <TableContainer sx={{marginY: 2}}>
+              <Table 
+                aria-label="simple table" 
+                //sx={{ border: "1px solid #ddd" }} 
+              >
                 <TableHead>
-                  <TableRow>
+                  <TableRow 
+                    //sx={{backgroundColor: "#f5f5f5"}}
+                  >
                     <TableCell style={{ width: '400px' }}>A</TableCell>
                     <TableCell style={{ width: '200px' }}></TableCell>
                     <TableCell style={{ width: '400px' }}>B</TableCell>

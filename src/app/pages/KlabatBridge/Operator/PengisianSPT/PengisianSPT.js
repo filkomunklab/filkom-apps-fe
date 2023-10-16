@@ -34,12 +34,16 @@ import {
     DialogContent, 
     DialogContentText, 
     DialogTitle,
+    Input,
+    IconButton,
   } from "@mui/material";
 import React, { useState } from "react";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
 import { makeStyles } from '@mui/styles';
+import ClearIcon from "@mui/icons-material/Clear";
+import BackupOutlinedIcon from '@mui/icons-material/BackupOutlined';
 
 const rows = [
     { id: 1, name: 'Row 1', mk: 'Robotics', sks: '3', keterangan: 'Summer 2023' },
@@ -109,13 +113,40 @@ const PengisianSPT = () => {
         setSelectedDate(date);
     };
 
+    // pdf upload
+    const [pdfFile, setPdfFile] = useState(null);
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type === "application/pdf" && file.size <= 10485760) {
+      setPdfFile(file);
+    } else {
+      alert("Please select a valid PDF file (max. 10MB).");
+    }
+  };
+
+  const handleLinkClick = () => {
+    // Handle link click event if needed
+  };
+
+  const handleDeletePdf = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setPdfFile(null);
+  };
+
     return (
         <Box
-            marginX={15}
-            marginY={3}
-            //sx={{backgroundColor: 'white'}}
+            // marginX={15}
+            // marginY={3}
+            p={8}
+            sx={{
+                backgroundColor: 'white',
+                borderRadius: 5,
+                boxShadow: 3,
+            }}
         >
-            <Typography mb={5} sx={{ fontSize: "24px", fontWeight: 500, }}>
+            <Typography mb={2} sx={{ fontSize: "24px", fontWeight: 500, }}>
                 Surat Permohonan Tamat
             </Typography>
 
@@ -293,9 +324,9 @@ const PengisianSPT = () => {
             <Typography mt={5} sx={{ fontSize: "24px", fontWeight: 500, }}>
                 Sisa mata kuliah yang harus diambil:
             </Typography>
-            <Box m={2}>
-                <TableContainer component={Paper}>
-                    <Table>
+            <Box sx={{marginY: 2}}>
+                <TableContainer >
+                    <Table sx={{ border: "1px solid #ddd" }} >
                         <TableHead>
                         <TableRow style={{ backgroundColor: '#f5f5f5' }}>
                             <TableCell sx={{ width: '10px' }}>No.</TableCell>
@@ -358,20 +389,103 @@ const PengisianSPT = () => {
             </Typography>
             <Div
                 sx={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
+                    // display: 'flex',
+                    // flexWrap: 'wrap',
+                    marginY: 2,
+
                     '& > :not(style)': {
-                        m: 2,
                         width: 245,
                         height: 130,
-                    marginTop:'30px',
+                        //marginTop:'30px',
                     },
                 }}
             >
-                <Paper elevation={3}/>
+                <label htmlFor="pdf-upload-input">
+        <Input
+          accept=".pdf"
+          type="file"
+          id="pdf-upload-input"
+          onChange={handleFileUpload}
+          style={{ display: "none" }}
+        />
+        <Button
+          variant="outlined"
+          component="span"
+          style={{
+            width: "200px",
+            height: "100px", // Adjust the height to accommodate the content
+            display: "flex",
+            flexDirection: "column", // Arrange items vertically
+            alignItems: "center", // Center items horizontally
+            justifyContent: "center", // Center items vertically
+            padding: "5px", // Add padding to the button
+            color: "#1C1B20",
+            backgroundColor: "#F8F9FD",
+            border: "1px solid #DCDCDC",
+            "& .MuiSvgIcon-root": {
+              fontSize: 48, // Adjust the icon size
+            },
+            "&:hover": {
+              backgroundColor: "#7F91D9",
+              color: "white",
+            },
+          }}
+        >
+          <BackupOutlinedIcon sx={{color: "#6B696B"}}/> {/* Icon */}
+          <Typography variant="subtitle1" sx={{ fontSize: "12px", textTransform: "none" }}>
+            Upload PDF File Sertifikasi
+          </Typography> {/* Text and line breaks */}
+          <Typography variant="subtitle1" sx={{ fontSize: "10px", textTransform: "none" }}>
+            Max 10MB
+          </Typography> {/* Text and line breaks */}
+        </Button>
+      </label>
+
+      {pdfFile && (
+        <Div sx={{ 
+                position: "relative", 
+                fontSize: "15px", 
+                whiteSpace: "nowrap", 
+                marginTop: "10px", // Remove top margin
+                marginBottom: "0", // Remove bottom margin
+                paddingBottom: "0", // Remove bottom padding 
+            }}
+        >
+          <a
+            href={URL.createObjectURL(pdfFile)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleLinkClick}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              textDecoration: "none",
+              color: "blue",
+              margin: "0", // Remove margin
+              padding: "0", // Remove padding
+            }}
+          >
+            <span style={{ marginRight: "10px" }}>{pdfFile.name}</span>
+            <IconButton
+              sx={{
+                backgroundColor: "transparent",
+                "&:hover": {
+                  backgroundColor: "transparent",
+                },
+              }}
+              onClick={handleDeletePdf}
+              color="error"
+              aria-label="Delete PDF"
+            >
+              <ClearIcon sx={{ fontSize: 20 }} />
+            </IconButton>
+          </a>
+        </Div>
+      )}
+                {/* <Paper elevation={3}/> */}
             </Div>
-            <Divider sx={{ marginTop: '25px' }} />
-            <Grid container justifyContent="space-between" alignItems="center" style={{ padding: '20px' }}>
+            <Divider sx={{ marginY: 3 }} />
+            <Grid container justifyContent="space-between" alignItems="center" >
                 <Grid item>
                     <FormControlLabel control={<Checkbox/>} label="Saya telah mengisi data ini dengan benar dan tepat"/>
                 </Grid>
