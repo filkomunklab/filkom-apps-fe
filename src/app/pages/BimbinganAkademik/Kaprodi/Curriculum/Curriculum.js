@@ -1,28 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Select, MenuItem } from "@mui/material";
-import CurriculumInformatika from "./CurriculumInformatika";
-import CurriculumSistemInformasi from "./CurriculumSistemInformasi";
+import CurriculumInformatika2018 from "./CurriculumInformatika2018";
+import CurriculumInformatika2020 from "./CurriculumInformatika2020";
+import CurriculumSistemInformasi2018 from "./CurriculumSistemInformasi2018";
+import CurriculumSistemInformasi2020 from "./CurriculumSistemInformasi2020";
 import CurriculumTeknologiInformasi from "./CurriculumTeknologiInformasi";
 
 const Curriculum = () => {
   const [curriculum, setCurriculum] = useState("selectCurriculum");
 
-  const [InformatikaContentVisible, setInformatikaContentVisible] =
+  const [Informatika2018ContentVisible, setInformatika2018ContentVisible] =
     useState(false);
-  const [SistemInformasiContentVisible, setSistemInformasiContentVisible] =
+  const [Informatika2020ContentVisible, setInformatika2020ContentVisible] =
     useState(false);
+  const [
+    SistemInformasi2018ContentVisible,
+    setSistemInformasi2018ContentVisible,
+  ] = useState(false);
+  const [
+    SistemInformasi2020ContentVisible,
+    setSistemInformasi2020ContentVisible,
+  ] = useState(false);
   const [
     TeknologiInformasiContentVisible,
     setTeknologiInformasiContentVisible,
   ] = useState(false);
 
   useEffect(() => {
-    curriculum === "informatika"
-      ? setInformatikaContentVisible(true)
-      : setInformatikaContentVisible(false);
-    curriculum === "sistemInfromasi"
-      ? setSistemInformasiContentVisible(true)
-      : setSistemInformasiContentVisible(false);
+    curriculum === "informatika2018"
+      ? setInformatika2018ContentVisible(true)
+      : setInformatika2018ContentVisible(false);
+    curriculum === "informatika2020"
+      ? setInformatika2020ContentVisible(true)
+      : setInformatika2020ContentVisible(false);
+    curriculum === "sistemInfromasi2018"
+      ? setSistemInformasi2018ContentVisible(true)
+      : setSistemInformasi2018ContentVisible(false);
+    curriculum === "sistemInfromasi2020"
+      ? setSistemInformasi2020ContentVisible(true)
+      : setSistemInformasi2020ContentVisible(false);
     curriculum === "teknologiInfomasi"
       ? setTeknologiInformasiContentVisible(true)
       : setTeknologiInformasiContentVisible(false);
@@ -60,13 +76,17 @@ const Curriculum = () => {
           <MenuItem value="selectCurriculum">
             <Typography sx={{ fontWeight: 400 }}>View Curriculum</Typography>
           </MenuItem>
-          <MenuItem value="informatika">informatika 2020</MenuItem>
-          <MenuItem value="sistemInfromasi">Sistem Informasi 2020</MenuItem>
+          <MenuItem value="informatika2018">informatika 2018</MenuItem>
+          <MenuItem value="informatika2020">informatika 2020</MenuItem>
+          <MenuItem value="sistemInfromasi2018">Sistem Informasi 2018</MenuItem>
+          <MenuItem value="sistemInfromasi2020">Sistem Informasi 2020</MenuItem>
           <MenuItem value="teknologiInfomasi">Teknologi Infomasi 2023</MenuItem>
         </Select>
       </div>
-      {InformatikaContentVisible && <CurriculumInformatika />}
-      {SistemInformasiContentVisible && <CurriculumSistemInformasi />}
+      {Informatika2018ContentVisible && <CurriculumInformatika2018 />}
+      {Informatika2020ContentVisible && <CurriculumInformatika2020 />}
+      {SistemInformasi2018ContentVisible && <CurriculumSistemInformasi2018 />}
+      {SistemInformasi2020ContentVisible && <CurriculumSistemInformasi2020 />}
       {TeknologiInformasiContentVisible && <CurriculumTeknologiInformasi />}
     </div>
   );
