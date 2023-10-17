@@ -1,8 +1,7 @@
 import Div from "@jumbo/shared/Div";
-import React, { useState } from "react";
+import React from "react";
 import PeopleIcon from "@mui/icons-material/People";
 import {
-  Button,
   Chip,
   Table,
   TableBody,
@@ -106,7 +105,7 @@ const DaftarBimbinganSkripsiAdvisor = () => {
             </Typography>
           </Div>
         </Div>
-        {/* Belum Mengajukan Proposal */}
+        {/* Belum Mengajukan Skripsi */}
         <Div
           sx={{
             display: "flex",
@@ -130,7 +129,7 @@ const DaftarBimbinganSkripsiAdvisor = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Belum Mengajukan Proposal
+              Belum Mengajukan Skripsi
             </Typography>
             <Typography
               sx={{
@@ -144,7 +143,7 @@ const DaftarBimbinganSkripsiAdvisor = () => {
             </Typography>
           </Div>
         </Div>
-        {/* Sudah Mengajukan Proposal */}
+        {/* Sudah Mengajukan Skripsi */}
         <Div
           sx={{
             display: "flex",
@@ -170,7 +169,7 @@ const DaftarBimbinganSkripsiAdvisor = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Sudah Mengajukan Proposal
+              Sudah Mengajukan Skripsi
             </Typography>
             <Typography
               sx={{
@@ -184,7 +183,7 @@ const DaftarBimbinganSkripsiAdvisor = () => {
             </Typography>
           </Div>
         </Div>
-        {/* proposal yang Di Tolak */}
+        {/* Skripsi yang Di Tolak */}
         <Div
           sx={{
             display: "flex",
@@ -210,7 +209,7 @@ const DaftarBimbinganSkripsiAdvisor = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Proposal Yang Di Tolak
+              Skripsi Yang Di Tolak
             </Typography>
             <Typography
               sx={{
@@ -224,7 +223,7 @@ const DaftarBimbinganSkripsiAdvisor = () => {
             </Typography>
           </Div>
         </Div>
-        {/* Proposal yang diterima */}
+        {/* Skripsi yang diterima */}
         <Div
           sx={{
             display: "flex",
@@ -250,7 +249,7 @@ const DaftarBimbinganSkripsiAdvisor = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Proposal Yang Diterima
+              Skripsi Yang Diterima
             </Typography>
             <Typography
               sx={{
@@ -343,7 +342,7 @@ const DaftarBimbinganSkripsiAdvisor = () => {
           </Typography>
         </Div>
         {/* Semester End */}
-        {/* Table Mahasiswa Proposal Start */}
+        {/* Table Mahasiswa Skripsi Start */}
         <TableContainer>
           <Table>
             <TableHead>
@@ -374,7 +373,7 @@ const DaftarBimbinganSkripsiAdvisor = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* Table Mahasiswa Proposal End */}
+        {/* Table Mahasiswa Skripsi End */}
       </Div>
       {/* Table Master End */}
     </Div>
