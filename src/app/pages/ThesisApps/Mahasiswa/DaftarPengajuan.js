@@ -36,9 +36,9 @@ function DaftarPengajuan() {
   const [selectedOption, setSelectedOption] = useState("");
   const [options] = useState(["Option 1", "Option 2", "Option 3"]);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-  const [Advisor, setAdvisor] = useState(10);
-  const [CoAdvisor1, setCoAdvisor1] = useState(10);
-  const [CoAdvisor2, setCoAdvisor2] = useState(10);
+  const [Advisor, setAdvisor] = useState("");
+  const [CoAdvisor1, setCoAdvisor1] = useState("");
+  const [CoAdvisor2, setCoAdvisor2] = useState("");
   const [judulError, setJudulError] = useState(""); // State untuk pesan error judul
 
   const handleSelectChange = (e, index) => {
