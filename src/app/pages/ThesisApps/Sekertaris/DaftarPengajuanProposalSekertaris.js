@@ -1,5 +1,5 @@
 import Div from "@jumbo/shared/Div";
-import React, { useState } from "react";
+import React from "react";
 import PeopleIcon from "@mui/icons-material/People";
 import {
   Chip,
@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 
-const DaftarBimbinganProposalSekertaris = () => {
+const DaftarPengajuanProposalSekertaris = () => {
   const TableItem = ({ index }) => {
     return (
       <TableRow key={index}>
@@ -312,7 +312,7 @@ const DaftarBimbinganProposalSekertaris = () => {
               lineHeight: "32px",
             }}
           >
-            Daftar Bimbingan Proposal
+            Daftar Pengajuan Proposal
           </Typography>
           <Div
             sx={{
@@ -388,4 +388,4 @@ const DaftarBimbinganProposalSekertaris = () => {
   );
 };
 
-export default DaftarBimbinganProposalSekertaris;
+export default DaftarPengajuanProposalSekertaris;
