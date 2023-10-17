@@ -1,7 +1,8 @@
 import Page from "@jumbo/shared/Page";
 import DaftarAlumni from "app/pages/Mahasiswa/KlabatBridge/DaftarAlumni";
-import BerandaMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaMahasiswa";
 import BerandaPengajuanJudul from "app/pages/ThesisApps/Mahasiswa/BerandaPengajuanJudul";
+import BerandaProposalMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaProposalMahasiswa";
+import BerandaSkripsiMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaSkripsiMahasiswa";
 import DaftarPengajuan from "app/pages/ThesisApps/Mahasiswa/DaftarPengajuan";
 import Konsultasi from "app/pages/ThesisApps/Mahasiswa/Konsultasi";
 import PengajuanJudul from "app/pages/ThesisApps/Mahasiswa/PengajuanJudul";
@@ -13,7 +14,7 @@ const mahasiswaRoutes = [
   {
     // Thesis Apps Mahasiswa
     path: "/sistem-informasi-skripsi/daftar-pengajuan",
-    element: <Page component={UploadRevisiSkripsi} />,
+    element: <Page component={DaftarPengajuan} />,
   },
 ];
 
