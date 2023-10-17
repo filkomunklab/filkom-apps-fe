@@ -12,7 +12,7 @@ import {
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import React from "react";
 
-const BerandaMahasiswa = () => {
+const BerandaProposalMahasiswa = () => {
   return (
     <Div>
       <Div
@@ -521,4 +521,4 @@ const BerandaMahasiswa = () => {
   );
 };
 
-export default BerandaMahasiswa;
+export default BerandaProposalMahasiswa;
