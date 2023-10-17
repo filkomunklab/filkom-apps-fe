@@ -1,5 +1,5 @@
 import Div from "@jumbo/shared/Div";
-import React from "react";
+import React, { useState } from "react";
 import PeopleIcon from "@mui/icons-material/People";
 import {
   Chip,
@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 
-const DaftarPengajuanProposalSekertaris = () => {
+const DaftarBimbinganProposalSekertaris = () => {
   const TableItem = ({ index }) => {
     return (
       <TableRow key={index}>
@@ -388,4 +388,4 @@ const DaftarPengajuanProposalSekertaris = () => {
   );
 };
 
-export default DaftarPengajuanProposalSekertaris;
+export default DaftarBimbinganProposalSekertaris;
