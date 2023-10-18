@@ -100,20 +100,11 @@ const DaftarAlumni = () => {
 
               "&:hover": {
                 backgroundColor: "#006AF5",
-                borderRadius: "24px",
-                color: "white",
-                whiteSpace: "nowrap",
-                width: "100%",
-                pr:3,
-                pl:3,
-
-                "&:hover": {
-                    backgroundColor: "#006AF5",
-                },
-                }}
-            >
-                + Import Data
-            </Button>
+              },
+            }}
+          >
+            + Import Data
+          </Button>
         </Div>
       </Div>
       <TableContainer sx={{ overflow: "auto" }}>
@@ -137,11 +128,7 @@ const DaftarAlumni = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Grid container justifyContent="flex-end">
-        <Grid item>
-          <Pagination count={10} color="primary" sx={{ marginY: 5 }} />
-        </Grid>
-      </Grid>
+      <Pagination count={10} color="primary" sx={{ mt: 3 }} />
     </Div>
   );
 };
