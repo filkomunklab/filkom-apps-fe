@@ -1,138 +1,17 @@
-import Div from "@jumbo/shared/Div";
-import { LoadingButton } from "@mui/lab";
+import React from "react";
 import {
-  Box,
-  Breadcrumbs,
-  Button,
-  Grid,
-  Modal,
-  Stack,
+  Typography,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
-  Typography,
-  experimentalStyled as styled,
 } from "@mui/material";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
-const StyledLink = styled(Link)(({ theme }) => ({
-  textDecoration: "none",
-  color: "rgba(27, 43, 65, 0.69)",
-
-  "&:hover": {
-    textDecoration: "underline",
-  },
-}));
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 402,
-  bgcolor: "background.paper",
-  border: "1px solid #000",
-  borderRadius: 2,
-  boxShadow: 24,
-  overflow: "hidden",
-};
-
-const tableDataContract = [
-  {
-    number: 1,
-    code: "MATH000",
-    name: "Matematika/ Mathematics",
-    credit: 3,
-    grade: "-",
-    type: "General",
-    prerequisite: "-",
-    lecturer: "Sandag, Green A",
-    status: "-",
-  },
-  {
-    number: 2,
-    code: "IF1112",
-    name: "Dasar Aljabar Linear/ Aljabar Linear Fundamental",
-    credit: 3,
-    grade: "-",
-    type: "Major",
-    prerequisite: "- [MATH000] Matematika/ Mathematics - 2 credit(s)",
-    lecturer: "Sondakh, Debby Erce",
-    status: "-",
-  },
-  {
-    number: 3,
-    code: "MATH000",
-    name: "Matematika/ Mathematics",
-    credit: 2,
-    grade: "-",
-    type: "General",
-    prerequisite: "- [MATH000] Matematika/ Mathematics - 2 credit(s)",
-    lecturer: "Sengkey, Virginia",
-    status: "-",
-  },
-  {
-    number: 4,
-    code: "IF1112",
-    name: "Dasar Aljabar Linear/ Aljabar Linear Fundamental",
-    credit: 3,
-    grade: "-",
-    type: "General",
-    prerequisite: "-",
-    lecturer: "Sandag, Green A",
-    status: "-",
-  },
-  {
-    number: 5,
-    code: "MATH000",
-    name: "Matematika/ Mathematics",
-    credit: 2,
-    grade: "-",
-    type: "Major",
-    prerequisite: "-",
-    lecturer: "Adam, Stenly",
-    status: "-",
-  },
-  {
-    number: 6,
-    code: "IF1112",
-    name: "Dasar Aljabar Linear/ Aljabar Linear Fundamental",
-    credit: 3,
-    grade: "-",
-    type: "Major",
-    prerequisite: "- [MATH000] Matematika/ Mathematics - 2 credit(s)",
-    lecturer: "Sandag, Green A",
-    status: "-",
-  },
-  {
-    number: 7,
-    code: "FILG182",
-    name: "Teladan Kehidupan II/ The Exemplary Living II",
-    credit: 2,
-    grade: "-",
-    type: "Major",
-    prerequisite: "-",
-    lecturer: "Sandag, Green A",
-    status: "-",
-  },
-];
 
 const tableData1 = [
   {
     number: 1,
-    code: "MATH000",
-    name: "Matematika/ Mathematics",
-    credits: 2,
-    type: "Pre-requisite",
-    prerequisite: "-",
-  },
-  {
-    number: 2,
     code: "COPS000",
     name: "Keterampilan Komputer Dasar/ Basic Computer Skill",
     credits: 3,
@@ -140,7 +19,23 @@ const tableData1 = [
     prerequisite: "-",
   },
   {
+    number: 2,
+    code: "MATH000",
+    name: "Matematika/ Mathematics",
+    credits: 2,
+    type: "Pre-requisite",
+    prerequisite: "-",
+  },
+  {
     number: 3,
+    code: "LMTR999",
+    name: "Mata Kuliah Pembatas/ Limiter Subject",
+    credits: 1,
+    type: "Pre-requisite",
+    prerequisite: "-",
+  },
+  {
+    number: 4,
     code: "WEDU001",
     name: "Pendidikan Keterampilan/ Work Education",
     credits: 1,
@@ -148,18 +43,10 @@ const tableData1 = [
     prerequisite: "-",
   },
   {
-    number: 4,
+    number: 5,
     code: "BIU000",
     name: "Bahasa Inggris Pemula/ Basic English",
     credits: 3,
-    type: "Pre-requisite",
-    prerequisite: "-",
-  },
-  {
-    number: 5,
-    code: "LMTR999",
-    name: "Mata Kuliah Pembatas/ Limiter Subject",
-    credits: 1,
     type: "Pre-requisite",
     prerequisite: "-",
   },
@@ -1107,25 +994,7 @@ const tableData10 = [
   },
 ];
 
-let totalCredit = 0;
-
-for (const data of tableData1) {
-  totalCredit += data.credits;
-}
-
-const TableItem1 = ({ data }) => (
-  <TableRow>
-    <TableCell>{data.number}</TableCell>
-    <TableCell>{data.code}</TableCell>
-    <TableCell>{data.name}</TableCell>
-    <TableCell>{data.credit}</TableCell>
-    <TableCell>{data.grade}</TableCell>
-    <TableCell>{data.type}</TableCell>
-    <TableCell>{data.prerequisite}</TableCell>
-    <TableCell>{data.status}</TableCell>
-  </TableRow>
-);
-const TableItem2 = ({ data }) => (
+const TableItem = ({ data }) => (
   <TableRow>
     <TableCell>{data.number}</TableCell>
     <TableCell>{data.code}</TableCell>
@@ -1136,302 +1005,33 @@ const TableItem2 = ({ data }) => (
   </TableRow>
 );
 
-const ReviewPreRegistrationStudent = () => {
-  const tableData = [
-    ...tableData1,
-    ...tableData2,
-    ...tableData3,
-    ...tableData4,
-    ...tableData5,
-    ...tableData6,
-    ...tableData7,
-    ...tableData8,
-    ...tableData9,
-    ...tableData10,
-  ];
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isReject, setIsReject] = useState(false);
-  const [isApprove, setIsApprove] = useState(false);
-  console.log("aso", tableData);
-
-  const handleSubmit = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-  const handleReject = () => {
-    setIsReject(!isReject);
-  };
-  const handleApprove = () => {
-    setIsApprove(!isApprove);
-  };
-
-  const handleClick = (event) => {
-    event.preventDefault();
-  };
+const CurriculumInformatika = () => {
   return (
-    <Div>
-      <Div role="presentation" onClick={handleClick}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/dekan/review-activities/pre-registration/">
-            Review Pre-Registration
-          </StyledLink>
-          <Typography color="text.primary">Pre-registration</Typography>
-        </Breadcrumbs>
-      </Div>
+    <div>
       <Typography
-        fontSize={"24px"}
-        fontWeight="500"
-        sx={{ marginBottom: 2, paddingTop: "20px" }}
-      >
-        Courses Pre-registration
-      </Typography>
-      <Grid container>
-        <Grid item id="detail-item">
-          <Grid container>
-            <Grid item md={"auto"}>
-              <Stack>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Student Name
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Supervisor Name
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Submission Date
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Approval Date
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Status
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Category
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Descriptions
-                </Typography>
-              </Stack>
-            </Grid>
-            <Grid item md={"auto"}>
-              <Stack paddingX={1}>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-              </Stack>
-            </Grid>
-            <Grid item md={10}>
-              <Stack>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Awuy, Diany Mariska
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Adzanu, Shaliha Alifyaa
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  10 May 2000
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  11 May 2000
-                </Typography>
-                <Typography
-                  variant="h5"
-                  sx={{ marginBottom: 2, color: "#FFCC00" }}
-                >
-                  Waiting
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Seminar
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Saya ingin mengambil kembali mata kuliah “Pengantar Basisdata/
-                  Introduction to Database” karena tidak pass di pengambilan
-                  sebelumnya
-                </Typography>
-              </Stack>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-      <TableContainer
-        sx={{ overflow: "auto", marginTop: 4, backgroundColor: "white" }}
-      >
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
-            <TableRow>
-              <TableCell sx={{ width: "40px" }}>Number</TableCell>
-              <TableCell sx={{ width: "40px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
-              <TableCell sx={{ width: "40px" }}>Credit(s)</TableCell>
-              <TableCell sx={{ width: "40px" }}>Grade</TableCell>
-              <TableCell sx={{ width: "200px" }}>Type </TableCell>
-              <TableCell sx={{ width: "380px" }}>Prerequisite</TableCell>
-              <TableCell sx={{ width: "110px" }}>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tableDataContract.map((data, index) => (
-              <TableItem1 key={index} data={data} />
-            ))}
-          </TableBody>
-        </Table>
-        {/* {tableData1.map((data, index)=>(
-            <Typography></Typography>
-        ))} */}
-      </TableContainer>
-      <Typography sx={{ my: 3 }}>
-        Total Credits: {totalCredit} credits
-      </Typography>
-      <Box component="form" noValidate autoComplete="off">
-        <Typography variant="h6">Comments</Typography>
-        <TextField
-          id="outlined-multiline-static"
-          placeholder="Add comment"
-          multiline
-          minRows={4}
-          fullWidth
-        />
-      </Box>
-      <Div
         sx={{
-          mt: 3,
-          mb: 6,
-          display: "flex",
-          justifyContent: "flex-end",
-          columnGap: 2,
+          fontSize: "24px",
+          fontWeight: 500,
+          paddingTop: "25px",
+        }}
+      ></Typography>
+      <Typography
+        sx={{
+          fontSize: "14px",
+          fontWeight: 500,
+          margin: "18px",
+          width: "100%",
         }}
       >
-        <Button
-          loading
-          variant="contained"
-          color="error"
-          sx={{ borderRadius: 50, textTransform: "capitalize", width: "152px" }}
-          onClick={handleReject}
-        >
-          Reject
-        </Button>
-        <Button
-          loading
-          variant="contained"
-          //   color="success"
-          sx={{ borderRadius: 50, textTransform: "capitalize", width: "152px" }}
-          onClick={handleApprove}
-        >
-          Approve
-        </Button>
-        <Modal
-          open={isReject}
-          onClose={handleReject}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Div sx={{ py: 2, px: 3 }}>
-              <Typography id="modal-modal-title" variant="h3" color={`#0A0A0A`}>
-                Reject this course pre-registration?
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Please remember to leave comments for the student regarding the
-                reasons of the rejection.
-              </Typography>
-            </Div>
-            <Div
-              sx={{
-                display: "flex",
-                columnGap: 2,
-                justifyContent: "flex-end",
-                bgcolor: "#F5F5F5",
-                px: 2,
-                py: 1,
-              }}
-            >
-              <Button
-                variant="outlined"
-                sx={{
-                  borderColor: "#E0E0E0",
-                  color: "#0A0A0A",
-                  textTransform: "capitalize",
-                }}
-                onClick={() => setIsReject(false)}
-              >
-                Cancel
-              </Button>
-              <Button variant="contained" sx={{ textTransform: "capitalize" }}>
-                Submit
-              </Button>
-            </Div>
-          </Box>
-        </Modal>
-        <Modal
-          open={isApprove}
-          onClose={handleApprove}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Div sx={{ py: 2, px: 3 }}>
-              <Typography id="modal-modal-title" variant="h3" color={`#0A0A0A`}>
-                Approve this course pre-registration?
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Please note that approving this course pre-registration will
-                store the data for statistical analysis before making it
-                available.
-              </Typography>
-            </Div>
-            <Div
-              sx={{
-                display: "flex",
-                columnGap: 2,
-                justifyContent: "flex-end",
-                bgcolor: "#F5F5F5",
-                px: 2,
-                py: 1,
-              }}
-            >
-              <Button
-                variant="outlined"
-                sx={{
-                  borderColor: "#E0E0E0",
-                  color: "#0A0A0A",
-                  textTransform: "capitalize",
-                }}
-                onClick={() => setIsApprove(false)}
-              >
-                Cancel
-              </Button>
-              <Button variant="contained" sx={{ textTransform: "capitalize" }}>
-                Submit
-              </Button>
-            </Div>
-          </Box>
-        </Modal>
-      </Div>
-      <Typography variant="h1">Kurikulum Informatika 2020</Typography>
-      <TableContainer sx={{ overflow: "auto", backgroundColor: "white" }}>
+        PREREQUISITE
+      </Typography>
+      <TableContainer sx={{ overflow: "auto" }}>
         <Table>
           <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
             <TableRow>
               <TableCell sx={{ width: "80px" }}>Number</TableCell>
               <TableCell sx={{ width: "110px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
+              <TableCell sx={{ width: "400px" }}>Name</TableCell>
               <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
               <TableCell sx={{ width: "120px" }}>Type</TableCell>
               <TableCell sx={{ width: "288px" }}>Prerequisite</TableCell>
@@ -1439,7 +1039,7 @@ const ReviewPreRegistrationStudent = () => {
           </TableHead>
           <TableBody>
             {tableData1.map((data, index) => (
-              <TableItem2 key={index} data={data} />
+              <TableItem key={index} data={data} />
             ))}
             <div>
               <Typography
@@ -1467,7 +1067,7 @@ const ReviewPreRegistrationStudent = () => {
             </TableRow>
           </TableHead>
           {tableData2.map((data, index) => (
-            <TableItem2 key={index} data={data} />
+            <TableItem key={index} data={data} />
           ))}
           <div>
             <Typography
@@ -1494,7 +1094,7 @@ const ReviewPreRegistrationStudent = () => {
             </TableRow>
           </TableHead>
           {tableData3.map((data, index) => (
-            <TableItem2 key={index} data={data} />
+            <TableItem key={index} data={data} />
           ))}
           <div>
             <Typography
@@ -1521,7 +1121,7 @@ const ReviewPreRegistrationStudent = () => {
             </TableRow>
           </TableHead>
           {tableData4.map((data, index) => (
-            <TableItem2 key={index} data={data} />
+            <TableItem key={index} data={data} />
           ))}
           <div>
             <Typography
@@ -1548,7 +1148,7 @@ const ReviewPreRegistrationStudent = () => {
             </TableRow>
           </TableHead>
           {tableData5.map((data, index) => (
-            <TableItem2 key={index} data={data} />
+            <TableItem key={index} data={data} />
           ))}
           <div>
             <Typography
@@ -1575,7 +1175,7 @@ const ReviewPreRegistrationStudent = () => {
             </TableRow>
           </TableHead>
           {tableData6.map((data, index) => (
-            <TableItem2 key={index} data={data} />
+            <TableItem key={index} data={data} />
           ))}
           <div>
             <Typography
@@ -1602,7 +1202,7 @@ const ReviewPreRegistrationStudent = () => {
             </TableRow>
           </TableHead>
           {tableData7.map((data, index) => (
-            <TableItem2 key={index} data={data} />
+            <TableItem key={index} data={data} />
           ))}
           <div>
             <Typography
@@ -1629,7 +1229,7 @@ const ReviewPreRegistrationStudent = () => {
             </TableRow>
           </TableHead>
           {tableData8.map((data, index) => (
-            <TableItem2 key={index} data={data} />
+            <TableItem key={index} data={data} />
           ))}
           <div>
             <Typography
@@ -1656,7 +1256,7 @@ const ReviewPreRegistrationStudent = () => {
             </TableRow>
           </TableHead>
           {tableData9.map((data, index) => (
-            <TableItem2 key={index} data={data} />
+            <TableItem key={index} data={data} />
           ))}
           <div>
             <Typography
@@ -1683,7 +1283,7 @@ const ReviewPreRegistrationStudent = () => {
             </TableRow>
           </TableHead>
           {tableData10.map((data, index) => (
-            <TableItem2 key={index} data={data} />
+            <TableItem key={index} data={data} />
           ))}
           <div>
             <Typography
@@ -1699,8 +1299,8 @@ const ReviewPreRegistrationStudent = () => {
           </div>
         </Table>
       </TableContainer>
-    </Div>
+    </div>
   );
 };
 
-export default ReviewPreRegistrationStudent;
+export default CurriculumInformatika;
