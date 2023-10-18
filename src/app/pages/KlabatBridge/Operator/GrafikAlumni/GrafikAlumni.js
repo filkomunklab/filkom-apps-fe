@@ -19,13 +19,14 @@ import {
   InputLabel,
   IconButton,
   Pagination,
+  Grid,
 } from "@mui/material";
 import ActionButton from "app/shared/ActionButton";
 import SearchGlobal from "app/shared/SearchGlobal";
 import React, { useState } from "react";
 import CreateIcon from "@mui/icons-material/Create";
 import MarkunreadIcon from "@mui/icons-material/Markunread";
-import SchoolIcon from '@mui/icons-material/School';
+import SchoolIcon from "@mui/icons-material/School";
 import { Search } from "@mui/icons-material";
 
 const listSort = ["namalengkap", "nim", "prodi"];
@@ -54,81 +55,109 @@ const GrafikAlumni = () => {
   );
   return (
     <Div>
+      <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
+        Total Lulusan
+      </Typography>
+      <Div
+        sx={{
+          marginBottom: "20px",
+          display: "flex",
+          flexWrap: "wrap",
+          "& > :not(style)": {
+            m: 1,
+            width: 300,
+            height: 80,
+            mb: 2,
+          },
+        }}
+      >
+        <Paper sx={{ p: 1.5 }}>
+          <Box display="flex" alignItems="center">
+            <SchoolIcon sx={{ fontSize: 40, mr: 2, color: "primary.main" }} />
+            <Box flexGrow={1}>
+              <Typography variant="subtitle1" sx={{ fontSize: "14px" }}>
+                Total Mahasiswa FILKOM
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ fontSize: "22px", fontWeight: 500 }}
+              >
+                1,324 Mahasiswa
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+        <Paper sx={{ p: 1.5 }}>
+          <Box display="flex" alignItems="center">
+            <SchoolIcon sx={{ fontSize: 40, mr: 2, color: "primary.main" }} />
+            <Box flexGrow={1}>
+              <Typography variant="subtitle1" sx={{ fontSize: "14px" }}>
+                Mahasiswa Informatika
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ fontSize: "22px", fontWeight: 500 }}
+              >
+                357 Mahasiswa
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+        <Paper sx={{ p: 1.5 }}>
+          <Box display="flex" alignItems="center">
+            <SchoolIcon sx={{ fontSize: 40, mr: 2, color: "primary.main" }} />
+            <Box flexGrow={1}>
+              <Typography variant="subtitle1" sx={{ fontSize: "14px" }}>
+                Mahasiswa Sistem Informasi
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ fontSize: "22px", fontWeight: 500 }}
+              >
+                486 Mahasiswa
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+        <Paper sx={{ p: 1.5 }}>
+          <Box display="flex" alignItems="center">
+            <SchoolIcon sx={{ fontSize: 40, mr: 2, color: "primary.main" }} />
+            <Box flexGrow={1}>
+              <Typography variant="subtitle1" sx={{ fontSize: "14px" }}>
+                Mahasiswa Animasi dan Desain
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ fontSize: "22px", fontWeight: 500 }}
+              >
+                165 Mahasiswa
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+      </Div>
+      <Div
+        sx={{
+          display: "flex",
+          direction: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2,
+        }}
+      >
         <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
-            Total Lulusan
+          Daftar Alumni
         </Typography>
         <Div
-            sx={{
-                marginBottom:"20px",
-                display: 'flex',
-                flexWrap: 'wrap',
-                '& > :not(style)': {
-                    m: 1,
-                    width: 300,
-                    height: 80,
-                    mb: 2,
-                },
-            }}
-        >
-            <Paper sx={{p: 1.5 }}>
-                <Box display="flex" alignItems="center">
-                    <SchoolIcon sx={{ fontSize: 40, mr: 2, color: "primary.main" }} />
-                    <Box flexGrow={1}>
-                    <Typography variant="subtitle1" sx={{ fontSize: "14px"}}>Total Mahasiswa FILKOM</Typography>
-                    <Typography variant="body2" sx={{ fontSize: "22px", fontWeight: 500 }}>1,324 Mahasiswa</Typography>
-                    </Box>
-                </Box>
-            </Paper>
-            <Paper sx={{p: 1.5 }}>
-                <Box display="flex" alignItems="center">
-                    <SchoolIcon sx={{ fontSize: 40, mr: 2, color: "primary.main" }} />
-                    <Box flexGrow={1}>
-                    <Typography variant="subtitle1" sx={{ fontSize: "14px"}}>Mahasiswa Informatika</Typography>
-                    <Typography variant="body2" sx={{ fontSize: "22px", fontWeight: 500 }}>357 Mahasiswa</Typography>
-                    </Box>
-                </Box>
-            </Paper>
-            <Paper sx={{p: 1.5 }}>
-                <Box display="flex" alignItems="center">
-                    <SchoolIcon sx={{ fontSize: 40, mr: 2, color: "primary.main" }} />
-                    <Box flexGrow={1}>
-                    <Typography variant="subtitle1" sx={{ fontSize: "14px"}}>Mahasiswa Sistem Informasi</Typography>
-                    <Typography variant="body2" sx={{ fontSize: "22px", fontWeight: 500 }}>486 Mahasiswa</Typography>
-                    </Box>
-                </Box>
-            </Paper>
-            <Paper sx={{p: 1.5 }}>
-                <Box display="flex" alignItems="center">
-                    <SchoolIcon sx={{ fontSize: 40, mr: 2, color: "primary.main" }} />
-                    <Box flexGrow={1}>
-                    <Typography variant="subtitle1" sx={{ fontSize: "14px"}}>Mahasiswa Animasi dan Desain</Typography>
-                    <Typography variant="body2" sx={{ fontSize: "22px", fontWeight: 500 }}>165 Mahasiswa</Typography>
-                    </Box>
-                </Box>
-            </Paper>
-        </Div>
-        <Div
-            sx={{
+          sx={{
             display: "flex",
             direction: "row",
-            justifyContent: "space-between",
+            gap: 3,
             alignItems: "center",
-            mb: 2,
-            }}
+          }}
         >
-            <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
-                Daftar Alumni
-            </Typography>
-            <Div
-            sx={{
-                display: "flex",
-                direction: "row",
-                gap: 3,
-                alignItems: "center",
-            }}
-            >
-            <SearchGlobal sx={{ minWidth: { xs: 100, md: 300 } }} />
-            {/* <Select
+          <SearchGlobal sx={{ minWidth: { xs: 100, md: 300 } }} />
+          {/* <Select
                 sx={{ borderRadius: "50px", minWidth: "150px" }}
                 value={sortBy}
                 onChange={(event) => setSortBy(event.target.value)}
@@ -142,67 +171,72 @@ const GrafikAlumni = () => {
                 <MenuItem value={"nim"}>NIM</MenuItem>
                 <MenuItem value={"prodi"}>Prodi</MenuItem>
             </Select> */}
-            <FormControl sx={{minWidth: 150}} size="small">
-                <InputLabel id="demo-select-small">Sort by</InputLabel>
-                <Select
-                    sx={{ borderRadius: "50px", minWidth: "150px"}}
-                    labelId="demo-select-small"
-                    id="demo-select-small"
-                    value={sortBy}
-                    label="Sort by"
-                    onChange={(event) => setSortBy(event.target.value)}
-                >
-                    <MenuItem value="">
-                        <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={"Nama"}>Nama</MenuItem>
-                    <MenuItem value={"Fakultas"}>Fakultas</MenuItem>
-                    <MenuItem value={"Prodi"}>Prodi</MenuItem>
-                    <MenuItem value={"NIM"}>NIM</MenuItem>
-                    <MenuItem value={"Tahun Lulus"}>Tahun Lulus</MenuItem>
-                </Select>
-            </FormControl>
-            <Button
-                sx={{
-                backgroundColor: "#006AF5",
-                borderRadius: "24px",
-                color: "white",
-                whiteSpace: "nowrap",
-                width: "100%",
-                pr:3,
-                pl:3,
-
-                "&:hover": {
-                    backgroundColor: "#006AF5",
-                },
-                }}
+          <FormControl sx={{ minWidth: 150 }} size="small">
+            <InputLabel id="demo-select-small">Sort by</InputLabel>
+            <Select
+              sx={{ borderRadius: "50px", minWidth: "150px" }}
+              labelId="demo-select-small"
+              id="demo-select-small"
+              value={sortBy}
+              label="Sort by"
+              onChange={(event) => setSortBy(event.target.value)}
             >
-                + Import Data
-            </Button>
-            </Div>
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={"Nama"}>Nama</MenuItem>
+              <MenuItem value={"Fakultas"}>Fakultas</MenuItem>
+              <MenuItem value={"Prodi"}>Prodi</MenuItem>
+              <MenuItem value={"NIM"}>NIM</MenuItem>
+              <MenuItem value={"Tahun Lulus"}>Tahun Lulus</MenuItem>
+            </Select>
+          </FormControl>
+          <Button
+            sx={{
+              backgroundColor: "#006AF5",
+              borderRadius: "24px",
+              color: "white",
+              whiteSpace: "nowrap",
+              width: "100%",
+              pr: 3,
+              pl: 3,
+
+              "&:hover": {
+                backgroundColor: "#006AF5",
+              },
+            }}
+          >
+            + Import Data
+          </Button>
         </Div>
-        <TableContainer sx={{ overflow: "auto" }}>
-            <Table>
-            <TableHead>
-                <TableRow>
-                <TableCell>No</TableCell>
-                <TableCell>Nama Lengkap</TableCell>
-                <TableCell>Nim</TableCell>
-                <TableCell>Nama Prodi</TableCell>
-                <TableCell>Fakultas</TableCell>
-                <TableCell>Tahun Lulus</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>Aksi</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {[...Array(10)].map((item, index) => (
-                <TableItem index={index} />
-                ))}
-            </TableBody>
-            </Table>
-        </TableContainer>
-        <Pagination count={10} color="primary" sx={{mt:2}}/>
+      </Div>
+      <TableContainer sx={{ overflow: "auto" }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>No</TableCell>
+              <TableCell>Nama Lengkap</TableCell>
+              <TableCell>Nim</TableCell>
+              <TableCell>Nama Prodi</TableCell>
+              <TableCell>Fakultas</TableCell>
+              <TableCell>Tahun Lulus</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell sx={{ textAlign: "center" }}>Aksi</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {[...Array(10)].map((item, index) => (
+              <TableItem index={index} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Grid container justifyContent="flex-end">
+        <Grid item>
+          {/* Content you want to position on the right side */}
+          <Pagination count={10} color="primary" sx={{ marginY: 5 }} />
+        </Grid>
+      </Grid>
     </Div>
   );
 };

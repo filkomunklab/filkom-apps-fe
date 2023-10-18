@@ -13,6 +13,7 @@ import {
   FormControl,
   InputLabel,
   Pagination,
+  Grid,
 } from "@mui/material";
 import ActionButton from "app/shared/ActionButton";
 import SearchGlobal from "app/shared/SearchGlobal";
@@ -67,43 +68,43 @@ const DaftarAlumni = () => {
           }}
         >
           <SearchGlobal sx={{ minWidth: { xs: 100, md: 300 } }} />
-          <FormControl sx={{minWidth: 150}} size="small">
-              <InputLabel id="demo-select-small">Sort by</InputLabel>
-              <Select
-                sx={{ borderRadius: "50px", minWidth: "150px"}}
-                labelId="demo-select-small"
-                id="demo-select-small"
-                value={sortBy}
-                label="Sort by"
-                onChange={(event) => setSortBy(event.target.value)}
-              >
-                <MenuItem value="">
-                    <em>None</em>
-                </MenuItem>
-                <MenuItem value={"Nama"}>Nama</MenuItem>
-                <MenuItem value={"Fakultas"}>Fakultas</MenuItem>
-                <MenuItem value={"Prodi"}>Prodi</MenuItem>
-                <MenuItem value={"NIM"}>NIM</MenuItem>
-                <MenuItem value={"Tahun Lulus"}>Tahun Lulus</MenuItem>
-              </Select>
-            </FormControl>
-            <Button
-                sx={{
-                backgroundColor: "#006AF5",
-                borderRadius: "24px",
-                color: "white",
-                whiteSpace: "nowrap",
-                width: "100%",
-                pr:3,
-                pl:3,
-
-                "&:hover": {
-                    backgroundColor: "#006AF5",
-                },
-                }}
+          <FormControl sx={{ minWidth: 150 }} size="small">
+            <InputLabel id="demo-select-small">Sort by</InputLabel>
+            <Select
+              sx={{ borderRadius: "50px", minWidth: "150px" }}
+              labelId="demo-select-small"
+              id="demo-select-small"
+              value={sortBy}
+              label="Sort by"
+              onChange={(event) => setSortBy(event.target.value)}
             >
-                + Import Data
-            </Button>
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={"Nama"}>Nama</MenuItem>
+              <MenuItem value={"Fakultas"}>Fakultas</MenuItem>
+              <MenuItem value={"Prodi"}>Prodi</MenuItem>
+              <MenuItem value={"NIM"}>NIM</MenuItem>
+              <MenuItem value={"Tahun Lulus"}>Tahun Lulus</MenuItem>
+            </Select>
+          </FormControl>
+          <Button
+            sx={{
+              backgroundColor: "#006AF5",
+              borderRadius: "24px",
+              color: "white",
+              whiteSpace: "nowrap",
+              width: "100%",
+              pr: 3,
+              pl: 3,
+
+              "&:hover": {
+                backgroundColor: "#006AF5",
+              },
+            }}
+          >
+            + Import Data
+          </Button>
         </Div>
       </Div>
       <TableContainer sx={{ overflow: "auto" }}>
@@ -127,7 +128,7 @@ const DaftarAlumni = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Pagination count={10} color="primary" sx={{mt:3}}/>
+      <Pagination count={10} color="primary" sx={{ mt: 3 }} />
     </Div>
   );
 };

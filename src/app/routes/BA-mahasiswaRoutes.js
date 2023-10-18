@@ -1,6 +1,6 @@
 import Page from "@jumbo/shared/Page";
 // import DaftarAlumni from "app/pages/Mahasiswa/KlabatBridge/DaftarAlumni";
-import DaftarAlumni from "app/pages/KlabatBridge/DaftarAlumni";
+// import DaftarAlumni from "app/pages/KlabatBridge/DaftarAlumni";
 import AcademicGuide from "app/pages/BimbinganAkademik/Mahasiswa/AcademicGuide";
 import Certificate from "app/pages/BimbinganAkademik/Mahasiswa/Certificate";
 import AddNewCertificate from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/";
@@ -31,10 +31,10 @@ import VisionMisionGoals from "app/pages/BimbinganAkademik/Mahasiswa/VisionMisio
 import StudentGrade from "app/pages/BimbinganAkademik/Mahasiswa/Grades/StudentGrade";
 
 const mahasiswaRoutes = [
-  {
-    path: "/klabat-bridge/daftar-alumni",
-    element: <Page component={DaftarAlumni} />,
-  },
+  // {
+  //   path: "/klabat-bridge/daftar-alumni",
+  //   element: <Page component={DaftarAlumni} />,
+  // },
   {
     path: "/bimbingan-akademik/academic-guide",
     element: <Page component={AcademicGuide} />,
