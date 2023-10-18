@@ -31,7 +31,7 @@ const Sidebar = () => {
   React.useEffect(() => {
     const menus = roleCheck();
     setValidatedMenus(menus);
-  });
+  }, []);
 
   return (
     <React.Fragment>
