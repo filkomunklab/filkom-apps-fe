@@ -12,7 +12,7 @@ import StudentInformationFaculty from "app/pages/BimbinganAkademik/Kaprodi/Stude
 import StudentInformationMentored from "app/pages/BimbinganAkademik/Kaprodi/StudentInformationMentored";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/Kaprodi/VisionMisionGoals";
 // import DaftarAlumni from "app/pages/Mahasiswa/KlabatBridge/DaftarAlumni";
-import DaftarAlumni from "app/pages/KlabatBridge/DaftarAlumni";
+// import DaftarAlumni from "app/pages/KlabatBridge/DaftarAlumni";
 
 const kepalaProgramStudiRoutes = [
   {
