@@ -15,10 +15,23 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  Breadcrumbs,
+  experimentalStyled as styled,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const yearList = [
   {
@@ -74,7 +87,7 @@ const data = Array.from(Array(15).keys()).map((item, index) => ({
   status: `Active`,
 }));
 
-const StudentInformationMentored = () => {
+const Informatics = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -88,21 +101,23 @@ const StudentInformationMentored = () => {
     setPage(0);
   };
 
+  const handleClick = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <Div>
-      <Div>
-        <Typography variant="h1" sx={{ mb: 3 }}>
-          Student Information
-        </Typography>
-        <Typography variant="h6" sx={{ mb: 3 }}>
-          Currently, you are on the Student Information page, where you can
-          easily view all information about your mentored students, including
-          the number, status, and other detailed and comprehensive information.
-        </Typography>
-      </Div>
-      <Grid container spacing={2}>
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink to="/bimbingan-akademik/dekan/student-information-faculty">
+            Faculty Student
+          </StyledLink>
+          <Typography color="text.primary">Informatics</Typography>
+        </Breadcrumbs>
+      </div>
+      <Grid container spacing={2} paddingTop={1}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">List of mentored students</Typography>
+          <Typography variant="h2">Informatics Students List</Typography>
         </Grid>
         <Grid item md={3}>
           <SearchGlobal sx={{ height: "100%" }} />
@@ -215,24 +230,20 @@ const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(
-      `/bimbingan-akademik/kaprodi/student-information/mentored-student/${item.nim}`
-    );
+    navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
 
     switch (name) {
       case "profile":
-        navigate(
-          `/bimbingan-akademik/kaprodi/student-information/mentored-student/${item.nim}`
-        );
+        navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/kaprodi/student-information/mentored-student/${item.nim}/grade`
+          `/bimbingan-akademik/dekan/student-information/${item.nim}/grade`
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/kaprodi/student-information/mentored-student/${item.nim}/certificate`
+          `/bimbingan-akademik/dekan/student-information/${item.nim}/certificate`
         );
         break;
 
@@ -279,4 +290,4 @@ const TableItem = ({ item, index }) => {
   );
 };
 
-export default StudentInformationMentored;
+export default Informatics;
