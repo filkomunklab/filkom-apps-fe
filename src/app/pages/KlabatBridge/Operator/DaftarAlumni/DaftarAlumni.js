@@ -14,6 +14,7 @@ import {
   InputLabel,
   Pagination,
   Grid,
+  Box,
 } from "@mui/material";
 import ActionButton from "app/shared/ActionButton";
 import SearchGlobal from "app/shared/SearchGlobal";
@@ -46,7 +47,14 @@ const DaftarAlumni = () => {
     </TableRow>
   );
   return (
-    <Div>
+    <Box
+      p={8}
+      sx={{
+          backgroundColor: 'white',
+          borderRadius: 5,
+          boxShadow: 3,
+      }}
+    >
       <Div
         sx={{
           display: "flex",
@@ -110,7 +118,7 @@ const DaftarAlumni = () => {
       <TableContainer sx={{ overflow: "auto" }}>
         <Table>
           <TableHead>
-            <TableRow>
+            <TableRow sx={{ backgroundColor: '#f5f5f5'}}>
               <TableCell>No</TableCell>
               <TableCell>Nama Lengkap</TableCell>
               <TableCell>Nim</TableCell>
@@ -133,7 +141,7 @@ const DaftarAlumni = () => {
           <Pagination count={10} color="primary" sx={{marginY:5}}/>
         </Grid>
       </Grid>
-    </Div>
+    </Box>
   );
 };
 

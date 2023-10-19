@@ -27,7 +27,15 @@ import Div from '@jumbo/shared/Div';
 
 const ViewDetailStudent = () => {
   return (
-    <Div>
+    <Box
+      p={8}
+      sx={{
+          backgroundColor: 'white',
+          borderRadius: 5,
+          boxShadow: 3,
+          height: '100%',
+      }}
+    >
         <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
             View Detail 
         </Typography>
@@ -116,7 +124,7 @@ const ViewDetailStudent = () => {
           </Paper>
         </Div>
         
-    </Div>
+    </Box>
   )
 }
 

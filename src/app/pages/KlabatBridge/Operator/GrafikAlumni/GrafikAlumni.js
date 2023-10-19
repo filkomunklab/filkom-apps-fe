@@ -54,7 +54,14 @@ const GrafikAlumni = () => {
     </TableRow>
   );
   return (
-    <Div>
+    <Box
+        p={8}
+        sx={{
+            backgroundColor: 'white',
+            borderRadius: 5,
+            boxShadow: 3,
+        }}
+    >
         <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
             Total Lulusan
         </Typography>
@@ -185,7 +192,7 @@ const GrafikAlumni = () => {
         <TableContainer sx={{ overflow: "auto" }}>
             <Table>
             <TableHead>
-                <TableRow>
+                <TableRow sx={{ backgroundColor: '#f5f5f5'}}>
                 <TableCell>No</TableCell>
                 <TableCell>Nama Lengkap</TableCell>
                 <TableCell>Nim</TableCell>
@@ -209,7 +216,7 @@ const GrafikAlumni = () => {
             <Pagination count={10} color="primary" sx={{marginY:5}}/>
             </Grid>
         </Grid>
-    </Div>
+    </Box>
   );
 };
 

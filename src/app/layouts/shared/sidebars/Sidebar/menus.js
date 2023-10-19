@@ -354,6 +354,12 @@ const menus = [
         uri: "/klabat-bridge/form-tracer-study",
       },
       {
+        label: "Form Tracer Study (alumni)",
+        type: "nav-item",
+        icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/form-tracer-study-alumni",
+      },
+      {
         label: "Pengisian SPT",
         type: "nav-item",
         icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
@@ -395,18 +401,6 @@ const menus = [
       //   icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
       //   uri: "/klabat-bridge/pengisian-tracer-study",
       // },
-    ],
-  },
-  {
-    label: "Bimbingan Akademik",
-    type: "section",
-    children: [
-      {
-        label: "Panduan Kurikulum",
-        type: "nav-item",
-        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/panduan-kurikulum",
-      },
     ],
   },
 ];

@@ -325,10 +325,10 @@ const PengisianSPT = () => {
                 Sisa mata kuliah yang harus diambil:
             </Typography>
             <Box sx={{marginY: 2}}>
-                <TableContainer >
-                    <Table sx={{ border: "1px solid #ddd" }} >
+                <TableContainer>
+                    <Table sx={{ border: "1px solid #ddd"}} >
                         <TableHead>
-                        <TableRow style={{ backgroundColor: '#f5f5f5' }}>
+                        <TableRow sx={{ backgroundColor: '#f5f5f5'}}>
                             <TableCell sx={{ width: '10px' }}>No.</TableCell>
                             <TableCell sx={{ width: '300px' }}>Mata kuliah</TableCell>
                             <TableCell sx={{ width: '50px' }}>SKS</TableCell>
