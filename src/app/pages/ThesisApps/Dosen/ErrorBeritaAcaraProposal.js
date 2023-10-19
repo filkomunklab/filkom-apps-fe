@@ -1,24 +1,12 @@
 import Div from "@jumbo/shared/Div";
-import {
-  Button,
-  Chip,
-  Menu,
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
+import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const BerandaPengajuanJudul = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+const ErrorBeritaAcaraProposal = () => {
+  const [anchorEl, setAnchorEl] = useState(null);
   const open1 = Boolean(anchorEl);
-  const [anchorE2, setAnchorE2] = React.useState(null);
+  const [anchorE2, setAnchorE2] = useState(null);
   const open2 = Boolean(anchorE2);
 
   return (
@@ -34,7 +22,7 @@ const BerandaPengajuanJudul = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Beranda
+          Berita Acara Proposal
         </Typography>
       </Div>
 
@@ -197,7 +185,6 @@ const BerandaPengajuanJudul = () => {
         {/* Element 2 Start */}
         <Div
           sx={{
-            direction: "row",
             display: "flex",
             width: "1050px",
             paddingBottom: "0px",
@@ -262,7 +249,7 @@ const BerandaPengajuanJudul = () => {
                       },
                     }}
                   >
-                    Pengajuan Judul
+                    Jadwal Sidang
                   </Button>
                 </Link>
               </Div>
@@ -277,7 +264,6 @@ const BerandaPengajuanJudul = () => {
               <Div sx={{ margin: "auto" }}>
                 <Link to="#">
                   <Button
-                    disabled
                     sx={{
                       // width: "130px",
                       fontSize: "13px",
@@ -303,7 +289,6 @@ const BerandaPengajuanJudul = () => {
               ></Div>
               <Div sx={{ margin: "auto" }}>
                 <Button
-                  disabled
                   onClick={(event) => setAnchorEl(event.currentTarget)}
                   sx={{
                     fontSize: "13px",
@@ -318,7 +303,6 @@ const BerandaPengajuanJudul = () => {
                   Pengajuan Proposal
                 </Button>
                 <Menu
-                  disabled
                   anchorEl={anchorEl}
                   open={open1}
                   onClose={() => setAnchorEl(null)}
@@ -333,6 +317,9 @@ const BerandaPengajuanJudul = () => {
                 >
                   <MenuItem onClick={() => setAnchorEl(null)}>
                     Upload Proposal
+                  </MenuItem>
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Berita Acara Proposal
                   </MenuItem>
                   <MenuItem onClick={() => setAnchorEl(null)}>
                     Upload Revisi Proposal
@@ -350,7 +337,6 @@ const BerandaPengajuanJudul = () => {
               {/* Menu Pengajuan Skripsi */}
               <Div>
                 <Button
-                  disabled
                   onClick={(event) => setAnchorE2(event.currentTarget)}
                   sx={{
                     fontSize: "13px",
@@ -365,9 +351,8 @@ const BerandaPengajuanJudul = () => {
                   Pengajuan Skripsi
                 </Button>
                 <Menu
-                  disabled
                   anchorEl={anchorE2}
-                  open2={open2}
+                  open={open2}
                   onClose={() => setAnchorE2(null)}
                   anchorOrigin={{
                     vertical: "bottom",
@@ -379,10 +364,13 @@ const BerandaPengajuanJudul = () => {
                   }}
                 >
                   <MenuItem onClick={() => setAnchorE2(null)}>
-                    Upload Skripsi
+                    Dokumen Skripsi
                   </MenuItem>
                   <MenuItem onClick={() => setAnchorE2(null)}>
-                    Upload Revisi Skripsi
+                    Berita Acara Skripsi
+                  </MenuItem>
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Revisi Skripsi
                   </MenuItem>
                 </Menu>
               </Div>
@@ -411,104 +399,15 @@ const BerandaPengajuanJudul = () => {
                 padding: "24px",
                 alignItems: "center",
                 gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
+                color: "#CA150C",
+                background: "rgba(226, 29, 18, 0.50)",
                 borderRadius: "6px",
                 fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+                fontWeight: 600,
               }}
             >
-              PENGEMBANGAN SISTEM INFORMASI SKRIPSI DI FAKULTAS ILMU KOMPUTER
-              UNIVERSITAS KLABAT
+              Belum saatnya mengisi berita acara.
             </Typography>
-
-            {/* Table Start*/}
-
-            <Div
-              sx={{
-                width: "100%",
-                padding: "0 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "50px",
-              }}
-            >
-              {/* Table Kelompok Mahasiswa Start*/}
-              <Typography
-                sx={{
-                  padding: "14px 16px",
-                  background: "rgba(26, 56, 96, 0.10)",
-                  borderRadius: "6px 6px 0 0",
-                  border: "1px",
-                }}
-              >
-                Kelompok Mahasiswa
-              </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
-                <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Nama Lengkap</TableCell>
-                      <TableCell sx={{ width: "25%" }}>NIM</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Program Studi</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>Geovalga Fransiscus Lim</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>2</TableCell>
-                      <TableCell>Frances Rully Yong</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Kelompok mahasiswa End */}
-
-              {/* Table Pengajuan Proposal Start */}
-              <Typography
-                sx={{
-                  padding: "14px 16px",
-                  background: "rgba(26, 56, 96, 0.10)",
-                  borderRadius: "6px 6px 0 0",
-                  border: "1px",
-                }}
-              >
-                Status Pengajuan Judul
-              </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
-                <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ width: "50%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "50%" }}>Dosen Skripsi</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>
-                        <Chip
-                          label="Menunggu"
-                          sx={{
-                            background: "rgba(255, 204, 0, 0.10)",
-                            color: "#985211",
-                          }}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Pengajuan Proposal End */}
-            </Div>
           </Div>
         </Div>
         {/* Element 2 End */}
@@ -517,4 +416,4 @@ const BerandaPengajuanJudul = () => {
   );
 };
 
-export default BerandaPengajuanJudul;
+export default ErrorBeritaAcaraProposal;

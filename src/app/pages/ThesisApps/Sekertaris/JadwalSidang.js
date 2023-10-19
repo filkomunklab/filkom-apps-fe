@@ -67,8 +67,8 @@ const JadwalSidang = () => {
   const open2 = Boolean(anchorE2);
 
   //   select tim dosen
-  const [KetuaPenelis, setKetuaPenelis] = useState(10);
-  const [AnggotaPenelis, setAnggotaPenelis] = useState(10);
+  const [KetuaPenelis, setKetuaPenelis] = useState("");
+  const [AnggotaPenelis, setAnggotaPenelis] = useState("");
 
   const handleKetuaPenelis = (e) => {
     setKetuaPenelis(e.target.value);

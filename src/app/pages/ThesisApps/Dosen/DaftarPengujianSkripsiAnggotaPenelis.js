@@ -1,8 +1,7 @@
 import Div from "@jumbo/shared/Div";
-import React, { useState } from "react";
+import React from "react";
 import PeopleIcon from "@mui/icons-material/People";
 import {
-  Button,
   Chip,
   Table,
   TableBody,
@@ -14,10 +13,12 @@ import {
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
-import EventAvailableIcon from "@mui/icons-material/EventAvailable";
-import EventBusyIcon from "@mui/icons-material/EventBusy";
+import DateRangeIcon from "@mui/icons-material/DateRange";
+import GavelIcon from "@mui/icons-material/Gavel";
+import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 
-const DaftarBimbinganProposalSekertaris = () => {
+const DaftarPengujianSkripsiAnggotaPenelis = () => {
   const TableItem = ({ index }) => {
     return (
       <TableRow key={index}>
@@ -26,6 +27,9 @@ const DaftarBimbinganProposalSekertaris = () => {
         <TableCell sx={{ fontSize: "13px" }}>
           SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
           UNIVERSITAS KLABAT
+        </TableCell>
+        <TableCell>
+          <Chip label={"Belum"} />
         </TableCell>
         <TableCell>
           <Chip label={"Belum"} />
@@ -54,7 +58,7 @@ const DaftarBimbinganProposalSekertaris = () => {
 
   return (
     <Div>
-      {/* Dashboard Start 1 */}
+      {/* Dashboard Start */}
       <Div
         sx={{
           display: "flex",
@@ -64,7 +68,7 @@ const DaftarBimbinganProposalSekertaris = () => {
           gap: "20px",
         }}
       >
-        {/* Jumlah bimbingan */}
+        {/* Kelompok Yang Diuji */}
         <Div
           sx={{
             display: "flex",
@@ -90,7 +94,7 @@ const DaftarBimbinganProposalSekertaris = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Jumlah Kelompok
+              Kelompok Yang Diuji
             </Typography>
             <Typography
               sx={{
@@ -104,7 +108,7 @@ const DaftarBimbinganProposalSekertaris = () => {
             </Typography>
           </Div>
         </Div>
-        {/* Belum Mengajukan Proposal */}
+        {/* Belum Maju Sidang */}
         <Div
           sx={{
             display: "flex",
@@ -117,7 +121,7 @@ const DaftarBimbinganProposalSekertaris = () => {
             textItem: "center",
           }}
         >
-          <PeopleIcon
+          <DateRangeIcon
             sx={{ width: "35px", height: "35px", color: "#006AF5" }}
           />
           <Div>
@@ -130,7 +134,7 @@ const DaftarBimbinganProposalSekertaris = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Siap Sidang
+              Belum Maju Sidang
             </Typography>
             <Typography
               sx={{
@@ -140,11 +144,11 @@ const DaftarBimbinganProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              34 Kelompok
+              29 Kelompok
             </Typography>
           </Div>
         </Div>
-        {/* Sudah Mengajukan Proposal */}
+        {/* Sudah Maju Sidang */}
         <Div
           sx={{
             display: "flex",
@@ -157,9 +161,7 @@ const DaftarBimbinganProposalSekertaris = () => {
             textItem: "center",
           }}
         >
-          <PeopleIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <GavelIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -170,7 +172,7 @@ const DaftarBimbinganProposalSekertaris = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Belum Siap Sidang
+              Sudah Maju Sidang
             </Typography>
             <Typography
               sx={{
@@ -180,23 +182,11 @@ const DaftarBimbinganProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              5 Kelompok
+              39 Kelompok
             </Typography>
           </Div>
         </Div>
-      </Div>
-      {/* Dashboard End 1*/}
-      {/* Dashboard Start 2*/}
-      <Div
-        sx={{
-          display: "flex",
-          width: "100%",
-          padding: "10px 0px",
-          alignItems: "flex-start",
-          gap: "20px",
-        }}
-      >
-        {/* Jumlah bimbingan */}
+        {/* Belum Selesai Revisi*/}
         <Div
           sx={{
             display: "flex",
@@ -209,7 +199,7 @@ const DaftarBimbinganProposalSekertaris = () => {
             textItem: "center",
           }}
         >
-          <EventAvailableIcon
+          <DownloadDoneIcon
             sx={{ width: "35px", height: "35px", color: "#006AF5" }}
           />
           <Div>
@@ -222,47 +212,7 @@ const DaftarBimbinganProposalSekertaris = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Sudah Ada Jadwal
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: "18px",
-                fontStyle: "normal",
-                fontWeight: 700,
-                lineHeight: "32px",
-              }}
-            >
-              34 Kelompok
-            </Typography>
-          </Div>
-        </Div>
-        {/* Belum Mengajukan Proposal */}
-        <Div
-          sx={{
-            display: "flex",
-            width: "100%",
-            padding: "10px",
-            alignItems: "center",
-            gap: "20px",
-            background: "rgba(26, 56, 96, 0.10)",
-            borderRadius: "10px",
-            textItem: "center",
-          }}
-        >
-          <EventBusyIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
-          <Div>
-            <Typography
-              sx={{
-                fontSize: "10px",
-                fontStyle: "normal",
-                fontWeight: 400,
-                lineHeight: "20px",
-                color: "rgba(28, 48, 74, 0.52)",
-              }}
-            >
-              Belum Ada Jadwal
+              Sudah Selesai Revisi
             </Typography>
             <Typography
               sx={{
@@ -276,8 +226,48 @@ const DaftarBimbinganProposalSekertaris = () => {
             </Typography>
           </Div>
         </Div>
+        {/* Skripsi yang diterima */}
+        <Div
+          sx={{
+            display: "flex",
+            width: "100%",
+            padding: "10px",
+            alignItems: "center",
+            gap: "20px",
+            background: "rgba(26, 56, 96, 0.10)",
+            borderRadius: "10px",
+            textItem: "center",
+          }}
+        >
+          <BorderColorIcon
+            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
+          />
+          <Div>
+            <Typography
+              sx={{
+                fontSize: "10px",
+                fontStyle: "normal",
+                fontWeight: 400,
+                lineHeight: "20px",
+                color: "rgba(28, 48, 74, 0.52)",
+              }}
+            >
+              Belum Selesai Revisi
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: "18px",
+                fontStyle: "normal",
+                fontWeight: 700,
+                lineHeight: "32px",
+              }}
+            >
+              34 Kelompok
+            </Typography>
+          </Div>
+        </Div>
       </Div>
-      {/* Dasboard 2 End */}
+      {/* Dashboard End */}
 
       {/* Table Master Start */}
       <Div
@@ -313,7 +303,7 @@ const DaftarBimbinganProposalSekertaris = () => {
               lineHeight: "32px",
             }}
           >
-            Daftar Bimbingan Proposal
+            Daftar Pengujian Skripsi
           </Typography>
           <Div
             sx={{
@@ -351,11 +341,11 @@ const DaftarBimbinganProposalSekertaris = () => {
               color: "#192434",
             }}
           >
-            2023/2024-Genap (Proposal)
+            2023/2024-Genap (Skripsi)
           </Typography>
         </Div>
         {/* Semester End */}
-        {/* Table Mahasiswa Proposal Start */}
+        {/* Table Mahasiswa Skripsi Start */}
         <TableContainer>
           <Table>
             <TableHead>
@@ -367,11 +357,14 @@ const DaftarBimbinganProposalSekertaris = () => {
                   Mahasiswa
                 </TableCell>
                 <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
+                <TableCell sx={{ fontSize: "13px" }}>Sidang</TableCell>
                 <TableCell sx={{ fontSize: "13px" }}>
-                  Dokumen Proposal
+                  Revisi Ketua Penelis
                 </TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Pembayaran</TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Cek Plagiat</TableCell>
+                <TableCell sx={{ fontSize: "13px" }}>
+                  Revisi Anggota Penelis
+                </TableCell>
+                <TableCell sx={{ fontSize: "13px" }}>Revisi Advisor</TableCell>
                 <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -382,11 +375,11 @@ const DaftarBimbinganProposalSekertaris = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* Table Mahasiswa Proposal End */}
+        {/* Table Mahasiswa Skripsi End */}
       </Div>
       {/* Table Master End */}
     </Div>
   );
 };
 
-export default DaftarBimbinganProposalSekertaris;
+export default DaftarPengujianSkripsiAnggotaPenelis;

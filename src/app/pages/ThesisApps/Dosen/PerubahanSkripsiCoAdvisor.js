@@ -1,25 +1,50 @@
 import Div from "@jumbo/shared/Div";
 import {
   Button,
-  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Menu,
   MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
+  TextareaAutosize,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const BerandaPengajuanJudul = () => {
+const PerubahanSkripsiCoAvisor = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const open1 = Boolean(anchorEl);
+  const open = Boolean(anchorEl);
   const [anchorE2, setAnchorE2] = React.useState(null);
   const open2 = Boolean(anchorE2);
+
+  const [coAdvisorChange, setCoAdvisorChange] = useState(""); // State untuk menyimpan perubahan Co-Advisor
+  const [displayedChange, setDisplayedChange] = useState(""); // State untuk menampilkan perubahan di Typography
+  const [isSubmitted, setIsSubmitted] = useState(false); // Menyimpan status apakah sudah disubmit atau belum
+  const [openDialog, setOpenDialog] = useState(false); // Menyimpan status dialog konfirmasi
+
+  const handleCoAdvisorChange = (event) => {
+    setCoAdvisorChange(event.target.value);
+  };
+
+  const handleCoAdvisorSubmit = () => {
+    // Saat tombol "Submit" ditekan, buka dialog konfirmasi
+    setOpenDialog(true);
+  };
+
+  const handleConfirmSubmit = () => {
+    // Fungsi ini akan dipanggil saat pengguna mengonfirmasi submit
+    setDisplayedChange(coAdvisorChange);
+    setIsSubmitted(true);
+    setOpenDialog(false); // Tutup dialog setelah dikonfirmasi
+  };
+
+  const handleCloseDialog = () => {
+    // Fungsi ini akan dipanggil saat pengguna menutup dialog
+    setOpenDialog(false);
+  };
 
   return (
     <Div>
@@ -34,7 +59,7 @@ const BerandaPengajuanJudul = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Beranda
+          Document Revisi Skripsi
         </Typography>
       </Div>
 
@@ -252,7 +277,7 @@ const BerandaPengajuanJudul = () => {
                 <Link to="#">
                   <Button
                     sx={{
-                      // width: "150px",
+                      width: "100%",
                       fontSize: "13px",
                       fontWeight: 500,
                       color: "#192434",
@@ -277,7 +302,6 @@ const BerandaPengajuanJudul = () => {
               <Div sx={{ margin: "auto" }}>
                 <Link to="#">
                   <Button
-                    disabled
                     sx={{
                       // width: "130px",
                       fontSize: "13px",
@@ -303,7 +327,6 @@ const BerandaPengajuanJudul = () => {
               ></Div>
               <Div sx={{ margin: "auto" }}>
                 <Button
-                  disabled
                   onClick={(event) => setAnchorEl(event.currentTarget)}
                   sx={{
                     fontSize: "13px",
@@ -318,9 +341,8 @@ const BerandaPengajuanJudul = () => {
                   Pengajuan Proposal
                 </Button>
                 <Menu
-                  disabled
                   anchorEl={anchorEl}
-                  open={open1}
+                  open={open}
                   onClose={() => setAnchorEl(null)}
                   anchorOrigin={{
                     vertical: "bottom",
@@ -350,7 +372,6 @@ const BerandaPengajuanJudul = () => {
               {/* Menu Pengajuan Skripsi */}
               <Div>
                 <Button
-                  disabled
                   onClick={(event) => setAnchorE2(event.currentTarget)}
                   sx={{
                     fontSize: "13px",
@@ -365,9 +386,8 @@ const BerandaPengajuanJudul = () => {
                   Pengajuan Skripsi
                 </Button>
                 <Menu
-                  disabled
                   anchorEl={anchorE2}
-                  open2={open2}
+                  open={open2}
                   onClose={() => setAnchorE2(null)}
                   anchorOrigin={{
                     vertical: "bottom",
@@ -389,7 +409,6 @@ const BerandaPengajuanJudul = () => {
             </Div>
           </Div>
           {/* Menu horizontal End */}
-
           <Div
             sx={{
               display: "flex",
@@ -418,103 +437,268 @@ const BerandaPengajuanJudul = () => {
                 fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
               }}
             >
-              PENGEMBANGAN SISTEM INFORMASI SKRIPSI DI FAKULTAS ILMU KOMPUTER
-              UNIVERSITAS KLABAT
+              Perubahan
             </Typography>
 
-            {/* Table Start*/}
-
+            {/* View PerubahanStart*/}
             <Div
               sx={{
+                display: "flex",
                 width: "100%",
                 padding: "0 25px",
                 flexDirection: "column",
                 alignItems: "flex-start",
-                gap: "50px",
+                gap: "25px",
               }}
             >
-              {/* Table Kelompok Mahasiswa Start*/}
-              <Typography
+              {/* Perubahan Ketua Penelis */}
+              <Div
                 sx={{
-                  padding: "14px 16px",
-                  background: "rgba(26, 56, 96, 0.10)",
-                  borderRadius: "6px 6px 0 0",
-                  border: "1px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
                 }}
               >
-                Kelompok Mahasiswa
-              </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
-                <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Nama Lengkap</TableCell>
-                      <TableCell sx={{ width: "25%" }}>NIM</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Program Studi</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>Geovalga Fransiscus Lim</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>2</TableCell>
-                      <TableCell>Frances Rully Yong</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Kelompok mahasiswa End */}
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    padding: "14px 16px",
+                    borderRadius: "6px",
+                  }}
+                >
+                  <Typography variant="subtitle2">Ketua Penelis</Typography>
+                </Div>
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    padding: "14px 16px",
+                    border: "2px solid rgba(26, 56, 96, 0.10)",
+                    borderRadius: "0 0 6px 6px",
+                  }}
+                >
+                  <Typography>
+                    1.Ubah Judul. 2.Ganti Metode. 3.Ganti MongoDB menjadi
+                    PostgreSQL. 4. Perbaiki Typo penulisan di Bab 1 dan 2.
+                  </Typography>
+                </Div>
+              </Div>
+              {/* Perubahan Anggota Penelis */}
+              <Div
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                }}
+              >
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    padding: "14px 16px",
+                    borderRadius: "6px",
+                  }}
+                >
+                  <Typography variant="subtitle2">Anggota Penelis</Typography>
+                </Div>
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    padding: "14px 16px",
+                    border: "2px solid rgba(26, 56, 96, 0.10)",
+                    borderRadius: "0 0 6px 6px",
+                  }}
+                >
+                  <Typography>
+                    Tambahkan perbandingan metode-metode yang digunakan.
+                    Menambahkan metode Perbaiki font dan ukuran menggunakan
+                    standar kampus
+                  </Typography>
+                </Div>
+              </Div>
+              {/* Perubahan Advisor */}
+              <Div
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                }}
+              >
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    padding: "14px 16px",
+                    borderRadius: "6px",
+                  }}
+                >
+                  <Typography variant="subtitle2">Advisor</Typography>
+                </Div>
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    padding: "14px 16px",
+                    border: "2px solid rgba(26, 56, 96, 0.10)",
+                    borderRadius: "0 0 6px 6px",
+                  }}
+                >
+                  <Typography>
+                    Tambahkan sebuah fitur-fitur. Tambahkan user Mahasiswa.
+                  </Typography>
+                </Div>
+              </Div>
+              {/* Perubahan Co-Advisor */}
+              <Div
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                }}
+              >
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    padding: "14px 16px",
+                    borderRadius: "6px",
+                  }}
+                >
+                  <Typography variant="subtitle2">Co-Advisor</Typography>
+                </Div>
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    padding: "14px 16px",
+                    border: "2px solid rgba(26, 56, 96, 0.10)",
+                    borderRadius: "0 0 6px 6px",
+                  }}
+                >
+                  {/* input textarea perubahan Start */}
+                  {isSubmitted ? ( // Cek apakah sudah disubmit
+                    <Typography>
+                      {displayedChange.split("\n").map((point, index) => (
+                        <div key={index}>{point}</div>
+                      ))}
+                    </Typography>
+                  ) : (
+                    <TextareaAutosize
+                      aria-label="minimum height"
+                      rowsMin={4}
+                      style={{
+                        width: "100%",
+                        height: 108,
+                        marginBottom: "25px",
+                        display: "block",
+                        resize: "vertical",
+                      }}
+                      placeholder="Masukkan perubahan di sini"
+                      value={coAdvisorChange}
+                      onChange={handleCoAdvisorChange}
+                    />
+                  )}
 
-              {/* Table Pengajuan Proposal Start */}
-              <Typography
+                  {/* input textarea perubahan End */}
+                </Div>
+              </Div>
+              <Div
                 sx={{
-                  padding: "14px 16px",
+                  display: "flex",
+                  padding: "12px 24px 12px 0",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  gap: "12px",
+                  alignSelf: "stretch",
                   background: "rgba(26, 56, 96, 0.10)",
-                  borderRadius: "6px 6px 0 0",
-                  border: "1px",
+                  borderRadius: "6px",
                 }}
               >
-                Status Pengajuan Judul
-              </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
-                <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ width: "50%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "50%" }}>Dosen Skripsi</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>
-                        <Chip
-                          label="Menunggu"
-                          sx={{
-                            background: "rgba(255, 204, 0, 0.10)",
-                            color: "#985211",
-                          }}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Pengajuan Proposal End */}
+                <Button
+                  size="small"
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                  color="primary"
+                  onClick={handleCoAdvisorSubmit}
+                  disabled={isSubmitted} // Menonaktifkan tombol "Submit" jika sudah disubmit
+                >
+                  Submit
+                </Button>
+              </Div>
             </Div>
           </Div>
+          {/* Element 2 End */}
         </Div>
-        {/* Element 2 End */}
       </Div>
+
+      {/* Dialog Konfirmasi */}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="form-dialog-title"
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle
+          id="form-dialog-title"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            alignSelf: "stretch",
+          }}
+        >
+          <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
+            Revisi Skripsi
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Apakah Anda yakin ingin mengirim perubahan ini?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+          <Button
+            onClick={handleCloseDialog}
+            sx={{
+              background: "white",
+              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+              textTransform: "none",
+              color: "black",
+            }}
+          >
+            Batal
+          </Button>
+          <Button
+            onClick={handleConfirmSubmit}
+            variant="contained"
+            sx={{ textTransform: "none" }}
+            color="primary"
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Div>
   );
 };
 
-export default BerandaPengajuanJudul;
+export default PerubahanSkripsiCoAvisor;

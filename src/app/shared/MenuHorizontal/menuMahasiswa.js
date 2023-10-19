@@ -1,12 +1,12 @@
 import Div from "@jumbo/shared/Div";
 import { Button, Menu, MenuItem } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const MenuMahasiswa = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open1 = Boolean(anchorEl);
-  const [anchorE2, setAnchorE2] = React.useState(null);
+  const [anchorE2, setAnchorE2] = useState(null);
   const open2 = Boolean(anchorE2);
   return (
     <Div>
@@ -65,7 +65,7 @@ const MenuMahasiswa = () => {
                   },
                 }}
               >
-                Pengajuan judul
+                Pengajuan Judul
               </Button>
             </Link>
           </Div>
@@ -119,7 +119,7 @@ const MenuMahasiswa = () => {
               Pengajuan Proposal
             </Button>
             <Menu
-              anchorEl={anchorE2}
+              anchorEl={anchorEl}
               open={open1}
               onClose={() => setAnchorEl(null)}
               anchorOrigin={{
@@ -133,6 +133,9 @@ const MenuMahasiswa = () => {
             >
               <MenuItem onClick={() => setAnchorEl(null)}>
                 Upload Proposal
+              </MenuItem>
+              <MenuItem onClick={() => setAnchorEl(null)}>
+                Berita Acara Proposal
               </MenuItem>
               <MenuItem onClick={() => setAnchorEl(null)}>
                 Upload Revisi Proposal
@@ -177,10 +180,13 @@ const MenuMahasiswa = () => {
               }}
             >
               <MenuItem onClick={() => setAnchorE2(null)}>
-                Upload Skripsi
+                Dokumen Skripsi
               </MenuItem>
               <MenuItem onClick={() => setAnchorE2(null)}>
-                Upload Revisi Skripsi
+                Berita Acara Skripsi
+              </MenuItem>
+              <MenuItem onClick={() => setAnchorE2(null)}>
+                Dokumen Revisi Skripsi
               </MenuItem>
             </Menu>
           </Div>

@@ -1,21 +1,22 @@
 import Page from "@jumbo/shared/Page";
-import DaftarPengajuan from "app/pages/ThesisApps/Mahasiswa/DaftarPengajuan";
+import DaftarAlumni from "app/pages/Mahasiswa/KlabatBridge/DaftarAlumni";
 import BerandaPengajuanJudul from "app/pages/ThesisApps/Mahasiswa/BerandaPengajuanJudul";
+import BerandaProposalMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaProposalMahasiswa";
+import BerandaSkripsiMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaSkripsiMahasiswa";
+import DaftarPengajuan from "app/pages/ThesisApps/Mahasiswa/DaftarPengajuan";
+import Konsultasi from "app/pages/ThesisApps/Mahasiswa/Konsultasi";
 import PengajuanJudul from "app/pages/ThesisApps/Mahasiswa/PengajuanJudul";
 import PengajuanJudulDiterima from "app/pages/ThesisApps/Mahasiswa/PengajuanJudulDiterima";
 import BerandaPengajuanSkripsi from "app/pages/ThesisApps/Mahasiswa/BerandaPengajuanSkripsi";
 import Konsultasi from "app/pages/ThesisApps/Mahasiswa/Konsultasi";
 import UploadProposal from "app/pages/ThesisApps/Mahasiswa/UploadProposal";
-// ++ UploadRevisi
+import UploadRevisiSkripsi from "app/pages/ThesisApps/Mahasiswa/UploadRevisiSkripsi";
 
 const mahasiswaRoutes = [
   {
+    // Thesis Apps Mahasiswa
     path: "/sistem-informasi-skripsi/daftar-pengajuan",
     element: <Page component={DaftarPengajuan} />,
-  },
-  {
-    path: "/sistem-informasi-skripsi/daftar-pengajuan/beranda-pengajuan-judul",
-    element: <Page component={BerandaPengajuanJudul} />,
   },
   {
     path: "/sistem-informasi-skripsi/daftar-pengajuan/beranda-pengajuan-skripsi",

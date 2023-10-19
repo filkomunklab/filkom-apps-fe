@@ -1,9 +1,6 @@
 import Div from "@jumbo/shared/Div";
 import {
-  Button,
   Chip,
-  Menu,
-  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -12,15 +9,10 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import React from "react";
-import { Link } from "react-router-dom";
 
-const BerandaPengajuanJudul = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open1 = Boolean(anchorEl);
-  const [anchorE2, setAnchorE2] = React.useState(null);
-  const open2 = Boolean(anchorE2);
-
+const BerandaSkripsiMahasiswa = () => {
   return (
     <Div>
       <Div
@@ -197,7 +189,6 @@ const BerandaPengajuanJudul = () => {
         {/* Element 2 Start */}
         <Div
           sx={{
-            direction: "row",
             display: "flex",
             width: "1050px",
             paddingBottom: "0px",
@@ -208,186 +199,10 @@ const BerandaPengajuanJudul = () => {
           }}
         >
           {/* Menu Horizontal Start */}
-          <Div
-            sx={{
-              display: "flex",
-              // padding: "5px 16px",
-              width: "100%",
-              alignSelf: "stretch",
-              borderRadius: "8px",
-              border: "1px solid #E0E0E0",
-              background: "#FFF",
-              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
-              flexDirection: "column",
-            }}
-          >
-            <Div sx={{ width: "100%", display: "flex" }}>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    sx={{
-                      fontSize: "13px",
-                      padding: "6px 16px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Beranda
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    sx={{
-                      // width: "150px",
-                      fontSize: "13px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Pengajuan Judul
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    disabled
-                    sx={{
-                      // width: "130px",
-                      fontSize: "13px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Konsultasi
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Button
-                  disabled
-                  onClick={(event) => setAnchorEl(event.currentTarget)}
-                  sx={{
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: "#006AF5",
-                    },
-                  }}
-                >
-                  Pengajuan Proposal
-                </Button>
-                <Menu
-                  disabled
-                  anchorEl={anchorEl}
-                  open={open1}
-                  onClose={() => setAnchorEl(null)}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Proposal
-                  </MenuItem>
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Revisi Proposal
-                  </MenuItem>
-                </Menu>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              {/* Menu Pengajuan Skripsi */}
-              <Div>
-                <Button
-                  disabled
-                  onClick={(event) => setAnchorE2(event.currentTarget)}
-                  sx={{
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: "#006AF5",
-                    },
-                  }}
-                >
-                  Pengajuan Skripsi
-                </Button>
-                <Menu
-                  disabled
-                  anchorEl={anchorE2}
-                  open2={open2}
-                  onClose={() => setAnchorE2(null)}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuItem onClick={() => setAnchorE2(null)}>
-                    Upload Skripsi
-                  </MenuItem>
-                  <MenuItem onClick={() => setAnchorE2(null)}>
-                    Upload Revisi Skripsi
-                  </MenuItem>
-                </Menu>
-              </Div>
-            </Div>
+          <Div sx={{ width: "100%" }}>
+            <MenuMahasiswa />
           </Div>
+
           {/* Menu horizontal End */}
 
           <Div
@@ -472,7 +287,7 @@ const BerandaPengajuanJudul = () => {
               </TableContainer>
               {/* Table Kelompok mahasiswa End */}
 
-              {/* Table Pengajuan Proposal Start */}
+              {/* Table Pengajuan Skripsi Start */}
               <Typography
                 sx={{
                   padding: "14px 16px",
@@ -481,33 +296,222 @@ const BerandaPengajuanJudul = () => {
                   border: "1px",
                 }}
               >
-                Status Pengajuan Judul
+                Status Pengajuan Skripsi
               </Typography>
               <TableContainer sx={{ marginBottom: "50px" }}>
                 <Table>
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ width: "50%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "50%" }}>Dosen Skripsi</TableCell>
+                      <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
+                      <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
+                      <TableCell sx={{ width: "25%" }}>Co-Advisor 1</TableCell>
+                      <TableCell sx={{ width: "25%" }}>Co-Advisor 2</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     <TableRow>
                       <TableCell>1</TableCell>
                       <TableCell>
-                        <Chip
-                          label="Menunggu"
-                          sx={{
-                            background: "rgba(255, 204, 0, 0.10)",
-                            color: "#985211",
-                          }}
-                        />
+                        <Chip label={"Belum"} />
+                      </TableCell>
+                      <TableCell>
+                        <Chip label={"Belum"} />
+                      </TableCell>
+                      <TableCell>
+                        <Chip label={"Belum"} />
                       </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* Table Pengajuan Proposal End */}
+              {/* Table Pengajuan Skripsi End */}
+
+              {/* Table Status Siap Maju Sidang Start*/}
+              <Typography
+                sx={{
+                  padding: "14px 16px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  borderRadius: "6px 6px 0 0",
+                  border: "1px",
+                }}
+              >
+                Status Siap Maju Sidang
+              </Typography>
+              <TableContainer sx={{ marginBottom: "50px" }}>
+                <Table>
+                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                      <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
+                      <TableCell sx={{ width: "25%" }}>
+                        Dokumen Skripsi
+                      </TableCell>
+                      <TableCell sx={{ width: "25%" }}>
+                        Bukti Pembayaran
+                      </TableCell>
+                      <TableCell sx={{ width: "25%" }}>
+                        Hasil Cek Plagiat
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>1</TableCell>
+                      <TableCell>
+                        <Chip label={"Belum"} />
+                      </TableCell>
+                      <TableCell>
+                        <Chip label={"Belum"} />
+                      </TableCell>
+                      <TableCell>
+                        <Chip label={"Belum"} />
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* Table Status Siap Maju Sidang End */}
+
+              {/* Table Tim Panelis Start*/}
+              <Typography
+                sx={{
+                  padding: "14px 16px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  borderRadius: "6px 6px 0 0",
+                  border: "1px",
+                }}
+              >
+                Tim Panelis
+              </Typography>
+              <TableContainer sx={{ marginBottom: "50px" }}>
+                <Table>
+                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                      <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
+                      <TableCell sx={{ width: "25%" }}>Ketua Penelis</TableCell>
+                      <TableCell sx={{ width: "25%" }}>
+                        Anggota Penelis
+                      </TableCell>
+                      <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>1</TableCell>
+                      <TableCell>-</TableCell>
+                      <TableCell>-</TableCell>
+                      <TableCell>Andrew T. Liem, MT, PhD</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* Table Tim Panelis End*/}
+
+              {/* Table Jadwal Sidang Skripsi Start */}
+              <Typography
+                sx={{
+                  padding: "14px 16px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  borderRadius: "6px 6px 0 0",
+                  border: "1px",
+                }}
+              >
+                Jadwal Sidang Skripsi
+              </Typography>
+              <TableContainer sx={{ marginBottom: "50px" }}>
+                <Table>
+                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                      <TableCell sx={{ width: "20%" }}>Nomor</TableCell>
+                      <TableCell sx={{ width: "20%" }}>Mulai</TableCell>
+                      <TableCell sx={{ width: "20%" }}>Selesai</TableCell>
+                      <TableCell sx={{ width: "20%" }}>Tanggal</TableCell>
+                      <TableCell sx={{ width: "20%" }}>Ruangan</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>1</TableCell>
+                      <TableCell>-</TableCell>
+                      <TableCell>-</TableCell>
+                      <TableCell>-</TableCell>
+                      <TableCell>-</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* Table Jadwal Sidang Skripsi End */}
+
+              {/* Table Sidang Skripsi Start */}
+              <Typography
+                sx={{
+                  padding: "14px 16px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  borderRadius: "6px 6px 0 0",
+                  border: "1px",
+                }}
+              >
+                Status Sidang Skripsi
+              </Typography>
+              <TableContainer sx={{ marginBottom: "50px" }}>
+                <Table>
+                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                      <TableCell sx={{ width: "50%" }}>Nomor</TableCell>
+                      <TableCell sx={{ width: "50%" }}>Status</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>1</TableCell>
+                      <TableCell>
+                        <Chip label={"Belum"} />
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* Table Sidang Skripsi End */}
+
+              {/* Table Revisi Skripsi Start */}
+              <Typography
+                sx={{
+                  padding: "14px 16px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  borderRadius: "6px 6px 0 0",
+                  border: "1px",
+                }}
+              >
+                Status Revisi Skripsi
+              </Typography>
+              <TableContainer sx={{ marginBottom: "50px" }}>
+                <Table>
+                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                      <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
+                      <TableCell sx={{ width: "25%" }}>Ketua Penelis</TableCell>
+                      <TableCell sx={{ width: "25%" }}>
+                        Anggota Penelis
+                      </TableCell>
+                      <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>1</TableCell>
+                      <TableCell>
+                        <Chip label={"Belum"} />
+                      </TableCell>
+                      <TableCell>
+                        <Chip label={"Belum"} />
+                      </TableCell>
+                      <TableCell>
+                        <Chip label={"Belum"} />
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* Table Revisi Skripsi End */}
             </Div>
           </Div>
         </Div>
@@ -517,4 +521,4 @@ const BerandaPengajuanJudul = () => {
   );
 };
 
-export default BerandaPengajuanJudul;
+export default BerandaSkripsiMahasiswa;

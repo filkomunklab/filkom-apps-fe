@@ -2,6 +2,11 @@ import Div from "@jumbo/shared/Div";
 import {
   Button,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Menu,
   MenuItem,
   Table,
@@ -15,14 +20,15 @@ import {
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { pdfjs } from "react-pdf";
+import WarningIcon from "@mui/icons-material/Warning";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-// View Document Proposal
-const PDFViewerProposal = ({ proposalFile }) => {
-  const viewPDFProposal = () => {
+// View Document Skripsi
+const PDFViewerRevisiSkripsi = ({ RevisiSkripsiFile }) => {
+  const viewPDFRevisiSkripsi = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(proposalFile);
+    const pdfURL = URL.createObjectURL(RevisiSkripsiFile);
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -30,75 +36,37 @@ const PDFViewerProposal = ({ proposalFile }) => {
 
   return (
     <div>
-      <span sx={{ fontSize: "10px" }} onClick={viewPDFProposal}>
+      <span sx={{ fontSize: "10px" }} onClick={viewPDFRevisiSkripsi}>
         View
       </span>
     </div>
   );
 };
 
-// View Document Payment
-const PDFViewerPayment = ({ paymentFile }) => {
-  const viewPDFPayment = () => {
-    // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(paymentFile);
-
-    // Buka tautan dalam tab atau jendela baru
-    window.open(pdfURL, "_blank");
-  };
-
-  return (
-    <div>
-      <span onClick={viewPDFPayment}>View</span>
-    </div>
-  );
-};
-
-// View Document Cek Plagiat
-const PDFViewerCekPlagiat = ({ plagiarismFile }) => {
-  const viewPDFCekPlagiat = () => {
-    // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(plagiarismFile);
-
-    // Buka tautan dalam tab atau jendela baru
-    window.open(pdfURL, "_blank");
-  };
-
-  return (
-    <div>
-      <span onClick={viewPDFCekPlagiat}>View</span>
-    </div>
-  );
-};
-
-const UploadProposal = () => {
+const UploadRevisiSkripsi = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [anchorE2, setAnchorE2] = React.useState(null);
   const open2 = Boolean(anchorE2);
 
-  // state untuk Upload Proposal
-  const [proposalUploadedFiles, setProposalUploadedFiles] = useState([]);
-  const [selectedProposalFileName, setSelectedProposalFileName] = useState("");
-  const [proposalFile, setProposalFile] = useState(null);
-
-  // State untuk Bukti Pembayaran
-  const [paymentFile, setPaymentFile] = useState(null);
-  const [selectedPaymentFileName, setSelectedPaymentFileName] = useState("");
-  const [paymentUploadedFiles, setPaymentUploadedFiles] = useState([]);
-
-  // State untuk Hasil Cek Plagiat
-  const [plagiarismFile, setPlagiarismFile] = useState(null);
-  const [selectedPlagiarismFileName, setSelectedPlagiarismFileName] =
+  // state untuk Upload Revisi Skripsi
+  const [RevisiSkripsiUploadedFiles, setRevisiSkripsiUploadedFiles] = useState(
+    []
+  );
+  const [selectedRevisiSkripsiFileName, setSelectedRevisiSkripsiFileName] =
     useState("");
-  const [plagiarismUploadedFiles, setPlagiarismUploadedFiles] = useState([]);
+  const [RevisiSkripsiFile, setRevisiSkripsiFile] = useState(null);
 
-  const onProposalFileChange = (event) => {
+  // popup delete konfirmasi
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [deletingIndex, setDeletingIndex] = useState(null);
+
+  const onRevisiSkripsiFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      if (proposalUploadedFiles.length === 0) {
-        setProposalFile(file);
-        setSelectedProposalFileName(file.name);
+      if (RevisiSkripsiUploadedFiles.length === 0) {
+        setRevisiSkripsiFile(file);
+        setSelectedRevisiSkripsiFileName(file.name);
 
         const newFileData = {
           name: file.name,
@@ -109,82 +77,28 @@ const UploadProposal = () => {
           coAdvisor2: "",
         };
 
-        setProposalUploadedFiles([newFileData]);
-      }
-    }
-  };
-
-  const onPaymentFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (paymentUploadedFiles.length === 0) {
-        setPaymentFile(file);
-        setSelectedPaymentFileName(file.name);
-
-        // Tambahkan data file baru ke state paymentUploadedFiles
-        const newFileData = {
-          name: file.name,
-          date: new Date().toLocaleDateString(),
-          size: file.size,
-        };
-
-        setPaymentUploadedFiles([newFileData]);
-      } else {
-        alert(
-          "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-        );
-      }
-    }
-  };
-
-  const onPlagiarismFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (plagiarismUploadedFiles.length === 0) {
-        setPlagiarismFile(file);
-        setSelectedPlagiarismFileName(file.name);
-
-        // Tambahkan data file baru ke state plagiarismUploadedFiles
-        const newFileData = {
-          name: file.name,
-          date: new Date().toLocaleDateString(),
-          size: file.size,
-        };
-
-        setPlagiarismUploadedFiles([newFileData]);
-      } else {
-        alert(
-          "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-        );
+        setRevisiSkripsiUploadedFiles([newFileData]);
       }
     }
   };
 
   // fungsi untuk menghapus file Proposal
-  const handleDeleteProposalFile = (index) => {
-    const updatedFiles = [...proposalUploadedFiles];
+  const handleDeleteRevisiSkripsiFile = (index) => {
+    const updatedFiles = [...RevisiSkripsiUploadedFiles];
     updatedFiles.splice(index, 1);
-    setProposalUploadedFiles(updatedFiles);
-    setProposalFile(null);
-    setSelectedProposalFileName("");
+    setRevisiSkripsiUploadedFiles(updatedFiles);
+    setRevisiSkripsiFile(null);
+    setSelectedRevisiSkripsiFileName("");
   };
 
-  // Fungsi untuk menghapus file bukti pembayaran
-  const handleDeletePaymentFile = (index) => {
-    const updatedFiles = [...paymentUploadedFiles];
-    updatedFiles.splice(index, 1);
-    setPaymentUploadedFiles(updatedFiles);
-    setPaymentFile(null);
-    setSelectedPaymentFileName("");
+  const openConfirmDialog = (index) => {
+    setDeletingIndex(index);
+    setConfirmDialogOpen(true);
   };
 
-  // Fungsi untuk menghapus file hasil cek plagiat
-  const handleDeletePlagiarismFile = (index) => {
-    const updatedFiles = [...plagiarismUploadedFiles];
-    updatedFiles.splice(index, 1);
-    setPlagiarismUploadedFiles(updatedFiles);
-    setPlagiarismFile(null);
-    setSelectedPlagiarismFileName("");
+  const closeConfirmDialog = () => {
+    setDeletingIndex(null);
+    setConfirmDialogOpen(false);
   };
 
   return (
@@ -200,7 +114,7 @@ const UploadProposal = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Upload Proposal
+          Upload Revisi Skripsi
         </Typography>
       </Div>
 
@@ -578,10 +492,187 @@ const UploadProposal = () => {
                 fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
               }}
             >
-              Unggah Dokumen Proposal
+              Perubahan
             </Typography>
 
-            {/* Table 1 Start*/}
+            {/* View Perubahan Start*/}
+            <Div
+              sx={{
+                display: "flex",
+                width: "100%",
+                padding: "0 25px",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "25px",
+              }}
+            >
+              {/* Perubahan Ketua Penelis */}
+              <Div
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                }}
+              >
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    padding: "14px 16px",
+                    borderRadius: "6px",
+                  }}
+                >
+                  <Typography variant="subtitle2">Ketua Penelis</Typography>
+                </Div>
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    padding: "14px 16px",
+                    border: "2px solid rgba(26, 56, 96, 0.10)",
+                    borderRadius: "0 0 6px 6px",
+                  }}
+                >
+                  <Typography>
+                    1.Ubah Judul. 2.Ganti Metode. 3.Ganti MongoDB menjadi
+                    PostgreSQL. 4. Perbaiki Typo penulisan di Bab 1 dan 2.
+                  </Typography>
+                </Div>
+              </Div>
+              {/* Perubahan Anggota Penelis */}
+              <Div
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                }}
+              >
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    padding: "14px 16px",
+                    borderRadius: "6px",
+                  }}
+                >
+                  <Typography variant="subtitle2">Anggota Penelis</Typography>
+                </Div>
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    padding: "14px 16px",
+                    border: "2px solid rgba(26, 56, 96, 0.10)",
+                    borderRadius: "0 0 6px 6px",
+                  }}
+                >
+                  <Typography>
+                    Tambahkan perbandingan metode-metode yang digunakan.
+                    Menambahkan metode Perbaiki font dan ukuran menggunakan
+                    standar kampus
+                  </Typography>
+                </Div>
+              </Div>
+              {/* Perubahan Advisor */}
+              <Div
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                }}
+              >
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    padding: "14px 16px",
+                    borderRadius: "6px",
+                  }}
+                >
+                  <Typography variant="subtitle2">Advisor</Typography>
+                </Div>
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    padding: "14px 16px",
+                    border: "2px solid rgba(26, 56, 96, 0.10)",
+                    borderRadius: "0 0 6px 6px",
+                  }}
+                >
+                  <Typography>
+                    Tambahkan sebuah fitur-fitur. Tambahkan user Mahasiswa.
+                  </Typography>
+                </Div>
+              </Div>
+              {/* Perubahan Co-Advisor */}
+              <Div
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                }}
+              >
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    padding: "14px 16px",
+                    borderRadius: "6px",
+                  }}
+                >
+                  <Typography variant="subtitle2">Co-Advisor</Typography>
+                </Div>
+                <Div
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                    padding: "14px 16px",
+                    border: "2px solid rgba(26, 56, 96, 0.10)",
+                    borderRadius: "0 0 6px 6px",
+                  }}
+                >
+                  <Typography>
+                    Tambahkan sebuah fitur-fitur. Tambahkan user Mahasiswa.
+                  </Typography>
+                </Div>
+              </Div>
+            </Div>
+            {/* View Perubahan End */}
+            <Typography
+              sx={{
+                width: "100%",
+                display: "flex",
+                padding: "24px",
+                alignItems: "center",
+                gap: "10px",
+                color: "#192434",
+                background: "rgba(26, 56, 96, 0.10)",
+                borderRadius: "6px",
+                fontSize: "12px",
+                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+              }}
+            >
+              Unggah Revisi Proposal
+            </Typography>
+
+            {/* Table 2 Start */}
             <Div
               sx={{
                 width: "100%",
@@ -591,7 +682,7 @@ const UploadProposal = () => {
                 gap: "25px",
               }}
             >
-              {/* file upload Start */}
+              {/* file upload Revisi Skripsi */}
               <Div sx={{ display: "flex", marginBottom: "20px" }}>
                 <Button
                   variant="contained"
@@ -610,7 +701,7 @@ const UploadProposal = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    onChange={onProposalFileChange}
+                    onChange={onRevisiSkripsiFileChange}
                     style={{ display: "none" }}
                   />
                   Pilih File
@@ -624,16 +715,16 @@ const UploadProposal = () => {
                     fontSize: "10px",
                   }}
                   type="text"
-                  id="filename"
+                  id="revisiSkripsiFilename"
                   autoComplete="off"
                   disabled
                   readOnly
-                  value={selectedProposalFileName || "No file uploaded"}
+                  value={selectedRevisiSkripsiFileName || "No file uploaded"}
                 />
               </Div>
-              {/* file upload end */}
+              {/* file upload end for Revisi Pripsi */}
 
-              {/* Table Upload Proposal Start*/}
+              {/* Table Upload Revisi Skripsi Start*/}
               <TableContainer sx={{ marginBottom: "25px" }}>
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
@@ -699,7 +790,7 @@ const UploadProposal = () => {
                   </TableHead>
 
                   <TableBody>
-                    {proposalUploadedFiles.map((file, index) => (
+                    {RevisiSkripsiUploadedFiles.map((file, index) => (
                       <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
@@ -754,15 +845,15 @@ const UploadProposal = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {proposalFile && (
-                                <PDFViewerProposal
-                                  proposalFile={proposalFile}
+                              {RevisiSkripsiFile && (
+                                <PDFViewerRevisiSkripsi
+                                  RevisiSkripsiFile={RevisiSkripsiFile}
                                 />
                               )}
                             </span>
                             <Div
                               style={{
-                                margin: "0 5px", // Margin di sekitar garis vertikal
+                                margin: "0 5px",
                                 color: "#E0E0E0",
                               }}
                             >
@@ -775,7 +866,7 @@ const UploadProposal = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() => handleDeleteProposalFile(index)}
+                              onClick={() => openConfirmDialog(index)}
                             >
                               Delete
                             </span>
@@ -786,345 +877,69 @@ const UploadProposal = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* Table Upload Proposal End */}
-            </Div>
-            {/* Table 1 End */}
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
-              }}
-            >
-              Unggah Bukti Pembayaran
-            </Typography>
-
-            {/* Table 2 Start */}
-            <Div
-              sx={{
-                width: "100%",
-                padding: "0 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "25px",
-              }}
-            >
-              {/* file upload for Payment */}
-              <Div sx={{ display: "flex", marginBottom: "20px" }}>
-                <Button
-                  variant="contained"
-                  component="label"
-                  sx={{
-                    textTransform: "none",
-                    background: "#006AF5",
-                    color: "white",
-                    fontSize: "10px",
-                    borderRadius: "6px 0 0 6px",
-                    padding: "6px 12px",
-                    width: "80px",
-                    height: "30px",
-                  }}
-                >
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    onChange={onPaymentFileChange}
-                    style={{ display: "none" }}
-                  />
-                  Pilih File
-                </Button>
-                <input
-                  style={{
-                    height: "30px",
-                    border: "1px solid #ccc",
-                    width: "350px",
-                    borderRadius: "0 6px 6px 0",
-                    fontSize: "10px",
-                  }}
-                  type="text"
-                  id="paymentFilename"
-                  autoComplete="off"
-                  disabled
-                  readOnly
-                  value={selectedPaymentFileName || "No file uploaded"}
-                />
-              </Div>
-              {/* file upload end for Payment */}
-
-              {/* Table Upload Payment Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }}>
-                <Table>
-                  <TableHead sx={{ background: "#F5F5F5" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
-                      >
-                        Nomor
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
-                      >
-                        Nama File
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Tanggal
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Ukuran
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          fontSize: "12px",
-                          padding: "11px",
-                          textAlign: "center",
-                          width: "12%",
-                        }}
-                      >
-                        Action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {paymentUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {index + 1}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.date}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
-                        </TableCell>
-                        <TableCell>
-                          <Div sx={{ display: "flex" }}>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "blue",
-                                fontSize: "12px",
-                              }}
-                            >
-                              {paymentFile && (
-                                <PDFViewerPayment paymentFile={paymentFile} />
-                              )}
-                            </span>
-                            <Div
-                              style={{
-                                margin: "0 5px", // Margin di sekitar garis vertikal
-                                color: "#E0E0E0",
-                              }}
-                            >
-                              |
-                            </Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
-                                fontSize: "12px",
-                              }}
-                              onClick={() => handleDeletePaymentFile(index)}
-                            >
-                              Delete
-                            </span>
-                          </Div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Upload Payment End*/}
+              {/* Table UplRevisi Skripsi End*/}
             </Div>
             {/* Table 2 End */}
-
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
-              }}
-            >
-              Unggah Hasil Cek plagiat
-            </Typography>
-            {/* Table 3 Start */}
-            <Div
-              sx={{
-                width: "100%",
-                padding: "0 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "25px",
-              }}
-            >
-              {/* file upload for Payment */}
-              <Div sx={{ display: "flex", marginBottom: "20px" }}>
-                <Button
-                  variant="contained"
-                  component="label"
-                  sx={{
-                    textTransform: "none",
-                    background: "#006AF5",
-                    color: "white",
-                    fontSize: "10px",
-                    borderRadius: "6px 0 0 6px",
-                    padding: "6px 12px",
-                    width: "80px",
-                    height: "30px",
-                  }}
-                >
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    onChange={onPlagiarismFileChange}
-                    style={{ display: "none" }}
-                  />
-                  Pilih File
-                </Button>
-                <input
-                  style={{
-                    height: "30px",
-                    border: "1px solid #ccc",
-                    width: "350px",
-                    borderRadius: "0 6px 6px 0",
-                    fontSize: "10px",
-                  }}
-                  type="text"
-                  id="paymentFilename"
-                  autoComplete="off"
-                  disabled
-                  readOnly
-                  value={selectedPlagiarismFileName || "No file uploaded"}
-                />
-              </Div>
-              {/* file upload end for Payment */}
-
-              {/* Table Upload Payment Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }}>
-                <Table>
-                  <TableHead sx={{ background: "#F5F5F5" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
-                      >
-                        Nomor
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
-                      >
-                        Nama File
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Tanggal
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Ukuran
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          fontSize: "12px",
-                          padding: "11px",
-                          textAlign: "center",
-                          width: "12%",
-                        }}
-                      >
-                        Action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {plagiarismUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {index + 1}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.date}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
-                        </TableCell>
-                        <TableCell>
-                          <Div sx={{ display: "flex" }}>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "blue",
-                                fontSize: "12px",
-                              }}
-                            >
-                              {plagiarismFile && (
-                                <PDFViewerCekPlagiat
-                                  plagiarismFile={plagiarismFile}
-                                />
-                              )}
-                            </span>
-                            <Div
-                              style={{
-                                margin: "0 5px", // Margin di sekitar garis vertikal
-                                color: "#E0E0E0",
-                              }}
-                            >
-                              |
-                            </Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
-                                fontSize: "12px",
-                              }}
-                              onClick={() => handleDeletePlagiarismFile(index)}
-                            >
-                              Delete
-                            </span>
-                          </Div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Upload Payment End*/}
-            </Div>
-            {/* Table 3 End */}
           </Div>
           {/* Element 2 End */}
         </Div>
+        <Dialog
+          open={confirmDialogOpen}
+          onClose={closeConfirmDialog}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              alignSelf: "stretch",
+            }}
+          >
+            <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
+            <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
+              Menghapus Dokumen
+            </Typography>
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Apakah Anda yakin ingin menghapus file ini?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+            <Button
+              onClick={closeConfirmDialog}
+              sx={{
+                background: "white",
+                boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                textTransform: "none",
+                color: "black",
+              }}
+            >
+              Batal
+            </Button>
+            <Button
+              onClick={() => {
+                handleDeleteRevisiSkripsiFile(deletingIndex);
+                closeConfirmDialog();
+              }}
+              sx={{
+                textTransform: "none",
+                background: "#FC0",
+                color: "#263445",
+                "&:hover": {
+                  color: "#FC0",
+                },
+              }}
+            >
+              Hapus
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Div>
     </Div>
   );
 };
 
-export default UploadProposal;
+export default UploadRevisiSkripsi;

@@ -18,7 +18,7 @@ import GavelIcon from "@mui/icons-material/Gavel";
 import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 
-const DaftarPengujianProposalKetuaPenelis = () => {
+const DaftarPengujianProposalAnggotaPenelis = () => {
   const TableItem = ({ index }) => {
     return (
       <TableRow key={index}>
@@ -382,4 +382,4 @@ const DaftarPengujianProposalKetuaPenelis = () => {
   );
 };
 
-export default DaftarPengujianProposalKetuaPenelis;
+export default DaftarPengujianProposalAnggotaPenelis;

@@ -11,14 +11,14 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
-import DateRangeIcon from "@mui/icons-material/DateRange";
-import GavelIcon from "@mui/icons-material/Gavel";
-import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
 
-const DaftarPengujianProposalKetuaPenelis = () => {
+const DaftarPengajuanSkripsiDosenSkripsi = () => {
   const TableItem = ({ index }) => {
     return (
       <TableRow key={index}>
@@ -27,9 +27,6 @@ const DaftarPengujianProposalKetuaPenelis = () => {
         <TableCell sx={{ fontSize: "13px" }}>
           SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
           UNIVERSITAS KLABAT
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
         </TableCell>
         <TableCell>
           <Chip label={"Belum"} />
@@ -68,7 +65,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
           gap: "20px",
         }}
       >
-        {/* Kelompok Yang Diuji */}
+        {/* Jumlah bimbingan */}
         <Div
           sx={{
             display: "flex",
@@ -94,7 +91,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Kelompok Yang Diuji
+              Jumlah Kelompok
             </Typography>
             <Typography
               sx={{
@@ -108,7 +105,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
             </Typography>
           </Div>
         </Div>
-        {/* Belum Maju Sidang */}
+        {/* Belum Mengajukan Skripsi */}
         <Div
           sx={{
             display: "flex",
@@ -121,9 +118,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
             textItem: "center",
           }}
         >
-          <DateRangeIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <EditIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -134,7 +129,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Belum Maju Sidang
+              Belum Mengajukan Skripsi
             </Typography>
             <Typography
               sx={{
@@ -148,7 +143,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
             </Typography>
           </Div>
         </Div>
-        {/* Sudah Maju Sidang */}
+        {/* Sudah Mengajukan Skripsi */}
         <Div
           sx={{
             display: "flex",
@@ -161,7 +156,9 @@ const DaftarPengujianProposalKetuaPenelis = () => {
             textItem: "center",
           }}
         >
-          <GavelIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
+          <ArrowUpwardIcon
+            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
+          />
           <Div>
             <Typography
               sx={{
@@ -172,7 +169,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Sudah Maju Sidang
+              Sudah Mengajukan Skripsi
             </Typography>
             <Typography
               sx={{
@@ -186,7 +183,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
             </Typography>
           </Div>
         </Div>
-        {/* Belum Selesai Revisi*/}
+        {/* Skripsi yang Di Tolak */}
         <Div
           sx={{
             display: "flex",
@@ -199,7 +196,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
             textItem: "center",
           }}
         >
-          <DownloadDoneIcon
+          <ArrowDownwardIcon
             sx={{ width: "35px", height: "35px", color: "#006AF5" }}
           />
           <Div>
@@ -212,7 +209,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Sudah Selesai Revisi
+              Skripsi Yang Di Tolak
             </Typography>
             <Typography
               sx={{
@@ -226,7 +223,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
             </Typography>
           </Div>
         </Div>
-        {/* Proposal yang diterima */}
+        {/* Skripsi yang diterima */}
         <Div
           sx={{
             display: "flex",
@@ -239,7 +236,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
             textItem: "center",
           }}
         >
-          <BorderColorIcon
+          <StarBorderIcon
             sx={{ width: "35px", height: "35px", color: "#006AF5" }}
           />
           <Div>
@@ -252,7 +249,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Belum Selesai Revisi
+              Skripsi Yang Diterima
             </Typography>
             <Typography
               sx={{
@@ -303,7 +300,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
               lineHeight: "32px",
             }}
           >
-            Daftar Pengujian Proposal
+            Daftar Bimbingan Skripsi
           </Typography>
           <Div
             sx={{
@@ -341,11 +338,11 @@ const DaftarPengujianProposalKetuaPenelis = () => {
               color: "#192434",
             }}
           >
-            2023/2024-Genap (Proposal)
+            2023/2024-Genap (Skripsi)
           </Typography>
         </Div>
         {/* Semester End */}
-        {/* Table Mahasiswa Proposal Start */}
+        {/* Table Mahasiswa Skripsi Start */}
         <TableContainer>
           <Table>
             <TableHead>
@@ -357,14 +354,15 @@ const DaftarPengujianProposalKetuaPenelis = () => {
                   Mahasiswa
                 </TableCell>
                 <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Sidang</TableCell>
                 <TableCell sx={{ fontSize: "13px" }}>
-                  Revisi Ketua Penelis
+                  Disetujui Advisor
                 </TableCell>
                 <TableCell sx={{ fontSize: "13px" }}>
-                  Revisi Anggota Penelis
+                  Disetujui Co-Advisor 1
                 </TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Revisi Advisor</TableCell>
+                <TableCell sx={{ fontSize: "13px" }}>
+                  Disetujui Co-Advisor 2
+                </TableCell>
                 <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -375,11 +373,11 @@ const DaftarPengujianProposalKetuaPenelis = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* Table Mahasiswa Proposal End */}
+        {/* Table Mahasiswa Skripsi End */}
       </Div>
       {/* Table Master End */}
     </Div>
   );
 };
 
-export default DaftarPengujianProposalKetuaPenelis;
+export default DaftarPengajuanSkripsiDosenSkripsi;

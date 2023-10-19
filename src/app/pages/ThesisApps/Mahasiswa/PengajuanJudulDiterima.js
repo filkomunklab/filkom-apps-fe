@@ -16,12 +16,6 @@ import {
   TableRow,
   Typography,
   TextareaAutosize,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
-  InputLabel,
-  Select,
   DialogTitle,
   DialogContentText,
   DialogActions,
@@ -42,45 +36,26 @@ const PengajuanJudulDiterima = () => {
 
   // State untuk mengelola berbagai data termasuk judul, latar belakang, dll.
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorE2, setAnchorE2] = React.useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [judul, setJudul] = useState(
     "Pengembangan Sistem Informasi Skripsi di Fakultas Ilmu Komputer Universitas Klabat"
   );
-  const [latarBelakang, setLatarBelakang] = useState("tuliskan kalimat disini");
-  const [rumusanMasalah, setRumusanMasalah] = useState(
-    "tuliskan kalimat disini"
-  );
-  const [tujuan, setTujuan] = useState("tuliskan kalimat disini");
-  const [manfaat, setManfaat] = useState("tuliskan kalimat disini ");
-  const [cakupan, setCakupan] = useState("tuliskan kalimat disini");
-  const [batasan, setBatasan] = useState("tuliskan kalimat disini");
 
   // State untuk manajemen dialog konfirmasi perubahan judul
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [initialJudul, setInitialJudul] = useState(judul);
-  const [initialLatarBelakang, setInitialLatarBelakang] =
-    useState(latarBelakang);
-  const [initialRumusanMasalah, setInitialRumusanMasalah] =
-    useState(rumusanMasalah);
-  const [initialTujuan, setInitialTujuan] = useState(tujuan);
-  const [initialManfaat, setInitialManfaat] = useState(manfaat);
-  const [initialCakupan, setInitialCakupan] = useState(cakupan);
-  const [initialBatasan, setInitialBatasan] = useState(batasan);
 
   const handleCancelAllEdits = () => {
     setJudul(initialJudul);
-    setLatarBelakang(initialLatarBelakang);
-    setRumusanMasalah(initialRumusanMasalah);
-    setTujuan(initialTujuan);
-    setManfaat(initialManfaat);
-    setCakupan(initialCakupan);
-    setBatasan(initialBatasan);
+
     setIsEditing(false);
     setSelectedOption(initialSelectedOption);
     setStatusVisible(true);
   };
 
   const open = Boolean(anchorEl);
+  const open2 = Boolean(anchorE2);
 
   // Fungsi yang dipanggil ketika tombol "Ubah" ditekan
   const handleEditClick = () => {
@@ -88,17 +63,12 @@ const PengajuanJudulDiterima = () => {
     setInitialSelectedOption(selectedOption);
     setStatusVisible(false); // Menyembunyikan status dan chip
     setInitialJudul(judul); // Simpan nilai awal judul
-    setInitialLatarBelakang(latarBelakang); // Simpan nilai awal latar belakang
-    setInitialTujuan(tujuan); // Simpan nilai awal tujuan
-    setInitialManfaat(manfaat); // Simpan nilai awal manfaat
-    setInitialCakupan(cakupan); // Simpan nilai awal cakupan
-    setInitialBatasan(batasan); // Simpan nilai awal batasan
   };
 
   // Fungsi yang dipanggil ketika tombol "Batal" ditekan dalam mode edit
   const handleCancelEdit = () => {
     setJudul(initialJudul);
-    setLatarBelakang(initialLatarBelakang); // Kembalikan nilai awal latar belakang
+
     setIsEditing(false);
     setSelectedOption(initialSelectedOption);
     setStatusVisible(true); // Menampilkan kembali status dan chip
@@ -125,35 +95,6 @@ const PengajuanJudulDiterima = () => {
     setIsConfirmationOpen(false);
   };
 
-  // Fungsi yang dipanggil ketika isi latar belakang berubah
-  const handleLatarBelakangChange = (event) => {
-    setLatarBelakang(event.target.value);
-  };
-
-  // Fungsi yang dipanggil ketika isi rumusan masalah berubah
-  const handleRumusanMasalahChange = (event) => {
-    setRumusanMasalah(event.target.value);
-  };
-
-  // Fungsi yang dipanggil ketika isi tujuan berubah
-  const handleTujuanChange = (event) => {
-    setTujuan(event.target.value);
-  };
-
-  // Fungsi yang dipanggil ketika isi manfaat berubah
-  const handleManfaatChange = (event) => {
-    setManfaat(event.target.value);
-  };
-
-  // Fungsi yang dipanggil ketika isi cakupan berubah
-  const handleCakupanChange = (event) => {
-    setCakupan(event.target.value);
-  };
-
-  // Fungsi yang dipanggil ketika isi batasan berubah
-  const handleBatasanChange = (event) => {
-    setBatasan(event.target.value);
-  };
   return (
     <Div>
       <Div
@@ -479,7 +420,7 @@ const PengajuanJudulDiterima = () => {
               {/* Menu Pengajuan Skripsi */}
               <Div>
                 <Button
-                  onClick={(event) => setAnchorEl(event.currentTarget)}
+                  onClick={(event) => setAnchorE2(event.currentTarget)}
                   sx={{
                     fontSize: "13px",
                     fontWeight: 500,
@@ -493,9 +434,9 @@ const PengajuanJudulDiterima = () => {
                   Pengajuan Skripsi
                 </Button>
                 <Menu
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={() => setAnchorEl(null)}
+                  anchorEl={anchorE2}
+                  open={open2}
+                  onClose={() => setAnchorE2(null)}
                   anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "left",
@@ -505,10 +446,10 @@ const PengajuanJudulDiterima = () => {
                     horizontal: "left",
                   }}
                 >
-                  <MenuItem onClick={() => setAnchorEl(null)}>
+                  <MenuItem onClick={() => setAnchorE2(null)}>
                     Upload Skripsi
                   </MenuItem>
-                  <MenuItem onClick={() => setAnchorEl(null)}>
+                  <MenuItem onClick={() => setAnchorE2(null)}>
                     Upload Revisi Skripsi
                   </MenuItem>
                 </Menu>
@@ -534,7 +475,7 @@ const PengajuanJudulDiterima = () => {
             <Div sx={{ marginBottom: "25px" }}>
               {isStatusVisible && (
                 <>
-                  <Typography>Status</Typography>
+                  <Typography variant="subtitle2">Status</Typography>
                   <Chip
                     label="Diterima"
                     sx={{
@@ -558,6 +499,7 @@ const PengajuanJudulDiterima = () => {
             >
               {/* Table Kelompok Mahasiswa Start*/}
               <Typography
+                variant="subtitle2"
                 sx={{
                   padding: "14px 16px",
                   background: "rgba(26, 56, 96, 0.10)",
@@ -596,7 +538,7 @@ const PengajuanJudulDiterima = () => {
               {/* Table Kelompok mahasiswa End */}
               {/* Judul Start */}
               <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Judul</Typography>
+                <Typography variant="subtitle2">Judul</Typography>
                 {isEditing ? (
                   <TextareaAutosize
                     value={judul}
@@ -668,128 +610,116 @@ const PengajuanJudulDiterima = () => {
               {/* Judul End */}
               {/* Latar Belakang Start */}
               <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Latar Belakang Masalah</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={latarBelakang}
-                    onChange={handleLatarBelakangChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {latarBelakang}
-                  </Typography>
-                )}
+                <Typography variant="subtitle2">
+                  Latar Belakang Masalah
+                </Typography>
+                <Typography
+                  style={{
+                    width: "100%",
+                    whiteSpace: "pre-line",
+                  }}
+                >
+                  Perkembangan teknologi informasi semakin mengguncangkan dunia
+                  dengan pesatnya. Seiring dengan adanya inovasi terbaru,
+                  teknologi informasi telah mempengaruhi banyak aspek kehidupan
+                  manusia, khususnya dalam bidang informasi. Sebagai contoh,
+                  perguruan tinggi negeri dan swasta saat ini semakin gencar
+                  untuk mengembangkan sistem referensi repository, khususnya
+                  untuk skripsi alumni guna meningkatkan kemajuan universitas.
+                  Tidak hanya itu, teknologi informasi juga telah mengubah dunia
+                  bisnis tradisional dengan munculnya komputasi awan dan
+                  pertumbuhan platform bisnis digital seluler berbasis
+                  smartphone dan tablet. Inovasi ini memberikan peluang bagi
+                  pengusaha dan perusahaan tradisional untuk menciptakan produk
+                  dan layanan baru, mengembangkan model bisnis baru, dan
+                  mengubah perilaku bisnis sehari-hari. Oleh karena itu,
+                  teknologi informasi menjadi fondasi bisnis di abad ke-21
+                  karena banyak bisnis atau perusahaan dapat beroperasi dan
+                  berkembang dengan adanya sistem informasi yang mumpuni.
+                  Sebagaimana disebutkan dalam UU No. 11 Tahun 2008 tentang
+                  Informasi dan Transaksi Elektronik, teknologi informasi adalah
+                  teknik untuk mengumpulkan, menyiapkan, menyimpan, memproses,
+                  mengumumkan, menganalisis, dan/atau menyebarkan informasi.
+                </Typography>
               </Div>
               {/* Latar Belakang End */}
               {/* Rumusan Masalah Start */}
               <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Rumusan Masalah</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={rumusanMasalah}
-                    onChange={handleRumusanMasalahChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {rumusanMasalah}
-                  </Typography>
-                )}
+                <Typography variant="subtitle2">Rumusan Masalah</Typography>
+                <Typography sx={{ whiteSpace: "pre-line" }}>
+                  Berdasarkan latar belakang masalah penelitian, maka dibuat
+                  suatu rumusan masalah dalam penelitian ini, yaitu bagaimana
+                  mengembangkan sistem informasi manajemen skripsi berbasis
+                  web-application untuk penyerahan skripsi yang sudah selesai
+                  dinilai dan disimpan di repository?
+                </Typography>
               </Div>
               {/* Rumusan Masalah End */}
               {/* Tujuan Start */}
               <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Tujuan</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={tujuan}
-                    onChange={handleTujuanChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {tujuan}
-                  </Typography>
-                )}
+                <Typography variant="subtitle2">Tujuan</Typography>
+                <Typography sx={{ whiteSpace: "pre-line" }}>
+                  Tujuan dari penelitian ini adalah untuk mengembangkan dan
+                  mengimplementasikan sistem informasi managemen skripsi untuk
+                  penyerahan skripsi dan penyimpanan skripsi yang terintegrasi
+                  yang memudahkan mahasiswa untuk mencari referensi judul
+                  skripsi yang sesuai dengan minat dan keahlian mereka serta
+                  membantu dosen pembimbing dalam memberikan saran dan
+                  rekomendasi judul skripsi melalui sistem ini sehingga judul
+                  atau topik penelitian yang diajukan tidak sama dengan
+                  penelitian yang sudah ada.
+                </Typography>
               </Div>
               {/* Tujuan End */}
               {/* Manfaat Start */}
               <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Manfaat</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={manfaat}
-                    onChange={handleManfaatChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {manfaat}
-                  </Typography>
-                )}
+                <Typography variant="subtitle2">Manfaat</Typography>
+                <Typography sx={{ whiteSpace: "pre-line" }}>
+                  1. Mahasiswa dan dosen pembimbing Fakultas Ilmu Komputer dapat
+                  mencari referensi judul skripsi lebih mudah dan cepat sehingga
+                  dapat menghindari duplikasi penelitian yang sudah dilakukan
+                  sebelumnya. 2. Meningkatkan efisiensi dalam penyerahan skripsi
+                  dan penyimpanan dengan sistem yang terintegrasi sehingga
+                  mahasiswa tidak perlu melakukan permohonan akses ke Fakultas
+                  Ilmu Komputer untuk mengakses skripsi yang sudah disetujui
+                  atau diuji dan lulus. 3. Dengan adanya sistem terintegrasi,
+                  kesalahan dalam penyimpanan skripsi dapat dihindari. 
+                </Typography>
               </Div>
               {/* Manfaat End*/}
               {/* Cakupan Start */}
               <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Cakupan</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={cakupan}
-                    onChange={handleCakupanChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {cakupan}
-                  </Typography>
-                )}
+                <Typography variant="subtitle2">Cakupan</Typography>
+
+                <Typography sx={{ whiteSpace: "pre-line" }}>
+                  1. Sistem hanya mencakup manajemen skripsi Fakultas Ilmu
+                  Komputer Universitas Klabat 2. Sistem hanya menerima
+                  penyerahan skripsi yang sudah diuji dan lulus oleh dosen
+                  penguji dan menyimpannya. 3. Sistem menyediakan pencarian
+                  skripsi beserta teks lengkap di repository. Pencarian skripsi
+                  dibuka untuk umum tetapi teks lengkap hanya dapat diakses oleh
+                  mahasiswa dan dosen Universitas Klabat.
+                </Typography>
               </Div>
               {/* Cakupan End */}
               {/* Batasan Start */}
               <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Batasan</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={batasan}
-                    onChange={handleBatasanChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {batasan}
-                  </Typography>
-                )}
+                <Typography variant="subtitle2">Batasan</Typography>
+                <Typography sx={{ whiteSpace: "pre-line" }}>
+                  1 Sistem hanya dibangun untuk digunakan Fakultas Ilmu Komputer
+                  Universitas Klabat. 2 Sistem hanya mengelola lembar pengesahan
+                  dan skripsi yang sudah diuji di Fakultas Ilmu Komputer
+                  Universitas Klabat. 3Sistem hanya menerima penyerahan skripsi
+                  dalam format file tertentu seperti PDF atau Microsoft Word
+                  dengan batasan ukuran file sebesar 50MB. 4Sistem tidak
+                  menyimpan data pribadi lengkap  penulis atau mahasiswa. 5
+                  Sistem hanya memberikan akses lihat dan unduh teks lengkap
+                  skripsi kepada dosen dan mahasiswa Universitas Klabat. 6
+                  Sistem tidak dapat menampilkan skripsi yang paling sering
+                  dicari atau paling tren. 7 Sistem tidak menyediakan fitur
+                  notifikasi persetujuan penyerahan skripsi 8 Sistem ini
+                  berbasis web-application.
+                </Typography>
               </Div>
               {/* Batasan End */}
 
@@ -820,7 +750,7 @@ const PengajuanJudulDiterima = () => {
                       gap: "15px",
                     }}
                   >
-                    <Typography>Calon Advisor</Typography>
+                    <Typography variant="subtitle2">Calon Advisor</Typography>
                     <Typography>Andrew T. Liem, MT, PhD</Typography>
                   </Div>
                   <Div
@@ -831,7 +761,9 @@ const PengajuanJudulDiterima = () => {
                       gap: "15px",
                     }}
                   >
-                    <Typography>Calon Co-Advisor 1</Typography>
+                    <Typography variant="subtitle2">
+                      Calon Co-Advisor 1
+                    </Typography>
                     <Typography>Senly I. Adam, SKom, MSc</Typography>
                   </Div>
                   <Div
@@ -842,7 +774,9 @@ const PengajuanJudulDiterima = () => {
                       gap: "15px",
                     }}
                   >
-                    <Typography>Calon Co-Advisor 2</Typography>
+                    <Typography variant="subtitle2">
+                      Calon Co-Advisor 2
+                    </Typography>
                     <Typography>Stenly R. Pungus, MT, PhD</Typography>
                   </Div>
                 </Div>

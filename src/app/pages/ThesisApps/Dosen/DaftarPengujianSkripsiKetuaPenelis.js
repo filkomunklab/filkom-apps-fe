@@ -18,7 +18,7 @@ import GavelIcon from "@mui/icons-material/Gavel";
 import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 
-const DaftarPengujianProposalKetuaPenelis = () => {
+const DaftarPengujianSkripsiKetuaPenelis = () => {
   const TableItem = ({ index }) => {
     return (
       <TableRow key={index}>
@@ -226,7 +226,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
             </Typography>
           </Div>
         </Div>
-        {/* Proposal yang diterima */}
+        {/* Skripsi yang diterima */}
         <Div
           sx={{
             display: "flex",
@@ -303,7 +303,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
               lineHeight: "32px",
             }}
           >
-            Daftar Pengujian Proposal
+            Daftar Pengujian Skripsi
           </Typography>
           <Div
             sx={{
@@ -341,11 +341,11 @@ const DaftarPengujianProposalKetuaPenelis = () => {
               color: "#192434",
             }}
           >
-            2023/2024-Genap (Proposal)
+            2023/2024-Genap (Skripsi)
           </Typography>
         </Div>
         {/* Semester End */}
-        {/* Table Mahasiswa Proposal Start */}
+        {/* Table Mahasiswa Skripsi Start */}
         <TableContainer>
           <Table>
             <TableHead>
@@ -375,11 +375,11 @@ const DaftarPengujianProposalKetuaPenelis = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* Table Mahasiswa Proposal End */}
+        {/* Table Mahasiswa Skripsi End */}
       </Div>
       {/* Table Master End */}
     </Div>
   );
 };
 
-export default DaftarPengujianProposalKetuaPenelis;
+export default DaftarPengujianSkripsiKetuaPenelis;
