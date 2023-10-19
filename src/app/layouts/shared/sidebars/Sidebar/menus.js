@@ -418,92 +418,92 @@ import RecentActorsIcon from "@mui/icons-material/RecentActors";
 // ];
 
 // Mahasiswa Bimbingan Akademik Menus
-// const menus = [
-//   {
-//     label: "Klabat Bridge",
-//     type: "section",
-//     children: [
-//       {
-//         label: "Dafter Alumni",
-//         type: "nav-item",
-//         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
-//         uri: "/klabat-bridge/daftar-alumni",
-//       },
-//       {
-//         label: "Grafik Alumni",
-//         type: "nav-item",
-//         icon: <PublicIcon sx={{ fontSize: 20 }} />,
-//         uri: "/klabat-bridge/grafik-alumni",
-//       },
-//     ],
-//   },
-//   {
-//     label: "Bimbingan Akademik",
-//     type: "section",
-//     children: [
-//       {
-//         label: "Academic Guide",
-//         type: "nav-item",
-//         icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/academic-guide",
-//       },
-//       {
-//         label: "Vision Mission Goals",
-//         type: "nav-item",
-//         icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/vision-mission-goals",
-//       },
-//       {
-//         label: "Curriculum",
-//         type: "nav-item",
-//         icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/curriculum",
-//       },
-//       {
-//         label: "Grades",
-//         type: "nav-item",
-//         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/grades",
-//       },
-//       {
-//         label: "Certificates",
-//         type: "nav-item",
-//         icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/certificates",
-//       },
-//       {
-//         label: "History",
-//         type: "nav-item",
-//         icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/history",
-//       },
-//       {
-//         label: "Grade Submission",
-//         type: "nav-item",
-//         icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/grade-submission",
-//       },
-//       {
-//         label: "Pre-registration",
-//         type: "nav-item",
-//         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/pre-registration",
-//       },
-//       {
-//         label: "Consultation",
-//         type: "nav-item",
-//         icon: <PermContactCalendarIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/consultation",
-//       },
-//       {
-//         label: "Profile",
-//         type: "nav-item",
-//         icon: <PersonIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/profile",
-//       },
-//     ],
-//   },
-// ];
+export const mahasiswaMenus = [
+  {
+    label: "Klabat Bridge",
+    type: "section",
+    children: [
+      {
+        label: "Dafter Alumni",
+        type: "nav-item",
+        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-alumni",
+      },
+      {
+        label: "Grafik Alumni",
+        type: "nav-item",
+        icon: <PublicIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/grafik-alumni",
+      },
+    ],
+  },
+  {
+    label: "Bimbingan Akademik",
+    type: "section",
+    children: [
+      {
+        label: "Academic Guide",
+        type: "nav-item",
+        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/academic-guide",
+      },
+      {
+        label: "Vision Mission Goals",
+        type: "nav-item",
+        icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/vision-mission-goals",
+      },
+      {
+        label: "Curriculum",
+        type: "nav-item",
+        icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/curriculum",
+      },
+      {
+        label: "Grades",
+        type: "nav-item",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/grades",
+      },
+      {
+        label: "Certificates",
+        type: "nav-item",
+        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/certificates",
+      },
+      {
+        label: "History",
+        type: "nav-item",
+        icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/history",
+      },
+      {
+        label: "Grade Submission",
+        type: "nav-item",
+        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/grade-submission",
+      },
+      {
+        label: "Pre-registration",
+        type: "nav-item",
+        icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/pre-registration",
+      },
+      {
+        label: "Consultation",
+        type: "nav-item",
+        icon: <PermContactCalendarIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/consultation",
+      },
+      {
+        label: "Profile",
+        type: "nav-item",
+        icon: <PersonIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/profile",
+      },
+    ],
+  },
+];
 
 // Dekan Bimbingan Akademik Menus
 export const dekanMenus = [
@@ -771,127 +771,127 @@ export const dosenMenus = [
 ];
 
 // Kaprodi Bimbingan Akademik Menus
-// const menus = [
-//   {
-//     label: "Klabat Bridge",
-//     type: "section",
-//     children: [
-//       {
-//         label: "Dafter Alumni",
-//         type: "nav-item",
-//         icon: <DashboardIcon sx={{ fontSize: 20 }} />,
-//         uri: "/klabat-bridge/daftar-alumni",
-//       },
-//       {
-//         label: "Grafik Alumni",
-//         type: "nav-item",
-//         icon: <PublicIcon sx={{ fontSize: 20 }} />,
-//         uri: "/klabat-bridge/grafik-alumni",
-//       },
-//     ],
-//   },
-//   {
-//     label: "Bimbingan Akademik",
-//     type: "section",
-//     children: [
-//       {
-//         label: "Dashboard",
-//         type: "nav-item",
-//         icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/kaprodi/dashboard",
-//       },
-//       {
-//         label: "Academic Guide",
-//         type: "nav-item",
-//         icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/kaprodi/academic-guide",
-//       },
-//       {
-//         label: "Vision Mission Goals",
-//         type: "nav-item",
-//         icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/kaprodi/vision-mission-goals",
-//       },
-//       {
-//         label: "Curriculum",
-//         type: "nav-item",
-//         icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/kaprodi/curriculum",
-//       },
-//       {
-//         label: "Student Information",
-//         type: "collapsible",
-//         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
-//         children: [
-//           {
-//             label: "Mentored Student",
-//             type: "nav-item",
-//             uri: "/bimbingan-akademik/kaprodi/student-information/mentored-student",
-//           },
-//           {
-//             label: "Faculty Student",
-//             type: "nav-item",
-//             uri: "/bimbingan-akademik/kaprodi/student-information/faculty-student",
-//           },
-//         ],
-//       },
-//       {
-//         label: "Supervisor Infomation",
-//         type: "nav-item",
-//         icon: <GroupIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/kaprodi/supervisor-information",
-//       },
-//       {
-//         label: "Review Activities",
-//         type: "collapsible",
-//         icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
-//         children: [
-//           {
-//             label: "Review Pre-Registration",
-//             type: "nav-item",
-//             uri: "/bimbingan-akademik/kaprodi/Review-Activities/pre-registration",
-//           },
-//           {
-//             label: "Review Certificates",
-//             type: "nav-item",
-//             uri: "/bimbingan-akademik/kaprodi/Review-Activities/certificates",
-//           },
-//           {
-//             label: "Review Grades",
-//             type: "nav-item",
-//             uri: "/bimbingan-akademik/kaprodi/Review-Activities/grade",
-//           },
-//           {
-//             label: "Student Consultation",
-//             type: "nav-item",
-//             uri: "/bimbingan-akademik/kaprodi/Review-Activities/consultation",
-//           },
-//         ],
-//       },
-//       {
-//         label: "Recent History",
-//         type: "nav-item",
-//         icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/kaprodi/recent-history",
-//       },
-//       {
-//         label: "Activity History",
-//         type: "nav-item",
-//         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/kaprodi/activity-history",
-//       },
-//       {
-//         label: "Add Activity",
-//         type: "nav-item",
-//         icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/kaprodi/add-activity",
-//       },
-//       {
-//         label: "Profile",
-//         type: "nav-item",
-//         icon: <PersonIcon sx={{ fontSize: 20 }} />,
-//         uri: "/bimbingan-akademik/kaprodi/profile",
-//       },
-//     ],
-//   },
-// ];
+export const kaprodiMenus = [
+  {
+    label: "Klabat Bridge",
+    type: "section",
+    children: [
+      {
+        label: "Dafter Alumni",
+        type: "nav-item",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-alumni",
+      },
+      {
+        label: "Grafik Alumni",
+        type: "nav-item",
+        icon: <PublicIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/grafik-alumni",
+      },
+    ],
+  },
+  {
+    label: "Bimbingan Akademik",
+    type: "section",
+    children: [
+      {
+        label: "Dashboard",
+        type: "nav-item",
+        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/dashboard",
+      },
+      {
+        label: "Academic Guide",
+        type: "nav-item",
+        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/academic-guide",
+      },
+      {
+        label: "Vision Mission Goals",
+        type: "nav-item",
+        icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/vision-mission-goals",
+      },
+      {
+        label: "Curriculum",
+        type: "nav-item",
+        icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/curriculum",
+      },
+      {
+        label: "Student Information",
+        type: "collapsible",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Mentored Student",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/kaprodi/student-information/mentored-student",
+          },
+          {
+            label: "Faculty Student",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/kaprodi/student-information/faculty-student",
+          },
+        ],
+      },
+      {
+        label: "Supervisor Infomation",
+        type: "nav-item",
+        icon: <GroupIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/supervisor-information",
+      },
+      {
+        label: "Review Activities",
+        type: "collapsible",
+        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Review Pre-Registration",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/kaprodi/Review-Activities/pre-registration",
+          },
+          {
+            label: "Review Certificates",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/kaprodi/Review-Activities/certificates",
+          },
+          {
+            label: "Review Grades",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/kaprodi/Review-Activities/grade",
+          },
+          {
+            label: "Student Consultation",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/kaprodi/Review-Activities/consultation",
+          },
+        ],
+      },
+      {
+        label: "Recent History",
+        type: "nav-item",
+        icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/recent-history",
+      },
+      {
+        label: "Activity History",
+        type: "nav-item",
+        icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/activity-history",
+      },
+      {
+        label: "Add Activity",
+        type: "nav-item",
+        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/add-activity",
+      },
+      {
+        label: "Profile",
+        type: "nav-item",
+        icon: <PersonIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/profile",
+      },
+    ],
+  },
+];
