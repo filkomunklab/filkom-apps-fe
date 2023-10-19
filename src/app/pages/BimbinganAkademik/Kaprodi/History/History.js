@@ -124,6 +124,7 @@ const History = (props) => {
               </Box>
 
               <ListItem
+                size="small"
                 button
                 component={Link}
                 to="/bimbingan-akademik/history/activity/"

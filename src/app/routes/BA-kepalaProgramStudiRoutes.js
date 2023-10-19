@@ -1,5 +1,6 @@
 import Page from "@jumbo/shared/Page";
 import AcademicGuide from "app/pages/BimbinganAkademik/Kaprodi/AcademicGuide";
+import AddActivity from "app/pages/BimbinganAkademik/Kaprodi/AddActivity";
 import Curriculum from "app/pages/BimbinganAkademik/Kaprodi/Curriculum";
 import Dashboard from "app/pages/BimbinganAkademik/Kaprodi/Dashboard/Dashboard.";
 import History from "app/pages/BimbinganAkademik/Kaprodi/History";
@@ -11,7 +12,6 @@ import StudentProfile from "app/pages/BimbinganAkademik/Kaprodi/StudentInformati
 import StudentInformationFaculty from "app/pages/BimbinganAkademik/Kaprodi/StudentInformationFaculty";
 import StudentInformationMentored from "app/pages/BimbinganAkademik/Kaprodi/StudentInformationMentored";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/Kaprodi/VisionMisionGoals";
-// import DaftarAlumni from "app/pages/Mahasiswa/KlabatBridge/DaftarAlumni";
 import DaftarAlumni from "app/pages/KlabatBridge/DaftarAlumni";
 
 const kepalaProgramStudiRoutes = [
@@ -62,6 +62,10 @@ const kepalaProgramStudiRoutes = [
   {
     path: "/bimbingan-akademik/kaprodi/activity-history",
     element: <Page component={History} />,
+  },
+  {
+    path: "/bimbingan-akademik/kaprodi/add-activity",
+    element: <Page component={AddActivity} />,
   },
 ];
 
