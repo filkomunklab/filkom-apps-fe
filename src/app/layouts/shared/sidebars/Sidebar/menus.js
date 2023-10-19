@@ -29,7 +29,6 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import ScheduleTwoToneIcon from "@mui/icons-material/ScheduleTwoTone";
 
-
 // // Menu Mahasiswa
 // const menus = [
 //   {
@@ -313,65 +312,65 @@ const menus = [
 // ];
 
 // Menu Sekretaris
-const menus = [
-  {
-    label: "Sistem Informasi Skripsi",
-    type: "section",
-    children: [
-      {
-        label: "Pengajuan",
-        type: "collapsible",
-        icon: <MailIcon sx={{ fontSize: 20 }} />,
-        children: [
-          {
-            uri: "/sistem-informasi-skripsi/daftar-pengajuan-proposal",
-            label: "Pengajuan Proposal",
-            type: "nav-item",
-            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
-          },
-          {
-            uri: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi",
-            label: "Pengajuan Skripsi",
-            type: "nav-item",
-            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-          },
-        ],
-      },
-      {
-        uri: "/sistem-informasi-skripsi/manajemen-jadwal",
-        label: "Kelola Jadwal",
-        type: "collapsible",
-        icon: <ScheduleTwoToneIcon sx={{ fontSize: 20 }} />,
-        children: [
-          {
-            uri: "/sistem-informasi-skripsi/jadwal-proposal",
-            label: "Jadwal Proposal",
-            type: "nav-item",
-            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
-          },
-          {
-            uri: "/sistem-informasi-skripsi/jadwal-skripsi",
-            label: "Jadwal Skripsi",
-            type: "nav-item",
-            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-          },
-        ],
-      },
-      {
-        uri: "/sistem-informasi-skripsi/manajamen-dosen-skripsi",
-        label: "Dosen Skripsi",
-        type: "nav-item",
-        icon: <PersonIcon sx={{ fontSize: 20 }} />,
-      },
-      {
-        uri: "/sistem-informasi-skripsi/manajamen-dosen",
-        label: "Dosen",
-        type: "nav-item",
-        icon: <PersonIcon sx={{ fontSize: 20 }} />,
-      },
-    ],
-  },
-];
+// const menus = [
+//   {
+//     label: "Sistem Informasi Skripsi",
+//     type: "section",
+//     children: [
+//       {
+//         label: "Pengajuan",
+//         type: "collapsible",
+//         icon: <MailIcon sx={{ fontSize: 20 }} />,
+//         children: [
+//           {
+//             uri: "/sistem-informasi-skripsi/daftar-pengajuan-proposal",
+//             label: "Pengajuan Proposal",
+//             type: "nav-item",
+//             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+//           },
+//           {
+//             uri: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi",
+//             label: "Pengajuan Skripsi",
+//             type: "nav-item",
+//             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+//           },
+//         ],
+//       },
+//       {
+//         uri: "/sistem-informasi-skripsi/manajemen-jadwal",
+//         label: "Kelola Jadwal",
+//         type: "collapsible",
+//         icon: <ScheduleTwoToneIcon sx={{ fontSize: 20 }} />,
+//         children: [
+//           {
+//             uri: "/sistem-informasi-skripsi/jadwal-proposal",
+//             label: "Jadwal Proposal",
+//             type: "nav-item",
+//             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+//           },
+//           {
+//             uri: "/sistem-informasi-skripsi/jadwal-skripsi",
+//             label: "Jadwal Skripsi",
+//             type: "nav-item",
+//             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+//           },
+//         ],
+//       },
+//       {
+//         uri: "/sistem-informasi-skripsi/manajamen-dosen-skripsi",
+//         label: "Dosen Skripsi",
+//         type: "nav-item",
+//         icon: <PersonIcon sx={{ fontSize: 20 }} />,
+//       },
+//       {
+//         uri: "/sistem-informasi-skripsi/manajamen-dosen",
+//         label: "Dosen",
+//         type: "nav-item",
+//         icon: <PersonIcon sx={{ fontSize: 20 }} />,
+//       },
+//     ],
+//   },
+// ];
 
 // // Menu Kaprpodi
 // const menus = [

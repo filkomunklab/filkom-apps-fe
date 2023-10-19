@@ -142,6 +142,7 @@ const dosenRoutes = [
     // Daftar Riwayat Anggota Penelis
     path: "/sistem-informasi-skripsi/riwayat-uji-anggota",
     element: <Page component={RiwayatPengujianAnggotaPenelis} />,
+  },
   {
     path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi",
     element: <Page component={DaftarPengajuanJudulDosenSkripsi} />,
