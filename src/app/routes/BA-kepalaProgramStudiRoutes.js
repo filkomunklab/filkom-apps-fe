@@ -9,10 +9,11 @@ import CertificateDetail from "app/pages/BimbinganAkademik/Kaprodi/StudentInform
 import StudentGradeDashboard from "app/pages/BimbinganAkademik/Kaprodi/StudentInformation/StudentGradeDashboard";
 import StudentGrade from "app/pages/BimbinganAkademik/Kaprodi/StudentInformation/StudentGradeDashboard/StudentGrade";
 import StudentProfile from "app/pages/BimbinganAkademik/Kaprodi/StudentInformation/StudentProfile";
-import StudentInformationFaculty from "app/pages/BimbinganAkademik/Kaprodi/StudentInformationFaculty";
-import StudentInformationMentored from "app/pages/BimbinganAkademik/Kaprodi/StudentInformationMentored";
+import StudentInformationFaculty from "app/pages/BimbinganAkademik/Kaprodi/StudentInformation/StudentInformationFaculty/StudentInformation";
+import StudentInformationMentored from "app/pages/BimbinganAkademik/Kaprodi/StudentInformation/StudentInformationMentored/StudentInformation";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/Kaprodi/VisionMisionGoals";
-import DaftarAlumni from "app/pages/KlabatBridge/DaftarAlumni";
+import SupervisorInformation from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation";
+import AdvisorProfile from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/AdvisorProfile";
 
 const kepalaProgramStudiRoutes = [
   {
@@ -66,6 +67,14 @@ const kepalaProgramStudiRoutes = [
   {
     path: "/bimbingan-akademik/kaprodi/add-activity",
     element: <Page component={AddActivity} />,
+  },
+  {
+    path: "/bimbingan-akademik/kaprodi/supervisor-information",
+    element: <Page component={SupervisorInformation} />,
+  },
+  {
+    path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/:id",
+    element: <Page component={AdvisorProfile} />,
   },
 ];
 

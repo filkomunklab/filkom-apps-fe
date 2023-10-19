@@ -15,10 +15,14 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  Card,
+  CardHeader,
+  CardContent,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
 
 const yearList = [
   {
@@ -67,17 +71,19 @@ const prodiList = [
 ];
 
 const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nim: `105022010000`,
+  nidn: `105022010000`,
   name: `Yuhu, Christopher Darell`,
   prodi: `Informatika`,
   year: `2021`,
   status: `Active`,
 }));
 
-const StudentInformationFaculty = () => {
+const SupervisorInformation = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const navigate = useNavigate();
+  const [showLabel, setShowLabel] = useState(true);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -92,19 +98,26 @@ const StudentInformationFaculty = () => {
     <Div>
       <Div>
         <Typography variant="h1" sx={{ mb: 3 }}>
-          Student Information
+          Supervisor Information
         </Typography>
-        <Typography variant="h6" sx={{ mb: 3 }}>
-          Currently, you are on the Student Information page, where you can
-          easily view all information about your mentored students, including
-          the number, status, and other detailed and comprehensive information.
+        <Typography
+          variant="h6"
+          sx={{
+            paddingBottom: "8px",
+            fontSize: "15px",
+            fontWeight: 400,
+            color: "rgba(27, 43, 65, 0.69)",
+          }}
+        >
+          Currently, you are on the Academic Supervisor Information page, here
+          you can easily see all information about academic supervisors in your
+          department, along with their students.
         </Typography>
       </Div>
-      <Grid container spacing={2}>
+
+      <Grid container spacing={2} marginTop={1}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">
-            Computer Sciences Faculty Students List
-          </Typography>
+          <Typography variant="h2">Informatics Supervisor List</Typography>
         </Grid>
         <Grid item md={3}>
           <SearchGlobal sx={{ height: "100%" }} />
@@ -115,13 +128,19 @@ const StudentInformationFaculty = () => {
               width: "100%",
             }}
           >
-            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
+            <InputLabel shrink={false}>{showLabel ? "Filter" : ""}</InputLabel>
             <Select
               sx={{ borderRadius: 50 }}
               multiple
               value={filter}
-              label="Grouping"
               renderValue={(selected) => selected.join(", ")}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: "37%",
+                  },
+                },
+              }}
             >
               <MenuItem value="">
                 <em>None</em>
@@ -202,13 +221,11 @@ const TableHeading = ({ index }) => {
   return (
     <TableRow sx={{ backgroundColor: "#1A38601A" }}>
       <TableCell sx={[style]}>No</TableCell>
-      <TableCell sx={[style]}>NIM</TableCell>
-      <TableCell sx={[style]}>Student Name</TableCell>
-      <TableCell sx={[style]}>Program Studi</TableCell>
-      <TableCell sx={[style]}>Tahun Masuk</TableCell>
-      <TableCell sx={[style]}>Nilai</TableCell>
-      <TableCell sx={[style]}>Sertifikat</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
+      <TableCell sx={[style]}>NIDN</TableCell>
+      <TableCell sx={[style]}>Name</TableCell>
+      <TableCell sx={[style]}>Faculty</TableCell>
+      <TableCell sx={[style]}>History</TableCell>
+      <TableCell sx={[style]}>Number of Student</TableCell>
     </TableRow>
   );
 };
@@ -217,20 +234,15 @@ const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+    navigate(`/bimbingan-akademik/student-information/${item.nidn}`);
 
     switch (name) {
       case "profile":
-        navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+        navigate(`/bimbingan-akademik/student-information/${item.nidn}`);
         break;
-      case "grade":
+      case "history":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/grade`
-        );
-        break;
-      case "certificate":
-        navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/certificate`
+          `/bimbingan-akademik/student-information/${item.nidn}/history`
         );
         break;
 
@@ -241,7 +253,7 @@ const TableItem = ({ item, index }) => {
   return (
     <TableRow>
       <TableCell>{index + 1}</TableCell>
-      <TableCell>{`105022010000`}</TableCell>
+      <TableCell>{`022407712`}</TableCell>
       <TableCell>
         <Button
           name="profile"
@@ -250,31 +262,18 @@ const TableItem = ({ item, index }) => {
         >{`Yuhu, Christopher Darell`}</Button>
       </TableCell>
       <TableCell>{`Informatika`}</TableCell>
-      <TableCell>{`2021`}</TableCell>
-
       <TableCell>
         <Button
-          name="grade"
+          name="history"
           onClick={handleButtonNavigate}
           sx={{ textTransform: "capitalize" }}
         >
-          View Grades
+          View History
         </Button>
       </TableCell>
-      <TableCell>
-        <Button
-          name="certificate"
-          onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
-        >
-          View Certificates
-        </Button>
-      </TableCell>
-      <TableCell>
-        <Chip label={"Active"} variant="filled" color={"success"} />
-      </TableCell>
+      <TableCell>{`25`}</TableCell>
     </TableRow>
   );
 };
 
-export default StudentInformationFaculty;
+export default SupervisorInformation;
