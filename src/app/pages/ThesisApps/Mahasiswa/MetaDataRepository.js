@@ -12,12 +12,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
   TextareaAutosize,
   Typography,
@@ -185,7 +179,11 @@ const MetaDataRepository = () => {
               {penulisCount < 5 && ( // Tampilkan tombol hanya jika jumlah penulis kurang dari 5
                 <Button
                   onClick={handleTambahPenulis}
-                  style={{ fontSize: "12px", marginBottom: "25px" }}
+                  style={{
+                    fontSize: "12px",
+                    marginBottom: "25px",
+                    textTransform: "none",
+                  }}
                 >
                   <AddIcon fontSize="small" />
                   Tambah Penulis
