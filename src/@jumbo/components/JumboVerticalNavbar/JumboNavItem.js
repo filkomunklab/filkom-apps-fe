@@ -63,7 +63,8 @@ const JumboNavItem = ({ item, isNested, translate }) => {
               }
             : {}),
         },
-        ...(location.pathname === item.uri
+        ...(location.pathname === item.uri ||
+        location.pathname.includes(item.uri)
           ? {
               color: (theme) => theme.palette.primary.main,
               backgroundColor: (theme) => theme.palette.primary.lowContrast,
