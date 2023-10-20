@@ -46,7 +46,7 @@ const StudentProfile = () => {
             <Grid item xs={12} md={12}>
               <Typography variant="h5">Full Name</Typography>
               <Typography variant="h6" sx={textSyle}>
-                Dhio, Claude
+                Christopher, Darell
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -99,7 +99,7 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Married Status</Typography>
               <Typography variant="h6" sx={textSyle}>
-                Sudah Menikah
+                Belum Menikah
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
