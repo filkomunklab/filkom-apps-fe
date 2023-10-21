@@ -135,9 +135,6 @@ const MenuMahasiswa = () => {
                 Upload Proposal
               </MenuItem>
               <MenuItem onClick={() => setAnchorEl(null)}>
-                Berita Acara Proposal
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorEl(null)}>
                 Upload Revisi Proposal
               </MenuItem>
             </Menu>
@@ -183,10 +180,13 @@ const MenuMahasiswa = () => {
                 Dokumen Skripsi
               </MenuItem>
               <MenuItem onClick={() => setAnchorE2(null)}>
-                Berita Acara Skripsi
+                Dokumen Revisi Skripsi
               </MenuItem>
               <MenuItem onClick={() => setAnchorE2(null)}>
-                Dokumen Revisi Skripsi
+                Arsip Document
+              </MenuItem>
+              <MenuItem onClick={() => setAnchorE2(null)}>
+                Metadata Repository
               </MenuItem>
             </Menu>
           </Div>
