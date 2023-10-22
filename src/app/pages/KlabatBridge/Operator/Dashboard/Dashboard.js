@@ -12,7 +12,9 @@ import {
   Card, 
   CardContent,
   CardMedia,
-  Grid
+  Grid,
+  CardHeader, 
+  Avatar 
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import SchoolIcon from '@mui/icons-material/School';
@@ -30,6 +32,23 @@ import {
   Cell,
  } from 'recharts';
 import petaIndonesia from "./Indonesia.svg"
+import { styled } from "@mui/system";
+
+const filkomStudents = [
+  { icon: <SchoolIcon style={{ fontSize: 40 }}/>, topText: "Total Mahasiswa FILKOM", bottomText: "1,324 Students" },
+  { icon: <SchoolIcon style={{ fontSize: 40 }}/>, topText: "Mahasiswa Informatika", bottomText: "357 Students" },
+  { icon: <SchoolIcon style={{ fontSize: 40 }}/>, topText: "Mahasiswa Sistem Informasi", bottomText: "486 Students" },
+  { icon: <SchoolIcon style={{ fontSize: 40 }}/>, topText: "Mahasiswa Animasi & Desain", bottomText: "165 Students" },
+];
+
+const ResponsiveAvatar = styled(Avatar)(
+  ({ theme }) => ({
+    fontSize: theme.typography.pxToRem(48), // Set initial font size
+    [theme.breakpoints.down("sm")]: {
+      fontSize: theme.typography.pxToRem(36), // Reduce font size on smaller screens
+    },
+  })
+);
 
 const alumniDistribution = [
   { region: 'Jakarta', alumni: 150, percentage: 30 },
@@ -74,100 +93,47 @@ const data = [
   { organization: 'Wiraswasta/Perusahaan sendiri', value: 80, color: '#C317FF' },
   { organization: 'Lainnya', value: 55, color: '#FC76DE' },
 ];
-// const data = [
-//   { organization: 'Pemerintahan', value: 30, color: '#8884d8' },
-//   { organization: 'BUMN/BUMD', value: 45, color: '#82ca9d' },
-//   { organization: 'Multilateral', value: 28, color: '#ffc658' },
-//   { organization: 'Non-profit', value: 60, color: '#ff7300' },
-//   { organization: 'Swasta', value: 15, color: '#0088fe' },
-//   { organization: 'Wiraswasta', value: 80, color: '#00c49f' },
-//   { organization: 'Lainnya', value: 55, color: '#ff5733' },
-// ];
 
-// Function to customize abbreviation for each organization
-const abbreviateName = (organizationName) => {
-  const customAbbreviations = {
-    'Instansi Pemerintahan': 'Org 1',
-    'BUMN/BUMD': 'Org 2',
-    'Institusi/Organisasi Multilateral': 'Org 3',
-    'Organisasi non-profit/Lembaga Swadaya Masyarakat': 'Org 4',
-    'Perusahaan Swasta': 'Org 5',
-    'Wiraswasta/Perusahaan sendiri': 'Org 6',
-    'Lainnya': 'Org 7',
-    // Add more organizations and their custom abbreviations as needed
-  };
-
-  return customAbbreviations[organizationName] || organizationName;
-};
+// bar chart - alumni yang mendapat pekerjaan <12 bulan 
+const dapatKerja = [
+  { month: '2 months', value: 40 },
+  { month: '4 months', value: 65 },
+  { month: '6 months', value: 80 },
+  { month: '8 months', value: 70 },
+  { month: '10 months', value: 30 },
+  { month: '12 months', value: 50 },
+];
 
 const processedData = data.map(item => ({
   ...item,
   fill: item.color,
-  abbreviatedName: abbreviateName(item.organization),
 }));
 
 const Dashboard = () => {
   return (
       <Div >
         <Grid container spacing={5}>
+          {/* 4 cards */}
           <Grid item md={12}>
-            {/* 4 cards */}
-            <Div
-                sx={{
-                    marginBottom:"20px",
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    '& > :not(style)': {
-                        m: 1,
-                        width: 300,
-                        height: 80,
-                        mb: 2,
-                    },
-                }}
-            >
-                <Paper sx={{p: 1.5 }}>
-                    <Box display="flex" alignItems="center">
-                        <SchoolIcon sx={{ fontSize: 40, mr: 2, color: "primary.main" }} />
-                        <Box flexGrow={1}>
-                        <Typography variant="subtitle1" sx={{ fontSize: "14px"}}>Total Mahasiswa FILKOM</Typography>
-                        <Typography variant="body2" sx={{ fontSize: "22px", fontWeight: 500 }}>1,324 Mahasiswa</Typography>
-                        </Box>
-                    </Box>
-                </Paper>
-                <Paper sx={{p: 1.5 }}>
-                    <Box display="flex" alignItems="center">
-                        <SchoolIcon sx={{ fontSize: 40, mr: 2, color: "primary.main" }} />
-                        <Box flexGrow={1}>
-                        <Typography variant="subtitle1" sx={{ fontSize: "14px"}}>Mahasiswa Informatika</Typography>
-                        <Typography variant="body2" sx={{ fontSize: "22px", fontWeight: 500 }}>357 Mahasiswa</Typography>
-                        </Box>
-                    </Box>
-                </Paper>
-                <Paper sx={{p: 1.5 }}>
-                    <Box display="flex" alignItems="center">
-                        <SchoolIcon sx={{ fontSize: 40, mr: 2, color: "primary.main" }} />
-                        <Box flexGrow={1}>
-                        <Typography variant="subtitle1" sx={{ fontSize: "14px"}}>Mahasiswa Sistem Informasi</Typography>
-                        <Typography variant="body2" sx={{ fontSize: "22px", fontWeight: 500 }}>486 Mahasiswa</Typography>
-                        </Box>
-                    </Box>
-                </Paper>
-                <Paper sx={{p: 1.5 }}>
-                    <Box display="flex" alignItems="center">
-                        <SchoolIcon sx={{ fontSize: 40, mr: 2, color: "primary.main" }} />
-                        <Box flexGrow={1}>
-                        <Typography variant="subtitle1" sx={{ fontSize: "14px"}}>Mahasiswa Animasi dan Desain</Typography>
-                        <Typography variant="body2" sx={{ fontSize: "22px", fontWeight: 500 }}>165 Mahasiswa</Typography>
-                        </Box>
-                    </Box>
-                </Paper>
-            </Div>
+             <Grid container spacing={5}>
+              {filkomStudents.map((item, index) => (
+                <Grid item xs={12} sm={6} md={3} key={index}>
+                  <Card sx={{ paddingX: 1 }}>
+                    <CardHeader
+                      avatar={<ResponsiveAvatar sx={{ color: 'primary.main', bgcolor: 'white' }}>{item.icon}</ResponsiveAvatar>}
+                      title={<Typography variant="h6">{item.topText}</Typography>}
+                      subheader={<Typography variant="body2" sx={{ fontSize: "22px", fontWeight: 500 }}>{item.bottomText}</Typography>}
+                    />
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
           </Grid>
 
           {/* Persebaran alumni */}
           <Grid item md={12}>
             <Card sx={{ p: 5}}>
-              <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, textAlign: 'center', mb: 3}}>
+              <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, mb: 3}}>
                 PERESEBARAN ALUMNI FILKOM DI INDONESIA
               </Typography>
               <Div sx={{ display: 'flex', alignItems: 'center' }}>
@@ -216,10 +182,10 @@ const Dashboard = () => {
           {/* Distribusi mahasiswa */}
           <Grid item sm={12} md={6}>
             <Card sx={{ p: 5 }}>
-              <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, textAlign: 'center'}}>
+              <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, marginLeft: "20px"}}>
                 DISTRIBUSI MAHASISWA 
               </Typography>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={400}>
                 <BarChart
                   data={studentsDistribution}
                   margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
@@ -240,10 +206,10 @@ const Dashboard = () => {
           {/* Pie Chart - Jumlah alumni yg telah mengisi TS  */}
           <Grid item xs={12} sm={12} md={6}>
             <Card sx={{ p: 5}}>
-              <Typography variant="h1" sx={{ fontSize: "20px", textAlign: 'center', fontWeight: 500 }}>
+              <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, marginLeft: "20px" }}>
                 JUMLAH ALUMNI YANG TELAH MENGISI KUESIONER
               </Typography>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={400}>
                   <PieChart>
                     <Pie
                       data={pieChartData}
@@ -268,11 +234,10 @@ const Dashboard = () => {
           {/* Bar Chart - Jenis perusahaan tempat alumni bekerja */}
           <Grid item xs={12} md={6}>
             <Card sx={{ p: 5 }}>
-             
-                <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, textAlign: 'center'}}>
-                  Jenis Perusahaan
+                <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, marginLeft: "20px"}}>
+                  JENIS PERUSAHAAN TEMPAT ALUMNI BEKERJA
                 </Typography>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={400}>
                   <BarChart 
                     data={processedData} 
                     margin={{ top: 20, right: 30, bottom: 5 }}
@@ -286,6 +251,33 @@ const Dashboard = () => {
                     <Bar dataKey="value" />
                   </BarChart>
                 </ResponsiveContainer>
+            </Card>
+            
+          </Grid>
+
+          {/* Bar Chart - alumni yang mendapatkan pekerjaan selama <12 bulan */}
+          <Grid item xs={12} md={6}>
+            <Card sx={{ p: 5 }}>
+              <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, marginLeft: "20px"}}>
+                ALUMNI YANG MENDAPATKAN PEKERJAAN SELAMA &lt;12 BULAN
+              </Typography>
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart 
+                  data={dapatKerja} 
+                  margin={{ top: 20, right: 30, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  {/* <Legend/> */}
+                  <Bar dataKey="value" fill="#006AF5" />
+                </BarChart>
+              </ResponsiveContainer>
+              <Typography  ml={5}>
+                <span style={{ fontSize: '1.5em' }}>300 Mahasiswa </span>
+                yang mendapatkan pekerjaan dalam waktu &lt;12 bulan
+              </Typography>
             </Card>
             
           </Grid>
