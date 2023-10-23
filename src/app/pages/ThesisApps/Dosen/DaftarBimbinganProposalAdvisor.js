@@ -41,7 +41,7 @@ const DaftarBimbinganProposalAdvisor = () => {
         <TableCell>
           <Typography
             component={Link}
-            to="/halaman-berikutnya"
+            to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/beranda"
             sx={{
               textDecoration: "none",
               color: "blue",
