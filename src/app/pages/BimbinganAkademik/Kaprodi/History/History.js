@@ -127,7 +127,7 @@ const History = (props) => {
                 size="small"
                 button
                 component={Link}
-                to="activity"
+                to="activity2"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -151,7 +151,8 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Tolong kumpulkan kartu hasil study kalian
+                        Form untuk memasukan Pre-Registration Course telah
+                        dibuka.
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Tidak ada pertemuan tatap muka. Diharapkan semua untuk
@@ -167,9 +168,10 @@ const History = (props) => {
               <Divider component="li" />
 
               <ListItem
+                size="small"
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/activity/"
+                to="activity1"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -208,9 +210,10 @@ const History = (props) => {
               </ListItem>
               <Divider component="li" />
               <ListItem
+                size="small"
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/activity/"
+                to="activity"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -263,9 +266,10 @@ const History = (props) => {
                 </Typography>
               </Box>
               <ListItem
+                size="small"
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/activity/"
+                to="activity3"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -342,7 +346,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/pre-registrationwaiting/"
+                to="pre-registration-rejected"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -366,7 +370,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pre-registrasi Adzana, Shaliha Gracia
+                        Adzana, Shaliha Gracia
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Preregistrasi semester II tahun ajaran 2023/2024
@@ -379,23 +383,10 @@ const History = (props) => {
                 </Box>
               </ListItem>
               <Divider component="li" />
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Sunday, Aug 6, 2023
-                </Typography>
-              </Box>
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/pre-registrationapproved/"
+                to="pre-registration-approved"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -419,36 +410,23 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pre-registrasi Adzana, Shaliha Gracia
+                        Peter, Parker Judith
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
-                        Preregistrasi semester I tahun ajaran 2023/2024
+                        Preregistrasi semester II tahun ajaran 2023/2024
                       </Typography>{" "}
                     </>
                   }
                 />
                 <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Aug 6, 2023" />
+                  <ListItemText secondary="Jan 8, 2024" />
                 </Box>
               </ListItem>
               <Divider component="li" />
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Sunday, Mar 12, 2023
-                </Typography>
-              </Box>
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/pre-registrationrejected/"
+                to="pre-registration-rejected"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -464,6 +442,7 @@ const History = (props) => {
                   }
                   secondary={
                     <>
+                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
@@ -471,16 +450,230 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pre-registrasi Adzana, Shaliha Gracia
+                        Banner, Tony Stark
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
-                        Preregistrasi semester II tahun ajaran 2022/2023
-                      </Typography>
+                        Preregistrasi semester II tahun ajaran 2023/2024
+                      </Typography>{" "}
+                    </>
+                  }
+                />
+                <Box sx={{ marginLeft: "auto" }}>
+                  <ListItemText secondary="Jan 8, 2024" />
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                button
+                component={Link}
+                to="pre-registration-approved"
+                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
+              >
+                <ListItemText
+                  primary={
+                    <Chip
+                      size={"small"}
+                      label={"Pre-registration"}
+                      sx={{
+                        backgroundColor: "rgba(21, 131, 67, 0.1)",
+                        color: "rgba(21, 131, 67, 1)",
+                      }}
+                    />
+                  }
+                  secondary={
+                    <>
+                      {" "}
+                      <Typography
+                        sx={{
+                          color: "rgba(0, 0, 0, 1)",
+                          paddingLeft: "8px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        Shaliha, Gracia Mandag
+                      </Typography>{" "}
+                      <Typography sx={{ paddingLeft: "8px" }}>
+                        Preregistrasi semester II tahun ajaran 2023/2024
+                      </Typography>{" "}
+                    </>
+                  }
+                />
+                <Box sx={{ marginLeft: "auto" }}>
+                  <ListItemText secondary="Jan 8, 2024" />
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+
+              <Box
+                sx={{
+                  height: "50px",
+                  backgroundColor: "rgba(235, 235, 235, 1)",
+                  display: "flex",
+                  alignItems: "center",
+                  paddingLeft: "35px",
+                }}
+              >
+                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
+                  Sunday, Jan 6, 2023
+                </Typography>
+              </Box>
+              <ListItem
+                button
+                component={Link}
+                to="pre-registration-rejected"
+                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
+              >
+                <ListItemText
+                  primary={
+                    <Chip
+                      size={"small"}
+                      label={"Pre-registration"}
+                      sx={{
+                        backgroundColor: "rgba(21, 131, 67, 0.1)",
+                        color: "rgba(21, 131, 67, 1)",
+                      }}
+                    />
+                  }
+                  secondary={
+                    <>
+                      {" "}
+                      <Typography
+                        sx={{
+                          color: "rgba(0, 0, 0, 1)",
+                          paddingLeft: "8px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        Adzana, Shaliha Gracia
+                      </Typography>{" "}
+                      <Typography sx={{ paddingLeft: "8px" }}>
+                        Preregistrasi semester I tahun ajaran 2023/2024
+                      </Typography>{" "}
                     </>
                   }
                 />
                 <Box sx={{ marginLeft: "auto" }}>
                   <ListItemText secondary="Aug 6, 2023" />
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                button
+                component={Link}
+                to="pre-registration-approved"
+                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
+              >
+                <ListItemText
+                  primary={
+                    <Chip
+                      size={"small"}
+                      label={"Pre-registration"}
+                      sx={{
+                        backgroundColor: "rgba(21, 131, 67, 0.1)",
+                        color: "rgba(21, 131, 67, 1)",
+                      }}
+                    />
+                  }
+                  secondary={
+                    <>
+                      {" "}
+                      <Typography
+                        sx={{
+                          color: "rgba(0, 0, 0, 1)",
+                          paddingLeft: "8px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        Banner, Tony Stark
+                      </Typography>{" "}
+                      <Typography sx={{ paddingLeft: "8px" }}>
+                        Preregistrasi semester II tahun ajaran 2023/2024
+                      </Typography>{" "}
+                    </>
+                  }
+                />
+                <Box sx={{ marginLeft: "auto" }}>
+                  <ListItemText secondary="Jan 6, 2024" />
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                button
+                component={Link}
+                to="pre-registration-approved"
+                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
+              >
+                <ListItemText
+                  primary={
+                    <Chip
+                      size={"small"}
+                      label={"Pre-registration"}
+                      sx={{
+                        backgroundColor: "rgba(21, 131, 67, 0.1)",
+                        color: "rgba(21, 131, 67, 1)",
+                      }}
+                    />
+                  }
+                  secondary={
+                    <>
+                      {" "}
+                      <Typography
+                        sx={{
+                          color: "rgba(0, 0, 0, 1)",
+                          paddingLeft: "8px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        Banner, Tony Stark
+                      </Typography>{" "}
+                      <Typography sx={{ paddingLeft: "8px" }}>
+                        Preregistrasi semester II tahun ajaran 2023/2024
+                      </Typography>{" "}
+                    </>
+                  }
+                />
+                <Box sx={{ marginLeft: "auto" }}>
+                  <ListItemText secondary="Jan 6, 2024" />
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                button
+                component={Link}
+                to="pre-registration-rejected"
+                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
+              >
+                <ListItemText
+                  primary={
+                    <Chip
+                      size={"small"}
+                      label={"Pre-registration"}
+                      sx={{
+                        backgroundColor: "rgba(21, 131, 67, 0.1)",
+                        color: "rgba(21, 131, 67, 1)",
+                      }}
+                    />
+                  }
+                  secondary={
+                    <>
+                      {" "}
+                      <Typography
+                        sx={{
+                          color: "rgba(0, 0, 0, 1)",
+                          paddingLeft: "8px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        Banner, Tony Stark
+                      </Typography>{" "}
+                      <Typography sx={{ paddingLeft: "8px" }}>
+                        Preregistrasi semester II tahun ajaran 2023/2024
+                      </Typography>{" "}
+                    </>
+                  }
+                />
+                <Box sx={{ marginLeft: "auto" }}>
+                  <ListItemText secondary="Jan 6, 2024" />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -525,7 +718,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/student-certificate-waiting"
+                to="certificate-approved"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -549,7 +742,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pengumpulan Sertifikat Adzana, Shaliha Gracia
+                        Adzana, Shaliha Gracia
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Seminar "Apa itu IT"
@@ -579,7 +772,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/student-certificate-approved"
+                to="certificate-approved"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -603,7 +796,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pengumpulan Sertifikat Adzana, Shaliha Gracia{" "}
+                        Banner, Tony Stark
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Juara 2 saat mengikuti lomba melukis
@@ -619,7 +812,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/student-certificate-rejected"
+                to="certificate-rejected"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -643,7 +836,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pengumpulan Sertifikat Adzana, Shaliha Gracia{" "}
+                        Adzana, Shaliha Gracia{" "}
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Menang lomba desain prototype
@@ -659,7 +852,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/student-certificate-approved"
+                to="certificate-approved"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -683,7 +876,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pengumpulan Sertifikat Adzana, Shaliha Gracia{" "}
+                        Banner, Tony Stark
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Juara 2 saat mengikuti lomba melukis
@@ -737,7 +930,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/grade-waiting"
+                to="grade-rejected"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -761,7 +954,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pemasukan Nilai Adzana, Shaliha Gracia{" "}
+                        Tony, Stark Banner
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Semester 4
@@ -792,7 +985,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/grade-approved"
+                to="grade-approved"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -816,7 +1009,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pemasukan Nilai Adzana, Shaliha Gracia{" "}
+                        Adzana, Shaliha Gracia{" "}
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Semester 3
@@ -870,7 +1063,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/consultationWaiting"
+                to="consultation"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -894,7 +1087,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Adzana, Shaliha Gracia
+                        Banner, Tony Stark
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Academic
@@ -910,7 +1103,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/consultationOnProcess"
+                to="consultation"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -965,7 +1158,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/consultationComplete"
+                to="consultation"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -989,7 +1182,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Adzana, Shaliha Gracia{" "}
+                        Banner, Tony Stark
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Non-Academic
@@ -1005,7 +1198,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/consultationComplete"
+                to="consultation"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -1045,7 +1238,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/consultationComplete"
+                to="consultation"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -1069,7 +1262,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Adzana, Shaliha Gracia{" "}
+                        Banner, Tony Stark
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Academic
