@@ -78,7 +78,7 @@ const MenuMahasiswa = () => {
             }}
           ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="#">
+            <Link to="/konsultasi">
               <Button
                 sx={{
                   // width: "130px",
