@@ -10,7 +10,6 @@ import MetaDataRepository from "app/pages/ThesisApps/Mahasiswa/MetaDataRepositor
 import PengajuanJudul from "app/pages/ThesisApps/Mahasiswa/PengajuanJudul";
 import PengajuanJudulDiterima from "app/pages/ThesisApps/Mahasiswa/PengajuanJudulDiterima";
 import BerandaPengajuanSkripsi from "app/pages/ThesisApps/Mahasiswa/BerandaPengajuanSkripsi";
-import Konsultasi from "app/pages/ThesisApps/Mahasiswa/Konsultasi";
 import UploadProposal from "app/pages/ThesisApps/Mahasiswa/UploadProposal";
 import UploadRevisiSkripsi from "app/pages/ThesisApps/Mahasiswa/UploadRevisiSkripsi";
 
@@ -37,7 +36,6 @@ const mahasiswaRoutes = [
     path: "/sistem-informasi-skripsi/daftar-pengajuan/pengajuan-judul-diterima",
     element: <Page component={PengajuanJudulDiterima} />,
   },
-
 ];
 
 export default mahasiswaRoutes;
