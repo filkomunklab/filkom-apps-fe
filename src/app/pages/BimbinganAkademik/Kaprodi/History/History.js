@@ -127,7 +127,7 @@ const History = (props) => {
                 size="small"
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/activity/"
+                to="activity"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
