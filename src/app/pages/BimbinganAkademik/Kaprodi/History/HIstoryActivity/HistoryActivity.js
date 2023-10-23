@@ -40,22 +40,22 @@ const ViewActivity = () => {
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Stack spacing={2} sx={{ paddingTop: 3 }}>
-            <Grid sx={{ display: "flex", direction: "row" }}>
+          <Stack spacing={2} sx={{ paddingTop: 1 }}>
+            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
               <Typography>Title</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 1 }}>
-                PENGUMPULAN KARTU RENCANA STUDI SEMESTER GANJIL TAHUN 2022/2023
-                GELOMBANG 1
+                Pengumpulan Krtu Rencana Studi Semester Ganjil Tahun Ajaran
+                2022/2023 Gelombang 1
               </Typography>
             </Paper>
           </Stack>
         </Grid>
         <Grid item xs={12}>
           <Stack spacing={2}>
-            <Grid sx={{ display: "flex", direction: "row" }}>
+            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
               <Typography>Descriptions</Typography>
             </Grid>
 
@@ -74,9 +74,9 @@ const ViewActivity = () => {
           </Stack>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Stack spacing={2}>
-            <Grid sx={{ display: "flex", direction: "row" }}>
+            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
               <Typography>Due Date</Typography>
             </Grid>
 
@@ -88,15 +88,57 @@ const ViewActivity = () => {
           </Stack>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Stack spacing={2}>
-            <Grid sx={{ display: "flex", direction: "row" }}>
+            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
               <Typography>Clock (optional)</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
                 18:00
+              </Typography>
+            </Paper>
+          </Stack>
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Stack spacing={2}>
+            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
+              <Typography>Form Attendance</Typography>
+            </Grid>
+
+            <Paper elevation={0} variant="outlined" fullWidth>
+              <Typography variant="body1" sx={{ p: 2 }}>
+                No
+              </Typography>
+            </Paper>
+          </Stack>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Stack spacing={2}>
+            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
+              <Typography>For</Typography>
+            </Grid>
+
+            <Paper elevation={0} variant="outlined" fullWidth>
+              <Typography variant="body1" sx={{ p: 2 }}>
+                Mahasiswa Fakultas
+              </Typography>
+            </Paper>
+          </Stack>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Stack spacing={2}>
+            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
+              <Typography>Student</Typography>
+            </Grid>
+
+            <Paper elevation={0} variant="outlined" fullWidth>
+              <Typography variant="body1" sx={{ p: 2 }}>
+                All Student
               </Typography>
             </Paper>
           </Stack>
