@@ -21,6 +21,16 @@ import CurrentActivities from "app/pages/BimbinganAkademik/Kaprodi/RecentActivit
 import ViewActivity from "app/pages/BimbinganAkademik/Kaprodi/RecentActivities/ViewActivity/ViewActivity";
 import ViewConsultation from "app/pages/BimbinganAkademik/Kaprodi/RecentActivities/ViewConsultation/ViewConsultation";
 import HistoryActivity from "app/pages/BimbinganAkademik/Kaprodi/History/HIstoryActivity/HistoryActivity";
+import HistoryActivity1 from "app/pages/BimbinganAkademik/Kaprodi/History/HIstoryActivity/HistoryActivity1";
+import HistoryActivity2 from "app/pages/BimbinganAkademik/Kaprodi/History/HIstoryActivity/HistoryActivity2";
+import HistoryActivity3 from "app/pages/BimbinganAkademik/Kaprodi/History/HIstoryActivity/HistoryActivity3";
+import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/Kaprodi/History/HistoryPreRegis/PreRegistrationApproved";
+import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/Kaprodi/History/HistoryPreRegis/PreRegistrationRejected";
+import HistoryCertificateApproved from "app/pages/BimbinganAkademik/Kaprodi/History/HistoryCertificate/CertificateApproved";
+import HistoryCertificateRejected from "app/pages/BimbinganAkademik/Kaprodi/History/HistoryCertificate/CertificateRejected";
+import HistoryGradeApproved from "app/pages/BimbinganAkademik/Kaprodi/History/HistoryGrade/ApprovedHistoryGrade";
+import HistoryGradeRejected from "app/pages/BimbinganAkademik/Kaprodi/History/HistoryGrade/RejectedHistoryGrade";
+import HistoryConsultationComplete from "app/pages/BimbinganAkademik/Kaprodi/History/HistoryConsultation/ConsultationComplete";
 
 const kepalaProgramStudiRoutes = [
   {
@@ -90,20 +100,44 @@ const kepalaProgramStudiRoutes = [
     element: <Page component={HistoryActivity} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/history",
-    element: <Page component={History} />,
+    path: "/bimbingan-akademik/kaprodi/history/activity1",
+    element: <Page component={HistoryActivity1} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/history",
-    element: <Page component={History} />,
+    path: "/bimbingan-akademik/kaprodi/history/activity2",
+    element: <Page component={HistoryActivity2} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/history",
-    element: <Page component={History} />,
+    path: "/bimbingan-akademik/kaprodi/history/activity3",
+    element: <Page component={HistoryActivity3} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/history",
-    element: <Page component={History} />,
+    path: "/bimbingan-akademik/kaprodi/history/pre-registration-approved",
+    element: <Page component={HistoryPreRegistrationApproved} />,
+  },
+  {
+    path: "/bimbingan-akademik/kaprodi/history/pre-registration-rejected",
+    element: <Page component={HistoryPreRegistrationRejected} />,
+  },
+  {
+    path: "/bimbingan-akademik/kaprodi/history/certificate-approved",
+    element: <Page component={HistoryCertificateApproved} />,
+  },
+  {
+    path: "/bimbingan-akademik/kaprodi/history/certificate-rejected",
+    element: <Page component={HistoryCertificateRejected} />,
+  },
+  {
+    path: "/bimbingan-akademik/kaprodi/history/grade-approved",
+    element: <Page component={HistoryGradeApproved} />,
+  },
+  {
+    path: "/bimbingan-akademik/kaprodi/history/grade-rejected",
+    element: <Page component={HistoryGradeRejected} />,
+  },
+  {
+    path: "/bimbingan-akademik/kaprodi/history/consultation",
+    element: <Page component={HistoryConsultationComplete} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/add-activity",

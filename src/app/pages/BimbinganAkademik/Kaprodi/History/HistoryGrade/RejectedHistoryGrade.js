@@ -14,7 +14,7 @@ import {
   Stack,
   Paper,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -96,15 +96,17 @@ const TableItem = ({ data }) => (
 );
 
 const RejectedHistoryGrade = () => {
+  const navigate = useNavigate();
+
   const handleClick = (event) => {
     event.preventDefault();
+    navigate(-1);
   };
-
   return (
     <div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/history">History</StyledLink>
+          <StyledLink>History</StyledLink>
           <Typography color="text.primary">Grade</Typography>
         </Breadcrumbs>
       </div>

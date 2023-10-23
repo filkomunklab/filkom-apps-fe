@@ -8,7 +8,7 @@ import {
   Paper,
 } from "@mui/material";
 import { format } from "date-fns";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -19,8 +19,11 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const ConsultationComplete = () => {
+  const navigate = useNavigate();
+
   const handleClick = (event) => {
     event.preventDefault();
+    navigate(-1);
   };
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileName, setSelectedFileName] = useState("");
@@ -47,7 +50,7 @@ const ConsultationComplete = () => {
     <div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/history">History</StyledLink>
+          <StyledLink>History</StyledLink>
           <Typography color="text.primary">Consultation</Typography>
         </Breadcrumbs>
       </div>
