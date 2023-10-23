@@ -26,6 +26,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
+import Fetch from "../Fetch";
 
 function DaftarMahasiswa() {
   const [judulPengajuan, setJudulPengajuan] = useState([]);
@@ -34,7 +35,7 @@ function DaftarMahasiswa() {
   const [inputCount, setInputCount] = useState(1);
   const [open, setOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
-  const [options] = useState(["Option 1", "Option 2", "Option 3"]);
+  const [options, setOptions] = useState([""]);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [Advisor, setAdvisor] = useState("");
   const [CoAdvisor1, setCoAdvisor1] = useState("");
@@ -54,8 +55,11 @@ function DaftarMahasiswa() {
     }
   };
 
-  const handleClickOpen = () => {
+  const handleClickOpen = async () => {
     setOpen(true);
+
+    // const dataMahasiswa = await Fetch("/list-mahasiswa");
+    // setOptions(dataMahasiswa.data);
   };
 
   const handleClose = () => {
@@ -63,7 +67,7 @@ function DaftarMahasiswa() {
     setJudulError(""); // Bersihkan pesan error ketika dialog ditutup
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!judulPengajuanBaru) {
       // Jika judul kosong, tampilkan pesan error
       setJudulError("Judul harus diisi");
@@ -74,6 +78,13 @@ function DaftarMahasiswa() {
       // Buka popup konfirmasi
       setIsConfirmDialogOpen(true);
     }
+
+    // const payload = {
+    //   nama_parnter: selectedOption,
+    //   judul: judulPengajuan,
+    // };
+    // const res = await Fetch("/list-mahasiswa");
+    // console.log("res", res);
   };
 
   const handleCloseConfirmDialog = () => {
