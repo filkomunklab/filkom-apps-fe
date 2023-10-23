@@ -15,6 +15,12 @@ import StudentGradeDashboard from "app/pages/BimbinganAkademik/Dekan/StudentInfo
 import CertificateDetail from "app/pages/BimbinganAkademik/Dekan/StudentInformation/StudentCertificate/CertificateDetail";
 import ReviewPreRegistration from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/ReviewPreRegistration";
 import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/ReviewPreRegistration/ReviewPreRegistrationStudent";
+import ReviewCertificate from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/ReviewCertificate/ReviewCertificate";
+import ReviewCertificateStudent from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/ReviewCertificate/ReviewCertificateStudent";
+import ReviewGrade from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/ReviewGrade";
+import ReviewGradeStudent from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/ReviewGrade/ReviewGradeStudent";
+import StudentConsultation from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/StudentConsultation";
+import ReplyConsultation from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/StudentConsultation/ReplyConsultation/Consultation";
 import SupervisorInformation from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation";
 import SupervisorInformatics from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation/Informatics";
 import SupervisorInformationSystem from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation/InformationSystem";
@@ -98,6 +104,30 @@ const dekanRoutes = [
   {
     path: "/bimbingan-akademik/dekan/review-activities/pre-registration/:id",
     element: <Page component={ReviewPreRegistrationStudent} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/review-activities/certificate",
+    element: <Page component={ReviewCertificate} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/review-activities/certificate/:id",
+    element: <Page component={ReviewCertificateStudent} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/review-activities/grade",
+    element: <Page component={ReviewGrade} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/review-activities/grade/:id",
+    element: <Page component={ReviewGradeStudent} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/review-activities/consultation",
+    element: <Page component={StudentConsultation} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/review-activities/consultation/:id",
+    element: <Page component={ReplyConsultation} />,
   },
   {
     path: "/bimbingan-akademik/dekan/supervisor-information",
