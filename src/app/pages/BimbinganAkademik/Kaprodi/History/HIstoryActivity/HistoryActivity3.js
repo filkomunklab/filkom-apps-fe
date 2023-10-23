@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Stack,
@@ -6,10 +6,6 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
   Paper,
-  Checkbox,
-  Modal,
-  Button,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -21,11 +17,12 @@ import {
   ListSubheader,
   MenuItem,
   Select,
+  Switch,
+  FormControlLabel,
+  FormGroup,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import { Link, useNavigate } from "react-router-dom";
 import SearchGlobal from "app/shared/SearchGlobal";
-
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -35,40 +32,12 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  padding: 24,
-  backgroundColor: "white",
-  borderRadius: 10,
-  maxWidth: "90%",
-  "@media (max-width: 768px)": {
-    maxWidth: "80%",
-  },
-  "@media (max-width: 480px)": {
-    maxWidth: "80%",
-  },
-};
-
-const style2 = {
-  position: "fixed",
-  top: "15%",
-  right: "2%",
-  width: 400,
-  padding: 24,
-  backgroundColor: "white",
-  borderRadius: 10,
-};
-
 const studentsData = Array.from({ length: 29 }, (_, index) => ({
   id: index + 1,
   name: "Adzana, Shaliha Gracia",
   nim: "105022010006",
   prodi: "Informatika",
+  status: "Submitted",
 }));
 
 const yearList = [
@@ -117,54 +86,16 @@ const prodiList = [
   },
 ];
 
-const ViewActivity = () => {
-  const [selectedAll, setSelectedAll] = useState(false);
-  const [selectedStudents, setSelectedStudents] = useState([]);
+const ViewActivity3 = () => {
+  const navigate = useNavigate();
+
   const [filter, setFilter] = useState([]);
   const [showLabel, setShowLabel] = useState(true);
-
-  const handleSelectAll = () => {
-    setSelectedAll(!selectedAll);
-    setSelectedStudents(
-      selectedAll ? [] : studentsData.map((student) => student.id)
-    );
-  };
-
-  const handleSelectStudent = (studentId) => {
-    const updatedSelectedStudents = selectedStudents.includes(studentId)
-      ? selectedStudents.filter((id) => id !== studentId)
-      : [...selectedStudents, studentId];
-
-    setSelectedAll(updatedSelectedStudents.length === studentsData.length);
-    setSelectedStudents(updatedSelectedStudents);
-  };
-
-  const navigate = useNavigate();
 
   const handleClick = (event) => {
     event.preventDefault();
     navigate(-1);
   };
-
-  const [openFirstModal, setOpenFirstModal] = React.useState(false);
-  const [openSecondModal, setOpenSecondModal] = React.useState(false);
-  const handleOpenFirstModal = () => setOpenFirstModal(true);
-  const handleCloseFirstModal = () => setOpenFirstModal(false);
-  const handleOpenSecondModal = () => setOpenSecondModal(true);
-  const handleCloseSecondModal = () => setOpenSecondModal(false);
-  const handleSubmitFirstModal = () => {
-    handleCloseFirstModal();
-    handleOpenSecondModal();
-  };
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleCloseSecondModal();
-    }, 5000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [handleOpenSecondModal]);
 
   return (
     <div>
@@ -178,10 +109,11 @@ const ViewActivity = () => {
         sx={{ fontSize: "24px", fontWeight: 500, paddingTop: "20px" }}
       >
         Activity
-      </Typography>{" "}
+      </Typography>
+
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Stack spacing={2} sx={{ paddingTop: 3 }}>
+          <Stack spacing={2} sx={{ paddingTop: 1 }}>
             <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
               <Typography>Title</Typography>
             </Grid>
@@ -251,7 +183,7 @@ const ViewActivity = () => {
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                Yes
+                No
               </Typography>
             </Paper>
           </Stack>
@@ -285,133 +217,19 @@ const ViewActivity = () => {
           </Stack>
         </Grid>
       </Grid>
-      <Grid
-        sx={{
-          padding: 2,
-          paddingTop: "30px",
-          display: "flex",
-          justifyContent: "flex-end",
-        }}
-      >
-        <Button
-          onClick={handleOpenFirstModal}
-          sx={{
-            backgroundColor: "#006AF5",
-            borderRadius: "24px",
-            color: "white",
-            whiteSpace: "nowrap",
-            minWidth: "132px",
-            fontSize: "12px",
-            padding: "10px",
-            gap: "6px",
 
-            "&:hover": {
-              backgroundColor: "#025ED8",
-            },
-          }}
-        >
-          Submit
-        </Button>
+      <Grid container paddingTop={4}>
+        <Grid item xs={6} md={3}>
+          <FormGroup sx={{ paddingLeft: "9px" }}>
+            <FormControlLabel
+              control={<Switch defaultChecked size="small" color="primary" />}
+              label="Add Grade Submission Page"
+            />
+          </FormGroup>
+        </Grid>
       </Grid>
-      <Modal
-        open={openFirstModal}
-        onClose={handleCloseFirstModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div style={style}>
-          <Typography
-            id="modal-modal-title"
-            variant="h4"
-            component="h2"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            Send Certificate?
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            style={{ marginTop: "16px", marginBottom: "20px" }}
-          >
-            Are you sure you want to submit this? Forms that have been submitted
-            cannot be edited again.
-          </Typography>
 
-          <Grid container spacing={1} justifyContent="flex-end">
-            <Grid item>
-              <Button
-                onClick={handleCloseFirstModal}
-                sx={{
-                  backgroundColor: "white",
-                  borderRadius: "5px",
-                  color: "black",
-                  whiteSpace: "nowrap",
-                  "&:hover": {
-                    backgroundColor: "lightgrey",
-                  },
-                }}
-              >
-                Cancel
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleSubmitFirstModal}
-                sx={{
-                  backgroundColor: "#006AF5",
-                  borderRadius: "5px",
-                  color: "white",
-                  whiteSpace: "nowrap",
-                  "&:hover": {
-                    backgroundColor: "#025ED8",
-                  },
-                }}
-              >
-                Submit
-              </Button>
-            </Grid>
-          </Grid>
-        </div>
-      </Modal>
-      <Modal
-        open={openSecondModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div style={style2}>
-          <IconButton
-            edge="end"
-            color="#D9D9D9"
-            onClick={handleCloseSecondModal}
-            aria-label="close"
-            sx={{
-              position: "absolute",
-              top: "10px",
-              right: "20px",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <Typography
-            id="modal-modal-title"
-            variant="h4"
-            component="h2"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            Successful Submission!
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            style={{ marginTop: "16px", marginBottom: "20px" }}
-          >
-            You have successfully preregistered for the course.
-          </Typography>
-        </div>
-      </Modal>
-      <Grid container spacing={2} marginTop={1}>
+      <Grid container spacing={2} marginTop={6}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={7}>
           <Typography sx={{ fontSize: "24px", fontWeight: 400 }}>
             Attendance
@@ -511,9 +329,7 @@ const ViewActivity = () => {
                 <TableCell>Student Name</TableCell>
                 <TableCell>NIM</TableCell>
                 <TableCell>Prodi</TableCell>
-                <TableCell>
-                  <Checkbox checked={selectedAll} onChange={handleSelectAll} />
-                </TableCell>
+                <TableCell>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -523,49 +339,15 @@ const ViewActivity = () => {
                   <TableCell sx={{ width: "190px" }}>{student.name}</TableCell>
                   <TableCell sx={{ width: "80px" }}>{student.nim}</TableCell>
                   <TableCell sx={{ width: "80px" }}>{student.prodi}</TableCell>
-                  <TableCell sx={{ width: "40px" }}>
-                    <Checkbox
-                      checked={selectedStudents.includes(student.id)}
-                      onChange={() => handleSelectStudent(student.id)}
-                    />
-                  </TableCell>
+                  <TableCell sx={{ width: "40px" }}>{student.status}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Grid>
-      <Grid
-        sx={{
-          padding: 2,
-          paddingTop: "30px",
-          display: "flex",
-          justifyContent: "flex-end",
-          paddingBottom: "60px",
-        }}
-      >
-        <Button
-          onClick={handleOpenFirstModal}
-          sx={{
-            backgroundColor: "#006AF5",
-            borderRadius: "24px",
-            color: "white",
-            whiteSpace: "nowrap",
-            minWidth: "132px",
-            fontSize: "12px",
-            padding: "10px",
-            gap: "6px",
-
-            "&:hover": {
-              backgroundColor: "#025ED8",
-            },
-          }}
-        >
-          Submit Attendance
-        </Button>
-      </Grid>
     </div>
   );
 };
 
-export default ViewActivity;
+export default ViewActivity3;
