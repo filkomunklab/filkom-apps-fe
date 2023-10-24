@@ -23,10 +23,30 @@ import {
   FormControlLabel,
   FormControl,
   InputLabel,
+  Paper,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
-import Fetch from "../Fetch";
+import { pdfjs } from "react-pdf";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
+// View Document pengajuan judul
+const PDFViewerPengajuanJudul = ({ pengajuanJudulFile }) => {
+  const viewPDFPengajuanJudul = () => {
+    // Buat URL objek untuk file PDF
+    const pdfURL = URL.createObjectURL(pengajuanJudulFile);
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span onClick={viewPDFPengajuanJudul}>View</span>
+    </div>
+  );
+};
 
 function DaftarPengajuan() {
   const [judulPengajuan, setJudulPengajuan] = useState([]);
@@ -35,12 +55,54 @@ function DaftarPengajuan() {
   const [inputCount, setInputCount] = useState(1);
   const [open, setOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
-  const [options, setOptions] = useState([""]);
+  const [options, setOptions] = useState(["Option 1", "Option 2", "Option 3"]);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [Advisor, setAdvisor] = useState("");
   const [CoAdvisor1, setCoAdvisor1] = useState("");
   const [CoAdvisor2, setCoAdvisor2] = useState("");
   const [judulError, setJudulError] = useState(""); // State untuk pesan error judul
+
+  const [pengajuanJudulFile, setPengajuanJudulFile] = useState(null);
+  const [selectedPengajuanJudulFileName, setSelectedPengajuanJudulFileName] =
+    useState("");
+  const [pengajuanJudulUploadedFiles, setPengajuanJudulUploadedFiles] =
+    useState([]);
+  // Tambahkan state untuk melacak apakah file pembayaran telah diunggah
+  const [isPaymentUploaded, setIsPaymentUploaded] = useState(false);
+
+  const onPengajuanJudulFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      if (pengajuanJudulUploadedFiles.length === 0) {
+        setPengajuanJudulFile(file);
+        setSelectedPengajuanJudulFileName(file.name);
+
+        // Tambahkan data file baru ke state paymentUploadedFiles
+        const newFileData = {
+          name: file.name,
+          date: new Date().toLocaleDateString(),
+          size: file.size,
+        };
+
+        setPengajuanJudulUploadedFiles([newFileData]);
+        // Set isPaymentUploaded menjadi true
+        setIsPaymentUploaded(true);
+      } else {
+        // alert(
+        //   "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
+        // );
+      }
+    }
+  };
+
+  // Fungsi untuk menghapus file Pengajuan Judul
+  const handleDeletePengajuanJudulFile = (index) => {
+    const updatedFiles = [...pengajuanJudulUploadedFiles];
+    updatedFiles.splice(index, 1);
+    setPengajuanJudulUploadedFiles(updatedFiles);
+    setPengajuanJudulFile(null);
+    setSelectedPengajuanJudulFileName("");
+  };
 
   const handleSelectChange = (e, index) => {
     const newSelectedOptions = [...selectedOptions];
@@ -57,9 +119,6 @@ function DaftarPengajuan() {
 
   const handleClickOpen = async () => {
     setOpen(true);
-
-    // const dataMahasiswa = await Fetch("/list-mahasiswa");
-    // setOptions(dataMahasiswa.data);
   };
 
   const handleClose = () => {
@@ -103,6 +162,16 @@ function DaftarPengajuan() {
 
     // Reset judulPengajuanBaru setelah judul berhasil diajukan
     setJudulPengajuanBaru("");
+
+    // Reset status isPaymentUploaded menjadi false
+    setIsPaymentUploaded(false);
+
+    // Reset file pembayaran dan nama file
+    setPengajuanJudulFile(null);
+    setSelectedPengajuanJudulFileName("");
+
+    // Bersihkan daftar file pembayaran yang telah diunggah
+    setPengajuanJudulUploadedFiles([]);
   };
 
   const handleAdvisorChange = (e) => {
@@ -188,7 +257,7 @@ function DaftarPengajuan() {
                 <TableCell>
                   <Link
                     href="#"
-                    to="./BerandaMahasiswa.js"
+                    to="/sistem-informasi-skripsi/daftar-pengajuan/beranda"
                     style={{
                       textDecoration: "none",
                       color: "blue",
@@ -292,114 +361,147 @@ function DaftarPengajuan() {
               />
               {judulError && <p style={{ color: "red" }}>{judulError}</p>}
             </Div>
-            <Div>
-              <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-                Latar Belakang
-              </DialogContentText>
-              <TextareaAutosize
-                aria-label="minimum height"
-                minRows={3}
-                placeholder="Enter Latar Belakang"
-                style={{
-                  width: "100%",
-                  height: 108,
-                  marginBottom: "25px",
-                  display: "block",
-                  resize: "vertical",
-                }}
-              />
-            </Div>
-
-            <Div>
-              <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-                Rumusan Masalah
-              </DialogContentText>
-              <TextareaAutosize
-                aria-label="minimum height"
-                minRows={3}
-                placeholder="Enter Rumusan Masalah"
-                style={{
-                  width: "100%",
-                  height: 108,
-                  marginBottom: "25px",
-                  display: "block",
-                  resize: "vertical",
-                }}
-              />
-            </Div>
-
-            <Div>
-              <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-                Tujuan Penelitian
-              </DialogContentText>
-              <TextareaAutosize
-                aria-label="minimum height"
-                minRows={3}
-                placeholder="Enter Tujuan"
-                style={{
-                  width: "100%",
-                  height: 108,
-                  marginBottom: "25px",
-                  display: "block",
-                  resize: "vertical",
-                }}
-              />
-            </Div>
-
-            <Div>
-              <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-                Manfaat Penelitian
-              </DialogContentText>
-              <TextareaAutosize
-                aria-label="minimum height"
-                minRows={3}
-                placeholder="Enter Manfaat"
-                style={{
-                  width: "100%",
-                  height: 108,
-                  marginBottom: "25px",
-                  display: "block",
-                  resize: "vertical",
-                }}
-              />
-            </Div>
-
-            <Div>
-              <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-                Cakupan Penelitian
-              </DialogContentText>
-              <TextareaAutosize
-                aria-label="minimum height"
-                minRows={3}
-                placeholder="Enter Cakupan"
-                style={{
-                  width: "100%",
-                  height: 108,
-                  marginBottom: "25px",
-                  display: "block",
-                  resize: "vertical",
-                }}
-              />
-            </Div>
-
-            <Div>
-              <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-                Batasan Penelitian
-              </DialogContentText>
-              <TextareaAutosize
-                aria-label="minimum height"
-                minRows={3}
-                placeholder="Enter Batasan"
-                style={{
-                  width: "100%",
-                  height: 108,
-                  marginBottom: "25px",
-                  display: "block",
-                  resize: "vertical",
-                }}
-              />
-            </Div>
             {/* TextArea End */}
+
+            {/* Upload Pengajuan Judul Start */}
+            <Div sx={{ display: "flex", marginBottom: "20px" }}>
+              <Button
+                variant="contained"
+                component="label"
+                sx={{
+                  textTransform: "none",
+                  background: "#006AF5",
+                  color: "white",
+                  fontSize: "10px",
+                  borderRadius: "6px 0 0 6px",
+                  padding: "6px 12px",
+                  width: "80px",
+                  height: "30px",
+                }}
+              >
+                <input
+                  type="file"
+                  accept=".pdf"
+                  onChange={onPengajuanJudulFileChange}
+                  style={{ display: "none" }}
+                />
+                Pilih File
+              </Button>
+              <input
+                style={{
+                  height: "30px",
+                  border: "1px solid #ccc",
+                  width: "350px",
+                  borderRadius: "0 6px 6px 0",
+                  fontSize: "10px",
+                }}
+                type="text"
+                id="pengajuanJudulFilename"
+                autoComplete="off"
+                disabled
+                readOnly
+                value={selectedPengajuanJudulFileName || "No file uploaded"}
+              />
+            </Div>
+            {/* UPload Pengajuan Judul End */}
+            {/* Table Upload Pengajuan Judul Start*/}
+            <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
+              <Table>
+                <TableHead sx={{ background: "#F5F5F5" }}>
+                  <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                    <TableCell
+                      sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
+                    >
+                      Nomor
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
+                    >
+                      Nama File
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                    >
+                      Tanggal
+                    </TableCell>
+                    <TableCell
+                      sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                    >
+                      Ukuran
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontSize: "12px",
+                        padding: "11px",
+                        textAlign: "center",
+                        width: "12%",
+                      }}
+                    >
+                      Action
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {pengajuanJudulUploadedFiles.map((file, index) => (
+                    <TableRow key={index}>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {index + 1}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {file.name}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {file.date}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {file.size} bytes
+                      </TableCell>
+                      <TableCell>
+                        <Div sx={{ display: "flex" }}>
+                          <span
+                            style={{
+                              textDecoration: "none",
+                              cursor: "pointer",
+                              color: "blue",
+                              fontSize: "12px",
+                            }}
+                          >
+                            {pengajuanJudulFile && (
+                              <PDFViewerPengajuanJudul
+                                pengajuanJudulFile={pengajuanJudulFile}
+                              />
+                            )}
+                          </span>
+                          <Div
+                            style={{
+                              margin: "0 5px", // Margin di sekitar garis vertikal
+                              color: "#E0E0E0",
+                            }}
+                          >
+                            |
+                          </Div>
+                          <span
+                            style={{
+                              textDecoration: "none",
+                              cursor: "pointer",
+                              color: "red",
+                              fontSize: "12px",
+                            }}
+                            onClick={() =>
+                              handleDeletePengajuanJudulFile(index)
+                            }
+                          >
+                            Delete
+                          </span>
+                        </Div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            {/* Table Upload Pengajuan Judul End*/}
+
             {/* Select Dosen Pembimbing Start */}
             <Div sx={{ display: "flex", marginBottom: "25px" }}>
               <FormControl fullWidth size="small">
