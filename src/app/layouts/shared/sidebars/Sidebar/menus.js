@@ -39,6 +39,47 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import ScheduleTwoToneIcon from "@mui/icons-material/ScheduleTwoTone";
 
+// Alumni
+// const menus = [
+//   {
+//     label: "Klabat Bridge",
+//     type: "section",
+//     children: [
+//       {
+//         label: "Dafter Alumni",
+//         type: "nav-item",
+//         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+//         uri: "/klabat-bridge/daftar-alumni",
+//       },
+//       {
+//         label: "Grafik Alumni",
+//         type: "nav-item",
+//         icon: <PublicIcon sx={{ fontSize: 20 }} />,
+//         uri: "/klabat-bridge/grafik-alumni",
+//       },
+//     ],
+//   },
+//   {
+//     label: "Bimbingan Akademik",
+//     type: "section",
+//     children: [
+//       {
+//         label: "Panduan Kurikulum",
+//         type: "nav-item",
+//         icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+//         uri: "/bimbingan-akademik/panduan-kurikulum",
+//       },
+//       {
+//         label: "Grafik Alumni",
+//         type: "nav-item",
+//         icon: <PublicIcon sx={{ fontSize: 20 }} />,
+//         uri: "/klabat-bridge/grafik-alumni",
+//       },
+//     ],
+//   },
+// ];
+
+// // Mahasiswa Menu System Informasi Skripsi
 // // Menu Mahasiswa
 // const menus = [
 //   {
@@ -321,7 +362,7 @@ const menus = [
 //   },
 // ];
 
-// Menu Sekretaris
+// // Menu Sekretaris
 // const menus = [
 //   {
 //     label: "Sistem Informasi Skripsi",
@@ -959,6 +1000,7 @@ export const dekanMenus = [
   },
 ];
 
+export default menus;
 export const dosenMenus = [
   {
     label: "Bimbingan Akademik",
