@@ -1,13 +1,14 @@
 import Div from "@jumbo/shared/Div";
+import { Typography } from "@mui/material";
 import React from "react";
 
 const Riwayatlog = () => {
   return (
-    <Div>
+    <Div sx={{ width: "100%" }}>
       {/* Riwayat Log Start */}
       <Div
         sx={{
-          width: "320px",
+          width: "100%",
           height: "500px",
           borderRadius: "6px",
           border: "1px solid rgba(26, 56, 96, 0.10)",
@@ -22,7 +23,7 @@ const Riwayatlog = () => {
       <Div
         sx={{
           display: "flex",
-          width: "320px",
+          width: "100%",
           flexDirection: "column",
           alignItems: "flex-start",
           borderRadius: "6px",
@@ -34,105 +35,114 @@ const Riwayatlog = () => {
         <Div
           sx={{
             display: "flex",
-            width: "480px",
+            width: "100%",
             alignItems: "flex-start",
           }}
         >
           <Div
+            variant="subtitle2"
             sx={{
               display: "flex",
-              width: "150px",
-              padding: "14px 16px",
+              width: "120px",
+              padding: "16px 16px",
               alignItems: "center",
-              gap: 2,
-              flexShrink: "0",
-              alignSelf: "stretch",
               background: "#F5F5F5",
             }}
           >
-            Advisor
+            <Typography
+              variant="subtitle2"
+              gutterBottom
+              sx={{ fontSize: "12px" }}
+            >
+              Advisor
+            </Typography>
           </Div>
           <Div
             sx={{
               display: "flex",
-              padding: "14px 16px",
+              padding: "10px 16px",
               alignItems: "flex-start",
-              gap: 2,
-              flex: "1 0 0",
-              alignSelf: "stretch",
             }}
           >
-            -
+            <Typography sx={{ fontSize: "12px" }}>
+              Oktoverano H. Lengkong, SKom, MDs, MM
+            </Typography>
           </Div>
         </Div>
         {/* Co-Advisor 1*/}
         <Div
           sx={{
             display: "flex",
-            width: "480px",
+            width: "100%",
             alignItems: "flex-start",
           }}
         >
           <Div
+            variant="subtitle2"
             sx={{
               display: "flex",
-              width: "150px",
+              width: "120px",
               padding: "14px 16px",
               alignItems: "center",
-              gap: 2,
-              flexShrink: "0",
-              alignSelf: "stretch",
               background: "#F5F5F5",
             }}
           >
-            Co-Advisor 1
+            <Typography
+              variant="subtitle2"
+              gutterBottom
+              sx={{ fontSize: "12px" }}
+            >
+              Co-Advisor 1
+            </Typography>
           </Div>
           <Div
             sx={{
               display: "flex",
-              padding: "14px 16px",
+              padding: "10px 16px",
               alignItems: "flex-start",
-              gap: 2,
-              flex: "1 0 0",
-              alignSelf: "stretch",
             }}
           >
-            -
+            <Typography sx={{ fontSize: "12px" }}>
+              Oktoverano H. Lengkong, SKom, MDs, MM
+            </Typography>
           </Div>
         </Div>
         {/* Co-Advisor 2*/}
         <Div
           sx={{
             display: "flex",
-            width: "480px",
+            width: "100%",
             alignItems: "flex-start",
           }}
         >
           <Div
+            variant="subtitle2"
             sx={{
               display: "flex",
-              width: "150px",
+              width: "120px",
               padding: "14px 16px",
               alignItems: "center",
-              gap: 2,
-              flexShrink: "0",
-              alignSelf: "stretch",
               background: "#F5F5F5",
             }}
           >
-            Co-Advisor 2
+            <Typography
+              variant="subtitle2"
+              gutterBottom
+              sx={{ fontSize: "12px" }}
+            >
+              Co-Advisor 2
+            </Typography>
           </Div>
           <Div
             sx={{
               display: "flex",
-              padding: "14px 16px",
+              padding: "10px 16px",
               alignItems: "flex-start",
-              gap: 2,
-              flex: "1 0 0",
-              alignSelf: "stretch",
             }}
           >
-            -
+            <Typography sx={{ fontSize: "12px" }}>
+              Oktoverano H. Lengkong, SKom, MDs, MM
+            </Typography>
           </Div>
         </Div>
       </Div>
