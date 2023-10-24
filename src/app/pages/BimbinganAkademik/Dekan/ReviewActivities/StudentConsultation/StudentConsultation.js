@@ -19,7 +19,7 @@ const data = Array.from(Array(1).keys()).map((item, index) => ({
   submission_date: `Sep 23, 2022`,
   student_name: `Dengah, Julio Franco`,
   topic: `Akademic`,
-  message: `Syalom sir, mohon maaf mengganggu, saya ingin melakukan konsultasi terkait perkuliahan saya. Saya mengalami kriisiis dalam hal keuangan,...`,
+  message: `Syalom sir, mohon maaf mengganggu, saya ingin melakukan konsultasi terkait perkuliahan saya. Saya mengalami krisis dalam hal keuangan`,
   status: `Waiting`,
 }));
 
@@ -112,9 +112,21 @@ const StudentConsultation = () => {
           <TableBody>
             {data
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((item, index) => (
-                <TableItem item={item} index={index} key={index} />
-              ))}
+              .map((item, index) => {
+                const maxWords = 12;
+                const messageWords = item.message.split(" ");
+
+                const truncatedMessage =
+                  messageWords.length > maxWords
+                    ? messageWords.slice(0, maxWords).join(" ") + "..."
+                    : item.message;
+
+                const truncatedItem = { ...item, message: truncatedMessage };
+
+                return (
+                  <TableItem item={truncatedItem} index={index} key={index} />
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>
