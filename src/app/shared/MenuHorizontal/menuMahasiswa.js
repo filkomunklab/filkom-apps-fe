@@ -26,7 +26,7 @@ const MenuMahasiswa = () => {
       >
         <Div sx={{ width: "100%", display: "flex" }}>
           <Div sx={{ margin: "auto" }}>
-            <Link to="#">
+            <Link to="/sistem-informasi-skripsi/daftar-pengajuan/beranda">
               <Button
                 sx={{
                   fontSize: "13px",
@@ -52,7 +52,7 @@ const MenuMahasiswa = () => {
             }}
           ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="#">
+            <Link to="/sistem-informasi-skripsi/daftar-pengajuan/pengajuan-judul">
               <Button
                 sx={{
                   // width: "150px",
@@ -78,7 +78,7 @@ const MenuMahasiswa = () => {
             }}
           ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="/konsultasi">
+            <Link to="/sistem-informasi-skripsi/daftar-pengajuan/konsultasi">
               <Button
                 sx={{
                   // width: "130px",
@@ -131,9 +131,14 @@ const MenuMahasiswa = () => {
                 horizontal: "left",
               }}
             >
-              <MenuItem onClick={() => setAnchorEl(null)}>
-                Upload Proposal
-              </MenuItem>
+              <Link to="/sistem-informasi-skripsi/daftar-pengajuan/upload-proposal">
+                <MenuItem
+                  onClick={() => setAnchorEl(null)}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  Upload Proposal
+                </MenuItem>
+              </Link>
               <MenuItem onClick={() => setAnchorEl(null)}>
                 Upload Revisi Proposal
               </MenuItem>
