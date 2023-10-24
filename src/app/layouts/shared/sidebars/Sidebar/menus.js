@@ -820,7 +820,7 @@ export const kaprodiMenus = [
         label: "History",
         type: "nav-item",
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/kaprodi/activity-history",
+        uri: "/bimbingan-akademik/kaprodi/history",
       },
       {
         label: "Add Activity",
@@ -833,6 +833,69 @@ export const kaprodiMenus = [
         type: "nav-item",
         icon: <PersonIcon sx={{ fontSize: 20 }} />,
         uri: "/bimbingan-akademik/kaprodi/profile",
+      },
+    ],
+  },
+];
+
+export const sekDekanMenus = [
+  {
+    label: "Klabat Bridge",
+    type: "section",
+    children: [
+      {
+        label: "Dafter Alumni",
+        type: "nav-item",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-alumni",
+      },
+      {
+        label: "Grafik Alumni",
+        type: "nav-item",
+        icon: <PublicIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/grafik-alumni",
+      },
+    ],
+  },
+  {
+    label: "Bimbingan Akademik",
+    type: "section",
+    children: [
+      {
+        label: "Academic Guide",
+        type: "nav-item",
+        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/sekDekan/academic-guide",
+      },
+      {
+        label: "Vision Mission Goals",
+        type: "nav-item",
+        icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/sekDekan/vision-mission-goals",
+      },
+      {
+        label: "Curriculum",
+        type: "nav-item",
+        icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/sekDekan/curriculum",
+      },
+      {
+        label: "Student Information",
+        type: "collapsible",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/sekDekan/student-information-faculty",
+      },
+      {
+        label: "Supervisor Information",
+        type: "nav-item",
+        icon: <GroupIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/sekDekan/supervisor-information",
+      },
+      {
+        label: "Profile",
+        type: "nav-item",
+        icon: <PermContactCalendarIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/sekDekan/profile",
       },
     ],
   },
