@@ -68,7 +68,7 @@
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "6",
     "react-router-redux": "^4.0.8",
-    "react-scripts": "^5.0.0",
+    "react-scripts": "^5.0.1",
     "react-sortable-hoc": "^2.0.0",
     "react-spinners": "^0.11.0",
     "react-spring": "^9.3.2",

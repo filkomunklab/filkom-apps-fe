@@ -20,6 +20,16 @@ import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import PeopleIcon from "@mui/icons-material/People";
 import PublicIcon from "@mui/icons-material/Public";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import GroupsIcon from "@mui/icons-material/Groups";
+import HomeIcon from "@mui/icons-material/Home";
+import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
+import PersonIcon from "@mui/icons-material/Person";
+import GroupIcon from "@mui/icons-material/Group";
+import RecentActorsIcon from "@mui/icons-material/RecentActors";
 import PersonIcon from "@mui/icons-material/Person";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { EmailOutlined } from "@mui/icons-material";
@@ -479,6 +489,725 @@ const menus = [
 //       },
 //     ],
 //   },
+//   // {
+//   //   label: "Skripsi",
+//   //   type: "section",
+//   //   children: [
+//   //     {
+//   //       label: "sidebar.menu.calendar",
+//   //       type: "collapsible",
+//   //       icon: <EventNoteIcon sx={{ fontSize: 20 }} />,
+//   //       children: [
+//   //         {
+//   //           uri: "/modules/calendars/basic",
+//   //           label: "sidebar.menuItem.basic",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/calendars/culture",
+//   //           label: "sidebar.menuItem.cultures",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/calendars/popup",
+//   //           label: "sidebar.menuItem.popup",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/calendars/rendering",
+//   //           label: "sidebar.menuItem.rendering",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/calendars/selectable",
+//   //           label: "sidebar.menuItem.selectable",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/calendars/timeslot",
+//   //           label: "sidebar.menuItem.timeSlots",
+//   //           type: "nav-item",
+//   //         },
+//   //       ],
+//   //     },
+//   //     {
+//   //       label: "sidebar.menu.charts",
+//   //       type: "collapsible",
+//   //       icon: <InsertChartOutlinedIcon sx={{ fontSize: 20 }} />,
+//   //       children: [
+//   //         {
+//   //           uri: "/modules/charts/line",
+//   //           label: "sidebar.menuItem.line",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/charts/bar",
+//   //           label: "sidebar.menuItem.bar",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/charts/area",
+//   //           label: "sidebar.menuItem.area",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/charts/composed",
+//   //           label: "sidebar.menuItem.composed",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/charts/pie",
+//   //           label: "sidebar.menuItem.pie",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/charts/scatter",
+//   //           label: "sidebar.menuItem.scatter",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/charts/radial",
+//   //           label: "sidebar.menuItem.radial",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/charts/radar",
+//   //           label: "sidebar.menuItem.radar",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/charts/treemap",
+//   //           label: "sidebar.menuItem.treeMap",
+//   //           type: "nav-item",
+//   //         },
+//   //       ],
+//   //     },
+//   //     {
+//   //       label: "sidebar.menu.maps",
+//   //       type: "collapsible",
+//   //       icon: <MyLocationIcon sx={{ fontSize: 20 }} />,
+//   //       children: [
+//   //         {
+//   //           uri: "/modules/maps/simple",
+//   //           label: "sidebar.menuItem.simpleMap",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/maps/styled",
+//   //           label: "sidebar.menuItem.styledMap",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/maps/geo-location",
+//   //           label: "sidebar.menuItem.geoLocation",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/maps/directions",
+//   //           label: "sidebar.menuItem.directional",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/maps/overlay",
+//   //           label: "sidebar.menuItem.overlay",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/maps/kml",
+//   //           label: "sidebar.menuItem.kmLayer",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/maps/popup-info",
+//   //           label: "sidebar.menuItem.popupInfo",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/maps/street-view",
+//   //           label: "sidebar.menuItem.streetView",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/maps/drawing",
+//   //           label: "sidebar.menuItem.drawing",
+//   //           type: "nav-item",
+//   //         },
+//   //         {
+//   //           uri: "/modules/maps/clustering",
+//   //           label: "sidebar.menuItem.clustering",
+//   //           type: "nav-item",
+//   //         },
+//   //       ],
+//   //     },
+//   //   ],
+//   // },
+// ];
+// Alumni
+
+// Mahasiswa Bimbingan Akademik Menus
+// const menus = [
+//   {
+//     label: "Klabat Bridge",
+//     type: "section",
+//     children: [
+//       {
+//         label: "Dafter Alumni",
+//         type: "nav-item",
+//         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+//         uri: "/klabat-bridge/daftar-alumni",
+//       },
+//       {
+//         label: "Grafik Alumni",
+//         type: "nav-item",
+//         icon: <PublicIcon sx={{ fontSize: 20 }} />,
+//         uri: "/klabat-bridge/grafik-alumni",
+//       },
+//     ],
+//   },
+//   {
+//     label: "Bimbingan Akademik",
+//     type: "section",
+//     children: [
+//       {
+//         label: "Academic Guide",
+//         type: "nav-item",
+//         icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+//         uri: "/bimbingan-akademik/academic-guide",
+//       },
+//       {
+//         label: "Vision Mission Goals",
+//         type: "nav-item",
+//         icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
+//         uri: "/bimbingan-akademik/vision-mission-goals",
+//       },
+//       {
+//         label: "Curriculum",
+//         type: "nav-item",
+//         icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
+//         uri: "/bimbingan-akademik/curriculum",
+//       },
+//       {
+//         label: "Grades",
+//         type: "nav-item",
+//         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+//         uri: "/bimbingan-akademik/grades",
+//       },
+//       {
+//         label: "Certificates",
+//         type: "nav-item",
+//         icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+//         uri: "/bimbingan-akademik/certificates",
+//       },
+//       {
+//         label: "History",
+//         type: "nav-item",
+//         icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
+//         uri: "/bimbingan-akademik/history",
+//       },
+//       {
+//         label: "Grade Submission",
+//         type: "nav-item",
+//         icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
+//         uri: "/bimbingan-akademik/grade-submission",
+//       },
+//       {
+//         label: "Pre-registration",
+//         type: "nav-item",
+//         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+//         uri: "/bimbingan-akademik/pre-registration",
+//       },
+//       {
+//         label: "Consultation",
+//         type: "nav-item",
+//         icon: <PermContactCalendarIcon sx={{ fontSize: 20 }} />,
+//         uri: "/bimbingan-akademik/consultation",
+//       },
+//       {
+//         label: "Profile",
+//         type: "nav-item",
+//         icon: <PersonIcon sx={{ fontSize: 20 }} />,
+//         uri: "/bimbingan-akademik/profile",
+//       },
+//     ],
+//   },
 // ];
 
+// Mahasiswa Bimbingan Akademik Menus
+export const mahasiswaMenus = [
+  {
+    label: "Klabat Bridge",
+    type: "section",
+    children: [
+      {
+        label: "Dafter Alumni",
+        type: "nav-item",
+        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-alumni",
+      },
+      {
+        label: "Grafik Alumni",
+        type: "nav-item",
+        icon: <PublicIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/grafik-alumni",
+      },
+    ],
+  },
+  {
+    label: "Bimbingan Akademik",
+    type: "section",
+    children: [
+      {
+        label: "Academic Guide",
+        type: "nav-item",
+        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/academic-guide",
+      },
+      {
+        label: "Vision Mission Goals",
+        type: "nav-item",
+        icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/vision-mission-goals",
+      },
+      {
+        label: "Curriculum",
+        type: "nav-item",
+        icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/curriculum",
+      },
+      {
+        label: "Grades",
+        type: "nav-item",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/grades",
+      },
+      {
+        label: "Certificates",
+        type: "nav-item",
+        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/certificates",
+      },
+      {
+        label: "History",
+        type: "nav-item",
+        icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/history",
+      },
+      {
+        label: "Grade Submission",
+        type: "nav-item",
+        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/grade-submission",
+      },
+      {
+        label: "Pre-registration",
+        type: "nav-item",
+        icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/pre-registration",
+      },
+      {
+        label: "Consultation",
+        type: "nav-item",
+        icon: <PermContactCalendarIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/consultation",
+      },
+      {
+        label: "Profile",
+        type: "nav-item",
+        icon: <PersonIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/profile",
+      },
+    ],
+  },
+];
+
+// Dekan Bimbingan Akademik Menus
+export const dekanMenus = [
+  {
+    label: "Klabat Bridge",
+    type: "section",
+    children: [
+      {
+        label: "Dashboard",
+        type: "nav-item",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/dashboard",
+      },
+      {
+        label: "Dafter Alumni",
+        type: "nav-item",
+        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-alumni",
+      },
+      {
+        label: "Grafik Alumni",
+        type: "nav-item",
+        icon: <PublicIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/grafik-alumni",
+      },
+      {
+        label: "Form Tracer Study",
+        type: "nav-item",
+        icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/form-tracer-study",
+      },
+      {
+        label: "Pengisian SPT",
+        type: "nav-item",
+        icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/pengisian-spt",
+      },
+      {
+        label: "View Detail Student",
+        type: "nav-item",
+        icon: <AccountBoxIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/view-detail-student",
+      },
+      {
+        label: "Daftar Calon Tamatan",
+        type: "nav-item",
+        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-calon-tamatan",
+      },
+      {
+        label: "Daftar Calon Tamatan Fakultas",
+        type: "nav-item",
+        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-calon-tamatan-fakultas",
+      },
+      {
+        label: "Home (Alumni)",
+        type: "nav-item",
+        icon: <HomeIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/home-alumni",
+      },
+      {
+        label: "Home (Calon Tamatan)",
+        type: "nav-item",
+        icon: <HomeIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/home-calon-tamatan",
+      },
+      // {
+      //   label: "Pengisian Tracer Study",
+      //   type: "nav-item",
+      //   icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
+      //   uri: "/klabat-bridge/pengisian-tracer-study",
+      // },
+    ],
+  },
+  {
+    label: "Bimbingan Akademik",
+    type: "section",
+    children: [
+      {
+        label: "Dashboard",
+        type: "nav-item",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dekan/dashboard",
+      },
+      {
+        label: "Academic Guide",
+        type: "nav-item",
+        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dekan/academic-guide",
+      },
+      {
+        label: "Vision Mission Goals",
+        type: "nav-item",
+        icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dekan/vision-mission-goals",
+      },
+      {
+        label: "Curriculum",
+        type: "nav-item",
+        icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dekan/curriculum",
+      },
+      {
+        label: "Student Information",
+        type: "collapsible",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Mentored Student",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/dekan/student-information-mentored",
+          },
+          {
+            label: "Faculty Student",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/dekan/student-information-faculty",
+          },
+        ],
+      },
+      {
+        label: "Supervisor Information",
+        type: "nav-item",
+        icon: <GroupIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dekan/supervisor-information",
+      },
+      {
+        label: "Review Activities",
+        type: "collapsible",
+        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Review Pre-Registration",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/dekan/review-activities/pre-registration",
+          },
+          {
+            label: "Review Certificates",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/dekan/review-activities/certificate",
+          },
+          {
+            label: "Student Consultation",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/dekan/review-activities/consultation",
+          },
+          {
+            label: "Review Grades",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/dekan/review-activities/grade",
+          },
+        ],
+      },
+      {
+        label: "Recent History",
+        type: "nav-item",
+        icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dekan/recent-history",
+      },
+      {
+        label: "Activity History",
+        type: "nav-item",
+        icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dekan/activity-history",
+      },
+      {
+        label: "Add Activity",
+        type: "nav-item",
+        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dekan/add-activity",
+      },
+      {
+        label: "Profile",
+        type: "nav-item",
+        icon: <PermContactCalendarIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dekan/profile",
+      },
+    ],
+  },
+];
+
 export default menus;
+export const dosenMenus = [
+  {
+    label: "Bimbingan Akademik",
+    type: "section",
+    children: [
+      {
+        label: "Dashboard",
+        type: "nav-item",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dashboard",
+      },
+      {
+        label: "Academic Guide",
+        type: "nav-item",
+        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/academic-guide",
+      },
+      {
+        label: "Vision, Mission and Goals",
+        type: "nav-item",
+        icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/vision-mission-goals",
+      },
+      {
+        label: "Curriculum",
+        type: "nav-item",
+        icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/curriculum",
+      },
+      {
+        label: "Student Information",
+        type: "nav-item",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/student-information",
+      },
+      {
+        label: "Review Activity",
+        type: "collapsible",
+        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Review Pre-Registration",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/review-pre-registration",
+          },
+          {
+            label: "Review Certificate",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/review-certificate",
+          },
+          {
+            label: "Student Consultation",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/student-consultation",
+          },
+        ],
+      },
+      {
+        label: "Recent Activities",
+        type: "nav-item",
+        icon: <RecentActorsIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/recent-activities",
+      },
+      {
+        label: "Activity History",
+        type: "nav-item",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/activity-history",
+      },
+      {
+        label: "Add Activity",
+        type: "nav-item",
+        icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/add-activity",
+      },
+      {
+        label: "Profile",
+        type: "nav-item",
+        icon: <PersonIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/profile",
+      },
+    ],
+  },
+];
+
+// Kaprodi Bimbingan Akademik Menus
+export const kaprodiMenus = [
+  {
+    label: "Klabat Bridge",
+    type: "section",
+    children: [
+      {
+        label: "Dafter Alumni",
+        type: "nav-item",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-alumni",
+      },
+      {
+        label: "Grafik Alumni",
+        type: "nav-item",
+        icon: <PublicIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/grafik-alumni",
+      },
+    ],
+  },
+  {
+    label: "Bimbingan Akademik",
+    type: "section",
+    children: [
+      {
+        label: "Dashboard",
+        type: "nav-item",
+        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/dashboard",
+      },
+      {
+        label: "Academic Guide",
+        type: "nav-item",
+        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/academic-guide",
+      },
+      {
+        label: "Vision Mission Goals",
+        type: "nav-item",
+        icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/vision-mission-goals",
+      },
+      {
+        label: "Curriculum",
+        type: "nav-item",
+        icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/curriculum",
+      },
+      {
+        label: "Student Information",
+        type: "collapsible",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Mentored Student",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/kaprodi/student-information/mentored-student",
+          },
+          {
+            label: "Faculty Student",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/kaprodi/student-information/faculty-student",
+          },
+        ],
+      },
+      {
+        label: "Supervisor Infomation",
+        type: "nav-item",
+        icon: <GroupIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/supervisor-information",
+      },
+      {
+        label: "Review Activities",
+        type: "collapsible",
+        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Review Pre-Registration",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/kaprodi/Review-Activities/pre-registration",
+          },
+          {
+            label: "Review Certificates",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/kaprodi/Review-Activities/certificates",
+          },
+          {
+            label: "Review Grades",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/kaprodi/Review-Activities/grade",
+          },
+          {
+            label: "Student Consultation",
+            type: "nav-item",
+            uri: "/bimbingan-akademik/kaprodi/Review-Activities/consultation",
+          },
+        ],
+      },
+      {
+        label: "Recent History",
+        type: "nav-item",
+        icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/recent-history",
+      },
+      {
+        label: "Activity History",
+        type: "nav-item",
+        icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/activity-history",
+      },
+      {
+        label: "Add Activity",
+        type: "nav-item",
+        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/add-activity",
+      },
+      {
+        label: "Profile",
+        type: "nav-item",
+        icon: <PersonIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/profile",
+      },
+    ],
+  },
+];
