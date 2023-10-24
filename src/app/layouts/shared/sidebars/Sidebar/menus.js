@@ -30,7 +30,6 @@ import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import PersonIcon from "@mui/icons-material/Person";
 import GroupIcon from "@mui/icons-material/Group";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
-import PersonIcon from "@mui/icons-material/Person";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { EmailOutlined } from "@mui/icons-material";
 import AttachEmailIcon from "@mui/icons-material/AttachEmail";

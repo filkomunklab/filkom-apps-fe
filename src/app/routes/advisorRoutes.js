@@ -1,5 +1,5 @@
 import Page from "@jumbo/shared/Page";
-import CatatKonsultasi from "app/pages/ThesisApps/Dosen/CatatKonsultasi";
+// import CatatKonsultasi from "app/pages/ThesisApps/Dosen/CatatKonsultasi";
 import DaftarBimbinganProposalAdvisor from "app/pages/ThesisApps/Dosen/DaftarBimbinganProposalAdvisor";
 import DaftarBimbinganSkripsiAdvisor from "app/pages/ThesisApps/Dosen/DaftarBimbinganSkripsiAdvisor";
 import RiwayatBimbinganAdvisor from "app/pages/ThesisApps/Dosen/RiwayatBimbinganAdvisor";
@@ -28,11 +28,11 @@ const advisorRoutes = [
     path: "/sistem-informasi-skripsi/bimbingan-proposal-advisor/beranda",
     element: <Page component={BerandaProposalMahasiswa} />,
   },
-  {
-    // Catat Konsultasi Mahasiswa
-    path: "/sistem-informasi-skripsi/bimbingan-proposal-advisor/konsultasi",
-    element: <Page component={CatatKonsultasi} />,
-  },
+  // {
+  //   // Catat Konsultasi Mahasiswa
+  //   path: "/sistem-informasi-skripsi/bimbingan-proposal-advisor/konsultasi",
+  //   element: <Page component={CatatKonsultasi} />,
+  // },
 ];
 
 export default advisorRoutes;
