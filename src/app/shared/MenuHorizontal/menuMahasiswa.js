@@ -131,7 +131,10 @@ const MenuMahasiswa = () => {
                 horizontal: "left",
               }}
             >
-              <Link to="/sistem-informasi-skripsi/daftar-pengajuan/upload-proposal">
+              <Link
+                to="/sistem-informasi-skripsi/daftar-pengajuan/upload-proposal"
+                underline="none"
+              >
                 <MenuItem
                   onClick={() => setAnchorEl(null)}
                   style={{ textDecoration: "none", color: "black" }}
