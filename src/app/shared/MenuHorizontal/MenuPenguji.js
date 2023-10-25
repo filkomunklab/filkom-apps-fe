@@ -78,7 +78,7 @@ const MenuPenguji = () => {
             }}
           ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="#">
+            <Link to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/konsultasi">
               <Button
                 sx={{
                   // width: "130px",
@@ -134,9 +134,14 @@ const MenuPenguji = () => {
               <MenuItem onClick={() => setAnchorEl(null)}>
                 Dokumen Proposal
               </MenuItem>
-              <MenuItem onClick={() => setAnchorEl(null)}>
-                Berita Acara Proposal
-              </MenuItem>
+              <Link
+                to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/berita-acara"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem onClick={() => setAnchorEl(null)}>
+                  Berita Acara Proposal
+                </MenuItem>
+              </Link>
               <MenuItem onClick={() => setAnchorEl(null)}>
                 Dokumen Revisi Proposal
               </MenuItem>
