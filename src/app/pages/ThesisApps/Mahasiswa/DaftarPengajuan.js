@@ -55,7 +55,7 @@ function DaftarPengajuan() {
   const [inputCount, setInputCount] = useState(1);
   const [open, setOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
-  const [options, setOptions] = useState(["Option 1", "Option 2", "Option 3"]);
+  const [options] = useState(["Option 1", "Option 2", "Option 3"]);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [Advisor, setAdvisor] = useState("");
   const [CoAdvisor1, setCoAdvisor1] = useState("");
@@ -68,7 +68,7 @@ function DaftarPengajuan() {
   const [pengajuanJudulUploadedFiles, setPengajuanJudulUploadedFiles] =
     useState([]);
   // Tambahkan state untuk melacak apakah file pembayaran telah diunggah
-  const [isPaymentUploaded, setIsPaymentUploaded] = useState(false);
+  const [isPengajuanJudulUploaded, setIsPaymentUploaded] = useState(false);
 
   const onPengajuanJudulFileChange = (event) => {
     const file = event.target.files[0];
