@@ -8,4 +8,6 @@ export const ROLES = {
   DEKAN: "DEKAN",
   KAPRODI: "KAPRODI",
   DOSEN: "DOSEN",
+  SEKRETARIS: "SEKRETARIS",
+  REGISTER: "REGISTER",
 };
