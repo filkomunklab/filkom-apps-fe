@@ -9,6 +9,8 @@ import PengajuanJudulDiterima from "app/pages/ThesisApps/Mahasiswa/PengajuanJudu
 import DaftarPengajuanProposalSekertaris from "app/pages/ThesisApps/Sekertaris/DaftarPengajuanProposalSekertaris";
 import DaftarPengajuanSkripsiSekertaris from "app/pages/ThesisApps/Sekertaris/DaftarPengajuanSkripsiSekertaris";
 import JadwalSidangSkripsi from "app/pages/ThesisApps/Sekertaris/JadwalSidangSkripsi";
+import BerandaProposal from "app/pages/ThesisApps/Sekertaris/BerandaProposal";
+import BerandaSkripsi from "app/pages/ThesisApps/Sekertaris/BerandaSkripsi";
 
 const sekertarisRoutes = [
   {
@@ -35,6 +37,16 @@ const sekertarisRoutes = [
     // manajemen dosen skripsi
     path: "/sistem-informasi-skripsi/manajamen-dosen-skripsi",
     element: <Page component={ManajemenDosenSkripsi} />,
+  },
+  {
+    // beranda proposal
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal/beranda",
+    element: <Page component={BerandaProposal} />,
+  },
+  {
+    // beranda skripsi
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/beranda",
+    element: <Page component={BerandaSkripsi} />,
   },
 ];
 
