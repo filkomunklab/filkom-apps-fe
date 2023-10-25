@@ -388,7 +388,7 @@ const menus = [
       },
       {
         uri: "/sistem-informasi-skripsi/manajemen-jadwal",
-        label: "Kelola Jadwal",
+        label: "Manajemen Jadwal",
         type: "collapsible",
         icon: <ScheduleIcon sx={{ fontSize: 20 }} />,
         children: [
@@ -408,7 +408,7 @@ const menus = [
       },
       {
         uri: "/sistem-informasi-skripsi/manajamen-dosen-skripsi",
-        label: "Dosen Skripsi",
+        label: "Manajemen Dosen Skripsi",
         type: "nav-item",
         icon: <PersonIcon sx={{ fontSize: 20 }} />,
       },
