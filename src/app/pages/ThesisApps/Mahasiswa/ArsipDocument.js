@@ -1,6 +1,7 @@
 import Div from "@jumbo/shared/Div";
 import {
   Button,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -360,7 +361,7 @@ const ArsipDocument = () => {
               {/* file upload end */}
 
               {/* Table Upload HKI Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }}>
+              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
@@ -402,7 +403,6 @@ const ArsipDocument = () => {
                       </TableCell>
                     </TableRow>
                   </TableHead>
-
                   <TableBody>
                     {HKIUploadedFiles.map((file, index) => (
                       <TableRow key={index}>
@@ -485,7 +485,10 @@ const ArsipDocument = () => {
               }}
             >
               {/* file upload for Artikel Jurnal */}
-              <Div sx={{ display: "flex", marginBottom: "20px" }}>
+              <Div
+                sx={{ display: "flex", marginBottom: "20px" }}
+                component={Paper}
+              >
                 <Button
                   variant="contained"
                   component="label"
@@ -695,7 +698,7 @@ const ArsipDocument = () => {
               {/* file upload end for Source Code */}
 
               {/* Table Upload Source Code Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }}>
+              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
