@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Div from "@jumbo/shared/Div";
 import {
   Table,
@@ -20,105 +20,95 @@ import {
   Input,
   Button,
   IconButton,
+  Select, 
+  MenuItem,
+  InputLabel,
+  ListSubheader,
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import BackupOutlinedIcon from '@mui/icons-material/BackupOutlined';
+import CreateIcon from "@mui/icons-material/Create";
+import MarkunreadIcon from "@mui/icons-material/Markunread";
+
+const data = [
+  { name: 'John', age: 30, city: 'New York' },
+  { name: 'Alice', age: 25, city: 'Chicago' },
+  { name: 'Bob', age: 35, city: 'Los Angeles' },
+  { name: 'Tom & Jerry', age: 35, city: 'Los Angeles' },
+  { name: 'Sam', age: 35, city: 'Los Angeles' },
+  { name: 'Bob', age: 25, city: 'Washington' },
+  // ...more data
+];
 
 const HomeAlumni = () => {
-  const [pdfFile, setPdfFile] = useState(null);
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file && file.type === "application/pdf" && file.size <= 10485760) {
-      setPdfFile(file);
-    } else {
-      alert("Please select a valid PDF file (max. 10MB).");
-    }
-  };
+  const [filter, setFilter] = useState('');
 
-  const handleLinkClick = () => {
-    // Handle link click event if needed
-  };
+  const filteredData = data.filter(item =>
+    Object.values(item).some(value =>
+      value.toString().toLowerCase().includes(filter.toString().toLowerCase())
+    )
+  );
 
-  const handleDeletePdf = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setPdfFile(null);
+  const handleChange = event => {
+    setFilter(event.target.value);
   };
 
   return (
     <Div >
-      <label htmlFor="pdf-upload-input">
-        <Input
-          accept=".pdf"
-          type="file"
-          id="pdf-upload-input"
-          onChange={handleFileUpload}
-          style={{ display: "none" }}
-        />
-        <Button
-          variant="outlined"
-          component="span"
-          style={{
-            width: "200px",
-            height: "100px", // Adjust the height to accommodate the content
-            display: "flex",
-            flexDirection: "column", // Arrange items vertically
-            alignItems: "center", // Center items horizontally
-            justifyContent: "center", // Center items vertically
-            padding: "5px", // Add padding to the button
-            color: "#1C1B20",
-            backgroundColor: "#F8F9FD",
-            "& .MuiSvgIcon-root": {
-              fontSize: 48, // Adjust the icon size
-            },
-            "&:hover": {
-              backgroundColor: "#7F91D9",
-              color: "white",
-            },
-          }}
+      <FormControl sx={{m: 1, minWidth: 120}}>
+        <InputLabel htmlFor="grouped-select">Grouping</InputLabel>
+        <Select 
+          defaultValue="" 
+          id="grouped-select" 
+          label="Grouping"
+          value={filter}
+          onChange={handleChange}
         >
-          <BackupOutlinedIcon /> {/* Icon */}
-          <Typography variant="subtitle1" sx={{ fontSize: "12px", textTransform: "none" }}>
-            Upload PDF File Sertifikasi
-          </Typography> {/* Text and line breaks */}
-          <Typography variant="subtitle1" sx={{ fontSize: "10px", textTransform: "none" }}>
-            Max 10MB
-          </Typography> {/* Text and line breaks */}
-        </Button>
-      </label>
+          <MenuItem value="">
+              <em>None</em>
+          </MenuItem>
+          <ListSubheader>Name</ListSubheader>
+          <MenuItem value={"John"}>John</MenuItem>
+          <MenuItem value={"Alice"}>Alice</MenuItem>
+          <MenuItem value={"Bob"}>Bob</MenuItem>
+          <MenuItem value={"Tom & Jerry"}>Tom & Jerry</MenuItem>
+          <ListSubheader>Age</ListSubheader>
+          <MenuItem value={30}>30</MenuItem>
+          <MenuItem value={25}>25</MenuItem>
+          <MenuItem value={35}>35</MenuItem>
+          <ListSubheader>Age</ListSubheader>
+          <MenuItem value={"New York"}>New York</MenuItem>
+          <MenuItem value={"Chicago"}>Chicago</MenuItem>
+          <MenuItem value={"Los Angeles"}>Los Angeles</MenuItem>
 
-      {pdfFile && (
-        <Div sx={{ marginTop: "20px", position: "relative" }}>
-          <a
-            href={URL.createObjectURL(pdfFile)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={handleLinkClick}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              textDecoration: "none",
-              color: "blue",
-            }}
-          >
-            <span style={{ marginRight: "10px" }}>{pdfFile.name}</span>
-            <IconButton
-              sx={{
-                backgroundColor: "transparent",
-                "&:hover": {
-                  backgroundColor: "transparent",
-                },
-              }}
-              onClick={handleDeletePdf}
-              color="error"
-              aria-label="Delete PDF"
-            >
-              <ClearIcon />
-            </IconButton>
-          </a>
-        </Div>
-      )}
+        </Select>
+      </FormControl>
+
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Age</TableCell>
+              <TableCell>City</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredData.map((row, index) => (
+              <TableRow key={index}>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.age}</TableCell>
+                <TableCell>{row.city}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+
+
+
       {/* <Box sx={{
         backgroundColor:"#E8EBE8", 
         height: "70px", 
@@ -133,7 +123,6 @@ const HomeAlumni = () => {
           Silahkan mengisi form Tracer Study
         </Typography>
       </Box> */}
-
       
     </Div>
     

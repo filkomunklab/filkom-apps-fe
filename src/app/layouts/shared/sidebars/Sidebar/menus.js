@@ -336,16 +336,16 @@ const menus = [
         uri: "/klabat-bridge/dashboard",
       },
       {
+        label: "Daftar Calon Tamatan",
+        type: "nav-item",
+        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-calon-tamatan",
+      },
+      {
         label: "Dafter Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/daftar-alumni",
-      },
-      {
-        label: "Grafik Alumni",
-        type: "nav-item",
-        icon: <PublicIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/grafik-alumni",
       },
       {
         label: "Form Tracer Study",
@@ -366,18 +366,6 @@ const menus = [
         uri: "/klabat-bridge/view-detail-student",
       },
       {
-        label: "Daftar Calon Tamatan",
-        type: "nav-item",
-        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-calon-tamatan",
-      },
-      {
-        label: "Daftar Calon Tamatan Fakultas",
-        type: "nav-item",
-        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-calon-tamatan-fakultas",
-      },
-      {
         label: "Home (Alumni)",
         type: "nav-item",
         icon: <HomeIcon sx={{ fontSize: 20 }} />,
@@ -395,18 +383,6 @@ const menus = [
       //   icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
       //   uri: "/klabat-bridge/pengisian-tracer-study",
       // },
-    ],
-  },
-  {
-    label: "Bimbingan Akademik",
-    type: "section",
-    children: [
-      {
-        label: "Panduan Kurikulum",
-        type: "nav-item",
-        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/panduan-kurikulum",
-      },
     ],
   },
 ];
