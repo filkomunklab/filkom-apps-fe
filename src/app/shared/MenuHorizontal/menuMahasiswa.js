@@ -26,7 +26,7 @@ const MenuMahasiswa = () => {
       >
         <Div sx={{ width: "100%", display: "flex" }}>
           <Div sx={{ margin: "auto" }}>
-            <Link to="#">
+            <Link to="/sistem-informasi-skripsi/daftar-pengajuan/beranda">
               <Button
                 sx={{
                   fontSize: "13px",
@@ -52,7 +52,7 @@ const MenuMahasiswa = () => {
             }}
           ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="#">
+            <Link to="/sistem-informasi-skripsi/daftar-pengajuan/pengajuan-judul">
               <Button
                 sx={{
                   // width: "150px",
@@ -78,7 +78,7 @@ const MenuMahasiswa = () => {
             }}
           ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="/konsultasi">
+            <Link to="/sistem-informasi-skripsi/daftar-pengajuan/konsultasi">
               <Button
                 sx={{
                   // width: "130px",
@@ -131,12 +131,25 @@ const MenuMahasiswa = () => {
                 horizontal: "left",
               }}
             >
-              <MenuItem onClick={() => setAnchorEl(null)}>
-                Upload Proposal
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorEl(null)}>
-                Upload Revisi Proposal
-              </MenuItem>
+              <Link
+                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-proposal"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem
+                  onClick={() => setAnchorEl(null)}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  Unggah Proposal
+                </MenuItem>
+              </Link>
+              <Link
+                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-revisi-proposal"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem onClick={() => setAnchorEl(null)}>
+                  Unggah Revisi Proposal
+                </MenuItem>
+              </Link>
             </Menu>
           </Div>
           <Div
@@ -176,18 +189,38 @@ const MenuMahasiswa = () => {
                 horizontal: "left",
               }}
             >
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Dokumen Skripsi
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Dokumen Revisi Skripsi
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Arsip Document
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Metadata Repository
-              </MenuItem>
+              <Link
+                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-skripsi"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem onClick={() => setAnchorE2(null)}>
+                  Unggah Skripsi
+                </MenuItem>
+              </Link>
+              <Link
+                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-revisi-skripsi"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem onClick={() => setAnchorE2(null)}>
+                  Unggah Revisi Skripsi
+                </MenuItem>
+              </Link>
+              <Link
+                to="/sistem-informasi-skripsi/daftar-pengajuan/arsip-document"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem onClick={() => setAnchorE2(null)}>
+                  Arsip Document
+                </MenuItem>
+              </Link>
+              <Link
+                to="/sistem-informasi-skripsi/daftar-pengajuan/metadata-repository"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem onClick={() => setAnchorE2(null)}>
+                  Metadata Repository
+                </MenuItem>
+              </Link>
             </Menu>
           </Div>
         </Div>
