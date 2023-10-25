@@ -70,6 +70,17 @@ function DaftarPengajuan() {
   // Tambahkan state untuk melacak apakah file pembayaran telah diunggah
   const [isPengajuanJudulUploaded, setIsPaymentUploaded] = useState(false);
 
+  // state select kelas
+  const [kelas, setKelas] = React.useState("");
+  const [optionsKelas] = useState([
+    "proposal semester ganjil 2023/2024 - stenly adam",
+    "skripsi semester ganjil 2023/2024 - green mandias",
+    "padat semester ganjil 2023/2024 - green mandias",
+  ]);
+  const handleKelasChange = (event) => {
+    setKelas(event.target.value);
+  };
+
   const onPengajuanJudulFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -297,6 +308,39 @@ function DaftarPengajuan() {
               display: "flex",
               justifyContent: "flex-start",
               alignItems: "center",
+              borderRadius: "6px",
+            }}
+          >
+            Kelas
+          </DialogTitle>
+          {/* select kelas */}
+          <Div sx={{ marginBottom: "25px" }}>
+            <FormControl sx={{ m: 1, minWidth: "98%" }} size="small">
+              <InputLabel id="demo-select-kelas-small-label">Kelas</InputLabel>
+              <Select
+                labelId="demo-select-kelas-small-label"
+                id="demo-select-kelas-small"
+                value={kelas}
+                label="Kelas"
+                onChange={handleKelasChange}
+              >
+                {optionsKelas.map((optKelas) => (
+                  <MenuItem value={optKelas}>{optKelas}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Div>
+
+          <DialogTitle
+            style={{
+              background: "rgba(26, 56, 96, 0.10)",
+              width: "100%",
+              height: "75px",
+              marginBottom: "25px",
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              borderRadius: "6px",
             }}
           >
             Buat Kelompok
@@ -514,31 +558,57 @@ function DaftarPengajuan() {
                   label="Advisor"
                   onChange={handleAdvisorChange}
                 >
-                  <MenuItem value={10}>Andrew T. Liem, MT, PhD</MenuItem>
-                  <MenuItem value={20}>Green Mandias, SKom, MCs</MenuItem>
-                  <MenuItem value={30}>Stenly R. Pungus, MT, PhD</MenuItem>
-                  <MenuItem value={40}>Debby E. Sondakh, MT, PhD</MenuItem>
-                  <MenuItem value={50}>Ir. Edson Y. Putra, MKom</MenuItem>
-                  <MenuItem value={60}>Green A. Sandag, SKom, MS</MenuItem>
-                  <MenuItem value={70}>
+                  <MenuItem value={"Andrew T. Liem, MT, PhD"}>
+                    Andrew T. Liem, MT, PhD
+                  </MenuItem>
+                  <MenuItem value={"Green Mandias, SKom, MCs"}>
+                    Green Mandias, SKom, MCs
+                  </MenuItem>
+                  <MenuItem value={"Stenly R. Pungus, MT, PhD"}>
+                    Stenly R. Pungus, MT, PhD
+                  </MenuItem>
+                  <MenuItem value={"Debby E. Sondakh, MT, PhD"}>
+                    Debby E. Sondakh, MT, PhD
+                  </MenuItem>
+                  <MenuItem value={"Ir. Edson Y. Putra, MKom"}>
+                    Ir. Edson Y. Putra, MKom
+                  </MenuItem>
+                  <MenuItem value={"Green A. Sandag, SKom, MS"}>
+                    Green A. Sandag, SKom, MS
+                  </MenuItem>
+                  <MenuItem value={"Jacquline M. S. Waworundeng, ST, MT"}>
                     Jacquline M. S. Waworundeng, ST, MT
                   </MenuItem>
-                  <MenuItem value={80}>
+                  <MenuItem value={"Jimmy H. Moedjahedy, SKom, MKom, MM"}>
                     Jimmy H. Moedjahedy, SKom, MKom, MM
                   </MenuItem>
-                  <MenuItem value={90}>Joe Y. Mambu, BSIT, MCIS</MenuItem>
-                  <MenuItem value={100}>Lidya C. Laoh, SKom, MMSi</MenuItem>
-                  <MenuItem value={110}>Marshal Tombeng,</MenuItem>
-                  <MenuItem value={120}>
+                  <MenuItem value={"Joe Y. Mambu, BSIT, MCIS"}>
+                    Joe Y. Mambu, BSIT, MCIS
+                  </MenuItem>
+                  <MenuItem value={"Lidya C. Laoh, SKom, MMSi"}>
+                    Lidya C. Laoh, SKom, MMSi
+                  </MenuItem>
+                  <MenuItem value={"Marshal Tombeng,"}>
+                    Marshal Tombeng,
+                  </MenuItem>
+                  <MenuItem value={"Oktoverano H. Lengkong, SKom, MDs, MM"}>
                     Oktoverano H. Lengkong, SKom, MDs, MM
                   </MenuItem>
-                  <MenuItem value={130}>Reymon Rotikan, SKom, MS, MM</MenuItem>
-                  <MenuItem value={140}>
+                  <MenuItem value={"Reymon Rotikan, SKom, MS, MM"}>
+                    Reymon Rotikan, SKom, MS, MM
+                  </MenuItem>
+                  <MenuItem value={"Reynoldus A. Sahulata, SKom, MM"}>
                     Reynoldus A. Sahulata, SKom, MM
                   </MenuItem>
-                  <MenuItem value={150}>Rolly Lontaan, MKom</MenuItem>
-                  <MenuItem value={160}>Semmy W. Taju, SKom</MenuItem>
-                  <MenuItem value={170}>Senly I. Adam, SKom, MSc</MenuItem>
+                  <MenuItem value={"Rolly Lontaan, MKom"}>
+                    Rolly Lontaan, MKom
+                  </MenuItem>
+                  <MenuItem value={"Semmy W. Taju, SKom"}>
+                    Semmy W. Taju, SKom
+                  </MenuItem>
+                  <MenuItem value={"Senly I. Adam, SKom, MSc"}>
+                    Senly I. Adam, SKom, MSc
+                  </MenuItem>
                 </Select>
               </FormControl>
               <FormControl fullWidth sx={{ margin: "0 25px" }} size="small">
@@ -552,31 +622,57 @@ function DaftarPengajuan() {
                   label="Co-Advisor 1"
                   onChange={handleCoAdvisorChange1}
                 >
-                  <MenuItem value={10}>Andrew T. Liem, MT, PhD</MenuItem>
-                  <MenuItem value={20}>Green Mandias, SKom, MCs</MenuItem>
-                  <MenuItem value={30}>Stenly R. Pungus, MT, PhD</MenuItem>
-                  <MenuItem value={40}>Debby E. Sondakh, MT, PhD</MenuItem>
-                  <MenuItem value={50}>Ir. Edson Y. Putra, MKom</MenuItem>
-                  <MenuItem value={60}>Green A. Sandag, SKom, MS</MenuItem>
-                  <MenuItem value={70}>
+                  <MenuItem value={"Andrew T. Liem, MT, PhD"}>
+                    Andrew T. Liem, MT, PhD
+                  </MenuItem>
+                  <MenuItem value={"Green Mandias, SKom, MCs"}>
+                    Green Mandias, SKom, MCs
+                  </MenuItem>
+                  <MenuItem value={"Stenly R. Pungus, MT, PhD"}>
+                    Stenly R. Pungus, MT, PhD
+                  </MenuItem>
+                  <MenuItem value={"Debby E. Sondakh, MT, PhD"}>
+                    Debby E. Sondakh, MT, PhD
+                  </MenuItem>
+                  <MenuItem value={"Ir. Edson Y. Putra, MKom"}>
+                    Ir. Edson Y. Putra, MKom
+                  </MenuItem>
+                  <MenuItem value={"Green A. Sandag, SKom, MS"}>
+                    Green A. Sandag, SKom, MS
+                  </MenuItem>
+                  <MenuItem value={"Jacquline M. S. Waworundeng, ST, MT"}>
                     Jacquline M. S. Waworundeng, ST, MT
                   </MenuItem>
-                  <MenuItem value={80}>
+                  <MenuItem value={"Jimmy H. Moedjahedy, SKom, MKom, MM"}>
                     Jimmy H. Moedjahedy, SKom, MKom, MM
                   </MenuItem>
-                  <MenuItem value={90}>Joe Y. Mambu, BSIT, MCIS</MenuItem>
-                  <MenuItem value={100}>Lidya C. Laoh, SKom, MMSi</MenuItem>
-                  <MenuItem value={110}>Marshal Tombeng,</MenuItem>
-                  <MenuItem value={120}>
+                  <MenuItem value={"Joe Y. Mambu, BSIT, MCIS"}>
+                    Joe Y. Mambu, BSIT, MCIS
+                  </MenuItem>
+                  <MenuItem value={"Lidya C. Laoh, SKom, MMSi"}>
+                    Lidya C. Laoh, SKom, MMSi
+                  </MenuItem>
+                  <MenuItem value={"Marshal Tombeng,"}>
+                    Marshal Tombeng,
+                  </MenuItem>
+                  <MenuItem value={"Oktoverano H. Lengkong, SKom, MDs, MM"}>
                     Oktoverano H. Lengkong, SKom, MDs, MM
                   </MenuItem>
-                  <MenuItem value={130}>Reymon Rotikan, SKom, MS, MM</MenuItem>
-                  <MenuItem value={140}>
+                  <MenuItem value={"Reymon Rotikan, SKom, MS, MM"}>
+                    Reymon Rotikan, SKom, MS, MM
+                  </MenuItem>
+                  <MenuItem value={"Reynoldus A. Sahulata, SKom, MM"}>
                     Reynoldus A. Sahulata, SKom, MM
                   </MenuItem>
-                  <MenuItem value={150}>Rolly Lontaan, MKom</MenuItem>
-                  <MenuItem value={160}>Semmy W. Taju, SKom</MenuItem>
-                  <MenuItem value={170}>Senly I. Adam, SKom, MSc</MenuItem>
+                  <MenuItem value={"Rolly Lontaan, MKom"}>
+                    Rolly Lontaan, MKom
+                  </MenuItem>
+                  <MenuItem value={"Semmy W. Taju, SKom"}>
+                    Semmy W. Taju, SKom
+                  </MenuItem>
+                  <MenuItem value={"Senly I. Adam, SKom, MSc"}>
+                    Senly I. Adam, SKom, MSc
+                  </MenuItem>
                 </Select>
               </FormControl>
               <FormControl fullWidth size="small">
@@ -590,31 +686,57 @@ function DaftarPengajuan() {
                   label="Co-Advisor 2"
                   onChange={handleCoAdvisorChange2}
                 >
-                  <MenuItem value={10}>Andrew T. Liem, MT, PhD</MenuItem>
-                  <MenuItem value={20}>Green Mandias, SKom, MCs</MenuItem>
-                  <MenuItem value={30}>Stenly R. Pungus, MT, PhD</MenuItem>
-                  <MenuItem value={40}>Debby E. Sondakh, MT, PhD</MenuItem>
-                  <MenuItem value={50}>Ir. Edson Y. Putra, MKom</MenuItem>
-                  <MenuItem value={60}>Green A. Sandag, SKom, MS</MenuItem>
-                  <MenuItem value={70}>
+                  <MenuItem value={"Andrew T. Liem, MT, PhD"}>
+                    Andrew T. Liem, MT, PhD
+                  </MenuItem>
+                  <MenuItem value={"Green Mandias, SKom, MCs"}>
+                    Green Mandias, SKom, MCs
+                  </MenuItem>
+                  <MenuItem value={"Stenly R. Pungus, MT, PhD"}>
+                    Stenly R. Pungus, MT, PhD
+                  </MenuItem>
+                  <MenuItem value={"Debby E. Sondakh, MT, PhD"}>
+                    Debby E. Sondakh, MT, PhD
+                  </MenuItem>
+                  <MenuItem value={"Ir. Edson Y. Putra, MKom"}>
+                    Ir. Edson Y. Putra, MKom
+                  </MenuItem>
+                  <MenuItem value={"Green A. Sandag, SKom, MS"}>
+                    Green A. Sandag, SKom, MS
+                  </MenuItem>
+                  <MenuItem value={"Jacquline M. S. Waworundeng, ST, MT"}>
                     Jacquline M. S. Waworundeng, ST, MT
                   </MenuItem>
-                  <MenuItem value={80}>
+                  <MenuItem value={"Jimmy H. Moedjahedy, SKom, MKom, MM"}>
                     Jimmy H. Moedjahedy, SKom, MKom, MM
                   </MenuItem>
-                  <MenuItem value={90}>Joe Y. Mambu, BSIT, MCIS</MenuItem>
-                  <MenuItem value={100}>Lidya C. Laoh, SKom, MMSi</MenuItem>
-                  <MenuItem value={110}>Marshal Tombeng,</MenuItem>
-                  <MenuItem value={120}>
+                  <MenuItem value={"Joe Y. Mambu, BSIT, MCIS"}>
+                    Joe Y. Mambu, BSIT, MCIS
+                  </MenuItem>
+                  <MenuItem value={"Lidya C. Laoh, SKom, MMSi"}>
+                    Lidya C. Laoh, SKom, MMSi
+                  </MenuItem>
+                  <MenuItem value={"Marshal Tombeng,"}>
+                    Marshal Tombeng,
+                  </MenuItem>
+                  <MenuItem value={"Oktoverano H. Lengkong, SKom, MDs, MM"}>
                     Oktoverano H. Lengkong, SKom, MDs, MM
                   </MenuItem>
-                  <MenuItem value={130}>Reymon Rotikan, SKom, MS, MM</MenuItem>
-                  <MenuItem value={140}>
+                  <MenuItem value={"Reymon Rotikan, SKom, MS, MM"}>
+                    Reymon Rotikan, SKom, MS, MM
+                  </MenuItem>
+                  <MenuItem value={"Reynoldus A. Sahulata, SKom, MM"}>
                     Reynoldus A. Sahulata, SKom, MM
                   </MenuItem>
-                  <MenuItem value={150}>Rolly Lontaan, MKom</MenuItem>
-                  <MenuItem value={160}>Semmy W. Taju, SKom</MenuItem>
-                  <MenuItem value={170}>Senly I. Adam, SKom, MSc</MenuItem>
+                  <MenuItem value={"Rolly Lontaan, MKom"}>
+                    Rolly Lontaan, MKom
+                  </MenuItem>
+                  <MenuItem value={"Semmy W. Taju, SKom"}>
+                    Semmy W. Taju, SKom
+                  </MenuItem>
+                  <MenuItem value={"Senly I. Adam, SKom, MSc"}>
+                    Senly I. Adam, SKom, MSc
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Div>
