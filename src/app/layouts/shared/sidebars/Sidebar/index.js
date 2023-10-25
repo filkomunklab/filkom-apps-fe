@@ -81,7 +81,7 @@ const Sidebar = () => {
             </Div>
           }
         >
-          <JumboVerticalNavbar translate items={validatedMenus} />
+          <JumboVerticalNavbar translate items={kaprodiMenus} />
         </Suspense>
         <Div
           sx={{

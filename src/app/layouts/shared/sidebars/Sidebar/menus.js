@@ -96,6 +96,48 @@ export const sekretarisMenus = [
       },
     ],
   },
+  {
+    label: "Bimbingan Akademik",
+    type: "section",
+    children: [
+      {
+        label: "Academic Guide",
+        type: "nav-item",
+        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/sekDekan/academic-guide",
+      },
+      {
+        label: "Vision Mission Goals",
+        type: "nav-item",
+        icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/sekDekan/vision-mission-goals",
+      },
+      {
+        label: "Curriculum",
+        type: "nav-item",
+        icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/sekDekan/curriculum",
+      },
+      {
+        label: "Student Information",
+        type: "collapsible",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/sekDekan/student-information-faculty",
+      },
+      {
+        label: "Supervisor Information",
+        type: "nav-item",
+        icon: <GroupIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/sekDekan/supervisor-information",
+      },
+      {
+        label: "Profile",
+        type: "nav-item",
+        icon: <PermContactCalendarIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/sekDekan/profile",
+      },
+    ],
+  },
 ];
 
 export const mahasiswaMenus = [
@@ -658,7 +700,7 @@ export const kaprodiMenus = [
         ],
       },
       {
-        label: "Supervisor Infomation",
+        label: "Supervisor Information",
         type: "nav-item",
         icon: <GroupIcon sx={{ fontSize: 20 }} />,
         uri: "/bimbingan-akademik/kaprodi/supervisor-information",
@@ -691,16 +733,16 @@ export const kaprodiMenus = [
         ],
       },
       {
-        label: "Recent History",
+        label: "Current Activities",
         type: "nav-item",
         icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/kaprodi/recent-history",
+        uri: "/bimbingan-akademik/kaprodi/current-activities",
       },
       {
-        label: "Activity History",
+        label: "History",
         type: "nav-item",
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/kaprodi/activity-history",
+        uri: "/bimbingan-akademik/kaprodi/history",
       },
       {
         label: "Add Activity",

@@ -55,7 +55,6 @@ const style2 = {
   top: "15%",
   right: "2%",
   width: 400,
-  // bgcolor: "background.paper",
   boxShadow: 24,
   padding: 24,
   backgroundColor: "white",
@@ -372,7 +371,6 @@ const Certificate = () => {
                   >
                     You have successfully preregistered for the course.
                   </Typography>
-                  {/* Tambahkan tautan dan elemen lain yang diperlukan di sini */}
                 </div>
               </Modal>
             </Box>
