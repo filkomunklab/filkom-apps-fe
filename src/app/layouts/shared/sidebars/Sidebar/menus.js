@@ -253,6 +253,12 @@ export const dekanMenus = [
         uri: "/klabat-bridge/dashboard",
       },
       {
+        label: "Daftar Calon Tamatan",
+        type: "nav-item",
+        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-calon-tamatan",
+      },
+      {
         label: "Dafter Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,

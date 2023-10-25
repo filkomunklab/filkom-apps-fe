@@ -2,14 +2,12 @@
 import Page from "@jumbo/shared/Page";
 import DaftarAlumni from "app/pages/KlabatBridge/Operator/DaftarAlumni";
 import FormTracerStudy from "app/pages/KlabatBridge/Operator/FormTracerStudy";
-import GrafikAlumni from "app/pages/KlabatBridge/Operator/GrafikAlumni";
 import Dashboard from "app/pages/KlabatBridge/Operator/Dashboard";
 import ViewDetailStudent from "app/pages/KlabatBridge/Operator/ViewDetailStudent";
 import PengisianSPT from "app/pages/KlabatBridge/Operator/PengisianSPT";
 import DaftarCalonTamatan from "app/pages/KlabatBridge/Operator/DaftarCalonTamatan";
 import HomeAlumni from "app/pages/KlabatBridge/Operator/HomeAlumni";
 import HomeCalonTamatan from "app/pages/KlabatBridge/Operator/HomeCalonTamatan";
-import DaftarCalonTamatanFakultas from "app/pages/KlabatBridge/Operator/DaftarCalonTamatanFakultas";
 
 const operatorRoutes = [
   {
@@ -25,10 +23,6 @@ const operatorRoutes = [
     element: <Page component={FormTracerStudy} />,
   },
   {
-    path: "klabat-bridge/grafik-alumni",
-    element: <Page component={GrafikAlumni} />,
-  },
-  {
     path: "klabat-bridge/view-detail-student",
     element: <Page component={ViewDetailStudent} />,
   },
@@ -41,10 +35,6 @@ const operatorRoutes = [
     element: <Page component={DaftarCalonTamatan} />,
   },
   {
-    path: "klabat-bridge/daftar-calon-tamatan-fakultas",
-    element: <Page component={DaftarCalonTamatanFakultas} />,
-  },
-  {
     path: "klabat-bridge/home-alumni",
     element: <Page component={HomeAlumni} />,
   },
@@ -52,6 +42,7 @@ const operatorRoutes = [
     path: "klabat-bridge/home-calon-tamatan",
     element: <Page component={HomeCalonTamatan} />,
   },
+  
 ];
 
 export default operatorRoutes;

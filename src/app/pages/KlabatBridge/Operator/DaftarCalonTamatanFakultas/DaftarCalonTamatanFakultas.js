@@ -247,11 +247,11 @@ const DaftarCalonTamatan = () => {
         </Button>
       </TableCell>
       <TableCell>105011810011</TableCell>
-      <TableCell>Sistem Informasi</TableCell>
       <TableCell>Fakultas Ilmu Komputer</TableCell>
+      <TableCell>Sistem Informasi</TableCell>
       <TableCell>Semester 1 2023/2024</TableCell>
       <TableCell>Approved</TableCell>
-      <TableCell>
+      <TableCell> 
         <Grid container alignItems="center" justifyContent="center">
           <Grid item>
             <CheckIcon sx={{ fontSize: 20 }} />
@@ -279,7 +279,14 @@ const DaftarCalonTamatan = () => {
   
 
   return (
-    <Div>
+    <Box
+      p={8}
+      sx={{
+          backgroundColor: 'white',
+          borderRadius: 5,
+          boxShadow: 3,
+      }}
+    >
       <Div
         sx={{
           display: "flex",
@@ -331,12 +338,12 @@ const DaftarCalonTamatan = () => {
       <TableContainer sx={{ overflow: "auto" }}>
         <Table>
           <TableHead>
-            <TableRow>
+            <TableRow sx={{ backgroundColor: '#f5f5f5'}}>
               <TableCell >No</TableCell>
               <TableCell>Nama Lengkap</TableCell>
               <TableCell>Nim</TableCell>
-              <TableCell>Nama Prodi</TableCell>
               <TableCell>Fakultas</TableCell>
+              <TableCell>Program Studi</TableCell>
               <TableCell>Waktu Kelulusan</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Status</TableCell>
@@ -374,11 +381,11 @@ const DaftarCalonTamatan = () => {
         </Grid>
       </Grid>
 
-      <Box display="flex" justifyContent="flex-end">
+      {/* <Box display="flex" justifyContent="flex-end">
         <Button variant="outlined" color="primary" style={{ marginRight: "10px" }}>
           Batal
         </Button>
-        {/* alert dialog */}
+        
         <Div >
           <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
             Kirim
@@ -405,8 +412,8 @@ const DaftarCalonTamatan = () => {
             </DialogActions>
           </Dialog>
         </Div>
-      </Box>
-    </Div>
+      </Box> */}
+    </Box>
   );
 };
 
