@@ -18,27 +18,27 @@ const Konsultasi = () => {
     {
       deskripsi: "Diskusi Tentang Judul",
       tanggal: "08/09/2023",
-      tertenda: "Andrew T.Liem",
+      tertera: "Andrew T.Liem",
     },
     {
       deskripsi: "Diskusi Tentang Metode",
       tanggal: "08/09/2023",
-      tertenda: "Andrew T.Liem",
+      tertera: "Andrew T.Liem",
     },
     {
       deskripsi: "Diskusi Tentang Penulisan",
       tanggal: "08/09/2023",
-      tertenda: "Andrew T.Liem",
+      tertera: "Andrew T.Liem",
     },
     {
       deskripsi: "Diskusi Tentang Perubahan",
       tanggal: "08/09/2023",
-      tertenda: "Andrew T.Liem",
+      tertera: "Andrew T.Liem",
     },
     {
       deskripsi: "Diskusi Tentang Latar Belakang",
       tanggal: "08/09/2023",
-      tertenda: "Andrew T.Liem",
+      tertera: "Andrew T.Liem",
     },
   ];
 
@@ -132,7 +132,7 @@ const Konsultasi = () => {
                       <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
                       <TableCell sx={{ width: "25%" }}>Deskripsi</TableCell>
                       <TableCell sx={{ width: "25%" }}>Tanggal</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Tertenda</TableCell>
+                      <TableCell sx={{ width: "25%" }}>Tertera</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -141,7 +141,7 @@ const Konsultasi = () => {
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{item.deskripsi}</TableCell>
                         <TableCell>{item.tanggal}</TableCell>
-                        <TableCell>{item.tertenda}</TableCell>
+                        <TableCell>{item.tertera}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
