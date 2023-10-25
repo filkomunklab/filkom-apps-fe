@@ -4,10 +4,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const MenuSekertaris = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open1 = Boolean(anchorEl);
-  const [anchorE2, setAnchorE2] = React.useState(null);
-  const open2 = Boolean(anchorE2);
   return (
     <Div>
       {/* Menu Horizontal Start */}
@@ -26,7 +22,7 @@ const MenuSekertaris = () => {
       >
         <Div sx={{ width: "100%", display: "flex" }}>
           <Div sx={{ margin: "auto" }}>
-            <Link to="#">
+            <Link to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi/beranda">
               <Button
                 sx={{
                   fontSize: "13px",
@@ -43,16 +39,8 @@ const MenuSekertaris = () => {
               </Button>
             </Link>
           </Div>
-          <Div
-            sx={{
-              width: "1px",
-              transform: "90px",
-              alignSelf: "stretch",
-              background: "rgba(26, 56, 96, 0.10)",
-            }}
-          ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="#">
+            <Link to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi/jadwal-sidang">
               <Button
                 sx={{
                   // width: "150px",
@@ -69,16 +57,8 @@ const MenuSekertaris = () => {
               </Button>
             </Link>
           </Div>
-          <Div
-            sx={{
-              width: "1px",
-              transform: "90px",
-              alignSelf: "stretch",
-              background: "rgba(26, 56, 96, 0.10)",
-            }}
-          ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="#">
+            <Link to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi/konsultasi">
               <Button
                 sx={{
                   // width: "130px",
@@ -95,100 +75,41 @@ const MenuSekertaris = () => {
               </Button>
             </Link>
           </Div>
-          <Div
-            sx={{
-              width: "1px",
-              transform: "90px",
-              alignSelf: "stretch",
-              background: "rgba(26, 56, 96, 0.10)",
-            }}
-          ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Button
-              onClick={(event) => setAnchorEl(event.currentTarget)}
-              sx={{
-                fontSize: "13px",
-                fontWeight: 500,
-                color: "#192434",
-                textTransform: "none",
-                "&:hover": {
-                  color: "#006AF5",
-                },
-              }}
-            >
-              Pengajuan Proposal
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={open1}
-              onClose={() => setAnchorEl(null)}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-            >
-              <MenuItem onClick={() => setAnchorEl(null)}>
-                Upload Proposal
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorEl(null)}>
-                Berita Acara
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorEl(null)}>
-                Upload Revisi Proposal
-              </MenuItem>
-            </Menu>
+            <Link to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi/dokumen-proposal">
+              <Button
+                sx={{
+                  // width: "130px",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  color: "#192434",
+                  textTransform: "none",
+                  "&:hover": {
+                    color: "#006AF5",
+                  },
+                }}
+              >
+                Dokumen Proposal
+              </Button>
+            </Link>
           </Div>
-          <Div
-            sx={{
-              width: "1px",
-              transform: "90px",
-              alignSelf: "stretch",
-              background: "rgba(26, 56, 96, 0.10)",
-            }}
-          ></Div>
-          {/* Menu Pengajuan Skripsi */}
-          <Div>
-            <Button
-              onClick={(event) => setAnchorE2(event.currentTarget)}
-              sx={{
-                fontSize: "13px",
-                fontWeight: 500,
-                color: "#192434",
-                textTransform: "none",
-                "&:hover": {
-                  color: "#006AF5",
-                },
-              }}
-            >
-              Pengajuan Skripsi
-            </Button>
-            <Menu
-              anchorEl={anchorE2}
-              open={open2}
-              onClose={() => setAnchorE2(null)}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-            >
-              <MenuItem onClick={() => setAnchorE2(null)}>
+          <Div sx={{ margin: "auto" }}>
+            <Link to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi/dokumen-skripsi">
+              <Button
+                sx={{
+                  // width: "130px",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  color: "#192434",
+                  textTransform: "none",
+                  "&:hover": {
+                    color: "#006AF5",
+                  },
+                }}
+              >
                 Dokumen Skripsi
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Berita Acara Skripsi
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Dokumen Revisi Skripsi
-              </MenuItem>
-            </Menu>
+              </Button>
+            </Link>
           </Div>
         </Div>
       </Div>

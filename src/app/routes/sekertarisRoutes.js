@@ -11,6 +11,10 @@ import DaftarPengajuanSkripsiSekertaris from "app/pages/ThesisApps/Sekertaris/Da
 import JadwalSidangSkripsi from "app/pages/ThesisApps/Sekertaris/JadwalSidangSkripsi";
 import BerandaProposal from "app/pages/ThesisApps/Sekertaris/BerandaProposal";
 import BerandaSkripsi from "app/pages/ThesisApps/Sekertaris/BerandaSkripsi";
+import Konsultasi from "app/pages/ThesisApps/Sekertaris/KonsultasiSekertaris";
+import DokumenProposal from "app/pages/ThesisApps/Sekertaris/DokumenProposal";
+import DokumenSkripsi from "app/pages/ThesisApps/Sekertaris/DokumenSkripsi";
+import KonsultasiSekertaris from "app/pages/ThesisApps/Sekertaris/KonsultasiSekertaris";
 
 const sekertarisRoutes = [
   {
@@ -47,6 +51,26 @@ const sekertarisRoutes = [
     // beranda skripsi
     path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/beranda",
     element: <Page component={BerandaSkripsi} />,
+  },
+  {
+    // jadwal Sidang
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/jadwal-sidang",
+    element: <Page component={PerbaruiJadwalSidang} />,
+  },
+  {
+    // konsultasi
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/konsultasi",
+    element: <Page component={KonsultasiSekertaris} />,
+  },
+  {
+    // Dokumen Proposal
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/dokumen-proposal",
+    element: <Page component={DokumenProposal} />,
+  },
+  {
+    // Dokumen Skripsi
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/dokumen-skripsi",
+    element: <Page component={DokumenSkripsi} />,
   },
 ];
 
