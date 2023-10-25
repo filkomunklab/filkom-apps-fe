@@ -88,12 +88,6 @@ export const sekretarisMenus = [
         type: "nav-item",
         icon: <PersonIcon sx={{ fontSize: 20 }} />,
       },
-      {
-        uri: "/sistem-informasi-skripsi/manajamen-dosen",
-        label: "Dosen",
-        type: "nav-item",
-        icon: <PersonIcon sx={{ fontSize: 20 }} />,
-      },
     ],
   },
   {
