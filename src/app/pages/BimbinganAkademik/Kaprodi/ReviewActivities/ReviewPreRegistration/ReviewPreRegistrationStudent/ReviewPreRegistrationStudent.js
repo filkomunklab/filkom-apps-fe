@@ -1171,7 +1171,7 @@ const ReviewPreRegistrationStudent = () => {
     <Div>
       <Div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/dekan/review-activities/pre-registration/">
+          <StyledLink to="/bimbingan-akademik/kaprodi/review-activities/pre-registration/">
             Review Pre-Registration
           </StyledLink>
           <Typography color="text.primary">Pre-registration</Typography>
