@@ -14,7 +14,11 @@ import { ROLES } from "app/utils/constants/roles";
 import { dekanMenus, dosenMenus, kaprodiMenus, mahasiswaMenus } from "./menus";
 
 const roleCheck = () => {
-  const role = JSON.parse(localStorage.getItem("user"))?.role[0];
+  const roles = JSON.parse(localStorage.getItem("user"))?.role;
+
+  const role =
+    typeof roles === "string" ? roles : roles?.length > 0 ? roles[0] : null;
+  console.log(role);
   switch (role) {
     case ROLES.MAHASISWA:
       return mahasiswaMenus;
