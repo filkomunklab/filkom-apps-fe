@@ -11,17 +11,31 @@ import JumboNavSection from "@jumbo/components/JumboVerticalNavbar/JumboNavSecti
 import useJumboAuth from "@jumbo/hooks/useJumboAuth";
 import { useNavigate } from "react-router-dom";
 import { ROLES } from "app/utils/constants/roles";
-import menus, {
+import {
+  adminMenus,
   dekanMenus,
   dosenMenus,
   kaprodiMenus,
   mahasiswaMenus,
+  mahasiswaMenusGraduate,
+  operatorMenus,
+  registerMenus,
+  sekretarisMenus,
 } from "./menus";
 
 const roleCheck = () => {
-  const role = JSON.parse(localStorage.getItem("user"))?.role[0];
+  const roles = JSON.parse(localStorage.getItem("user"))?.role;
+
+  const role =
+    typeof roles === "string" ? roles : roles?.length > 0 ? roles[0] : null;
+  console.log(role);
   switch (role) {
+    case ROLES.ADMIN:
+      return adminMenus;
     case ROLES.MAHASISWA:
+      if (JSON.parse(localStorage.getItem("user")).status === "GRADUATE") {
+        return mahasiswaMenusGraduate;
+      }
       return mahasiswaMenus;
     case ROLES.DOSEN:
       return dosenMenus;
@@ -29,6 +43,12 @@ const roleCheck = () => {
       return dekanMenus;
     case ROLES.KAPRODI:
       return kaprodiMenus;
+    case ROLES.SEKRETARIS:
+      return sekretarisMenus;
+    case ROLES.REGISTER:
+      return registerMenus;
+    case ROLES.OPERATOR_LPMI:
+      return operatorMenus;
     default:
       return [];
   }
@@ -61,7 +81,7 @@ const Sidebar = () => {
             </Div>
           }
         >
-          <JumboVerticalNavbar translate items={menus} />
+          <JumboVerticalNavbar translate items={validatedMenus} />
         </Suspense>
         <Div
           sx={{

@@ -125,7 +125,7 @@ const Dashboard = () => {
   return (
     <Div>
       <Grid container spacing={2}>
-        <Grid item sm={12} md={12} lg={12} xs={12}>
+        <Grid item sm={12} md={12} lg={6} xs={12}>
           <Card>
             <CardHeader title="Distribution of students" />
             <CardContent>
@@ -139,6 +139,36 @@ const Dashboard = () => {
                   <Bar dataKey="pv" fill="#8884d8" />
                   <Bar dataKey="uv" fill="#82ca9d" />
                 </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item sm={12} md={12} lg={6} xs={12}>
+          <Card sx={{ height: "100%" }}>
+            <CardHeader title="Certificate" />
+            <CardContent>
+              <ResponsiveContainer width={"100%"} height={250}>
+                <PieChart>
+                  <Pie
+                    data={data02}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="55%"
+                    innerRadius={50}
+                    outerRadius={100}
+                    fill="#82ca9d"
+                    label
+                  >
+                    {data.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Legend />
+                </PieChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
@@ -205,138 +235,6 @@ const Dashboard = () => {
                 </CardContent>
               </Grid>
             </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={6} xs={12}>
-          <Card sx={{ height: "100%" }}>
-            <CardHeader title="Certificate" />
-            <CardContent>
-              <ResponsiveContainer width={"100%"} height={280}>
-                <PieChart>
-                  <Pie
-                    data={data02}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="55%"
-                    innerRadius={50}
-                    outerRadius={100}
-                    fill="#82ca9d"
-                    label
-                  >
-                    {data.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={6} xs={12}>
-          <Card>
-            <CardHeader
-              title="Review Certificates"
-              action={
-                <Link type="">
-                  <Typography>View All</Typography>{" "}
-                </Link>
-              }
-            />
-            <CardContent sx={{ paddingY: 0 }}>
-              <Stack gap={2}>
-                {data03.map((item, index) => (
-                  <Div
-                    sx={{
-                      display: "flex",
-                      direction: "row",
-                      justifyContent: "space-between",
-                    }}
-                    key={index}
-                  >
-                    <Div
-                      sx={{
-                        display: "flex",
-                        direction: "row",
-                        alignItems: "center",
-                        gap: 2,
-                      }}
-                    >
-                      <img
-                        src={item.profileImage}
-                        alt="profile"
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          objectFit: "contain",
-                          borderRadius: "50%",
-                        }}
-                      />
-                      <Box>
-                        <Typography>{item.title}</Typography>
-                        <Typography variant="caption" color={"#6200EE"}>
-                          {item.name}{" "}
-                          <span style={{ color: "#00000061" }}>
-                            {moment(item.submiteDate, "DD MMMM YYYY").fromNow()}
-                          </span>
-                        </Typography>
-                      </Box>
-                    </Div>
-                    <Typography color={statusColor(item.status)}>
-                      {item.status}
-                    </Typography>
-                  </Div>
-                ))}
-              </Stack>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={6} xs={12}>
-          <Card>
-            <CardHeader
-              title="Review Pre-registrations"
-              action={
-                <Link type="">
-                  <Typography>View All</Typography>{" "}
-                </Link>
-              }
-            />
-            <CardContent sx={{ padding: 0, overflowX: "auto" }}>
-              <Table>
-                <TableHead children={<TableHeading />} />
-                <TableBody>
-                  {data04.map((item, index) => (
-                    <TableItem key={index} item={item} index={index} />
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={6} xs={12}>
-          <Card>
-            <CardHeader
-              title="Review Grades"
-              action={
-                <Link type="">
-                  <Typography>View All</Typography>{" "}
-                </Link>
-              }
-            />
-            <CardContent sx={{ padding: 0, overflowX: "auto" }}>
-              <Table>
-                <TableHead children={<TableHeading />} />
-                <TableBody>
-                  {data04.map((item, index) => (
-                    <TableItem key={index} item={item} index={index} />
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
           </Card>
         </Grid>
       </Grid>
