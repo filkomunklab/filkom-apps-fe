@@ -36,7 +36,7 @@ import AttachEmailIcon from "@mui/icons-material/AttachEmail";
 import MailIcon from "@mui/icons-material/Mail";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
-import ScheduleTwoToneIcon from "@mui/icons-material/ScheduleTwoTone";
+import ScheduleIcon from "@mui/icons-material/Schedule";
 
 export const sekretarisMenus = [
   {
@@ -66,7 +66,7 @@ export const sekretarisMenus = [
         uri: "/sistem-informasi-skripsi/manajemen-jadwal",
         label: "Kelola Jadwal",
         type: "collapsible",
-        icon: <ScheduleTwoToneIcon sx={{ fontSize: 20 }} />,
+        icon: <ScheduleIcon sx={{ fontSize: 20 }} />,
         children: [
           {
             uri: "/sistem-informasi-skripsi/jadwal-proposal",

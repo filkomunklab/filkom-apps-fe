@@ -42,7 +42,6 @@ const routesForAuthenticatedOnly = [
   ...ketuaPenelisRoutes,
   ...anggotaPenelisRoutes,
   // ...calonTamatanRoutes,
-  ...mahasiswaRoutes,
   ...dosenPembimbingRoutes,
   ...dekanRoutes,
   ...kepalaProgramStudiRoutes,

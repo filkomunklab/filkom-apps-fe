@@ -1,8 +1,6 @@
 import Div from "@jumbo/shared/Div";
 import {
-  Button,
-  Menu,
-  MenuItem,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -11,14 +9,38 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
+import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import React from "react";
-import { Link } from "react-router-dom";
 
 const Konsultasi = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const [anchorE2, setAnchorE2] = React.useState(null);
-  const open2 = Boolean(anchorE2);
+  const data = [
+    {
+      deskripsi: "Diskusi Tentang Judul",
+      tanggal: "08/09/2023",
+      tertera: "Andrew T.Liem",
+    },
+    {
+      deskripsi: "Diskusi Tentang Metode",
+      tanggal: "08/09/2023",
+      tertera: "Andrew T.Liem",
+    },
+    {
+      deskripsi: "Diskusi Tentang Penulisan",
+      tanggal: "08/09/2023",
+      tertera: "Andrew T.Liem",
+    },
+    {
+      deskripsi: "Diskusi Tentang Perubahan",
+      tanggal: "08/09/2023",
+      tertera: "Andrew T.Liem",
+    },
+    {
+      deskripsi: "Diskusi Tentang Latar Belakang",
+      tanggal: "08/09/2023",
+      tertera: "Andrew T.Liem",
+    },
+  ];
 
   return (
     <Div>
@@ -57,139 +79,7 @@ const Konsultasi = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          {/* Riwayat Log Start */}
-          <Div
-            sx={{
-              width: "320px",
-              height: "500px",
-              borderRadius: "6px",
-              border: "1px solid rgba(26, 56, 96, 0.10)",
-              background: "#FFF",
-            }}
-          >
-            Riwayat Log
-          </Div>
-          {/* Riwayat Log End */}
-
-          {/* Dosen Pembimbing Start */}
-          <Div
-            sx={{
-              display: "flex",
-              width: "320px",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              borderRadius: "6px",
-              border: "1px solid rgba(26, 56, 96, 0.10)",
-              background: "#FFF",
-            }}
-          >
-            {/* Advisor */}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Advisor
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-            {/* Co-Advisor 1*/}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Co-Advisor 1
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-            {/* Co-Advisor 2*/}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Co-Advisor 2
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-          </Div>
-          {/* Dosen Pembimbing End */}
+          <Riwayatlog />
         </Div>
         {/* Element 1 End */}
         {/* Element 2 Start */}
@@ -206,180 +96,8 @@ const Konsultasi = () => {
           }}
         >
           {/* Menu Horizontal Start */}
-          <Div
-            sx={{
-              display: "flex",
-              // padding: "5px 16px",
-              width: "100%",
-              alignSelf: "stretch",
-              borderRadius: "8px",
-              border: "1px solid #E0E0E0",
-              background: "#FFF",
-              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
-              flexDirection: "column",
-            }}
-          >
-            <Div sx={{ width: "100%", display: "flex" }}>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    sx={{
-                      fontSize: "13px",
-                      padding: "6px 16px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Beranda
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    sx={{
-                      // width: "150px",
-                      fontSize: "13px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Pengajuan Judul
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    sx={{
-                      // width: "130px",
-                      fontSize: "13px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Konsultasi
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Button
-                  onClick={(event) => setAnchorEl(event.currentTarget)}
-                  sx={{
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: "#006AF5",
-                    },
-                  }}
-                >
-                  Pengajuan Proposal
-                </Button>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={() => setAnchorEl(null)}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Proposal
-                  </MenuItem>
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Revisi Proposal
-                  </MenuItem>
-                </Menu>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              {/* Menu Pengajuan Skripsi */}
-              <Div>
-                <Button
-                  onClick={(event) => setAnchorEl(event.currentTarget)}
-                  sx={{
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: "#006AF5",
-                    },
-                  }}
-                >
-                  Pengajuan Skripsi
-                </Button>
-                <Menu
-                  anchorEl={anchorE2}
-                  open={open2}
-                  onClose={() => setAnchorE2(null)}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuItem onClick={() => setAnchorE2(null)}>
-                    Upload Skripsi
-                  </MenuItem>
-                  <MenuItem onClick={() => setAnchorE2(null)}>
-                    Upload Revisi Skripsi
-                  </MenuItem>
-                </Menu>
-              </Div>
-            </Div>
+          <Div sx={{ width: "100%" }}>
+            <MenuMahasiswa />
           </Div>
           {/* Menu horizontal End */}
 
@@ -407,47 +125,25 @@ const Konsultasi = () => {
               }}
             >
               {/* Table Konsultasi Start*/}
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
                       <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
                       <TableCell sx={{ width: "25%" }}>Deskripsi</TableCell>
                       <TableCell sx={{ width: "25%" }}>Tanggal</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Tertenda</TableCell>
+                      <TableCell sx={{ width: "25%" }}>Tertera</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>Diskusi Tentang Judul</TableCell>
-                      <TableCell>08/09/2023</TableCell>
-                      <TableCell>Andrew T.Liem</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>2</TableCell>
-                      <TableCell>Diskusi Tentang Metode</TableCell>
-                      <TableCell>08/09/2023</TableCell>
-                      <TableCell>Andrew T.Liem</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>3</TableCell>
-                      <TableCell>Diskusi Tentang Penulisan</TableCell>
-                      <TableCell>08/09/2023</TableCell>
-                      <TableCell>Andrew T.Liem</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>4</TableCell>
-                      <TableCell>Diskusi Tentang Perubahan</TableCell>
-                      <TableCell>08/09/2023</TableCell>
-                      <TableCell>Andrew T.Liem</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>5</TableCell>
-                      <TableCell>Diskusi Tentang Latar Belakang</TableCell>
-                      <TableCell>08/09/2023</TableCell>
-                      <TableCell>Andrew T.Liem</TableCell>
-                    </TableRow>
+                    {data.map((item, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{item.deskripsi}</TableCell>
+                        <TableCell>{item.tanggal}</TableCell>
+                        <TableCell>{item.tertera}</TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
