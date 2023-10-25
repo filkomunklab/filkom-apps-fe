@@ -336,28 +336,22 @@ const menus = [
         uri: "/klabat-bridge/dashboard",
       },
       {
+        label: "Daftar Calon Tamatan",
+        type: "nav-item",
+        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-calon-tamatan",
+      },
+      {
         label: "Dafter Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/daftar-alumni",
       },
       {
-        label: "Grafik Alumni",
-        type: "nav-item",
-        icon: <PublicIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/grafik-alumni",
-      },
-      {
         label: "Form Tracer Study",
         type: "nav-item",
         icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/form-tracer-study",
-      },
-      {
-        label: "Form Tracer Study (alumni)",
-        type: "nav-item",
-        icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/form-tracer-study-alumni",
       },
       {
         label: "Pengisian SPT",
@@ -370,18 +364,6 @@ const menus = [
         type: "nav-item",
         icon: <AccountBoxIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/view-detail-student",
-      },
-      {
-        label: "Daftar Calon Tamatan",
-        type: "nav-item",
-        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-calon-tamatan",
-      },
-      {
-        label: "Daftar Calon Tamatan Fakultas",
-        type: "nav-item",
-        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-calon-tamatan-fakultas",
       },
       {
         label: "Home (Alumni)",

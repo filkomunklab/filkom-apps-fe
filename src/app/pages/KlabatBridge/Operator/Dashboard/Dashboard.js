@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import SchoolIcon from '@mui/icons-material/School';
+import PeopleIcon from '@mui/icons-material/People';
 import { 
   BarChart, 
   Bar, XAxis, 
@@ -35,10 +36,10 @@ import petaIndonesia from "./Indonesia.svg"
 import { styled } from "@mui/system";
 
 const filkomStudents = [
-  { icon: <SchoolIcon style={{ fontSize: 40 }}/>, topText: "Total Mahasiswa FILKOM", bottomText: "1,324 Students" },
-  { icon: <SchoolIcon style={{ fontSize: 40 }}/>, topText: "Mahasiswa Informatika", bottomText: "357 Students" },
-  { icon: <SchoolIcon style={{ fontSize: 40 }}/>, topText: "Mahasiswa Sistem Informasi", bottomText: "486 Students" },
-  { icon: <SchoolIcon style={{ fontSize: 40 }}/>, topText: "Mahasiswa Animasi & Desain", bottomText: "165 Students" },
+  { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Computer Science", bottomText: "1,324 Students" },
+  { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Informatics", bottomText: "357 Students" },
+  { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Information Systems", bottomText: "486 Students" },
+  { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Animation & Design", bottomText: "165 Students" },
 ];
 
 const ResponsiveAvatar = styled(Avatar)(
@@ -112,17 +113,17 @@ const processedData = data.map(item => ({
 const Dashboard = () => {
   return (
       <Div >
-        <Grid container spacing={5}>
+        <Grid container spacing={3}>
           {/* 4 cards */}
           <Grid item md={12}>
-             <Grid container spacing={5}>
+             <Grid container spacing={3}>
               {filkomStudents.map((item, index) => (
                 <Grid item xs={12} sm={6} md={3} key={index}>
-                  <Card sx={{ paddingX: 1 }}>
+                  <Card>
                     <CardHeader
                       avatar={<ResponsiveAvatar sx={{ color: 'primary.main', bgcolor: 'white' }}>{item.icon}</ResponsiveAvatar>}
                       title={<Typography variant="h6">{item.topText}</Typography>}
-                      subheader={<Typography variant="body2" sx={{ fontSize: "22px", fontWeight: 500 }}>{item.bottomText}</Typography>}
+                      subheader={<Typography variant="body2" sx={{ fontSize: "18px", fontWeight: 500 }}>{item.bottomText}</Typography>}
                     />
                   </Card>
                 </Grid>
@@ -133,8 +134,8 @@ const Dashboard = () => {
           {/* Persebaran alumni */}
           <Grid item md={12}>
             <Card sx={{ p: 5}}>
-              <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, mb: 3}}>
-                PERESEBARAN ALUMNI FILKOM DI INDONESIA
+              <Typography variant="h1" sx={{ fontSize: "18px", fontWeight: 500, mb: 3}}>
+                DISTRIBUTION OF COMPUTER SCIENCE ALUMNI IN INDONESIA
               </Typography>
               <Div sx={{ display: 'flex', alignItems: 'center' }}>
                 <Div sx={{ width: '50%', marginRight: '20px'}}>
@@ -180,10 +181,10 @@ const Dashboard = () => {
           </Grid>
 
           {/* Distribusi mahasiswa */}
-          <Grid item sm={12} md={6}>
+          <Grid item md={12}>
             <Card sx={{ p: 5 }}>
-              <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, marginLeft: "20px"}}>
-                DISTRIBUSI MAHASISWA 
+              <Typography variant="h1" sx={{ fontSize: "18px", fontWeight: 500, marginLeft: "20px"}}>
+                STUDENT DISTRIBUTION 
               </Typography>
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart
@@ -192,7 +193,7 @@ const Dashboard = () => {
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="year" />
-                  <YAxis label={{ value: 'Jumlah Mahasiswa', angle: -90, position: 'insideLeft', dy: 50 }} />
+                  <YAxis label={{ value: 'Total Students', angle: -90, position: 'insideLeft', dy: 50 }} />
                   <Tooltip />
                   <Legend iconType="circle" />
                   <Bar dataKey="TI" fill="#FFCC00" name="TI" />
@@ -203,14 +204,64 @@ const Dashboard = () => {
             </Card>
           </Grid>
 
-          {/* Pie Chart - Jumlah alumni yg telah mengisi TS  */}
-          <Grid item xs={12} sm={12} md={6}>
+          {/* Bar Chart - Jenis perusahaan tempat alumni bekerja */}
+          <Grid item md={12}>
+            <Card sx={{ p: 5 }}>
+                <Typography variant="h1" sx={{ fontSize: "18px", fontWeight: 500, marginLeft: "20px"}}>
+                  COMPANY CATEGORIES OF ALUMNI EMPLOYMENT
+                </Typography>
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart 
+                    data={processedData} 
+                    margin={{ top: 20, right: 30, bottom: 5 }}
+                    //barCategoryGap="10%" // Adjust the space between bars
+                    //barGap="5%" // Adjust the space between groups of bars (if applicable)
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="organization" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" />
+                  </BarChart>
+                </ResponsiveContainer>
+            </Card>
+          </Grid>
+
+          {/* Bar Chart - alumni yang mendapatkan pekerjaan selama <12 bulan */}
+          <Grid item md={12}>
+            <Card sx={{ p: 5 }}>
+              <Typography variant="h1" sx={{ fontSize: "18px", fontWeight: 500, marginLeft: "20px"}}>
+                ALUMNI EMPLOYED IN &lt;12 MONTHS
+              </Typography>
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart 
+                  data={dapatKerja} 
+                  margin={{ top: 20, right: 30, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  {/* <Legend/> */}
+                  <Bar dataKey="value" fill="#006AF5" />
+                </BarChart>
+              </ResponsiveContainer>
+              <Typography  ml={5}>
+                <span style={{ fontSize: '1.2em' }}>300 students </span>
+                 obtained jobs within 12 months
+              </Typography>
+            </Card>
+            
+          </Grid>
+          
+           {/* Pie Chart - Jumlah alumni yg telah mengisi TS  */}
+           <Grid item md={6}>
             <Card sx={{ p: 5}}>
-              <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, marginLeft: "20px" }}>
-                JUMLAH ALUMNI YANG TELAH MENGISI KUESIONER
+              <Typography variant="h1" sx={{ fontSize: "18px", fontWeight: 500, marginLeft: "20px" }}>
+                NUMBER OF ALUMNI SURVEYED
               </Typography>
                 <ResponsiveContainer width="100%" height={400}>
-                  <PieChart>
+                  <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                     <Pie
                       data={pieChartData}
                       dataKey="value"
@@ -231,57 +282,6 @@ const Dashboard = () => {
             </Card>
           </Grid>
 
-          {/* Bar Chart - Jenis perusahaan tempat alumni bekerja */}
-          <Grid item xs={12} md={6}>
-            <Card sx={{ p: 5 }}>
-                <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, marginLeft: "20px"}}>
-                  JENIS PERUSAHAAN TEMPAT ALUMNI BEKERJA
-                </Typography>
-                <ResponsiveContainer width="100%" height={400}>
-                  <BarChart 
-                    data={processedData} 
-                    margin={{ top: 20, right: 30, bottom: 5 }}
-                    //barCategoryGap="10%" // Adjust the space between bars
-                    //barGap="5%" // Adjust the space between groups of bars (if applicable)
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="organization" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="value" />
-                  </BarChart>
-                </ResponsiveContainer>
-            </Card>
-            
-          </Grid>
-
-          {/* Bar Chart - alumni yang mendapatkan pekerjaan selama <12 bulan */}
-          <Grid item xs={12} md={6}>
-            <Card sx={{ p: 5 }}>
-              <Typography variant="h1" sx={{ fontSize: "20px", fontWeight: 500, marginLeft: "20px"}}>
-                ALUMNI YANG MENDAPATKAN PEKERJAAN SELAMA &lt;12 BULAN
-              </Typography>
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart 
-                  data={dapatKerja} 
-                  margin={{ top: 20, right: 30, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  {/* <Legend/> */}
-                  <Bar dataKey="value" fill="#006AF5" />
-                </BarChart>
-              </ResponsiveContainer>
-              <Typography  ml={5}>
-                <span style={{ fontSize: '1.5em' }}>300 Mahasiswa </span>
-                yang mendapatkan pekerjaan dalam waktu &lt;12 bulan
-              </Typography>
-            </Card>
-            
-          </Grid>
-          
         </Grid>
       </Div>
     );

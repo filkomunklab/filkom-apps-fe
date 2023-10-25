@@ -27,6 +27,7 @@ import {
   Divider, 
   FormControlLabel,
   Checkbox,
+  ListSubheader,
 } from "@mui/material";
 import ActionButton from "app/shared/ActionButton";
 import SearchGlobal from "app/shared/SearchGlobal";
@@ -248,8 +249,9 @@ const DaftarCalonTamatan = () => {
       <TableCell>105011810011</TableCell>
       <TableCell>Fakultas Ilmu Komputer</TableCell>
       <TableCell>Sistem Informasi</TableCell>
-      <TableCell>2023</TableCell>
-      <TableCell>Approved</TableCell>
+      <TableCell>Semester I 2023/2024</TableCell>
+      <TableCell>Waiting</TableCell>
+      <TableCell>Waiting</TableCell>
     </TableRow>
   );
 
@@ -272,12 +274,12 @@ const DaftarCalonTamatan = () => {
 
   return (
     <Box
-      p={8}
-      sx={{
-          backgroundColor: 'white',
-          borderRadius: 5,
-          boxShadow: 3,
-      }}
+      // p={8}
+      // sx={{
+      //     backgroundColor: 'white',
+      //     borderRadius: 5,
+      //     boxShadow: 3,
+      // }}
     >
       <Div
         sx={{
@@ -289,45 +291,38 @@ const DaftarCalonTamatan = () => {
           mb: 2,
         }}
       >
-        <Div sx={{ 
-          display: "flex",
-          direction: "row",
-          gap: 3,
-          }}
-        >
-          <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
-            Calon Tamatan
-          </Typography>
-          <FormControl sx={{minWidth: 150}} size="small">
-          <InputLabel id="demo-select-small">Tahun</InputLabel>
-          <Select
-            sx={{ borderRadius: "50px", minWidth: "150px"}}
-            labelId="demo-select-small"
-            id="demo-select-small"
-            value={sortBy}
-            label="Tahun"
-            onChange={(event) => setSortBy(event.target.value)}
+        <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
+          Calon Tamatan
+        </Typography>
+        <FormControl sx={{minWidth: 200}} size="small">
+          <InputLabel htmlFor="grouped-select">Filter</InputLabel>
+          <Select 
+            defaultValue="" 
+            id="grouped-select" 
+            label="Filter"
+            sx={{borderRadius: 10, maxHeight: '50px'}}
+            // value={filter}
+            // onChange={handleChange}
           >
-            <MenuItem value={"2017"}>2017</MenuItem>
-            <MenuItem value={"2018"}>2018</MenuItem>
-            <MenuItem value={"2019"}>2019</MenuItem>
-            <MenuItem value={"2020"}>2020</MenuItem>
-            <MenuItem value={"2021"}>2021</MenuItem>
+            <MenuItem value="">
+                <em>None</em>
+            </MenuItem>
+            <ListSubheader sx={{color: "#192739F0"}}>Status by Faculty</ListSubheader>
+            <MenuItem value={"f-Approved"}>Approved</MenuItem>
+            <MenuItem value={"f-Waiting"}>Waiting</MenuItem>
+            <MenuItem value={"f-Rejected"}>Rejected</MenuItem>
+            <ListSubheader sx={{color: "#192739F0"}}>Status by Registar</ListSubheader>
+            <MenuItem value={"r-Approved"}>Approved</MenuItem>
+            <MenuItem value={"r-Waiting"}>Waiting</MenuItem>
+            <MenuItem value={"r-Rejected"}>Rejected</MenuItem>
+            <ListSubheader sx={{color: "#192739F0"}}>Rencana Tamat</ListSubheader>
+            <MenuItem value={"Semester I 2023/2024"}>Semester I 2023/2024</MenuItem>
+            <MenuItem value={"Semester II 2023/2024"}>Semester II 2023/2024</MenuItem>
           </Select>
-          </FormControl>
-        </Div>
-        <Div
-          sx={{
-            // display: "flex",
-            // direction: "row",
-            // alignItems: "center",
-            // justifyContent: "space-between",
-          }}
-        >
-          <SearchGlobal sx={{ minWidth: { xs: 100, md: 300 } }} />
-        </Div>
+        </FormControl>
       </Div>
-      <TableContainer sx={{ overflow: "auto" }}>
+
+      <TableContainer component={Paper} sx={{ overflow: "auto" }}>
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: '#f5f5f5'}}>
@@ -336,8 +331,9 @@ const DaftarCalonTamatan = () => {
               <TableCell>Nim</TableCell>
               <TableCell>Fakultas</TableCell>
               <TableCell>Program Studi</TableCell>
-              <TableCell>Tahun Lulus</TableCell>
-              <TableCell>Status</TableCell>
+              <TableCell>Rencana Tamat</TableCell>
+              <TableCell>Approved by Faculty</TableCell>
+              <TableCell>Approved by Registar</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
