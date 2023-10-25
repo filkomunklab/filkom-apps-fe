@@ -11,7 +11,12 @@ import JumboNavSection from "@jumbo/components/JumboVerticalNavbar/JumboNavSecti
 import useJumboAuth from "@jumbo/hooks/useJumboAuth";
 import { useNavigate } from "react-router-dom";
 import { ROLES } from "app/utils/constants/roles";
-import { dekanMenus, dosenMenus, kaprodiMenus, mahasiswaMenus } from "./menus";
+import menus, {
+  dekanMenus,
+  dosenMenus,
+  kaprodiMenus,
+  mahasiswaMenus,
+} from "./menus";
 
 const roleCheck = () => {
   const role = JSON.parse(localStorage.getItem("user"))?.role[0];
@@ -56,7 +61,7 @@ const Sidebar = () => {
             </Div>
           }
         >
-          <JumboVerticalNavbar translate items={validatedMenus} />
+          <JumboVerticalNavbar translate items={menus} />
         </Suspense>
         <Div
           sx={{

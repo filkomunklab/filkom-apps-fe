@@ -131,17 +131,25 @@ const MenuMahasiswa = () => {
                 horizontal: "left",
               }}
             >
-              <Link to="/sistem-informasi-skripsi/daftar-pengajuan/upload-proposal">
+              <Link
+                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-proposal"
+                style={{ textDecoration: "none", color: "black" }}
+              >
                 <MenuItem
                   onClick={() => setAnchorEl(null)}
                   style={{ textDecoration: "none", color: "black" }}
                 >
-                  Upload Proposal
+                  Unggah Proposal
                 </MenuItem>
               </Link>
-              <MenuItem onClick={() => setAnchorEl(null)}>
-                Upload Revisi Proposal
-              </MenuItem>
+              <Link
+                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-revisi-proposal"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem onClick={() => setAnchorEl(null)}>
+                  Unggah Revisi Proposal
+                </MenuItem>
+              </Link>
             </Menu>
           </Div>
           <Div
@@ -181,18 +189,38 @@ const MenuMahasiswa = () => {
                 horizontal: "left",
               }}
             >
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Dokumen Skripsi
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Dokumen Revisi Skripsi
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Arsip Document
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Metadata Repository
-              </MenuItem>
+              <Link
+                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-skripsi"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem onClick={() => setAnchorE2(null)}>
+                  Unggah Skripsi
+                </MenuItem>
+              </Link>
+              <Link
+                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-revisi-skripsi"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem onClick={() => setAnchorE2(null)}>
+                  Unggah Revisi Skripsi
+                </MenuItem>
+              </Link>
+              <Link
+                to="/sistem-informasi-skripsi/daftar-pengajuan/arsip-document"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem onClick={() => setAnchorE2(null)}>
+                  Arsip Document
+                </MenuItem>
+              </Link>
+              <Link
+                to="/sistem-informasi-skripsi/daftar-pengajuan/metadata-repository"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem onClick={() => setAnchorE2(null)}>
+                  Metadata Repository
+                </MenuItem>
+              </Link>
             </Menu>
           </Div>
         </Div>
