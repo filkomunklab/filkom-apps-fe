@@ -12,22 +12,43 @@ import useJumboAuth from "@jumbo/hooks/useJumboAuth";
 import { useNavigate } from "react-router-dom";
 import { ROLES } from "app/utils/constants/roles";
 import {
+  adminMenus,
   dekanMenus,
   dosenMenus,
   kaprodiMenus,
-  sekDekanMenus,
-  menus,
+  mahasiswaMenus,
+  mahasiswaMenusGraduate,
+  operatorMenus,
+  registerMenus,
+  sekretarisMenus,
 } from "./menus";
 
 const roleCheck = () => {
-  const role = JSON.parse(localStorage.getItem("user"))?.role;
+  const roles = JSON.parse(localStorage.getItem("user"))?.role;
+
+  const role =
+    typeof roles === "string" ? roles : roles?.length > 0 ? roles[0] : null;
+  console.log(role);
   switch (role) {
+    case ROLES.ADMIN:
+      return adminMenus;
+    case ROLES.MAHASISWA:
+      if (JSON.parse(localStorage.getItem("user")).status === "GRADUATE") {
+        return mahasiswaMenusGraduate;
+      }
+      return mahasiswaMenus;
     case ROLES.DOSEN:
       return dosenMenus;
     case ROLES.DEKAN:
       return dekanMenus;
     case ROLES.KAPRODI:
       return kaprodiMenus;
+    case ROLES.SEKRETARIS:
+      return sekretarisMenus;
+    case ROLES.REGISTER:
+      return registerMenus;
+    case ROLES.OPERATOR_LPMI:
+      return operatorMenus;
     default:
       return [];
   }
