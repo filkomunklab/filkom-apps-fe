@@ -43,42 +43,8 @@ const MenuPenguji = () => {
               </Button>
             </Link>
           </Div>
-          <Div
-            sx={{
-              width: "1px",
-              transform: "90px",
-              alignSelf: "stretch",
-              background: "rgba(26, 56, 96, 0.10)",
-            }}
-          ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="#">
-              <Button
-                sx={{
-                  // width: "150px",
-                  fontSize: "13px",
-                  fontWeight: 500,
-                  color: "#192434",
-                  textTransform: "none",
-                  "&:hover": {
-                    color: "#006AF5",
-                  },
-                }}
-              >
-                Jadwal Sidang
-              </Button>
-            </Link>
-          </Div>
-          <Div
-            sx={{
-              width: "1px",
-              transform: "90px",
-              alignSelf: "stretch",
-              background: "rgba(26, 56, 96, 0.10)",
-            }}
-          ></Div>
-          <Div sx={{ margin: "auto" }}>
-            <Link to="#">
+            <Link to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/konsultasi">
               <Button
                 sx={{
                   // width: "130px",
@@ -134,12 +100,22 @@ const MenuPenguji = () => {
               <MenuItem onClick={() => setAnchorEl(null)}>
                 Dokumen Proposal
               </MenuItem>
-              <MenuItem onClick={() => setAnchorEl(null)}>
-                Berita Acara Proposal
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorEl(null)}>
-                Dokumen Revisi Proposal
-              </MenuItem>
+              <Link
+                to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/berita-acara-proposal"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem onClick={() => setAnchorEl(null)}>
+                  Berita Acara Proposal
+                </MenuItem>
+              </Link>
+              <Link
+                to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/document-revisi-proposal"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <MenuItem onClick={() => setAnchorEl(null)}>
+                  Dokumen Revisi Proposal
+                </MenuItem>
+              </Link>
             </Menu>
           </Div>
           <Div
