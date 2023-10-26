@@ -105,10 +105,12 @@ const AdvisorProfile = () => {
     setPage(0);
   };
 
+  const navigate = useNavigate();
+
   const handleClick = (event) => {
     event.preventDefault();
+    navigate(-1);
   };
-
   const handleUbahJurusan = (event) => {
     setPilihJurusan(event.target.value);
   };
@@ -127,9 +129,7 @@ const AdvisorProfile = () => {
         sx={{ paddingBottom: "15px" }}
       >
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/dekan/supervisor-information/">
-            Supervisor Information
-          </StyledLink>
+          <StyledLink>Supervisor Information</StyledLink>
           <Typography color="text.primary">Advisor Profile</Typography>
         </Breadcrumbs>
       </Div>

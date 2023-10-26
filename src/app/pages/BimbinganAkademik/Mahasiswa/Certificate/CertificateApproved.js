@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Typography,
@@ -9,20 +9,51 @@ import {
   experimentalStyled as styled,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import { viewAllStudentCertificate } from "./CertificateGetData";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
-
   "&:hover": {
     textDecoration: "underline",
   },
 }));
 
 const CertificateWaiting = () => {
+  const [certificateData, setCertificateData] = useState({
+    title: "No title available",
+    Student: {
+      firstName: "No",
+      lastName: "student name available",
+    },
+    Employee: {
+      firstName: "No",
+      lastName: "supervisor name available",
+    },
+    category: "No category available",
+    submitDate: "No submission date available",
+    status: "No status available",
+    description: "No description available.",
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await viewAllStudentCertificate("kse maso dsni"); // Tanyakan pada pa alden ID dospem
+        console.log("Certificate Data:", data);
+        setCertificateData(data);
+      } catch (error) {
+        console.error("Error fetching certificate data:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const handleClick = (event) => {
     event.preventDefault();
   };
+
   const imageUrl =
     "https://i.pinimg.com/originals/fc/fa/29/fcfa2911e796d71f1bf6aa25ee1d8d89.jpg";
 
@@ -87,22 +118,22 @@ const CertificateWaiting = () => {
         </Box>
         <Box sx={{ flex: 1 }}>
           <Typography variant="h3" fontWeight="500" sx={{ marginBottom: 2 }}>
-            Menang lomba desain prototype
+            {certificateData.title}
           </Typography>
           <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Awuy, Diany Mariska
+            {`${certificateData.Student.firstName} ${certificateData.Student.lastName}`}
           </Typography>
           <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Adzanu, Shaliha Alifyaa
+            {`${certificateData.Employee.firstName} ${certificateData.Employee.lastName}`}
           </Typography>
           <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Local
+            {certificateData.category}
           </Typography>
           <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            10 May 2000
+            {certificateData.submitDate}
           </Typography>
           <Typography variant="h5" sx={{ marginBottom: 2, color: "#006AF5" }}>
-            Approved
+            {certificateData.status}
           </Typography>
         </Box>
         <Box sx={{ flex: 1 }}>
@@ -117,10 +148,7 @@ const CertificateWaiting = () => {
         <Typography variant="h5" sx={{ marginBottom: 2 }}>
           Descriptions:
         </Typography>
-        <Typography variant="h5">
-          Saya mengikuti lomba desain prototype website kampus yang
-          diselenggarakan oleh Fakultas Ilmu Komputer.
-        </Typography>
+        <Typography variant="h5">{certificateData.description}</Typography>
       </Box>
       <Stack spacing={2} sx={{ padding: 3, marginTop: 4 }}>
         <Typography variant="h5" sx={{ fontWeight: 600 }}>

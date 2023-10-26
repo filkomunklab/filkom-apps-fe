@@ -713,22 +713,22 @@ export const kaprodiMenus = [
           {
             label: "Review Pre-Registration",
             type: "nav-item",
-            uri: "/bimbingan-akademik/kaprodi/Review-Activities/pre-registration",
+            uri: "/bimbingan-akademik/kaprodi/review-activities/pre-registration",
           },
           {
             label: "Review Certificates",
             type: "nav-item",
-            uri: "/bimbingan-akademik/kaprodi/Review-Activities/certificates",
+            uri: "/bimbingan-akademik/kaprodi/review-activities/certificate",
           },
           {
             label: "Review Grades",
             type: "nav-item",
-            uri: "/bimbingan-akademik/kaprodi/Review-Activities/grade",
+            uri: "/bimbingan-akademik/kaprodi/review-activities/grade",
           },
           {
             label: "Student Consultation",
             type: "nav-item",
-            uri: "/bimbingan-akademik/kaprodi/Review-Activities/consultation",
+            uri: "/bimbingan-akademik/kaprodi/review-activities/consultation",
           },
         ],
       },

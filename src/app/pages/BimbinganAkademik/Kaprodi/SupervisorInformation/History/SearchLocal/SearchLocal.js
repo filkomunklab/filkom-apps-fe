@@ -5,7 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 const SearchLocal = ({ sx }) => {
   return (
     <div style={{ paddingBottom: "28px" }}>
-      <Search sx={{ color: "gray" }}>
+      <Search sx={{ color: "gray", width: "300px" }}>
         <SearchIconWrapper>
           <SearchIcon />
         </SearchIconWrapper>

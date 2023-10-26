@@ -100,18 +100,18 @@ const Informatics = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+  const navigate = useNavigate();
 
   const handleClick = (event) => {
     event.preventDefault();
+    navigate(-1);
   };
 
   return (
     <Div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/dekan/student-information-faculty">
-            Faculty Student
-          </StyledLink>
+          <StyledLink> Faculty Student</StyledLink>
           <Typography color="text.primary">Informatics</Typography>
         </Breadcrumbs>
       </div>
@@ -230,20 +230,24 @@ const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+    navigate(
+      `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}`
+    );
 
     switch (name) {
       case "profile":
-        navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+        navigate(
+          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}`
+        );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/grade`
+          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}/grade`
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/certificate`
+          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}/certificate`
         );
         break;
 
