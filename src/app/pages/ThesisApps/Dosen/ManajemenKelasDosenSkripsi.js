@@ -21,6 +21,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Paper,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import AddIcon from "@mui/icons-material/Add";
@@ -35,10 +36,161 @@ const ManajemenKelasDosenSkripsi = () => {
   const [classes, setClasses] = useState([]);
   const [selectedClass, setSelectedClass] = useState(null);
   const [addStudentOpen, setAddStudentOpen] = useState(false);
-  const [studentInput, setStudentInput] = useState("");
   const [students, setStudents] = useState([]);
   const [kelasMahasiswa, setKelasMahasiswa] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [openAkademik, setOpenAkademik] = useState(false);
+  const [openAddAkademik, setOpenAddAkademik] = useState(false);
+  const [akademikData, setAkademikData] = useState([]);
+
+  const [semesterAkademik, setSemesterAkademik] = useState("");
+  const [tahunAjaranAkademik, setTahunAjaranAkademik] = useState("");
+  const [addedStudents, setAddedStudents] = React.useState([]);
+
+  const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
+
+  function findStudentByNIM(nim) {
+    const student = students.find((student) => student.nim === nim);
+    return student;
+  }
+
+  const handleDeleteStudent = (index) => {
+    const updatedAddedStudents = [...addedStudents];
+    updatedAddedStudents.splice(index, 1);
+    setAddedStudents(updatedAddedStudents);
+
+    const updatedSearchResults = [...searchResults];
+    updatedSearchResults.splice(index, 1);
+    setSearchResults(updatedSearchResults);
+  };
+
+  const handleConfirmDeleteClass = () => {
+    const classIndex = selectedClassIndex;
+    const updatedClasses = [...classes];
+    updatedClasses.splice(classIndex, 1);
+    setClasses(updatedClasses);
+    setKelasMahasiswa(
+      kelasMahasiswa.filter((_, index) => index !== classIndex)
+    );
+    setConfirmDeleteClass(false);
+  };
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+  const handleCloseDeleteConfirmation = () => {
+    // Tutup konfirmasi popup tanpa menghapus kelas
+    setOpenDeleteConfirmation(false);
+  };
+
+  const handleSearch = () => {
+    // Memisahkan NIM yang dimasukkan pengguna berdasarkan spasi
+    const nims = searchNIMs.split(" ");
+    const newResults = [];
+
+    // Loop melalui setiap NIM dan cari informasi mahasiswa
+    for (const nim of nims) {
+      const student = findStudentByNIM(nim);
+      if (student) {
+        newResults.push(student);
+      }
+    }
+
+    // Menambahkan hasil pencarian baru ke daftar mahasiswa yang telah ditambahkan
+    setAddedStudents([...addedStudents, ...newResults]);
+
+    // Menggabungkan hasil pencarian baru dengan data yang sudah ada
+    setSearchResults([...searchResults, ...newResults]);
+    setAddStudentOpen(false);
+    // Mengosongkan input setelah menambahkan mahasiswa
+    setSearchNIMs("");
+  };
+
+  const [confirmDeleteClass, setConfirmDeleteClass] = useState(false);
+  const [selectedClassIndex, setSelectedClassIndex] = useState(null);
+
+  const studentss = [
+    { name: "John Doe", nim: "123456", prodi: "Teknik Informatika" },
+    { name: "Jane Smith", nim: "789012", prodi: "Manajemen Bisnis" },
+    { name: "David Johnson", nim: "654321", prodi: "Akuntansi" },
+    { name: "Mary Brown", nim: "987654", prodi: "Ilmu Komputer" },
+    { name: "Michael Davis", nim: "4567839", prodi: "Manajemen Bisnis" },
+    { name: "Linda Wilson", nim: "5678930", prodi: "Teknik Sipil" },
+    { name: "James Lee", nim: "2345627", prodi: "Ilmu Komputer" },
+    { name: "Patricia Evans", nim: "3456782", prodi: "Teknik Elektro" },
+    { name: "Robert Martinez", nim: "342242", prodi: "Teknik Informatika" },
+    { name: "Jennifer Taylor", nim: "89012342", prodi: "Manajemen Bisnis" },
+    { name: "William Anderson", nim: "7890132", prodi: "Akuntansi" },
+    { name: "Elizabeth Harris", nim: "1234567", prodi: "Ilmu Komputer" },
+    { name: "Joseph Clark", nim: "987654", prodi: "Manajemen Bisnis" },
+    { name: "Mildred White", nim: "234567", prodi: "Teknik Sipil" },
+    { name: "Charles Lewis", nim: "456789", prodi: "Ilmu Komputer" },
+    { name: "Nancy Hall", nim: "345678", prodi: "Teknik Elektro" },
+    { name: "Thomas Young", nim: "5678904", prodi: "Teknik Informatika" },
+    { name: "Karen King", nim: "890123", prodi: "Manajemen Bisnis" },
+    { name: "Mark Adams", nim: "654321", prodi: "Akuntansi" },
+    { name: "Sarah Scott", nim: "567890", prodi: "Ilmu Komputer" },
+  ];
+
+  const [searchNIMs, setSearchNIMs] = React.useState(""); // State untuk NIM yang dimasukkan pengguna
+  const [searchResults, setSearchResults] = React.useState([]); // State untuk hasil pencarian
+
+  function findStudentByNIM(nim) {
+    const student = studentss.find((student) => student.nim === nim);
+    return student;
+  }
+
+  // State untuk mengelola data akademik yang sedang diupdate
+  const [selectedAkademikData, setSelectedAkademikData] = useState(null);
+  const [openUpdateAkademik, setOpenUpdateAkademik] = useState(false);
+
+  // Fungsi untuk membuka form update data akademik
+  const handleOpenUpdateAkademik = (data) => {
+    setSelectedAkademikData(data);
+    setOpenUpdateAkademik(true);
+  };
+
+  // Fungsi untuk menutup form update data akademik
+  const handleCloseUpdateAkademik = () => {
+    setOpenUpdateAkademik(false);
+    setSelectedAkademikData(null);
+  };
+
+  // Fungsi untuk menghapus data akademik
+  const handleDeleteAkademik = (data) => {
+    const updatedAkademikData = akademikData.filter((item) => item !== data);
+    setAkademikData(updatedAkademikData);
+  };
+
+  // Fungsi untuk mengupdate data akademik
+  const handleUpdateAkademik = () => {
+    if (selectedAkademikData) {
+      const updatedAkademikData = akademikData.map((item) =>
+        item === selectedAkademikData
+          ? {
+              semesterAkademik,
+              tahunAjaranAkademik,
+            }
+          : item
+      );
+      setAkademikData(updatedAkademikData);
+      handleCloseUpdateAkademik();
+    }
+  };
+
+  const handleOpenAddAkademik = () => {
+    setOpenAddAkademik(true);
+  };
+
+  const handleCloseAddAkademik = () => {
+    setOpenAddAkademik(false);
+  };
+
+  const handleOpenAkademik = () => {
+    setOpenAkademik(true);
+  };
+
+  const handleCloseAkademik = () => {
+    setOpenAkademik(false);
+  };
 
   const handleOpen = () => {
     handleClose();
@@ -50,6 +202,22 @@ const ManajemenKelasDosenSkripsi = () => {
     setKelas("");
     setSemester("");
     setTahunAjaran("");
+  };
+
+  const handleCreateAkademik = () => {
+    // Memeriksa apakah kedua input telah diisi
+    if (semesterAkademik && tahunAjaranAkademik) {
+      const newData = {
+        semesterAkademik,
+        tahunAjaranAkademik,
+      };
+
+      // Menambahkan data baru ke state
+      setAkademikData([...akademikData, newData]);
+
+      // Menutup dialog tambah akademik
+      handleCloseAddAkademik();
+    }
   };
 
   const handleCreateClass = () => {
@@ -71,56 +239,6 @@ const ManajemenKelasDosenSkripsi = () => {
     setSelectedClass(selectedClass === classIndex ? null : classIndex);
   };
 
-  const handleAddStudent = () => {
-    // Memecah input dari pengguna berdasarkan koma (,)
-    const studentEntries = studentInput.split(",").map((entry) => entry.trim());
-
-    const newStudents = studentEntries.map((entry) => {
-      // Menggunakan regex untuk memisahkan setiap input mahasiswa
-      const regex = /(.+?) (\d+) (.+)/;
-      const matches = entry.match(regex);
-      setAddStudentOpen(false);
-
-      if (matches && matches.length === 4) {
-        const nama = matches[1];
-        const nim = matches[2];
-        const prodi = matches[3];
-
-        return {
-          prodi,
-          name: nama,
-          nim,
-        };
-      } else {
-        // Tampilkan pesan kesalahan jika input tidak sesuai
-        alert(
-          "Input tidak sesuai. Pastikan Anda memasukkan nama mahasiswa, NIM, dan program studi dalam format yang benar."
-        );
-        return null; // Return null for invalid entries
-      }
-    });
-
-    // Filter out null entries (invalid entries) before adding to the students array
-    const validNewStudents = newStudents.filter((student) => student !== null);
-
-    // Menambahkan mahasiswa yang valid ke dalam array mahasiswa
-    setStudents([...students, ...validNewStudents]);
-
-    // Mengosongkan input studentInput
-    setStudentInput("");
-  };
-
-  const handleDeleteStudent = (index) => {
-    const updatedStudents = [...students];
-    updatedStudents.splice(index, 1);
-    setStudents(updatedStudents);
-  };
-
-  const handleEditStudent = (index) => {
-    const selected = students[index];
-    setSelectedStudent({ ...selected, selectedIndex: index });
-  };
-
   const handleUpdateStudent = () => {
     if (selectedStudent) {
       const updatedStudents = [...students];
@@ -133,11 +251,28 @@ const ManajemenKelasDosenSkripsi = () => {
 
   const handleDeleteClass = () => {
     if (selectedClass !== null) {
-      const updatedClasses = [...classes];
-      updatedClasses.splice(selectedClass, 1);
-      setClasses(updatedClasses);
-      setSelectedClass(null);
+      // Periksa apakah ada mahasiswa dalam kelas yang akan dihapus
+      const classData = classes[selectedClass];
+      if (classData.students.length > 0) {
+        // Jika ada mahasiswa dalam kelas, tampilkan popup konfirmasi
+        setShowDeleteConfirmation(true);
+      } else {
+        // Jika tidak ada mahasiswa dalam kelas, langsung hapus kelas
+        deleteClass(selectedClass);
+      }
     }
+  };
+
+  const deleteClass = (classIndex) => {
+    const updatedClasses = [...classes];
+    updatedClasses.splice(classIndex, 1);
+    setClasses(updatedClasses);
+    setSelectedClass(null);
+    setShowDeleteConfirmation(false);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirmation(false);
   };
 
   return (
@@ -191,6 +326,276 @@ const ManajemenKelasDosenSkripsi = () => {
             flex: "1 0 0",
           }}
         >
+          {/* Button Akademik Calender */}
+          <Button
+            style={{
+              borderRadius: "60px",
+              padding: "12px 16px",
+              alignItems: "center",
+              background: "#006AF5",
+              color: "#ffff",
+              "&:hover": { color: "#006AF5" },
+            }}
+            onClick={handleOpenAkademik}
+          >
+            Kalender Akademik
+          </Button>
+          {/* popup Akademik Caldender Start */}
+          <Dialog
+            open={openAkademik}
+            onClose={handleCloseAkademik}
+            fullWidth
+            maxWidth="lg"
+          >
+            <DialogTitle
+              variant="subtitle2"
+              sx={{ textAlign: "center", background: "rgba(26, 56, 96, 0.10)" }}
+            >
+              Kalender Akademik
+            </DialogTitle>
+            <DialogContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "25px",
+              }}
+            >
+              <Button
+                size="small"
+                style={{
+                  borderRadius: "60px",
+                  background: "#006AF5",
+                  color: "#ffff",
+                  textTransform: "none",
+                  "&:hover": { color: "#006AF5" },
+                  marginLeft: "auto",
+                  marginTop: "25px",
+                }}
+                onClick={handleOpenAddAkademik}
+              >
+                <AddIcon sx={{ fontSize: "20px" }} />
+                Kalender Akademik
+              </Button>
+
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ background: "#F5F5F5" }}>
+                      <TableCell sx={{ width: "10%" }}>Nomor</TableCell>
+                      <TableCell sx={{ width: "40%" }}>Semester</TableCell>
+                      <TableCell sx={{ width: "30%" }}>Tahun Ajaran</TableCell>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Action
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {akademikData.map((data, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{data.semesterAkademik}</TableCell>
+                        <TableCell>{data.tahunAjaranAkademik}</TableCell>
+                        <TableCell>
+                          <Div
+                            sx={{ display: "flex", justifyContent: "center" }}
+                          >
+                            <span
+                              style={{
+                                textDecoration: "none",
+                                cursor: "pointer",
+                                color: "blue",
+                                fontSize: "14px",
+                              }}
+                              onClick={() => handleOpenUpdateAkademik(data)}
+                            >
+                              Update
+                            </span>
+                            <Div
+                              style={{
+                                margin: "0 5px", // Margin di sekitar garis vertikal
+                                color: "#E0E0E0",
+                              }}
+                            >
+                              |
+                            </Div>
+                            <span
+                              style={{
+                                textDecoration: "none",
+                                cursor: "pointer",
+                                color: "red",
+                                fontSize: "14px",
+                              }}
+                              onClick={() => handleDeleteAkademik(data)}
+                            >
+                              Hapus
+                            </span>
+                          </Div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    <Dialog
+                      open={openUpdateAkademik}
+                      onClose={handleCloseUpdateAkademik}
+                      fullWidth
+                      maxWidth="sm"
+                    >
+                      <DialogTitle
+                        variant="subtitle2"
+                        sx={{
+                          textAlign: "center",
+                          background: "rgba(26, 56, 96, 0.10)",
+                        }}
+                      >
+                        Update Akademik Data
+                      </DialogTitle>
+                      <DialogContent
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          gap: "25px",
+                        }}
+                      >
+                        <FormControl fullWidth sx={{ marginTop: "25px" }}>
+                          <InputLabel id="semester-label-akademik">
+                            Semester
+                          </InputLabel>
+                          <Select
+                            labelId="semester-label-akademik"
+                            label="Semester"
+                            value={semesterAkademik}
+                            onChange={(e) =>
+                              setSemesterAkademik(e.target.value)
+                            }
+                          >
+                            <MenuItem value="Ganjil">Ganjil</MenuItem>
+                            <MenuItem value="Padat">Padat</MenuItem>
+                            <MenuItem value="Genap">Genap</MenuItem>
+                          </Select>
+                        </FormControl>
+                        <TextField
+                          value={tahunAjaranAkademik}
+                          onChange={(e) =>
+                            setTahunAjaranAkademik(e.target.value)
+                          }
+                          label="Masukan Tahun Ajaran"
+                          fullWidth
+                        />
+                      </DialogContent>
+                      <DialogActions sx={{ background: "#F5F5F5" }}>
+                        <Button
+                          size="small"
+                          onClick={handleCloseUpdateAkademik}
+                          color="primary"
+                          sx={{
+                            background: "white",
+                            boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                            textTransform: "none",
+                            color: "black",
+                          }}
+                        >
+                          Batal
+                        </Button>
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="primary"
+                          sx={{ textTransform: "none" }}
+                          onClick={handleUpdateAkademik}
+                        >
+                          Simpan
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </DialogContent>
+            <DialogActions sx={{ background: "#F5F5F5" }}>
+              <Button
+                onClick={handleCloseAkademik}
+                color="primary"
+                size="small"
+                sx={{
+                  background: "white",
+                  boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                  textTransform: "none",
+                  color: "black",
+                }}
+              >
+                Kembali
+              </Button>
+            </DialogActions>
+          </Dialog>
+          {/* popup Akademik Caldender End */}
+          {/* popup membuat add Akademik Calendar start */}
+          <Dialog
+            fullWidth
+            maxWidth="sm"
+            open={openAddAkademik}
+            onClose={handleCloseAddAkademik}
+          >
+            <DialogTitle
+              variant="subtitle2"
+              sx={{ textAlign: "center", background: "rgba(26, 56, 96, 0.10)" }}
+            >
+              Tambah Akademik Kalender
+            </DialogTitle>
+            <DialogContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                gap: "25px",
+              }}
+            >
+              <FormControl fullWidth sx={{ marginTop: "25px" }}>
+                <InputLabel id="semester-label-akademik">Semester</InputLabel>
+                <Select
+                  labelId="semester-label-akademik"
+                  label="Semester"
+                  onChange={(e) => setSemesterAkademik(e.target.value)}
+                >
+                  <MenuItem value="Ganjil">Ganjil</MenuItem>
+                  <MenuItem value="Padat">Padat</MenuItem>
+                  <MenuItem value="Genap">Genap</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                onChange={(e) => setTahunAjaranAkademik(e.target.value)}
+                label="Masukan Tahun Ajaran"
+                fullWidth
+              />
+            </DialogContent>
+            <DialogActions sx={{ background: "#F5F5F5" }}>
+              <Button
+                size="small"
+                color="primary"
+                sx={{
+                  background: "white",
+                  boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                  textTransform: "none",
+                  color: "black",
+                }}
+                onClick={handleCloseAddAkademik}
+              >
+                Kembali
+              </Button>
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                sx={{ textTransform: "none" }}
+                onClick={handleCreateAkademik}
+              >
+                Buat Akademik
+              </Button>
+            </DialogActions>
+          </Dialog>
+          {/* popup membuat add Akademik Calendar end */}
+
           <Button
             onClick={handleOpen}
             style={{
@@ -243,17 +648,11 @@ const ManajemenKelasDosenSkripsi = () => {
                 onChange={(e) => setSemester(e.target.value)}
                 label="Semester"
               >
-                <MenuItem value="Ganjil">Ganjil</MenuItem>
-                <MenuItem value="Padat">Padat</MenuItem>
-                <MenuItem value="Genap">Genap</MenuItem>
+                <MenuItem value="Ganjil 2023/2024">Ganjil 2023/2024</MenuItem>
+                <MenuItem value="Padat 2023/2024">Padat 2023/2024</MenuItem>
+                <MenuItem value="Genap 2023/2024">Genap 2023/2024</MenuItem>
               </Select>
             </FormControl>
-            <TextField
-              value={tahunAjaran}
-              onChange={(e) => setTahunAjaran(e.target.value)}
-              label="Masukan Tahun Ajaran"
-              fullWidth
-            />
           </DialogContent>
           <DialogActions sx={{ background: "#F5F5F5" }}>
             <Button
@@ -307,6 +706,41 @@ const ManajemenKelasDosenSkripsi = () => {
                 <DeleteIcon fontSize="small" />
                 Hapus Kelas
               </Button>
+              {/* Konfirmasi popup untuk menghapus kelas */}
+              <Dialog
+                open={openDeleteConfirmation}
+                onClose={handleCloseDeleteConfirmation}
+                fullWidth
+                maxWidth="sm"
+              >
+                <DialogTitle variant="subtitle2">
+                  Konfirmasi Penghapusan Kelas
+                </DialogTitle>
+                <DialogContent>
+                  <Typography>
+                    Anda tidak dapat menghapus kelas ini karena masih ada
+                    mahasiswa di dalamnya. Harap hapus semua mahasiswa terlebih
+                    dahulu sebelum menghapus kelas ini.
+                  </Typography>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    size="small"
+                    onClick={handleCloseDeleteConfirmation}
+                    color="primary"
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    color="error"
+                    onClick={handleConfirmDeleteClass}
+                  >
+                    Hapus Kelas
+                  </Button>
+                </DialogActions>
+              </Dialog>
               <Button
                 size="small"
                 variant="contained"
@@ -330,45 +764,24 @@ const ManajemenKelasDosenSkripsi = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {students.map((student, index) => (
+                  {searchResults.map((student, index) => (
                     <TableRow key={index}>
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>{student.name}</TableCell>
                       <TableCell>{student.nim}</TableCell>
                       <TableCell>{student.prodi}</TableCell>
                       <TableCell>
-                        <Div sx={{ display: "flex" }}>
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
-                              fontSize: "14px",
-                            }}
-                            onClick={() => handleEditStudent(index)}
-                          >
-                            Update
-                          </span>
-                          <Div
-                            style={{
-                              margin: "0 5px", // Margin di sekitar garis vertikal
-                              color: "#E0E0E0",
-                            }}
-                          >
-                            |
-                          </Div>
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "red",
-                              fontSize: "14px",
-                            }}
-                            onClick={() => handleDeleteStudent(index)}
-                          >
-                            Hapus
-                          </span>
-                        </Div>
+                        <span
+                          style={{
+                            textDecoration: "none",
+                            cursor: "pointer",
+                            color: "red",
+                            fontSize: "14px",
+                          }}
+                          onClick={() => handleDeleteStudent(index)}
+                        >
+                          Hapus
+                        </span>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -378,6 +791,29 @@ const ManajemenKelasDosenSkripsi = () => {
           </AccordionDetails>
         </Accordion>
       ))}
+
+      {showDeleteConfirmation && (
+        <Dialog open={showDeleteConfirmation} fullWidth maxWidth="sm">
+          <DialogTitle variant="subtitle2">Konfirmasi Hapus Kelas</DialogTitle>
+          <DialogContent>
+            Apakah Anda yakin ingin menghapus kelas ini? Semua nama mahasiswa
+            dalam kelas ini akan dihapus juga.
+          </DialogContent>
+          <DialogActions>
+            <Button size="small" onClick={handleCancelDelete} color="primary">
+              Batal
+            </Button>
+            <Button
+              size="small"
+              onClick={() => deleteClass(selectedClass)}
+              color="error"
+            >
+              Hapus Kelas
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+
       {/* edit mahasiswa */}
       <Dialog
         open={selectedStudent !== null}
@@ -391,7 +827,14 @@ const ManajemenKelasDosenSkripsi = () => {
         >
           Edit Mahasiswa
         </DialogTitle>
-        <DialogContent>
+        <DialogContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "25px",
+          }}
+        >
           <TextField
             label="Nama Mahasiswa"
             value={selectedStudent ? selectedStudent.name : ""}
@@ -402,6 +845,7 @@ const ManajemenKelasDosenSkripsi = () => {
               })
             }
             fullWidth
+            sx={{ marginTop: "25px" }}
           />
           <TextField
             label="NIM"
@@ -474,9 +918,9 @@ const ManajemenKelasDosenSkripsi = () => {
             <TextField
               size="small"
               type="text"
-              placeholder="Masukkan data mahasiswa (nama NIM prodi)"
-              value={studentInput}
-              onChange={(e) => setStudentInput(e.target.value)}
+              placeholder="Masukkan NIM mahasiswa (pisahkan dengan spasi)"
+              value={searchNIMs}
+              onChange={(e) => setSearchNIMs(e.target.value)}
               sx={{
                 margin: "10px 0",
                 padding: "10px 0",
@@ -503,10 +947,10 @@ const ManajemenKelasDosenSkripsi = () => {
             size="small"
             variant="contained"
             color="primary"
-            onClick={handleAddStudent}
+            onClick={handleSearch}
             sx={{ textTransform: "none" }}
           >
-            Submit
+            Tambah
           </Button>
         </DialogActions>
       </Dialog>
