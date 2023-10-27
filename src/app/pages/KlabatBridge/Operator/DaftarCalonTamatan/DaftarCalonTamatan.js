@@ -239,11 +239,13 @@ const DaftarCalonTamatan = () => {
           onClick={handleOpenModal}
           sx={{
             color:'black',
+            textTransform: 'none',
+            textAlign: 'left',
             '&:hover': {
             color: '#4C5EFF', // Change background color on hover
             },
           }}>
-          Shyereal Imanuelita Saerang
+          Shyereal Saerang
         </Button>
       </TableCell>
       <TableCell>105011810011</TableCell>
@@ -292,7 +294,7 @@ const DaftarCalonTamatan = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
-          Calon Tamatan
+          Graduate Candidates
         </Typography>
         <FormControl sx={{minWidth: 200}} size="small">
           <InputLabel htmlFor="grouped-select">Filter</InputLabel>

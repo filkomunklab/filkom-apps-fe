@@ -141,14 +141,14 @@ const PengisianSPT = () => {
                 Surat Permohonan Tamat
             </Typography>
             <Box
-                p={8}
+                p={5}
                 sx={{
                     backgroundColor: 'white',
                     borderRadius: 1,
                     boxShadow: 2,
                 }}
             >
-                <Typography variant="body1" sx={{lineHeight: 2.5}}>
+                <Typography variant="body1" sx={{lineHeight: 2.5, fontSize: "15px"}}>
                     Saya yang bertanda tangan di bawah ini, bermohon untuk dapat wisuda pada semester 1 2022/2023 dengan sisa SKS yang harus diambil
                         <span style={{ display: 'inline-block', minWidth: '30px' }}>
                             <TextField
@@ -312,6 +312,18 @@ const PengisianSPT = () => {
                             name="phoneNumber"
                             placeholder="12345678910"
                             type='number'
+                            //   value={identityData.nim}
+                            //   onChange={handleIdentityChange}
+                            />
+                        </Grid>
+                        <Grid item sm={12} md={6}>
+                            <Typography variant="subtitle1" mb={1}>Email</Typography>
+                            <TextField
+                            fullWidth
+                            variant="outlined"
+                            name="email"
+                            placeholder="serealsajow18@gmail.com"
+                            type='gmail'
                             //   value={identityData.nim}
                             //   onChange={handleIdentityChange}
                             />

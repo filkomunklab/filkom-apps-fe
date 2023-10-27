@@ -154,7 +154,7 @@ const Dashboard = () => {
                         <TableRow>
                           <TableCell>Region</TableCell>
                           <TableCell align="center">Alumni</TableCell>
-                          <TableCell align="center">%Percentage</TableCell>
+                          <TableCell align="center">Percentage</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>

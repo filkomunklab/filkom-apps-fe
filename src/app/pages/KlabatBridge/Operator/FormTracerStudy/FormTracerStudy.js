@@ -218,7 +218,7 @@ const FormTracerStudy = () => {
           Tracer Study Form
         </Typography>
         <Box 
-          p={8} 
+          p={5} 
           sx={{
             backgroundColor: 'white',
             borderRadius: 1,
@@ -714,9 +714,9 @@ const FormTracerStudy = () => {
                     <TableRow 
                       //sx={{backgroundColor: "#f5f5f5"}}
                     >
-                      <TableCell style={{ width: '400px' }}>A</TableCell>
-                      <TableCell style={{ width: '200px' }}></TableCell>
-                      <TableCell style={{ width: '400px' }}>B</TableCell>
+                      <TableCell style={{ width: '450px' }}>A</TableCell>
+                      <TableCell style={{ width: '100px' }}></TableCell>
+                      <TableCell style={{ width: '450px' }}>B</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>
@@ -1801,6 +1801,8 @@ const FormTracerStudy = () => {
                       </Button>
                   </DialogActions>
               </Dialog>
+
+              
           </Box>
         </Box>
       </Box>

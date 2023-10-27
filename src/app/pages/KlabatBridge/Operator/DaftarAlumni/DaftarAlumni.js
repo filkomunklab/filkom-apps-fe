@@ -17,6 +17,14 @@ import {
   Box,
   Paper,
   ListSubheader,
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogContentText, 
+  DialogTitle, 
+  TextField,
+  Divider,
+  Checkbox,
 } from "@mui/material";
 import ActionButton from "app/shared/ActionButton";
 import SearchGlobal from "app/shared/SearchGlobal";
@@ -25,10 +33,40 @@ import CreateIcon from "@mui/icons-material/Create";
 import MarkunreadIcon from "@mui/icons-material/Markunread";
 
 const DaftarAlumni = () => {
-  const [sortBy, setSortBy] = useState(null);
+  // for dialog box to edit alumni password
+  const [resetPassword, setResetPassword] = React.useState(false);
+
+  // style cancel button
+  const buttonStyle = {
+    color: 'black',
+    backgroundColor: 'white',
+  };
+
+  // select all button
+  const [selectAll, setSelectAll] = useState(false);
+  const [checkboxes, setCheckboxes] = useState(new Array(10).fill(false));
+
+  const handleSelectAll = () => {
+    setSelectAll(!selectAll);
+    setCheckboxes(new Array(10).fill(!selectAll));
+  };
+
+  const handleCheckboxChange = (index) => {
+    const newCheckboxes = [...checkboxes];
+    newCheckboxes[index] = !checkboxes[index];
+    setCheckboxes(newCheckboxes);
+    setSelectAll(newCheckboxes.every((checkbox) => checkbox));
+  };
 
   const TableItem = ({ index }) => (
     <TableRow>
+      <TableCell>
+        <Checkbox 
+          checked={checkboxes[index]}
+          onChange={() => handleCheckboxChange(index)}
+          color="primary"
+        />
+      </TableCell>
       <TableCell>{index + 1}</TableCell>
       <TableCell>Shyereal Saerang</TableCell>
       <TableCell>105011810011</TableCell>
@@ -43,7 +81,7 @@ const DaftarAlumni = () => {
           alignItems: 'center',
         }}
         >
-          <Button>
+          <Button onClick={() => setResetPassword(true)}>
             <CreateIcon sx={{ fontSize: 16 }} />
           </Button>
           <Button>
@@ -73,7 +111,7 @@ const DaftarAlumni = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
-          Alumni Roster
+          Alumni
         </Typography>
         <Div
           sx={{
@@ -106,29 +144,29 @@ const DaftarAlumni = () => {
               <MenuItem value={2022}>2022</MenuItem>
             </Select>
           </FormControl>
-            <Button
-                sx={{
-                backgroundColor: "#006AF5",
-                borderRadius: "24px",
-                color: "white",
-                whiteSpace: "nowrap",
-                minWidth: 100,
-                pr:3,
-                pl:3,
-
-                "&:hover": {
-                    backgroundColor: "#006AF5",
-                },
-                }}
-            >
-                Send
-            </Button>
+          
+          {/* select all button */}
+          <Button 
+            variant="contained" 
+            color="primary" 
+            
+            sx={{
+              borderRadius: 10,
+              // whiteSpace: "nowrap",
+              minWidth: 100,
+              }}
+          >
+            <Box>Export</Box>
+          </Button>
         </Div>
       </Div>
       <TableContainer component={Paper} sx={{ overflow: "auto" }}>
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: '#f5f5f5'}}>
+              <TableCell>
+                <Checkbox onClick={handleSelectAll}/>
+              </TableCell>
               <TableCell>No</TableCell>
               <TableCell>Full Name</TableCell>
               <TableCell>NIM</TableCell>
@@ -146,11 +184,80 @@ const DaftarAlumni = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
       <Grid container justifyContent="flex-end" >
         <Grid item>
           <Pagination count={10} color="primary" sx={{marginY:5}}/>
         </Grid>
       </Grid>
+
+      <Grid container justifyContent="flex-end" >
+        <Grid item> 
+          <Button
+            variant="contained" 
+            color="primary"
+            sx={{
+            borderRadius: 10,
+            whiteSpace: "nowrap",
+            minWidth: 100,
+            // pr:3,
+            // pl:3,
+            }}
+          >
+            Send
+          </Button>
+      </Grid>
+      </Grid>
+
+
+      
+
+      {/* dialog box to reset alumni password */}
+      <Dialog open={resetPassword} onClose={() => setResetPassword(false)}>
+        <DialogTitle>Reset Password</DialogTitle>
+        <Divider />
+        <DialogContent style={{ minWidth: '500px' }}>
+          {/* <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Email Address"
+              type="email"
+              fullWidth
+              variant="standard"
+          /> */}
+          <Typography>Email</Typography>
+          <TextField 
+            id="outlined-basic"   
+            placeholder="s11810007@student.unklab.ac.id" 
+            variant="outlined" 
+            type="email"
+            fullWidth
+            sx={{mb:3}}
+          />
+          <Typography>New Password</Typography>
+          <TextField 
+            id="outlined-basic"   
+            placeholder="New Password" 
+            variant="outlined" 
+            type="password"
+            fullWidth
+            sx={{mb:3}}
+          />
+          <Typography>Confirm New Password</Typography>
+          <TextField 
+            id="outlined-basic"   
+            placeholder="Confirm New Password" 
+            variant="outlined" 
+            type="password"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setResetPassword(false)} variant="contained"  style={buttonStyle}>Cancel</Button>
+          <Button onClick={() => setResetPassword(false)} variant="contained" color="primary">Confirm</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
