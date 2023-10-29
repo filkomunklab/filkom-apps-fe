@@ -62,7 +62,7 @@ const History = (props) => {
 
   const handleClick = (event) => {
     event.preventDefault();
-    navigate(-2);
+    navigate(-1);
   };
 
   useEffect(() => {

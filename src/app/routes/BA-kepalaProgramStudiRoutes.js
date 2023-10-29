@@ -58,6 +58,11 @@ import ReviewGrade from "app/pages/BimbinganAkademik/Kaprodi/ReviewActivities/Re
 import ReviewGradeStudent from "app/pages/BimbinganAkademik/Kaprodi/ReviewActivities/ReviewGrade/ReviewGradeStudent";
 import StudentConsultation from "app/pages/BimbinganAkademik/Kaprodi/ReviewActivities/StudentConsultation";
 import ReplyConsultation from "app/pages/BimbinganAkademik/Kaprodi/ReviewActivities/StudentConsultation/ReplyConsultation/Consultation";
+import SupervisorStudentProfile from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/StudentProfile/StudentProfile";
+import SupervisorStudentGradeDashboard from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/StudentProfile/StudentGradeDashboard";
+import SupervisorStudentGrade from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/StudentProfile/StudentGradeDashboard/StudentGrade";
+import SupervisorStudentCertificate from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/StudentProfile/StudentCertificate";
+import SupervisorCertificateDetail from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/StudentProfile/StudentCertificate/CertificateDetail";
 
 const kepalaProgramStudiRoutes = [
   {
@@ -195,6 +200,10 @@ const kepalaProgramStudiRoutes = [
     element: <Page component={SupervisorInformation} />,
   },
   {
+    path: "/bimbingan-akademik/kaprodi/supervisor-information/student-information/:id",
+    element: <Page component={SupervisorStudentProfile} />,
+  },
+  {
     path: "/bimbingan-akademik/kaprodi/supervisor-information/informatics",
     element: <Page component={SupervisorInformatics} />,
   },
@@ -217,6 +226,22 @@ const kepalaProgramStudiRoutes = [
   {
     path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/",
     element: <Page component={AdvisorProfileFaculty} />,
+  },
+  {
+    path: "/bimbingan-akademik/kaprodi/supervisor-information/:id/grade",
+    element: <Page component={SupervisorStudentGradeDashboard} />,
+  },
+  {
+    path: "/bimbingan-akademik/kaprodi/supervisor-information/:id/grade/semester/:number",
+    element: <Page component={SupervisorStudentGrade} />,
+  },
+  {
+    path: "/bimbingan-akademik/kaprodi/supervisor-information/:id/certificate",
+    element: <Page component={SupervisorStudentCertificate} />,
+  },
+  {
+    path: "/bimbingan-akademik/kaprodi/supervisor-information/:id/certificate/detail",
+    element: <Page component={SupervisorCertificateDetail} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/supervisor-information/history/",
