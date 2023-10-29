@@ -228,7 +228,6 @@ const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(`advisor-profile/${item.nidn}`);
 
     switch (name) {
       case "profile":

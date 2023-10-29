@@ -109,7 +109,7 @@ const AdvisorProfileFaculty = () => {
 
   const handleClick = (event) => {
     event.preventDefault();
-    navigate(-2);
+    navigate(-1);
   };
   const handleUbahJurusan = (event) => {
     setPilihJurusan(event.target.value);
@@ -352,16 +352,18 @@ const TableItem = ({ item, index }) => {
     const { name } = event.currentTarget;
     switch (name) {
       case "profile":
-        navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+        navigate(
+          `/bimbingan-akademik/kaprodi/supervisor-information/student-information/${item.nim}`
+        );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/grade`
+          `/bimbingan-akademik/kaprodi/supervisor-information/${item.nim}/grade`
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/certificate`
+          `/bimbingan-akademik/kaprodi/supervisor-information/${item.nim}/certificate`
         );
         break;
 

@@ -302,9 +302,8 @@ const TableItem = ({ item, index }) => {
         );
         break;
       case "history":
-        navigate(
-          `/bimbingan-akademik/kaprodi/supervisor-information${item.nidn}/history`
-        );
+        navigate(`/bimbingan-akademik/kaprodi/supervisor-information/history`);
+
         break;
 
       default:
