@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
@@ -27,6 +27,7 @@ import SearchGlobal from "app/shared/SearchGlobal";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import axios from "axios";
 
 const ManajemenKelasDosenSkripsi = () => {
   const [open, setOpen] = useState(false);
@@ -145,6 +146,8 @@ const ManajemenKelasDosenSkripsi = () => {
   // Fungsi untuk membuka form update data akademik
   const handleOpenUpdateAkademik = (data) => {
     setSelectedAkademikData(data);
+    setSemesterAkademik(data.semester);
+    setTahunAjaranAkademik(data.year);
     setOpenUpdateAkademik(true);
   };
 
@@ -156,23 +159,66 @@ const ManajemenKelasDosenSkripsi = () => {
 
   // Fungsi untuk menghapus data akademik
   const handleDeleteAkademik = (data) => {
-    const updatedAkademikData = akademikData.filter((item) => item !== data);
-    setAkademikData(updatedAkademikData);
+    // Melakukan DELETE request ke API
+    axios
+      .delete(`http://localhost:2000/api/v1/academic-calendar/${data.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, //ganti token dengan sesusai
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log("Data berhasil dihapus:", data.id);
+          // Memperbarui state setelah penghapusan
+          const updatedAkademikData = akademikData.filter(
+            (item) => item.id !== data.id
+          );
+          setAkademikData(updatedAkademikData);
+        } else {
+          console.log("Gagal menghapus data:", data.id);
+        }
+      })
+      .catch((error) => {
+        console.error("Terjadi kesalahan saat menghapus data:", error);
+      });
   };
 
-  // Fungsi untuk mengupdate data akademik
+  // Fungsi untuk mengirim permintaan pembaruan (update) data akademik
   const handleUpdateAkademik = () => {
     if (selectedAkademikData) {
-      const updatedAkademikData = akademikData.map((item) =>
-        item === selectedAkademikData
-          ? {
-              semesterAkademik,
-              tahunAjaranAkademik,
-            }
-          : item
-      );
-      setAkademikData(updatedAkademikData);
-      handleCloseUpdateAkademik();
+      const updatedData = {
+        semester: semesterAkademik,
+        year: tahunAjaranAkademik,
+      };
+
+      axios
+        .put(
+          `http://localhost:2000/api/v1/academic-calendar/${selectedAkademikData.id}`,
+          updatedData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            console.log("Data berhasil diperbarui:", selectedAkademikData.id);
+            // Update state dengan data yang diperbarui
+            const updatedAkademikData = akademikData.map((item) =>
+              item.id === selectedAkademikData.id
+                ? { ...item, ...updatedData }
+                : item
+            );
+            setAkademikData(updatedAkademikData);
+            handleCloseUpdateAkademik();
+          } else {
+            console.log("Gagal memperbarui data:", selectedAkademikData.id);
+          }
+        })
+        .catch((error) => {
+          console.error("Terjadi kesalahan saat memperbarui data:", error);
+        });
     }
   };
 
@@ -204,19 +250,70 @@ const ManajemenKelasDosenSkripsi = () => {
     setTahunAjaran("");
   };
 
+  // fungsi untuk mendapatkan data GET
+  // token JWT
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMmViMzU2ODctYzQxNC00NjM0LWIwMTAtMWI2NGNhYTFiZjI3IiwibmlrIjoiZG9zZW4xIiwibmFtZSI6IkxlY3R1cmVyMSBEb3NlbjEiLCJyb2xlIjpbIkRPU0VOIiwiRE9TRU5fTUsiLCJLQVBST0RJIl19LCJpYXQiOjE2OTg1NjQ1OTJ9.G5MAcuXQDg95xMGpW_bBOymZQxSOFKzG63cHrD4nsk8";
+
+  useEffect(() => {
+    // Fungsi untuk mengambil data akademik
+    const fetchAcademicData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:2000/api/v1/academic-calendar",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setAkademikData(response.data.data);
+        console.log("Berhasil mengambil data:");
+      } catch (error) {
+        console.error("Gagal mengambil data:", error);
+      }
+    };
+
+    fetchAcademicData();
+  }, []);
+
+  // mengirim data POST akademik
   const handleCreateAkademik = () => {
-    // Memeriksa apakah kedua input telah diisi
     if (semesterAkademik && tahunAjaranAkademik) {
-      const newData = {
-        semesterAkademik,
-        tahunAjaranAkademik,
+      const newAkademikData = {
+        semester: semesterAkademik,
+        year: tahunAjaranAkademik,
       };
 
-      // Menambahkan data baru ke state
-      setAkademikData([...akademikData, newData]);
+      axios
+        .post(
+          "http://localhost:2000/api/v1/academic-calendar",
+          newAkademikData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          if (response.status === 201) {
+            // Jika berhasil menambahkan, tambahkan data baru ke state
+            setAkademikData([...akademikData, response.data.data]);
+            console.log("Berhasil menambahkan data:", response.data);
 
-      // Menutup dialog tambah akademik
-      handleCloseAddAkademik();
+            // Reset nilai input
+            setSemesterAkademik("");
+            setTahunAjaranAkademik("");
+
+            // Tutup dialog tambah akademik
+            handleCloseAddAkademik();
+          } else {
+            console.error("Gagal menambahkan data:", response.data);
+          }
+        })
+        .catch((error) => {
+          console.error("Terjadi kesalahan:", error);
+        });
     }
   };
 
@@ -224,15 +321,11 @@ const ManajemenKelasDosenSkripsi = () => {
     const newClass = {
       kelas,
       semester,
-      tahunAjaran,
       students: [],
     };
     setClasses([...classes, newClass]);
     handleClose();
-    setKelasMahasiswa([
-      ...kelasMahasiswa,
-      `${kelas} - Semester ${semester} ${tahunAjaran}`,
-    ]);
+    setKelasMahasiswa([...kelasMahasiswa, `${kelas} - Semester ${semester}`]);
   };
 
   const handleAccordionClick = (classIndex) => {
@@ -394,8 +487,8 @@ const ManajemenKelasDosenSkripsi = () => {
                     {akademikData.map((data, index) => (
                       <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
-                        <TableCell>{data.semesterAkademik}</TableCell>
-                        <TableCell>{data.tahunAjaranAkademik}</TableCell>
+                        <TableCell>{data.semester}</TableCell>
+                        <TableCell>{data.year}</TableCell>
                         <TableCell>
                           <Div
                             sx={{ display: "flex", justifyContent: "center" }}
@@ -464,7 +557,7 @@ const ManajemenKelasDosenSkripsi = () => {
                           <Select
                             labelId="semester-label-akademik"
                             label="Semester"
-                            value={semesterAkademik}
+                            value={semesterAkademik || ""}
                             onChange={(e) =>
                               setSemesterAkademik(e.target.value)
                             }
@@ -556,6 +649,7 @@ const ManajemenKelasDosenSkripsi = () => {
                 <Select
                   labelId="semester-label-akademik"
                   label="Semester"
+                  value={semesterAkademik}
                   onChange={(e) => setSemesterAkademik(e.target.value)}
                 >
                   <MenuItem value="Ganjil">Ganjil</MenuItem>
@@ -565,6 +659,7 @@ const ManajemenKelasDosenSkripsi = () => {
               </FormControl>
               <TextField
                 onChange={(e) => setTahunAjaranAkademik(e.target.value)}
+                value={tahunAjaranAkademik}
                 label="Masukan Tahun Ajaran"
                 fullWidth
               />
@@ -648,9 +743,14 @@ const ManajemenKelasDosenSkripsi = () => {
                 onChange={(e) => setSemester(e.target.value)}
                 label="Semester"
               >
-                <MenuItem value="Ganjil 2023/2024">Ganjil 2023/2024</MenuItem>
-                <MenuItem value="Padat 2023/2024">Padat 2023/2024</MenuItem>
-                <MenuItem value="Genap 2023/2024">Genap 2023/2024</MenuItem>
+                {akademikData.map((semesterData) => (
+                  <MenuItem
+                    key={semesterData.id} // Sesuaikan dengan kunci yang sesuai di data Anda
+                    value={`${semesterData.semester} ${semesterData.year}`}
+                  >
+                    {`${semesterData.semester} ${semesterData.year}`}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </DialogContent>
