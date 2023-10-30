@@ -74,7 +74,7 @@ const data = Array.from(Array(15).keys()).map((item, index) => ({
   status: `Active`,
 }));
 
-const StudentInformation = () => {
+const StudentInformationMentored = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -94,7 +94,15 @@ const StudentInformation = () => {
         <Typography variant="h1" sx={{ mb: 3 }}>
           Student Information
         </Typography>
-        <Typography variant="h6" sx={{ mb: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            paddingBottom: "25px",
+            fontSize: "15px",
+            fontWeight: 400,
+            color: "rgba(27, 43, 65, 0.69)",
+          }}
+        >
           Currently, you are on the Student Information page, where you can
           easily view all information about your mentored students, including
           the number, status, and other detailed and comprehensive information.
@@ -215,18 +223,24 @@ const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(`/bimbingan-akademik/student-information/${item.nim}`);
+    navigate(
+      `/bimbingan-akademik/dosen-pembimbing/student-information/${item.nim}`
+    );
 
     switch (name) {
       case "profile":
-        navigate(`/bimbingan-akademik/student-information/${item.nim}`);
+        navigate(
+          `/bimbingan-akademik/dosen-pembimbing/student-information/${item.nim}`
+        );
         break;
       case "grade":
-        navigate(`/bimbingan-akademik/student-information/${item.nim}/grade`);
+        navigate(
+          `/bimbingan-akademik/dosen-pembimbing/student-information/${item.nim}/grade`
+        );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/student-information/${item.nim}/certificate`
+          `/bimbingan-akademik/dosen-pembimbing/student-information/${item.nim}/certificate`
         );
         break;
 
@@ -273,4 +287,4 @@ const TableItem = ({ item, index }) => {
   );
 };
 
-export default StudentInformation;
+export default StudentInformationMentored;

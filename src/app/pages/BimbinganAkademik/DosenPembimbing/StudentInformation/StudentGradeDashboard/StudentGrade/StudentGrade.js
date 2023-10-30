@@ -7,15 +7,40 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Breadcrumbs,
+  experimentalStyled as styled,
 } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const StudentGrade = () => {
+  const navigate = useNavigate();
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigate(-1);
+  };
   return (
     <Div>
-      <Stack gap={3}>
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink>Back</StyledLink>
+          <Typography color="text.primary">Student Profile</Typography>
+        </Breadcrumbs>
+      </div>
+      <Stack gap={3} paddingTop={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography variant="h1">Nilai Mahasiswa</Typography>
-          <Typography variant="h6">Yuhu, Darell Deil</Typography>
+          <Typography variant="h6" sx={{ paddingRight: "15px" }}>
+            Yuhu, Darell Deil
+          </Typography>
         </Stack>
         <Typography variant="h5">Semester 1</Typography>
         <Table>

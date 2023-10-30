@@ -7,14 +7,38 @@ import {
   Stack,
   TextareaAutosize,
   Typography,
+  Breadcrumbs,
+  experimentalStyled as styled,
 } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const CertificateDetail = () => {
+  const navigate = useNavigate();
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigate(-1);
+  };
+
   const imageUrl =
     "https://i.pinimg.com/originals/fc/fa/29/fcfa2911e796d71f1bf6aa25ee1d8d89.jpg";
   return (
     <Div>
-      <Typography variant="h2" fontWeight="500">
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink>Back</StyledLink>
+          <Typography color="text.primary">Student Profile</Typography>
+        </Breadcrumbs>
+      </div>
+      <Typography variant="h2" paddingTop={3} fontWeight="500">
         Certificate
       </Typography>
       <Grid container>

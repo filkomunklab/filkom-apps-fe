@@ -13,11 +13,20 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  Breadcrumbs,
+  experimentalStyled as styled,
 } from "@mui/material";
 import SearchLocal from "app/shared/SearchLocal";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
 
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 const data = [...Array(15)].map(() => ({
   submissionDate: "10 May 2000",
   title: "Menang Lomba Desain Prototype",
@@ -29,6 +38,12 @@ const data = [...Array(15)].map(() => ({
 }));
 
 const StudentCertificate = () => {
+  const navigate = useNavigate();
+
+  const handleClick = (event) => {
+    event.preventDefault();
+  };
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortBy, setSortBy] = useState("");
@@ -43,7 +58,15 @@ const StudentCertificate = () => {
   };
   return (
     <Div>
-      <Stack gap={3}>
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink to="/bimbingan-akademik/dosen-pembimbing/student-information">
+            Back
+          </StyledLink>
+          <Typography color="text.primary">Student Profile</Typography>
+        </Breadcrumbs>
+      </div>
+      <Stack gap={3} paddingTop={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography variant="h1">All Certifications</Typography>
           <Typography variant="h6">Yuhu, Darell Deil</Typography>
@@ -135,9 +158,7 @@ const TableItem = ({ item, index }) => {
   }
 
   const handleNavigate = () => {
-    navigate(
-      "/bimbingan-akademik/student-information/10000002/certificate/1000001"
-    );
+    navigate("detail");
   };
 
   return (
