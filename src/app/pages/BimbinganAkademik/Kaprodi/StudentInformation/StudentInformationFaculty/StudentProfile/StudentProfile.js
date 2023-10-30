@@ -27,7 +27,7 @@ const StudentProfile = () => {
 
   const handleClick = (event) => {
     event.preventDefault();
-    navigate(-1);
+    navigate(-2);
   };
 
   return (

@@ -63,6 +63,7 @@ import SupervisorStudentGradeDashboard from "app/pages/BimbinganAkademik/Kaprodi
 import SupervisorStudentGrade from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/StudentProfile/StudentGradeDashboard/StudentGrade";
 import SupervisorStudentCertificate from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/StudentProfile/StudentCertificate";
 import SupervisorCertificateDetail from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/StudentProfile/StudentCertificate/CertificateDetail";
+import Profile from "app/pages/BimbinganAkademik/Kaprodi/Profile";
 
 const kepalaProgramStudiRoutes = [
   {
@@ -337,6 +338,10 @@ const kepalaProgramStudiRoutes = [
   {
     path: "/bimbingan-akademik/kaprodi/review-activities/consultation/:id",
     element: <Page component={ReplyConsultation} />,
+  },
+  {
+    path: "/bimbingan-akademik/kaprodi/profile",
+    element: <Page component={Profile} />,
   },
 ];
 

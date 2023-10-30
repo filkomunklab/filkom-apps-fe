@@ -122,7 +122,8 @@ export const sekretarisMenus = [
         label: "Student Information",
         type: "nav-item",
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/sek-dekan/student-information-faculty",
+        uri: "/bimbingan-akademik/sek-dekan/student-information",
+
       },
       {
         label: "Supervisor Information",
@@ -661,7 +662,7 @@ export const kaprodiMenus = [
       {
         label: "Dashboard",
         type: "nav-item",
-        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
         uri: "/bimbingan-akademik/kaprodi/dashboard",
       },
       {
