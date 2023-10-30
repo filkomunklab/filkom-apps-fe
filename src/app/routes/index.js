@@ -16,6 +16,7 @@ import anggotaPenelisRoutes from "./anggotaPenelisRoutes";
 import dosenPembimbingRoutes from "./BA-dosenPembimbingRoutes";
 import dekanRoutes from "./BA-dekanRoutes";
 import kepalaProgramStudiRoutes from "./BA-kepalaProgramStudiRoutes";
+import sekretarisDekanRoutes from "./BA-sekDekanRoutes";
 /**
  routes which you want to make accessible to both authenticated and anonymous users
  **/
@@ -46,6 +47,7 @@ const routesForAuthenticatedOnly = [
   ...dosenPembimbingRoutes,
   ...dekanRoutes,
   ...kepalaProgramStudiRoutes,
+  ...sekretarisDekanRoutes,
   //...operatorRoutes,
 ];
 

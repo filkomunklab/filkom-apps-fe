@@ -1,4 +1,4 @@
-import AcademicGuide from "app/pages/BimbinganAkademik/SekDekan/AcademicGuide";
+import AcademicGuide from "app/pages/BimbinganAkademik/SekDekan/AcademicGuide/AcademicGuide";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/SekDekan/VisionMisionGoals";
 import Curriculum from "app/pages/BimbinganAkademik/SekDekan/Curriculum/Curriculum";
 import StudentInformation from "app/pages/BimbinganAkademik/SekDekan/StudentInformation";
