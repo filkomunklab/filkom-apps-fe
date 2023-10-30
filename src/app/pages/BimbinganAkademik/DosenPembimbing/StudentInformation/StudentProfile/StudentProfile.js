@@ -7,14 +7,45 @@ import {
   IconButton,
   Stack,
   Typography,
+  Breadcrumbs,
+  experimentalStyled as styled,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import { Link, useNavigate } from "react-router-dom";
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const StudentProfile = () => {
+  const navigate = useNavigate();
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigate(-1);
+  };
+
   return (
     <Div>
-      <Typography variant={"h1"} sx={{ marginLeft: 3 }}>
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink>Back</StyledLink>
+          <Typography color="text.primary">Student Profile</Typography>
+        </Breadcrumbs>
+      </div>
+      <Typography
+        sx={{
+          fontSize: "24px",
+          fontWeight: 500,
+          paddingBottom: "20px",
+          paddingTop: "24px",
+        }}
+      >
         Student Profile
       </Typography>
       <Accordion defaultExpanded>
@@ -22,7 +53,7 @@ const StudentProfile = () => {
           expandIcon={<ExpandMoreIcon />}
           sx={{ backgroundColor: "#1A38601A" }}
         >
-          <Typography variant={"h3"}>Student Information</Typography>
+          <Typography fontWeight={500}>Student Information</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3}>
@@ -42,20 +73,20 @@ const StudentProfile = () => {
               </Div>
             </Grid>
             <Grid item xs={12} md={12}>
-              <Typography variant="h4">Full Name</Typography>
+              <Typography variant="h5">Full Name</Typography>
               <Typography variant="h6" sx={textSyle}>
-                Yuhu, Darell Deil
+                Christopher, Darell
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Gender</Typography>
+              <Typography variant="h5">Gender</Typography>
               <Typography variant="h6" sx={textSyle}>
                 Male
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Stack direction={"row"} gap={1} justifyContent={"space-between"}>
-                <Typography variant="h4">Student Status</Typography>
+                <Typography variant="h5">Student Status</Typography>
                 <IconButton size="small">
                   <BorderColorIcon fontSize="inherit" />
                 </IconButton>
@@ -65,87 +96,85 @@ const StudentProfile = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">NIM</Typography>
+              <Typography variant="h5">NIM</Typography>
               <Typography variant="h6" sx={textSyle}>
                 105021810001
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Registration Number</Typography>
+              <Typography variant="h5">Registration Number</Typography>
               <Typography variant="h6" sx={textSyle}>
                 S2200001
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Date of Birth</Typography>
+              <Typography variant="h5">Date of Birth</Typography>
               <Typography variant="h6" sx={textSyle}>
                 08/01/2005
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Religion</Typography>
+              <Typography variant="h5">Religion</Typography>
               <Typography variant="h6" sx={textSyle}>
                 Christian
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Blood Type</Typography>
+              <Typography variant="h5">Blood Type</Typography>
               <Typography variant="h6" sx={textSyle}>
                 B
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Status Pernikahan</Typography>
+              <Typography variant="h5">Married Status</Typography>
               <Typography variant="h6" sx={textSyle}>
                 Belum Menikah
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Email</Typography>
+              <Typography variant="h5">Email</Typography>
               <Typography variant="h6" sx={textSyle}>
                 s2200001@student.unklab.ac.id
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Phone Number</Typography>
+              <Typography variant="h5">Phone Number</Typography>
               <Typography variant="h6" sx={textSyle}>
                 0853-1234-5678
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Kurikulum</Typography>
+              <Typography variant="h5">Curriculum</Typography>
               <Typography variant="h6" sx={textSyle}>
                 TI 2018
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Bidang Perminatan</Typography>
+              <Typography variant="h5">Area of Concentration</Typography>
               <Typography variant="h6" sx={textSyle}>
                 -
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Asal SMA</Typography>
+              <Typography variant="h5">Previous High School</Typography>
               <Typography variant="h6" sx={textSyle}>
                 SMA Bakti Luhur
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Alamat Rumah</Typography>
+              <Typography variant="h5">Address</Typography>
               <Typography variant="h6" sx={textSyle}>
                 Winenet, lorong kopi-kopi 2, Kecamatan Aertembaga
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Alamat Sekarang</Typography>
+              <Typography variant="h5">Current Address</Typography>
               <Typography variant="h6" sx={textSyle}>
                 Kost Pink
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">
-                Status Tempat Tinggal Sekarang
-              </Typography>
+              <Typography variant="h5">Current Residence Status</Typography>
               <Typography variant="h6" sx={textSyle}>
                 Kost
               </Typography>
@@ -158,54 +187,94 @@ const StudentProfile = () => {
           expandIcon={<ExpandMoreIcon />}
           sx={{ backgroundColor: "#1A38601A" }}
         >
-          <Typography variant={"h3"}>Orang Tua / Wali Mahasiswa</Typography>
+          <Typography fontWeight={500}>Parents / Guardians</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
-              <Typography variant="h4">Full Name</Typography>
+              <Typography variant="h5" paddingTop={2}>
+                Full Name
+              </Typography>
               <Typography variant="h6" sx={textSyle}>
                 Adzana Shaliha
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Jenjang Pendidikan</Typography>
+              <Typography variant="h5">Level of Education</Typography>
               <Typography variant="h6" sx={textSyle}>
                 S-1
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Religion</Typography>
+              <Typography variant="h5">Religion</Typography>
               <Typography variant="h6" sx={textSyle}>
                 Christian
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Married Status</Typography>
+              <Typography variant="h5">Married Status</Typography>
               <Typography variant="h6" sx={textSyle}>
                 Married
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Relationship</Typography>
+              <Typography variant="h5">Relationship</Typography>
               <Typography variant="h6" sx={textSyle}>
                 Mother
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Email</Typography>
+              <Typography variant="h5">Email</Typography>
               <Typography variant="h6" sx={textSyle}>
                 adzana@gmail.com
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4">Phone</Typography>
+              <Typography variant="h5">Phone</Typography>
               <Typography variant="h6" sx={textSyle}>
                 0853-1234-5678
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h4">Address</Typography>
+              <Typography variant="h5">Address</Typography>
+              <Typography variant="h6" sx={textSyle}>
+                Winenet, lorong kopi-kopi 2, Kecamatan Aertembaga
+              </Typography>
+            </Grid>
+          </Grid>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          sx={{ backgroundColor: "#1A38601A" }}
+        >
+          <Typography fontWeight={500}>Academic Advisor</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={12}>
+              <Typography variant="h5" paddingTop={2}>
+                Full Name
+              </Typography>
+              <Typography variant="h6" sx={textSyle}>
+                Adzana Shaliha
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h5">Email</Typography>
+              <Typography variant="h6" sx={textSyle}>
+                adzana@gmail.com
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h5">Phone</Typography>
+              <Typography variant="h6" sx={textSyle}>
+                085335181818
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h5">Address</Typography>
               <Typography variant="h6" sx={textSyle}>
                 Winenet, lorong kopi-kopi 2, Kecamatan Aertembaga
               </Typography>
