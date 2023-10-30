@@ -21,6 +21,7 @@ import React, { useState } from "react";
 import CreateIcon from "@mui/icons-material/Create";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
+import axios from "axios";
 
 const BuatKonsultasiAdvisor = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -44,22 +45,47 @@ const BuatKonsultasiAdvisor = () => {
     setDescription(event.target.value);
   };
 
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMmViMzU2ODctYzQxNC00NjM0LWIwMTAtMWI2NGNhYTFiZjI3IiwibmlrIjoiZG9zZW4xIiwibmFtZSI6IkxlY3R1cmVyMSBEb3NlbjEiLCJyb2xlIjpbIkRPU0VOIiwiRE9TRU5fTUsiLCJLQVBST0RJIl19LCJpYXQiOjE2OTg1ODIwNDF9.fQaun7RGCehPJXt-bLve0m_zpyC5-BHYPjmYfUyid8I";
+
   const handleCatatKonsultasi = () => {
     if (!selectedDate || !description) {
-      // Validasi gagal jika tanggal atau deskripsi kosong
       alert("Harap isi tanggal dan deskripsi sebelum mencatat konsultasi.");
     } else {
-      // Validasi berhasil, catat konsultasi dan atur ulang input
       const newConsultation = {
-        date: selectedDate,
+        group_id: "8406cfb1-d1a2-4314-8563-62797bd6c381", // Ganti dengan group_id yang sesuai
         description: description,
+        date: selectedDate,
       };
-      setConsultations([...consultations, newConsultation]);
-      setSelectedDate(""); // Mengatur ulang nilai tanggal menjadi kosong
-      setDescription(""); // Mengatur ulang nilai deskripsi menjadi kosong
-      handleDialogClose(); // Menutup dialog setelah mencatat konsultasi
+
+      // Mendapatkan token dari tempat yang sesuai, contoh: dari state
+      const authToken =
+        "Bearer " +
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMmViMzU2ODctYzQxNC00NjM0LWIwMTAtMWI2NGNhYTFiZjI3IiwibmlrIjoiZG9zZW4xIiwibmFtZSI6IkxlY3R1cmVyMSBEb3NlbjEiLCJyb2xlIjpbIkRPU0VOIiwiRE9TRU5fTUsiLCJLQVBST0RJIl19LCJpYXQiOjE2OTg1ODIwNDF9.fQaun7RGCehPJXt-bLve0m_zpyC5-BHYPjmYfUyid8I"; // Ganti 'your_token_here' dengan token yang sesuai
+
+      // Mengatur header dengan token
+      const headers = {
+        Authorization: authToken,
+      };
+
+      // Kirim permintaan POST ke backend dengan header yang berisi token
+      axios
+        .post("http://localhost:2000/api/v1/consultation", newConsultation, {
+          headers,
+        })
+        .then((response) => {
+          console.log("Response:", response.data);
+          setSelectedDate("");
+          setDescription("");
+          handleDialogClose();
+        })
+        .catch((error) => {
+          alert("Terjadi kesalahan saat mencatat konsultasi.");
+          console.error("Error:", error);
+        });
     }
   };
+
   return (
     <Div>
       <Div
@@ -216,7 +242,6 @@ const BuatKonsultasiAdvisor = () => {
                       minRows={3}
                       label="Deskripsi"
                       placeholder="Deskripsi"
-                      fullWidth
                       value={description}
                       onChange={handleDescriptionChange}
                       style={{

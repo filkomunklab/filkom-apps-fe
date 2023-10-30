@@ -28,6 +28,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import axios from "axios";
+import { getAuthToken } from "app/services/Auth/jwtAuth";
 
 const ManajemenKelasDosenSkripsi = () => {
   const [open, setOpen] = useState(false);
@@ -252,8 +253,10 @@ const ManajemenKelasDosenSkripsi = () => {
 
   // fungsi untuk mendapatkan data GET
   // token JWT
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMmViMzU2ODctYzQxNC00NjM0LWIwMTAtMWI2NGNhYTFiZjI3IiwibmlrIjoiZG9zZW4xIiwibmFtZSI6IkxlY3R1cmVyMSBEb3NlbjEiLCJyb2xlIjpbIkRPU0VOIiwiRE9TRU5fTUsiLCJLQVBST0RJIl19LCJpYXQiOjE2OTg1NjQ1OTJ9.G5MAcuXQDg95xMGpW_bBOymZQxSOFKzG63cHrD4nsk8";
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+  // const token =
+  //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMmViMzU2ODctYzQxNC00NjM0LWIwMTAtMWI2NGNhYTFiZjI3IiwibmlrIjoiZG9zZW4xIiwibmFtZSI6IkxlY3R1cmVyMSBEb3NlbjEiLCJyb2xlIjpbIkRPU0VOIiwiRE9TRU5fTUsiLCJLQVBST0RJIl19LCJpYXQiOjE2OTg2Mjk3Mzh9.B8r31KdGUmERHhPg03k_o_qEi11A51U8zeITaCJmfeg";
 
   useEffect(() => {
     // Fungsi untuk mengambil data akademik
