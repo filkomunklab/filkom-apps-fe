@@ -12,7 +12,7 @@ import CertificateDetail from "app/pages/BimbinganAkademik/SekDekan/StudentInfor
 import StudentGradeDashboard from "app/pages/BimbinganAkademik/SekDekan/StudentInformation/StudentGradeDashboard";
 import Profile from "app/pages/BimbinganAkademik/SekDekan/Profile";
 import SupervisorInformation from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation";
-import AdvisorProfile from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/AdvisorProfile";
+import AdvisorProfile from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/AdvisorProfile/AdvisorProfilFaculty";
 import SupervisorInformatics from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/Informatics";
 import SupervisorInformationSystem from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/InformationSystem";
 import SupervisorInformationTechnology from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/InformationTechnology";
