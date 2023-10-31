@@ -105,7 +105,7 @@ const StudentInformation = () => {
         </Typography>
       </Div>
       <Grid container spacing={2} sx={{ paddingBottom: 4, paddingTop: 2 }}>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
+        <Grid item sx={12} sm={4} md={4} lg={4} xs={12}>
           <Card
             sx={{
               height: "100%",
@@ -138,7 +138,7 @@ const StudentInformation = () => {
             </Grid>
           </Card>
         </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
+        <Grid item sx={12} sm={4} md={4} lg={4} xs={12}>
           <Card
             sx={{
               height: "100%",
@@ -171,7 +171,7 @@ const StudentInformation = () => {
             </Grid>
           </Card>
         </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
+        <Grid item sx={12} sm={4} md={4} lg={4} xs={12}>
           <Card
             sx={{
               height: "100%",
@@ -208,13 +208,13 @@ const StudentInformation = () => {
       <Grid container spacing={2}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
           <Typography variant="h2">
-            Computer Sciences Faculty Students List
+            Computer Sciences Faculty Students
           </Typography>
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={8} md={3}>
           <SearchGlobal sx={{ height: "100%" }} />
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={4} md={3}>
           <FormControl
             sx={{
               width: "100%",
@@ -227,6 +227,13 @@ const StudentInformation = () => {
               value={filter}
               label="Grouping"
               renderValue={(selected) => selected.join(", ")}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: "37%",
+                  },
+                },
+              }}
             >
               <MenuItem value="">
                 <em>None</em>
@@ -234,8 +241,24 @@ const StudentInformation = () => {
               <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
                 Status
               </ListSubheader>
-              <MenuItem value={"activeStudent"}>Active</MenuItem>
-              <MenuItem value={"nonactiveStudent"}>Nonactive</MenuItem>
+              <MenuItem
+                sx={{
+                  backgroundColor: "#FAFAFA",
+                  borderRadius: "5px",
+                }}
+                value={"activeStudent"}
+              >
+                Active
+              </MenuItem>
+              <MenuItem
+                sx={{
+                  backgroundColor: "#FAFAFA",
+                  borderRadius: "5px",
+                }}
+                value={"nonactiveStudent"}
+              >
+                Nonactive
+              </MenuItem>
               <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
                 Tahun Masuk
               </ListSubheader>
@@ -246,7 +269,6 @@ const StudentInformation = () => {
                   sx={{
                     backgroundColor: "#FAFAFA",
                     borderRadius: "5px",
-                    margin: "5px",
                   }}
                 >
                   {item.label}
@@ -264,7 +286,6 @@ const StudentInformation = () => {
                     sx={{
                       backgroundColor: "#FAFAFA",
                       borderRadius: "5px",
-                      justifyContent: "center",
                     }}
                   >
                     {item.label}
@@ -287,6 +308,16 @@ const StudentInformation = () => {
                 ))}
             </TableBody>
           </Table>
+        </Grid>
+        <Grid
+          item
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            "@media (max-width: 890px)": { justifyContent: "flex-start" },
+          }}
+        >
           <TablePagination
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}

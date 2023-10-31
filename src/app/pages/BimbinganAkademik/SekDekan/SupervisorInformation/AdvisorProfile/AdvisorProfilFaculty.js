@@ -194,12 +194,23 @@ const AdvisorProfileFaculty = () => {
         </Grid>
       </Paper>
       <Grid container spacing={2}>
-        <Grid item md={4} display="flex" alignItems="center">
+        <Grid
+          item
+          lg={4}
+          md={12}
+          sm={12}
+          xs={12}
+          display="flex"
+          alignItems="center"
+        >
           <Typography variant="h2">List of mentored students</Typography>
         </Grid>
         <Grid
           item
-          md={3}
+          lg={3}
+          md={5}
+          sm={4}
+          xs={12}
           display="flex"
           alignItems="center"
           justifyContent="center"
@@ -208,7 +219,10 @@ const AdvisorProfileFaculty = () => {
         </Grid>
         <Grid
           item
-          md={3}
+          lg={3}
+          md={4}
+          sm={4}
+          xs={6}
           display="flex"
           alignItems="center"
           justifyContent="center"
@@ -225,6 +239,13 @@ const AdvisorProfileFaculty = () => {
               value={filter}
               label="Grouping"
               renderValue={(selected) => selected.join(", ")}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: "37%",
+                  },
+                },
+              }}
             >
               <MenuItem value="">
                 <em>None</em>
@@ -272,7 +293,15 @@ const AdvisorProfileFaculty = () => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item md={2} display="flex" alignItems="center">
+        <Grid
+          item
+          lg={2}
+          md={3}
+          sm={4}
+          xs={6}
+          display="flex"
+          alignItems="center"
+        >
           <Link to={`/add-supervisor/informatics`}>
             <Button
               sx={{
@@ -280,7 +309,7 @@ const AdvisorProfileFaculty = () => {
                 borderRadius: "24px",
                 color: "white",
                 whiteSpace: "nowrap",
-                minWidth: "132px",
+                minWidth: "135px",
                 fontSize: "12px",
                 padding: "10px",
 
@@ -306,6 +335,16 @@ const AdvisorProfileFaculty = () => {
                 ))}
             </TableBody>
           </Table>
+        </Grid>
+        <Grid
+          item
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            "@media (max-width: 890px)": { justifyContent: "flex-start" },
+          }}
+        >
           <TablePagination
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}

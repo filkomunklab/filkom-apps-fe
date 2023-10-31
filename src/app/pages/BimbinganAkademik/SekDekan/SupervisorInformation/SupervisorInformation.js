@@ -106,7 +106,7 @@ const SupervisorInformation = () => {
         </Typography>
       </Div>
       <Grid container spacing={2} sx={{ mb: 5, mt: 2 }}>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
+        <Grid item sm={4} md={4} lg={4} xs={12}>
           <Card
             sx={{
               height: "100%",
@@ -139,7 +139,7 @@ const SupervisorInformation = () => {
             </Grid>
           </Card>
         </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
+        <Grid item sm={4} md={4} lg={4} xs={12}>
           <Card
             sx={{
               height: "100%",
@@ -172,7 +172,7 @@ const SupervisorInformation = () => {
             </Grid>
           </Card>
         </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
+        <Grid item sm={4} md={4} lg={4} xs={12}>
           <Card
             sx={{
               height: "100%",
@@ -210,16 +210,19 @@ const SupervisorInformation = () => {
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
           <Typography variant="h2">List of Academic Supervisors</Typography>
         </Grid>
-        <Grid item md={4}>
+        <Grid item xs={8} sm={9} md={4}>
           <SearchGlobal sx={{ height: "100%", width: "100%" }} />
         </Grid>
         <Grid
           item
+          xs={4}
+          sm={3}
           md={2}
           sx={{
             display: "flex",
             flexDirection: "row",
             justifyContent: "flex-end",
+            paddingLeft: "5px",
           }}
         >
           <Link
@@ -232,7 +235,7 @@ const SupervisorInformation = () => {
                 borderRadius: "24px",
                 color: "white",
                 whiteSpace: "nowrap",
-                minWidth: "132px",
+                width: "100%",
                 fontSize: "12px",
                 padding: "10px",
                 gap: "6px",
@@ -247,8 +250,7 @@ const SupervisorInformation = () => {
             </Button>
           </Link>
         </Grid>
-
-        <Grid item xs={12}>
+        <Grid item xs={12} paddingTop={4}>
           <Table>
             <TableHead>
               <TableHeading />
@@ -261,6 +263,16 @@ const SupervisorInformation = () => {
                 ))}
             </TableBody>
           </Table>
+        </Grid>{" "}
+        <Grid
+          item
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+          }}
+        >
           <TablePagination
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
