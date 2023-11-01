@@ -34,12 +34,13 @@ import {
  } from 'recharts';
 import petaIndonesia from "./Indonesia.svg"
 import { styled } from "@mui/system";
+import axios from "axios";
 
-const filkomStudents = [
-  { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Computer Science", bottomText: "1,324 Students" },
+let filkomStudents = [
+  { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Total Alumni", bottomText: "1,324 Students" },
   { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Informatics", bottomText: "357 Students" },
   { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Information Systems", bottomText: "486 Students" },
-  { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Animation & Design", bottomText: "165 Students" },
+  // { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Animation & Design", bottomText: "165 Students" },
 ];
 
 const ResponsiveAvatar = styled(Avatar)(
@@ -78,14 +79,14 @@ const studentsDistribution = [
 const pieChartData = [
   { name: 'Informatika', value: 450,  description: 'Description for Value 1' },
   { name: 'Sistem Informasi', value: 350,  description: 'Description for Value 2' },
-  { name: 'Desain dan Animasi', value: 200,  description: 'Description for Value 3' },
+  // { name: 'Desain dan Animasi', value: 200,  description: 'Description for Value 3' },
 ];
 
 // colors for pie chart
 const pieColors = ['#FED605', '#0053C0', '#FF4242']; 
 
 // bar chart - jenis perusahann tempat alumni bekerja
-const data = [
+const jenisPerusahaan = [
   { organization: 'Instansi Pemerintahan', value: 30, color: '#6200EE' },
   { organization: 'BUMN/BUMD', value: 45, color: '#FFF735' },
   { organization: 'Institusi/Organisasi Multilateral', value: 28, color: '#6BFAD7' },
@@ -105,25 +106,55 @@ const dapatKerja = [
   { month: '12 months', value: 50 },
 ];
 
-const processedData = data.map(item => ({
+const processedData = jenisPerusahaan.map(item => ({
   ...item,
   fill: item.color,
 }));
 
 const Dashboard = () => {
+
+  const [data, setData] = useState([]);
+
+  const getData = async () => {
+    await axios.get("http://localhost:2000/api/v1/dashboard/statistic").then((res) => {
+      console.log(res.data.data);
+      setData(res.data.data);
+    });
+  };
+
+  React.useEffect(() => {
+    getData();
+  }, []);
+
+  // React.useEffect(() => {
+  //   const data1 = [
+  //     {value: ""},
+  //     {value: "200"},
+  //     {value: "300"},
+  //   ]
+  //   filkomStudents = filkomStudents.map((item, index) => ({
+  //     ...item,
+  //     ...data1[index]
+  //   }))
+  // }, []);
+
+
   return (
       <Div >
+        <Typography>Total filkom students: {data.totalAlumni}</Typography>
         <Grid container spacing={3}>
+          
           {/* 4 cards */}
+          
           <Grid item md={12}>
              <Grid container spacing={3}>
               {filkomStudents.map((item, index) => (
-                <Grid item xs={12} sm={6} md={3} key={index}>
+                <Grid item xs={12} sm={6} md={4} key={index}>
                   <Card>
                     <CardHeader
                       avatar={<ResponsiveAvatar sx={{ color: 'primary.main', bgcolor: 'white' }}>{item.icon}</ResponsiveAvatar>}
                       title={<Typography variant="h6">{item.topText}</Typography>}
-                      subheader={<Typography variant="body2" sx={{ fontSize: "18px", fontWeight: 500 }}>{item.bottomText}</Typography>}
+                      subheader={<Typography variant="body2" sx={{ fontSize: "18px", fontWeight: 500 }}>{`${item.value} students`}</Typography>}
                     />
                   </Card>
                 </Grid>
@@ -197,7 +228,7 @@ const Dashboard = () => {
                   <Tooltip />
                   <Legend iconType="circle" />
                   <Bar dataKey="TI" fill="#FFCC00" name="TI" />
-                  <Bar dataKey="DKV" fill="#E21D12" name="DKV" />
+                  {/* <Bar dataKey="DKV" fill="#E21D12" name="DKV" /> */}
                   <Bar dataKey="SI" fill="#006AF5" name="SI" />
                 </BarChart>
               </ResponsiveContainer>

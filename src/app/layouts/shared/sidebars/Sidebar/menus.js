@@ -348,6 +348,12 @@ const menus = [
         uri: "/klabat-bridge/daftar-alumni",
       },
       {
+        label: "Alumni",
+        type: "nav-item",
+        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-alumni-fakultas",
+      },
+      {
         label: "Tracer Study Form",
         type: "nav-item",
         icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,

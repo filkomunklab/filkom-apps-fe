@@ -29,15 +29,13 @@ import {
 } from "@mui/material";
 import ActionButton from "app/shared/ActionButton";
 import SearchGlobal from "app/shared/SearchGlobal";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CreateIcon from "@mui/icons-material/Create";
 import MarkunreadIcon from "@mui/icons-material/Markunread";
 import SearchIcon from '@mui/icons-material/Search';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import axios from "axios";
-import { DataArrayRounded } from "@mui/icons-material";
 
-const DaftarAlumni = () => {
+const DaftarAlumniFakultas = () => {
   const [data, setData] = useState([]);
   const [year, setYear] = useState([]);
   const [major, setMajor] = useState([]);
@@ -54,96 +52,43 @@ const DaftarAlumni = () => {
     backgroundColor: 'white',
   };
 
-  // select all button
-  const [selectAll, setSelectAll] = useState(false);
-  const [checkboxes, setCheckboxes] = useState(new Array(10).fill(false));
+  // // select all button
+  // const [selectAll, setSelectAll] = useState(false);
+  // const [checkboxes, setCheckboxes] = useState(new Array(10).fill(false));
 
-  const handleSelectAll = () => {
-    setSelectAll(!selectAll);
-    setCheckboxes(new Array(10).fill(!selectAll));
-  };
+  // const handleSelectAll = () => {
+  //   setSelectAll(!selectAll);
+  //   setCheckboxes(new Array(10).fill(!selectAll));
+  // };
 
-  const handleCheckboxChange = (index) => {
-    const newCheckboxes = [...checkboxes];
-    newCheckboxes[index] = !checkboxes[index];
-    setCheckboxes(newCheckboxes);
-    setSelectAll(newCheckboxes.every((checkbox) => checkbox));
-  };
+  // const handleCheckboxChange = (index) => {
+  //   const newCheckboxes = [...checkboxes];
+  //   newCheckboxes[index] = !checkboxes[index];
+  //   setCheckboxes(newCheckboxes);
+  //   setSelectAll(newCheckboxes.every((checkbox) => checkbox));
+  // };
 
   const TableItem = ({ index, item }) => (
     <TableRow>
-      <TableCell>
-        <Checkbox 
-          checked={checkboxes[index]}
-          onChange={() => handleCheckboxChange(index)}
-          color="primary"
-        />
-      </TableCell>
       <TableCell>{index + 1}</TableCell>
       <TableCell>{`${item.firstName} ${item.lastName}`}</TableCell>
       <TableCell>{item.nim}</TableCell>
       <TableCell>{item.faculty}</TableCell>
       <TableCell>{item.major === "IF" ? "Informatika" : "Sistem Informasi"}</TableCell>
       <TableCell>{item.graduate_year}</TableCell>
-      <TableCell>{item.status}</TableCell>
-      <TableCell>
-        <Box sx={{
-          display: "flex",
-          //justifyContent: "center",
-          alignItems: 'center',
-        }}
-        >
-          <Button 
-            //onClick={() => setResetPassword(true)}
-          >
-            <WhatsAppIcon sx={{ fontSize: 16, color: 'black' }} />
-          </Button>
-          <Button>
-            <MarkunreadIcon sx={{ fontSize: 16, color: 'black' }}/>
-          </Button>
-        </Box>
-      </TableCell>
     </TableRow>
   );
 
-
   const getData = async () => {
-    await axios.get(`http://localhost:2000/api/v1/fakultas/alumni?search_query=${searchValue}`).then((res) => {
+    await axios.get("http://localhost:2000/api/v1/fakultas/alumni").then((res) => {
       console.log(res.data.data);
-      
       setData(res.data.data);
-
-      const uniqueYears = [...new Set(res.data.data.map(item=> item.graduate_year))]
-      const uniquMajor = [...new Set(res.data.data.map(item=> item.major))]
-
-      console.log(uniqueYears);
-      setYear(uniqueYears)
-      setMajor(uniquMajor)
     });
   };
 
-  // React.useEffect(() =>{
-
-  //   if(filterValue){
-  //     function filterData() {
-  //       return data.filter(item => item["graduate_year"] === filterValue || item["major"] === filterValue);
-  //     }
-  
-  //     const data1 = filterData()
-  //     console.log(data1)
-  //     setFilterValue(data1)
-  //   }
-  // }, [filterValue, data]);
-
-  function filterData() {
-          return data.filter(item => item["graduate_year"] === filterValue || item["major"] === filterValue);
-        }
-
-
-
   React.useEffect(() => {
     getData();
-  }, [searchBtn]);
+  }, []);
 
   return (
     <Box
@@ -174,27 +119,23 @@ const DaftarAlumni = () => {
             alignItems: "center",
           }}
         >
-          {/* searchbar */}
-          {/* <SearchGlobal sx={{ minWidth: { xs: 100, md: 300 } }} /> */}
-          <TextField
-            // label="Search"
-            placeholder="Search by Name or NIM"
+           <TextField
+            label="Search"
             variant="outlined"
             size="small"
             // value={searchTerm}
-            onChange={(e) => setSearchValue(e.target.value)}
+            // onChange={(e) => setSearchTerm(e.target.value)}
             InputProps={{
               endAdornment: (
                 <IconButton 
-                  onClick={() => setSearchBtn(!searchBtn)} 
+                  //onClick={handleSearch} 
                   edge="end">
                   <SearchIcon />
                 </IconButton>
               ),
-              style: { borderRadius: '25px', width: '250px', height: '35px'} // Apply border radius here
+              style: { borderRadius: '25px', width: '200px', height: '35px'} // Apply border radius here
             }}
           />
-
           <FormControl sx={{minWidth: 200}} size="small">
             <InputLabel htmlFor="grouped-select">Filter</InputLabel>
             <Select 
@@ -202,53 +143,22 @@ const DaftarAlumni = () => {
               id="grouped-select" 
               label="Filter"
               sx={{borderRadius: 10, maxHeight: '50px'}}
-              value={filterValue}
-              onChange={(event)=>setFilterValue(event.target.value)}
+              // value={filter}
+              // onChange={handleChange}
             >
               <MenuItem value="">
                   <em>None</em>
               </MenuItem>
               <ListSubheader sx={{color: "#192739F0"}}>Program Study</ListSubheader>
-              {major.map(item => {
-                let label
-
-                switch (item) {
-                  case 'IF':
-                    label='Informatics'
-                    break;
-                  case 'SI':
-                    label='Sistem Information'
-                    break;
-                  case 'DKV':
-                    label='DKV'
-                    break;
-                
-                  default:
-                    break;
-                }
-                return(
-
-              <MenuItem value={item}>{label}</MenuItem>
-              )})}
+              <MenuItem value={"Informatika"}>Informatics</MenuItem>
+              <MenuItem value={"Sistem Informasi"}>Information Systems</MenuItem>
               <ListSubheader sx={{color: "#192739F0"}}>Gradutaion Year</ListSubheader>
-              {year.map((item)=>{return(
-                 <MenuItem value={item}>{item}</MenuItem>
-              )})}
+              <MenuItem value={2020}>2020</MenuItem>
+              <MenuItem value={2021}>2021</MenuItem>
+              <MenuItem value={2022}>2022</MenuItem>
             </Select>
           </FormControl>
           
-          {/* <Button 
-            variant="contained" 
-            color="primary" 
-            
-            sx={{
-              borderRadius: 10,
-              // whiteSpace: "nowrap",
-              minWidth: 100,
-              }}
-          >
-            <Box>Export</Box>
-          </Button> */}
           
         </Div>
       </Div>
@@ -256,24 +166,17 @@ const DaftarAlumni = () => {
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: '#f5f5f5'}}>
-              <TableCell>
-                <Checkbox onClick={handleSelectAll}/>
-              </TableCell>
               <TableCell>No</TableCell>
               <TableCell>Full Name</TableCell>
               <TableCell>NIM</TableCell>
               <TableCell>Faculty</TableCell>
               <TableCell>Program Study</TableCell>
               <TableCell>Graduation Year</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell sx={{ textAlign: "center" }}>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filterData().length > 0 ? filterData().map((item, index) => (
-              <TableItem index={index} item={item} />
-            )) : data.map((item, index) => (
-              <TableItem index={index} item={item} />
+            {data.map((item, index) => (
+              <TableItem index={index} item={item}/>
             ))}
           </TableBody>
         </Table>
@@ -356,4 +259,4 @@ const DaftarAlumni = () => {
   );
 };
 
-export default DaftarAlumni;
+export default DaftarAlumniFakultas;

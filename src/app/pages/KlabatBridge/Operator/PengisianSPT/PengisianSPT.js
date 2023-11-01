@@ -37,23 +37,25 @@ import {
     Input,
     IconButton,
   } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
 import { makeStyles } from '@mui/styles';
 import ClearIcon from "@mui/icons-material/Clear";
 import BackupOutlinedIcon from '@mui/icons-material/BackupOutlined';
+import axios from "axios";
 
-const rows = [
-    { id: 1, name: 'Row 1', mk: 'Robotics', sks: '3', keterangan: 'Summer 2023' },
-    { id: 2, name: 'Row 2', mk: 'Research Project 2', sks: '3', keterangan: 'Summer 2023' },
-    { id: 3, name: 'Row 3', mk: 'Machine Learning', sks: '3', keterangan: 'Semester 1 2023/2024' },
-    { id: 4, name: 'Row 4', mk: 'ITPM', sks: '3', keterangan: 'Semester 1 2023/2024' },
-    { id: 5, name: 'Row 5', mk: 'DevOps', sks: '3', keterangan: 'Semester 1 2023/2024' },
-    { id: 6, name: 'Row 6', mk: 'Internet of Things', sks: '3', keterangan: 'Semester 1 2023/2024' },
-    // Add more rows as needed
-  ];
+// const rows = [
+//     { id: 1, name: 'Row 1', mk: 'Robotics', sks: '3', keterangan: 'Summer 2023' },
+//     { id: 2, name: 'Row 2', mk: 'Research Project 2', sks: '3', keterangan: 'Summer 2023' },
+//     { id: 3, name: 'Row 3', mk: 'Machine Learning', sks: '3', keterangan: 'Semester 1 2023/2024' },
+//     { id: 4, name: 'Row 4', mk: 'ITPM', sks: '3', keterangan: 'Semester 1 2023/2024' },
+//     { id: 5, name: 'Row 5', mk: 'DevOps', sks: '3', keterangan: 'Semester 1 2023/2024' },
+//     { id: 6, name: 'Row 6', mk: 'Internet of Things', sks: '3', keterangan: 'Semester 1 2023/2024' },
+//     // Add more rows as needed
+//   ];
+
 
 const faculties = [
     'ASMIK',
@@ -76,31 +78,115 @@ const majorsByFaculty = {
     };
 
 const PengisianSPT = () => {
-    // table
-    const [data, setData] = useState(rows);
+    // input SPT
+    const [dataSPT, setDataSPT]= useState({
+        sisaSKS:"",
+        nama: "",
+        noRegis: "",
+        // tglLahir: "",
+        gender: "",
+        nik:"",
+        nim:"",
+        fakultas:"",
+        prodi:"",
+        minor:"",
+        ibuKandung:"",
+        noTelp:"",
+        email:"",
+    })
 
-    const handleInputChange = (e, id, columnName) => {
-        const updatedData = data.map((row) => {
+    const handleDataSPT = async (event) => {
+        try {
+            // Make an HTTP POST request to your backend API endpoint
+            const response = await axios.post('http://localhost:2000/api/v1/spt/', dataSPT);
+    
+            // Handle the response from the server if needed
+            console.log('Response from server:', response.data);
+            console.log('Form submitted successfully!', response.data);
+
+            setDataSPT({
+                      ...dataSPT,
+                      [event.target.name]: event.target.value,
+                    });
+            // Optionally, you can handle success or redirect to another page here
+        } catch (error) {
+            // Handle errors if the request fails
+            console.error('Error submitting data:', error);
+            // Optionally, you can show an error message to the user
+        }
+    };
+    
+    // handle onchange
+    // const handleDataSPT = (event) => {
+    //     setDataSPT({
+    //       ...dataSPT,
+    //       [event.target.name]: event.target.value,
+    //     });
+    // };
+
+    
+
+    // table
+    const [rows, setRows] = useState([
+        // initial data for rows, you can initialize it as per your requirements
+        { id: 1, mk: '', sks: '', keterangan: '' },
+        { id: 2, mk: '', sks: '', keterangan: '' },
+        { id: 3, mk: '', sks: '', keterangan: '' },
+        { id: 4, mk: '', sks: '', keterangan: '' },
+        { id: 5, mk: '', sks: '', keterangan: '' },
+        { id: 6, mk: '', sks: '', keterangan: '' },
+        { id: 7, mk: '', sks: '', keterangan: '' },
+        { id: 8, mk: '', sks: '', keterangan: '' },
+    ]);
+
+    const [totalSKS, setTotalSKS] = useState(0);
+
+    const handleInputChange = (e, id, column) => {
+    const updatedRows = rows.map(row => {
         if (row.id === id) {
-            return { ...row, [columnName]: e.target.value };
+        return { ...row, [column]: e.target.value };
         }
         return row;
-        });
-        setData(updatedData);
+    });
+    setRows(updatedRows);
     };
 
-    const [selectedFaculty, setSelectedFaculty] = useState('');
-    const [selectedMajor, setSelectedMajor] = useState('');
+    // sum of total sks
+    useEffect(() => {
+        // Calculate the sum of column 3 whenever rows change
+        const sum = rows.reduce((acc, row) => acc + parseFloat(row.sks || 0), 0);
+        setTotalSKS(sum);
+      }, [rows]);
 
-    const handleFacultyChange = (event) => {
-        setSelectedFaculty(event.target.value);
-        // Reset selected major when faculty changes
-        setSelectedMajor('');
-    };
+    // cek input data
+    useEffect(() => {
+        console.log(dataSPT)
+    }, [dataSPT])
 
-    const handleMajorChange = (event) => {
-        setSelectedMajor(event.target.value);
-    };
+    // const [data, setData] = useState(rows);
+
+    // const handleInputChange = (e, id, columnName) => {
+    //     const updatedData = data.map((row) => {
+    //     if (row.id === id) {
+    //         return { ...row, [columnName]: e.target.value };
+    //     }
+    //     return row;
+    //     });
+    //     setData(updatedData);
+    // };
+
+    // const [selectedFaculty, setSelectedFaculty] = useState('');
+    // const [selectedMajor, setSelectedMajor] = useState('');
+
+    // const handleFacultyChange = (event) => {
+    //     setSelectedFaculty(event.target.value);
+    //     // Reset selected major when faculty changes
+    //     setSelectedMajor('');
+    // };
+
+    // const handleMajorChange = (event) => {
+    //     setSelectedMajor(event.target.value);
+    // };
 
     // alert dialog
     const [open, setOpen] = React.useState(false);
@@ -152,14 +238,14 @@ const PengisianSPT = () => {
                     Saya yang bertanda tangan di bawah ini, bermohon untuk dapat wisuda pada semester 1 2022/2023 dengan sisa SKS yang harus diambil
                         <span style={{ display: 'inline-block', minWidth: '30px' }}>
                             <TextField
-                            //   value={remainingSks}
-                            //   onChange={handleSksChange}
-                            type="number"
-                            variant="outlined"
-                            size="small"
-                            placeholder='23'
-                            sx={{ width: '70px', ml:"10px", marginRight:"10px" }}
-
+                                type="number"
+                                variant="outlined"
+                                size="small"
+                                placeholder='23'
+                                sx={{ width: '70px', ml:"10px", marginRight:"10px" }}
+                                name="sisaSKS"
+                                value={totalSKS}
+                                onChange={handleDataSPT}
                             />
                         </span>
                     sks.
@@ -173,11 +259,10 @@ const PengisianSPT = () => {
                             <TextField
                             fullWidth
                             variant="outlined"
-                            name="namaLengkap"
                             placeholder="Aurelea Saerang"
-                        
-                            //   value={identityData.nim}
-                            //   onChange={handleIdentityChange}
+                            name="nama"
+                            value={dataSPT.nama}
+                            onChange={handleDataSPT}
                             />
                         </Grid>
                         <Grid item sm={12} md={6}>
@@ -187,8 +272,8 @@ const PengisianSPT = () => {
                             variant="outlined"
                             name="noRegis"
                             placeholder="1234567890"
-                            //   value={identityData.kodePT}
-                            //   onChange={handleIdentityChange}
+                            value={dataSPT.noRegis}
+                            onChange={handleDataSPT}
                             />
                         </Grid>
                         <Grid item sm={12} md={6}>
@@ -209,7 +294,11 @@ const PengisianSPT = () => {
                             <Typography variant="subtitle1" mb={1}>Gender</Typography>
                             <RadioGroup
                                 row
-                                name="row-radio-buttons-group"
+                                // name="row-radio-buttons-group"
+                                name="gender"
+                                placeholder="1234567890"
+                                value={dataSPT.gender}
+                                onChange={handleDataSPT}
                             >
                                 <FormControlLabel value="female" control={<Radio/>} label="Female"/>
                                 <FormControlLabel value="male" control={<Radio/>} label="Male"/>
@@ -224,8 +313,8 @@ const PengisianSPT = () => {
                             name="nik"
                             type='number'
                             placeholder="12345678910"
-                            //   value={identityData.nim}
-                            //   onChange={handleIdentityChange}
+                            value={dataSPT.nik}
+                            onChange={handleDataSPT}
                             />
                         </Grid>
                         <Grid item sm={12} md={6}>
@@ -236,8 +325,8 @@ const PengisianSPT = () => {
                             name="nim"
                             type='number'
                             placeholder="12345678910"
-                            //   value={identityData.kodePT}
-                            //   onChange={handleIdentityChange}
+                            value={dataSPT.nim}
+                            onChange={handleDataSPT}
                             />
                         </Grid>
                         <Grid item xs={12} md={4} >
@@ -247,16 +336,16 @@ const PengisianSPT = () => {
                             <Select
                                 fullWidth
                                 variant='outlined'
-                                name="faculty"
-                                value={selectedFaculty}
-                                onChange={handleFacultyChange}
+                                name="fakultas"
+                                value={dataSPT.fakultas}
+                                onChange={handleDataSPT}
                             >
                             <MenuItem value="" disabled>
                                 Select Faculty
                             </MenuItem>
-                            {faculties.map((faculty) => (
-                                <MenuItem key={faculty} value={faculty}>
-                                    {faculty}
+                            {faculties.map((fakultas) => (
+                                <MenuItem key={fakultas} value={fakultas}>
+                                    {fakultas}
                                 </MenuItem>
                             ))}
                             </Select>
@@ -268,16 +357,16 @@ const PengisianSPT = () => {
                                 <Select
                                     fullWidth
                                     variant="outlined"
-                                    name="major"
-                                    value={selectedMajor}
-                                    onChange={handleMajorChange}
+                                    name="prodi"
+                                    value={dataSPT.prodi}
+                                    onChange={handleDataSPT}
                                 >
                                     <MenuItem value="" disabled>
                                     Select Major
                                     </MenuItem>
-                                    {majorsByFaculty[selectedFaculty]?.map((major) => (
-                                    <MenuItem key={major} value={major}>
-                                        {major}
+                                    {majorsByFaculty[dataSPT.fakultas]?.map((prodi) => (
+                                    <MenuItem key={prodi} value={prodi}>
+                                        {prodi}
                                     </MenuItem>
                                     ))}
                                 </Select>
@@ -289,8 +378,8 @@ const PengisianSPT = () => {
                             variant="outlined"
                             name="minor"
                             placeholder="Web Developer"
-                            //   value={identityData.nim}
-                            //   onChange={handleIdentityChange}
+                            value={dataSPT.minor}
+                            onChange={handleDataSPT}
                             />
                         </Grid>
                         <Grid item sm={12} md={6}>
@@ -298,10 +387,10 @@ const PengisianSPT = () => {
                             <TextField
                             fullWidth
                             variant="outlined"
-                            name="namaLengkap"
+                            name="ibuKandung"
                             placeholder="Ariana Grande"
-                            //   value={identityData.nim}
-                            //   onChange={handleIdentityChange}
+                            value={dataSPT.ibuKandung}
+                            onChange={handleDataSPT}
                             />
                         </Grid>
                         <Grid item sm={12} md={6}>
@@ -309,11 +398,11 @@ const PengisianSPT = () => {
                             <TextField
                             fullWidth
                             variant="outlined"
-                            name="phoneNumber"
+                            name="noTelp"
                             placeholder="12345678910"
                             type='number'
-                            //   value={identityData.nim}
-                            //   onChange={handleIdentityChange}
+                            value={dataSPT.noTelp}
+                            onChange={handleDataSPT}
                             />
                         </Grid>
                         <Grid item sm={12} md={6}>
@@ -324,8 +413,8 @@ const PengisianSPT = () => {
                             name="email"
                             placeholder="serealsajow18@gmail.com"
                             type='gmail'
-                            //   value={identityData.nim}
-                            //   onChange={handleIdentityChange}
+                            value={dataSPT.email}
+                            onChange={handleDataSPT}
                             />
                         </Grid>
                     </Grid>
@@ -347,37 +436,38 @@ const PengisianSPT = () => {
                             </TableHead>
                             <TableBody>
                             {rows.map((row) => (
-                    <TableRow key={row.id}>
-                        <TableCell>{row.id}</TableCell>
-                        <TableCell>
-                        <TextField
-                            value={row.column2}
-                            onChange={(e) => handleInputChange(e, row.id, 'column2')}
-                            fullWidth
-                            variant="standard"
-                            sx={{ '& .MuiInputBase-root': { borderBottom: 'none' } }}
-                        />
-                        </TableCell>
-                        <TableCell>
-                        <TextField
-                            value={row.column3}
-                            onChange={(e) => handleInputChange(e, row.id, 'column3')}
-                            fullWidth
-                            variant="standard"
-                            sx={{ '& .MuiInputBase-root': { borderBottom: 'none' } }}
-                        />
-                        </TableCell>
-                        <TableCell>
-                        <TextField
-                            value={row.column4}
-                            onChange={(e) => handleInputChange(e, row.id, 'column4')}
-                            fullWidth
-                            variant="standard"
-                            sx={{ '& .MuiInputBase-root': { borderBottom: 'none' } }}
-                        />
-                        </TableCell>
-                    </TableRow>
-                    ))}
+                                <TableRow key={row.id}>
+                                    <TableCell>{row.id}</TableCell>
+                                    <TableCell>
+                                        <TextField
+                                            value={row.mk}
+                                            onChange={(e) => handleInputChange(e, row.id, 'mk')}
+                                            fullWidth
+                                            variant="standard"
+                                            sx={{ '& .MuiInputBase-root': { borderBottom: 'none' } }}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <TextField
+                                            value={row.sks}
+                                            onChange={(e) => handleInputChange(e, row.id, 'sks')}
+                                            fullWidth
+                                            variant="standard"
+                                            sx={{ '& .MuiInputBase-root': { borderBottom: 'none' } }}
+                                            type="number"
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <TextField
+                                            value={row.keterangan}
+                                            onChange={(e) => handleInputChange(e, row.id, 'keterangan')}
+                                            fullWidth
+                                            variant="standard"
+                                            sx={{ '& .MuiInputBase-root': { borderBottom: 'none' } }}
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -385,7 +475,7 @@ const PengisianSPT = () => {
                 <Typography variant="body1" sx={{lineHeight: 2.5}}>
                     Total SKS yang diambil:
                         <span style={{ display: 'inline-block', minWidth: '30px' }}>
-                            <TextField
+                            {/* <TextField
                             //   value={remainingSks}
                             //   onChange={handleSksChange}
                             type="number"
@@ -393,6 +483,16 @@ const PengisianSPT = () => {
                             size="small"
                             placeholder='23'
                             sx={{ width: '70px', ml:"10px", marginRight:"10px" }}
+                            /> */}
+                            <TextField
+                                value={totalSKS}
+                                variant="outlined"
+                                size="small"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                sx={{ width: '70px', ml:"10px", marginRight:"10px" }}
+                                onChange={handleDataSPT}
                             />
                         </span>
                     sks.
