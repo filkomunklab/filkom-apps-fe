@@ -24,13 +24,27 @@ import {
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 
-const MengisiBeritaAcaraProposalKetuaPenelis = () => {
+const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
   // State untuk mengontrol tampilan popup
   const [openScoreDialog, setOpenScoreDialog] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [viewedChanges, setViewedChanges] = useState("");
   const [status, setStatus] = useState(""); // State untuk menyimpan status
+  const [isRevisionEnabled, setIsRevisionEnabled] = useState(true);
+  const [isScoreEnabled, setIsScoreEnabled] = useState(true);
+  const [isSignInEnabled, setIsSignInEnabled] = useState(true);
+
+  const [openSignInConfirmationDialog, setOpenSignInConfirmationDialog] =
+    useState(false);
+
+  const handleOpenSignInConfirmationDialog = () => {
+    setOpenSignInConfirmationDialog(true);
+  };
+
+  const handleCloseSignInConfirmationDialog = () => {
+    setOpenSignInConfirmationDialog(false);
+  };
 
   const { role } = JSON.parse(localStorage.getItem("user"));
   // const role = ["KETUA_PANELIS", "DOSEN"];
@@ -350,10 +364,14 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
                       <span
                         style={{
                           textDecoration: "none",
-                          cursor: "pointer",
-                          color: "blue",
+                          cursor: isScoreEnabled ? "pointer" : "not-allowed", // Mengubah tampilan kursor
+                          color: isScoreEnabled ? "blue" : "gray", // Mengubah warna
                         }}
-                        onClick={handleOpenDialog} // Membuka popup ketika diklik
+                        onClick={() => {
+                          if (isScoreEnabled) {
+                            handleOpenDialog();
+                          }
+                        }}
                       >
                         Score
                       </span>
@@ -427,10 +445,14 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
                       <span
                         style={{
                           textDecoration: "none",
-                          cursor: "pointer",
-                          color: "blue",
+                          cursor: isRevisionEnabled ? "pointer" : "not-allowed", // Mengubah tampilan kursor
+                          color: isRevisionEnabled ? "blue" : "gray", // Mengubah warna
                         }}
-                        onClick={handleOpenRevisionDialog}
+                        onClick={() => {
+                          if (isRevisionEnabled) {
+                            handleOpenRevisionDialog();
+                          }
+                        }}
                       >
                         Revision
                       </span>
@@ -504,10 +526,14 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
                       <span
                         style={{
                           textDecoration: "none",
-                          cursor: "pointer",
-                          color: "blue",
+                          cursor: isSignInEnabled ? "pointer" : "not-allowed",
+                          color: isSignInEnabled ? "blue" : "gray",
                         }}
-                        onClick={handleSignClick}
+                        onClick={() => {
+                          if (isSignInEnabled) {
+                            handleOpenSignInConfirmationDialog("");
+                          }
+                        }}
                       >
                         Sign
                       </span>
@@ -1172,7 +1198,8 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
           <Div
             sx={{
               display: "flex",
-              alignItems: "flex-start",
+              alignItems: "center", // Menengahkan vertikal
+              justifyContent: "center", // Menengahkan horizontal
               alignSelf: "stretch",
             }}
           >
@@ -1227,7 +1254,10 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
             Batal
           </Button>
           <Button
-            onClick={handleSave}
+            onClick={() => {
+              setIsScoreEnabled(false); // Menonaktifkan elemen "Score"
+              handleSave();
+            }}
             variant="contained"
             sx={{ textTransform: "none" }}
             color="primary"
@@ -1375,6 +1405,7 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
             onClick={() => {
               handleRevisionSubmit();
               handleSudmitClick();
+              setIsRevisionEnabled(false);
             }}
             variant="contained"
             sx={{ textTransform: "none" }}
@@ -1636,8 +1667,46 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
         </DialogActions>
       </Dialog>
       {/* konfrimasi Sidang Proposal End */}
+      <Dialog
+        open={openSignInConfirmationDialog}
+        onClose={handleCloseSignInConfirmationDialog}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Berita Acara</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Apakah Anda yakin ingin menyetujui berita acara?
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+          <Button
+            onClick={handleCloseSignInConfirmationDialog}
+            sx={{
+              background: "white",
+              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+              textTransform: "none",
+              color: "black",
+            }}
+          >
+            Batal
+          </Button>
+          <Button
+            onClick={() => {
+              handleSignClick();
+              handleCloseSignInConfirmationDialog();
+              setIsSignInEnabled();
+            }}
+            variant="contained"
+            sx={{ textTransform: "none" }}
+            color="primary"
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Div>
   );
 };
 
-export default MengisiBeritaAcaraProposalKetuaPenelis;
+export default MengisiBeritaAcaraSkripsiKetuaPenelis;
