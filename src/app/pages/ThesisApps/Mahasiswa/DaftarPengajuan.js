@@ -28,6 +28,7 @@ import {
 import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
 import { pdfjs } from "react-pdf";
+import ClearIcon from "@mui/icons-material/Clear";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -55,12 +56,13 @@ function DaftarPengajuan() {
   const [inputCount, setInputCount] = useState(1);
   const [open, setOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
-  const [options] = useState(["Option 1", "Option 2", "Option 3"]);
+  const [options, setOption] = useState(["Option 1", "Option 2", "Option 3"]);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [Advisor, setAdvisor] = useState("");
   const [CoAdvisor1, setCoAdvisor1] = useState("");
   const [CoAdvisor2, setCoAdvisor2] = useState("");
   const [judulError, setJudulError] = useState(""); // State untuk pesan error judul
+  const [dosenPembibingError, setDosenPembibingError] = useState("");
 
   const [pengajuanJudulFile, setPengajuanJudulFile] = useState(null);
   const [selectedPengajuanJudulFileName, setSelectedPengajuanJudulFileName] =
@@ -72,11 +74,6 @@ function DaftarPengajuan() {
 
   // state select kelas
   const [kelas, setKelas] = React.useState("");
-  const [optionsKelas] = useState([
-    "proposal semester ganjil 2023/2024 - stenly adam",
-    "skripsi semester ganjil 2023/2024 - green mandias",
-    "padat semester ganjil 2023/2024 - green mandias",
-  ]);
   const handleKelasChange = (event) => {
     setKelas(event.target.value);
   };
@@ -135,6 +132,7 @@ function DaftarPengajuan() {
   const handleClose = () => {
     setOpen(false);
     setJudulError(""); // Bersihkan pesan error ketika dialog ditutup
+    setDosenPembibingError("");
   };
 
   const handleSubmit = async () => {
@@ -144,17 +142,15 @@ function DaftarPengajuan() {
     } else {
       // Tutup dialog
       setOpen(false);
-
       // Buka popup konfirmasi
       setIsConfirmDialogOpen(true);
+      setAdvisor("");
+      setCoAdvisor1("");
+      setCoAdvisor2("");
+      setSelectedOption("");
+      setDosenPembibingError("");
+      setKelas("");
     }
-
-    // const payload = {
-    //   nama_parnter: selectedOption,
-    //   judul: judulPengajuan,
-    // };
-    // const res = await Fetch("/list-mahasiswa");
-    // console.log("res", res);
   };
 
   const handleCloseConfirmDialog = () => {
@@ -162,9 +158,6 @@ function DaftarPengajuan() {
   };
 
   const handleConfirmSubmit = () => {
-    // Lakukan sesuatu saat pengguna mengkonfirmasi
-    // ...
-
     // Tambahkan judul baru ke dalam state judulPengajuan
     setJudulPengajuan([...judulPengajuan, judulPengajuanBaru]);
 
@@ -195,6 +188,16 @@ function DaftarPengajuan() {
 
   const handleCoAdvisorChange2 = (e) => {
     setCoAdvisor2(e.target.value);
+  };
+
+  const handleDeleteSelect = (index) => {
+    if (index >= 0) {
+      const newSelectedOptions = [...selectedOptions];
+      newSelectedOptions.splice(index, 1);
+      setSelectedOptions(newSelectedOptions);
+
+      setInputCount(inputCount - 1);
+    }
   };
 
   return (
@@ -324,9 +327,15 @@ function DaftarPengajuan() {
                 label="Kelas"
                 onChange={handleKelasChange}
               >
-                {optionsKelas.map((optKelas) => (
-                  <MenuItem value={optKelas}>{optKelas}</MenuItem>
-                ))}
+                <MenuItem value="proposal semester ganjil 2023/2024 - stenly adam">
+                  proposal semester ganjil 2023/2024 - stenly adam
+                </MenuItem>
+                <MenuItem value="skripsi semester ganjil 2023/2024 - green mandias">
+                  skripsi semester ganjil 2023/2024 - green mandias
+                </MenuItem>
+                <MenuItem value="padat semester ganjil 2023/2024 - green mandias">
+                  padat semester ganjil 2023/2024 - green mandias
+                </MenuItem>
               </Select>
             </FormControl>
           </Div>
@@ -346,27 +355,50 @@ function DaftarPengajuan() {
             Buat Kelompok
           </DialogTitle>
           {selectedOptions.map((option, index) => (
-            <Div key={index}>
-              <FormControl style={{ m: 1, minWidth: 120 }} size="small">
-                <InputLabel id="demo-select-small">
-                  Nama Partner {index + 1}
-                </InputLabel>
-                <Select
-                  labelId="demo-select-small"
-                  id="demo-select-small"
-                  label="Nama Partner 1"
-                  fullWidth
-                  value={option}
-                  onChange={(e) => handleSelectChange(e, index)}
-                  style={{ marginBottom: "25px", width: "400px" }}
+            <Div
+              key={index}
+              sx={{
+                display: "flex",
+                gap: "15px",
+              }}
+            >
+              <Div>
+                <FormControl
+                  style={{ minWidth: 120, alignItems: "center" }}
+                  size="small"
                 >
-                  {options.map((opt, optIndex) => (
-                    <MenuItem key={optIndex} value={opt}>
-                      {opt}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                  <InputLabel id="demo-select-small">
+                    Nama Partner {index + 1}
+                  </InputLabel>
+                  <Select
+                    labelId="demo-select-small"
+                    id="demo-select-small"
+                    label="Nama Partner 1"
+                    fullWidth
+                    value={option}
+                    onChange={(e) => handleSelectChange(e, index)}
+                    style={{ marginBottom: "25px", width: "400px" }}
+                  >
+                    {options.map((opt, optIndex) => (
+                      <MenuItem key={optIndex} value={opt}>
+                        {opt}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Div>
+              <Div sx={{ marginTop: "6px" }}>
+                <span
+                  style={{
+                    textDecoration: "none",
+                    cursor: "pointer",
+                    color: "#757575",
+                  }}
+                  onClick={() => handleDeleteSelect(index)}
+                >
+                  <ClearIcon />
+                </span>
+              </Div>
             </Div>
           ))}
           {inputCount < 5 && (
@@ -401,14 +433,21 @@ function DaftarPengajuan() {
                 onChange={(e) => {
                   setJudulPengajuanBaru(e.target.value);
                   setJudulError(""); // Bersihkan pesan error saat pengguna mengubah judul
+                  setDosenPembibingError("");
                 }}
               />
-              {judulError && <p style={{ color: "red" }}>{judulError}</p>}
+              {judulError && (
+                <Typography style={{ color: "red", marginTop: "-20px" }}>
+                  {judulError}
+                </Typography>
+              )}
             </Div>
             {/* TextArea End */}
 
             {/* Upload Pengajuan Judul Start */}
-            <Div sx={{ display: "flex", marginBottom: "20px" }}>
+            <Div
+              sx={{ display: "flex", marginBottom: "20px", marginTop: "20px" }}
+            >
               <Button
                 variant="contained"
                 component="label"
@@ -558,6 +597,7 @@ function DaftarPengajuan() {
                   label="Advisor"
                   onChange={handleAdvisorChange}
                 >
+                  <MenuItem value="">None</MenuItem>
                   <MenuItem value={"Andrew T. Liem, MT, PhD"}>
                     Andrew T. Liem, MT, PhD
                   </MenuItem>
@@ -622,6 +662,7 @@ function DaftarPengajuan() {
                   label="Co-Advisor 1"
                   onChange={handleCoAdvisorChange1}
                 >
+                  <MenuItem value="">None</MenuItem>
                   <MenuItem value={"Andrew T. Liem, MT, PhD"}>
                     Andrew T. Liem, MT, PhD
                   </MenuItem>
@@ -686,6 +727,7 @@ function DaftarPengajuan() {
                   label="Co-Advisor 2"
                   onChange={handleCoAdvisorChange2}
                 >
+                  <MenuItem value="">None</MenuItem>
                   <MenuItem value={"Andrew T. Liem, MT, PhD"}>
                     Andrew T. Liem, MT, PhD
                   </MenuItem>
@@ -739,6 +781,11 @@ function DaftarPengajuan() {
                   </MenuItem>
                 </Select>
               </FormControl>
+            </Div>
+            <Div sx={{ margin: "20px" }}>
+              {dosenPembibingError && (
+                <div style={{ color: "red" }}>{dosenPembibingError}</div>
+              )}
             </Div>
             {/* Select Dosen Pembimbing End */}
             {/* Radio Button Start */}

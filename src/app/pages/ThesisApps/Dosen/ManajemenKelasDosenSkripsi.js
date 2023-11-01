@@ -32,8 +32,8 @@ import { getAuthToken } from "app/services/Auth/jwtAuth";
 
 const ManajemenKelasDosenSkripsi = () => {
   const [open, setOpen] = useState(false);
-  const [kelas, setKelas] = useState("");
-  const [semester, setSemester] = useState("");
+  const [academic_id, setAcademicId] = useState("");
+  const [name, setName] = useState("");
   const [tahunAjaran, setTahunAjaran] = useState("");
   const [classes, setClasses] = useState([]);
   const [selectedClass, setSelectedClass] = useState(null);
@@ -246,8 +246,8 @@ const ManajemenKelasDosenSkripsi = () => {
 
   const handleClose = () => {
     setOpen(false);
-    setKelas("");
-    setSemester("");
+    setAcademicId("");
+    setName("");
     setTahunAjaran("");
   };
 
@@ -277,6 +277,23 @@ const ManajemenKelasDosenSkripsi = () => {
       }
     };
 
+    const fetchClassData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:2000/api/v1/classroom",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data);
+      } catch (error) {
+        console.error("Gagal mengambil data kelas", error);
+      }
+    };
+
+    fetchClassData();
     fetchAcademicData();
   }, []);
 
@@ -322,13 +339,31 @@ const ManajemenKelasDosenSkripsi = () => {
 
   const handleCreateClass = () => {
     const newClass = {
-      kelas,
-      semester,
-      students: [],
+      academic_id,
+      name,
     };
-    setClasses([...classes, newClass]);
-    handleClose();
-    setKelasMahasiswa([...kelasMahasiswa, `${kelas} - Semester ${semester}`]);
+    console.log(newClass);
+
+    axios
+      .post(`http://localhost:2000/api/v1/classroom`, newClass, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // Berhasil membuat kelas di backend, Anda dapat menangani respons di sini
+        console.log("Kelas berhasil dibuat:", response.data);
+        setClasses([...classes, newClass]);
+        handleClose();
+        setKelasMahasiswa([
+          ...kelasMahasiswa,
+          `${academic_id} - Semester ${name}`,
+        ]);
+      })
+      .catch((error) => {
+        // Penanganan kesalahan jika ada
+        console.error("Gagal membuat kelas:", error);
+      });
   };
 
   const handleAccordionClick = (classIndex) => {
@@ -730,8 +765,8 @@ const ManajemenKelasDosenSkripsi = () => {
               <InputLabel id="kelas-label">Kelas</InputLabel>
               <Select
                 labelId="kelas-label"
-                value={kelas}
-                onChange={(e) => setKelas(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 label="Kelas"
               >
                 <MenuItem value="Proposal">Proposal</MenuItem>
@@ -742,14 +777,14 @@ const ManajemenKelasDosenSkripsi = () => {
               <InputLabel id="semester-label">Semester</InputLabel>
               <Select
                 labelId="semester-label"
-                value={semester}
-                onChange={(e) => setSemester(e.target.value)}
+                value={academic_id}
+                onChange={(e) => setAcademicId(e.target.value)}
                 label="Semester"
               >
                 {akademikData.map((semesterData) => (
                   <MenuItem
                     key={semesterData.id} // Sesuaikan dengan kunci yang sesuai di data Anda
-                    value={`${semesterData.semester} ${semesterData.year}`}
+                    value={semesterData.id}
                   >
                     {`${semesterData.semester} ${semesterData.year}`}
                   </MenuItem>
@@ -793,7 +828,7 @@ const ManajemenKelasDosenSkripsi = () => {
         >
           <AccordionSummary>
             <div>
-              <Typography variant="h2">{classData.kelas}</Typography>
+              <Typography variant="h2">{classData.name}</Typography>
               <Typography>{`Semester ${classData.semester} ${classData.tahunAjaran}`}</Typography>
             </div>
           </AccordionSummary>

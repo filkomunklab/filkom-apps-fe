@@ -32,6 +32,10 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
   const [viewedChanges, setViewedChanges] = useState("");
   const [status, setStatus] = useState(""); // State untuk menyimpan status
 
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["KETUA_PANELIS", "DOSEN"];
+  console.log(role);
+
   const handleStatusChange = (event) => {
     setStatus(event.target.value); // Mengubah status saat radio button berubah
   };
@@ -514,191 +518,205 @@ const MengisiBeritaAcaraProposalKetuaPenelis = () => {
             </TableContainer>
             {/* Table Berita Acara End */}
             {/* Radio Button Penilaian Akhir Start */}
-            <Div
-              sx={{
-                display: "flex",
-                padding: "0px 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-              }}
-            >
-              <Typography variant="subtitle2">
-                Kesimpulan Ujian Proposal
-              </Typography>
-              <Div>
-                <FormControl component="fieldset">
-                  <RadioGroup
-                    row
-                    aria-label="status"
-                    name="status"
-                    value={status}
-                    onChange={handleStatusChange}
-                  >
-                    <FormControlLabel
-                      value="Diterima"
-                      control={<Radio />}
-                      label="Diterima"
-                    />
-                    <FormControlLabel
-                      value="Ditolak"
-                      control={<Radio />}
-                      label="Ditolak"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Div>
-            </Div>
-            <Div
-              sx={{
-                display: "flex",
-                padding: "0px 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-              }}
-            >
-              <Typography variant="subtitle2">Perubahan</Typography>
-              <Div>
-                <FormControl component="fieldset">
-                  <RadioGroup
-                    row
-                    aria-label="perubahan"
-                    name="perubahan"
-                    value={perubahan}
-                    onChange={handlePerubahanChange}
-                  >
-                    <FormControlLabel
-                      value="Major"
-                      control={<Radio />}
-                      label="Major"
-                    />
-                    <FormControlLabel
-                      value="Minor"
-                      control={<Radio />}
-                      label="Minor"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Div>
-            </Div>
-            <Div
-              sx={{
-                display: "flex",
-                padding: "0px 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-              }}
-            >
-              <Typography variant="subtitle2">
-                Nilai Kesimpulan Ujian Proposal
-              </Typography>
-              <Div>
-                <FormControl component="fieldset">
-                  <RadioGroup
-                    row
-                    aria-label="nilai"
-                    name="nilai"
-                    value={nilai}
-                    onChange={handleNilaiChange}
-                  >
-                    <FormControlLabel value="A" control={<Radio />} label="A" />
-                    <FormControlLabel
-                      value="A-"
-                      control={<Radio />}
-                      label="A-"
-                    />
-                    <FormControlLabel
-                      value="B+"
-                      control={<Radio />}
-                      label="B+"
-                    />
-                    <FormControlLabel value="B" control={<Radio />} label="B" />
-                    <FormControlLabel
-                      value="B-"
-                      control={<Radio />}
-                      label="B-"
-                    />
-                    <FormControlLabel
-                      value="C+"
-                      control={<Radio />}
-                      label="C+"
-                    />
-                    <FormControlLabel value="C" control={<Radio />} label="C" />
-                    <FormControlLabel
-                      value="C-"
-                      control={<Radio />}
-                      label="C-"
-                    />
-                    <FormControlLabel
-                      value="D+"
-                      control={<Radio />}
-                      label="D+"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Div>
-            </Div>
-            <Div
-              sx={{
-                display: "flex",
-                padding: "0px 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-              }}
-            >
-              <Typography variant="subtitle2">Deskripsi</Typography>
-              <Div>
-                <FormControl component="fieldset">
-                  <RadioGroup
-                    row
-                    aria-label="deskripsi"
-                    name="deskripsi"
-                    value={deskripsi}
-                    onChange={handleDeskripsiChange}
-                  >
-                    <FormControlLabel
-                      value="Lulus"
-                      control={<Radio />}
-                      label="Lulus"
-                    />
-                    <FormControlLabel
-                      value="Tidak Lulus"
-                      control={<Radio />}
-                      label="Tidak Lulus"
-                    />
-                    <FormControlLabel
-                      value="Mengulang"
-                      control={<Radio />}
-                      label="Mengulang"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Div>
-            </Div>
-            {/* Radio Button Penilaian Akhir End */}
-            <Div
-              sx={{
-                display: "flex",
-                width: "100%",
-                height: "59.43px",
-                padding: "12px 24px 12px 0px",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                gap: "12px",
-                background: "#F5F5F5",
-              }}
-            >
-              <Button
-                variant="contained"
-                sx={{ textTransform: "none" }}
-                color="primary"
-                onClick={handleOpenConfirmationBeritaAcaraDialog}
+            <Div hidden={role.includes("KETUA_PANELIS") ? false : true}>
+              <Div
+                sx={{
+                  display: "flex",
+                  padding: "0px 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                }}
               >
-                Submit
-              </Button>
+                <Typography variant="subtitle2">
+                  Kesimpulan Ujian Proposal
+                </Typography>
+                <Div>
+                  <FormControl component="fieldset">
+                    <RadioGroup
+                      row
+                      aria-label="status"
+                      name="status"
+                      value={status}
+                      onChange={handleStatusChange}
+                    >
+                      <FormControlLabel
+                        value="Diterima"
+                        control={<Radio />}
+                        label="Diterima"
+                      />
+                      <FormControlLabel
+                        value="Ditolak"
+                        control={<Radio />}
+                        label="Ditolak"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Div>
+              </Div>
+              <Div
+                sx={{
+                  display: "flex",
+                  padding: "0px 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                }}
+              >
+                <Typography variant="subtitle2">Perubahan</Typography>
+                <Div>
+                  <FormControl component="fieldset">
+                    <RadioGroup
+                      row
+                      aria-label="perubahan"
+                      name="perubahan"
+                      value={perubahan}
+                      onChange={handlePerubahanChange}
+                    >
+                      <FormControlLabel
+                        value="Major"
+                        control={<Radio />}
+                        label="Major"
+                      />
+                      <FormControlLabel
+                        value="Minor"
+                        control={<Radio />}
+                        label="Minor"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Div>
+              </Div>
+              <Div
+                sx={{
+                  display: "flex",
+                  padding: "0px 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                }}
+              >
+                <Typography variant="subtitle2">
+                  Nilai Kesimpulan Ujian Proposal
+                </Typography>
+                <Div>
+                  <FormControl component="fieldset">
+                    <RadioGroup
+                      row
+                      aria-label="nilai"
+                      name="nilai"
+                      value={nilai}
+                      onChange={handleNilaiChange}
+                    >
+                      <FormControlLabel
+                        value="A"
+                        control={<Radio />}
+                        label="A"
+                      />
+                      <FormControlLabel
+                        value="A-"
+                        control={<Radio />}
+                        label="A-"
+                      />
+                      <FormControlLabel
+                        value="B+"
+                        control={<Radio />}
+                        label="B+"
+                      />
+                      <FormControlLabel
+                        value="B"
+                        control={<Radio />}
+                        label="B"
+                      />
+                      <FormControlLabel
+                        value="B-"
+                        control={<Radio />}
+                        label="B-"
+                      />
+                      <FormControlLabel
+                        value="C+"
+                        control={<Radio />}
+                        label="C+"
+                      />
+                      <FormControlLabel
+                        value="C"
+                        control={<Radio />}
+                        label="C"
+                      />
+                      <FormControlLabel
+                        value="C-"
+                        control={<Radio />}
+                        label="C-"
+                      />
+                      <FormControlLabel
+                        value="D+"
+                        control={<Radio />}
+                        label="D+"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Div>
+              </Div>
+              <Div
+                sx={{
+                  display: "flex",
+                  padding: "0px 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                }}
+              >
+                <Typography variant="subtitle2">Deskripsi</Typography>
+                <Div>
+                  <FormControl component="fieldset">
+                    <RadioGroup
+                      row
+                      aria-label="deskripsi"
+                      name="deskripsi"
+                      value={deskripsi}
+                      onChange={handleDeskripsiChange}
+                    >
+                      <FormControlLabel
+                        value="Lulus"
+                        control={<Radio />}
+                        label="Lulus"
+                      />
+                      <FormControlLabel
+                        value="Tidak Lulus"
+                        control={<Radio />}
+                        label="Tidak Lulus"
+                      />
+                      <FormControlLabel
+                        value="Mengulang"
+                        control={<Radio />}
+                        label="Mengulang"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Div>
+              </Div>
+              {/* Radio Button Penilaian Akhir End */}
+              <Div
+                sx={{
+                  display: "flex",
+                  width: "100%",
+                  height: "59.43px",
+                  padding: "12px 24px 12px 0px",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  gap: "12px",
+                  background: "#F5F5F5",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                  color="primary"
+                  onClick={handleOpenConfirmationBeritaAcaraDialog}
+                >
+                  Submit
+                </Button>
+              </Div>
             </Div>
           </Div>
         </Div>
