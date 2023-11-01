@@ -38,6 +38,13 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
   const [openSignInConfirmationDialog, setOpenSignInConfirmationDialog] =
     useState(false);
 
+  const [isSubmitted, setIsSubmitted] = useState(false); // State untuk mengecek apakah sudah disubmit
+
+  // Fungsi yang akan dijalankan ketika pengguna mengklik tombol "Submit"
+  const handleSubmit = () => {
+    // Setelah disubmit, radio button akan diganti dengan teks
+    setIsSubmitted(true);
+  };
   const handleOpenSignInConfirmationDialog = () => {
     setOpenSignInConfirmationDialog(true);
   };
@@ -251,7 +258,7 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Berita Acara Proposal
+          Berita Acara Skripsi
         </Typography>
       </Div>
 
@@ -546,19 +553,24 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
             {/* Radio Button Penilaian Akhir Start */}
 
             {/* Kesimpulan dari Pengujian Ketua penelis start */}
-            <Div hidden={role.includes("KETUA_PANELIS") ? false : true}>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "0px 25px",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  alignSelf: "stretch",
-                }}
-              >
-                <Typography variant="subtitle2">
-                  Kesimpulan Ujian Proposal
-                </Typography>
+
+            <Div
+              sx={{
+                display: "flex",
+                padding: "0px 25px",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                alignSelf: "stretch",
+              }}
+            >
+              {isSubmitted ? (
+                <Div>
+                  <Typography variant="subtitle2">
+                    Kesimpulan Ujian Skripsi
+                  </Typography>
+                  <Typography variant="body1">{status}</Typography>
+                </Div>
+              ) : (
                 <Div>
                   <FormControl component="fieldset">
                     <RadioGroup
@@ -572,179 +584,217 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
                         value="Diterima"
                         control={<Radio />}
                         label="Diterima"
+                        onChange={(e) => setStatus(e.target.value)}
                       />
                       <FormControlLabel
                         value="Ditolak"
                         control={<Radio />}
                         label="Ditolak"
+                        onChange={(e) => setStatus(e.target.value)}
                       />
                     </RadioGroup>
                   </FormControl>
                 </Div>
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "0px 25px",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  alignSelf: "stretch",
-                }}
-              >
-                <Typography variant="subtitle2">Perubahan</Typography>
+              )}
+            </Div>
+            <Div
+              sx={{
+                display: "flex",
+                padding: "0px 25px",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                alignSelf: "stretch",
+              }}
+            >
+              {isSubmitted ? (
                 <Div>
-                  <FormControl component="fieldset">
-                    <RadioGroup
-                      row
-                      aria-label="perubahan"
-                      name="perubahan"
-                      value={perubahan}
-                      onChange={handlePerubahanChange}
-                    >
-                      <FormControlLabel
-                        value="Major"
-                        control={<Radio />}
-                        label="Major"
-                      />
-                      <FormControlLabel
-                        value="Minor"
-                        control={<Radio />}
-                        label="Minor"
-                      />
-                    </RadioGroup>
-                  </FormControl>
+                  <Typography variant="subtitle2">Perubahan</Typography>
+                  <Typography variant="body1">{perubahan}</Typography>
                 </Div>
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "0px 25px",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  alignSelf: "stretch",
-                }}
-              >
-                <Typography variant="subtitle2">
-                  Nilai Kesimpulan Ujian Proposal
-                </Typography>
+              ) : (
                 <Div>
-                  <FormControl component="fieldset">
-                    <RadioGroup
-                      row
-                      aria-label="nilai"
-                      name="nilai"
-                      value={nilai}
-                      onChange={handleNilaiChange}
-                    >
-                      <FormControlLabel
-                        value="A"
-                        control={<Radio />}
-                        label="A"
-                      />
-                      <FormControlLabel
-                        value="A-"
-                        control={<Radio />}
-                        label="A-"
-                      />
-                      <FormControlLabel
-                        value="B+"
-                        control={<Radio />}
-                        label="B+"
-                      />
-                      <FormControlLabel
-                        value="B"
-                        control={<Radio />}
-                        label="B"
-                      />
-                      <FormControlLabel
-                        value="B-"
-                        control={<Radio />}
-                        label="B-"
-                      />
-                      <FormControlLabel
-                        value="C+"
-                        control={<Radio />}
-                        label="C+"
-                      />
-                      <FormControlLabel
-                        value="C"
-                        control={<Radio />}
-                        label="C"
-                      />
-                      <FormControlLabel
-                        value="C-"
-                        control={<Radio />}
-                        label="C-"
-                      />
-                      <FormControlLabel
-                        value="D+"
-                        control={<Radio />}
-                        label="D+"
-                      />
-                    </RadioGroup>
-                  </FormControl>
+                  <Div>
+                    <Typography variant="subtitle2">Perubahan</Typography>
+                    <Div>
+                      <FormControl component="fieldset">
+                        <RadioGroup
+                          row
+                          aria-label="perubahan"
+                          name="perubahan"
+                          value={perubahan}
+                          onChange={(e) => setPerubahan(e.target.value)}
+                        >
+                          <FormControlLabel
+                            value="Major"
+                            control={<Radio />}
+                            label="Major"
+                          />
+                          <FormControlLabel
+                            value="Minor"
+                            control={<Radio />}
+                            label="Minor"
+                          />
+                        </RadioGroup>
+                      </FormControl>
+                    </Div>
+                  </Div>
                 </Div>
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "0px 25px",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  alignSelf: "stretch",
-                }}
-              >
-                <Typography variant="subtitle2">Deskripsi</Typography>
+              )}
+            </Div>
+            <Div
+              sx={{
+                display: "flex",
+                padding: "0px 25px",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                alignSelf: "stretch",
+              }}
+            >
+              {isSubmitted ? (
                 <Div>
-                  <FormControl component="fieldset">
-                    <RadioGroup
-                      row
-                      aria-label="deskripsi"
-                      name="deskripsi"
-                      value={deskripsi}
-                      onChange={handleDeskripsiChange}
-                    >
-                      <FormControlLabel
-                        value="Lulus"
-                        control={<Radio />}
-                        label="Lulus"
-                      />
-                      <FormControlLabel
-                        value="Tidak Lulus"
-                        control={<Radio />}
-                        label="Tidak Lulus"
-                      />
-                      <FormControlLabel
-                        value="Mengulang"
-                        control={<Radio />}
-                        label="Mengulang"
-                      />
-                    </RadioGroup>
-                  </FormControl>
+                  <Typography variant="subtitle2">
+                    Nilai Kesimpulan Ujian Skripsi
+                  </Typography>
+                  <Typography variant="body1">{nilai}</Typography>
                 </Div>
-              </Div>
-              {/* Radio Button Penilaian Akhir End */}
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "100%",
-                  height: "59.43px",
-                  padding: "12px 24px 12px 0px",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  gap: "12px",
-                  background: "#F5F5F5",
-                }}
+              ) : (
+                <Div>
+                  <Div>
+                    <Typography variant="subtitle2">
+                      Nilai Kesimpulan Ujian Skripsi
+                    </Typography>
+                    <Div>
+                      <FormControl component="fieldset">
+                        <RadioGroup
+                          row
+                          aria-label="nilai"
+                          name="nilai"
+                          value={nilai}
+                          onChange={(e) => setNilai(e.target.value)}
+                        >
+                          <FormControlLabel
+                            value="A"
+                            control={<Radio />}
+                            label="A"
+                          />
+                          <FormControlLabel
+                            value="A-"
+                            control={<Radio />}
+                            label="A-"
+                          />
+                          <FormControlLabel
+                            value="B+"
+                            control={<Radio />}
+                            label="B+"
+                          />
+                          <FormControlLabel
+                            value="B"
+                            control={<Radio />}
+                            label="B"
+                          />
+                          <FormControlLabel
+                            value="B-"
+                            control={<Radio />}
+                            label="B-"
+                          />
+                          <FormControlLabel
+                            value="C+"
+                            control={<Radio />}
+                            label="C+"
+                          />
+                          <FormControlLabel
+                            value="C"
+                            control={<Radio />}
+                            label="C"
+                          />
+                          <FormControlLabel
+                            value="C-"
+                            control={<Radio />}
+                            label="C-"
+                          />
+                          <FormControlLabel
+                            value="D+"
+                            control={<Radio />}
+                            label="D+"
+                          />
+                        </RadioGroup>
+                      </FormControl>
+                    </Div>
+                  </Div>
+                </Div>
+              )}
+            </Div>
+            <Div
+              sx={{
+                display: "flex",
+                padding: "0px 25px",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                alignSelf: "stretch",
+              }}
+            >
+              {isSubmitted ? (
+                <Div>
+                  <Typography variant="subtitle2">Deskripsi</Typography>
+                  <Typography variant="body1">{deskripsi}</Typography>
+                </Div>
+              ) : (
+                <Div>
+                  <Div>
+                    <Typography variant="subtitle2">Deskripsi</Typography>
+                    <Div>
+                      <FormControl component="fieldset">
+                        <RadioGroup
+                          row
+                          aria-label="deskripsi"
+                          name="deskripsi"
+                          value={deskripsi}
+                          onChange={(e) => setDeskripsi(e.target.value)}
+                        >
+                          <FormControlLabel
+                            value="Lulus"
+                            control={<Radio />}
+                            label="Lulus"
+                          />
+                          <FormControlLabel
+                            value="Tidak Lulus"
+                            control={<Radio />}
+                            label="Tidak Lulus"
+                          />
+                          <FormControlLabel
+                            value="Mengulang"
+                            control={<Radio />}
+                            label="Mengulang"
+                          />
+                        </RadioGroup>
+                      </FormControl>
+                    </Div>
+                  </Div>
+                </Div>
+              )}
+            </Div>
+
+            {/* Radio Button Penilaian Akhir End */}
+            <Div
+              sx={{
+                display: "flex",
+                width: "100%",
+                height: "59.43px",
+                padding: "12px 24px 12px 0px",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                gap: "12px",
+                background: "#F5F5F5",
+              }}
+            >
+              <Button
+                variant="contained"
+                sx={{ textTransform: "none" }}
+                color="primary"
+                onClick={handleOpenConfirmationBeritaAcaraDialog}
               >
-                <Button
-                  variant="contained"
-                  sx={{ textTransform: "none" }}
-                  color="primary"
-                  onClick={handleOpenConfirmationBeritaAcaraDialog}
-                >
-                  Submit
-                </Button>
-              </Div>
+                Submit
+              </Button>
             </Div>
             {/* Kesimpulan dari Pengujian Ketua penelis start */}
           </Div>
@@ -844,87 +894,97 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
               <TableCell sx={{ width: "5%" }}>1</TableCell>
               <TableCell sx={{ width: "35%" }}>Penguasaan Materi</TableCell>
               <TableCell sx={{ width: "60%" }}>
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value1 === "9"}
-                  onChange={handleChange}
-                  value="9"
-                  name="value1"
-                  inputProps={{ "aria-label": "9" }}
-                />
-                9
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value1 === "8"}
-                  onChange={handleChange}
-                  value="8"
-                  name="value1"
-                  inputProps={{ "aria-label": "8" }}
-                />
-                8
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value1 === "7"}
-                  onChange={handleChange}
-                  value="7"
-                  name="value1"
-                  inputProps={{ "aria-label": "7" }}
-                />
-                7
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value1 === "6"}
-                  onChange={handleChange}
-                  value="6"
-                  name="value1"
-                  inputProps={{ "aria-label": "6" }}
-                />
-                6
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value1 === "5"}
-                  onChange={handleChange}
-                  value="5"
-                  name="value1"
-                  inputProps={{ "aria-label": "5" }}
-                />
-                5
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value1 === "4"}
-                  onChange={handleChange}
-                  value="4"
-                  name="value1"
-                  inputProps={{ "aria-label": "4" }}
-                />
-                4
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value1 === "3"}
-                  onChange={handleChange}
-                  value="3"
-                  name="value1"
-                  inputProps={{ "aria-label": "3" }}
-                />
-                3
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value1 === "2"}
-                  onChange={handleChange}
-                  value="2"
-                  name="value1"
-                  inputProps={{ "aria-label": "2" }}
-                />
-                2
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value1 === "1"}
-                  onChange={handleChange}
-                  value="1"
-                  name="value1"
-                  inputProps={{ "aria-label": "1" }}
-                />
-                1
+                <Div
+                  sx={{
+                    display: "flex",
+                    gap: "5px",
+                    alignItems: "center", // Menengahkan vertikal
+                    justifyContent: "center", // Menengahkan horizontal
+                    alignSelf: "stretch",
+                  }}
+                >
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value1 === "9"}
+                    onChange={handleChange}
+                    value="9"
+                    name="value1"
+                    inputProps={{ "aria-label": "9" }}
+                  />
+                  9
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value1 === "8"}
+                    onChange={handleChange}
+                    value="8"
+                    name="value1"
+                    inputProps={{ "aria-label": "8" }}
+                  />
+                  8
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value1 === "7"}
+                    onChange={handleChange}
+                    value="7"
+                    name="value1"
+                    inputProps={{ "aria-label": "7" }}
+                  />
+                  7
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value1 === "6"}
+                    onChange={handleChange}
+                    value="6"
+                    name="value1"
+                    inputProps={{ "aria-label": "6" }}
+                  />
+                  6
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value1 === "5"}
+                    onChange={handleChange}
+                    value="5"
+                    name="value1"
+                    inputProps={{ "aria-label": "5" }}
+                  />
+                  5
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value1 === "4"}
+                    onChange={handleChange}
+                    value="4"
+                    name="value1"
+                    inputProps={{ "aria-label": "4" }}
+                  />
+                  4
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value1 === "3"}
+                    onChange={handleChange}
+                    value="3"
+                    name="value1"
+                    inputProps={{ "aria-label": "3" }}
+                  />
+                  3
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value1 === "2"}
+                    onChange={handleChange}
+                    value="2"
+                    name="value1"
+                    inputProps={{ "aria-label": "2" }}
+                  />
+                  2
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value1 === "1"}
+                    onChange={handleChange}
+                    value="1"
+                    name="value1"
+                    inputProps={{ "aria-label": "1" }}
+                  />
+                  1
+                </Div>
               </TableCell>
             </TableRow>
             <TableRow>
@@ -932,175 +992,199 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
               <TableCell sx={{ width: "35%" }}>
                 Konten (Aplikasi dan Materi)
               </TableCell>
-              <TableCell sx={{ width: "60%" }}>
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value2 === "9"}
-                  onChange={handleChange}
-                  value="9"
-                  name="value2"
-                  inputProps={{ "aria-label": "9" }}
-                />
-                9
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value2 === "8"}
-                  onChange={handleChange}
-                  value="8"
-                  name="value2"
-                  inputProps={{ "aria-label": "8" }}
-                />
-                8
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value2 === "7"}
-                  onChange={handleChange}
-                  value="7"
-                  name="value2"
-                  inputProps={{ "aria-label": "7" }}
-                />
-                7
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value2 === "6"}
-                  onChange={handleChange}
-                  value="6"
-                  name="value2"
-                  inputProps={{ "aria-label": "6" }}
-                />
-                6
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value2 === "5"}
-                  onChange={handleChange}
-                  value="5"
-                  name="value2"
-                  inputProps={{ "aria-label": "5" }}
-                />
-                5
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value2 === "4"}
-                  onChange={handleChange}
-                  value="4"
-                  name="value2"
-                  inputProps={{ "aria-label": "4" }}
-                />
-                4
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value2 === "3"}
-                  onChange={handleChange}
-                  value="3"
-                  name="value2"
-                  inputProps={{ "aria-label": "3" }}
-                />
-                3
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value2 === "2"}
-                  onChange={handleChange}
-                  value="2"
-                  name="value2"
-                  inputProps={{ "aria-label": "2" }}
-                />
-                2
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value2 === "1"}
-                  onChange={handleChange}
-                  value="1"
-                  name="value2"
-                  inputProps={{ "aria-label": "1" }}
-                />
-                1
+              <TableCell
+                sx={{
+                  width: "60%",
+                }}
+              >
+                <Div
+                  sx={{
+                    display: "flex",
+                    gap: "5px",
+                    alignItems: "center", // Menengahkan vertikal
+                    justifyContent: "center", // Menengahkan horizontal
+                    alignSelf: "stretch",
+                  }}
+                >
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value2 === "9"}
+                    onChange={handleChange}
+                    value="9"
+                    name="value2"
+                    inputProps={{ "aria-label": "9" }}
+                  />
+                  9
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value2 === "8"}
+                    onChange={handleChange}
+                    value="8"
+                    name="value2"
+                    inputProps={{ "aria-label": "8" }}
+                  />
+                  8
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value2 === "7"}
+                    onChange={handleChange}
+                    value="7"
+                    name="value2"
+                    inputProps={{ "aria-label": "7" }}
+                  />
+                  7
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value2 === "6"}
+                    onChange={handleChange}
+                    value="6"
+                    name="value2"
+                    inputProps={{ "aria-label": "6" }}
+                  />
+                  6
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value2 === "5"}
+                    onChange={handleChange}
+                    value="5"
+                    name="value2"
+                    inputProps={{ "aria-label": "5" }}
+                  />
+                  5
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value2 === "4"}
+                    onChange={handleChange}
+                    value="4"
+                    name="value2"
+                    inputProps={{ "aria-label": "4" }}
+                  />
+                  4
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value2 === "3"}
+                    onChange={handleChange}
+                    value="3"
+                    name="value2"
+                    inputProps={{ "aria-label": "3" }}
+                  />
+                  3
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value2 === "2"}
+                    onChange={handleChange}
+                    value="2"
+                    name="value2"
+                    inputProps={{ "aria-label": "2" }}
+                  />
+                  2
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value2 === "1"}
+                    onChange={handleChange}
+                    value="1"
+                    name="value2"
+                    inputProps={{ "aria-label": "1" }}
+                  />
+                  1
+                </Div>
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell sx={{ width: "5%" }}>3</TableCell>
-              <TableCell sx={{ width: "35%" }}>Presentasi</TableCell>
+              <TableCell sx={{ width: "20%" }}>Presentasi</TableCell>
               <TableCell sx={{ width: "60%" }}>
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value3 === "9"}
-                  onChange={handleChange}
-                  value="9"
-                  name="value3"
-                  inputProps={{ "aria-label": "9" }}
-                />
-                9
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value3 === "8"}
-                  onChange={handleChange}
-                  value="8"
-                  name="value3"
-                  inputProps={{ "aria-label": "8" }}
-                />
-                8
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value3 === "7"}
-                  onChange={handleChange}
-                  value="7"
-                  name="value3"
-                  inputProps={{ "aria-label": "7" }}
-                />
-                7
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value3 === "6"}
-                  onChange={handleChange}
-                  value="6"
-                  name="value3"
-                  inputProps={{ "aria-label": "6" }}
-                />
-                6
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value3 === "5"}
-                  onChange={handleChange}
-                  value="5"
-                  name="value3"
-                  inputProps={{ "aria-label": "5" }}
-                />
-                5
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value3 === "4"}
-                  onChange={handleChange}
-                  value="4"
-                  name="value3"
-                  inputProps={{ "aria-label": "4" }}
-                />
-                4
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value3 === "3"}
-                  onChange={handleChange}
-                  value="3"
-                  name="value3"
-                  inputProps={{ "aria-label": "3" }}
-                />
-                3
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value3 === "2"}
-                  onChange={handleChange}
-                  value="2"
-                  name="value3"
-                  inputProps={{ "aria-label": "2" }}
-                />
-                2
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value3 === "1"}
-                  onChange={handleChange}
-                  value="1"
-                  name="value3"
-                  inputProps={{ "aria-label": "1" }}
-                />
-                1
+                <Div
+                  sx={{
+                    display: "flex",
+                    gap: "5px",
+                    alignItems: "center", // Menengahkan vertikal
+                    justifyContent: "center", // Menengahkan horizontal
+                    alignSelf: "stretch",
+                  }}
+                >
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value3 === "9"}
+                    onChange={handleChange}
+                    value="9"
+                    name="value3"
+                    inputProps={{ "aria-label": "9" }}
+                  />
+                  9
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value3 === "8"}
+                    onChange={handleChange}
+                    value="8"
+                    name="value3"
+                    inputProps={{ "aria-label": "8" }}
+                  />
+                  8
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value3 === "7"}
+                    onChange={handleChange}
+                    value="7"
+                    name="value3"
+                    inputProps={{ "aria-label": "7" }}
+                  />
+                  7
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value3 === "6"}
+                    onChange={handleChange}
+                    value="6"
+                    name="value3"
+                    inputProps={{ "aria-label": "6" }}
+                  />
+                  6
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value3 === "5"}
+                    onChange={handleChange}
+                    value="5"
+                    name="value3"
+                    inputProps={{ "aria-label": "5" }}
+                  />
+                  5
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value3 === "4"}
+                    onChange={handleChange}
+                    value="4"
+                    name="value3"
+                    inputProps={{ "aria-label": "4" }}
+                  />
+                  4
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value3 === "3"}
+                    onChange={handleChange}
+                    value="3"
+                    name="value3"
+                    inputProps={{ "aria-label": "3" }}
+                  />
+                  3
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value3 === "2"}
+                    onChange={handleChange}
+                    value="2"
+                    name="value3"
+                    inputProps={{ "aria-label": "2" }}
+                  />
+                  2
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value3 === "1"}
+                    onChange={handleChange}
+                    value="1"
+                    name="value3"
+                    inputProps={{ "aria-label": "1" }}
+                  />
+                  1
+                </Div>
               </TableCell>
             </TableRow>
             <TableRow>
@@ -1109,87 +1193,97 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
                 Mempertahankan Pendapat
               </TableCell>
               <TableCell sx={{ width: "60%" }}>
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value4 === "9"}
-                  onChange={handleChange}
-                  value="9"
-                  name="value4"
-                  inputProps={{ "aria-label": "9" }}
-                />
-                9
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value4 === "8"}
-                  onChange={handleChange}
-                  value="8"
-                  name="value4"
-                  inputProps={{ "aria-label": "8" }}
-                />
-                8
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value4 === "7"}
-                  onChange={handleChange}
-                  value="7"
-                  name="value4"
-                  inputProps={{ "aria-label": "7" }}
-                />
-                7
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value4 === "6"}
-                  onChange={handleChange}
-                  value="6"
-                  name="value4"
-                  inputProps={{ "aria-label": "6" }}
-                />
-                6
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value4 === "5"}
-                  onChange={handleChange}
-                  value="5"
-                  name="value4"
-                  inputProps={{ "aria-label": "5" }}
-                />
-                5
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value4 === "4"}
-                  onChange={handleChange}
-                  value="4"
-                  name="value4"
-                  inputProps={{ "aria-label": "4" }}
-                />
-                4
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value4 === "3"}
-                  onChange={handleChange}
-                  value="3"
-                  name="value4"
-                  inputProps={{ "aria-label": "3" }}
-                />
-                3
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value4 === "2"}
-                  onChange={handleChange}
-                  value="2"
-                  name="value4"
-                  inputProps={{ "aria-label": "2" }}
-                />
-                2
-                <Radio
-                  sx={{ margin: "4px" }}
-                  checked={selectedValues.value4 === "1"}
-                  onChange={handleChange}
-                  value="1"
-                  name="value4"
-                  inputProps={{ "aria-label": "1" }}
-                />
-                1
+                <Div
+                  sx={{
+                    display: "flex",
+                    gap: "5px",
+                    alignItems: "center", // Menengahkan vertikal
+                    justifyContent: "center", // Menengahkan horizontal
+                    alignSelf: "stretch",
+                  }}
+                >
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value4 === "9"}
+                    onChange={handleChange}
+                    value="9"
+                    name="value4"
+                    inputProps={{ "aria-label": "9" }}
+                  />
+                  9
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value4 === "8"}
+                    onChange={handleChange}
+                    value="8"
+                    name="value4"
+                    inputProps={{ "aria-label": "8" }}
+                  />
+                  8
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value4 === "7"}
+                    onChange={handleChange}
+                    value="7"
+                    name="value4"
+                    inputProps={{ "aria-label": "7" }}
+                  />
+                  7
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value4 === "6"}
+                    onChange={handleChange}
+                    value="6"
+                    name="value4"
+                    inputProps={{ "aria-label": "6" }}
+                  />
+                  6
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value4 === "5"}
+                    onChange={handleChange}
+                    value="5"
+                    name="value4"
+                    inputProps={{ "aria-label": "5" }}
+                  />
+                  5
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value4 === "4"}
+                    onChange={handleChange}
+                    value="4"
+                    name="value4"
+                    inputProps={{ "aria-label": "4" }}
+                  />
+                  4
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value4 === "3"}
+                    onChange={handleChange}
+                    value="3"
+                    name="value4"
+                    inputProps={{ "aria-label": "3" }}
+                  />
+                  3
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value4 === "2"}
+                    onChange={handleChange}
+                    value="2"
+                    name="value4"
+                    inputProps={{ "aria-label": "2" }}
+                  />
+                  2
+                  <Radio
+                    sx={{ margin: "4px" }}
+                    checked={selectedValues.value4 === "1"}
+                    onChange={handleChange}
+                    value="1"
+                    name="value4"
+                    inputProps={{ "aria-label": "1" }}
+                  />
+                  1
+                </Div>
               </TableCell>
             </TableRow>
             {/* Table Row End*/}
@@ -1631,14 +1725,14 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
       </Dialog>
       {/* Melihat Perubahan End */}
 
-      {/* Konfirmasi Sidang Proposal Start*/}
+      {/* Konfirmasi Sidang Skripsi Start*/}
       <Dialog
         open={openConfirmationBeritaAcaraDialog}
         onClose={handleCloseConfirmationBeritaAcaraDialog}
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>Sidang Proposal</DialogTitle>
+        <DialogTitle>Sidang Skripsi</DialogTitle>
         <DialogContent>
           <Typography>
             Apakah Anda yakin ingin menyetujui hasil sidang ini?
@@ -1657,7 +1751,10 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
             Batal
           </Button>
           <Button
-            onClick={handleSubmitData} // Anda perlu membuat fungsi handleSubmitData sesuai dengan kebutuhan Anda
+            onClick={() => {
+              handleSubmitData();
+              handleSubmit();
+            }}
             variant="contained"
             sx={{ textTransform: "none" }}
             color="primary"
@@ -1666,7 +1763,7 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      {/* konfrimasi Sidang Proposal End */}
+      {/* konfrimasi Sidang Skripsi End */}
       <Dialog
         open={openSignInConfirmationDialog}
         onClose={handleCloseSignInConfirmationDialog}

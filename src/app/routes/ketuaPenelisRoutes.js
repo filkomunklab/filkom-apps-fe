@@ -23,7 +23,7 @@ const ketuaPenelisRoutes = [
   },
   {
     // Berita Acara Proposal Ketua Penelis
-    path: "/sistem-informasi-skripsi/daftar-pengujian-proposal/berita-acara-skripsi",
+    path: "/sistem-informasi-skripsi/daftar-pengujian-skripsi/berita-acara-skripsi",
     element: <Page component={MengisiBeritaAcaraSkripsiKetuaPenelis} />,
   },
   {
