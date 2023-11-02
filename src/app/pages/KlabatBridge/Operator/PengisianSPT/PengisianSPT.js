@@ -37,13 +37,14 @@ import {
   Input,
   IconButton,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { makeStyles } from "@mui/styles";
 import ClearIcon from "@mui/icons-material/Clear";
 import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
+import axios from "axios";
 
 const rows = [
   { id: 1, name: "Row 1", mk: "Robotics", sks: "3", keterangan: "Summer 2023" },
@@ -115,8 +116,26 @@ const majorsByFaculty = {
 };
 
 const PengisianSPT = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [studentData, setStudentData] = useState({
+    reg_num: "",
+    dateOfBirth: "",
+    gender: "",
+    nim: "",
+    faculty: "",
+    major: "",
+    phoneNo: "",
+  });
+  const [selectedFaculty, setSelectedFaculty] = useState("");
+  const [selectedMajor, setSelectedMajor] = useState("");
   // table
   const [data, setData] = useState(rows);
+  // alert dialog
+  const [open, setOpen] = React.useState(false);
+  // date picker
+  const [selectedDate, setSelectedDate] = useState(null);
+  // pdf upload
+  const [pdfFile, setPdfFile] = useState(null);
 
   const handleInputChange = (e, id, columnName) => {
     const updatedData = data.map((row) => {
@@ -128,9 +147,6 @@ const PengisianSPT = () => {
     setData(updatedData);
   };
 
-  const [selectedFaculty, setSelectedFaculty] = useState("");
-  const [selectedMajor, setSelectedMajor] = useState("");
-
   const handleFacultyChange = (event) => {
     setSelectedFaculty(event.target.value);
     // Reset selected major when faculty changes
@@ -141,18 +157,9 @@ const PengisianSPT = () => {
     setSelectedMajor(event.target.value);
   };
 
-  // alert dialog
-  const [open, setOpen] = React.useState(false);
-
-  // date picker
-  const [selectedDate, setSelectedDate] = useState(null);
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-
-  // pdf upload
-  const [pdfFile, setPdfFile] = useState(null);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -172,6 +179,34 @@ const PengisianSPT = () => {
     event.stopPropagation();
     setPdfFile(null);
   };
+
+  // const getStudentData = async () => {
+  //   const res = await axios.get(
+  //     `http://localhost:2000/api/v1/student/${user.nim}`
+  //   );
+  //   console.log(res.data.data);
+  //   setStudentData(res.data.data);
+  // };
+
+  useEffect(() => {
+    const source = axios.CancelToken.source();
+    // getStudentData();
+    axios
+      .get(`http://localhost:2000/api/v1/student/${user.nim}`, {
+        cancelToken: source.token,
+      })
+      .then((res) => {
+        if (!source.token.reason) {
+          setStudentData(res.data.data);
+        }
+      });
+
+    return () => {
+      source.cancel("component got unmounted");
+    };
+  }, []);
+
+  console.log(studentData);
 
   return (
     <Box>
@@ -229,6 +264,7 @@ const PengisianSPT = () => {
                 variant="outlined"
                 name="noRegis"
                 placeholder="1234567890"
+                value={studentData.reg_num}
                 //   value={identityData.kodePT}
                 //   onChange={handleIdentityChange}
               />
@@ -241,6 +277,7 @@ const PengisianSPT = () => {
                 <DesktopDatePicker
                   label="Select Date"
                   format="dd/MM/yyyy"
+                  defaultValue={studentData?.dateOfBirth}
                   value={selectedDate}
                   onChange={handleDateChange}
                   renderInput={(params) => <TextField {...params} />}
@@ -253,7 +290,12 @@ const PengisianSPT = () => {
                 <Typography variant="subtitle1" mb={1}>
                   Gender
                 </Typography>
-                <RadioGroup row name="row-radio-buttons-group">
+                <RadioGroup
+                  row
+                  name="row-radio-buttons-group"
+                  value={studentData.gender.toLowerCase()}
+                  onChange={(event) => console.log(event.target.value)}
+                >
                   <FormControlLabel
                     value="female"
                     control={<Radio />}
@@ -286,10 +328,11 @@ const PengisianSPT = () => {
                 Nomor Induk Mahasiswa
               </Typography>
               <TextField
+                value={studentData?.nim}
                 fullWidth
                 variant="outlined"
                 name="nim"
-                type="number"
+                type="text"
                 placeholder="12345678910"
                 //   value={identityData.kodePT}
                 //   onChange={handleIdentityChange}
@@ -300,6 +343,7 @@ const PengisianSPT = () => {
                 Fakultas
               </Typography>
               <Select
+                defaultValue={studentData?.faculty}
                 fullWidth
                 variant="outlined"
                 name="faculty"
@@ -321,6 +365,7 @@ const PengisianSPT = () => {
                 Program Studi
               </Typography>
               <Select
+                defaultValue={studentData?.major}
                 fullWidth
                 variant="outlined"
                 name="major"
@@ -368,11 +413,12 @@ const PengisianSPT = () => {
                 Phone Number
               </Typography>
               <TextField
+                value={studentData?.phoneNo}
                 fullWidth
                 variant="outlined"
                 name="phoneNumber"
                 placeholder="12345678910"
-                type="number"
+                type="text"
                 //   value={identityData.nim}
                 //   onChange={handleIdentityChange}
               />
