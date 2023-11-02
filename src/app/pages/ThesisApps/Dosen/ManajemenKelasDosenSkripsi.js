@@ -28,7 +28,6 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import axios from "axios";
-import { getAuthToken } from "app/services/Auth/jwtAuth";
 
 const ManajemenKelasDosenSkripsi = () => {
   const [open, setOpen] = useState(false);
@@ -96,14 +95,26 @@ const ManajemenKelasDosenSkripsi = () => {
       }
     }
 
-    // Menambahkan hasil pencarian baru ke daftar mahasiswa yang telah ditambahkan
-    setAddedStudents([...addedStudents, ...newResults]);
+    axios
+      .post(`http://localhost:2000/api/v1/classroom/insert-student`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // Menambahkan hasil pencarian baru ke daftar mahasiswa yang telah ditambahkan
+        setAddedStudents([...addedStudents, ...newResults]);
 
-    // Menggabungkan hasil pencarian baru dengan data yang sudah ada
-    setSearchResults([...searchResults, ...newResults]);
-    setAddStudentOpen(false);
-    // Mengosongkan input setelah menambahkan mahasiswa
-    setSearchNIMs("");
+        // Menggabungkan hasil pencarian baru dengan data yang sudah ada
+        setSearchResults([...searchResults, ...newResults]);
+        setAddStudentOpen(false);
+        // Mengosongkan input setelah menambahkan mahasiswa
+        setSearchNIMs("");
+        console.log("berhasil menambahkan mahasiswa:", response.data);
+      })
+      .catch((error) => {
+        console.error("Gagal menambahkan mahasiswa");
+      });
   };
 
   const [confirmDeleteClass, setConfirmDeleteClass] = useState(false);
@@ -287,6 +298,8 @@ const ManajemenKelasDosenSkripsi = () => {
             },
           }
         );
+        setClasses(response.data.data);
+        console.log("Berhasil mengambil data kelas:");
         console.log(response.data);
       } catch (error) {
         console.error("Gagal mengambil data kelas", error);
@@ -388,8 +401,21 @@ const ManajemenKelasDosenSkripsi = () => {
         // Jika ada mahasiswa dalam kelas, tampilkan popup konfirmasi
         setShowDeleteConfirmation(true);
       } else {
-        // Jika tidak ada mahasiswa dalam kelas, langsung hapus kelas
-        deleteClass(selectedClass);
+        axios
+          .delete(`http://localhost:2000/api/v1/classroom/${classData.id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            // Jika tidak ada mahasiswa dalam kelas, langsung hapus kelas
+            deleteClass(selectedClass);
+            console.log("Kelas berhasil dihapus", response.data);
+          })
+          .catch((error) => {
+            // Handle respons error
+            console.error("Kelas tidak berhasil dihapus: ", error);
+          });
       }
     }
   };
@@ -829,7 +855,7 @@ const ManajemenKelasDosenSkripsi = () => {
           <AccordionSummary>
             <div>
               <Typography variant="h2">{classData.name}</Typography>
-              <Typography>{`Semester ${classData.semester} ${classData.tahunAjaran}`}</Typography>
+              <Typography>{`Semester ${classData.semester} ${classData.year}`}</Typography>
             </div>
           </AccordionSummary>
 
