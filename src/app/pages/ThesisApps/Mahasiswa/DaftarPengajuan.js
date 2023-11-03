@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import {
   Button,
@@ -29,6 +29,7 @@ import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
 import { pdfjs } from "react-pdf";
 import ClearIcon from "@mui/icons-material/Clear";
+import axios from "axios";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -50,13 +51,26 @@ const PDFViewerPengajuanJudul = ({ pengajuanJudulFile }) => {
 };
 
 function DaftarPengajuan() {
-  const [judulPengajuan, setJudulPengajuan] = useState([]);
-  const [judulPengajuanBaru, setJudulPengajuanBaru] = useState(""); // State untuk judul yang dimasukkan
-  const [selectedOptions, setSelectedOptions] = useState([""]);
-  const [inputCount, setInputCount] = useState(1);
+  // State -  Dialog
   const [open, setOpen] = useState(false);
+
+  // State - Daftar pengajuan
+  const [daftarPengajuan, setDaftarPengajuan] = useState([]);
+  // State - Daftar kelas
+  const [kelas, setKelas] = useState(""); // State untuk nilai yang dipilih dalam Select
+  const [selectedClassroomId, setSelectedClassroomId] = useState(""); // State untuk ID kelas yang dipilih
+  const [daftarKelas, setDaftarKelas] = useState([]);
+  // State - Daftar partner
+  const [daftarPartner, setPartner] = useState([]);
+  const [options, setOption] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([""]);
+  // const [daftarMahasiswa, setDaftarMahasiswa] = useState([]);
+
+  const [judulPengajuan, setJudulPengajuan] = useState([]);
+
+  const [judulPengajuanBaru, setJudulPengajuanBaru] = useState(""); // State untuk judul yang dimasukkan
+  const [inputCount, setInputCount] = useState(1);
   const [selectedOption, setSelectedOption] = useState("");
-  const [options, setOption] = useState(["Option 1", "Option 2", "Option 3"]);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [Advisor, setAdvisor] = useState("");
   const [CoAdvisor1, setCoAdvisor1] = useState("");
@@ -72,10 +86,92 @@ function DaftarPengajuan() {
   // Tambahkan state untuk melacak apakah file pembayaran telah diunggah
   const [isPengajuanJudulUploaded, setIsPaymentUploaded] = useState(false);
 
-  // state select kelas
-  const [kelas, setKelas] = React.useState("");
+  // fungsi membuka tombol AJUKAN JUDUL
+  const handleClickOpen = async () => {
+    setOpen(true);
+  };
+
+  // fungsi untuk mendapatkan data GET
+  // token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchDaftarPengajuanData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:2000/api/v1/group/thesis_list",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        // Atur state 'daftarPengajuan' dengan data dari respons
+        setDaftarPengajuan(response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil daftar pengajuan:",
+          error
+        );
+      }
+    };
+
+    const fetchDaftarKelasData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:2000/api/v1/group/classroom_list",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        // Mengubah format data dari backend menjadi format yang sesuai
+        const formattedData = response.data.data.map((kelasItem, index) => ({
+          label: kelasItem.classroom,
+          value: kelasItem.id,
+        }));
+        setDaftarKelas(formattedData);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil daftar kelas:", error);
+      }
+    };
+
+    const fetchDaftarMahasiswaData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/classroom/students-list/${selectedClassroomId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setPartner(response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil daftar pengajuan:",
+          error
+        );
+      }
+    };
+
+    fetchDaftarPengajuanData(); // Panggil fungsi fetchData saat komponen dimuat
+    fetchDaftarKelasData();
+    fetchDaftarMahasiswaData();
+  }, [token, selectedClassroomId]);
+
+  // fungsi - ganti kelas
   const handleKelasChange = (event) => {
-    setKelas(event.target.value);
+    const selectedClassroomId = event.target.value; // Mengambil ID kelas yang dipilih
+    setSelectedClassroomId(selectedClassroomId);
+  };
+
+  const handlePartnerChange = (e, index) => {
+    const newSelectedOptions = [...selectedOptions];
+    newSelectedOptions[index] = e.target.value;
+    setSelectedOptions(newSelectedOptions);
   };
 
   const onPengajuanJudulFileChange = (event) => {
@@ -112,21 +208,11 @@ function DaftarPengajuan() {
     setSelectedPengajuanJudulFileName("");
   };
 
-  const handleSelectChange = (e, index) => {
-    const newSelectedOptions = [...selectedOptions];
-    newSelectedOptions[index] = e.target.value;
-    setSelectedOptions(newSelectedOptions);
-  };
-
   const handleAddSelect = () => {
     if (inputCount < 5) {
       setInputCount(inputCount + 1);
       setSelectedOptions([...selectedOptions, ""]);
     }
-  };
-
-  const handleClickOpen = async () => {
-    setOpen(true);
   };
 
   const handleClose = () => {
@@ -255,18 +341,58 @@ function DaftarPengajuan() {
                 Judul
               </TableCell>
               <TableCell style={{ width: "200px", margin: "0 100px" }}>
-                Status
+                Status Judul
+              </TableCell>
+              <TableCell style={{ width: "200px", margin: "0 100px" }}>
+                Status Proposal
+              </TableCell>
+              <TableCell style={{ width: "200px", margin: "0 100px" }}>
+                Status Skripsi
               </TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {judulPengajuan.map((judul, index) => (
+            {daftarPengajuan.map((pengajuan, index) => (
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{judul}</TableCell>
+                <TableCell>{pengajuan.title}</TableCell>
                 <TableCell>
-                  <Chip label={"Belum"} />
+                  {pengajuan.is_approve === "Waiting" ? (
+                    <Chip label={"Mengunggu"} />
+                  ) : pengajuan.is_approve === "Approve" ? (
+                    <Chip label={"Diterima"} />
+                  ) : pengajuan.is_approve === "Rejected" ? (
+                    <Chip label={"Ditolak"} />
+                  ) : (
+                    pengajuan.is_approve
+                  )}
+                </TableCell>
+                <TableCell>
+                  {pengajuan.is_pass_proposal === null ? (
+                    <Chip label={"Belum"} />
+                  ) : pengajuan.is_pass_proposal === "Waiting" ? (
+                    <Chip label={"Mengunggu"} />
+                  ) : pengajuan.is_pass_proposal === "Approve" ? (
+                    <Chip label={"Diterima"} />
+                  ) : pengajuan.is_pass_proposal === "Rejected" ? (
+                    <Chip label={"Ditolak"} />
+                  ) : (
+                    pengajuan.is_pass_proposal
+                  )}
+                </TableCell>
+                <TableCell>
+                  {pengajuan.is_pass_skripsi === null ? (
+                    <Chip label={"Belum"} />
+                  ) : pengajuan.is_pass_skripsi === "Waiting" ? (
+                    <Chip label={"Mengunggu"} />
+                  ) : pengajuan.is_pass_skripsi === "Approve" ? (
+                    <Chip label={"Diterima"} />
+                  ) : pengajuan.is_pass_skripsi === "Rejected" ? (
+                    <Chip label={"Ditolak"} />
+                  ) : (
+                    pengajuan.is_pass_skripsi
+                  )}
                 </TableCell>
                 <TableCell>
                   <Link
@@ -278,7 +404,7 @@ function DaftarPengajuan() {
                       fontSize: "12px",
                     }}
                   >
-                    View
+                    Detail
                   </Link>
                 </TableCell>
               </TableRow>
@@ -314,7 +440,7 @@ function DaftarPengajuan() {
               borderRadius: "6px",
             }}
           >
-            Kelas
+            Kelas Proposal
           </DialogTitle>
           {/* select kelas */}
           <Div sx={{ marginBottom: "25px" }}>
@@ -323,19 +449,15 @@ function DaftarPengajuan() {
               <Select
                 labelId="demo-select-kelas-small-label"
                 id="demo-select-kelas-small"
-                value={kelas}
+                value={selectedClassroomId}
                 label="Kelas"
                 onChange={handleKelasChange}
               >
-                <MenuItem value="proposal semester ganjil 2023/2024 - stenly adam">
-                  proposal semester ganjil 2023/2024 - stenly adam
-                </MenuItem>
-                <MenuItem value="skripsi semester ganjil 2023/2024 - green mandias">
-                  skripsi semester ganjil 2023/2024 - green mandias
-                </MenuItem>
-                <MenuItem value="padat semester ganjil 2023/2024 - green mandias">
-                  padat semester ganjil 2023/2024 - green mandias
-                </MenuItem>
+                {daftarKelas.map((kelasItem, index) => (
+                  <MenuItem key={index} value={kelasItem.value}>
+                    {kelasItem.label}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Div>
@@ -367,23 +489,25 @@ function DaftarPengajuan() {
                   style={{ minWidth: 120, alignItems: "center" }}
                   size="small"
                 >
-                  <InputLabel id="demo-select-small">
+                  <InputLabel id={`nama-partner-label-${index}`}>
                     Nama Partner {index + 1}
                   </InputLabel>
                   <Select
-                    labelId="demo-select-small"
-                    id="demo-select-small"
-                    label="Nama Partner 1"
+                    labelId={`nama-partner-label-${index}`}
+                    id={`nama-partner-select-${index}`}
+                    label={`Nama Partner ${index + 1}`}
                     fullWidth
                     value={option}
-                    onChange={(e) => handleSelectChange(e, index)}
+                    onChange={(e) => handlePartnerChange(e, index)}
                     style={{ marginBottom: "25px", width: "400px" }}
                   >
-                    {options.map((opt, optIndex) => (
-                      <MenuItem key={optIndex} value={opt}>
-                        {opt}
-                      </MenuItem>
-                    ))}
+                    {daftarPartner
+                      ? daftarPartner.map((partner, partnerIndex) => (
+                          <MenuItem key={partnerIndex} value={partner}>
+                            {partner.fullName}
+                          </MenuItem>
+                        ))
+                      : null}
                   </Select>
                 </FormControl>
               </Div>
