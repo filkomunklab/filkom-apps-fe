@@ -53,7 +53,6 @@ const PDFViewerPengajuanJudul = ({ pengajuanJudulFile }) => {
 function DaftarPengajuan() {
   // State -  Dialog
   const [open, setOpen] = useState(false);
-
   // State - Daftar pengajuan
   const [daftarPengajuan, setDaftarPengajuan] = useState([]);
   // State - Daftar kelas
@@ -64,7 +63,11 @@ function DaftarPengajuan() {
   const [daftarPartner, setPartner] = useState([]);
   const [options, setOption] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([""]);
-  // const [daftarMahasiswa, setDaftarMahasiswa] = useState([]);
+  // State - Daftar dosen
+  const [daftarDosen, setDaftarDosen] = useState([]);
+  const [selectedAdvisorId, setSelectedAdvisorId] = useState("");
+  const [selectedCoAdvisor1Id, setSelectedCoAdvisor1Id] = useState("");
+  const [selectedCoAdvisor2Id, setSelectedCoAdvisor2Id] = useState("");
 
   const [judulPengajuan, setJudulPengajuan] = useState([]);
 
@@ -157,9 +160,29 @@ function DaftarPengajuan() {
       }
     };
 
+    const fetchDaftarDosenData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/dosen-list`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDaftarDosen(response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil daftar pengajuan:",
+          error
+        );
+      }
+    };
+
     fetchDaftarPengajuanData(); // Panggil fungsi fetchData saat komponen dimuat
     fetchDaftarKelasData();
     fetchDaftarMahasiswaData();
+    fetchDaftarDosenData();
   }, [token, selectedClassroomId]);
 
   // fungsi - ganti kelas
@@ -168,6 +191,7 @@ function DaftarPengajuan() {
     setSelectedClassroomId(selectedClassroomId);
   };
 
+  // fungsi - ganti partner
   const handlePartnerChange = (e, index) => {
     const newSelectedOptions = [...selectedOptions];
     newSelectedOptions[index] = e.target.value;
@@ -544,10 +568,10 @@ function DaftarPengajuan() {
               <TextareaAutosize
                 aria-label="minimum height"
                 minRows={3}
-                placeholder="Enter Judul"
+                placeholder="Masukkan judul"
                 style={{
                   width: "100%",
-                  height: 108,
+                  height: 50,
                   marginBottom: "25px",
                   display: "block",
                   resize: "vertical",
@@ -717,62 +741,16 @@ function DaftarPengajuan() {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={Advisor}
+                  value={selectedAdvisorId}
                   label="Advisor"
-                  onChange={handleAdvisorChange}
+                  onChange={(e) => setSelectedAdvisorId(e.target.value)}
                 >
-                  <MenuItem value="">None</MenuItem>
-                  <MenuItem value={"Andrew T. Liem, MT, PhD"}>
-                    Andrew T. Liem, MT, PhD
-                  </MenuItem>
-                  <MenuItem value={"Green Mandias, SKom, MCs"}>
-                    Green Mandias, SKom, MCs
-                  </MenuItem>
-                  <MenuItem value={"Stenly R. Pungus, MT, PhD"}>
-                    Stenly R. Pungus, MT, PhD
-                  </MenuItem>
-                  <MenuItem value={"Debby E. Sondakh, MT, PhD"}>
-                    Debby E. Sondakh, MT, PhD
-                  </MenuItem>
-                  <MenuItem value={"Ir. Edson Y. Putra, MKom"}>
-                    Ir. Edson Y. Putra, MKom
-                  </MenuItem>
-                  <MenuItem value={"Green A. Sandag, SKom, MS"}>
-                    Green A. Sandag, SKom, MS
-                  </MenuItem>
-                  <MenuItem value={"Jacquline M. S. Waworundeng, ST, MT"}>
-                    Jacquline M. S. Waworundeng, ST, MT
-                  </MenuItem>
-                  <MenuItem value={"Jimmy H. Moedjahedy, SKom, MKom, MM"}>
-                    Jimmy H. Moedjahedy, SKom, MKom, MM
-                  </MenuItem>
-                  <MenuItem value={"Joe Y. Mambu, BSIT, MCIS"}>
-                    Joe Y. Mambu, BSIT, MCIS
-                  </MenuItem>
-                  <MenuItem value={"Lidya C. Laoh, SKom, MMSi"}>
-                    Lidya C. Laoh, SKom, MMSi
-                  </MenuItem>
-                  <MenuItem value={"Marshal Tombeng,"}>
-                    Marshal Tombeng,
-                  </MenuItem>
-                  <MenuItem value={"Oktoverano H. Lengkong, SKom, MDs, MM"}>
-                    Oktoverano H. Lengkong, SKom, MDs, MM
-                  </MenuItem>
-                  <MenuItem value={"Reymon Rotikan, SKom, MS, MM"}>
-                    Reymon Rotikan, SKom, MS, MM
-                  </MenuItem>
-                  <MenuItem value={"Reynoldus A. Sahulata, SKom, MM"}>
-                    Reynoldus A. Sahulata, SKom, MM
-                  </MenuItem>
-                  <MenuItem value={"Rolly Lontaan, MKom"}>
-                    Rolly Lontaan, MKom
-                  </MenuItem>
-                  <MenuItem value={"Semmy W. Taju, SKom"}>
-                    Semmy W. Taju, SKom
-                  </MenuItem>
-                  <MenuItem value={"Senly I. Adam, SKom, MSc"}>
-                    Senly I. Adam, SKom, MSc
-                  </MenuItem>
+                  <MenuItem value="">-</MenuItem>
+                  {daftarDosen.map((dosen) => (
+                    <MenuItem key={dosen.id} value={dosen.id}>
+                      {dosen.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
               <FormControl fullWidth sx={{ margin: "0 25px" }} size="small">
@@ -782,62 +760,16 @@ function DaftarPengajuan() {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={CoAdvisor1}
+                  value={selectedCoAdvisor1Id}
                   label="Co-Advisor 1"
-                  onChange={handleCoAdvisorChange1}
+                  onChange={(e) => setSelectedCoAdvisor1Id(e.target.value)}
                 >
-                  <MenuItem value="">None</MenuItem>
-                  <MenuItem value={"Andrew T. Liem, MT, PhD"}>
-                    Andrew T. Liem, MT, PhD
-                  </MenuItem>
-                  <MenuItem value={"Green Mandias, SKom, MCs"}>
-                    Green Mandias, SKom, MCs
-                  </MenuItem>
-                  <MenuItem value={"Stenly R. Pungus, MT, PhD"}>
-                    Stenly R. Pungus, MT, PhD
-                  </MenuItem>
-                  <MenuItem value={"Debby E. Sondakh, MT, PhD"}>
-                    Debby E. Sondakh, MT, PhD
-                  </MenuItem>
-                  <MenuItem value={"Ir. Edson Y. Putra, MKom"}>
-                    Ir. Edson Y. Putra, MKom
-                  </MenuItem>
-                  <MenuItem value={"Green A. Sandag, SKom, MS"}>
-                    Green A. Sandag, SKom, MS
-                  </MenuItem>
-                  <MenuItem value={"Jacquline M. S. Waworundeng, ST, MT"}>
-                    Jacquline M. S. Waworundeng, ST, MT
-                  </MenuItem>
-                  <MenuItem value={"Jimmy H. Moedjahedy, SKom, MKom, MM"}>
-                    Jimmy H. Moedjahedy, SKom, MKom, MM
-                  </MenuItem>
-                  <MenuItem value={"Joe Y. Mambu, BSIT, MCIS"}>
-                    Joe Y. Mambu, BSIT, MCIS
-                  </MenuItem>
-                  <MenuItem value={"Lidya C. Laoh, SKom, MMSi"}>
-                    Lidya C. Laoh, SKom, MMSi
-                  </MenuItem>
-                  <MenuItem value={"Marshal Tombeng,"}>
-                    Marshal Tombeng,
-                  </MenuItem>
-                  <MenuItem value={"Oktoverano H. Lengkong, SKom, MDs, MM"}>
-                    Oktoverano H. Lengkong, SKom, MDs, MM
-                  </MenuItem>
-                  <MenuItem value={"Reymon Rotikan, SKom, MS, MM"}>
-                    Reymon Rotikan, SKom, MS, MM
-                  </MenuItem>
-                  <MenuItem value={"Reynoldus A. Sahulata, SKom, MM"}>
-                    Reynoldus A. Sahulata, SKom, MM
-                  </MenuItem>
-                  <MenuItem value={"Rolly Lontaan, MKom"}>
-                    Rolly Lontaan, MKom
-                  </MenuItem>
-                  <MenuItem value={"Semmy W. Taju, SKom"}>
-                    Semmy W. Taju, SKom
-                  </MenuItem>
-                  <MenuItem value={"Senly I. Adam, SKom, MSc"}>
-                    Senly I. Adam, SKom, MSc
-                  </MenuItem>
+                  <MenuItem value="">-</MenuItem>
+                  {daftarDosen.map((dosen) => (
+                    <MenuItem key={dosen.id} value={dosen.id}>
+                      {dosen.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
               <FormControl fullWidth size="small">
@@ -847,62 +779,16 @@ function DaftarPengajuan() {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={CoAdvisor2}
+                  value={selectedCoAdvisor2Id}
                   label="Co-Advisor 2"
-                  onChange={handleCoAdvisorChange2}
+                  onChange={(e) => setSelectedCoAdvisor2Id(e.target.value)}
                 >
-                  <MenuItem value="">None</MenuItem>
-                  <MenuItem value={"Andrew T. Liem, MT, PhD"}>
-                    Andrew T. Liem, MT, PhD
-                  </MenuItem>
-                  <MenuItem value={"Green Mandias, SKom, MCs"}>
-                    Green Mandias, SKom, MCs
-                  </MenuItem>
-                  <MenuItem value={"Stenly R. Pungus, MT, PhD"}>
-                    Stenly R. Pungus, MT, PhD
-                  </MenuItem>
-                  <MenuItem value={"Debby E. Sondakh, MT, PhD"}>
-                    Debby E. Sondakh, MT, PhD
-                  </MenuItem>
-                  <MenuItem value={"Ir. Edson Y. Putra, MKom"}>
-                    Ir. Edson Y. Putra, MKom
-                  </MenuItem>
-                  <MenuItem value={"Green A. Sandag, SKom, MS"}>
-                    Green A. Sandag, SKom, MS
-                  </MenuItem>
-                  <MenuItem value={"Jacquline M. S. Waworundeng, ST, MT"}>
-                    Jacquline M. S. Waworundeng, ST, MT
-                  </MenuItem>
-                  <MenuItem value={"Jimmy H. Moedjahedy, SKom, MKom, MM"}>
-                    Jimmy H. Moedjahedy, SKom, MKom, MM
-                  </MenuItem>
-                  <MenuItem value={"Joe Y. Mambu, BSIT, MCIS"}>
-                    Joe Y. Mambu, BSIT, MCIS
-                  </MenuItem>
-                  <MenuItem value={"Lidya C. Laoh, SKom, MMSi"}>
-                    Lidya C. Laoh, SKom, MMSi
-                  </MenuItem>
-                  <MenuItem value={"Marshal Tombeng,"}>
-                    Marshal Tombeng,
-                  </MenuItem>
-                  <MenuItem value={"Oktoverano H. Lengkong, SKom, MDs, MM"}>
-                    Oktoverano H. Lengkong, SKom, MDs, MM
-                  </MenuItem>
-                  <MenuItem value={"Reymon Rotikan, SKom, MS, MM"}>
-                    Reymon Rotikan, SKom, MS, MM
-                  </MenuItem>
-                  <MenuItem value={"Reynoldus A. Sahulata, SKom, MM"}>
-                    Reynoldus A. Sahulata, SKom, MM
-                  </MenuItem>
-                  <MenuItem value={"Rolly Lontaan, MKom"}>
-                    Rolly Lontaan, MKom
-                  </MenuItem>
-                  <MenuItem value={"Semmy W. Taju, SKom"}>
-                    Semmy W. Taju, SKom
-                  </MenuItem>
-                  <MenuItem value={"Senly I. Adam, SKom, MSc"}>
-                    Senly I. Adam, SKom, MSc
-                  </MenuItem>
+                  <MenuItem value="">-</MenuItem>
+                  {daftarDosen.map((dosen) => (
+                    <MenuItem key={dosen.id} value={dosen.id}>
+                      {dosen.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Div>
