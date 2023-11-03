@@ -29,6 +29,7 @@ import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
 import { pdfjs } from "react-pdf";
 import ClearIcon from "@mui/icons-material/Clear";
+import AttachmentIcon from "@mui/icons-material/Attachment";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -44,7 +45,9 @@ const PDFViewerPengajuanJudul = ({ pengajuanJudulFile }) => {
 
   return (
     <div>
-      <span onClick={viewPDFPengajuanJudul}>View</span>
+      <span onClick={viewPDFPengajuanJudul} style={{ fontSize: "14px" }}>
+        View
+      </span>
     </div>
   );
 };
@@ -455,10 +458,10 @@ function DaftarPengajuan() {
                   textTransform: "none",
                   background: "#006AF5",
                   color: "white",
-                  fontSize: "10px",
-                  borderRadius: "6px 0 0 6px",
+                  fontSize: "12px",
+                  borderRadius: "6px",
                   padding: "6px 12px",
-                  width: "80px",
+                  width: "130px",
                   height: "30px",
                 }}
               >
@@ -468,23 +471,9 @@ function DaftarPengajuan() {
                   onChange={onPengajuanJudulFileChange}
                   style={{ display: "none" }}
                 />
-                Pilih File
+                <AttachmentIcon sx={{ fontSize: "16px", margin: "5px" }} />
+                Unggah file
               </Button>
-              <input
-                style={{
-                  height: "30px",
-                  border: "1px solid #ccc",
-                  width: "350px",
-                  borderRadius: "0 6px 6px 0",
-                  fontSize: "10px",
-                }}
-                type="text"
-                id="pengajuanJudulFilename"
-                autoComplete="off"
-                disabled
-                readOnly
-                value={selectedPengajuanJudulFileName || "No file uploaded"}
-              />
             </Div>
             {/* UPload Pengajuan Judul End */}
             {/* Table Upload Pengajuan Judul Start*/}
@@ -539,8 +528,14 @@ function DaftarPengajuan() {
                       <TableCell sx={{ fontSize: "12px" }}>
                         {file.size} bytes
                       </TableCell>
-                      <TableCell>
-                        <Div sx={{ display: "flex" }}>
+                      <TableCell sx={{ textAlign: "center" }}>
+                        <Div
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
                           <span
                             style={{
                               textDecoration: "none",
@@ -568,7 +563,7 @@ function DaftarPengajuan() {
                               textDecoration: "none",
                               cursor: "pointer",
                               color: "red",
-                              fontSize: "12px",
+                              fontSize: "14px",
                             }}
                             onClick={() =>
                               handleDeletePengajuanJudulFile(index)

@@ -1,6 +1,7 @@
 import Div from "@jumbo/shared/Div";
 import {
   Chip,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -126,7 +127,7 @@ const BerandaMahasiswa = () => {
               >
                 Kelompok Mahasiswa
               </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
@@ -165,7 +166,7 @@ const BerandaMahasiswa = () => {
               >
                 Status Pengajuan Proposal
               </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
@@ -204,7 +205,7 @@ const BerandaMahasiswa = () => {
               >
                 Status Siap Maju Sidang
               </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
@@ -249,7 +250,7 @@ const BerandaMahasiswa = () => {
               >
                 Tim Panelis
               </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
@@ -284,7 +285,7 @@ const BerandaMahasiswa = () => {
               >
                 Jadwal Sidang Proposal
               </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
@@ -319,7 +320,7 @@ const BerandaMahasiswa = () => {
               >
                 Status Sidang Proposal
               </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
@@ -350,7 +351,7 @@ const BerandaMahasiswa = () => {
               >
                 Status Revisi Proposal
               </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>

@@ -319,7 +319,13 @@ const ArsipDocument = () => {
               }}
             >
               {/* file upload Start */}
-              <Div sx={{ display: "flex", marginBottom: "20px" }}>
+              <Div
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginBottom: "20px",
+                }}
+              >
                 <Button
                   variant="contained"
                   component="label"
@@ -327,10 +333,9 @@ const ArsipDocument = () => {
                     textTransform: "none",
                     background: "#006AF5",
                     color: "white",
-                    fontSize: "10px",
-                    borderRadius: "6px 0 0 6px",
-                    padding: "6px 12px",
-                    width: "80px",
+                    fontSize: "12px",
+                    borderRadius: "6px",
+                    width: "130px",
                     height: "30px",
                   }}
                 >
@@ -340,23 +345,9 @@ const ArsipDocument = () => {
                     onChange={onHKIFileChange}
                     style={{ display: "none" }}
                   />
-                  Pilih File
+                  <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
+                  Unggah file
                 </Button>
-                <input
-                  style={{
-                    height: "30px",
-                    border: "1px solid #ccc",
-                    width: "350px",
-                    borderRadius: "0 6px 6px 0",
-                    fontSize: "10px",
-                  }}
-                  type="text"
-                  id="filename"
-                  autoComplete="off"
-                  disabled
-                  readOnly
-                  value={selectedHKIFileName || "No file uploaded"}
-                />
               </Div>
               {/* file upload end */}
 
@@ -486,7 +477,11 @@ const ArsipDocument = () => {
             >
               {/* file upload for Artikel Jurnal */}
               <Div
-                sx={{ display: "flex", marginBottom: "20px" }}
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginBottom: "20px",
+                }}
                 component={Paper}
               >
                 <Button
@@ -496,10 +491,9 @@ const ArsipDocument = () => {
                     textTransform: "none",
                     background: "#006AF5",
                     color: "white",
-                    fontSize: "10px",
-                    borderRadius: "6px 0 0 6px",
-                    padding: "6px 12px",
-                    width: "80px",
+                    fontSize: "12px",
+                    borderRadius: "6px",
+                    width: "130px",
                     height: "30px",
                   }}
                 >
@@ -509,28 +503,14 @@ const ArsipDocument = () => {
                     onChange={onArtikelJurnalFileChange}
                     style={{ display: "none" }}
                   />
-                  Pilih File
+                  <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
+                  Unggah file
                 </Button>
-                <input
-                  style={{
-                    height: "30px",
-                    border: "1px solid #ccc",
-                    width: "350px",
-                    borderRadius: "0 6px 6px 0",
-                    fontSize: "10px",
-                  }}
-                  type="text"
-                  id="artikelJurnalFilename"
-                  autoComplete="off"
-                  disabled
-                  readOnly
-                  value={selectedArtikelJurnalFileName || "No file uploaded"}
-                />
               </Div>
               {/* file upload end for Artikel Jurnal */}
 
               {/* Table Upload Artikel Jurnal Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }}>
+              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
@@ -656,7 +636,13 @@ const ArsipDocument = () => {
               }}
             >
               {/* file upload for Source Code */}
-              <Div sx={{ display: "flex", marginBottom: "20px" }}>
+              <Div
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginBottom: "20px",
+                }}
+              >
                 <Button
                   variant="contained"
                   component="label"
@@ -664,10 +650,9 @@ const ArsipDocument = () => {
                     textTransform: "none",
                     background: "#006AF5",
                     color: "white",
-                    fontSize: "10px",
-                    borderRadius: "6px 0 0 6px",
-                    padding: "6px 12px",
-                    width: "80px",
+                    fontSize: "12px",
+                    borderRadius: "6px",
+                    width: "130px",
                     height: "30px",
                   }}
                 >
@@ -677,23 +662,9 @@ const ArsipDocument = () => {
                     onChange={onSourceCodeFileChange}
                     style={{ display: "none" }}
                   />
-                  Pilih File
+                  <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
+                  Unggah file
                 </Button>
-                <input
-                  style={{
-                    height: "30px",
-                    border: "1px solid #ccc",
-                    width: "350px",
-                    borderRadius: "0 6px 6px 0",
-                    fontSize: "10px",
-                  }}
-                  type="text"
-                  id="SourceCodeFilename"
-                  autoComplete="off"
-                  disabled
-                  readOnly
-                  value={selectedSourceCodeFileName || "No file uploaded"}
-                />
               </Div>
               {/* file upload end for Source Code */}
 
@@ -793,7 +764,13 @@ const ArsipDocument = () => {
               </TableContainer>
               {/* Table Upload Source Code End*/}
               {/* file upload for Link Start */}
-              <Div sx={{ display: "flex", marginBottom: "20px" }}>
+              <Div
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginBottom: "20px",
+                }}
+              >
                 <input
                   style={{
                     height: "30px",
@@ -810,23 +787,27 @@ const ArsipDocument = () => {
                 <div style={{ flex: 1 }}></div>
                 <Button
                   variant="contained"
-                  color="primary"
+                  component="label"
                   sx={{
                     textTransform: "none",
+                    background: "#006AF5",
+                    color: "white",
+                    fontSize: "12px",
                     borderRadius: "6px",
-                    fontSize: "10px",
+                    width: "130px",
+                    height: "30px",
                   }}
                   onClick={addLink}
                 >
                   <AttachmentIcon
-                    sx={{ fontSize: "16px", marginRight: "5px" }}
+                    sx={{ fontSize: "14px", marginRight: "5px" }}
                   />
                   Unggah Link
                 </Button>
               </Div>
               {/* file upload for Link End */}
               {/* Table upload Link Start */}
-              <TableContainer>
+              <TableContainer component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>

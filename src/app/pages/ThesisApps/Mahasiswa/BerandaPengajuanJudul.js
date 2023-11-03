@@ -1,6 +1,7 @@
 import Div from "@jumbo/shared/Div";
 import {
   Chip,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -128,7 +129,7 @@ const BerandaPengajuanJudul = () => {
               >
                 Kelompok Mahasiswa
               </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
@@ -167,7 +168,7 @@ const BerandaPengajuanJudul = () => {
               >
                 Status Pengajuan Judul
               </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>

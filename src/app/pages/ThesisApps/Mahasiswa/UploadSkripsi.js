@@ -2,6 +2,7 @@ import Div from "@jumbo/shared/Div";
 import {
   Button,
   Chip,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -14,6 +15,7 @@ import React, { useState } from "react";
 import { pdfjs } from "react-pdf";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
+import AttachmentIcon from "@mui/icons-material/Attachment";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -282,7 +284,13 @@ const UploadSkipsi = () => {
               }}
             >
               {/* file upload Start */}
-              <Div sx={{ display: "flex", marginBottom: "20px" }}>
+              <Div
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginBottom: "20px",
+                }}
+              >
                 <Button
                   variant="contained"
                   component="label"
@@ -290,10 +298,9 @@ const UploadSkipsi = () => {
                     textTransform: "none",
                     background: "#006AF5",
                     color: "white",
-                    fontSize: "10px",
-                    borderRadius: "6px 0 0 6px",
-                    padding: "6px 12px",
-                    width: "80px",
+                    fontSize: "12px",
+                    borderRadius: "6px",
+                    width: "130px",
                     height: "30px",
                   }}
                 >
@@ -303,28 +310,14 @@ const UploadSkipsi = () => {
                     onChange={onProposalFileChange}
                     style={{ display: "none" }}
                   />
-                  Pilih File
+                  <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
+                  Unggah file
                 </Button>
-                <input
-                  style={{
-                    height: "30px",
-                    border: "1px solid #ccc",
-                    width: "350px",
-                    borderRadius: "0 6px 6px 0",
-                    fontSize: "10px",
-                  }}
-                  type="text"
-                  id="filename"
-                  autoComplete="off"
-                  disabled
-                  readOnly
-                  value={selectedSkripsiFileName || "No file uploaded"}
-                />
               </Div>
               {/* file upload end */}
 
               {/* Table Upload Proposal Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }}>
+              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
@@ -505,7 +498,13 @@ const UploadSkipsi = () => {
               }}
             >
               {/* file upload for Payment */}
-              <Div sx={{ display: "flex", marginBottom: "20px" }}>
+              <Div
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginBottom: "20px",
+                }}
+              >
                 <Button
                   variant="contained"
                   component="label"
@@ -513,10 +512,9 @@ const UploadSkipsi = () => {
                     textTransform: "none",
                     background: "#006AF5",
                     color: "white",
-                    fontSize: "10px",
-                    borderRadius: "6px 0 0 6px",
-                    padding: "6px 12px",
-                    width: "80px",
+                    fontSize: "12px",
+                    borderRadius: "6px",
+                    width: "130px",
                     height: "30px",
                   }}
                 >
@@ -526,28 +524,14 @@ const UploadSkipsi = () => {
                     onChange={onPaymentFileChange}
                     style={{ display: "none" }}
                   />
-                  Pilih File
+                  <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
+                  Unggah file
                 </Button>
-                <input
-                  style={{
-                    height: "30px",
-                    border: "1px solid #ccc",
-                    width: "350px",
-                    borderRadius: "0 6px 6px 0",
-                    fontSize: "10px",
-                  }}
-                  type="text"
-                  id="paymentFilename"
-                  autoComplete="off"
-                  disabled
-                  readOnly
-                  value={selectedPaymentFileName || "No file uploaded"}
-                />
               </Div>
               {/* file upload end for Payment */}
 
               {/* Table Upload Payment Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }}>
+              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
@@ -669,7 +653,13 @@ const UploadSkipsi = () => {
               }}
             >
               {/* file upload for Payment */}
-              <Div sx={{ display: "flex", marginBottom: "20px" }}>
+              <Div
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginBottom: "20px",
+                }}
+              >
                 <Button
                   variant="contained"
                   component="label"
@@ -677,10 +667,9 @@ const UploadSkipsi = () => {
                     textTransform: "none",
                     background: "#006AF5",
                     color: "white",
-                    fontSize: "10px",
-                    borderRadius: "6px 0 0 6px",
-                    padding: "6px 12px",
-                    width: "80px",
+                    fontSize: "12px",
+                    borderRadius: "6px",
+                    width: "130px",
                     height: "30px",
                   }}
                 >
@@ -690,28 +679,14 @@ const UploadSkipsi = () => {
                     onChange={onPlagiarismFileChange}
                     style={{ display: "none" }}
                   />
-                  Pilih File
+                  <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
+                  Unggah file
                 </Button>
-                <input
-                  style={{
-                    height: "30px",
-                    border: "1px solid #ccc",
-                    width: "350px",
-                    borderRadius: "0 6px 6px 0",
-                    fontSize: "10px",
-                  }}
-                  type="text"
-                  id="paymentFilename"
-                  autoComplete="off"
-                  disabled
-                  readOnly
-                  value={selectedPlagiarismFileName || "No file uploaded"}
-                />
               </Div>
               {/* file upload end for Payment */}
 
               {/* Table Upload Payment Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }}>
+              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>

@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -45,9 +46,6 @@ const BuatKonsultasiAdvisor = () => {
     setDescription(event.target.value);
   };
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMmViMzU2ODctYzQxNC00NjM0LWIwMTAtMWI2NGNhYTFiZjI3IiwibmlrIjoiZG9zZW4xIiwibmFtZSI6IkxlY3R1cmVyMSBEb3NlbjEiLCJyb2xlIjpbIkRPU0VOIiwiRE9TRU5fTUsiLCJLQVBST0RJIl19LCJpYXQiOjE2OTg1ODIwNDF9.fQaun7RGCehPJXt-bLve0m_zpyC5-BHYPjmYfUyid8I";
-
   const handleCatatKonsultasi = () => {
     if (!selectedDate || !description) {
       alert("Harap isi tanggal dan deskripsi sebelum mencatat konsultasi.");
@@ -58,20 +56,16 @@ const BuatKonsultasiAdvisor = () => {
         date: selectedDate,
       };
 
-      // Mendapatkan token dari tempat yang sesuai, contoh: dari state
-      const authToken =
-        "Bearer " +
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMmViMzU2ODctYzQxNC00NjM0LWIwMTAtMWI2NGNhYTFiZjI3IiwibmlrIjoiZG9zZW4xIiwibmFtZSI6IkxlY3R1cmVyMSBEb3NlbjEiLCJyb2xlIjpbIkRPU0VOIiwiRE9TRU5fTUsiLCJLQVBST0RJIl19LCJpYXQiOjE2OTg1ODIwNDF9.fQaun7RGCehPJXt-bLve0m_zpyC5-BHYPjmYfUyid8I"; // Ganti 'your_token_here' dengan token yang sesuai
-
-      // Mengatur header dengan token
-      const headers = {
-        Authorization: authToken,
-      };
+      // token
+      const token = localStorage.getItem("token");
+      console.log("token", token);
 
       // Kirim permintaan POST ke backend dengan header yang berisi token
       axios
         .post("http://localhost:2000/api/v1/consultation", newConsultation, {
-          headers,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         })
         .then((response) => {
           console.log("Response:", response.data);
@@ -280,14 +274,14 @@ const BuatKonsultasiAdvisor = () => {
                   </DialogActions>
                 </Dialog>
               </Container>
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
                       <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
                       <TableCell sx={{ width: "25%" }}>Deskripsi</TableCell>
                       <TableCell sx={{ width: "25%" }}>Tanggal</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Tertenda</TableCell>
+                      <TableCell sx={{ width: "25%" }}>Tertera</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -296,7 +290,7 @@ const BuatKonsultasiAdvisor = () => {
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{consultation.description}</TableCell>
                         <TableCell>{consultation.date}</TableCell>
-                        <TableCell>Tertenda</TableCell>
+                        <TableCell>Tertera</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

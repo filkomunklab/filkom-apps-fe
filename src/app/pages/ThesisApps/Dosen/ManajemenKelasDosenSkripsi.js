@@ -262,12 +262,8 @@ const ManajemenKelasDosenSkripsi = () => {
     setTahunAjaran("");
   };
 
-  // fungsi untuk mendapatkan data GET
-  // token JWT
   const token = localStorage.getItem("token");
   console.log("token", token);
-  // const token =
-  //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMmViMzU2ODctYzQxNC00NjM0LWIwMTAtMWI2NGNhYTFiZjI3IiwibmlrIjoiZG9zZW4xIiwibmFtZSI6IkxlY3R1cmVyMSBEb3NlbjEiLCJyb2xlIjpbIkRPU0VOIiwiRE9TRU5fTUsiLCJLQVBST0RJIl19LCJpYXQiOjE2OTg2Mjk3Mzh9.B8r31KdGUmERHhPg03k_o_qEi11A51U8zeITaCJmfeg";
 
   useEffect(() => {
     // Fungsi untuk mengambil data akademik
@@ -897,8 +893,8 @@ const ManajemenKelasDosenSkripsi = () => {
                   </Button>
                   <Button
                     size="small"
-                    variant="contained"
                     color="error"
+                    variant="contained"
                     onClick={handleConfirmDeleteClass}
                   >
                     Hapus Kelas
@@ -963,14 +959,25 @@ const ManajemenKelasDosenSkripsi = () => {
             Apakah Anda yakin ingin menghapus kelas ini? Semua nama mahasiswa
             dalam kelas ini akan dihapus juga.
           </DialogContent>
-          <DialogActions>
-            <Button size="small" onClick={handleCancelDelete} color="primary">
+          <DialogActions sx={{ background: "#F5F5F5" }}>
+            <Button
+              size="small"
+              color="primary"
+              sx={{
+                background: "white",
+                boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                textTransform: "none",
+                color: "black",
+              }}
+              onClick={handleCancelDelete}
+            >
               Batal
             </Button>
             <Button
               size="small"
-              onClick={() => deleteClass(selectedClass)}
               color="error"
+              variant="contained"
+              onClick={() => deleteClass(selectedClass)}
             >
               Hapus Kelas
             </Button>
