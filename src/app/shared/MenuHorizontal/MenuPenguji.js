@@ -8,6 +8,11 @@ const MenuPenguji = () => {
   const open1 = Boolean(anchorEl);
   const [anchorE2, setAnchorE2] = React.useState(null);
   const open2 = Boolean(anchorE2);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log(role);
+
   return (
     <Div>
       {/* Menu Horizontal Start */}
@@ -26,22 +31,86 @@ const MenuPenguji = () => {
       >
         <Div sx={{ width: "100%", display: "flex" }}>
           <Div sx={{ margin: "auto" }}>
-            <Link to="#">
-              <Button
-                sx={{
-                  fontSize: "13px",
-                  padding: "6px 16px",
-                  fontWeight: 500,
-                  color: "#192434",
-                  textTransform: "none",
-                  "&:hover": {
-                    color: "#006AF5",
-                  },
-                }}
-              >
-                Beranda
-              </Button>
-            </Link>
+            {/* DOSEN SKRIPSI */}
+            <Div hidden={role.includes("DOSEN") ? false : true}>
+              <Link to="/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/beranda">
+                <Button
+                  sx={{
+                    fontSize: "13px",
+                    padding: "6px 16px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Beranda
+                </Button>
+              </Link>
+            </Div>
+            {/* DOSEN PEMBIMBING */}
+            <Div hidden={role.includes("ADVISOR", "CO_ADVISOR") ? false : true}>
+              <Link to="#">
+                <Button
+                  sx={{
+                    fontSize: "13px",
+                    padding: "6px 16px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Beranda
+                </Button>
+              </Link>
+            </Div>
+            <Div
+              hidden={
+                role.includes("KETUA_PANALIS", "ANGGOTA_PANALIS") ? false : true
+              }
+            >
+              <Link to="#">
+                <Button
+                  sx={{
+                    fontSize: "13px",
+                    padding: "6px 16px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Beranda
+                </Button>
+              </Link>
+            </Div>
+          </Div>
+          <Div sx={{ margin: "auto" }}>
+            <Div hidden={role.includes("DOSEN") ? false : true}>
+              <Link to="/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/pengajuan-judul">
+                <Button
+                  sx={{
+                    fontSize: "13px",
+                    padding: "6px 16px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Pengajuan Judul
+                </Button>
+              </Link>
+            </Div>
           </Div>
           <Div sx={{ margin: "auto" }}>
             <Link to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/konsultasi">
