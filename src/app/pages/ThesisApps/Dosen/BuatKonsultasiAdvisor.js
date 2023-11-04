@@ -48,37 +48,24 @@ const BuatKonsultasiAdvisor = () => {
 
   const handleCatatKonsultasi = () => {
     if (!selectedDate || !description) {
+      // Validasi gagal jika tanggal atau deskripsi kosong
       alert("Harap isi tanggal dan deskripsi sebelum mencatat konsultasi.");
     } else {
+      // Validasi berhasil, catat konsultasi dan atur ulang input
       const newConsultation = {
-        group_id: "8406cfb1-d1a2-4314-8563-62797bd6c381", // Ganti dengan group_id yang sesuai
-        description: description,
         date: selectedDate,
+        description: description,
       };
-
-      // token
-      const token = localStorage.getItem("token");
-      console.log("token", token);
-
-      // Kirim permintaan POST ke backend dengan header yang berisi token
-      axios
-        .post("http://localhost:2000/api/v1/consultation", newConsultation, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          console.log("Response:", response.data);
-          setSelectedDate("");
-          setDescription("");
-          handleDialogClose();
-        })
-        .catch((error) => {
-          alert("Terjadi kesalahan saat mencatat konsultasi.");
-          console.error("Error:", error);
-        });
+      setConsultations([...consultations, newConsultation]);
+      setSelectedDate(""); // Mengatur ulang nilai tanggal menjadi kosong
+      setDescription(""); // Mengatur ulang nilai deskripsi menjadi kosong
+      handleDialogClose(); // Menutup dialog setelah mencatat konsultasi
     }
   };
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log(role);
 
   return (
     <Div>
@@ -96,7 +83,6 @@ const BuatKonsultasiAdvisor = () => {
           Konsultasi
         </Typography>
       </Div>
-
       <Div
         sx={{
           display: "flex",
@@ -137,6 +123,7 @@ const BuatKonsultasiAdvisor = () => {
           <Div sx={{ width: "100%" }}>
             <MenuPenguji />
           </Div>
+
           {/* Menu horizontal End */}
 
           <Div
@@ -174,16 +161,30 @@ const BuatKonsultasiAdvisor = () => {
                   marginBottom: "25px",
                 }}
               >
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="primary"
-                  sx={{ textTransform: "none" }}
-                  onClick={handleDialogOpen}
+                {/* roll yang bisa akses dosen pembimbing */}
+                <Div
+                  hidden={
+                    role.includes(
+                      "DOSEN",
+                      "ADVISOR",
+                      "CO_ADVISOR",
+                      "KETUA_PANELIS"
+                    )
+                      ? false
+                      : true
+                  }
                 >
-                  <CreateIcon sx={{ margin: "3px", fontSize: "small" }} />
-                  Catat Konsultasi
-                </Button>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    color="primary"
+                    sx={{ textTransform: "none" }}
+                    onClick={handleDialogOpen}
+                  >
+                    <CreateIcon sx={{ margin: "3px", fontSize: "small" }} />
+                    Catat Konsultasi
+                  </Button>
+                </Div>
                 <Dialog
                   open={isDialogOpen}
                   onClose={handleDialogClose}
@@ -236,6 +237,7 @@ const BuatKonsultasiAdvisor = () => {
                       minRows={3}
                       label="Deskripsi"
                       placeholder="Deskripsi"
+                      fullWidth
                       value={description}
                       onChange={handleDescriptionChange}
                       style={{

@@ -23,6 +23,8 @@ import {
   DialogContent,
 } from "@mui/material";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
+import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 
 const PengajuanJudulDosenSkripsi = () => {
   const handleTolakClick = () => {
@@ -146,139 +148,7 @@ const PengajuanJudulDosenSkripsi = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          {/* Riwayat Log Start */}
-          <Div
-            sx={{
-              width: "320px",
-              height: "500px",
-              borderRadius: "6px",
-              border: "1px solid rgba(26, 56, 96, 0.10)",
-              background: "#FFF",
-            }}
-          >
-            Riwayat Log
-          </Div>
-          {/* Riwayat Log End */}
-
-          {/* Dosen Pembimbing Start */}
-          <Div
-            sx={{
-              display: "flex",
-              width: "320px",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              borderRadius: "6px",
-              border: "1px solid rgba(26, 56, 96, 0.10)",
-              background: "#FFF",
-            }}
-          >
-            {/* Advisor */}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Advisor
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-            {/* Co-Advisor 1*/}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Co-Advisor 1
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-            {/* Co-Advisor 2*/}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Co-Advisor 2
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-          </Div>
-          {/* Dosen Pembimbing End */}
+          <Riwayatlog />
         </Div>
         {/* Element 1 End */}
         {/* Element 2 Start */}
@@ -295,185 +165,8 @@ const PengajuanJudulDosenSkripsi = () => {
           }}
         >
           {/* Menu Horizontal Start */}
-          <Div
-            sx={{
-              display: "flex",
-              // padding: "5px 16px",
-              width: "100%",
-              alignSelf: "stretch",
-              borderRadius: "8px",
-              border: "1px solid #E0E0E0",
-              background: "#FFF",
-              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
-              flexDirection: "column",
-            }}
-          >
-            <Div sx={{ width: "100%", display: "flex" }}>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    sx={{
-                      fontSize: "13px",
-                      padding: "6px 16px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Beranda
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    sx={{
-                      // width: "150px",
-                      fontSize: "13px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Pengajuan Judul
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    disabled
-                    sx={{
-                      // width: "130px",
-                      fontSize: "13px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Konsultasi
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Button
-                  disabled
-                  onClick={(event) => setAnchorEl(event.currentTarget)}
-                  sx={{
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: "#006AF5",
-                    },
-                  }}
-                >
-                  Pengajuan Proposal
-                </Button>
-                <Menu
-                  disabled
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={() => setAnchorEl(null)}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Proposal
-                  </MenuItem>
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Revisi Proposal
-                  </MenuItem>
-                </Menu>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              {/* Menu Pengajuan Skripsi */}
-              <Div>
-                <Button
-                  disabled
-                  onClick={(event) => setAnchorEl(event.currentTarget)}
-                  sx={{
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: "#006AF5",
-                    },
-                  }}
-                >
-                  Pengajuan Skripsi
-                </Button>
-                <Menu
-                  disabled
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={() => setAnchorEl(null)}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Skripsi
-                  </MenuItem>
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Revisi Skripsi
-                  </MenuItem>
-                </Menu>
-              </Div>
-            </Div>
+          <Div sx={{ width: "100%" }}>
+            <MenuPenguji />
           </Div>
           {/* Menu horizontal End */}
 
@@ -500,9 +193,14 @@ const PengajuanJudulDosenSkripsi = () => {
                     status === "Menunggu"
                       ? "rgba(255, 204, 0, 0.10)"
                       : status === "Ditolak"
-                      ? "red"
-                      : "green",
-                  color: status === "Menunggu" ? "#985211" : "white",
+                      ? "rgba(226, 29, 18, 0.10)"
+                      : "rgba(21, 131, 67, 0.1)",
+                  color:
+                    status === "Menunggu"
+                      ? "#985211"
+                      : status === "Diterima"
+                      ? "rgba(10, 118, 55, 1)"
+                      : "#CA150C",
                   height: "25px",
                 }}
               />
@@ -561,64 +259,73 @@ const PengajuanJudulDosenSkripsi = () => {
                 <Typography variant="subtitle2">Judul</Typography>
                 <Typography sx={{ whiteSpace: "pre-line" }}>{judul}</Typography>
               </Div>
+              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
+                <Table>
+                  <TableHead sx={{ background: "#F5F5F5" }}>
+                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
+                      >
+                        Nomor
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
+                      >
+                        Nama File
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                      >
+                        Tanggal
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                      >
+                        Ukuran
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          textAlign: "center",
+                          width: "12%",
+                        }}
+                      >
+                        Action
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>1</TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        SISTEM INFORMASI PELAYANAN PUSKESMAS TALAWAAN BERBASIS
+                        WEB-APPLICATION
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        08/09/2023
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        5.6321 bytes
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          style={{
+                            textDecoration: "none",
+                            cursor: "pointer",
+                            color: "blue",
+                            fontSize: "12px",
+                            padding: "5px 0",
+                          }}
+                        >
+                          View
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
               {/* Judul End */}
-              {/* Latar Belakang Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography variant="subtitle2">
-                  Latar Belakang Masalah
-                </Typography>
-                <Typography
-                  style={{
-                    width: "100%",
-                    whiteSpace: "pre-line",
-                  }}
-                >
-                  {latarBelakang}
-                </Typography>
-              </Div>
-              {/* Latar Belakang End */}
-              {/* Rumusan Masalah Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography variant="subtitle2">Rumusan Masalah</Typography>
-                <Typography sx={{ whiteSpace: "pre-line" }}>
-                  {rumusanMasalah}
-                </Typography>
-              </Div>
-              {/* Rumusan Masalah End */}
-              {/* Tujuan Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography variant="subtitle2">Tujuan</Typography>
-                <Typography sx={{ whiteSpace: "pre-line" }}>
-                  {tujuan}
-                </Typography>
-              </Div>
-              {/* Tujuan End */}
-              {/* Manfaat Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography variant="subtitle2">Manfaat</Typography>
-                <Typography sx={{ whiteSpace: "pre-line" }}>
-                  {manfaat}
-                </Typography>
-              </Div>
-              {/* Manfaat End*/}
-              {/* Cakupan Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography variant="subtitle2">Cakupan</Typography>
-
-                <Typography sx={{ whiteSpace: "pre-line" }}>
-                  {cakupan}
-                </Typography>
-              </Div>
-              {/* Cakupan End */}
-              {/* Batasan Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography variant="subtitle2">Batasan</Typography>
-                <Typography sx={{ whiteSpace: "pre-line" }}>
-                  {batasan}
-                </Typography>
-              </Div>
-              {/* Batasan End */}
-
               {/* Select Dosen Pembimbing Start */}
               <Div
                 sx={{
@@ -762,6 +469,7 @@ const PengajuanJudulDosenSkripsi = () => {
                 value={advisor}
                 onChange={handleAdvisorChange}
               >
+                <MenuItem value="">None</MenuItem>
                 <MenuItem value={"Andrew T. Liem, MT, PhD"}>
                   Andrew T. Liem, MT, PhD
                 </MenuItem>
@@ -820,6 +528,7 @@ const PengajuanJudulDosenSkripsi = () => {
                 value={coAdvisor1}
                 onChange={handleCoAdvisor1Change}
               >
+                <MenuItem value="">None</MenuItem>
                 <MenuItem value={"Andrew T. Liem, MT, PhD"}>
                   Andrew T. Liem, MT, PhD
                 </MenuItem>
@@ -878,6 +587,7 @@ const PengajuanJudulDosenSkripsi = () => {
                 value={coAdvisor2}
                 onChange={handleCoAdvisor2Change}
               >
+                <MenuItem value="">None</MenuItem>
                 <MenuItem value={"Andrew T. Liem, MT, PhD"}>
                   Andrew T. Liem, MT, PhD
                 </MenuItem>
