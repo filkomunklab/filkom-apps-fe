@@ -444,6 +444,9 @@ function DaftarPengajuan() {
     setCoAdvisor2(e.target.value);
   };
 
+  const groupId = daftarPengajuan.group_id; // Ganti dengan nilai yang sesuai
+  const linkTo = `/sistem-informasi-skripsi/daftar-pengajuan/beranda?groupId=${groupId}`;
+
   return (
     <Div>
       <Div>
@@ -555,7 +558,7 @@ function DaftarPengajuan() {
                 <TableCell>
                   <Link
                     href="#"
-                    to="/sistem-informasi-skripsi/daftar-pengajuan/beranda"
+                    to={linkTo}
                     style={{
                       textDecoration: "none",
                       color: "blue",
