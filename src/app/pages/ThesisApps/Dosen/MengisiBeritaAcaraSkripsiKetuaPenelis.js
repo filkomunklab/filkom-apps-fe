@@ -34,13 +34,16 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
   const [isRevisionEnabled, setIsRevisionEnabled] = useState(true);
   const [isScoreEnabled, setIsScoreEnabled] = useState(true);
   const [isSignInEnabled, setIsSignInEnabled] = useState(true);
-
   const [openSignInConfirmationDialog, setOpenSignInConfirmationDialog] =
     useState(false);
-
+  const [isSubmitButtonVisible, setIsSubmitButtonVisible] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false); // State untuk mengecek apakah sudah disubmit
+  const [nilai, setNilai] = useState("");
+  const [perubahan, setPerubahan] = useState("");
+  const [deskripsi, setDeskripsi] = useState("");
+  const [errorMessageKesimpulan, setErrorMessageKesimpulan] = useState();
+  const [errorMessagePenilaian, setErrorMessagePenilaian] = useState();
 
-  // Fungsi yang akan dijalankan ketika pengguna mengklik tombol "Submit"
   const handleSubmit = () => {
     // Setelah disubmit, radio button akan diganti dengan teks
     setIsSubmitted(true);
@@ -61,19 +64,13 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
     setStatus(event.target.value); // Mengubah status saat radio button berubah
   };
 
-  const [nilai, setNilai] = useState(""); // Nilai awal kosong, Anda dapat mengatur nilai default jika diperlukan
-
   const handleNilaiChange = (event) => {
     setNilai(event.target.value); // Mengubah nilai saat radio button berubah
   };
 
-  const [perubahan, setPerubahan] = useState(""); // Defaultnya adalah "Major"
-
   const handlePerubahanChange = (event) => {
     setPerubahan(event.target.value); // Mengubah jenis perubahan saat radio button berubah
   };
-
-  const [deskripsi, setDeskripsi] = useState(""); // Ubah nama state menjadi 'deskripsi'
 
   const handleDeskripsiChange = (event) => {
     setDeskripsi(event.target.value); // Ubah nama state saat radio button berubah
@@ -85,6 +82,11 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
   ] = useState(false);
 
   const handleOpenConfirmationBeritaAcaraDialog = () => {
+    if (!status || !perubahan || !nilai || !deskripsi) {
+      // Tampilkan pesan kesalahan jika salah satu opsi belum diisi
+      setErrorMessageKesimpulan("Harap isi semua opsi sebelum submit.");
+      return;
+    }
     setOpenConfirmationBeritaAcaraDialog(true);
   };
 
@@ -96,13 +98,12 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
 
   // Fungsi yang akan dijalankan ketika pengguna mengklik tombol "Ya" di dialog konfirmasi
   const handleSubmitData = () => {
-    // Di sini Anda dapat menambahkan logika untuk mengirim data atau tindakan yang diperlukan
-
     // Setelah tindakan selesai, tutup dialog konfirmasi
     handleCloseConfirmationBeritaAcaraDialog();
+  };
 
-    // Navigasi ke halaman lain
-    // history.push("/halaman-lain"); // Gantilah "/halaman-lain" dengan URL halaman yang sesuai
+  const handleConfirmClick = () => {
+    setIsSubmitButtonVisible(false);
   };
 
   const [ketuaPenelisStatusBeritaAcara, setKetuaPenelisStatusBeritaAcara] =
@@ -148,6 +149,18 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
   };
 
   const handleOpenConfirmDialog = () => {
+    // Memeriksa apakah salah satu opsi tidak terpilih
+    if (
+      selectedValues.value1 === "" ||
+      selectedValues.value2 === "" ||
+      selectedValues.value3 === "" ||
+      selectedValues.value4 === ""
+    ) {
+      setErrorMessagePenilaian(
+        "Anda harus memilih semua opsi sebelum mengirim penilaian."
+      );
+      return;
+    }
     setOpenConfirmDialog(true);
   };
 
@@ -553,7 +566,7 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
             {/* Radio Button Penilaian Akhir Start */}
 
             {/* Kesimpulan dari Pengujian Ketua penelis start */}
-
+            {/* <Div hidden={role.includes("KETUA_PANELIS") ? false : true}> */}
             <Div
               sx={{
                 display: "flex",
@@ -563,11 +576,11 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
                 alignSelf: "stretch",
               }}
             >
+              <Typography variant="subtitle2">
+                Kesimpulan Ujian Skripsi
+              </Typography>
               {isSubmitted ? (
                 <Div>
-                  <Typography variant="subtitle2">
-                    Kesimpulan Ujian Skripsi
-                  </Typography>
                   <Typography variant="body1">{status}</Typography>
                 </Div>
               ) : (
@@ -597,6 +610,7 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
                 </Div>
               )}
             </Div>
+
             <Div
               sx={{
                 display: "flex",
@@ -770,32 +784,38 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
                       </FormControl>
                     </Div>
                   </Div>
+                  <Typography style={{ color: "red" }}>
+                    {errorMessageKesimpulan}
+                  </Typography>
                 </Div>
               )}
             </Div>
 
             {/* Radio Button Penilaian Akhir End */}
-            <Div
-              sx={{
-                display: "flex",
-                width: "100%",
-                height: "59.43px",
-                padding: "12px 24px 12px 0px",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                gap: "12px",
-                background: "#F5F5F5",
-              }}
-            >
-              <Button
-                variant="contained"
-                sx={{ textTransform: "none" }}
-                color="primary"
-                onClick={handleOpenConfirmationBeritaAcaraDialog}
+            {isSubmitButtonVisible && (
+              <Div
+                sx={{
+                  display: "flex",
+                  width: "100%",
+                  height: "59.43px",
+                  padding: "12px 24px 12px 0px",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  gap: "12px",
+                  background: "#F5F5F5",
+                }}
               >
-                Submit
-              </Button>
-            </Div>
+                <Button
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                  color="primary"
+                  onClick={handleOpenConfirmationBeritaAcaraDialog}
+                >
+                  Submit
+                </Button>
+              </Div>
+            )}
+            {/* </Div> */}
             {/* Kesimpulan dari Pengujian Ketua penelis start */}
           </Div>
         </Div>
@@ -1289,6 +1309,19 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
             {/* Table Row End*/}
           </TableBody>
           {/* Jumlah nilai */}
+
+          <Div
+            sx={{
+              display: "flex",
+              alignItems: "center", // Menengahkan vertikal
+              justifyContent: "center", // Menengahkan horizontal
+              alignSelf: "stretch",
+            }}
+          >
+            <Typography style={{ color: "red" }}>
+              {errorMessagePenilaian}
+            </Typography>
+          </Div>
           <Div
             sx={{
               display: "flex",
@@ -1732,7 +1765,7 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>Sidang Skripsi</DialogTitle>
+        <DialogTitle variant="subtitle2">Sidang Skripsi</DialogTitle>
         <DialogContent>
           <Typography>
             Apakah Anda yakin ingin menyetujui hasil sidang ini?
@@ -1754,6 +1787,7 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
             onClick={() => {
               handleSubmitData();
               handleSubmit();
+              handleConfirmClick();
             }}
             variant="contained"
             sx={{ textTransform: "none" }}
