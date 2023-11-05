@@ -495,11 +495,7 @@ export const dosenMenus = [
     type: "section",
     children: [
       {
-<<<<<<< HEAD
-        uri: "/sistem-informasi-skripsi/komite-judul-dosen",
-=======
         uri: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
->>>>>>> 32e35bf8199bf96a8fbe074e758286afccf3302f
         label: "Komite Judul",
         type: "nav-item",
         icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
