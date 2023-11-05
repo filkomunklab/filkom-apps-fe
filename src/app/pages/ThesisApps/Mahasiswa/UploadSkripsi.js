@@ -196,7 +196,7 @@ const UploadSkipsi = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Upload Skripsi
+          Unggah Skripsi
         </Typography>
       </Div>
 
@@ -300,7 +300,7 @@ const UploadSkipsi = () => {
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
-                    width: "130px",
+                    width: "150px",
                     height: "30px",
                   }}
                 >
@@ -514,7 +514,7 @@ const UploadSkipsi = () => {
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
-                    width: "130px",
+                    width: "150px",
                     height: "30px",
                   }}
                 >
@@ -669,7 +669,7 @@ const UploadSkipsi = () => {
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
-                    width: "130px",
+                    width: "150px",
                     height: "30px",
                   }}
                 >

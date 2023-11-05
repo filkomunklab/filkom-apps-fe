@@ -29,7 +29,7 @@ import { Link } from "react-router-dom";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 
-const JadwalSidangProposal = () => {
+const JadwalSidangSkripsi = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [ketuaPenelis, setKetuaPenelis] = useState(""); // State untuk ketua penelis
   const [anggotaPenelis, setAnggotaPenelis] = useState(""); // State untuk anggota penelis
@@ -150,7 +150,7 @@ const JadwalSidangProposal = () => {
               lineHeight: "32px",
             }}
           >
-            Jadwal Sidang Proposal
+            Daftar Jadwal Proposal
           </Typography>
           <Div
             sx={{
@@ -192,7 +192,7 @@ const JadwalSidangProposal = () => {
           </Typography>
         </Div>
         {/* Semester End */}
-        {/* Table Mahasiswa Proposal Start */}
+        {/* Table Mahasiswa Skripsi Start */}
         <TableContainer>
           <Table>
             <TableHead>
@@ -211,6 +211,61 @@ const JadwalSidangProposal = () => {
                 <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
               </TableRow>
             </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell sx={{ fontSize: "13px" }}>1</TableCell>
+                <TableCell sx={{ fontSize: "13px" }}>
+                  SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
+                  UNIVERSITAS KLABAT
+                </TableCell>
+                <TableCell>
+                  <Typography>Andrew T. Liem, MT, PhD</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>Senly I. Adam, SKom, MSc</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>Senly I. Adam, SKom, MSc</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>10.00</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>12.00</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>17/09/2023</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>GK1-206</Typography>
+                </TableCell>
+                <TableCell>
+                  <Div sx={{ display: "flex" }}>
+                    <Typography
+                      component={Link}
+                      to="/halaman-berikutnya"
+                      sx={{
+                        textDecoration: "none",
+                        color: "blue",
+                      }}
+                    >
+                      Detail
+                    </Typography>
+                    <Div sx={{ margin: "2px" }}>|</Div>
+                    <span
+                      style={{
+                        textDecoration: "none",
+                        cursor: "pointer",
+                        color: "blue",
+                      }}
+                      onClick={handleUpdateClick}
+                    >
+                      Perbarui
+                    </span>
+                  </Div>
+                </TableCell>
+              </TableRow>
+            </TableBody>
             <TableBody>
               {jadwal.map((item, index) => (
                 <TableRow key={index}>
@@ -267,7 +322,7 @@ const JadwalSidangProposal = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* Table Mahasiswa Proposal End */}
+        {/* Table Mahasiswa Skripsi End */}
       </Div>
       {/* Table Master End */}
       {/* popup pembuatan Jadwal start */}
@@ -469,6 +524,10 @@ const JadwalSidangProposal = () => {
                   <MenuItem value={170}>Senly I. Adam, SKom, MSc</MenuItem>
                 </Select>
               </FormControl>
+              <Div sx={{ width: "800px" }}>
+                <Typography>Advisor</Typography>
+                <Typography>Andrew T. Liem, MT, PhD</Typography>
+              </Div>
             </Div>
           </Div>
           {/* Select Tim Penguji End */}
@@ -641,4 +700,4 @@ const JadwalSidangProposal = () => {
   );
 };
 
-export default JadwalSidangProposal;
+export default JadwalSidangSkripsi;

@@ -1,19 +1,48 @@
 import Page from "@jumbo/shared/Page";
+import BerandaProposalPenguji from "app/pages/ThesisApps/Dosen/BerandaProposalPenguji";
 import BuatKonsultasiAdvisor from "app/pages/ThesisApps/Dosen/BuatKonsultasiAdvisor";
 import DaftarBimbinganProposalAdvisor from "app/pages/ThesisApps/Dosen/DaftarBimbinganProposalAdvisor";
+import DaftarBimbinganSkripsiAdvisor from "app/pages/ThesisApps/Dosen/DaftarBimbinganSkripsiAdvisor";
 import DaftarPengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarPengajuanJudulDosenSkripsi";
 import DaftarPengajuanProposalDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarPengajuanProposalDosenSkripsi";
 import DaftarPengajuanSkripsiDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarPengajuanSkripsiDosenSkripsi";
+import DaftarPengujianProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianProposalKetuaPenelis";
+import DaftarPengujianSkripsiKetuaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianSkripsiKetuaPenelis";
 import ManajemenKelasDosenSkripsi from "app/pages/ThesisApps/Dosen/ManajemenKelasDosenSkripsi";
 import PengajuanJudul from "app/pages/ThesisApps/Dosen/PengajuanJudulDosen";
 import PengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/PengajuanJudulDosenSkripsi";
 import BerandaProposal from "app/pages/ThesisApps/Sekertaris/BerandaProposal";
 
 const dosenSkripsiRoutes = [
+  // {
+  //   // +++++
+  //   path: "/sistem-informasi-skripsi/pengajuan-judul-kaprodi",
+  //   element: <Page component={DaftarBimbinganProposalAdvisor} />,
+  // },
+  {
+    // +++++
+    path: "/sistem-informasi-skripsi/uji-proposal-ketua",
+    element: <Page component={BerandaProposalPenguji} />,
+  },
+  {
+    // +++++
+    path: "/sistem-informasi-skripsi/uji-proposal-ketua",
+    element: <Page component={DaftarPengujianProposalKetuaPenelis} />,
+  },
+  {
+    // +++++
+    path: "/sistem-informasi-skripsi/uji-skripsi-ketua",
+    element: <Page component={DaftarPengujianSkripsiKetuaPenelis} />,
+  },
   {
     // +++++
     path: "/sistem-informasi-skripsi/bimbingan-proposal-advisor",
     element: <Page component={DaftarBimbinganProposalAdvisor} />,
+  },
+  {
+    // +++++
+    path: "/sistem-informasi-skripsi/bimbingan-skripsi-advisor",
+    element: <Page component={DaftarBimbinganSkripsiAdvisor} />,
   },
   {
     // Daftar Pengajuan Judul Dosen Skripsi

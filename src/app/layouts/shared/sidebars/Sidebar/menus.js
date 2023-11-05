@@ -49,13 +49,13 @@ export const sekretarisMenus = [
         icon: <MailIcon sx={{ fontSize: 20 }} />,
         children: [
           {
-            uri: "/sistem-informasi-skripsi/pengajuan-proposal-dosen-skripsi",
+            uri: "/sistem-informasi-skripsi/daftar-pengajuan-proposal",
             label: "Pengajuan Proposal",
             type: "nav-item",
             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/pengajuan-skripsi-dosen-skripsi",
+            uri: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi",
             label: "Pengajuan Skripsi",
             type: "nav-item",
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
