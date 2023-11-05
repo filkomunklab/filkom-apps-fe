@@ -59,40 +59,6 @@ const DaftarPengajuanJudulDosen = () => {
     fetchDaftarKomiteJudulData();
   }, [token]);
 
-  const TableItem = ({ index }) => {
-    return (
-      <TableRow key={index}>
-        <TableCell sx={{ fontSize: "13px" }}>{index + 1}</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>Geovalga Fransiscus Lim</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>
-          SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
-          UNIVERSITAS KLABAT
-        </TableCell>
-        <TableCell>Andrew T. Liem, MT, PhD</TableCell>
-        <TableCell>Senly I. Adam, SKom, MSc</TableCell>
-        <TableCell>Oktoverano H. Lengkong, SKom, MDs, MM</TableCell>
-        <TableCell>
-          <Chip label={"Sudah"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Menunggu"} />
-        </TableCell>
-        <TableCell>
-          <Typography
-            component={Link}
-            to="/halaman-berikutnya"
-            sx={{
-              textDecoration: "none",
-              color: "blue",
-            }}
-          >
-            Detail
-          </Typography>
-        </TableCell>
-      </TableRow>
-    );
-  };
-
   return (
     <Div>
       {/* Table Master Start */}
