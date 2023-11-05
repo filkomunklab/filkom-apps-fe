@@ -383,6 +383,11 @@ const menus = [
         icon: <HomeIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/home-calon-tamatan",
       },
+
+
+
+
+
       // {
       //   label: "Pengisian Tracer Study",
       //   type: "nav-item",

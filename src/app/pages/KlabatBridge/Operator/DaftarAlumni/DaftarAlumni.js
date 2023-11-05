@@ -26,6 +26,7 @@ import {
   Divider,
   Checkbox,
   IconButton,
+  TablePagination,
 } from "@mui/material";
 import ActionButton from "app/shared/ActionButton";
 import SearchGlobal from "app/shared/SearchGlobal";
@@ -44,6 +45,20 @@ const DaftarAlumni = () => {
   const [filterValue, setFilterValue] = useState('');
   const [searchValue, setSearchValue] = useState('');
   const [searchBtn, setSearchBtn] = useState(false);
+
+  // pagination
+  const [filter, setFilter] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
   // for dialog box to edit alumni password
   const [resetPassword, setResetPassword] = React.useState(false);
@@ -108,17 +123,17 @@ const DaftarAlumni = () => {
 
 
   const getData = async () => {
-    await axios.get(`http://localhost:2000/api/v1/fakultas/alumni?search_query=${searchValue}`).then((res) => {
+    await axios.get(`http://localhost:2000/api/v1/admin-operator/alumni?search_query=${searchValue}`).then((res) => {
       console.log(res.data.data);
       
       setData(res.data.data);
 
       const uniqueYears = [...new Set(res.data.data.map(item=> item.graduate_year))]
-      const uniquMajor = [...new Set(res.data.data.map(item=> item.major))]
+      const uniqueMajor = [...new Set(res.data.data.map(item=> item.major))]
 
       console.log(uniqueYears);
       setYear(uniqueYears)
-      setMajor(uniquMajor)
+      setMajor(uniqueMajor)
     });
   };
 
@@ -136,10 +151,8 @@ const DaftarAlumni = () => {
   // }, [filterValue, data]);
 
   function filterData() {
-          return data.filter(item => item["graduate_year"] === filterValue || item["major"] === filterValue);
-        }
-
-
+    return data.filter(item => item["graduate_year"] === filterValue || item["major"] === filterValue);
+  }
 
   React.useEffect(() => {
     getData();
@@ -147,12 +160,6 @@ const DaftarAlumni = () => {
 
   return (
     <Box
-      // p={8}
-      // sx={{
-      //     backgroundColor: 'white',
-      //     borderRadius: 5,
-      //     boxShadow: 3,
-      // }}
     >
       <Div
         sx={{
@@ -222,25 +229,22 @@ const DaftarAlumni = () => {
                   case 'DKV':
                     label='DKV'
                     break;
-                
                   default:
                     break;
                 }
                 return(
-
               <MenuItem value={item}>{label}</MenuItem>
               )})}
-              <ListSubheader sx={{color: "#192739F0"}}>Gradutaion Year</ListSubheader>
+              <ListSubheader sx={{color: "#192739F0"}}>Graduation Year</ListSubheader>
               {year.map((item)=>{return(
                  <MenuItem value={item}>{item}</MenuItem>
               )})}
             </Select>
           </FormControl>
           
-          {/* <Button 
+          <Button 
             variant="contained" 
             color="primary" 
-            
             sx={{
               borderRadius: 10,
               // whiteSpace: "nowrap",
@@ -248,8 +252,7 @@ const DaftarAlumni = () => {
               }}
           >
             <Box>Export</Box>
-          </Button> */}
-          
+          </Button>
         </Div>
       </Div>
       <TableContainer component={Paper} sx={{ overflow: "auto" }}>
@@ -270,7 +273,9 @@ const DaftarAlumni = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filterData().length > 0 ? filterData().map((item, index) => (
+            {filterData().length > 0 ? filterData()
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((item, index) => (
               <TableItem index={index} item={item} />
             )) : data.map((item, index) => (
               <TableItem index={index} item={item} />
@@ -279,9 +284,19 @@ const DaftarAlumni = () => {
         </Table>
       </TableContainer>
 
+      
       <Grid container justifyContent="flex-end" >
         <Grid item>
-          <Pagination count={10} color="primary" sx={{marginY:5}}/>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50, 100]}
+            component={"div"}
+            count={data.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            sx={{marginY:2}}
+          />
         </Grid>
       </Grid>
 

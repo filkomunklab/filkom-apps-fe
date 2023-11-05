@@ -117,6 +117,7 @@ const Dashboard = () => {
 
   const getData = async () => {
     await axios.get("http://localhost:2000/api/v1/dashboard/statistic").then((res) => {
+      
       console.log(res.data.data);
       setData(res.data.data);
     });
@@ -141,14 +142,12 @@ const Dashboard = () => {
 
   return (
       <Div >
-        <Typography>Total filkom students: {data.totalAlumni}</Typography>
+        {/* <Typography>Total filkom students: {data.totalAlumni}</Typography> */}
         <Grid container spacing={3}>
-          
-          {/* 4 cards */}
-          
+          {/* 3 cards */}
           <Grid item md={12}>
              <Grid container spacing={3}>
-              {filkomStudents.map((item, index) => (
+              {/* {filkomStudents.map((item, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
                   <Card>
                     <CardHeader
@@ -158,7 +157,49 @@ const Dashboard = () => {
                     />
                   </Card>
                 </Grid>
-              ))}
+              ))} */}
+              <Grid item xs={12} sm={6} md={4} >
+                <Card>
+                  <CardHeader
+                    avatar={
+                      <ResponsiveAvatar sx={{ color: 'primary.main', bgcolor: 'white' }}>
+                        <PeopleIcon style={{ fontSize: 38 }}/>
+                      </ResponsiveAvatar>
+                    }
+                    title={<Typography variant="h6">Total Alumni</Typography>}
+                    subheader={<Typography variant="body2" sx={{ fontSize: "18px", fontWeight: 500 }}>{`${data.totalAlumni} students`}</Typography>}
+                  />
+                </Card>
+              </Grid>
+
+              <Grid item xs={12} sm={6} md={4} >
+                <Card>
+                  <CardHeader
+                    avatar={
+                      <ResponsiveAvatar sx={{ color: 'primary.main', bgcolor: 'white' }}>
+                        <PeopleIcon style={{ fontSize: 38 }}/>
+                      </ResponsiveAvatar>
+                    }
+                    title={<Typography variant="h6">Informatics</Typography>}
+                    subheader={<Typography variant="body2" sx={{ fontSize: "18px", fontWeight: 500 }}>{`${data.totalAlumniIF} students`}</Typography>}
+                  />
+                </Card>
+              </Grid>
+
+              <Grid item xs={12} sm={6} md={4} >
+                <Card>
+                  <CardHeader
+                    avatar={
+                      <ResponsiveAvatar sx={{ color: 'primary.main', bgcolor: 'white' }}>
+                        <PeopleIcon style={{ fontSize: 38 }}/>
+                      </ResponsiveAvatar>
+                    }
+                    title={<Typography variant="h6">Information Systems</Typography>}
+                    subheader={<Typography variant="body2" sx={{ fontSize: "18px", fontWeight: 500 }}>{`${data.totalAlumniSI} students`}</Typography>}
+                  />
+                </Card>
+              </Grid>
+
             </Grid>
           </Grid>
 
@@ -215,7 +256,7 @@ const Dashboard = () => {
           <Grid item md={12}>
             <Card sx={{ p: 5 }}>
               <Typography variant="h1" sx={{ fontSize: "18px", fontWeight: 500, marginLeft: "20px"}}>
-                STUDENT DISTRIBUTION 
+                ALUMNI DISTRIBUTION 
               </Typography>
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart
@@ -223,7 +264,7 @@ const Dashboard = () => {
                   margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="year" />
+                  <XAxis dataKey={"year"} />
                   <YAxis label={{ value: 'Total Students', angle: -90, position: 'insideLeft', dy: 50 }} />
                   <Tooltip />
                   <Legend iconType="circle" />

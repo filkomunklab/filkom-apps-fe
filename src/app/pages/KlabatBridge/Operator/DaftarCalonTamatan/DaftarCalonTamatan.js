@@ -28,6 +28,7 @@ import {
   FormControlLabel,
   Checkbox,
   ListSubheader,
+  TablePagination,
 } from "@mui/material";
 import ActionButton from "app/shared/ActionButton";
 import SearchGlobal from "app/shared/SearchGlobal";
@@ -90,11 +91,32 @@ const rows = [
 ];
 
 const DaftarCalonTamatan = () => {
-  // sort by year
-  const [sortBy, setSortBy] = useState(null);
+  const [data, setData] = useState([]);
+  const [statusByFac, setStatusByFac] = useState([]);
+  const [statusByRegister, setStatusByRegister] = useState([]);
+  const [graduatePlan, setGraduatePlan] = useState([]);
+  const [filterValue, setFilterValue] = useState('');
+  const [searchValue, setSearchValue] = useState('');
+  const [searchBtn, setSearchBtn] = useState(false);
+  // const [filterBy, setFilterBy] = useState([]);
+  const [selectedData, setSelectedData] = useState(null);
 
-  // dialog box to send data calon tamatan to operator
-  const [open, setOpen] = React.useState(false);
+  // pagination
+  const [filter, setFilter] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  // // dialog box to send data calon tamatan to operator
+  // const [open, setOpen] = React.useState(false);
 
   // dialog box to accept student's SPT
   const [terimaSPT, setTerimaSPT] = React.useState(false);
@@ -117,7 +139,6 @@ const DaftarCalonTamatan = () => {
 
  
   const TableSPT = ({ index, item }) => (
-   
     <TableRow>
       <TableCell>{index + 1}</TableCell>
       <TableCell>{item?.subject}</TableCell>
@@ -313,92 +334,51 @@ const DaftarCalonTamatan = () => {
     </TableRow>
   );
 
-  // table
-  const [data, setData] = useState([]);
-  const [filterBy, setFilterBy] = useState([]);
-  const [selectedData, setSelectedData] = useState(null);
-
-  // const handleInputChange = (e, id, columnName) => {
-  //   const updatedData = data.map((row) => {
-  //     if (row.id === id) {
-  //       return { ...row, [columnName]: e.target.value };
-  //     }
-  //     return row;
-  //   });
-  //   setData(updatedData);
-  // };
-
-  // const getData = async () => {
-  //   // await axios.get("http://localhost:2000/api/v1/spt/").then((res) => {
-  //   //   console.log(res.data.data);
-  //   try{
-  //     const response = await axios.get(`http://localhost:2000/api/v1/spt/`)
-  //     // const parseData = JSON.parse(response.data.data.remaining_classes)
-  //     console.log(response.data.data)
-  //     // console.log('ini data.remaining',response.data.data[0].remaining_classes)
-  //     setData(response.data.data)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  //     // const data = JSON.parse(res.data.data.remaining_classes)
-
-  //     // const normalize = res.data.data.map((item) => {
-  //     //   return {
-  //     //     name: `${item.student.firstName} ${item.student.lastName}`,
-  //     //     nim: item.student.nim,
-  //     //     faculty: item.student.faculty,
-  //     //     studyProgram:
-  //     //       item.student.major === "IF" ? "Informatika" : "Sistem Informasi",
-  //     //     plan: item.graduate_plan,
-  //     //     facultyApproval: item.approval_fac,
-  //     //     registarApproval: item.approval_reg,
-
-  //     //   };
-  //     // });
-
-  //     // console.log(normalize);
-  //     //setData(res.data.data);
-    
-  // };
-
-  // const getData = async () => {
-  //   try {
-  //     // Request to the first endpoint
-  //     const response1 = await axios.get("http://localhost:2000/api/v1/spt/");
-
-  //     console.log("Data from endpoint 1:", response1.data.data);
-
-  //     setDataTabel(response1.data.data); // Assuming setData1 is a state setter function for the first set of data
-  
-  //     // Request to the second endpoint
-  //     const response2 = await axios.get("http://localhost:2000/api/v1/spt/registar/filter-by");
-  //     console.log("Data from endpoint 2:", response2.data.data);
-  //     setFilterBy(response2.data.data); // Assuming setData2 is a state setter function for the second set of data
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
-
   const getData = async () => {
+    // await axios.get(`http://localhost:2000/api/v1/spt?search_query=${searchValue}`).then((res) => {
     await axios.get("http://localhost:2000/api/v1/spt/").then((res) => {
+
+      // const data5 = res.data.data.map(item => {
+      //   const remaining_classes = JSON.parse(item.remaining_classes)
+      //   return {...item, remaining_classes}
+      // })
+
+      // console.log(data5)
+
       console.log(res.data.data);
       setData(res.data.data);
+
+      const uniqueStatusByFac = [...new Set(res.data.data.map(item => item.approval_fac))]
+      const uniqueStatusByReg = [...new Set(res.data.data.map(item => item.approval_reg))]
+      const uniqueGraduatePlan = [...new Set(res.data.data.map(item => item.graduate_plan))]
+
+      setStatusByFac(uniqueStatusByFac)
+      setStatusByRegister(uniqueStatusByReg)
+      setGraduatePlan(uniqueGraduatePlan)
+
+      // console.log(uniqueGraduatePlan);
     });
   };
+
+  function filterData() {
+    // return data.filter(item => item["graduate_year"] === filterValue || item["major"] === filterValue);
+    return data.filter(item => item["approval_fac"]+'FACULTY' === filterValue || item["approval_reg"]+'REGISTER' === filterValue || item["graduate_plan"] === filterValue);
+  }
+
+  // const dummy = [
+  //   {
+  //     name: 'yuhu',
+  //     approvalStatus: 'WAITING',
+  //     otherStatus: 'ACCEPTED',
+  //   }
+  // ]
 
   React.useEffect(() => {
     getData();
   }, []);
 
   return (
-    <Box
-    // p={8}
-    // sx={{
-    //     backgroundColor: 'white',
-    //     borderRadius: 5,
-    //     boxShadow: 3,
-    // }}
-    >
+    <Box>
       <Div
         sx={{
           display: "flex",
@@ -410,7 +390,7 @@ const DaftarCalonTamatan = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
-          Calon Tamatan 
+         Graduate Candidates
         </Typography>
         <FormControl sx={{ minWidth: 200 }} size="small">
           <InputLabel htmlFor="grouped-select">Filter</InputLabel>
@@ -419,8 +399,8 @@ const DaftarCalonTamatan = () => {
             id="grouped-select"
             label="Filter"
             sx={{ borderRadius: 10, maxHeight: "50px" }}
-            // value={filter}
-            // onChange={handleChange}
+            value={filterValue}
+            onChange={(event)=>setFilterValue(event.target.value)}
           >
             <MenuItem value="">
               <em>None</em>
@@ -428,24 +408,23 @@ const DaftarCalonTamatan = () => {
             <ListSubheader sx={{ color: "#192739F0" }}>
               Status by Faculty
             </ListSubheader>
-            <MenuItem value={"f-Approved"}>Approved</MenuItem>
-            <MenuItem value={"f-Waiting"}>Waiting</MenuItem>
-            <MenuItem value={"f-Rejected"}>Rejected</MenuItem>
+            {statusByFac.map(item => { return (
+                <MenuItem value={item+'FACULTY'}>{item}</MenuItem>
+              )})}
+
             <ListSubheader sx={{ color: "#192739F0" }}>
-              Status by Registar
+              Status by Register
             </ListSubheader>
-            <MenuItem value={"r-Approved"}>Approved</MenuItem>
-            <MenuItem value={"r-Waiting"}>Waiting</MenuItem>
-            <MenuItem value={"r-Rejected"}>Rejected</MenuItem>
+            {statusByRegister.map(item => { return (
+                <MenuItem value={item+'REGISTER'}>{item}</MenuItem>
+              )})}
+
             <ListSubheader sx={{ color: "#192739F0" }}>
               Rencana Tamat
             </ListSubheader>
-            <MenuItem value={"Semester I 2023/2024"}>
-              Semester I 2023/2024
-            </MenuItem>
-            <MenuItem value={"Semester II 2023/2024"}>
-              Semester II 2023/2024
-            </MenuItem>
+            {graduatePlan.map(item => { return (
+                <MenuItem value={item}>{item}</MenuItem>
+              )})}
           </Select>
         </FormControl>
       </Div>
@@ -465,19 +444,16 @@ const DaftarCalonTamatan = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data?.map((item, index) => (
+            {filterData().length > 0 ? filterData()
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((item, index) => (
+              <TableItem index={index} item={item} />
+            )) : data.map((item, index) => (
               <TableItem index={index} item={item} />
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-
-      {data? (
-        <Typography>testing: {data?.birth_mother}</Typography>
-      ) : (
-        <Typography>oops</Typography>
-      )}
-      
 
       {/* modal box */}
       {/* <Modal
@@ -503,8 +479,17 @@ const DaftarCalonTamatan = () => {
       {/* below the table Data Calon Tamatan */}
       <Grid container justifyContent="flex-end">
         <Grid item>
-          {/* Content you want to position on the right side */}
-          <Pagination count={10} color="primary" sx={{ marginY: 5 }} />
+          {/* <Pagination count={10} color="primary" sx={{ marginY: 5 }} /> */}
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50, 100]}
+            component={"div"}
+            count={data.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            sx={{marginY:2}}
+          />
         </Grid>
       </Grid>
 
