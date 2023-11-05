@@ -6,6 +6,7 @@ import DaftarPengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarP
 import DaftarPengajuanProposalDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarPengajuanProposalDosenSkripsi";
 import DaftarPengujianProposalAnggotaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianProposalAnggotaPenelis";
 import DaftarPengujianProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianProposalKetuaPenelis";
+import ManajemenKelasDosenSkripsi from "app/pages/ThesisApps/Dosen/ManajemenKelasDosenSkripsi";
 
 const dosenRoutes = [
   {
@@ -39,6 +40,10 @@ const dosenRoutes = [
   {
     path: "/sistem-informasi-skripsi/daftar-pengujian-proposal-anggota",
     element: <Page component={DaftarPengujianProposalAnggotaPenelis} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/manajemen-kelas-dosen-skripsi",
+    element: <Page component={ManajemenKelasDosenSkripsi} />,
   },
 ];
 

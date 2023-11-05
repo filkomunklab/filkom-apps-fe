@@ -30,69 +30,174 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import axios from "axios";
 
 const ManajemenKelasDosenSkripsi = () => {
-  const [open, setOpen] = useState(false);
-  const [academic_id, setAcademicId] = useState("");
-  const [name, setName] = useState("");
-  const [tahunAjaran, setTahunAjaran] = useState("");
-  const [classes, setClasses] = useState([]);
+  // state - kelas
+  const [daftarSemuaKelas, setDaftarSemuaKelas] = useState([]); // menyimpan data semua kelas
+  const [daftarPilihanKelas, setDaftarPilihanKelas] = useState([]); // menyimpan data list kelas
+  // const [kelasId, setKelasId] = useState(); // menyimpan id kelas yang dipilih
   const [selectedClass, setSelectedClass] = useState(null);
-  const [addStudentOpen, setAddStudentOpen] = useState(false);
-  const [students, setStudents] = useState([]);
-  const [kelasMahasiswa, setKelasMahasiswa] = useState([]);
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false); // buka/tutup konfirmasi hapus kelas
+  const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
+  const [confirmDeleteClass, setConfirmDeleteClass] = useState(false);
+  const [addStudentOpen, setAddStudentOpen] = useState(false); // buka/tutup tambah mahasiswa
+  const [searchNIMs, setSearchNIMs] = useState(""); // menyimpan nim yang dimasukkan
+  // const [studentId, setStudentId] = useState(); // menyimpan id student yang dipilih dalam kelas
+  // state - akademik
+  const [daftarAkademik, setDaftarAkademik] = useState([]);
   const [openAkademik, setOpenAkademik] = useState(false);
   const [openAddAkademik, setOpenAddAkademik] = useState(false);
-  const [akademikData, setAkademikData] = useState([]);
+  const [openUpdateAkademik, setOpenUpdateAkademik] = useState(false); // buka/tutup perbarui akademik
+  const [semesterAkademik, setSemesterAkademik] = useState(""); // menyimpan akademik - semester yang akan diperbarui
+  const [tahunAjaranAkademik, setTahunAjaranAkademik] = useState(""); // menyimpan akademik - year yang akan diperbarui
+  const [selectedAkademikData, setSelectedAkademikData] = useState(null); // menyimpan akademik yang akan diperbarui
+  // state - menambah kelas
+  const [open, setOpen] = useState(false); // buka/tutup tambah kelas
+  const [name, setName] = useState(""); // menyimpan kelas - name
+  const [tahunAjaran, setTahunAjaran] = useState(""); // meyimpan kelas - tahun ajaran
+  const [academic_id, setAcademicId] = useState(""); // meyimpan kelas - akademik
 
-  const [semesterAkademik, setSemesterAkademik] = useState("");
-  const [tahunAjaranAkademik, setTahunAjaranAkademik] = useState("");
-  const [addedStudents, setAddedStudents] = React.useState([]);
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  // console.log("token", token);
 
-  const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
+  const fetchDaftarSemuaKelasData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:2000/api/v1/classroom",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Atur state 'setDaftarSemuaKelas' dengan data dari respons
+      setDaftarSemuaKelas(response.data.data);
+      console.log(
+        "Berhasil mengambil daftar semua kelas: ",
+        response.data.data
+      );
+    } catch (error) {
+      console.error(
+        "Terjadi kesalahan saat mengambil daftar semua kelas:",
+        error
+      );
+    }
+  };
+  const fetchDaftarPilihanKelasData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:2000/api/v1/classroom",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Atur state 'setDaftarPilihanKelas' dengan data dari respons
+      setDaftarPilihanKelas(response.data.data);
+      console.log(
+        "Berhasil mengambil daftar pilihan kelas: ",
+        response.data.data
+      );
+    } catch (error) {
+      console.error(
+        "Terjadi kesalahan saat mengambil daftar pilihan kelas:",
+        error
+      );
+    }
+  };
+  const fetchDaftarAkademikData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:2000/api/v1/academic-calendar",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Atur state 'setDaftarAkademik' dengan data dari respons
+      setDaftarAkademik(response.data.data);
+      console.log("Berhasil mengambil daftar akadmik: ", response.data.data);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengambil daftar akademik:", error);
+    }
+  };
+  useEffect(() => {
+    fetchDaftarSemuaKelasData();
+    fetchDaftarPilihanKelasData();
+    fetchDaftarAkademikData();
+  }, [token]);
 
-  function findStudentByNIM(nim) {
-    const student = students.find((student) => student.nim === nim);
-    return student;
-  }
-
-  const handleDeleteStudent = (index) => {
-    const updatedAddedStudents = [...addedStudents];
-    updatedAddedStudents.splice(index, 1);
-    setAddedStudents(updatedAddedStudents);
-
-    const updatedSearchResults = [...searchResults];
-    updatedSearchResults.splice(index, 1);
-    setSearchResults(updatedSearchResults);
+  // fungsi - hapus kelas
+  const handleDeleteClass = () => {
+    if (selectedClass !== null) {
+      // Periksa apakah ada mahasiswa dalam kelas yang akan dihapus
+      const daftarSemuaKelasData = daftarSemuaKelas[selectedClass];
+      if (daftarSemuaKelasData.students.length > 0) {
+        // Jika ada mahasiswa dalam kelas, tampilkan popup konfirmasi
+        setShowDeleteConfirmation(true);
+      } else {
+        axios
+          .delete(
+            `http://localhost:2000/api/v1/classroom/${daftarSemuaKelasData.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((response) => {
+            deleteClass(selectedClass);
+            fetchDaftarSemuaKelasData();
+            fetchDaftarPilihanKelasData();
+            console.log("Kelas berhasil dihapus", response.data);
+          })
+          .catch((error) => {
+            // Handle respons error
+            console.error("Kelas tidak berhasil dihapus: ", error);
+          });
+      }
+    }
   };
 
-  const handleConfirmDeleteClass = () => {
-    const classIndex = selectedClassIndex;
-    const updatedClasses = [...classes];
-    updatedClasses.splice(classIndex, 1);
-    setClasses(updatedClasses);
-    setKelasMahasiswa(
-      kelasMahasiswa.filter((_, index) => index !== classIndex)
-    );
-    setConfirmDeleteClass(false);
+  // fungsi - bersihkan setelah hapus kelas
+  const deleteClass = () => {
+    setSelectedClass(null);
+    setShowDeleteConfirmation(false);
   };
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
+  // fungsi - buka/tutup kelas
+  const handleAccordionClick = (classIndex) => {
+    setSelectedClass(selectedClass === classIndex ? null : classIndex);
+    console.log("Kelas yang dipilih: ", selectedClass);
+  };
+
+  // fungsi - menutup konfirmasi hapus kelas
   const handleCloseDeleteConfirmation = () => {
     // Tutup konfirmasi popup tanpa menghapus kelas
     setOpenDeleteConfirmation(false);
   };
 
+  // fungsi - konfirmasi hapus kelas
+  const handleConfirmDeleteClass = () => {
+    setConfirmDeleteClass(false);
+  };
+
+  // fungsi - membatalkan hapus kelas
+  const handleCancelDelete = () => {
+    setShowDeleteConfirmation(false);
+  };
+
+  // fungsi - menambah mahasiswa
   const handleSearch = () => {
     // Memisahkan NIM yang dimasukkan pengguna berdasarkan spasi
     const nims = searchNIMs.split(" ");
-    const newResults = [];
+    const newStudents = [];
+    newStudents.push(setSelectedClass);
 
     // Loop melalui setiap NIM dan cari informasi mahasiswa
     for (const nim of nims) {
-      const student = findStudentByNIM(nim);
-      if (student) {
-        newResults.push(student);
-      }
+      newStudents.push(nim);
     }
 
     axios
@@ -102,100 +207,97 @@ const ManajemenKelasDosenSkripsi = () => {
         },
       })
       .then((response) => {
-        // Menambahkan hasil pencarian baru ke daftar mahasiswa yang telah ditambahkan
-        setAddedStudents([...addedStudents, ...newResults]);
-
-        // Menggabungkan hasil pencarian baru dengan data yang sudah ada
-        setSearchResults([...searchResults, ...newResults]);
         setAddStudentOpen(false);
         // Mengosongkan input setelah menambahkan mahasiswa
         setSearchNIMs("");
-        console.log("berhasil menambahkan mahasiswa:", response.data);
+        console.log("Mahasiswa berhasil ditambahkan:", response.data);
       })
       .catch((error) => {
-        console.error("Gagal menambahkan mahasiswa");
+        console.error("Mahasiswa gagal ditambahkan", error);
       });
   };
 
-  const [confirmDeleteClass, setConfirmDeleteClass] = useState(false);
-  const [selectedClassIndex, setSelectedClassIndex] = useState(null);
+  // fungsi - menghapus mahasiswa yang dipilih
+  const handleDeleteStudent = (studentId) => {
+    axios
+      .delete(
+        `http://localhost:2000/api/v1/classroom/delete-student/${studentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        deleteClass(selectedClass);
+        console.log("Mahasiswa berhasil dihapus", response.data);
+      })
+      .catch((error) => {
+        // Handle respons error
+        console.error("Mahasiswa gagal dihapus: ", error);
+      });
+  };
 
-  const studentss = [
-    { name: "John Doe", nim: "123456", prodi: "Teknik Informatika" },
-    { name: "Jane Smith", nim: "789012", prodi: "Manajemen Bisnis" },
-    { name: "David Johnson", nim: "654321", prodi: "Akuntansi" },
-    { name: "Mary Brown", nim: "987654", prodi: "Ilmu Komputer" },
-    { name: "Michael Davis", nim: "4567839", prodi: "Manajemen Bisnis" },
-    { name: "Linda Wilson", nim: "5678930", prodi: "Teknik Sipil" },
-    { name: "James Lee", nim: "2345627", prodi: "Ilmu Komputer" },
-    { name: "Patricia Evans", nim: "3456782", prodi: "Teknik Elektro" },
-    { name: "Robert Martinez", nim: "342242", prodi: "Teknik Informatika" },
-    { name: "Jennifer Taylor", nim: "89012342", prodi: "Manajemen Bisnis" },
-    { name: "William Anderson", nim: "7890132", prodi: "Akuntansi" },
-    { name: "Elizabeth Harris", nim: "1234567", prodi: "Ilmu Komputer" },
-    { name: "Joseph Clark", nim: "987654", prodi: "Manajemen Bisnis" },
-    { name: "Mildred White", nim: "234567", prodi: "Teknik Sipil" },
-    { name: "Charles Lewis", nim: "456789", prodi: "Ilmu Komputer" },
-    { name: "Nancy Hall", nim: "345678", prodi: "Teknik Elektro" },
-    { name: "Thomas Young", nim: "5678904", prodi: "Teknik Informatika" },
-    { name: "Karen King", nim: "890123", prodi: "Manajemen Bisnis" },
-    { name: "Mark Adams", nim: "654321", prodi: "Akuntansi" },
-    { name: "Sarah Scott", nim: "567890", prodi: "Ilmu Komputer" },
-  ];
+  // fungsi - membuka Kalender Akademik
+  const handleOpenAkademik = () => {
+    setOpenAkademik(true);
+  };
 
-  const [searchNIMs, setSearchNIMs] = React.useState(""); // State untuk NIM yang dimasukkan pengguna
-  const [searchResults, setSearchResults] = React.useState([]); // State untuk hasil pencarian
+  // fungsi - menutup Kalender Akademik
+  const handleCloseAkademik = () => {
+    setOpenAkademik(false);
+  };
 
-  function findStudentByNIM(nim) {
-    const student = studentss.find((student) => student.nim === nim);
-    return student;
-  }
+  // fungsi - membuka tambah akademik
+  const handleOpenAddAkademik = () => {
+    setOpenAddAkademik(true);
+  };
 
-  // State untuk mengelola data akademik yang sedang diupdate
-  const [selectedAkademikData, setSelectedAkademikData] = useState(null);
-  const [openUpdateAkademik, setOpenUpdateAkademik] = useState(false);
+  // fungsi - menutup tambah akademik
+  const handleCloseAddAkademik = () => {
+    setSemesterAkademik(null);
+    setTahunAjaranAkademik(null);
+    setOpenAddAkademik(false);
+  };
 
-  // Fungsi untuk membuka form update data akademik
-  const handleOpenUpdateAkademik = (data) => {
-    setSelectedAkademikData(data);
-    setSemesterAkademik(data.semester);
-    setTahunAjaranAkademik(data.year);
+  // fungsi - membuka perbarui akademik
+  const handleOpenUpdateAkademik = (akademik) => {
+    setSelectedAkademikData(akademik);
+    setSemesterAkademik(akademik.semester);
+    setTahunAjaranAkademik(akademik.year);
     setOpenUpdateAkademik(true);
   };
 
-  // Fungsi untuk menutup form update data akademik
+  // fungsi - menutup perbarui akademik
   const handleCloseUpdateAkademik = () => {
     setOpenUpdateAkademik(false);
     setSelectedAkademikData(null);
   };
 
-  // Fungsi untuk menghapus data akademik
-  const handleDeleteAkademik = (data) => {
+  // fungsi - menghapus akademik
+  const handleDeleteAkademik = (akademik) => {
     // Melakukan DELETE request ke API
     axios
-      .delete(`http://localhost:2000/api/v1/academic-calendar/${data.id}`, {
+      .delete(`http://localhost:2000/api/v1/academic-calendar/${akademik.id}`, {
         headers: {
-          Authorization: `Bearer ${token}`, //ganti token dengan sesusai
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
         if (response.status === 200) {
-          console.log("Data berhasil dihapus:", data.id);
-          // Memperbarui state setelah penghapusan
-          const updatedAkademikData = akademikData.filter(
-            (item) => item.id !== data.id
-          );
-          setAkademikData(updatedAkademikData);
+          console.log("Akademik berhasil dihapus:", akademik.id);
+          // request data
+          fetchDaftarAkademikData();
         } else {
-          console.log("Gagal menghapus data:", data.id);
+          console.log("Akademik gagal dihapus:", akademik.id);
         }
       })
       .catch((error) => {
-        console.error("Terjadi kesalahan saat menghapus data:", error);
+        console.error("Terjadi kesalahan saat menghapus akademik:", error);
       });
   };
 
-  // Fungsi untuk mengirim permintaan pembaruan (update) data akademik
+  // fungsi - memperbarui akademik
   const handleUpdateAkademik = () => {
     if (selectedAkademikData) {
       const updatedData = {
@@ -215,102 +317,24 @@ const ManajemenKelasDosenSkripsi = () => {
         )
         .then((response) => {
           if (response.status === 200) {
-            console.log("Data berhasil diperbarui:", selectedAkademikData.id);
-            // Update state dengan data yang diperbarui
-            const updatedAkademikData = akademikData.map((item) =>
-              item.id === selectedAkademikData.id
-                ? { ...item, ...updatedData }
-                : item
+            console.log(
+              "Akademik berhasil diperbarui:",
+              selectedAkademikData.id
             );
-            setAkademikData(updatedAkademikData);
+            // request data
+            fetchDaftarAkademikData();
             handleCloseUpdateAkademik();
           } else {
-            console.log("Gagal memperbarui data:", selectedAkademikData.id);
+            console.log("Akademik Gagal diperbarui:", selectedAkademikData.id);
           }
         })
         .catch((error) => {
-          console.error("Terjadi kesalahan saat memperbarui data:", error);
+          console.error("Terjadi kesalahan saat memperbarui akademik:", error);
         });
     }
   };
 
-  const handleOpenAddAkademik = () => {
-    setOpenAddAkademik(true);
-  };
-
-  const handleCloseAddAkademik = () => {
-    setOpenAddAkademik(false);
-  };
-
-  const handleOpenAkademik = () => {
-    setOpenAkademik(true);
-  };
-
-  const handleCloseAkademik = () => {
-    setOpenAkademik(false);
-  };
-
-  const handleOpen = () => {
-    handleClose();
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setAcademicId("");
-    setName("");
-    setTahunAjaran("");
-  };
-
-  // fungsi untuk mendapatkan data GET
-  // token JWT
-  const token = localStorage.getItem("token");
-  console.log("token", token);
-  // const token =
-  //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMmViMzU2ODctYzQxNC00NjM0LWIwMTAtMWI2NGNhYTFiZjI3IiwibmlrIjoiZG9zZW4xIiwibmFtZSI6IkxlY3R1cmVyMSBEb3NlbjEiLCJyb2xlIjpbIkRPU0VOIiwiRE9TRU5fTUsiLCJLQVBST0RJIl19LCJpYXQiOjE2OTg2Mjk3Mzh9.B8r31KdGUmERHhPg03k_o_qEi11A51U8zeITaCJmfeg";
-
-  useEffect(() => {
-    // Fungsi untuk mengambil data akademik
-    const fetchAcademicData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/academic-calendar",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setAkademikData(response.data.data);
-        console.log("Berhasil mengambil data:");
-      } catch (error) {
-        console.error("Gagal mengambil data:", error);
-      }
-    };
-
-    const fetchClassData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/classroom",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setClasses(response.data.data);
-        console.log("Berhasil mengambil data kelas:");
-        console.log(response.data);
-      } catch (error) {
-        console.error("Gagal mengambil data kelas", error);
-      }
-    };
-
-    fetchClassData();
-    fetchAcademicData();
-  }, []);
-
-  // mengirim data POST akademik
+  // fungsi - menambahkan akademik
   const handleCreateAkademik = () => {
     if (semesterAkademik && tahunAjaranAkademik) {
       const newAkademikData = {
@@ -330,10 +354,9 @@ const ManajemenKelasDosenSkripsi = () => {
         )
         .then((response) => {
           if (response.status === 201) {
-            // Jika berhasil menambahkan, tambahkan data baru ke state
-            setAkademikData([...akademikData, response.data.data]);
-            console.log("Berhasil menambahkan data:", response.data);
-
+            console.log("Akademik Berhasil ditambahkan:", response.data);
+            // request data
+            fetchDaftarAkademikData();
             // Reset nilai input
             setSemesterAkademik("");
             setTahunAjaranAkademik("");
@@ -341,15 +364,30 @@ const ManajemenKelasDosenSkripsi = () => {
             // Tutup dialog tambah akademik
             handleCloseAddAkademik();
           } else {
-            console.error("Gagal menambahkan data:", response.data);
+            console.error("Akademik gagal ditambahkan:", response.data);
           }
         })
         .catch((error) => {
-          console.error("Terjadi kesalahan:", error);
+          console.error("Terjadi kesalahan saat menambahkan akademik:", error);
         });
     }
   };
 
+  // fungsi - membuka tambah kelas
+  const handleOpen = () => {
+    handleClose();
+    setOpen(true);
+  };
+
+  // fungsi - menutup tambah kelas
+  const handleClose = () => {
+    setOpen(false);
+    setAcademicId("");
+    setName("");
+    setTahunAjaran("");
+  };
+
+  // fungsi - membuat kelas
   const handleCreateClass = () => {
     const newClass = {
       academic_id,
@@ -364,72 +402,14 @@ const ManajemenKelasDosenSkripsi = () => {
         },
       })
       .then((response) => {
-        // Berhasil membuat kelas di backend, Anda dapat menangani respons di sini
         console.log("Kelas berhasil dibuat:", response.data);
-        setClasses([...classes, newClass]);
+        fetchDaftarSemuaKelasData();
+        fetchDaftarPilihanKelasData();
         handleClose();
-        setKelasMahasiswa([
-          ...kelasMahasiswa,
-          `${academic_id} - Semester ${name}`,
-        ]);
       })
       .catch((error) => {
-        // Penanganan kesalahan jika ada
-        console.error("Gagal membuat kelas:", error);
+        console.error("Kelas Gagal dibuat:", error);
       });
-  };
-
-  const handleAccordionClick = (classIndex) => {
-    setSelectedClass(selectedClass === classIndex ? null : classIndex);
-  };
-
-  const handleUpdateStudent = () => {
-    if (selectedStudent) {
-      const updatedStudents = [...students];
-      const selectedIndex = selectedStudent.selectedIndex;
-      updatedStudents[selectedIndex] = selectedStudent;
-      setStudents(updatedStudents);
-      setSelectedStudent(null);
-    }
-  };
-
-  const handleDeleteClass = () => {
-    if (selectedClass !== null) {
-      // Periksa apakah ada mahasiswa dalam kelas yang akan dihapus
-      const classData = classes[selectedClass];
-      if (classData.students.length > 0) {
-        // Jika ada mahasiswa dalam kelas, tampilkan popup konfirmasi
-        setShowDeleteConfirmation(true);
-      } else {
-        axios
-          .delete(`http://localhost:2000/api/v1/classroom/${classData.id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response) => {
-            // Jika tidak ada mahasiswa dalam kelas, langsung hapus kelas
-            deleteClass(selectedClass);
-            console.log("Kelas berhasil dihapus", response.data);
-          })
-          .catch((error) => {
-            // Handle respons error
-            console.error("Kelas tidak berhasil dihapus: ", error);
-          });
-      }
-    }
-  };
-
-  const deleteClass = (classIndex) => {
-    const updatedClasses = [...classes];
-    updatedClasses.splice(classIndex, 1);
-    setClasses(updatedClasses);
-    setSelectedClass(null);
-    setShowDeleteConfirmation(false);
-  };
-
-  const handleCancelDelete = () => {
-    setShowDeleteConfirmation(false);
   };
 
   return (
@@ -454,18 +434,14 @@ const ManajemenKelasDosenSkripsi = () => {
           }}
         >
           <FormControl sx={{ width: "60%" }}>
-            <InputLabel id="kelas-mahasiswa">Kelas Mahasiswa</InputLabel>
-            <Select
-              labelId="kelas-mahasiswa"
-              label="Kelas Mahasiswa"
-              size="small"
-            >
+            <InputLabel id="kelas">Kelas</InputLabel>
+            <Select labelId="kelas" label="Kelas" size="small">
               <MenuItem value="">
-                <em>None</em>
+                <em>-</em>
               </MenuItem>
-              {kelasMahasiswa.map((item, index) => (
+              {daftarPilihanKelas.map((kelas, index) => (
                 <MenuItem key={index} value={index}>
-                  {item}
+                  {kelas.classroom}
                 </MenuItem>
               ))}
             </Select>
@@ -548,11 +524,11 @@ const ManajemenKelasDosenSkripsi = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {akademikData.map((data, index) => (
+                    {daftarAkademik.map((akademik, index) => (
                       <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
-                        <TableCell>{data.semester}</TableCell>
-                        <TableCell>{data.year}</TableCell>
+                        <TableCell>{akademik.semester}</TableCell>
+                        <TableCell>{akademik.year}</TableCell>
                         <TableCell>
                           <Div
                             sx={{ display: "flex", justifyContent: "center" }}
@@ -564,9 +540,9 @@ const ManajemenKelasDosenSkripsi = () => {
                                 color: "blue",
                                 fontSize: "14px",
                               }}
-                              onClick={() => handleOpenUpdateAkademik(data)}
+                              onClick={() => handleOpenUpdateAkademik(akademik)}
                             >
-                              Update
+                              Perbarui
                             </span>
                             <Div
                               style={{
@@ -583,7 +559,7 @@ const ManajemenKelasDosenSkripsi = () => {
                                 color: "red",
                                 fontSize: "14px",
                               }}
-                              onClick={() => handleDeleteAkademik(data)}
+                              onClick={() => handleDeleteAkademik(akademik)}
                             >
                               Hapus
                             </span>
@@ -604,7 +580,7 @@ const ManajemenKelasDosenSkripsi = () => {
                           background: "rgba(26, 56, 96, 0.10)",
                         }}
                       >
-                        Update Akademik Data
+                        Perbarui Akademik Kalender
                       </DialogTitle>
                       <DialogContent
                         sx={{
@@ -637,6 +613,7 @@ const ManajemenKelasDosenSkripsi = () => {
                             setTahunAjaranAkademik(e.target.value)
                           }
                           label="Masukan Tahun Ajaran"
+                          placeholder="Contoh: 2023/2024"
                           fullWidth
                         />
                       </DialogContent>
@@ -724,7 +701,8 @@ const ManajemenKelasDosenSkripsi = () => {
               <TextField
                 onChange={(e) => setTahunAjaranAkademik(e.target.value)}
                 value={tahunAjaranAkademik}
-                label="Masukan Tahun Ajaran"
+                label="Tahun Ajaran"
+                placeholder="Contoh: 2023/2024"
                 fullWidth
               />
             </DialogContent>
@@ -807,7 +785,7 @@ const ManajemenKelasDosenSkripsi = () => {
                 onChange={(e) => setAcademicId(e.target.value)}
                 label="Semester"
               >
-                {akademikData.map((semesterData) => (
+                {daftarAkademik.map((semesterData) => (
                   <MenuItem
                     key={semesterData.id} // Sesuaikan dengan kunci yang sesuai di data Anda
                     value={semesterData.id}
@@ -845,7 +823,7 @@ const ManajemenKelasDosenSkripsi = () => {
         </Dialog>
         {/* popup membuat kelas end */}
       </Div>
-      {classes.map((classData, index) => (
+      {daftarSemuaKelas.map((classroomData, index) => (
         <Accordion
           key={index}
           expanded={selectedClass === index}
@@ -854,8 +832,7 @@ const ManajemenKelasDosenSkripsi = () => {
         >
           <AccordionSummary>
             <div>
-              <Typography variant="h2">{classData.name}</Typography>
-              <Typography>{`Semester ${classData.semester} ${classData.year}`}</Typography>
+              <Typography variant="h2">{classroomData.classroom}</Typography>
             </div>
           </AccordionSummary>
 
@@ -928,12 +905,12 @@ const ManajemenKelasDosenSkripsi = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {searchResults.map((student, index) => (
+                  {classroomData.students.map((student, index) => (
                     <TableRow key={index}>
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell>{student.name}</TableCell>
+                      <TableCell>{student.fullName}</TableCell>
                       <TableCell>{student.nim}</TableCell>
-                      <TableCell>{student.prodi}</TableCell>
+                      <TableCell>{student.major}</TableCell>
                       <TableCell>
                         <span
                           style={{
@@ -942,7 +919,7 @@ const ManajemenKelasDosenSkripsi = () => {
                             color: "red",
                             fontSize: "14px",
                           }}
-                          onClick={() => handleDeleteStudent(index)}
+                          onClick={() => handleDeleteStudent(student.id)}
                         >
                           Hapus
                         </span>
@@ -977,88 +954,6 @@ const ManajemenKelasDosenSkripsi = () => {
           </DialogActions>
         </Dialog>
       )}
-
-      {/* edit mahasiswa */}
-      <Dialog
-        open={selectedStudent !== null}
-        onClose={() => setSelectedStudent(null)}
-        fullWidth
-        maxWidth="sm"
-      >
-        <DialogTitle
-          variant="subtitle2"
-          sx={{ textAlign: "center", background: "rgba(26, 56, 96, 0.10)" }}
-        >
-          Edit Mahasiswa
-        </DialogTitle>
-        <DialogContent
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "25px",
-          }}
-        >
-          <TextField
-            label="Nama Mahasiswa"
-            value={selectedStudent ? selectedStudent.name : ""}
-            onChange={(e) =>
-              setSelectedStudent({
-                ...selectedStudent,
-                name: e.target.value,
-              })
-            }
-            fullWidth
-            sx={{ marginTop: "25px" }}
-          />
-          <TextField
-            label="NIM"
-            value={selectedStudent ? selectedStudent.nim : ""}
-            onChange={(e) =>
-              setSelectedStudent({
-                ...selectedStudent,
-                nim: e.target.value,
-              })
-            }
-            fullWidth
-          />
-          <TextField
-            label="Program Studi"
-            value={selectedStudent ? selectedStudent.prodi : ""}
-            onChange={(e) =>
-              setSelectedStudent({
-                ...selectedStudent,
-                prodi: e.target.value,
-              })
-            }
-            fullWidth
-          />
-        </DialogContent>
-        <DialogActions sx={{ background: "#F5F5F5" }}>
-          <Button
-            size="small"
-            onClick={() => setSelectedStudent(null)}
-            color="primary"
-            sx={{
-              background: "white",
-              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-              textTransform: "none",
-              color: "black",
-            }}
-          >
-            Batal
-          </Button>
-          <Button
-            size="small"
-            variant="contained"
-            color="primary"
-            sx={{ textTransform: "none" }}
-            onClick={handleUpdateStudent}
-          >
-            Simpan
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       {/* tambah mahasiswa */}
       <Dialog
