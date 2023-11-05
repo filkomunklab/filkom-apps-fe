@@ -69,6 +69,7 @@ const MenuPenguji = () => {
                 </Button>
               </Link>
             </Div>
+            {/* Dosen Penguji */}
             <Div
               hidden={
                 role.includes("KETUA_PANALIS", "ANGGOTA_PANALIS") ? false : true
@@ -93,6 +94,7 @@ const MenuPenguji = () => {
             </Div>
           </Div>
           <Div sx={{ margin: "auto" }}>
+            {/* Dosen skripsi */}
             <Div hidden={role.includes("DOSEN") ? false : true}>
               <Link to="/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/pengajuan-judul">
                 <Button
@@ -113,22 +115,24 @@ const MenuPenguji = () => {
             </Div>
           </Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/konsultasi">
-              <Button
-                sx={{
-                  // width: "130px",
-                  fontSize: "13px",
-                  fontWeight: 500,
-                  color: "#192434",
-                  textTransform: "none",
-                  "&:hover": {
-                    color: "#006AF5",
-                  },
-                }}
-              >
-                Konsultasi
-              </Button>
-            </Link>
+            <Div hidden={role.includes("ADVISOR", "CO_ADVISOR") ? false : true}>
+              <Link to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/konsultasi">
+                <Button
+                  sx={{
+                    // width: "130px",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Konsultasi
+                </Button>
+              </Link>
+            </Div>
           </Div>
           <Div
             sx={{
