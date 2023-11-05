@@ -412,18 +412,42 @@ const DaftarPengajuanJudulDosenSkripsi = () => {
                           </TableCell>
                           <TableCell sx={{ fontSize: "13px" }}>
                             {submission.is_consultation ? (
-                              <Chip label={"Sudah"} />
+                              <Chip
+                                label={"Sudah"}
+                                sx={{
+                                  background: "rgba(21, 131, 67, 0.10)",
+                                  color: "#0A7637",
+                                }}
+                              />
                             ) : (
                               <Chip label={"Belum"} />
                             )}
                           </TableCell>
                           <TableCell sx={{ fontSize: "13px" }}>
                             {submission.is_approve === "Waiting" ? (
-                              <Chip label={"Mengunggu"} />
+                              <Chip
+                                label={"Mengunggu"}
+                                sx={{
+                                  background: "rgba(255, 204, 0, 0.10)",
+                                  color: "#985211",
+                                }}
+                              />
                             ) : submission.is_approve === "Approve" ? (
-                              <Chip label={"Diterima"} />
+                              <Chip
+                                label={"Diterima"}
+                                sx={{
+                                  background: "rgba(21, 131, 67, 0.10)",
+                                  color: "#0A7637",
+                                }}
+                              />
                             ) : submission.is_approve === "Rejected" ? (
-                              <Chip label={"Ditolak"} />
+                              <Chip
+                                label={"Ditolak"}
+                                sx={{
+                                  background: "rgba(226, 29, 18, 0.10)",
+                                  color: "#CA150C",
+                                }}
+                              />
                             ) : (
                               submission.is_approve
                             )}

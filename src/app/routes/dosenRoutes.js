@@ -1,7 +1,7 @@
 import Page from "@jumbo/shared/Page";
 
 // import DaftarDosen from "app/pages/ThesisApps/Dosen/DaftarDosen";
-import DaftarPengajuanJudulDosen from "app/pages/ThesisApps/Dosen/DaftarPengajuanJudulDosen";
+import DaftarKomiteJudulDosen from "app/pages/ThesisApps/Dosen/DaftarKomiteJudulDosen";
 import MengisiBeritaAcaraProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/MengisiBeritaAcaraProposalKetuaPenelis";
 
 const dosenRoutes = [
@@ -13,7 +13,7 @@ const dosenRoutes = [
   },
   {
     path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen",
-    element: <Page component={DaftarPengajuanJudulDosen} />,
+    element: <Page component={DaftarKomiteJudulDosen} />,
   },
   // {
   //   path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen/pengajuan-judul",

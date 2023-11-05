@@ -58,40 +58,6 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
     fetchDaftarPengajuanProposalData();
   }, [token]);
 
-  const TableItem = ({ index }) => {
-    return (
-      <TableRow key={index}>
-        <TableCell sx={{ fontSize: "13px" }}>{index + 1}</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>Geovalga Fransiscus Lim</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>
-          SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
-          UNIVERSITAS KLABAT
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Typography
-            component={Link}
-            to="/halaman-berikutnya"
-            sx={{
-              textDecoration: "none",
-              color: "blue",
-            }}
-          >
-            View
-          </Typography>
-        </TableCell>
-      </TableRow>
-    );
-  };
-
   return (
     <Div>
       {/* Dashboard Start */}

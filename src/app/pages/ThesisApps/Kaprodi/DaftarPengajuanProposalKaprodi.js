@@ -12,19 +12,22 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
-import EventAvailableIcon from "@mui/icons-material/EventAvailable";
-import EventBusyIcon from "@mui/icons-material/EventBusy";
 
-const DaftarPengajuanProposalSekertaris = () => {
+const DaftarPengajuanProposalKaprodi = () => {
   const [daftarPengajuanProposal, setDaftarPengajuanProposal] = useState({
     dashboard: {
       total_group: 0,
-      ready: 0,
-      not_ready: 0,
-      have_schedule: 0,
-      not_schedule: 0,
+      not_defence: 0,
+      has_defence: 0,
+      pass: 0,
+      repeat: 0,
+      not_pass: 0,
     },
     semesterData: [],
   });
@@ -37,7 +40,7 @@ const DaftarPengajuanProposalSekertaris = () => {
     const fetchDaftarPengajuanProposalData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/proposal-list-sekretaris",
+          "http://localhost:2000/api/v1/group/proposal-list-kaprodi",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -48,7 +51,7 @@ const DaftarPengajuanProposalSekertaris = () => {
         setDaftarPengajuanProposal(response.data.data);
       } catch (error) {
         console.error(
-          "Terjadi kesalahan saat mengambil daftar bimbingan proposal:",
+          "Terjadi kesalahan saat mengambil daftar pengajuan:",
           error
         );
       }
@@ -58,7 +61,7 @@ const DaftarPengajuanProposalSekertaris = () => {
 
   return (
     <Div>
-      {/* Dashboard Start 1 */}
+      {/* Dashboard 1 Start */}
       <Div
         sx={{
           display: "flex",
@@ -108,7 +111,7 @@ const DaftarPengajuanProposalSekertaris = () => {
             </Typography>
           </Div>
         </Div>
-        {/* Belum Mengajukan Proposal */}
+        {/* Belum Maju Sidang */}
         <Div
           sx={{
             display: "flex",
@@ -121,9 +124,7 @@ const DaftarPengajuanProposalSekertaris = () => {
             textItem: "center",
           }}
         >
-          <PeopleIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <EditIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -134,7 +135,7 @@ const DaftarPengajuanProposalSekertaris = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Siap Sidang
+              Belum Maju Sidang
             </Typography>
             <Typography
               sx={{
@@ -144,11 +145,11 @@ const DaftarPengajuanProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.ready} Kelompok
+              {daftarPengajuanProposal.dashboard.not_defence} Kelompok
             </Typography>
           </Div>
         </Div>
-        {/* Sudah Mengajukan Proposal */}
+        {/* Sudah Maju Sidang */}
         <Div
           sx={{
             display: "flex",
@@ -161,7 +162,7 @@ const DaftarPengajuanProposalSekertaris = () => {
             textItem: "center",
           }}
         >
-          <PeopleIcon
+          <ArrowUpwardIcon
             sx={{ width: "35px", height: "35px", color: "#006AF5" }}
           />
           <Div>
@@ -174,7 +175,7 @@ const DaftarPengajuanProposalSekertaris = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Belum Siap Sidang
+              Sudah Maju Sidang
             </Typography>
             <Typography
               sx={{
@@ -184,13 +185,13 @@ const DaftarPengajuanProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.not_ready} Kelompok
+              {daftarPengajuanProposal.dashboard.has_defence} Kelompok
             </Typography>
           </Div>
         </Div>
       </Div>
-      {/* Dashboard End 1*/}
-      {/* Dashboard Start 2*/}
+      {/* Dashboard 1 End */}
+      {/* Dashboard 2 Start */}
       <Div
         sx={{
           display: "flex",
@@ -200,7 +201,7 @@ const DaftarPengajuanProposalSekertaris = () => {
           gap: "20px",
         }}
       >
-        {/* Jumlah bimbingan */}
+        {/* Lulus */}
         <Div
           sx={{
             display: "flex",
@@ -213,7 +214,7 @@ const DaftarPengajuanProposalSekertaris = () => {
             textItem: "center",
           }}
         >
-          <EventAvailableIcon
+          <PeopleIcon
             sx={{ width: "35px", height: "35px", color: "#006AF5" }}
           />
           <Div>
@@ -226,7 +227,7 @@ const DaftarPengajuanProposalSekertaris = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Sudah Ada Jadwal
+              Lulus
             </Typography>
             <Typography
               sx={{
@@ -236,11 +237,11 @@ const DaftarPengajuanProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.have_schedule} Kelompok
+              {daftarPengajuanProposal.dashboard.pass} Kelompok
             </Typography>
           </Div>
         </Div>
-        {/* Belum Mengajukan Proposal */}
+        {/* Mengulang */}
         <Div
           sx={{
             display: "flex",
@@ -253,7 +254,45 @@ const DaftarPengajuanProposalSekertaris = () => {
             textItem: "center",
           }}
         >
-          <EventBusyIcon
+          <EditIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
+          <Div>
+            <Typography
+              sx={{
+                fontSize: "10px",
+                fontStyle: "normal",
+                fontWeight: 400,
+                lineHeight: "20px",
+                color: "rgba(28, 48, 74, 0.52)",
+              }}
+            >
+              Mengulang
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: "18px",
+                fontStyle: "normal",
+                fontWeight: 700,
+                lineHeight: "32px",
+              }}
+            >
+              {daftarPengajuanProposal.dashboard.repeat} Kelompok
+            </Typography>
+          </Div>
+        </Div>
+        {/* Tidak Lulus */}
+        <Div
+          sx={{
+            display: "flex",
+            width: "100%",
+            padding: "10px",
+            alignItems: "center",
+            gap: "20px",
+            background: "rgba(26, 56, 96, 0.10)",
+            borderRadius: "10px",
+            textItem: "center",
+          }}
+        >
+          <ArrowUpwardIcon
             sx={{ width: "35px", height: "35px", color: "#006AF5" }}
           />
           <Div>
@@ -266,7 +305,7 @@ const DaftarPengajuanProposalSekertaris = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Belum Ada Jadwal
+              Tidak Lulus
             </Typography>
             <Typography
               sx={{
@@ -276,12 +315,12 @@ const DaftarPengajuanProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.not_schedule} Kelompok
+              {daftarPengajuanProposal.dashboard.not_pass} Kelompok
             </Typography>
           </Div>
         </Div>
       </Div>
-      {/* Dasboard 2 End */}
+      {/* Dashboard 1 End */}
 
       {/* Table Master Start */}
       <Div
@@ -317,7 +356,7 @@ const DaftarPengajuanProposalSekertaris = () => {
               lineHeight: "32px",
             }}
           >
-            Daftar Pengajuan Proposal
+            Daftar Bimbingan Proposal
           </Typography>
           <Div
             sx={{
@@ -374,15 +413,7 @@ const DaftarPengajuanProposalSekertaris = () => {
                         Mahasiswa
                       </TableCell>
                       <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Dokumen Proposal
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Pembayaran
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Cek Plagiat
-                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Status</TableCell>
                       <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
                     </TableRow>
                   </TableHead>
@@ -397,52 +428,39 @@ const DaftarPengajuanProposalSekertaris = () => {
                             <div key={student.id}>{student.fullName}</div>
                           ))}
                         </TableCell>
+
                         <TableCell sx={{ fontSize: "13px" }}>
                           {proposal.title}
                         </TableCell>
                         <TableCell sx={{ fontSize: "13px" }}>
-                          {proposal.proposal_status === false ? (
+                          {proposal.is_pass === null ? (
                             <Chip label={"Belum"} />
-                          ) : proposal.proposal_status === true ? (
+                          ) : proposal.is_pass === "Repeat" ? (
                             <Chip
-                              label={"Sudah"}
+                              label={"Mengulang"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : proposal.is_pass === "Pass" ? (
+                            <Chip
+                              label={"Lulus"}
                               sx={{
                                 background: "rgba(21, 131, 67, 0.10)",
                                 color: "#0A7637",
                               }}
                             />
-                          ) : (
-                            proposal.proposal_status
-                          )}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {proposal.paymant_status === false ? (
-                            <Chip label={"Belum"} />
-                          ) : proposal.paymant_status === true ? (
+                          ) : proposal.is_pass === "Fail" ? (
                             <Chip
-                              label={"Sudah"}
+                              label={"Ditolak"}
                               sx={{
-                                background: "rgba(21, 131, 67, 0.10)",
-                                color: "#0A7637",
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
                               }}
                             />
                           ) : (
-                            proposal.paymant_status
-                          )}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {proposal.plagiarism === false ? (
-                            <Chip label={"Belum"} />
-                          ) : proposal.plagiarism === true ? (
-                            <Chip
-                              label={"Sudah"}
-                              sx={{
-                                background: "rgba(21, 131, 67, 0.10)",
-                                color: "#0A7637",
-                              }}
-                            />
-                          ) : (
-                            proposal.plagiarism
+                            proposal.is_pass
                           )}
                         </TableCell>
                         <TableCell>
@@ -462,14 +480,14 @@ const DaftarPengajuanProposalSekertaris = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* Table Mahasiswa Proposal End */}
             </div>
           )
         )}
+        {/* Table Mahasiswa Proposal End */}
       </Div>
       {/* Table Master End */}
     </Div>
   );
 };
 
-export default DaftarPengajuanProposalSekertaris;
+export default DaftarPengajuanProposalKaprodi;

@@ -16,6 +16,10 @@ import anggotaPenelisRoutes from "./anggotaPenelisRoutes";
 import dosenPembimbingRoutes from "./BA-dosenPembimbingRoutes";
 import dekanRoutes from "./BA-dekanRoutes";
 import kepalaProgramStudiRoutes from "./BA-kepalaProgramStudiRoutes";
+import skripsiAppDekanRoutes from "./skripsi_app_dekan_routes";
+import skripsiAppKaprodiRoutes from "./skripsi_app_kaprodi_routes";
+import skripsiAppDosenRoutes from "./skripsi_app_dosen_routes";
+import skripsiAppSekretarisRoutes from "./skripsi_app_sekretaris_routes";
 /**
  routes which you want to make accessible to both authenticated and anonymous users
  **/
@@ -34,8 +38,8 @@ const routesForAuthenticatedOnly = [
   },
   ...mahasiswaRoutes,
   ...operatorRoutes,
-  ...dosenRoutes,
-  ...sekertarisRoutes,
+  // ...dosenRoutes,
+  // ...sekertarisRoutes,
   ...advisorRoutes,
   ...coAdvisorRoutes,
   ...dosenSkripsiRoutes,
@@ -46,6 +50,10 @@ const routesForAuthenticatedOnly = [
   ...dekanRoutes,
   ...kepalaProgramStudiRoutes,
   //...operatorRoutes,
+  ...skripsiAppDekanRoutes,
+  ...skripsiAppKaprodiRoutes,
+  ...skripsiAppDosenRoutes,
+  ...skripsiAppSekretarisRoutes,
 ];
 
 /**
