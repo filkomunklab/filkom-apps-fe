@@ -10,11 +10,17 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
+import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import React from "react";
 
 const BerandaProposalMahasiswa = () => {
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log(role);
+
   return (
     <Div>
       <Div
@@ -55,7 +61,6 @@ const BerandaProposalMahasiswa = () => {
           <Riwayatlog />
         </Div>
         {/* Element 1 End */}
-
         {/* Element 2 Start */}
         <Div
           sx={{
@@ -68,12 +73,43 @@ const BerandaProposalMahasiswa = () => {
             borderRadius: "8px",
           }}
         >
-          {/* Menu Horizontal Start */}
-          <Div sx={{ width: "100%" }}>
+          {/* Menu Horizontal Mahasiswa Start */}
+          <Div
+            hidden={role.includes("MAHASISWA") ? false : true}
+            sx={{ width: "100%" }}
+          >
             <MenuMahasiswa />
           </Div>
-          {/* Menu horizontal End */}
-
+          {/* Menu horizontal MahasiswaEnd */}
+          {/* Menu Horizontal Dosen Start */}
+          <Div
+            hidden={
+              role.includes(
+                "DOSEN",
+                "ADVISOR",
+                "CO_ADVISOR",
+                "DOSEN_SKRIPSI",
+                "KETUA_PANALIS",
+                "ANGGOTA_PANALIS",
+                "KAPRODI",
+                "DEKAN"
+              )
+                ? false
+                : true
+            }
+            sx={{ width: "100%" }}
+          >
+            <MenuPenguji />
+          </Div>
+          {/* Menu horizontal Dosen End */}
+          {/* Menu Horizontal Dosen Start */}
+          <Div
+            hidden={role.includes("SEKERTARIS") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuSekertaris />
+          </Div>
+          {/* Menu horizontal Dosen End */}
           <Div
             sx={{
               display: "flex",

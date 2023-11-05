@@ -17,45 +17,12 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { pdfjs } from "react-pdf";
 import WarningIcon from "@mui/icons-material/Warning";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-
-// View Document Proposal
-const PDFViewerRevisiProposal = ({ RevisiProposalFile }) => {
-  const viewPDFRevisiProposal = () => {
-    // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(RevisiProposalFile);
-
-    // Buka tautan dalam tab atau jendela baru
-    window.open(pdfURL, "_blank");
-  };
-
-  return (
-    <div>
-      <span sx={{ fontSize: "10px" }} onClick={viewPDFRevisiProposal}>
-        View
-      </span>
-    </div>
-  );
-};
-
 const DocumentRevisiProposalAdvisor = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const [anchorE2, setAnchorE2] = React.useState(null);
-  const open2 = Boolean(anchorE2);
-
   // state untuk Upload RevisiProposal
-  const [RevisiProposalUploadedFiles, setRevisiProposalUploadedFiles] =
-    useState([]);
-  const [selectedRevisiProposalFileName, setSelectedRevisiProposalFileName] =
-    useState("");
-  const [RevisiProposalFile, setRevisiProposalFile] = useState(null);
 
   const [isSetujuClicked, setIsSetujuClicked] = useState(false);
   const [isTolakClicked, setIsTolakClicked] = useState(false);
@@ -94,6 +61,10 @@ const DocumentRevisiProposalAdvisor = () => {
       setIsTolakClicked(true);
     }
   };
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log(role);
 
   return (
     <Div>
@@ -135,7 +106,6 @@ const DocumentRevisiProposalAdvisor = () => {
           <Riwayatlog />
         </Div>
         {/* Element 1 End */}
-
         {/* Element 2 Start */}
         <Div
           sx={{
@@ -424,16 +394,28 @@ const DocumentRevisiProposalAdvisor = () => {
                       >
                         Advisor
                       </TableCell>
-                      <TableCell
-                        sx={{
-                          fontSize: "12px",
-                          padding: "11px",
-                          textAlign: "center",
-                          width: "12%",
-                        }}
+                      <Div
+                        hidden={
+                          role.includes(
+                            "ADVISOR",
+                            "KETUA_PANALIS",
+                            "ANGGOTA_PANALIS"
+                          )
+                            ? false
+                            : true
+                        }
                       >
-                        Action
-                      </TableCell>
+                        <TableCell
+                          sx={{
+                            fontSize: "12px",
+                            padding: "11px",
+                            textAlign: "center",
+                            width: "12%",
+                          }}
+                        >
+                          Action
+                        </TableCell>
+                      </Div>
                     </TableRow>
                   </TableHead>
 
@@ -505,82 +487,96 @@ const DocumentRevisiProposalAdvisor = () => {
                           />
                         )}
                       </TableCell>
-                      <TableCell>
-                        <Div sx={{ display: "flex", flexDirection: "column" }}>
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
-                              fontSize: "12px",
-                              borderBottom: "1px solid #000",
-                              padding: "5px 0",
-                            }}
+                      <Div
+                        hidden={
+                          role.includes(
+                            "ADVISOR",
+                            "KETUA_PANALIS",
+                            "ANGGOTA_PANALIS"
+                          )
+                            ? false
+                            : true
+                        }
+                      >
+                        <TableCell>
+                          <Div
+                            sx={{ display: "flex", flexDirection: "column" }}
                           >
-                            View
-                          </span>
-                          {isSetujuClicked || isTolakClicked ? (
                             <span
                               style={{
                                 textDecoration: "none",
-                                cursor: "not-allowed",
-                                color: "gray",
+                                cursor: "pointer",
+                                color: "blue",
                                 fontSize: "12px",
                                 borderBottom: "1px solid #000",
                                 padding: "5px 0",
                               }}
                             >
-                              Setuju
+                              View
                             </span>
-                          ) : (
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "green",
-                                fontSize: "12px",
-                                borderBottom: "1px solid #000",
-                                padding: "5px 0",
-                              }}
-                              onClick={() => {
-                                setSelectedActionIndex(1);
-                                setSetujuConfirmationDialogOpen(true);
-                              }}
-                            >
-                              Setuju
-                            </span>
-                          )}
-                          {isSetujuClicked || isTolakClicked ? (
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "not-allowed",
-                                color: "gray",
-                                fontSize: "12px",
-                                marginTop: "5px",
-                              }}
-                            >
-                              Tolak
-                            </span>
-                          ) : (
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
-                                fontSize: "12px",
-                                marginTop: "5px",
-                              }}
-                              onClick={() => {
-                                setSelectedActionIndex(2);
-                                setTolakConfirmationDialogOpen(true);
-                              }}
-                            >
-                              Tolak
-                            </span>
-                          )}
-                        </Div>
-                      </TableCell>
+                            {isSetujuClicked || isTolakClicked ? (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "not-allowed",
+                                  color: "gray",
+                                  fontSize: "12px",
+                                  borderBottom: "1px solid #000",
+                                  padding: "5px 0",
+                                }}
+                              >
+                                Setuju
+                              </span>
+                            ) : (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "green",
+                                  fontSize: "12px",
+                                  borderBottom: "1px solid #000",
+                                  padding: "5px 0",
+                                }}
+                                onClick={() => {
+                                  setSelectedActionIndex(1);
+                                  setSetujuConfirmationDialogOpen(true);
+                                }}
+                              >
+                                Setuju
+                              </span>
+                            )}
+                            {isSetujuClicked || isTolakClicked ? (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "not-allowed",
+                                  color: "gray",
+                                  fontSize: "12px",
+                                  marginTop: "5px",
+                                }}
+                              >
+                                Tolak
+                              </span>
+                            ) : (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "red",
+                                  fontSize: "12px",
+                                  marginTop: "5px",
+                                }}
+                                onClick={() => {
+                                  setSelectedActionIndex(2);
+                                  setTolakConfirmationDialogOpen(true);
+                                }}
+                              >
+                                Tolak
+                              </span>
+                            )}
+                          </Div>
+                        </TableCell>
+                      </Div>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -592,7 +588,6 @@ const DocumentRevisiProposalAdvisor = () => {
           {/* Element 2 End */}
         </Div>
       </Div>
-
       {/* popup konfirmasi setuju */}
       <Dialog
         open={setujuConfirmationDialogOpen}
@@ -641,7 +636,6 @@ const DocumentRevisiProposalAdvisor = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
       {/* popup konfirmasi tolak */}
       <Dialog
         open={tolakConfirmationDialogOpen}

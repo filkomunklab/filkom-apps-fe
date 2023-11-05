@@ -22,24 +22,79 @@ import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 
 const DocumentPersetujuanDosenPembimbing = () => {
+  // Advisor setuju dan tolak
   const [isSetujuClicked, setIsSetujuClicked] = useState(false);
   const [isTolakClicked, setIsTolakClicked] = useState(false);
-
   const [isSetujuDisabled, setIsSetujuDisabled] = useState(false);
   const [isTolakDisabled, setIsTolakDisabled] = useState(false);
 
-  // menggubah statu Advisor setuju atau tolak
+  // coAdvisor1 setuju dan tolak
+  const [isSetujuClickedCoAdvisor1, setIsSetujuClickedCoAdvisor1] =
+    useState(false);
+  const [isTolakClickedCoAdvisor1, setIsTolakClickedCoAdvisor1] =
+    useState(false);
+  const [isSetujuDisabledCoAdvisor1, setIsSetujuDisabledCoAdvisor1] =
+    useState(false);
+  const [isTolakDisabledCoAdvisor1, setIsTolakDisabledCoAdvisor1] =
+    useState(false);
+
+  // coAdvisor12 setuju dan tolak
+  const [isSetujuClickedCoAdvisor2, setIsSetujuClickedCoAdvisor2] =
+    useState(false);
+  const [isTolakClickedCoAdvisor2, setIsTolakClickedCoAdvisor2] =
+    useState(false);
+  const [isSetujuDisabledCoAdvisor2, setIsSetujuDisabledCoAdvisor2] =
+    useState(false);
+  const [isTolakDisabledCoAdvisor2, setIsTolakDisabledCoAdvisor2] =
+    useState(false);
+
+  // menggubah statu Advisor dan co_advisor setuju atau tolak
   const [advisorStatus, setAdvisorStatus] = useState([]);
+  const [coAdvisor1Status, setCoAdvisor1Status] = useState([]);
+  const [coAdvisor2Status, setCoAdvisor2Status] = useState([]);
   const [selectedRevisiProposalIndex, setSelectedRevisiProposalIndex] =
     useState(null);
+  const [
+    selectedRevisiProposalIndexCoAdvisor1,
+    setSelectedRevisiProposalIndexCoAdvisor1,
+  ] = useState(null);
+  const [
+    selectedRevisiProposalIndexCoAdvisor2,
+    setSelectedRevisiProposalIndexCoAdvisor2,
+  ] = useState(null);
 
-  // popup konfirmasi setuju dan tolak
+  // popup konfirmasi setuju dan tolak advisor
   const [setujuConfirmationDialogOpen, setSetujuConfirmationDialogOpen] =
     useState(false);
   const [tolakConfirmationDialogOpen, setTolakConfirmationDialogOpen] =
     useState(false);
   const [selectedActionIndex, setSelectedActionIndex] = useState(null);
 
+  // popup konfirmasi setuju dan tolak Coadvisor 1
+  const [
+    setujuConfirmationDialogOpenCoAdvisor1,
+    setSetujuConfirmationDialogOpenCoAdvisor1,
+  ] = useState(false);
+  const [
+    tolakConfirmationDialogOpenCoAdvisor1,
+    setTolakConfirmationDialogOpenCoAdvisor1,
+  ] = useState(false);
+  const [selectedActionIndexCoAdvisor1, setSelectedActionIndexCoAdvisor1] =
+    useState(null);
+
+  // popup konfirmasi setuju dan tolak Coadvisor 2
+  const [
+    setujuConfirmationDialogOpenCoAdvisor2,
+    setSetujuConfirmationDialogOpenCoAdvisor2,
+  ] = useState(false);
+  const [
+    tolakConfirmationDialogOpenCoAdvisor2,
+    setTolakConfirmationDialogOpenCoAdvisor2,
+  ] = useState(false);
+  const [selectedActionIndexCoAdvisor2, setSelectedActionIndexCoAdvisor2] =
+    useState(null);
+
+  //status setuju dan tolak Advisor
   const handleActionClick = (index, status) => {
     // Memeriksa apakah tindakan tersebut sudah dilakukan
     if (
@@ -59,24 +114,48 @@ const DocumentPersetujuanDosenPembimbing = () => {
       setIsTolakClicked(true);
     }
   };
-  // Fungsi untuk menghasilkan data palsu
-  const generateTableData = () => {
-    const data = [
-      {
-        nomor: 1,
-        namaFile: "Pengembangan sistem informasi di fakultasi ilmu komputer",
-        tanggal: "2023-10-25",
-        ukuran: "214134 kb",
-        advisor: "Diterima",
-        coAdvisor1: "Diterima",
-        coAdvisor2: "Diterima",
-      },
-    ];
-    return data;
+
+  //status setuju dan tolak CoAdvisor 1
+  const handleActionClickCoAdvisor1 = (index, status) => {
+    // Memeriksa apakah tindakan tersebut sudah dilakukan
+    if (
+      (status === "Setuju" && isSetujuClickedCoAdvisor1) ||
+      (status === "Tolak" && isTolakClickedCoAdvisor1)
+    ) {
+      // Jika sudah dilakukan, tidak melakukan apa-apa
+      return;
+    }
+
+    setSelectedRevisiProposalIndexCoAdvisor1(index);
+    setCoAdvisor1Status(status);
+
+    if (status === "Setuju") {
+      setIsSetujuClickedCoAdvisor1(true);
+    } else if (status === "Tolak") {
+      setIsTolakClickedCoAdvisor1(true);
+    }
   };
 
-  // Fungsi komponen untuk membuat isi dari TableBody
-  const tableData = generateTableData();
+  //status setuju dan tolak CoAdvisor 2
+  const handleActionClickCoAdvisor2 = (index, status) => {
+    // Memeriksa apakah tindakan tersebut sudah dilakukan
+    if (
+      (status === "Setuju" && isSetujuClickedCoAdvisor2) ||
+      (status === "Tolak" && isTolakClickedCoAdvisor2)
+    ) {
+      // Jika sudah dilakukan, tidak melakukan apa-apa
+      return;
+    }
+
+    setSelectedRevisiProposalIndexCoAdvisor2(index);
+    setCoAdvisor2Status(status);
+
+    if (status === "Setuju") {
+      setIsSetujuClickedCoAdvisor2(true);
+    } else if (status === "Tolak") {
+      setIsTolakClickedCoAdvisor2(true);
+    }
+  };
 
   const generateBuktiPembayaranData = () => {
     const data = [
@@ -105,6 +184,10 @@ const DocumentPersetujuanDosenPembimbing = () => {
   };
 
   const cekPlagiatData = generateCekPlagiatData();
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log(role);
 
   return (
     <Div>
@@ -159,11 +242,35 @@ const DocumentPersetujuanDosenPembimbing = () => {
             borderRadius: "8px",
           }}
         >
-          {/* Menu Horizontal Start */}
-          <Div sx={{ width: "100%" }}>
+          {/* Menu Horizontal Dosen Start */}
+          <Div
+            hidden={
+              role.includes(
+                "DOSEN",
+                "ADVISOR",
+                "CO_ADVISOR",
+                "KETUA_PANALIS",
+                "ANGGOTA_PANALIS",
+                "KAPRODI",
+                "DEKAN"
+              )
+                ? false
+                : true
+            }
+            sx={{ width: "100%" }}
+          >
             <MenuPenguji />
           </Div>
-          {/* Menu horizontal End */}
+          {/* Menu horizontal Dosen End */}
+
+          {/* Menu Horizontal Sekertaris Start */}
+          <Div
+            hidden={role.includes("SEKERTARIS") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuSekertaris />
+          </Div>
+          {/* Menu horizontal Sekertaris End */}
           <Div
             sx={{
               display: "flex",
@@ -283,6 +390,7 @@ const DocumentPersetujuanDosenPembimbing = () => {
                       <TableCell sx={{ fontSize: "12px" }}>
                         5.6321 bytes
                       </TableCell>
+                      {/* status Advisor */}
                       <TableCell>
                         {advisorStatus === "Setuju" ? (
                           <Chip
@@ -316,103 +424,314 @@ const DocumentPersetujuanDosenPembimbing = () => {
                           />
                         )}
                       </TableCell>
-
+                      {/* status CoAdvisor1 */}
                       <TableCell>
-                        <Chip
-                          size="small"
-                          label="Menunggu"
-                          sx={{
-                            background: "rgba(255, 204, 0, 0.10)",
-                            color: "#985211",
-                            fontSize: "10px",
-                          }}
-                        />
+                        {coAdvisor1Status === "Setuju" ? (
+                          <Chip
+                            size="small"
+                            label="Diterima"
+                            sx={{
+                              background: "rgba(0, 255, 0, 0.10)",
+                              color: "#008000",
+                              fontSize: "10px",
+                            }}
+                          />
+                        ) : coAdvisor1Status === "Tolak" ? (
+                          <Chip
+                            size="small"
+                            label="Ditolak"
+                            sx={{
+                              background: "rgba(255, 0, 0, 0.10)",
+                              color: "#FF0000",
+                              fontSize: "10px",
+                            }}
+                          />
+                        ) : (
+                          <Chip
+                            size="small"
+                            label="Menunggu"
+                            sx={{
+                              background: "rgba(255, 204, 0, 0.10)",
+                              color: "#985211",
+                              fontSize: "10px",
+                            }}
+                          />
+                        )}
+                      </TableCell>
+                      {/* Status CoAdvisor2 */}
+                      <TableCell>
+                        {coAdvisor2Status === "Setuju" ? (
+                          <Chip
+                            size="small"
+                            label="Diterima"
+                            sx={{
+                              background: "rgba(0, 255, 0, 0.10)",
+                              color: "#008000",
+                              fontSize: "10px",
+                            }}
+                          />
+                        ) : coAdvisor2Status === "Tolak" ? (
+                          <Chip
+                            size="small"
+                            label="Ditolak"
+                            sx={{
+                              background: "rgba(255, 0, 0, 0.10)",
+                              color: "#FF0000",
+                              fontSize: "10px",
+                            }}
+                          />
+                        ) : (
+                          <Chip
+                            size="small"
+                            label="Menunggu"
+                            sx={{
+                              background: "rgba(255, 204, 0, 0.10)",
+                              color: "#985211",
+                              fontSize: "10px",
+                            }}
+                          />
+                        )}
                       </TableCell>
                       <TableCell>
-                        <Chip
-                          size="small"
-                          label="Menunggu"
-                          sx={{
-                            background: "rgba(255, 204, 0, 0.10)",
-                            color: "#985211",
-                            fontSize: "10px",
+                        <Div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
                           }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Div sx={{ display: "flex", flexDirection: "column" }}>
+                        >
                           <span
                             style={{
                               textDecoration: "none",
                               cursor: "pointer",
                               color: "blue",
                               fontSize: "12px",
-                              borderBottom: "1px solid #000",
                               padding: "5px 0",
                             }}
                           >
                             View
                           </span>
-                          {isSetujuClicked || isTolakClicked ? (
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "not-allowed",
-                                color: "gray",
-                                fontSize: "12px",
-                                borderBottom: "1px solid #000",
-                                padding: "5px 0",
-                              }}
-                            >
-                              Setuju
-                            </span>
-                          ) : (
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "green",
-                                fontSize: "12px",
-                                borderBottom: "1px solid #000",
-                                padding: "5px 0",
-                              }}
-                              onClick={() => {
-                                setSelectedActionIndex(1);
-                                setSetujuConfirmationDialogOpen(true);
-                              }}
-                            >
-                              Setuju
-                            </span>
-                          )}
-                          {isSetujuClicked || isTolakClicked ? (
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "not-allowed",
-                                color: "gray",
-                                fontSize: "12px",
-                                marginTop: "5px",
-                              }}
-                            >
-                              Tolak
-                            </span>
-                          ) : (
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
-                                fontSize: "12px",
-                                marginTop: "5px",
-                              }}
-                              onClick={() => {
-                                setSelectedActionIndex(2);
-                                setTolakConfirmationDialogOpen(true);
-                              }}
-                            >
-                              Tolak
-                            </span>
-                          )}
+                          {/* Button untuk Advisor */}
+                          <Div
+                            hidden={role.includes("DOSEN") ? false : true}
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                            }}
+                          >
+                            {isSetujuClicked || isTolakClicked ? (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "not-allowed",
+                                  color: "gray",
+                                  fontSize: "12px",
+                                  borderTop: "1px solid #000",
+                                  borderBottom: "1px solid #000",
+                                  padding: "5px 0",
+                                }}
+                              >
+                                Setuju
+                              </span>
+                            ) : (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "green",
+                                  fontSize: "12px",
+                                  borderTop: "1px solid #000",
+                                  borderBottom: "1px solid #000",
+                                  padding: "5px 0",
+                                }}
+                                onClick={() => {
+                                  setSelectedActionIndex(1);
+                                  setSetujuConfirmationDialogOpen(true);
+                                }}
+                              >
+                                Setuju
+                              </span>
+                            )}
+                            {isSetujuClicked || isTolakClicked ? (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "not-allowed",
+                                  color: "gray",
+                                  fontSize: "12px",
+                                }}
+                              >
+                                Tolak
+                              </span>
+                            ) : (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "red",
+                                  fontSize: "12px",
+                                }}
+                                onClick={() => {
+                                  setSelectedActionIndex(2);
+                                  setTolakConfirmationDialogOpen(true);
+                                }}
+                              >
+                                Tolak
+                              </span>
+                            )}
+                          </Div>
+                          {/* button untuk CoAdvisor1 */}
+                          {/* <Div
+                            hidden={role.includes("CO_ADVISOR1") ? false : true} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+                          >
+                            {isSetujuClickedCoAdvisor1 ||
+                            isTolakClickedCoAdvisor1 ? (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "not-allowed",
+                                  color: "gray",
+                                  fontSize: "12px",
+                                  borderTop: "1px solid #000",
+                                  borderBottom: "1px solid #000",
+                                  padding: "5px 0",
+                                }}
+                              >
+                                Setuju
+                              </span>
+                            ) : (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "green",
+                                  fontSize: "12px",
+                                  borderTop: "1px solid #000",
+                                  borderBottom: "1px solid #000",
+                                  padding: "5px 0",
+                                }}
+                                onClick={() => {
+                                  setSelectedActionIndexCoAdvisor1(1);
+                                  setSetujuConfirmationDialogOpenCoAdvisor1(
+                                    true
+                                  );
+                                }}
+                              >
+                                Setuju
+                              </span>
+                            )}
+                            {isSetujuClickedCoAdvisor1 ||
+                            isTolakClickedCoAdvisor1 ? (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "not-allowed",
+                                  color: "gray",
+                                  fontSize: "12px",
+                                  marginTop: "5px",
+                                }}
+                              >
+                                Tolak
+                              </span>
+                            ) : (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "red",
+                                  fontSize: "12px",
+                                  marginTop: "5px",
+                                }}
+                                onClick={() => {
+                                  setSelectedActionIndexCoAdvisor1(2);
+                                  setTolakConfirmationDialogOpenCoAdvisor1(
+                                    true
+                                  );
+                                }}
+                              >
+                                Tolak
+                              </span>
+                            )}
+                          </Div> */}
+                          {/* button untuk CoAdvisor2 */}
+                          {/* <Div
+                            hidden={role.includes("CO_ADVISOR2") ? false : true}
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                            }}
+                          >
+                            {isSetujuClickedCoAdvisor2 ||
+                            isTolakClickedCoAdvisor2 ? (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "not-allowed",
+                                  color: "gray",
+                                  fontSize: "12px",
+                                  borderTop: "1px solid #000",
+                                  borderBottom: "1px solid #000",
+                                  padding: "5px 0",
+                                }}
+                              >
+                                Setuju
+                              </span>
+                            ) : (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "green",
+                                  fontSize: "12px",
+                                  borderTop: "1px solid #000",
+                                  borderBottom: "1px solid #000",
+                                  padding: "5px 0",
+                                }}
+                                onClick={() => {
+                                  setSelectedActionIndexCoAdvisor2(1);
+                                  setSetujuConfirmationDialogOpenCoAdvisor2(
+                                    true
+                                  );
+                                }}
+                              >
+                                Setuju
+                              </span>
+                            )}
+                            {isSetujuClickedCoAdvisor2 ||
+                            isTolakClickedCoAdvisor2 ? (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "not-allowed",
+                                  color: "gray",
+                                  fontSize: "12px",
+                                  marginTop: "5px",
+                                }}
+                              >
+                                Tolak
+                              </span>
+                            ) : (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "red",
+                                  fontSize: "12px",
+                                  marginTop: "5px",
+                                }}
+                                onClick={() => {
+                                  setSelectedActionIndexCoAdvisor2(2);
+                                  setTolakConfirmationDialogOpenCoAdvisor2(
+                                    true
+                                  );
+                                }}
+                              >
+                                Tolak
+                              </span>
+                            )}
+                          </Div> */}
                         </Div>
                       </TableCell>
                     </TableRow>
@@ -421,7 +740,7 @@ const DocumentPersetujuanDosenPembimbing = () => {
               </TableContainer>
               {/* Table Upload Revisi Proposal End*/}
 
-              {/* popup konfirmasi setuju */}
+              {/* popup konfirmasi setuju Advisor */}
               <Dialog
                 open={setujuConfirmationDialogOpen}
                 onClose={() => setSetujuConfirmationDialogOpen(false)}
@@ -469,8 +788,7 @@ const DocumentPersetujuanDosenPembimbing = () => {
                   </Button>
                 </DialogActions>
               </Dialog>
-
-              {/* popup konfirmasi tolak */}
+              {/* popup konfirmasi tolak Advisor*/}
               <Dialog
                 open={tolakConfirmationDialogOpen}
                 onClose={() => setTolakConfirmationDialogOpen(false)}
@@ -510,6 +828,226 @@ const DocumentPersetujuanDosenPembimbing = () => {
                       setTolakConfirmationDialogOpen(false);
                       handleActionClick(selectedActionIndex, "Tolak");
                       setIsTolakDisabled(true);
+                    }}
+                    sx={{
+                      textTransform: "none",
+                      background: "#FC0",
+                      color: "#263445",
+                      "&:hover": {
+                        color: "#FC0",
+                      },
+                    }}
+                  >
+                    Ditolak
+                  </Button>
+                </DialogActions>
+              </Dialog>
+
+              {/* popup konfirmasi setuju CoAdvisor1 */}
+              <Dialog
+                open={setujuConfirmationDialogOpenCoAdvisor1}
+                onClose={() => setSetujuConfirmationDialogOpenCoAdvisor1(false)}
+                maxWidth="xs"
+                fullWidth
+              >
+                <DialogTitle
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    alignSelf: "stretch",
+                  }}
+                >
+                  <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
+                    Menyetujui Revisi
+                  </Typography>
+                </DialogTitle>
+                <DialogContent>
+                  Apakah Anda yakin ingin menyetujui tindakan ini?
+                </DialogContent>
+                <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                  <Button
+                    onClick={() =>
+                      setSetujuConfirmationDialogOpenCoAdvisor1(false)
+                    }
+                    sx={{
+                      background: "white",
+                      boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                      textTransform: "none",
+                      color: "black",
+                    }}
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setSetujuConfirmationDialogOpenCoAdvisor1(false);
+                      handleActionClickCoAdvisor1(
+                        selectedActionIndex,
+                        "Setuju"
+                      );
+                      setIsSetujuDisabledCoAdvisor1(true);
+                    }}
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                    color="primary"
+                  >
+                    Disetuju
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              {/* popup konfirmasi tolak CoAdvisor1 */}
+              <Dialog
+                open={tolakConfirmationDialogOpenCoAdvisor1}
+                onClose={() => setTolakConfirmationDialogOpenCoAdvisor1(false)}
+                maxWidth="xs"
+                fullWidth
+              >
+                <DialogTitle
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    alignSelf: "stretch",
+                  }}
+                >
+                  <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
+                  <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
+                    Menolak Revisi
+                  </Typography>
+                </DialogTitle>
+                <DialogContent>
+                  Apakah Anda yakin ingin menolak dokumen ini?
+                </DialogContent>
+                <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                  <Button
+                    onClick={() =>
+                      setTolakConfirmationDialogOpenCoAdvisor1(false)
+                    }
+                    sx={{
+                      background: "white",
+                      boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                      textTransform: "none",
+                      color: "black",
+                    }}
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setTolakConfirmationDialogOpenCoAdvisor1(false);
+                      handleActionClickCoAdvisor1(selectedActionIndex, "Tolak");
+                      setIsTolakDisabledCoAdvisor1(true);
+                    }}
+                    sx={{
+                      textTransform: "none",
+                      background: "#FC0",
+                      color: "#263445",
+                      "&:hover": {
+                        color: "#FC0",
+                      },
+                    }}
+                  >
+                    Ditolak
+                  </Button>
+                </DialogActions>
+              </Dialog>
+
+              {/* popup konfirmasi setuju CoAdvisor 2 */}
+              <Dialog
+                open={setujuConfirmationDialogOpenCoAdvisor2}
+                onClose={() => setSetujuConfirmationDialogOpenCoAdvisor2(false)}
+                maxWidth="xs"
+                fullWidth
+              >
+                <DialogTitle
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    alignSelf: "stretch",
+                  }}
+                >
+                  <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
+                    Menyetujui Revisi
+                  </Typography>
+                </DialogTitle>
+                <DialogContent>
+                  Apakah Anda yakin ingin menyetujui tindakan ini?
+                </DialogContent>
+                <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                  <Button
+                    onClick={() =>
+                      setSetujuConfirmationDialogOpenCoAdvisor2(false)
+                    }
+                    sx={{
+                      background: "white",
+                      boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                      textTransform: "none",
+                      color: "black",
+                    }}
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setSetujuConfirmationDialogOpenCoAdvisor2(false);
+                      handleActionClickCoAdvisor2(
+                        selectedActionIndex,
+                        "Setuju"
+                      );
+                      setIsSetujuDisabledCoAdvisor2(true);
+                    }}
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                    color="primary"
+                  >
+                    Disetuju
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              {/* popup konfirmasi tolak CoAdvisor 2 */}
+              <Dialog
+                open={tolakConfirmationDialogOpenCoAdvisor2}
+                onClose={() => setTolakConfirmationDialogOpenCoAdvisor2(false)}
+                maxWidth="xs"
+                fullWidth
+              >
+                <DialogTitle
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    alignSelf: "stretch",
+                  }}
+                >
+                  <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
+                  <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
+                    Menolak Revisi
+                  </Typography>
+                </DialogTitle>
+                <DialogContent>
+                  Apakah Anda yakin ingin menolak dokumen ini?
+                </DialogContent>
+                <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                  <Button
+                    onClick={() =>
+                      setTolakConfirmationDialogOpenCoAdvisor2(false)
+                    }
+                    sx={{
+                      background: "white",
+                      boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                      textTransform: "none",
+                      color: "black",
+                    }}
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setTolakConfirmationDialogOpenCoAdvisor2(false);
+                      handleActionClickCoAdvisor2(selectedActionIndex, "Tolak");
+                      setIsTolakDisabledCoAdvisor2(true);
                     }}
                     sx={{
                       textTransform: "none",

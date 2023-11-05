@@ -51,7 +51,7 @@ const MenuPenguji = () => {
               </Link>
             </Div>
             {/* DOSEN PEMBIMBING */}
-            <Div hidden={role.includes("ADVISOR", "CO_ADVISOR") ? false : true}>
+            <Div hidden={role.includes("ADVISOR") ? false : true}>
               <Link to="#">
                 <Button
                   sx={{
@@ -69,12 +69,8 @@ const MenuPenguji = () => {
                 </Button>
               </Link>
             </Div>
-            {/* Dosen Penguji */}
-            <Div
-              hidden={
-                role.includes("KETUA_PANALIS", "ANGGOTA_PANALIS") ? false : true
-              }
-            >
+            {/* Dosen ketua panalis */}
+            <Div hidden={role.includes("KETUA_PANALIS") ? false : true}>
               <Link to="#">
                 <Button
                   sx={{
@@ -115,7 +111,27 @@ const MenuPenguji = () => {
             </Div>
           </Div>
           <Div sx={{ margin: "auto" }}>
-            <Div hidden={role.includes("ADVISOR", "CO_ADVISOR") ? false : true}>
+            {/* dosen skripsi */}
+            <Div hidden={role.includes("DOSEN") ? false : true}>
+              <Link to="/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/konsultasi">
+                <Button
+                  sx={{
+                    // width: "130px",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Konsultasi
+                </Button>
+              </Link>
+            </Div>
+            {/* dosen Advisor */}
+            <Div hidden={role.includes("ADVISOR") ? false : true}>
               <Link to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/konsultasi">
                 <Button
                   sx={{
@@ -133,15 +149,12 @@ const MenuPenguji = () => {
                 </Button>
               </Link>
             </Div>
+            {/* dosen co-advisor */}
+            {/* dosen ketua panalis */}
+            {/* dosen anggota panalis */}
+            {/* dosen kaprodi */}
+            {/* dosen dekan */}
           </Div>
-          <Div
-            sx={{
-              width: "1px",
-              transform: "90px",
-              alignSelf: "stretch",
-              background: "rgba(26, 56, 96, 0.10)",
-            }}
-          ></Div>
           <Div sx={{ margin: "auto" }}>
             <Button
               onClick={(event) => setAnchorEl(event.currentTarget)}
@@ -170,9 +183,32 @@ const MenuPenguji = () => {
                 horizontal: "left",
               }}
             >
-              <MenuItem onClick={() => setAnchorEl(null)}>
-                Dokumen Proposal
-              </MenuItem>
+              {/* dosen skripsi */}
+              {/* DOSEN GANTI DOSEN_SKRIPSI */}
+              <Div
+                hidden={
+                  role.includes(
+                    "DOSEN",
+                    "ADVISOR",
+                    "CO_ADVISOR",
+                    "KETUA_PANALIS",
+                    "ANGGOTA_PANALIS",
+                    "KAPRODI",
+                    "DEKAN"
+                  )
+                    ? false
+                    : true
+                }
+              >
+                <Link
+                  to="/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
               <Link
                 to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/berita-acara-proposal"
                 style={{ textDecoration: "none", color: "black" }}

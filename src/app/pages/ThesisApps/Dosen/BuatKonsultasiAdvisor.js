@@ -164,12 +164,7 @@ const BuatKonsultasiAdvisor = () => {
                 {/* roll yang bisa akses dosen pembimbing */}
                 <Div
                   hidden={
-                    role.includes(
-                      "DOSEN",
-                      "ADVISOR",
-                      "CO_ADVISOR",
-                      "KETUA_PANELIS"
-                    )
+                    role.includes("DOSEN", "ADVISOR", "CO_ADVISOR")
                       ? false
                       : true
                   }

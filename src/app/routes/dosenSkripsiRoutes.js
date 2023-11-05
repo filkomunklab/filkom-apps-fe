@@ -4,10 +4,12 @@ import DaftarBimbinganProposalAdvisor from "app/pages/ThesisApps/Dosen/DaftarBim
 import DaftarPengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarPengajuanJudulDosenSkripsi";
 import DaftarPengajuanProposalDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarPengajuanProposalDosenSkripsi";
 import DaftarPengajuanSkripsiDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarPengajuanSkripsiDosenSkripsi";
+import DocumentPersetujuanDosenPembimbing from "app/pages/ThesisApps/Dosen/DocumentPersetujuanDosenPembimbing";
+import DocumentRevisiProposalAdvisor from "app/pages/ThesisApps/Dosen/DocumentRevisiProposalAdvisor";
 import ManajemenKelasDosenSkripsi from "app/pages/ThesisApps/Dosen/ManajemenKelasDosenSkripsi";
 import PengajuanJudul from "app/pages/ThesisApps/Dosen/PengajuanJudulDosen";
 import PengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/PengajuanJudulDosenSkripsi";
-import BerandaProposal from "app/pages/ThesisApps/Sekertaris/BerandaProposal";
+import BerandaProposalMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaProposalMahasiswa";
 
 const dosenSkripsiRoutes = [
   {
@@ -38,7 +40,7 @@ const dosenSkripsiRoutes = [
   {
     // Beranda Mahasiswa proposal
     path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/beranda",
-    element: <Page component={BerandaProposal} />,
+    element: <Page component={BerandaProposalMahasiswa} />,
   },
   {
     // Pengajuan Judul Mahasiswa
@@ -50,11 +52,11 @@ const dosenSkripsiRoutes = [
     path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/konsultasi",
     element: <Page component={BuatKonsultasiAdvisor} />,
   },
-  // {
-  //   // dokumen proposal
-  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-proposal",
-  //   element: <Page component={} />,
-  // },
+  {
+    // dokumen proposal
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-proposal",
+    element: <Page component={DocumentPersetujuanDosenPembimbing} />,
+  },
   // {
   //   // berita acara proposal
   //   path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/berita-acara-proposal",
