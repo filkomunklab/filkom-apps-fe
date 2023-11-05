@@ -159,7 +159,7 @@ function DaftarPengajuan() {
         setDaftarPartner(response.data.data);
       } catch (error) {
         console.error(
-          "Terjadi kesalahan saat mengambil daftar pengajuan:",
+          "Terjadi kesalahan saat mengambil daftar mahasiswa:",
           error
         );
       }
@@ -177,10 +177,7 @@ function DaftarPengajuan() {
         );
         setDaftarDosen(response.data.data);
       } catch (error) {
-        console.error(
-          "Terjadi kesalahan saat mengambil daftar pengajuan:",
-          error
-        );
+        console.error("Terjadi kesalahan saat mengambil daftar dosen:", error);
       }
     };
 
