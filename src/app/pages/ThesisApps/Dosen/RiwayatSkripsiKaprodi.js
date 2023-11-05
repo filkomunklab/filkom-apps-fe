@@ -3,13 +3,12 @@ import RiwayatMahasiswaSkripsi from "app/shared/Content/RiwayatMahasiswaSkripsi"
 import RiwayatSkripsi from "app/shared/Header/RiwayatSkripsi";
 import React from "react";
 
-const RiwayatSkripsiDekan = () => {
+const RiwayatSkripsiKaprodi = () => {
   return (
     <Div>
       <RiwayatSkripsi />
       <Div
         sx={{
-          marginTop: "25px",
           display: "inline-flex",
           flexDirection: "column",
           alignItems: "flex-start",
@@ -23,4 +22,4 @@ const RiwayatSkripsiDekan = () => {
   );
 };
 
-export default RiwayatSkripsiDekan;
+export default RiwayatSkripsiKaprodi;

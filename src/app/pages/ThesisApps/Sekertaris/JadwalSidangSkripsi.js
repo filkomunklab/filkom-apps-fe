@@ -48,6 +48,11 @@ const JadwalSidangSkripsi = () => {
     setOpenDialog(false);
   };
 
+  const handleOpenDialogKonfirmasi = () => {
+    // Setelah berhasil perbarui data, tampilkan dialog konfirmasi
+    setKonfirmasiDialog(true);
+  };
+
   // Daftar pengguna dengan nama dan ID
   const daftarPengguna = [
     { id: 10, nama: "Andrew T. Liem, MT, PhD" },
@@ -89,9 +94,6 @@ const JadwalSidangSkripsi = () => {
 
     // Tambahkan jadwal baru ke dalam array jadwal
     setJadwal([...jadwal, jadwalBaru]);
-
-    // Setelah berhasil perbarui data, tampilkan dialog konfirmasi
-    setKonfirmasiDialog(true);
 
     // Reset semua state input
     setKetuaPenelis("");
@@ -211,6 +213,61 @@ const JadwalSidangSkripsi = () => {
                 <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
               </TableRow>
             </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell sx={{ fontSize: "13px" }}>1</TableCell>
+                <TableCell sx={{ fontSize: "13px" }}>
+                  SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
+                  UNIVERSITAS KLABAT
+                </TableCell>
+                <TableCell>
+                  <Typography>Andrew T. Liem, MT, PhD</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>Senly I. Adam, SKom, MSc</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>Senly I. Adam, SKom, MSc</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>10.00</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>12.00</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>17/09/2023</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>GK1-206</Typography>
+                </TableCell>
+                <TableCell>
+                  <Div sx={{ display: "flex" }}>
+                    <Typography
+                      component={Link}
+                      to="/halaman-berikutnya"
+                      sx={{
+                        textDecoration: "none",
+                        color: "blue",
+                      }}
+                    >
+                      View
+                    </Typography>
+                    <Div sx={{ margin: "2px" }}>|</Div>
+                    <span
+                      style={{
+                        textDecoration: "none",
+                        cursor: "pointer",
+                        color: "blue",
+                      }}
+                      onClick={handleUpdateClick}
+                    >
+                      Update
+                    </span>
+                  </Div>
+                </TableCell>
+              </TableRow>
+            </TableBody>
             <TableBody>
               {jadwal.map((item, index) => (
                 <TableRow key={index}>
@@ -469,6 +526,10 @@ const JadwalSidangSkripsi = () => {
                   <MenuItem value={170}>Senly I. Adam, SKom, MSc</MenuItem>
                 </Select>
               </FormControl>
+              <Div sx={{ width: "800px" }}>
+                <Typography>Advisor</Typography>
+                <Typography>Andrew T. Liem, MT, PhD</Typography>
+              </Div>
             </Div>
           </Div>
           {/* Select Tim Penguji End */}
@@ -578,7 +639,7 @@ const JadwalSidangSkripsi = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={handlePerbarui}
+            onClick={handleOpenDialogKonfirmasi}
             sx={{ textTransform: "none" }}
           >
             Perbarui
@@ -629,7 +690,10 @@ const JadwalSidangSkripsi = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={handleKonfirmasiDialogClose}
+            onClick={() => {
+              handleKonfirmasiDialogClose();
+              handlePerbarui();
+            }}
             sx={{ textTransform: "none" }}
           >
             Confirm
