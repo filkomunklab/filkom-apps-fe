@@ -35,23 +35,23 @@ const DaftarPengajuanJudulDosen = () => {
         <TableCell sx={{ fontSize: "13px" }}>{index + 1}</TableCell>
         <TableCell sx={{ fontSize: "13px" }}>Geovalga Fransiscus Lim</TableCell>
         <TableCell sx={{ fontSize: "13px" }}>
-          SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
+          SISTEM INFORMASI MANAJEMEN SKRIPSI DI FAKULTAS ILMU KOMPUTER
           UNIVERSITAS KLABAT
         </TableCell>
+        <TableCell>Andrew T. Liem, MT, PhD</TableCell>
+        <TableCell>Senly I. Adam, SKom, MSc</TableCell>
+        <TableCell>Oktoverano H. Lengkong, SKom, MDs, MM</TableCell>
         <TableCell>
-          Andrew T. Liem, MT, PhD
+          <Chip
+            label={"Sudah"}
+            sx={{ background: "rgba(21, 131, 67, 0.10)", color: "#0A7637" }}
+          />
         </TableCell>
         <TableCell>
-          Senly I. Adam, SKom, MSc
-        </TableCell>
-        <TableCell>
-          Oktoverano H. Lengkong, SKom, MDs, MM
-        </TableCell>
-        <TableCell>
-          <Chip label={"Sudah"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Menunggu"} />
+          <Chip
+            label={"Menunggu"}
+            sx={{ background: "rgba(255, 204, 0, 0.10)", color: "#985211" }}
+          />
         </TableCell>
         <TableCell>
           <Typography
@@ -62,7 +62,7 @@ const DaftarPengajuanJudulDosen = () => {
               color: "blue",
             }}
           >
-            View
+            Detail
           </Typography>
         </TableCell>
       </TableRow>

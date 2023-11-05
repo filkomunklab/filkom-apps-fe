@@ -59,7 +59,7 @@ function DaftarPengajuan() {
   const [inputCount, setInputCount] = useState(1);
   const [open, setOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
-  const [options, setOption] = useState(["Option 1", "Option 2", "Option 3"]);
+  const [options, setOption] = useState(["Frances Yong", "Geovalga Lim"]);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [Advisor, setAdvisor] = useState("");
   const [CoAdvisor1, setCoAdvisor1] = useState("");
@@ -258,7 +258,13 @@ function DaftarPengajuan() {
                 Judul
               </TableCell>
               <TableCell style={{ width: "200px", margin: "0 100px" }}>
-                Status
+                Status Judul
+              </TableCell>
+              <TableCell style={{ width: "200px", margin: "0 100px" }}>
+                Status Proposal
+              </TableCell>
+              <TableCell style={{ width: "200px", margin: "0 100px" }}>
+                Status Skripsi
               </TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
@@ -272,6 +278,12 @@ function DaftarPengajuan() {
                   <Chip label={"Belum"} />
                 </TableCell>
                 <TableCell>
+                  <Chip label={"Belum"} />
+                </TableCell>
+                <TableCell>
+                  <Chip label={"Belum"} />
+                </TableCell>
+                <TableCell>
                   <Link
                     href="#"
                     to="/sistem-informasi-skripsi/daftar-pengajuan/beranda"
@@ -281,7 +293,7 @@ function DaftarPengajuan() {
                       fontSize: "12px",
                     }}
                   >
-                    View
+                    Detail
                   </Link>
                 </TableCell>
               </TableRow>

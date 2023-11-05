@@ -25,7 +25,7 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
         <TableCell sx={{ fontSize: "13px" }}>{index + 1}</TableCell>
         <TableCell sx={{ fontSize: "13px" }}>Geovalga Fransiscus Lim</TableCell>
         <TableCell sx={{ fontSize: "13px" }}>
-          SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
+          SISTEM INFORMASI MANAJEMEN SKRIPSI DI FAKULTAS ILMU KOMPUTER
           UNIVERSITAS KLABAT
         </TableCell>
         <TableCell>
@@ -49,7 +49,7 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
               color: "blue",
             }}
           >
-            View
+            Detail
           </Typography>
         </TableCell>
       </TableRow>
@@ -303,7 +303,7 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
               lineHeight: "32px",
             }}
           >
-            Daftar Pengujian Skripsi
+            Daftar Pengujian Skripsi Anggota Panelis
           </Typography>
           <Div
             sx={{

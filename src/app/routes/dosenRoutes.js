@@ -12,7 +12,7 @@ const dosenRoutes = [
     // element: <Page component={DaftarDosen} />,
   },
   {
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen",
+    path: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
     element: <Page component={DaftarPengajuanJudulDosen} />,
   },
   // {
