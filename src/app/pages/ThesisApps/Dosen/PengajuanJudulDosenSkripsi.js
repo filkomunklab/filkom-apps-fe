@@ -417,36 +417,38 @@ const PengajuanJudulDosenSkripsi = () => {
                 <Typography>Ya</Typography>
               </Div>
             </Div>
-            <Div
-              sx={{
-                display: "flex",
-                padding: "12px 24px 12px 0px",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                gap: "12px",
-                alignSelf: "stretch",
-                background: "#F5F5F5",
-              }}
-            >
-              <Button
-                size="small"
-                variant="contained"
-                sx={{ textTransform: "none" }}
-                color="error"
-                onClick={handleTolakClick} // Menggunakan fungsi handleTolakClick saat tombol Tolak diklik
+            {tolakTerimaButtonsVisible && (
+              <Div
+                sx={{
+                  display: "flex",
+                  padding: "12px 24px 12px 0px",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  gap: "12px",
+                  alignSelf: "stretch",
+                  background: "#F5F5F5",
+                }}
               >
-                Tolak
-              </Button>
-              <Button
-                size="small"
-                variant="contained"
-                sx={{ textTransform: "none" }}
-                color="primary"
-                onClick={handleTerimaClick} // Menggunakan fungsi handleTerimaClick saat tombol Terima diklik
-              >
-                Terima
-              </Button>
-            </Div>
+                <Button
+                  size="small"
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                  color="error"
+                  onClick={handleTolakClick} // Menggunakan fungsi handleTolakClick saat tombol Tolak diklik
+                >
+                  Tolak
+                </Button>
+                <Button
+                  size="small"
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                  color="primary"
+                  onClick={handleTerimaClick} // Menggunakan fungsi handleTerimaClick saat tombol Terima diklik
+                >
+                  Terima
+                </Button>
+              </Div>
+            )}
           </Div>
         </Div>
         {/* Element 2 End */}
