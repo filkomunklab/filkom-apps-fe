@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
   Chip,
-  Menu,
   MenuItem,
   Table,
   TableBody,
@@ -21,22 +19,54 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogContentText,
 } from "@mui/material";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 
 const PengajuanJudulDosenSkripsi = () => {
+  const [confirmTolakOpen, setConfirmTolakOpen] = useState(false); // State untuk dialog konfirmasi tolak
+  const [confirmTerimaOpen, setConfirmTerimaOpen] = useState(false); // State untuk dialog konfirmasi terima
+
+  const [
+    gantiAdvisorCoAdvisorButtonVisible,
+    setGantiAdvisorCoAdvisorButtonVisible,
+  ] = useState(true);
+
+  const [tolakTerimaButtonsVisible, setTolakTerimaButtonsVisible] =
+    useState(true);
+
   const handleTolakClick = () => {
-    // Di sini Anda bisa menambahkan logika untuk menolak pengajuan
-    // Setelah pengajuan ditolak, update status menjadi "Ditolak"
-    setStatus("Ditolak");
+    // Menampilkan dialog konfirmasi tolak
+    setConfirmTolakOpen(true);
   };
 
   const handleTerimaClick = () => {
-    // Di sini Anda bisa menambahkan logika untuk menerima pengajuan
+    // Menampilkan dialog konfirmasi terima
+    setConfirmTerimaOpen(true);
+  };
+
+  const handleTolak = () => {
+    setTolakTerimaButtonsVisible(false);
+    setGantiAdvisorCoAdvisorButtonVisible(false);
+    // Di sini Anda bisa menambahkan logika untuk menolak pengajuan setelah konfirmasi
+    // Setelah pengajuan ditolak, update status menjadi "Ditolak"
+    setStatus("Ditolak");
+
+    // Tutup dialog konfirmasi
+    setConfirmTolakOpen(false);
+  };
+
+  const handleTerima = () => {
+    setTolakTerimaButtonsVisible(false);
+    setGantiAdvisorCoAdvisorButtonVisible(false);
+    // Di sini Anda bisa menambahkan logika untuk menerima pengajuan setelah konfirmasi
     // Setelah pengajuan diterima, update status menjadi "Diterima"
     setStatus("Diterima");
+
+    // Tutup dialog konfirmasi
+    setConfirmTerimaOpen(false);
   };
 
   const [status, setStatus] = useState("Menunggu"); // Tambahkan state untuk status
@@ -57,33 +87,8 @@ const PengajuanJudulDosenSkripsi = () => {
   const [isStatusVisible] = useState(true);
 
   // State untuk mengelola berbagai data termasuk judul, latar belakang, dll.
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [judul] = useState(
     "Pengembangan Sistem Informasi Skripsi di Fakultas Ilmu Komputer Universitas Klabat"
-  );
-
-  const [latarBelakang] = useState(
-    "Perkembangan teknologi informasi semakin mengguncangkan dunia dengan pesatnya. Seiring dengan adanya inovasi terbaru, teknologi informasi telah mempengaruhi banyak aspek kehidupan manusia, khususnya dalam bidang informasi. Sebagai contoh, perguruan tinggi negeri dan swasta saat ini semakin gencar untuk mengembangkan sistem referensi repository, khususnya untuk skripsi alumni guna meningkatkan kemajuan universitas. Tidak hanya itu, teknologi informasi juga telah mengubah dunia bisnis tradisional dengan munculnya komputasi awan dan pertumbuhan platform bisnis digital seluler berbasis smartphone dan tablet. Inovasi ini memberikan peluang bagi pengusaha dan perusahaan tradisional untuk menciptakan produk dan layanan baru, mengembangkan model bisnis baru, dan mengubah perilaku bisnis sehari-hari. Oleh karena itu, teknologi informasi menjadi fondasi bisnis di abad ke-21 karena banyak bisnis atau perusahaan dapat beroperasi dan berkembang dengan adanya sistem informasi yang mumpuni. Sebagaimana disebutkan dalam UU No. 11 Tahun 2008 tentang Informasi dan Transaksi Elektronik, teknologi informasi adalah teknik untuk mengumpulkan, menyiapkan, menyimpan, memproses, mengumumkan, menganalisis, dan/atau menyebarkan informasi."
-  );
-
-  const [rumusanMasalah] = useState(
-    "Berdasarkan latar belakang masalah penelitian, maka dibuatsuatu rumusan masalah dalam penelitian ini, yaitu bagaimana mengembangkan sistem informasi manajemen skripsi berbasis web-application untuk penyerahan skripsi yang sudah selesai dinilai dan disimpan di repository?"
-  );
-
-  const [tujuan] = useState(
-    "Tujuan dari penelitian ini adalah untuk mengembangkan dan mengimplementasikan sistem informasi managemen skripsi untuk penyerahan skripsi dan penyimpanan skripsi yang terintegrasi yang memudahkan mahasiswa untuk mencari referensi judul skripsi yang sesuai dengan minat dan keahlian mereka serta membantu dosen pembimbing dalam memberikan saran dan rekomendasi judul skripsi melalui sistem ini sehingga judul atau topik penelitian yang diajukan tidak sama dengan penelitian yang sudah ada."
-  );
-
-  const [manfaat] = useState(
-    "1.	Mahasiswa dan dosen pembimbing Fakultas Ilmu Komputer dapat mencari referensi judul skripsi lebih mudah dan cepat sehingga dapat menghindari duplikasi penelitian yang sudah dilakukan sebelumnya. 2.	Meningkatkan efisiensi dalam penyerahan skripsi dan penyimpanan dengan sistem yang terintegrasi sehingga mahasiswa tidak perlu melakukan permohonan akses ke Fakultas Ilmu Komputer untuk mengakses skripsi yang sudah disetujui atau diuji dan lulus.3.	Dengan adanya sistem terintegrasi, kesalahan dalam penyimpanan skripsi dapat dihindari. "
-  );
-
-  const [cakupan] = useState(
-    "1.	Sistem hanya mencakup manajemen skripsi Fakultas Ilmu Komputer Universitas Klabat 2.	Sistem hanya menerima penyerahan skripsi yang sudah diuji dan lulus oleh dosen penguji dan menyimpannya. 3.	Sistem menyediakan pencarian skripsi beserta teks lengkap di repository. Pencarian skripsi dibuka untuk umum tetapi teks lengkap hanya dapat diakses oleh mahasiswa dan dosen Universitas Klabat."
-  );
-
-  const [batasan] = useState(
-    "1)	Sistem hanya dibangun untuk digunakan Fakultas Ilmu Komputer Universitas Klabat.2)	Sistem hanya mengelola lembar pengesahan dan skripsi yang sudah diuji di Fakultas Ilmu Komputer Universitas Klabat.3)	Sistem hanya menerima penyerahan skripsi dalam format file tertentu seperti PDF atau Microsoft Word dengan batasan ukuran file sebesar 50MB.4)	Sistem tidak menyimpan data pribadi lengkap  penulis atau mahasiswa.5)	Sistem hanya memberikan akses lihat dan unduh teks lengkap skripsi kepada dosen dan mahasiswa Universitas Klabat.6)	Sistem tidak dapat menampilkan skripsi yang paling sering dicari atau paling tren.7)	Sistem tidak menyediakan fitur notifikasi persetujuan penyerahan skripsi 8)	Sistem ini berbasis web-application."
   );
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -108,8 +113,6 @@ const PengajuanJudulDosenSkripsi = () => {
     // Setelah Anda menyimpan perubahan, Anda bisa menutup dialog.
     handleClose();
   };
-
-  const open = Boolean(anchorEl);
 
   return (
     <Div>
@@ -386,16 +389,18 @@ const PengajuanJudulDosenSkripsi = () => {
               {/* Select Dosen Pembimbing End */}
 
               {/* Button Ganti Dosen Pembimbing Start */}
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                sx={{ textTransform: "none", marginBottom: "25px" }}
-                onClick={handleClickOpen}
-              >
-                <BorderColorIcon fontSize="small" />
-                Ganti Advisor dan Co-Advisor
-              </Button>
+              {gantiAdvisorCoAdvisorButtonVisible && (
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="primary"
+                  sx={{ textTransform: "none", marginBottom: "25px" }}
+                  onClick={handleClickOpen}
+                >
+                  <BorderColorIcon fontSize="small" />
+                  Ganti Advisor dan Co-Advisor
+                </Button>
+              )}
               {/* Button GAnti Dosen Pembimbing End */}
 
               {/* Radio Button Start */}
@@ -412,36 +417,38 @@ const PengajuanJudulDosenSkripsi = () => {
                 <Typography>Ya</Typography>
               </Div>
             </Div>
-            <Div
-              sx={{
-                display: "flex",
-                padding: "12px 24px 12px 0px",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                gap: "12px",
-                alignSelf: "stretch",
-                background: "#F5F5F5",
-              }}
-            >
-              <Button
-                size="small"
-                variant="contained"
-                sx={{ textTransform: "none" }}
-                color="error"
-                onClick={handleTolakClick} // Menggunakan fungsi handleTolakClick saat tombol Tolak diklik
+            {tolakTerimaButtonsVisible && (
+              <Div
+                sx={{
+                  display: "flex",
+                  padding: "12px 24px 12px 0px",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  gap: "12px",
+                  alignSelf: "stretch",
+                  background: "#F5F5F5",
+                }}
               >
-                Tolak
-              </Button>
-              <Button
-                size="small"
-                variant="contained"
-                sx={{ textTransform: "none" }}
-                color="primary"
-                onClick={handleTerimaClick} // Menggunakan fungsi handleTerimaClick saat tombol Terima diklik
-              >
-                Terima
-              </Button>
-            </Div>
+                <Button
+                  size="small"
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                  color="error"
+                  onClick={handleTolakClick} // Menggunakan fungsi handleTolakClick saat tombol Tolak diklik
+                >
+                  Tolak
+                </Button>
+                <Button
+                  size="small"
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                  color="primary"
+                  onClick={handleTerimaClick} // Menggunakan fungsi handleTerimaClick saat tombol Terima diklik
+                >
+                  Terima
+                </Button>
+              </Div>
+            )}
           </Div>
         </Div>
         {/* Element 2 End */}
@@ -660,6 +667,81 @@ const PengajuanJudulDosenSkripsi = () => {
         </Dialog>
         {/* Dialog Select Dosen Pembimbing Start */}
       </Div>
+
+      {/* Dialog konfirmasi Tolak */}
+      <Dialog
+        open={confirmTolakOpen}
+        onClose={() => setConfirmTolakOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle variant="subtitle2">Menolak Pengajuan Judul</DialogTitle>
+        <DialogContent>
+          <Typography>Apakah Anda yakin ingin menerima judul ini?</Typography>
+        </DialogContent>
+        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+          <Button
+            onClick={() => setConfirmTolakOpen(false)}
+            sx={{
+              background: "white",
+              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+              textTransform: "none",
+              color: "black",
+            }}
+          >
+            Batal
+          </Button>
+          <Button
+            onClick={handleTolak}
+            sx={{
+              textTransform: "none",
+              background: "#FC0",
+              color: "black",
+              "&:hover": {
+                color: "#FC0",
+              },
+            }}
+          >
+            Tolak
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Dialog konfirmasi Terima */}
+      <Dialog
+        open={confirmTerimaOpen}
+        onClose={() => setConfirmTerimaOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle variant="subtitle2">Konfirmasi Terima</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Apakah Anda yakin ingin menerima pengajuan ini?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+          <Button
+            onClick={() => setConfirmTerimaOpen(false)}
+            sx={{
+              background: "white",
+              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+              textTransform: "none",
+              color: "black",
+            }}
+          >
+            Batal
+          </Button>
+          <Button
+            onClick={handleTerima}
+            variant="contained"
+            sx={{ textTransform: "none" }}
+            color="primary"
+          >
+            Terima
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Div>
   );
 };

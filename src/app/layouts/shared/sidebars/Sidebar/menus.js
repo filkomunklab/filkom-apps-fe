@@ -380,25 +380,25 @@ export const dekanMenus = [
     type: "section",
     children: [
       {
-        uri: "/sistem-informasi-skripsi/pengajuan-judul-kaprodi",
+        uri: "/sistem-informasi-skripsi/pengajuan-judul-dekan",
         label: "Pengajuan Judul",
         type: "nav-item",
         icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/pengajuan-proposal-kaprodi",
+        uri: "/sistem-informasi-skripsi/pengajuan-proposal-dekan",
         label: "Pengajuan Proposal",
         type: "nav-item",
         icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/pengajuan-skripsi-kaprodi",
+        uri: "/sistem-informasi-skripsi/pengajuan-skripsi-dekan",
         label: "Pengajuan Skripsi",
         type: "nav-item",
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/riwayat-kaprodi",
+        uri: "/sistem-informasi-skripsi/riwayat-dekan",
         label: "Riwayat",
         type: "nav-item",
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
@@ -495,7 +495,11 @@ export const dosenMenus = [
     type: "section",
     children: [
       {
+<<<<<<< HEAD
+        uri: "/sistem-informasi-skripsi/komite-judul-dosen",
+=======
         uri: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
+>>>>>>> 32e35bf8199bf96a8fbe074e758286afccf3302f
         label: "Komite Judul",
         type: "nav-item",
         icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
