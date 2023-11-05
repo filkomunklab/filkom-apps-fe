@@ -26,7 +26,7 @@ const DaftarBimbinganProposalCoAdvisor = () => {
         <TableCell sx={{ fontSize: "13px" }}>{index + 1}</TableCell>
         <TableCell sx={{ fontSize: "13px" }}>Geovalga Fransiscus Lim</TableCell>
         <TableCell sx={{ fontSize: "13px" }}>
-          SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
+          SISTEM INFORMASI MANAJEMEN SKRIPSI DI FAKULTAS ILMU KOMPUTER
           UNIVERSITAS KLABAT
         </TableCell>
         <TableCell>
@@ -47,7 +47,7 @@ const DaftarBimbinganProposalCoAdvisor = () => {
               color: "blue",
             }}
           >
-            View
+            Detail
           </Typography>
         </TableCell>
       </TableRow>
@@ -220,7 +220,7 @@ const DaftarBimbinganProposalCoAdvisor = () => {
                 lineHeight: "32px",
               }}
             >
-              5 Kelompok
+              5 Proposal
             </Typography>
           </Div>
         </Div>
@@ -260,7 +260,7 @@ const DaftarBimbinganProposalCoAdvisor = () => {
                 lineHeight: "32px",
               }}
             >
-              34 Kelompok
+              34 Proposal
             </Typography>
           </Div>
         </Div>
@@ -301,7 +301,7 @@ const DaftarBimbinganProposalCoAdvisor = () => {
               lineHeight: "32px",
             }}
           >
-            Daftar Bimbingan Proposal
+            Daftar Bimbingan Proposal Co-Advisor
           </Typography>
           <Div
             sx={{

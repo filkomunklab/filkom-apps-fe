@@ -1,5 +1,6 @@
 import Page from "@jumbo/shared/Page";
 import BuatKonsultasiAdvisor from "app/pages/ThesisApps/Dosen/BuatKonsultasiAdvisor";
+import DaftarBimbinganProposalAdvisor from "app/pages/ThesisApps/Dosen/DaftarBimbinganProposalAdvisor";
 import DaftarPengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarPengajuanJudulDosenSkripsi";
 import DaftarPengajuanProposalDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarPengajuanProposalDosenSkripsi";
 import DaftarPengajuanSkripsiDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarPengajuanSkripsiDosenSkripsi";
@@ -9,6 +10,11 @@ import PengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/PengajuanJudu
 import BerandaProposal from "app/pages/ThesisApps/Sekertaris/BerandaProposal";
 
 const dosenSkripsiRoutes = [
+  {
+    // +++++
+    path: "/sistem-informasi-skripsi/bimbingan-proposal-advisor",
+    element: <Page component={DaftarBimbinganProposalAdvisor} />,
+  },
   {
     // Daftar Pengajuan Judul Dosen Skripsi
     path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi",

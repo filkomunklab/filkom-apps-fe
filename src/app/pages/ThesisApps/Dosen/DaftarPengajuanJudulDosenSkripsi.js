@@ -35,7 +35,7 @@ const DaftarPengajuanJudulDosenSkripsi = () => {
         <TableCell sx={{ fontSize: "13px" }}>{index + 1}</TableCell>
         <TableCell sx={{ fontSize: "13px" }}>Geovalga Fransiscus Lim</TableCell>
         <TableCell sx={{ fontSize: "13px" }}>
-          SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
+          SISTEM INFORMASI MANAJEMEN SKRIPSI DI FAKULTAS ILMU KOMPUTER
           UNIVERSITAS KLABAT
         </TableCell>
         <TableCell>-</TableCell>
@@ -54,7 +54,7 @@ const DaftarPengajuanJudulDosenSkripsi = () => {
               color: "blue",
             }}
           >
-            View
+            Detail
           </Typography>
         </TableCell>
       </TableRow>
@@ -99,7 +99,7 @@ const DaftarPengajuanJudulDosenSkripsi = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Kelompok Yang Diuji
+              Jumlah Kelompok
             </Typography>
             <Typography
               sx={{
@@ -227,7 +227,7 @@ const DaftarPengajuanJudulDosenSkripsi = () => {
                 lineHeight: "32px",
               }}
             >
-              5 Kelompok
+              5 Judul
             </Typography>
           </Div>
         </Div>
@@ -265,7 +265,7 @@ const DaftarPengajuanJudulDosenSkripsi = () => {
                 lineHeight: "32px",
               }}
             >
-              34 Kelompok
+              34 Judul
             </Typography>
           </Div>
         </Div>

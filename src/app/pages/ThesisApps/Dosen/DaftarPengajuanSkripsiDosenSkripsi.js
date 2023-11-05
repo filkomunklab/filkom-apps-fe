@@ -219,7 +219,7 @@ const DaftarPengajuanSkripsiDosenSkripsi = () => {
                 lineHeight: "32px",
               }}
             >
-              5 Kelompok
+              5 Skripsi
             </Typography>
           </Div>
         </Div>
@@ -259,7 +259,7 @@ const DaftarPengajuanSkripsiDosenSkripsi = () => {
                 lineHeight: "32px",
               }}
             >
-              34 Kelompok
+              34 Skripsi
             </Typography>
           </Div>
         </Div>
@@ -300,7 +300,7 @@ const DaftarPengajuanSkripsiDosenSkripsi = () => {
               lineHeight: "32px",
             }}
           >
-            Daftar Bimbingan Skripsi
+            Daftar Pengajuan Skripsi
           </Typography>
           <Div
             sx={{
