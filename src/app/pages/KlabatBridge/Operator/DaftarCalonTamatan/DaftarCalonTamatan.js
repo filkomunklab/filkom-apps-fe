@@ -100,6 +100,7 @@ const DaftarCalonTamatan = () => {
   const [searchBtn, setSearchBtn] = useState(false);
   // const [filterBy, setFilterBy] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
+  const [dataRemainingClasses, setDataRemainingClasses] = useState([]);
 
   // pagination
   const [filter, setFilter] = useState([]);
@@ -169,34 +170,34 @@ const DaftarCalonTamatan = () => {
           sks.
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Nama Sesuai Ijazah: {`${item?.student.firstName} ${item?.student.lastName}`}
+          Nama Sesuai Ijazah: {item?.full_name}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          No. Regis: {item?.student.reg_num}
+          No. Regis: {item?.reg_num}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Tanggal Lahir: {item?.student.dateOfBirth}
+          Tanggal Lahir: {item?.date_of_birth}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Jenis Kelamin: {item?.student.gender}
+          Jenis Kelamin: {item?.gender}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           Nomor Induk Kependudukan (NIK): {item?.nik}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Nomor Induk Mahasiswa (NIM): {item?.student.nim}
+          Nomor Induk Mahasiswa (NIM): {item?.nim}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Email: {item?.student.personalEmail}
+          Email: {item?.personalEmail}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Prodi: {item?.student.major === "IF" ? "Informatika" : "Sistem Informasi"}
+          Prodi: {item?.major}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           Minor/Konsentrasi: {item?.minor}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          No. Telp: {item?.student.phoneNo}
+          No. Telp: {item?.phone_num}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           Nama Ibu Kandung: {item?.birth_mother}
@@ -219,7 +220,7 @@ const DaftarCalonTamatan = () => {
               </TableHead>
               <TableBody>
                 
-                {data.remaining_classes?.map((item, index) => (
+                {item?.remaining_classes?.map((item, index) => (
                   <TableSPT index={index} item={item} />
                 ))}
               </TableBody>
@@ -320,13 +321,14 @@ const DaftarCalonTamatan = () => {
             },
           }}
         >
-          {`${item?.student.firstName} ${item?.student.lastName}`}
+          {item?.full_name}
         </Button>
       </TableCell>
-      <TableCell>{item?.student.nim}</TableCell>
-      <TableCell>{item?.student.faculty}</TableCell>
+      <TableCell>{item?.nim}</TableCell>
+      <TableCell>{item?.faculty}</TableCell>
       <TableCell>
-        {item?.student.major === "IF" ? "Informatika" : "Sistem Informasi"}
+        {/* {item?.major === "IF" ? "Informatika" : "Sistem Informasi"} */}
+        {item?.major}
       </TableCell>
       <TableCell>{item?.graduate_plan}</TableCell>
       <TableCell>{item?.approval_fac}</TableCell>
@@ -335,18 +337,18 @@ const DaftarCalonTamatan = () => {
   );
 
   const getData = async () => {
-    // await axios.get(`http://localhost:2000/api/v1/spt?search_query=${searchValue}`).then((res) => {
-    await axios.get("http://localhost:2000/api/v1/spt/").then((res) => {
+    await axios.get(`http://localhost:2000/api/v1/spt?search_query=${searchValue}`).then((res) => {
+    // await axios.get("http://localhost:2000/api/v1/spt/").then((res) => {
+      console.log(res.data.data)
+      const formattedData = res.data.data.map(item => {
+        const remaining_classes = JSON.parse(item.remaining_classes)
+        return {...item, remaining_classes}
+      })
 
-      // const data5 = res.data.data.map(item => {
-      //   const remaining_classes = JSON.parse(item.remaining_classes)
-      //   return {...item, remaining_classes}
-      // })
+      console.log(formattedData)
+      // console.log(res.data.data);
 
-      // console.log(data5)
-
-      console.log(res.data.data);
-      setData(res.data.data);
+      setData(formattedData);
 
       const uniqueStatusByFac = [...new Set(res.data.data.map(item => item.approval_fac))]
       const uniqueStatusByReg = [...new Set(res.data.data.map(item => item.approval_reg))]
@@ -377,6 +379,7 @@ const DaftarCalonTamatan = () => {
     getData();
   }, []);
 
+  console.log(selectedData)
   return (
     <Box>
       <Div

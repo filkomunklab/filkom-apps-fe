@@ -114,12 +114,40 @@ const processedData = jenisPerusahaan.map(item => ({
 const Dashboard = () => {
 
   const [data, setData] = useState([]);
+  const [distribusiAlumni, setDistribusiAlumni] = useState([]);
+  const [totalITS, setTotalITS] = useState([]);
 
   const getData = async () => {
-    await axios.get("http://localhost:2000/api/v1/dashboard/statistic").then((res) => {
+    await axios.get("http://localhost:2000/api/v1/dashboard/statistic").then((response) => {
+      console.log(response.data.data);
+      // setData(response.data.data);
+
+      const apiData = response.data.data.distribusiAlumni;
+      const apiData1 = response.data.data.totalTS;
       
-      console.log(res.data.data);
-      setData(res.data.data);
+      // Format the API response data for alumni distribution bar chart
+    const formattedData = apiData.map(item => {
+      const year = item.graduateYear;
+      const siCount = item.major.find(major => major.name === 'SI')?.count || 0;
+      const ifCount = item.major.find(major => major.name === 'IF')?.count || 1;
+
+      return {
+        year: year,
+        SI: siCount,
+        IF: ifCount
+      };
+    });
+
+    // formated data for total alumni pie chart
+    const formattedData1 = apiData1.map(item => ({
+      name: item.major,
+      value: item.count
+    }));
+
+    setData(response.data.data);
+    setDistribusiAlumni(formattedData);
+    setTotalITS(formattedData1);
+    
     });
   };
 
@@ -260,7 +288,7 @@ const Dashboard = () => {
               </Typography>
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart
-                  data={studentsDistribution}
+                  data={distribusiAlumni}
                   margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
@@ -268,7 +296,7 @@ const Dashboard = () => {
                   <YAxis label={{ value: 'Total Students', angle: -90, position: 'insideLeft', dy: 50 }} />
                   <Tooltip />
                   <Legend iconType="circle" />
-                  <Bar dataKey="TI" fill="#FFCC00" name="TI" />
+                  <Bar dataKey="IF" fill="#FFCC00" name="IF" />
                   {/* <Bar dataKey="DKV" fill="#E21D12" name="DKV" /> */}
                   <Bar dataKey="SI" fill="#006AF5" name="SI" />
                 </BarChart>
@@ -335,7 +363,7 @@ const Dashboard = () => {
                 <ResponsiveContainer width="100%" height={400}>
                   <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                     <Pie
-                      data={pieChartData}
+                      data={totalITS}
                       dataKey="value"
                       nameKey="name"
                       cx="50%"

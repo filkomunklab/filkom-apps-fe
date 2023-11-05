@@ -40,6 +40,7 @@ import JumboDemoCard from "@jumbo/components/JumboDemoCard";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DesktopDatePicker} from "@mui/x-date-pickers/DesktopDatePicker";
+import axios from "axios";
 
 const FormTracerStudy = () => {
   //checkbox
@@ -73,10 +74,11 @@ const FormTracerStudy = () => {
     f504: "",
     f502: "",
     f505: "",
+    f506: "",
     f5a1: "",
     f5a2: "",
     f1101: "",
-    f1102: "", //delete later
+    f1102: "", 
     f5b: "",
     f5c: "",
     f5d: "",
@@ -347,14 +349,108 @@ const FormTracerStudy = () => {
     }));
   };
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   // Handle form submission logic here
-  //   console.log("Identity Data:", identityData);
-  //   console.log("Questionnaire Data:", questionnaireData);
-  //   // You can send the form data to an API, perform validation, etc.
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const normalized = {
+      kdptimsmh: identityData.kodePT,
+      kdpstmsmh: identityData.kodeProdi,
+      nimhsmsmh: identityData.nim,
+      nmmhsmsmh: identityData.fullName,
+      telpomsmh: identityData.noTelp,
+      emailmsmh: identityData.email,
+      tahun_lulus: identityData.tahunLulus,
+      nik: identityData.nik,
+      npwp: identityData.npwp,
+      f8: questionnaireData.f8,
+      f504: questionnaireData.f504,
+      f502: questionnaireData.f502,
+      f505: questionnaireData.f505,
+      f506: questionnaireData.f506,
+      f5a1: questionnaireData.f5a1,
+      f5a2: questionnaireData.f5a2,
+      f1101: questionnaireData.f1101,
+      f1102: questionnaireData.f1102, 
+      f5b: questionnaireData.f5b,
+      f5c: questionnaireData.f5c,
+      f5d: questionnaireData.f5d,
+      f18a: questionnaireData.f18a,
+      f18b: questionnaireData.f18b,
+      f18c: questionnaireData.f18c,
+      f18d: questionnaireData.f18d,
+      f1201: questionnaireData.f1201,
+      f1202: questionnaireData.f1202,
+      f14: questionnaireData.f14,
+      f15: questionnaireData.f15,
+      f1761: questionnaireData.f1761,
+      f1762: questionnaireData.f1762,
+      f1763: questionnaireData.f1763,
+      f1764: questionnaireData.f1764,
+      f1765: questionnaireData.f1765,
+      f1766: questionnaireData.f1766,
+      f1767: questionnaireData.f1767,
+      f1768: questionnaireData.f1768,
+      f1769: questionnaireData.f1769,
+      f1770: questionnaireData.f1770,
+      f1771: questionnaireData.f1771,
+      f1772: questionnaireData.f1772,
+      f1773: questionnaireData.f1773,
+      f1774: questionnaireData.f1774,
+      f21: questionnaireData.f21,
+      f22: questionnaireData.f22,
+      f23: questionnaireData.f23,
+      f24: questionnaireData.f24,
+      f25: questionnaireData.f25,
+      f26: questionnaireData.f26,
+      f27: questionnaireData.f27,
+      f301: questionnaireData.f301,
+      f302: questionnaireData.f302,
+      f303: questionnaireData.f303,
+      f401: questionnaireData.f401,
+      f402: questionnaireData.f402,
+      f403: questionnaireData.f403,
+      f404: questionnaireData.f404,
+      f405: questionnaireData.f405,
+      f406: questionnaireData.f406,
+      f407: questionnaireData.f407,
+      f408: questionnaireData.f408,
+      f409: questionnaireData.f409,
+      f410: questionnaireData.f410,
+      f411: questionnaireData.f411,
+      f412: questionnaireData.f412,
+      f413: questionnaireData.f413,
+      f414: questionnaireData.f414,
+      f415: questionnaireData.f415,
+      f416: questionnaireData.f416,
+      f6: questionnaireData.f6,
+      f7: questionnaireData.f7,
+      f7a: questionnaireData.f7a,
+      f1001: questionnaireData.f1001,
+      f1002: questionnaireData.f1002,
+      f1601: questionnaireData.f1601,
+      f1602: questionnaireData.f1602,
+      f1603: questionnaireData.f1603,
+      f1604: questionnaireData.f1604,
+      f1605: questionnaireData.f1605,
+      f1606: questionnaireData.f1606,
+      f1607: questionnaireData.f1607,
+      f1608: questionnaireData.f1608,
+      f1609: questionnaireData.f1609,
+      f1610: questionnaireData.f1610,
+      f1611: questionnaireData.f1611,
+      f1612: questionnaireData.f1612,
+      f1613: questionnaireData.f1613,
+      f1614: questionnaireData.f1614,
 
-  // };
+    }
+    console.log(normalized)
+    try {
+      const res = await axios.post("http://localhost:2000/api/v1/tracer-study/", normalized)
+          console.log('success', res.data.data)
+    } catch(e){
+        console.log(e)
+    }
+
+  };
 
   // send button (after filling the form)
   const [open, setOpen] = React.useState(false);
@@ -1942,7 +2038,7 @@ const FormTracerStudy = () => {
                   </DialogContent>
                   <DialogActions>
                       <Button onClick={() => setOpen(false)}>Cancel</Button>
-                      <Button onClick={() => setOpen(false)} autoFocus>
+                      <Button onClick={(e) => {setOpen(false); handleSubmit(e)}} autoFocus>
                           Submit
                       </Button>
                   </DialogActions>

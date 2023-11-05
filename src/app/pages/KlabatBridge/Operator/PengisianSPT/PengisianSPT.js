@@ -94,41 +94,40 @@ const PengisianSPT = () => {
         ibuKandung:"",
         noTelp:"",
         email:"",
+        rencanaTamat:"",
     })
 
-    // const handleDataSPT = async (event) => {
-        // try {
-        //     // Make an HTTP POST request to your backend API endpoint
-        //     const response = await axios.get('http://localhost:2000/api/v1/spt/', dataSPT);
-
-        //     // Handle the response from the server if needed
-        //     console.log('Response from server:', response.data);
-        //     console.log('Form submitted successfully!', response.data);
-
-        //     setDataSPT({
-        //               ...dataSPT,
-        //               [event.target.name]: event.target.value,
-        //             });
-        //     // Optionally, you can handle success or redirect to another page here
-        // } catch (error) {
-        //     // Handle errors if the request fails
-        //     console.error('Error submitting data:', error);
-        //     // Optionally, you can show an error message to the user
-        // }
-    //};
     
     // const [data, setData] = useState([]);
 
-    const getData = async () => {
-        await axios.post("http://localhost:2000/api/v1/spt/", {
-            remaining_credits: dataSPT.sisaSKS,
-            birth_mother: dataSPT.ibuKandung,
-        }).then((res) => {
+    // const getData = async () => {
+    //     await axios.post("http://localhost:2000/api/v1/spt/", {
+    //         full_name: dataSPT.nama,
+    //         reg_num: dataSPT.noRegis,
+    //         date_of_birth: selectedDate,
+    //         faculty: dataSPT.fakultas,
+    //         gender: dataSPT.gender,
+    //         major: dataSPT.prodi,
+    //         nim: dataSPT.nim,
+    //         phone_num: dataSPT.noTelp,
+    //         nik: dataSPT.nik,
+    //         birth_mother: dataSPT.ibuKandung,
+    //         graduate_plan: dataSPT.rencanaTamat,
+    //         minor: dataSPT.minor,
+    //         remaining_credits: dataSPT.sisaSKS,
+    //         remaining_classes: JSON.stringify(rows),
+    //         // email: dataSPT.email,
 
-        console.log(res.data.data);
-        // setData(res.data.data);
-        });
-    };
+
+    //         // approval_fac: dataSPT.approval_fac,
+    //         // approval_reg: dataSPT.approval_reg,
+
+    //     }).then((res) => {
+
+    //     console.log(res.data.data);
+    //     // setData(res.data.data);
+    //     });
+    // };
 
     // React.useEffect(() => {
     //     getData();
@@ -147,21 +146,21 @@ const PengisianSPT = () => {
     // table
     const [rows, setRows] = useState([
         // initial data for rows, you can initialize it as per your requirements
-        { id: 1, mk: '', sks: '', keterangan: '' },
-        { id: 2, mk: '', sks: '', keterangan: '' },
-        { id: 3, mk: '', sks: '', keterangan: '' },
-        { id: 4, mk: '', sks: '', keterangan: '' },
-        { id: 5, mk: '', sks: '', keterangan: '' },
-        { id: 6, mk: '', sks: '', keterangan: '' },
-        { id: 7, mk: '', sks: '', keterangan: '' },
-        { id: 8, mk: '', sks: '', keterangan: '' },
+        { subject: '', sks: '', keterangan: '' },
+        { subject: '', sks: '', keterangan: '' },
+        { subject: '', sks: '', keterangan: '' },
+        { subject: '', sks: '', keterangan: '' },
+        { subject: '', sks: '', keterangan: '' },
+        { subject: '', sks: '', keterangan: '' },
+        { subject: '', sks: '', keterangan: '' },
+        { subject: '', sks: '', keterangan: '' },
     ]);
 
     const [totalSKS, setTotalSKS] = useState(0);
 
     const handleInputChange = (e, id, column) => {
-    const updatedRows = rows.map(row => {
-        if (row.id === id) {
+    const updatedRows = rows.map((row, index) => {
+        if (index === id) {
         return { ...row, [column]: e.target.value };
         }
         return row;
@@ -240,18 +239,44 @@ const PengisianSPT = () => {
   };
 
   // submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log(dataSPT);
+    const normalized = {
+        full_name: dataSPT.nama,
+        reg_num: dataSPT.noRegis,
+        date_of_birth: selectedDate,
+        faculty: dataSPT.fakultas,
+        gender: dataSPT.gender.toUpperCase(),
+        major: dataSPT.prodi,
+        nim: dataSPT.nim,
+        phone_num: dataSPT.noTelp,
+        nik: dataSPT.nik,
+        birth_mother: dataSPT.ibuKandung,
+        graduate_plan: dataSPT.rencanaTamat,
+        minor: dataSPT.minor,
+        remaining_credits: dataSPT.sisaSKS,
+        remaining_classes: JSON.stringify(rows),
+        studentId: dataSPT.nim,
+    }
+    console.log(normalized)
+    try {
+        const res =  await axios.post("http://localhost:2000/api/v1/spt/", normalized)
+            console.log('success', res.data.data)
+    } catch(e){
+        console.log(e)
+    }
   };
+
+
+  // see the remaining classes input
+  console.log(rows)
 
     return (
         <Box>
             <Typography mb={2} sx={{ fontSize: "24px", fontWeight: 500, }}>
                 Surat Permohonan Tamat
             </Typography>
-            <form onSubmit={handleSubmit}>
+           
                 <Box
                     p={5}
                     sx={{
@@ -261,16 +286,29 @@ const PengisianSPT = () => {
                     }}
                 >
                     <Typography variant="body1" sx={{lineHeight: 2.5, fontSize: "15px"}}>
-                        Saya yang bertanda tangan di bawah ini, bermohon untuk dapat wisuda pada semester 1 2022/2023 dengan sisa SKS yang harus diambil
+                        Saya yang bertanda tangan di bawah ini, bermohon untuk dapat wisuda pada 
+                        <span style={{ display: 'inline-block', minWidth: '50px' }}>
+                                <TextField
+                                    // type="number"
+                                    variant="outlined"
+                                    size="small"
+                                    placeholder='semester 1 2022/2023'
+                                    sx={{ width: '180px', ml:"10px", marginRight:"10px" }}
+                                    name="rencanaTamat"
+                                    value={dataSPT.rencanaTamat}
+                                    onChange={handleDataSPT}
+                                />
+                            </span>
+                             dengan sisa SKS yang harus diambil
                             <span style={{ display: 'inline-block', minWidth: '30px' }}>
                                 <TextField
                                     type="number"
                                     variant="outlined"
                                     size="small"
                                     placeholder='23'
-                                    sx={{ width: '70px', ml:"10px", marginRight:"10px" }}
+                                    sx={{ width: '60px', ml:"10px", marginRight:"10px" }}
                                     name="sisaSKS"
-                                    value={totalSKS}
+                                    value={dataSPT.sisaSKS}
                                     onChange={handleDataSPT}
                                 />
                             </span>
@@ -349,7 +387,7 @@ const PengisianSPT = () => {
                                 fullWidth
                                 variant="outlined"
                                 name="nim"
-                                type='number'
+                                type='text'
                                 placeholder="12345678910"
                                 value={dataSPT.nim}
                                 onChange={handleDataSPT}
@@ -461,13 +499,13 @@ const PengisianSPT = () => {
                                 </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                {rows.map((row) => (
-                                    <TableRow key={row.id}>
-                                        <TableCell>{row.id}</TableCell>
+                                {rows.map((row, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>{index+1}</TableCell>
                                         <TableCell>
                                             <TextField
-                                                value={row.mk}
-                                                onChange={(e) => handleInputChange(e, row.id, 'mk')}
+                                                value={row.subject}
+                                                onChange={(e) => handleInputChange(e, index, 'subject')}
                                                 fullWidth
                                                 variant="standard"
                                                 sx={{ '& .MuiInputBase-root': { borderBottom: 'none' } }}
@@ -476,7 +514,7 @@ const PengisianSPT = () => {
                                         <TableCell>
                                             <TextField
                                                 value={row.sks}
-                                                onChange={(e) => handleInputChange(e, row.id, 'sks')}
+                                                onChange={(e) => handleInputChange(e, index, 'sks')}
                                                 fullWidth
                                                 variant="standard"
                                                 sx={{ '& .MuiInputBase-root': { borderBottom: 'none' } }}
@@ -486,7 +524,7 @@ const PengisianSPT = () => {
                                         <TableCell>
                                             <TextField
                                                 value={row.keterangan}
-                                                onChange={(e) => handleInputChange(e, row.id, 'keterangan')}
+                                                onChange={(e) => handleInputChange(e, index, 'keterangan')}
                                                 fullWidth
                                                 variant="standard"
                                                 sx={{ '& .MuiInputBase-root': { borderBottom: 'none' } }}
@@ -652,7 +690,7 @@ const PengisianSPT = () => {
                                         </DialogContent>
                                         <DialogActions>
                                             <Button onClick={() => setOpen(false)}>Cancel</Button>
-                                            <Button onClick={() => setOpen(false)} autoFocus>
+                                            <Button onClick={(e) => {setOpen(false); handleSubmit(e)}} autoFocus>
                                                 Submit
                                             </Button>
                                         </DialogActions>
@@ -664,7 +702,7 @@ const PengisianSPT = () => {
                     
                     
                 </Box>
-            </form>
+            
         </Box>
     )
 }
