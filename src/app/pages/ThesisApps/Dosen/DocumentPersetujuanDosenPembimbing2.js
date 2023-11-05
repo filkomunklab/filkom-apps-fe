@@ -512,7 +512,7 @@ const DocumentPersetujuanDosenPembimbing2 = () => {
                           </span>
                           {/* Button untuk Advisor */}
                           <Div
-                            hidden={role.includes("DOSEN") ? false : true}
+                            hidden={role.includes("ADVISOR") ? false : true}
                             style={{
                               display: "flex",
                               flexDirection: "column",

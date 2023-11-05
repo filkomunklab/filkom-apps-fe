@@ -24,7 +24,7 @@ import {
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 
-const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
+const MengisiBeritaAcaraProposalKetuaPenelis = () => {
   // State untuk mengontrol tampilan popup
   const [openScoreDialog, setOpenScoreDialog] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
@@ -1798,4 +1798,4 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
   );
 };
 
-export default MengisiBeritaAcaraSkripsiKetuaPenelis;
+export default MengisiBeritaAcaraProposalKetuaPenelis;
