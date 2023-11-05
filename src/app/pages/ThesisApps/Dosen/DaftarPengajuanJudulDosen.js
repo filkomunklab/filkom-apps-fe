@@ -1,12 +1,6 @@
 import Div from "@jumbo/shared/Div";
-import React, { useState } from "react";
-import PeopleIcon from "@mui/icons-material/People";
-import EmailIcon from "@mui/icons-material/Email";
-import DraftsIcon from "@mui/icons-material/Drafts";
-import ClearIcon from "@mui/icons-material/Clear";
-
+import React from "react";
 import {
-  Button,
   Chip,
   Table,
   TableBody,
@@ -16,17 +10,8 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
-import DateRangeIcon from "@mui/icons-material/DateRange";
-import GavelIcon from "@mui/icons-material/Gavel";
-import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
-import { DownloadDone, Mail } from "@mui/icons-material";
 
 const DaftarPengajuanJudulDosen = () => {
   const TableItem = ({ index }) => {
@@ -38,21 +23,22 @@ const DaftarPengajuanJudulDosen = () => {
           SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
           UNIVERSITAS KLABAT
         </TableCell>
+        <TableCell>Andrew T. Liem, MT, PhD</TableCell>
+        <TableCell>Senly I. Adam, SKom, MSc</TableCell>
+        <TableCell>Oktoverano H. Lengkong, SKom, MDs, MM</TableCell>
         <TableCell>
-          Andrew T. Liem, MT, PhD
+          <Chip
+            label={"Sudah"}
+            sx={{ background: "rgba(21, 131, 67, 0.10)", color: "#0A7637" }}
+          />
         </TableCell>
         <TableCell>
-          Senly I. Adam, SKom, MSc
+          <Chip
+            label={"Menunggu"}
+            sx={{ background: "rgba(255, 204, 0, 0.10)", color: "#985211" }}
+          />
         </TableCell>
-        <TableCell>
-          Oktoverano H. Lengkong, SKom, MDs, MM
-        </TableCell>
-        <TableCell>
-          <Chip label={"Sudah"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Menunggu"} />
-        </TableCell>
+
         <TableCell>
           <Typography
             component={Link}
