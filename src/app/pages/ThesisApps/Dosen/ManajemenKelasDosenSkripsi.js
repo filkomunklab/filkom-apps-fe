@@ -34,7 +34,7 @@ const ManajemenKelasDosenSkripsi = () => {
   const [daftarSemuaKelas, setDaftarSemuaKelas] = useState([]); // menyimpan data semua kelas
   const [daftarPilihanKelas, setDaftarPilihanKelas] = useState([]); // menyimpan data list kelas
   // const [kelasId, setKelasId] = useState(); // menyimpan id kelas yang dipilih
-  const [selectedClass, setSelectedClass] = useState(null);
+  const [selectedClass, setSelectedClass] = useState(null); // menyimpan index daftarSemuaKelas
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false); // buka/tutup konfirmasi hapus kelas
   const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
   const [confirmDeleteClass, setConfirmDeleteClass] = useState(false);
@@ -190,23 +190,27 @@ const ManajemenKelasDosenSkripsi = () => {
 
   // fungsi - menambah mahasiswa
   const handleSearch = () => {
-    // Memisahkan NIM yang dimasukkan pengguna berdasarkan spasi
-    const nims = searchNIMs.split(" ");
-    const newStudents = [];
-    newStudents.push(setSelectedClass);
-
-    // Loop melalui setiap NIM dan cari informasi mahasiswa
-    for (const nim of nims) {
-      newStudents.push(nim);
-    }
-
+    // Split `searchNIMs` berdasarkan spasi atau tab
+    const nims = searchNIMs.split(/\s+/);
+    const newStudents = {
+      classroom_id: daftarSemuaKelas[selectedClass].id,
+      students: nims.map((nim) => ({ nim })),
+    };
+    console.log("create new students:", newStudents);
+    console.log("class id:", setSelectedClass);
     axios
-      .post(`http://localhost:2000/api/v1/classroom/insert-student`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .post(
+        `http://localhost:2000/api/v1/classroom/insert-student`,
+        newStudents,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
+        // request data
+        fetchDaftarSemuaKelasData();
         setAddStudentOpen(false);
         // Mengosongkan input setelah menambahkan mahasiswa
         setSearchNIMs("");
@@ -229,6 +233,8 @@ const ManajemenKelasDosenSkripsi = () => {
         }
       )
       .then((response) => {
+        // request data
+        fetchDaftarSemuaKelasData();
         deleteClass(selectedClass);
         console.log("Mahasiswa berhasil dihapus", response.data);
       })
@@ -272,6 +278,8 @@ const ManajemenKelasDosenSkripsi = () => {
   const handleCloseUpdateAkademik = () => {
     setOpenUpdateAkademik(false);
     setSelectedAkademikData(null);
+    setSemesterAkademik(null);
+    setTahunAjaranAkademik(null);
   };
 
   // fungsi - menghapus akademik
@@ -508,7 +516,7 @@ const ManajemenKelasDosenSkripsi = () => {
                 onClick={handleOpenAddAkademik}
               >
                 <AddIcon sx={{ fontSize: "20px" }} />
-                Kalender Akademik
+                Tambah Kalender Akademik
               </Button>
 
               <TableContainer component={Paper}>
@@ -674,7 +682,7 @@ const ManajemenKelasDosenSkripsi = () => {
               variant="subtitle2"
               sx={{ textAlign: "center", background: "rgba(26, 56, 96, 0.10)" }}
             >
-              Tambah Akademik Kalender
+              Tambah Kalender Akademik
             </DialogTitle>
             <DialogContent
               sx={{
@@ -910,7 +918,13 @@ const ManajemenKelasDosenSkripsi = () => {
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>{student.fullName}</TableCell>
                       <TableCell>{student.nim}</TableCell>
-                      <TableCell>{student.major}</TableCell>
+                      <TableCell>
+                        {student.major === "IF"
+                          ? "Informatika"
+                          : student.major === "SI"
+                          ? "Sistem Informasi"
+                          : student.major}
+                      </TableCell>
                       <TableCell>
                         <span
                           style={{
@@ -937,20 +951,19 @@ const ManajemenKelasDosenSkripsi = () => {
         <Dialog open={showDeleteConfirmation} fullWidth maxWidth="sm">
           <DialogTitle variant="subtitle2">Konfirmasi Hapus Kelas</DialogTitle>
           <DialogContent>
-            Apakah Anda yakin ingin menghapus kelas ini? Semua nama mahasiswa
-            dalam kelas ini akan dihapus juga.
+            Kelas tidak dapat dihapus karena masih ada mahasiswa didalam kelas
           </DialogContent>
           <DialogActions>
             <Button size="small" onClick={handleCancelDelete} color="primary">
-              Batal
+              Kembali
             </Button>
-            <Button
+            {/* <Button
               size="small"
               onClick={() => deleteClass(selectedClass)}
               color="error"
             >
               Hapus Kelas
-            </Button>
+            </Button> */}
           </DialogActions>
         </Dialog>
       )}
