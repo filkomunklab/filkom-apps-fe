@@ -17,11 +17,11 @@ import {
   Box,
   Paper,
   ListSubheader,
-  Dialog, 
-  DialogActions, 
-  DialogContent, 
-  DialogContentText, 
-  DialogTitle, 
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   TextField,
   Divider,
   Checkbox,
@@ -33,8 +33,8 @@ import SearchGlobal from "app/shared/SearchGlobal";
 import React, { useEffect, useState } from "react";
 import CreateIcon from "@mui/icons-material/Create";
 import MarkunreadIcon from "@mui/icons-material/Markunread";
-import SearchIcon from '@mui/icons-material/Search';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import SearchIcon from "@mui/icons-material/Search";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import axios from "axios";
 import { DataArrayRounded } from "@mui/icons-material";
 
@@ -42,8 +42,8 @@ const DaftarAlumni = () => {
   const [data, setData] = useState([]);
   const [year, setYear] = useState([]);
   const [major, setMajor] = useState([]);
-  const [filterValue, setFilterValue] = useState('');
-  const [searchValue, setSearchValue] = useState('');
+  const [filterValue, setFilterValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const [searchBtn, setSearchBtn] = useState(false);
 
   // pagination
@@ -65,8 +65,8 @@ const DaftarAlumni = () => {
 
   // style cancel button
   const buttonStyle = {
-    color: 'black',
-    backgroundColor: 'white',
+    color: "black",
+    backgroundColor: "white",
   };
 
   // select all button
@@ -88,7 +88,7 @@ const DaftarAlumni = () => {
   const TableItem = ({ index, item }) => (
     <TableRow>
       <TableCell>
-        <Checkbox 
+        <Checkbox
           checked={checkboxes[index]}
           onChange={() => handleCheckboxChange(index)}
           color="primary"
@@ -98,43 +98,53 @@ const DaftarAlumni = () => {
       <TableCell>{`${item.firstName} ${item.lastName}`}</TableCell>
       <TableCell>{item.nim}</TableCell>
       <TableCell>{item.faculty}</TableCell>
-      <TableCell>{item.major === "IF" ? "Informatika" : "Sistem Informasi"}</TableCell>
+      <TableCell>
+        {item.major === "IF" ? "Informatika" : "Sistem Informasi"}
+      </TableCell>
       <TableCell>{item.graduate_year}</TableCell>
       <TableCell>{item.status}</TableCell>
       <TableCell>
-        <Box sx={{
-          display: "flex",
-          //justifyContent: "center",
-          alignItems: 'center',
-        }}
+        <Box
+          sx={{
+            display: "flex",
+            //justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          <Button 
-            //onClick={() => setResetPassword(true)}
+          <Button
+          //onClick={() => setResetPassword(true)}
           >
-            <WhatsAppIcon sx={{ fontSize: 16, color: 'black' }} />
+            <WhatsAppIcon sx={{ fontSize: 16, color: "black" }} />
           </Button>
           <Button>
-            <MarkunreadIcon sx={{ fontSize: 16, color: 'black' }}/>
+            <MarkunreadIcon sx={{ fontSize: 16, color: "black" }} />
           </Button>
         </Box>
       </TableCell>
     </TableRow>
   );
 
-
   const getData = async () => {
-    await axios.get(`http://localhost:2000/api/v1/admin-operator/alumni?search_query=${searchValue}`).then((res) => {
-      console.log(res.data.data);
-      
-      setData(res.data.data);
+    await axios
+      .get(
+        `http://localhost:2000/api/v1/admin-operator/alumni?search_query=${searchValue}`
+      )
+      .then((res) => {
+        console.log(res.data.data);
 
-      const uniqueYears = [...new Set(res.data.data.map(item=> item.graduate_year))]
-      const uniqueMajor = [...new Set(res.data.data.map(item=> item.major))]
+        setData(res.data.data);
 
-      console.log(uniqueYears);
-      setYear(uniqueYears)
-      setMajor(uniqueMajor)
-    });
+        const uniqueYears = [
+          ...new Set(res.data.data.map((item) => item.graduate_year)),
+        ];
+        const uniqueMajor = [
+          ...new Set(res.data.data.map((item) => item.major)),
+        ];
+
+        console.log(uniqueYears);
+        setYear(uniqueYears);
+        setMajor(uniqueMajor);
+      });
   };
 
   // React.useEffect(() =>{
@@ -143,7 +153,7 @@ const DaftarAlumni = () => {
   //     function filterData() {
   //       return data.filter(item => item["graduate_year"] === filterValue || item["major"] === filterValue);
   //     }
-  
+
   //     const data1 = filterData()
   //     console.log(data1)
   //     setFilterValue(data1)
@@ -151,7 +161,10 @@ const DaftarAlumni = () => {
   // }, [filterValue, data]);
 
   function filterData() {
-    return data.filter(item => item["graduate_year"] === filterValue || item["major"] === filterValue);
+    return data.filter(
+      (item) =>
+        item["graduate_year"] === filterValue || item["major"] === filterValue
+    );
   }
 
   React.useEffect(() => {
@@ -159,8 +172,7 @@ const DaftarAlumni = () => {
   }, [searchBtn]);
 
   return (
-    <Box
-    >
+    <Box>
       <Div
         sx={{
           display: "flex",
@@ -192,64 +204,65 @@ const DaftarAlumni = () => {
             onChange={(e) => setSearchValue(e.target.value)}
             InputProps={{
               endAdornment: (
-                <IconButton 
-                  onClick={() => setSearchBtn(!searchBtn)} 
-                  edge="end">
+                <IconButton onClick={() => setSearchBtn(!searchBtn)} edge="end">
                   <SearchIcon />
                 </IconButton>
               ),
-              style: { borderRadius: '25px', width: '250px', height: '35px'} // Apply border radius here
+              style: { borderRadius: "25px", width: "250px", height: "35px" }, // Apply border radius here
             }}
           />
 
-          <FormControl sx={{minWidth: 200}} size="small">
+          <FormControl sx={{ minWidth: 200 }} size="small">
             <InputLabel htmlFor="grouped-select">Filter</InputLabel>
-            <Select 
-              defaultValue="" 
-              id="grouped-select" 
+            <Select
+              defaultValue=""
+              id="grouped-select"
               label="Filter"
-              sx={{borderRadius: 10, maxHeight: '50px'}}
+              sx={{ borderRadius: 10, maxHeight: "50px" }}
               value={filterValue}
-              onChange={(event)=>setFilterValue(event.target.value)}
+              onChange={(event) => setFilterValue(event.target.value)}
             >
               <MenuItem value="">
-                  <em>None</em>
+                <em>None</em>
               </MenuItem>
-              <ListSubheader sx={{color: "#192739F0"}}>Program Study</ListSubheader>
-              {major.map(item => {
-                let label
+              <ListSubheader sx={{ color: "#192739F0" }}>
+                Program Study
+              </ListSubheader>
+              {major.map((item) => {
+                let label;
 
                 switch (item) {
-                  case 'IF':
-                    label='Informatics'
+                  case "IF":
+                    label = "Informatics";
                     break;
-                  case 'SI':
-                    label='Sistem Information'
+                  case "SI":
+                    label = "Sistem Information";
                     break;
-                  case 'DKV':
-                    label='DKV'
+                  case "DKV":
+                    label = "DKV";
                     break;
                   default:
                     break;
                 }
-                return(
-              <MenuItem value={item}>{label}</MenuItem>
-              )})}
-              <ListSubheader sx={{color: "#192739F0"}}>Graduation Year</ListSubheader>
-              {year.map((item)=>{return(
-                 <MenuItem value={item}>{item}</MenuItem>
-              )})}
+                return <MenuItem value={item}>{label}</MenuItem>;
+              })}
+              <ListSubheader sx={{ color: "#192739F0" }}>
+                Graduation Year
+              </ListSubheader>
+              {year.map((item) => {
+                return <MenuItem value={item}>{item}</MenuItem>;
+              })}
             </Select>
           </FormControl>
-          
-          <Button 
-            variant="contained" 
-            color="primary" 
+
+          <Button
+            variant="contained"
+            color="primary"
             sx={{
               borderRadius: 10,
               // whiteSpace: "nowrap",
               minWidth: 100,
-              }}
+            }}
           >
             <Box>Export</Box>
           </Button>
@@ -258,9 +271,9 @@ const DaftarAlumni = () => {
       <TableContainer component={Paper} sx={{ overflow: "auto" }}>
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: '#f5f5f5'}}>
+            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
               <TableCell>
-                <Checkbox onClick={handleSelectAll}/>
+                <Checkbox onClick={handleSelectAll} />
               </TableCell>
               <TableCell>No</TableCell>
               <TableCell>Full Name</TableCell>
@@ -273,19 +286,18 @@ const DaftarAlumni = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filterData().length > 0 ? filterData()
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((item, index) => (
-              <TableItem index={index} item={item} />
-            )) : data.map((item, index) => (
-              <TableItem index={index} item={item} />
-            ))}
+            {filterData().length > 0
+              ? filterData()
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => <TableItem index={index} item={item} />)
+              : data.map((item, index) => (
+                  <TableItem index={index} item={item} />
+                ))}
           </TableBody>
         </Table>
       </TableContainer>
 
-      
-      <Grid container justifyContent="flex-end" >
+      <Grid container justifyContent="flex-end">
         <Grid item>
           <TablePagination
             rowsPerPageOptions={[10, 25, 50, 100]}
@@ -295,37 +307,34 @@ const DaftarAlumni = () => {
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            sx={{marginY:2}}
+            sx={{ marginY: 2 }}
           />
         </Grid>
       </Grid>
 
-      <Grid container justifyContent="flex-end" >
-        <Grid item> 
+      <Grid container justifyContent="flex-end">
+        <Grid item>
           <Button
-            variant="contained" 
+            variant="contained"
             color="primary"
             sx={{
-            borderRadius: 10,
-            whiteSpace: "nowrap",
-            minWidth: 100,
-            // pr:3,
-            // pl:3,
+              borderRadius: 10,
+              whiteSpace: "nowrap",
+              minWidth: 100,
+              // pr:3,
+              // pl:3,
             }}
           >
             Send
           </Button>
+        </Grid>
       </Grid>
-      </Grid>
-
-
-      
 
       {/* dialog box to reset alumni password */}
       <Dialog open={resetPassword} onClose={() => setResetPassword(false)}>
         <DialogTitle>Reset Password</DialogTitle>
         <Divider />
-        <DialogContent style={{ minWidth: '500px' }}>
+        <DialogContent style={{ minWidth: "500px" }}>
           {/* <TextField
               autoFocus
               margin="dense"
@@ -336,35 +345,47 @@ const DaftarAlumni = () => {
               variant="standard"
           /> */}
           <Typography>Email</Typography>
-          <TextField 
-            id="outlined-basic"   
-            placeholder="s11810007@student.unklab.ac.id" 
-            variant="outlined" 
+          <TextField
+            id="outlined-basic"
+            placeholder="s11810007@student.unklab.ac.id"
+            variant="outlined"
             type="email"
             fullWidth
-            sx={{mb:3}}
+            sx={{ mb: 3 }}
           />
           <Typography>New Password</Typography>
-          <TextField 
-            id="outlined-basic"   
-            placeholder="New Password" 
-            variant="outlined" 
+          <TextField
+            id="outlined-basic"
+            placeholder="New Password"
+            variant="outlined"
             type="password"
             fullWidth
-            sx={{mb:3}}
+            sx={{ mb: 3 }}
           />
           <Typography>Confirm New Password</Typography>
-          <TextField 
-            id="outlined-basic"   
-            placeholder="Confirm New Password" 
-            variant="outlined" 
+          <TextField
+            id="outlined-basic"
+            placeholder="Confirm New Password"
+            variant="outlined"
             type="password"
             fullWidth
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setResetPassword(false)} variant="contained"  style={buttonStyle}>Cancel</Button>
-          <Button onClick={() => setResetPassword(false)} variant="contained" color="primary">Confirm</Button>
+          <Button
+            onClick={() => setResetPassword(false)}
+            variant="contained"
+            style={buttonStyle}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => setResetPassword(false)}
+            variant="contained"
+            color="primary"
+          >
+            Confirm
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>

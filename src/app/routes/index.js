@@ -2,12 +2,20 @@ import React from "react";
 import Home from "../pages/home";
 import Page from "@jumbo/shared/Page";
 import Login from "app/pages/Login";
-import mahasiswaRoutes from "./mahasiswaRoutes";
+import mahasiswaRoutes from "./BA-mahasiswaRoutes";
 import NotFound from "../pages/404";
 import Unauthorized from "app/pages/unauthorized";
 import operatorRoutes from "./operatorRoutes";
-// import calonTamatanRoutes from "./calonTamatanRoutes";
-
+import dosenRoutes from "./dosenRoutes";
+import sekertarisRoutes from "./sekertarisRoutes";
+import advisorRoutes from "./advisorRoutes";
+import coAdvisorRoutes from "./coAdvisorRoutes";
+import dosenSkripsiRoutes from "./dosenSkripsiRoutes";
+import ketuaPenelisRoutes from "./ketuaPenelisRoutes";
+import anggotaPenelisRoutes from "./anggotaPenelisRoutes";
+import dosenPembimbingRoutes from "./BA-dosenPembimbingRoutes";
+import dekanRoutes from "./BA-dekanRoutes";
+import kepalaProgramStudiRoutes from "./BA-kepalaProgramStudiRoutes";
 /**
  routes which you want to make accessible to both authenticated and anonymous users
  **/
@@ -24,9 +32,20 @@ const routesForAuthenticatedOnly = [
     path: "/",
     element: <Page component={Home} />,
   },
-  // ...mahasiswaRoutes,
+  ...mahasiswaRoutes,
   ...operatorRoutes,
+  ...dosenRoutes,
+  ...sekertarisRoutes,
+  ...advisorRoutes,
+  ...coAdvisorRoutes,
+  ...dosenSkripsiRoutes,
+  ...ketuaPenelisRoutes,
+  ...anggotaPenelisRoutes,
   // ...calonTamatanRoutes,
+  ...dosenPembimbingRoutes,
+  ...dekanRoutes,
+  ...kepalaProgramStudiRoutes,
+  //...operatorRoutes,
 ];
 
 /**

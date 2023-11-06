@@ -5,7 +5,7 @@ import {
   CssBaseline,
   FormControlLabel,
   Grid,
-  TextField,
+  Stack,
   Typography,
 } from "@mui/material";
 import React from "react";
@@ -21,6 +21,7 @@ import { Formik, Form } from "formik";
 import { LoadingButton } from "@mui/lab";
 import * as yup from "yup";
 import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
+import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
@@ -29,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flex: 1,
     justifyContent: "space-between",
+    // overflow: "auto",
   },
   leftSide: {
     display: "flex",
@@ -53,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 const signInSchema = yup.object({
   username: yup.string("Enter your username").required("Username is required"),
   password: yup.string("Enter your password").required("Password is required"),
+  loginAs: yup.string("Enter your password").required("Role is required"),
 });
 
 const Login = () => {
@@ -61,10 +64,10 @@ const Login = () => {
   const navigate = useNavigate();
 
   const onSignIn = async (formdata) => {
-    const { accessToken, user } = await authService.signIn(formdata);
-    setAuthToken(accessToken);
+    const { token, user } = await authService.signIn(formdata);
+    setAuthToken(token);
 
-    localStorage.setItem("user", user.id);
+    localStorage.setItem("user", JSON.stringify(user));
 
     navigate("/");
   };
@@ -85,7 +88,8 @@ const Login = () => {
           validationSchema={signInSchema}
           initialValues={{
             username: "admin",
-            password: "123456",
+            password: "12345",
+            loginAs: "admin",
           }}
           onSubmit={(data, { setSubmitting }) => {
             console.log(data);
@@ -96,12 +100,7 @@ const Login = () => {
         >
           {({ isSubmitting }) => (
             <Form noValidate>
-              <Box
-                sx={{ backgroundColor: "white", width: "433px" }}
-                display={"flex"}
-                flexDirection={"column"}
-                gap={"30px"}
-              >
+              <Stack sx={{ backgroundColor: "white", width: "433px" }}>
                 <Logo mini sx={{ height: "104px" }} />
                 <Typography
                   variant="h1"
@@ -125,6 +124,19 @@ const Login = () => {
                       label="Password"
                       fullWidth
                       type="password"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <JumboSelectField
+                      name="loginAs"
+                      label="Login as"
+                      fullWidth
+                      options={[
+                        { value: "", label: "None" },
+                        { value: "admin", label: "Admin" },
+                        { value: "student", label: "Student" },
+                        { value: "employee", label: "Employee" },
+                      ]}
                     />
                   </Grid>
                   <Grid container justifyContent={"space-between"}>
@@ -163,7 +175,7 @@ const Login = () => {
                     </Button>
                   </Grid>
                 </Grid>
-              </Box>
+              </Stack>
             </Form>
           )}
         </Formik>

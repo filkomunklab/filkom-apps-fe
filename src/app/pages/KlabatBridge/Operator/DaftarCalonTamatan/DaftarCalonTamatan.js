@@ -95,8 +95,8 @@ const DaftarCalonTamatan = () => {
   const [statusByFac, setStatusByFac] = useState([]);
   const [statusByRegister, setStatusByRegister] = useState([]);
   const [graduatePlan, setGraduatePlan] = useState([]);
-  const [filterValue, setFilterValue] = useState('');
-  const [searchValue, setSearchValue] = useState('');
+  const [filterValue, setFilterValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const [searchBtn, setSearchBtn] = useState(false);
   // const [filterBy, setFilterBy] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
@@ -135,10 +135,6 @@ const DaftarCalonTamatan = () => {
     setModalOpen(false);
   };
 
-
-  
-
- 
   const TableSPT = ({ index, item }) => (
     <TableRow>
       <TableCell>{index + 1}</TableCell>
@@ -219,7 +215,6 @@ const DaftarCalonTamatan = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                
                 {item?.remaining_classes?.map((item, index) => (
                   <TableSPT index={index} item={item} />
                 ))}
@@ -246,7 +241,7 @@ const DaftarCalonTamatan = () => {
                 height: 130,
                 backgroundColor: "red",
               },
-            }} 
+            }}
           >
             <Paper elevation={3} />
           </Div>
@@ -337,34 +332,47 @@ const DaftarCalonTamatan = () => {
   );
 
   const getData = async () => {
-    await axios.get(`http://localhost:2000/api/v1/spt?search_query=${searchValue}`).then((res) => {
-    // await axios.get("http://localhost:2000/api/v1/spt/").then((res) => {
-      console.log(res.data.data)
-      const formattedData = res.data.data.map(item => {
-        const remaining_classes = JSON.parse(item.remaining_classes)
-        return {...item, remaining_classes}
-      })
+    await axios
+      .get(`http://localhost:2000/api/v1/spt?search_query=${searchValue}`)
+      .then((res) => {
+        // await axios.get("http://localhost:2000/api/v1/spt/").then((res) => {
+        console.log(res.data.data);
+        const formattedData = res.data.data.map((item) => {
+          const remaining_classes = JSON.parse(item.remaining_classes);
+          return { ...item, remaining_classes };
+        });
 
-      console.log(formattedData)
-      // console.log(res.data.data);
+        console.log(formattedData);
+        // console.log(res.data.data);
 
-      setData(formattedData);
+        setData(formattedData);
 
-      const uniqueStatusByFac = [...new Set(res.data.data.map(item => item.approval_fac))]
-      const uniqueStatusByReg = [...new Set(res.data.data.map(item => item.approval_reg))]
-      const uniqueGraduatePlan = [...new Set(res.data.data.map(item => item.graduate_plan))]
+        const uniqueStatusByFac = [
+          ...new Set(res.data.data.map((item) => item.approval_fac)),
+        ];
+        const uniqueStatusByReg = [
+          ...new Set(res.data.data.map((item) => item.approval_reg)),
+        ];
+        const uniqueGraduatePlan = [
+          ...new Set(res.data.data.map((item) => item.graduate_plan)),
+        ];
 
-      setStatusByFac(uniqueStatusByFac)
-      setStatusByRegister(uniqueStatusByReg)
-      setGraduatePlan(uniqueGraduatePlan)
+        setStatusByFac(uniqueStatusByFac);
+        setStatusByRegister(uniqueStatusByReg);
+        setGraduatePlan(uniqueGraduatePlan);
 
-      // console.log(uniqueGraduatePlan);
-    });
+        // console.log(uniqueGraduatePlan);
+      });
   };
 
   function filterData() {
     // return data.filter(item => item["graduate_year"] === filterValue || item["major"] === filterValue);
-    return data.filter(item => item["approval_fac"]+'FACULTY' === filterValue || item["approval_reg"]+'REGISTER' === filterValue || item["graduate_plan"] === filterValue);
+    return data.filter(
+      (item) =>
+        item["approval_fac"] + "FACULTY" === filterValue ||
+        item["approval_reg"] + "REGISTER" === filterValue ||
+        item["graduate_plan"] === filterValue
+    );
   }
 
   // const dummy = [
@@ -379,7 +387,7 @@ const DaftarCalonTamatan = () => {
     getData();
   }, []);
 
-  console.log(selectedData)
+  console.log(selectedData);
   return (
     <Box>
       <Div
@@ -393,7 +401,7 @@ const DaftarCalonTamatan = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
-         Graduate Candidates
+          Graduate Candidates
         </Typography>
         <FormControl sx={{ minWidth: 200 }} size="small">
           <InputLabel htmlFor="grouped-select">Filter</InputLabel>
@@ -403,7 +411,7 @@ const DaftarCalonTamatan = () => {
             label="Filter"
             sx={{ borderRadius: 10, maxHeight: "50px" }}
             value={filterValue}
-            onChange={(event)=>setFilterValue(event.target.value)}
+            onChange={(event) => setFilterValue(event.target.value)}
           >
             <MenuItem value="">
               <em>None</em>
@@ -411,23 +419,23 @@ const DaftarCalonTamatan = () => {
             <ListSubheader sx={{ color: "#192739F0" }}>
               Status by Faculty
             </ListSubheader>
-            {statusByFac.map(item => { return (
-                <MenuItem value={item+'FACULTY'}>{item}</MenuItem>
-              )})}
+            {statusByFac.map((item) => {
+              return <MenuItem value={item + "FACULTY"}>{item}</MenuItem>;
+            })}
 
             <ListSubheader sx={{ color: "#192739F0" }}>
               Status by Register
             </ListSubheader>
-            {statusByRegister.map(item => { return (
-                <MenuItem value={item+'REGISTER'}>{item}</MenuItem>
-              )})}
+            {statusByRegister.map((item) => {
+              return <MenuItem value={item + "REGISTER"}>{item}</MenuItem>;
+            })}
 
             <ListSubheader sx={{ color: "#192739F0" }}>
               Rencana Tamat
             </ListSubheader>
-            {graduatePlan.map(item => { return (
-                <MenuItem value={item}>{item}</MenuItem>
-              )})}
+            {graduatePlan.map((item) => {
+              return <MenuItem value={item}>{item}</MenuItem>;
+            })}
           </Select>
         </FormControl>
       </Div>
@@ -447,13 +455,13 @@ const DaftarCalonTamatan = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filterData().length > 0 ? filterData()
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((item, index) => (
-              <TableItem index={index} item={item} />
-            )) : data.map((item, index) => (
-              <TableItem index={index} item={item} />
-            ))}
+            {filterData().length > 0
+              ? filterData()
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => <TableItem index={index} item={item} />)
+              : data.map((item, index) => (
+                  <TableItem index={index} item={item} />
+                ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -491,7 +499,7 @@ const DaftarCalonTamatan = () => {
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            sx={{marginY:2}}
+            sx={{ marginY: 2 }}
           />
         </Grid>
       </Grid>
