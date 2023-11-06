@@ -32,7 +32,7 @@ const dosenRoutes = [
   {
     // Daftar Komite Judul
     path: "/sistem-informasi-skripsi/komite-judul-dosen",
-    element: <Page component={MengisiBeritaAcaraProposalKetuaPenelis} />,
+    element: <Page component={DaftarPengajuanJudulDosen} />,
   },
 
   // user dekan

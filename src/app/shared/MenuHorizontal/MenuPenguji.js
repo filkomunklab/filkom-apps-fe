@@ -50,8 +50,65 @@ const MenuPenguji = () => {
                 </Button>
               </Link>
             </Div>
-            {/* DOSEN PEMBIMBING */}
+            {/* DOSEN ADVISOR */}
             <Div hidden={role.includes("ADVISOR") ? false : true}>
+              <Link to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/beranda">
+                <Button
+                  sx={{
+                    fontSize: "13px",
+                    padding: "6px 16px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Beranda
+                </Button>
+              </Link>
+            </Div>
+            {/* DOSEN CO_ADVISOR */}
+            <Div hidden={role.includes("CO_ADVISOR") ? false : true}>
+              <Link to="/sistem-informasi-skripsi/bimbingan-proposal-co-advisor/beranda">
+                <Button
+                  sx={{
+                    fontSize: "13px",
+                    padding: "6px 16px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Beranda
+                </Button>
+              </Link>
+            </Div>
+            {/* Dosen kETUA PANALIS */}
+            <Div hidden={role.includes("KETUA_PANALIS") ? false : true}>
+              <Link to="/sistem-informasi-skripsi/uji-proposal-ketua/beranda">
+                <Button
+                  sx={{
+                    fontSize: "13px",
+                    padding: "6px 16px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Beranda
+                </Button>
+              </Link>
+            </Div>
+            {/* Dosen ANGGOTA PANALIS */}
+            <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
               <Link to="#">
                 <Button
                   sx={{
@@ -69,8 +126,27 @@ const MenuPenguji = () => {
                 </Button>
               </Link>
             </Div>
-            {/* Dosen ketua panalis */}
-            <Div hidden={role.includes("KETUA_PANALIS") ? false : true}>
+            {/* Dosen KAPRODI */}
+            {/* <Div hidden={role.includes("KAPRODI") ? false : true}>
+              <Link to="#">
+                <Button
+                  sx={{
+                    fontSize: "13px",
+                    padding: "6px 16px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Beranda
+                </Button>
+              </Link>
+            </Div> */}
+            {/* Dosen DEKAN */}
+            <Div hidden={role.includes("DEKAN") ? false : true}>
               <Link to="#">
                 <Button
                   sx={{
@@ -109,6 +185,44 @@ const MenuPenguji = () => {
                 </Button>
               </Link>
             </Div>
+            {/* Dosen KAPRODI */}
+            <Div hidden={role.includes("KARPODI") ? false : true}>
+              <Link to="#">
+                <Button
+                  sx={{
+                    fontSize: "13px",
+                    padding: "6px 16px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Pengajuan Judul
+                </Button>
+              </Link>
+            </Div>
+            {/* Dosen DEKAN */}
+            <Div hidden={role.includes("DEKAN") ? false : true}>
+              <Link to="#">
+                <Button
+                  sx={{
+                    fontSize: "13px",
+                    padding: "6px 16px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Pengajuan Judul
+                </Button>
+              </Link>
+            </Div>
           </Div>
           <Div sx={{ margin: "auto" }}>
             {/* dosen skripsi */}
@@ -130,7 +244,7 @@ const MenuPenguji = () => {
                 </Button>
               </Link>
             </Div>
-            {/* dosen Advisor */}
+            {/* dosen ADVISOR */}
             <Div hidden={role.includes("ADVISOR") ? false : true}>
               <Link to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/konsultasi">
                 <Button
@@ -149,11 +263,101 @@ const MenuPenguji = () => {
                 </Button>
               </Link>
             </Div>
-            {/* dosen co-advisor */}
-            {/* dosen ketua panalis */}
-            {/* dosen anggota panalis */}
+            {/* dosen CO_ADVISOR */}
+            <Div hidden={role.includes("CO_ADVISOR") ? false : true}>
+              <Link to="/sistem-informasi-skripsi/bimbingan-proposal-co-advisor/konsultasi">
+                <Button
+                  sx={{
+                    // width: "130px",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Konsultasi
+                </Button>
+              </Link>
+            </Div>
+            {/* dosen KETUA_PANALIS */}
+            <Div hidden={role.includes("KETUA_PANALIS") ? false : true}>
+              <Link to="/sistem-informasi-skripsi/uji-proposal-ketua/konsultasi">
+                <Button
+                  sx={{
+                    // width: "130px",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Konsultasi
+                </Button>
+              </Link>
+            </Div>
+            {/* dosen ANGGOTA PANALIS */}
+            <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
+              <Link to="#">
+                <Button
+                  sx={{
+                    // width: "130px",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Konsultasi
+                </Button>
+              </Link>
+            </Div>
             {/* dosen kaprodi */}
-            {/* dosen dekan */}
+            {/* <Div hidden={role.includes("KAPRODI") ? false : true}>
+              <Link to="#">
+                <Button
+                  sx={{
+                    // width: "130px",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Konsultasi
+                </Button>
+              </Link>
+            </Div> */}
+            {/* dosen DEKAN */}
+            <Div hidden={role.includes("DEKAN") ? false : true}>
+              <Link to="#">
+                <Button
+                  sx={{
+                    // width: "130px",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Konsultasi
+                </Button>
+              </Link>
+            </Div>
           </Div>
           <Div sx={{ margin: "auto" }}>
             <Button
@@ -183,23 +387,8 @@ const MenuPenguji = () => {
                 horizontal: "left",
               }}
             >
-              {/* dosen skripsi */}
-              {/* DOSEN GANTI DOSEN_SKRIPSI */}
-              <Div
-                hidden={
-                  role.includes(
-                    "DOSEN",
-                    "ADVISOR",
-                    "CO_ADVISOR",
-                    "KETUA_PANALIS",
-                    "ANGGOTA_PANALIS",
-                    "KAPRODI",
-                    "DEKAN"
-                  )
-                    ? false
-                    : true
-                }
-              >
+              {/* DOSEN DOSEN_SKRIPSI */}
+              <Div hidden={role.includes("DOSEN") ? false : true}>
                 <Link
                   to="/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-proposal"
                   style={{ textDecoration: "none", color: "black" }}
@@ -209,22 +398,186 @@ const MenuPenguji = () => {
                   </MenuItem>
                 </Link>
               </Div>
-              <Link
-                to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/berita-acara-proposal"
-                style={{ textDecoration: "none", color: "black" }}
-              >
-                <MenuItem onClick={() => setAnchorEl(null)}>
-                  Berita Acara Proposal
-                </MenuItem>
-              </Link>
-              <Link
-                to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/document-revisi-proposal"
-                style={{ textDecoration: "none", color: "black" }}
-              >
-                <MenuItem onClick={() => setAnchorEl(null)}>
-                  Dokumen Revisi Proposal
-                </MenuItem>
-              </Link>
+              {/* DOSEN ADVISOR */}
+              <Div hidden={role.includes("ADVISOR") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/dokumen-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN CO_ADVISOR */}
+              <Div hidden={role.includes("CO_ADVISOR") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/bimbingan-proposal-co-advisor/dokumen-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN KETUA PANALIS */}
+              <Div hidden={role.includes("KETUA_PANALIS") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/uji-proposal-ketua/dokumen-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN ANGGOTA PANALIS */}
+              <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN KAPRODI */}
+              {/* <Div hidden={role.includes("KAPRODI") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Proposal
+                  </MenuItem>
+                </Link>
+              </Div> */}
+              {/* DOSEN DEKAN */}
+              <Div hidden={role.includes("DEKAN") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN ADVISOR */}
+              <Div hidden={role.includes("DOSEN") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/berita-acara-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Berita Acara Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN KETUA PANALIS */}
+              <Div hidden={role.includes("KETUA_PANALIS") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/uji-proposal-ketual/berita-acara-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Berita Acara Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN ANGGOTA PANALIS */}
+              <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Berita Acara Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN KAPRODI */}
+              {/* <Div hidden={role.includes("KAPRODI") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Berita Acara Proposal
+                  </MenuItem>
+                </Link>
+              </Div> */}
+              {/* DOSEN DEKAN */}
+              <Div hidden={role.includes("DEKAN") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Berita Acara Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN CO_ADVISOR */}
+              <Div hidden={role.includes("CO_ADVISOR") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/bimbingan-proposal-co-advisor/perubahan-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Perubahan Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN SKRIPSI */}
+              <Div hidden={role.includes("DOSEN") ? false : true}>
+                {/* GANTI SESUAI LINK PAGE DOSEN SKRIPSI */}
+                <Link
+                  to="/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-revisi-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Revisi Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN ADVISOR */}
+              <Div hidden={role.includes("ADVISOR") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/dokumen-revisi-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Revisi Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN ANGGOTA PANALIS */}
+              <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Revisi Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN KETUA PANALIS */}
+              <Div hidden={role.includes("KETUA_PANALIS") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/uji-proposal-ketua/dokumen-revisi-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Revisi Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN ANGGOTA PANALIS */}
+              <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Revisi Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN KAPRODI */}
+              {/* <Div hidden={role.includes("KAPRODI") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Revisi Proposal
+                  </MenuItem>
+                </Link>
+              </Div> */}
+              {/* DOSEN DEKAN */}
+              <Div hidden={role.includes("DEKAN") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Revisi Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
             </Menu>
           </Div>
           <Div
@@ -264,15 +617,200 @@ const MenuPenguji = () => {
                 horizontal: "left",
               }}
             >
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Dokumen Skripsi
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Berita Acara Skripsi
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Dokumen Revisi Skripsi
-              </MenuItem>
+              {/* DOSEN SKRIPSI */}
+              <Div hidden={role.includes("DOSEN") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/dokumen-skripsi"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN ADVISOR */}
+              <Div hidden={role.includes("ADVISOR") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/bimbingan-skripsi-advisor/dokumen-skripsi"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN CO_ADVISOR */}
+              <Div hidden={role.includes("CO_ADVISOR") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/bimbingan-skripsi-co-advisor/dokumen-skripsi"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN KETUA PANALIS */}
+              <Div hidden={role.includes("KETUA_PANALIS") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/uji-skripsi-ketua/dokumen-skripsi"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN ANGGOTA PANALIS */}
+              <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/uji-skripsi-ketua/berita-acara-skripsi"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN KAPRODI */}
+              {/* <Div hidden={role.includes("KAPRODI") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Skripsi
+                  </MenuItem>
+                </Link>
+              </Div> */}
+              {/* DOSEN DEKAN */}
+              <Div hidden={role.includes("DEKAN") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN ADVISOR */}
+              {/* GANTI LINK SESUAI DENGNA ADVISOR */}
+              <Div hidden={role.includes("DOSEN") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/bimbingan-skripsi-advisor/berita-acara-skripsi"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Berita Acara Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN KETUA_PANALIS */}
+              <Div hidden={role.includes("KETUA_PANALIS") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Berita Acara Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN ANGGOTA PANALIS */}
+              <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Berita Acara Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN KAPRODI */}
+              {/* <Div hidden={role.includes("KAPRODI") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Berita Acara Skripsi
+                  </MenuItem>
+                </Link>
+              </Div> */}
+              {/* DOSEN DEKAN */}
+              <Div hidden={role.includes("DEKAN") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Berita Acara Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN CO_ADVISOR */}
+              <Div hidden={role.includes("CO_ADVISOR") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/bimbingan-skripsi-co-advisor/perubahan-skripsi"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Perubahan Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN SKRIPSI */}
+              <Div hidden={role.includes("DOSEN") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/dokumen-revisi-skripsi"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Revisi Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN ADVISOR */}
+              <Div hidden={role.includes("ADVISOR") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/bimbingan-skripsi-advisor/dokumen-revisi-skripsi"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Revisi Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN CO_ADVISOR */}
+              <Div hidden={role.includes("CO_ADVISOR") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/bimbingan-skripsi-co-advisor/dokumen-revisi-skripsi"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Revisi Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN KETUA PANALIS */}
+              <Div hidden={role.includes("KETUA_PANALIS") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/uji-skripsi-ketua/dokumen-revisi-skripsi"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Revisi Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN ANGGOTA PANALIS */}
+              <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Revisi Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN KAPRODI */}
+              {/* <Div hidden={role.includes("KAPRODI") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Revisi Skripsi
+                  </MenuItem>
+                </Link>
+              </Div> */}
+              {/* DOSEN DEKAN */}
+              <Div hidden={role.includes("DEKAN") ? false : true}>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  <MenuItem onClick={() => setAnchorE2(null)}>
+                    Dokumen Revisi Skripsi
+                  </MenuItem>
+                </Link>
+              </Div>
             </Menu>
           </Div>
         </Div>

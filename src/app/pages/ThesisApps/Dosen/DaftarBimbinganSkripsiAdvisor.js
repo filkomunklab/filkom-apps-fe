@@ -46,7 +46,7 @@ const DaftarBimbinganSkripsiAdvisor = () => {
               color: "blue",
             }}
           >
-            View
+            Detail
           </Typography>
         </TableCell>
       </TableRow>

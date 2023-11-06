@@ -49,7 +49,7 @@ const DaftarPengujianSkripsiKetuaPenelis = () => {
               color: "blue",
             }}
           >
-            View
+            Detail
           </Typography>
         </TableCell>
       </TableRow>

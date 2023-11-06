@@ -49,7 +49,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
               color: "blue",
             }}
           >
-            View
+            Detail
           </Typography>
         </TableCell>
       </TableRow>

@@ -126,8 +126,8 @@ const PengajuanJudulDosenSkripsi = () => {
           gap: 2,
         }}
       >
-        <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Beranda
+        <Typography variant="subtitle2" sx={{ fontSize: "24px" }}>
+          Pengajuan Judul
         </Typography>
       </Div>
 

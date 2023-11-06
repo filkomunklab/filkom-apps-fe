@@ -16,6 +16,7 @@ import MengisiBeritaAcaraSkripsiKetuaPenelis from "app/pages/ThesisApps/Dosen/Me
 import PengajuanJudul from "app/pages/ThesisApps/Dosen/PengajuanJudulDosen";
 import PengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/PengajuanJudulDosenSkripsi";
 import BerandaProposalMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaProposalMahasiswa";
+import BerandaSkripsiMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaSkripsiMahasiswa";
 
 const dosenSkripsiRoutes = [
   {
@@ -43,6 +44,16 @@ const dosenSkripsiRoutes = [
     path: "/sistem-informasi-skripsi/manajemen-kelas-dosen-skripsi",
     element: <Page component={ManajemenKelasDosenSkripsi} />,
   },
+  // {
+  //   // beranda mahasiswa pengajuan judul
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/beranda",
+  //   element: <Page component={} />,
+  // },
+  // {
+  //   // pengajuan judul mahasiswa
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/pengajuan-judul",
+  //   element: <Page component={} />,
+  // },
   {
     // Beranda Mahasiswa proposal
     path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/beranda",
@@ -63,31 +74,40 @@ const dosenSkripsiRoutes = [
     path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-proposal",
     element: <Page component={DocumentPersetujuanDosenPembimbing} />,
   },
-  {
-    // berita acara proposal
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/berita-acara-proposal",
-    element: <Page component={MengisiBeritaAcaraProposalKetuaPenelis} />,
-  },
+
   {
     // dokuemn revisi proposal
     path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-revisi-proposal",
     element: <Page component={DocumentRevisiProposalKetuaPenelis} />,
   },
   {
+    // Beranda Mahasiswa skripsi
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/beranda",
+    element: <Page component={BerandaSkripsiMahasiswa} />,
+  },
+  // {
+  //   // pengajuan judul Mahasiswa skripsi
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/pengajuan-judul",
+  //   element: <Page component={} />,
+  // },
+  // {
+  //   // konsultasi Mahasiswa skripsi
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/konsultasi",
+  //   element: <Page component={} />,
+  // },
+  {
     // dokumen skripsi
     path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/dokumen-skripsi",
     element: <Page component={DocumentPersetujuanDosenPembimbing2} />,
   },
-  {
-    // berita acara skripsi
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/berita-acara-skripsi",
-    element: <Page component={MengisiBeritaAcaraSkripsiKetuaPenelis} />,
-  },
+
   {
     // dokuemn revisi skripsi
     path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/dokumen-revisi-skripsi",
     element: <Page component={DocumentRevisiSkripsiKetuaPenelis} />,
   },
+
+  // dibawah ini akan dihapus
 ];
 
 export default dosenSkripsiRoutes;
