@@ -39,7 +39,7 @@ const Curriculum = () => {
     curriculum === "sistemInfromasi2020"
       ? setSistemInformasi2020ContentVisible(true)
       : setSistemInformasi2020ContentVisible(false);
-    curriculum === "teknologiInfomasi"
+    curriculum === "teknologiInformasi"
       ? setTeknologiInformasiContentVisible(true)
       : setTeknologiInformasiContentVisible(false);
   }, [curriculum]);
@@ -80,7 +80,9 @@ const Curriculum = () => {
           <MenuItem value="informatika2020">informatika 2020</MenuItem>
           <MenuItem value="sistemInfromasi2018">Sistem Informasi 2018</MenuItem>
           <MenuItem value="sistemInfromasi2020">Sistem Informasi 2020</MenuItem>
-          <MenuItem value="teknologiInfomasi">Teknologi Infomasi 2023</MenuItem>
+          <MenuItem value="teknologiInformasi">
+            Teknologi Informasi 2023
+          </MenuItem>
         </Select>
       </div>
       {Informatika2018ContentVisible && <CurriculumInformatika2018 />}
