@@ -34,12 +34,13 @@ import {
  } from 'recharts';
 import petaIndonesia from "./Indonesia.svg"
 import { styled } from "@mui/system";
+import axios from "axios";
 
-const filkomStudents = [
-  { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Computer Science", bottomText: "1,324 Students" },
+let filkomStudents = [
+  { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Total Alumni", bottomText: "1,324 Students" },
   { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Informatics", bottomText: "357 Students" },
   { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Information Systems", bottomText: "486 Students" },
-  { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Animation & Design", bottomText: "165 Students" },
+  // { icon: <PeopleIcon style={{ fontSize: 38 }}/>, topText: "Animation & Design", bottomText: "165 Students" },
 ];
 
 const ResponsiveAvatar = styled(Avatar)(
@@ -78,14 +79,14 @@ const studentsDistribution = [
 const pieChartData = [
   { name: 'Informatika', value: 450,  description: 'Description for Value 1' },
   { name: 'Sistem Informasi', value: 350,  description: 'Description for Value 2' },
-  { name: 'Desain dan Animasi', value: 200,  description: 'Description for Value 3' },
+  // { name: 'Desain dan Animasi', value: 200,  description: 'Description for Value 3' },
 ];
 
 // colors for pie chart
 const pieColors = ['#FED605', '#0053C0', '#FF4242']; 
 
 // bar chart - jenis perusahann tempat alumni bekerja
-const data = [
+const jenisPerusahaan = [
   { organization: 'Instansi Pemerintahan', value: 30, color: '#6200EE' },
   { organization: 'BUMN/BUMD', value: 45, color: '#FFF735' },
   { organization: 'Institusi/Organisasi Multilateral', value: 28, color: '#6BFAD7' },
@@ -105,29 +106,128 @@ const dapatKerja = [
   { month: '12 months', value: 50 },
 ];
 
-const processedData = data.map(item => ({
+const processedData = jenisPerusahaan.map(item => ({
   ...item,
   fill: item.color,
 }));
 
 const Dashboard = () => {
+
+  const [data, setData] = useState([]);
+  const [distribusiAlumni, setDistribusiAlumni] = useState([]);
+  const [totalITS, setTotalITS] = useState([]);
+
+  const getData = async () => {
+    await axios.get("http://localhost:2000/api/v1/dashboard/statistic").then((response) => {
+      console.log(response.data.data);
+      // setData(response.data.data);
+
+      const apiData = response.data.data.distribusiAlumni;
+      const apiData1 = response.data.data.totalTS;
+      
+      // Format the API response data for alumni distribution bar chart
+    const formattedData = apiData.map(item => {
+      const year = item.graduateYear;
+      const siCount = item.major.find(major => major.name === 'SI')?.count || 0;
+      const ifCount = item.major.find(major => major.name === 'IF')?.count || 1;
+
+      return {
+        year: year,
+        SI: siCount,
+        IF: ifCount
+      };
+    });
+
+    // formated data for total alumni pie chart
+    const formattedData1 = apiData1.map(item => ({
+      name: item.major,
+      value: item.count
+    }));
+
+    setData(response.data.data);
+    setDistribusiAlumni(formattedData);
+    setTotalITS(formattedData1);
+    
+    });
+  };
+
+  React.useEffect(() => {
+    getData();
+  }, []);
+
+  // React.useEffect(() => {
+  //   const data1 = [
+  //     {value: ""},
+  //     {value: "200"},
+  //     {value: "300"},
+  //   ]
+  //   filkomStudents = filkomStudents.map((item, index) => ({
+  //     ...item,
+  //     ...data1[index]
+  //   }))
+  // }, []);
+
+
   return (
       <Div >
+        {/* <Typography>Total filkom students: {data.totalAlumni}</Typography> */}
         <Grid container spacing={3}>
-          {/* 4 cards */}
+          {/* 3 cards */}
           <Grid item md={12}>
              <Grid container spacing={3}>
-              {filkomStudents.map((item, index) => (
-                <Grid item xs={12} sm={6} md={3} key={index}>
+              {/* {filkomStudents.map((item, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
                   <Card>
                     <CardHeader
                       avatar={<ResponsiveAvatar sx={{ color: 'primary.main', bgcolor: 'white' }}>{item.icon}</ResponsiveAvatar>}
                       title={<Typography variant="h6">{item.topText}</Typography>}
-                      subheader={<Typography variant="body2" sx={{ fontSize: "18px", fontWeight: 500 }}>{item.bottomText}</Typography>}
+                      subheader={<Typography variant="body2" sx={{ fontSize: "18px", fontWeight: 500 }}>{`${item.value} students`}</Typography>}
                     />
                   </Card>
                 </Grid>
-              ))}
+              ))} */}
+              <Grid item xs={12} sm={6} md={4} >
+                <Card>
+                  <CardHeader
+                    avatar={
+                      <ResponsiveAvatar sx={{ color: 'primary.main', bgcolor: 'white' }}>
+                        <PeopleIcon style={{ fontSize: 38 }}/>
+                      </ResponsiveAvatar>
+                    }
+                    title={<Typography variant="h6">Total Alumni</Typography>}
+                    subheader={<Typography variant="body2" sx={{ fontSize: "18px", fontWeight: 500 }}>{`${data.totalAlumni} students`}</Typography>}
+                  />
+                </Card>
+              </Grid>
+
+              <Grid item xs={12} sm={6} md={4} >
+                <Card>
+                  <CardHeader
+                    avatar={
+                      <ResponsiveAvatar sx={{ color: 'primary.main', bgcolor: 'white' }}>
+                        <PeopleIcon style={{ fontSize: 38 }}/>
+                      </ResponsiveAvatar>
+                    }
+                    title={<Typography variant="h6">Informatics</Typography>}
+                    subheader={<Typography variant="body2" sx={{ fontSize: "18px", fontWeight: 500 }}>{`${data.totalAlumniIF} students`}</Typography>}
+                  />
+                </Card>
+              </Grid>
+
+              <Grid item xs={12} sm={6} md={4} >
+                <Card>
+                  <CardHeader
+                    avatar={
+                      <ResponsiveAvatar sx={{ color: 'primary.main', bgcolor: 'white' }}>
+                        <PeopleIcon style={{ fontSize: 38 }}/>
+                      </ResponsiveAvatar>
+                    }
+                    title={<Typography variant="h6">Information Systems</Typography>}
+                    subheader={<Typography variant="body2" sx={{ fontSize: "18px", fontWeight: 500 }}>{`${data.totalAlumniSI} students`}</Typography>}
+                  />
+                </Card>
+              </Grid>
+
             </Grid>
           </Grid>
 
@@ -154,7 +254,7 @@ const Dashboard = () => {
                         <TableRow>
                           <TableCell>Region</TableCell>
                           <TableCell align="center">Alumni</TableCell>
-                          <TableCell align="center">%Percentage</TableCell>
+                          <TableCell align="center">Percentage</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -184,20 +284,20 @@ const Dashboard = () => {
           <Grid item md={12}>
             <Card sx={{ p: 5 }}>
               <Typography variant="h1" sx={{ fontSize: "18px", fontWeight: 500, marginLeft: "20px"}}>
-                STUDENT DISTRIBUTION 
+                ALUMNI DISTRIBUTION 
               </Typography>
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart
-                  data={studentsDistribution}
+                  data={distribusiAlumni}
                   margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="year" />
+                  <XAxis dataKey={"year"} />
                   <YAxis label={{ value: 'Total Students', angle: -90, position: 'insideLeft', dy: 50 }} />
                   <Tooltip />
                   <Legend iconType="circle" />
-                  <Bar dataKey="TI" fill="#FFCC00" name="TI" />
-                  <Bar dataKey="DKV" fill="#E21D12" name="DKV" />
+                  <Bar dataKey="IF" fill="#FFCC00" name="IF" />
+                  {/* <Bar dataKey="DKV" fill="#E21D12" name="DKV" /> */}
                   <Bar dataKey="SI" fill="#006AF5" name="SI" />
                 </BarChart>
               </ResponsiveContainer>
@@ -263,7 +363,7 @@ const Dashboard = () => {
                 <ResponsiveContainer width="100%" height={400}>
                   <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                     <Pie
-                      data={pieChartData}
+                      data={totalITS}
                       dataKey="value"
                       nameKey="name"
                       cx="50%"

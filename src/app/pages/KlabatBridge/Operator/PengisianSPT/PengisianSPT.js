@@ -46,45 +46,15 @@ import ClearIcon from "@mui/icons-material/Clear";
 import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
 import axios from "axios";
 
-const rows = [
-  { id: 1, name: "Row 1", mk: "Robotics", sks: "3", keterangan: "Summer 2023" },
-  {
-    id: 2,
-    name: "Row 2",
-    mk: "Research Project 2",
-    sks: "3",
-    keterangan: "Summer 2023",
-  },
-  {
-    id: 3,
-    name: "Row 3",
-    mk: "Machine Learning",
-    sks: "3",
-    keterangan: "Semester 1 2023/2024",
-  },
-  {
-    id: 4,
-    name: "Row 4",
-    mk: "ITPM",
-    sks: "3",
-    keterangan: "Semester 1 2023/2024",
-  },
-  {
-    id: 5,
-    name: "Row 5",
-    mk: "DevOps",
-    sks: "3",
-    keterangan: "Semester 1 2023/2024",
-  },
-  {
-    id: 6,
-    name: "Row 6",
-    mk: "Internet of Things",
-    sks: "3",
-    keterangan: "Semester 1 2023/2024",
-  },
-  // Add more rows as needed
-];
+// const rows = [
+//     { id: 1, name: 'Row 1', mk: 'Robotics', sks: '3', keterangan: 'Summer 2023' },
+//     { id: 2, name: 'Row 2', mk: 'Research Project 2', sks: '3', keterangan: 'Summer 2023' },
+//     { id: 3, name: 'Row 3', mk: 'Machine Learning', sks: '3', keterangan: 'Semester 1 2023/2024' },
+//     { id: 4, name: 'Row 4', mk: 'ITPM', sks: '3', keterangan: 'Semester 1 2023/2024' },
+//     { id: 5, name: 'Row 5', mk: 'DevOps', sks: '3', keterangan: 'Semester 1 2023/2024' },
+//     { id: 6, name: 'Row 6', mk: 'Internet of Things', sks: '3', keterangan: 'Semester 1 2023/2024' },
+//     // Add more rows as needed
+//   ];
 
 const faculties = [
   "ASMIK",
@@ -116,46 +86,127 @@ const majorsByFaculty = {
 };
 
 const PengisianSPT = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const [studentData, setStudentData] = useState({
-    reg_num: "",
-    dateOfBirth: "",
+  // input SPT
+  const [dataSPT, setDataSPT] = useState({
+    sisaSKS: "",
+    nama: "",
+    noRegis: "",
+    // tglLahir: "",
     gender: "",
+    nik: "",
     nim: "",
-    faculty: "",
-    major: "",
-    phoneNo: "",
+    fakultas: "",
+    prodi: "",
+    minor: "",
+    ibuKandung: "",
+    noTelp: "",
+    email: "",
+    rencanaTamat: "",
   });
-  const [selectedFaculty, setSelectedFaculty] = useState("");
-  const [selectedMajor, setSelectedMajor] = useState("");
-  // table
-  const [data, setData] = useState(rows);
-  // alert dialog
-  const [open, setOpen] = React.useState(false);
-  // date picker
-  const [selectedDate, setSelectedDate] = useState(null);
-  // pdf upload
-  const [pdfFile, setPdfFile] = useState(null);
 
-  const handleInputChange = (e, id, columnName) => {
-    const updatedData = data.map((row) => {
-      if (row.id === id) {
-        return { ...row, [columnName]: e.target.value };
+  // const [data, setData] = useState([]);
+
+  // const getData = async () => {
+  //     await axios.post("http://localhost:2000/api/v1/spt/", {
+  //         full_name: dataSPT.nama,
+  //         reg_num: dataSPT.noRegis,
+  //         date_of_birth: selectedDate,
+  //         faculty: dataSPT.fakultas,
+  //         gender: dataSPT.gender,
+  //         major: dataSPT.prodi,
+  //         nim: dataSPT.nim,
+  //         phone_num: dataSPT.noTelp,
+  //         nik: dataSPT.nik,
+  //         birth_mother: dataSPT.ibuKandung,
+  //         graduate_plan: dataSPT.rencanaTamat,
+  //         minor: dataSPT.minor,
+  //         remaining_credits: dataSPT.sisaSKS,
+  //         remaining_classes: JSON.stringify(rows),
+  //         // email: dataSPT.email,
+
+  //         // approval_fac: dataSPT.approval_fac,
+  //         // approval_reg: dataSPT.approval_reg,
+
+  //     }).then((res) => {
+
+  //     console.log(res.data.data);
+  //     // setData(res.data.data);
+  //     });
+  // };
+
+  // React.useEffect(() => {
+  //     getData();
+  // }, []);
+
+  // handle onchange
+  const handleDataSPT = (event) => {
+    setDataSPT({
+      ...dataSPT,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  // table
+  const [rows, setRows] = useState([
+    // initial data for rows, you can initialize it as per your requirements
+    { subject: "", sks: "", keterangan: "" },
+    { subject: "", sks: "", keterangan: "" },
+    { subject: "", sks: "", keterangan: "" },
+    { subject: "", sks: "", keterangan: "" },
+    { subject: "", sks: "", keterangan: "" },
+    { subject: "", sks: "", keterangan: "" },
+    { subject: "", sks: "", keterangan: "" },
+    { subject: "", sks: "", keterangan: "" },
+  ]);
+
+  const [totalSKS, setTotalSKS] = useState(0);
+
+  const handleInputChange = (e, id, column) => {
+    const updatedRows = rows.map((row, index) => {
+      if (index === id) {
+        return { ...row, [column]: e.target.value };
       }
       return row;
     });
-    setData(updatedData);
+    setRows(updatedRows);
   };
 
-  const handleFacultyChange = (event) => {
-    setSelectedFaculty(event.target.value);
-    // Reset selected major when faculty changes
-    setSelectedMajor("");
-  };
+  // sum of total sks
+  useEffect(() => {
+    // Calculate the sum of column 3 whenever rows change
+    const sum = rows.reduce((acc, row) => acc + parseFloat(row.sks || 0), 0);
+    setTotalSKS(sum);
+  }, [rows]);
 
-  const handleMajorChange = (event) => {
-    setSelectedMajor(event.target.value);
-  };
+  // cek input data
+  useEffect(() => {
+    console.log(dataSPT);
+  }, [dataSPT]);
+
+  // const [data, setData] = useState(rows);
+
+  // const handleInputChange = (e, id, columnName) => {
+  //     const updatedData = data.map((row) => {
+  //     if (row.id === id) {
+  //         return { ...row, [columnName]: e.target.value };
+  //     }
+  //     return row;
+  //     });
+  //     setData(updatedData);
+  // };
+
+  // const [selectedFaculty, setSelectedFaculty] = useState('');
+  // const [selectedMajor, setSelectedMajor] = useState('');
+
+  // const handleFacultyChange = (event) => {
+  //     setSelectedFaculty(event.target.value);
+  //     // Reset selected major when faculty changes
+  //     setSelectedMajor('');
+  // };
+
+  // const handleMajorChange = (event) => {
+  //     setSelectedMajor(event.target.value);
+  // };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -180,59 +231,81 @@ const PengisianSPT = () => {
     setPdfFile(null);
   };
 
-  // const getStudentData = async () => {
-  //   const res = await axios.get(
-  //     `http://localhost:2000/api/v1/student/${user.nim}`
-  //   );
-  //   console.log(res.data.data);
-  //   setStudentData(res.data.data);
-  // };
-
-  useEffect(() => {
-    const source = axios.CancelToken.source();
-    // getStudentData();
-    axios
-      .get(`http://localhost:2000/api/v1/student/${user.nim}`, {
-        cancelToken: source.token,
-      })
-      .then((res) => {
-        if (!source.token.reason) {
-          setStudentData(res.data.data);
-        }
-      });
-
-    return () => {
-      source.cancel("component got unmounted");
+  // submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const normalized = {
+      full_name: dataSPT.nama,
+      reg_num: dataSPT.noRegis,
+      date_of_birth: selectedDate,
+      faculty: dataSPT.fakultas,
+      gender: dataSPT.gender.toUpperCase(),
+      major: dataSPT.prodi,
+      nim: dataSPT.nim,
+      phone_num: dataSPT.noTelp,
+      nik: dataSPT.nik,
+      birth_mother: dataSPT.ibuKandung,
+      graduate_plan: dataSPT.rencanaTamat,
+      minor: dataSPT.minor,
+      remaining_credits: dataSPT.sisaSKS,
+      remaining_classes: JSON.stringify(rows),
+      studentId: dataSPT.nim,
     };
-  }, []);
+    console.log(normalized);
+    try {
+      const res = await axios.post(
+        "http://localhost:2000/api/v1/spt/",
+        normalized
+      );
+      console.log("success", res.data.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
-  console.log(studentData);
+  // see the remaining classes input
+  console.log(rows);
 
   return (
     <Box>
       <Typography mb={2} sx={{ fontSize: "24px", fontWeight: 500 }}>
         Surat Permohonan Tamat
       </Typography>
+
       <Box
-        p={8}
+        p={5}
         sx={{
           backgroundColor: "white",
           borderRadius: 1,
           boxShadow: 2,
         }}
       >
-        <Typography variant="body1" sx={{ lineHeight: 2.5 }}>
+        <Typography variant="body1" sx={{ lineHeight: 2.5, fontSize: "15px" }}>
           Saya yang bertanda tangan di bawah ini, bermohon untuk dapat wisuda
-          pada semester 1 2022/2023 dengan sisa SKS yang harus diambil
+          pada
+          <span style={{ display: "inline-block", minWidth: "50px" }}>
+            <TextField
+              // type="number"
+              variant="outlined"
+              size="small"
+              placeholder="semester 1 2022/2023"
+              sx={{ width: "180px", ml: "10px", marginRight: "10px" }}
+              name="rencanaTamat"
+              value={dataSPT.rencanaTamat}
+              onChange={handleDataSPT}
+            />
+          </span>
+          dengan sisa SKS yang harus diambil
           <span style={{ display: "inline-block", minWidth: "30px" }}>
             <TextField
-              //   value={remainingSks}
-              //   onChange={handleSksChange}
               type="number"
               variant="outlined"
               size="small"
               placeholder="23"
-              sx={{ width: "70px", ml: "10px", marginRight: "10px" }}
+              sx={{ width: "60px", ml: "10px", marginRight: "10px" }}
+              name="sisaSKS"
+              value={dataSPT.sisaSKS}
+              onChange={handleDataSPT}
             />
           </span>
           sks.
@@ -248,11 +321,10 @@ const PengisianSPT = () => {
               <TextField
                 fullWidth
                 variant="outlined"
-                name="namaLengkap"
                 placeholder="Aurelea Saerang"
-
-                //   value={identityData.nim}
-                //   onChange={handleIdentityChange}
+                name="nama"
+                value={dataSPT.nama}
+                onChange={handleDataSPT}
               />
             </Grid>
             <Grid item sm={12} md={6}>
@@ -264,9 +336,8 @@ const PengisianSPT = () => {
                 variant="outlined"
                 name="noRegis"
                 placeholder="1234567890"
-                value={studentData.reg_num}
-                //   value={identityData.kodePT}
-                //   onChange={handleIdentityChange}
+                value={dataSPT.noRegis}
+                onChange={handleDataSPT}
               />
             </Grid>
             <Grid item sm={12} md={6}>
@@ -292,9 +363,11 @@ const PengisianSPT = () => {
                 </Typography>
                 <RadioGroup
                   row
-                  name="row-radio-buttons-group"
-                  value={studentData.gender.toLowerCase()}
-                  onChange={(event) => console.log(event.target.value)}
+                  // name="row-radio-buttons-group"
+                  name="gender"
+                  placeholder="1234567890"
+                  value={dataSPT.gender}
+                  onChange={handleDataSPT}
                 >
                   <FormControlLabel
                     value="female"
@@ -319,8 +392,8 @@ const PengisianSPT = () => {
                 name="nik"
                 type="number"
                 placeholder="12345678910"
-                //   value={identityData.nim}
-                //   onChange={handleIdentityChange}
+                value={dataSPT.nik}
+                onChange={handleDataSPT}
               />
             </Grid>
             <Grid item sm={12} md={6}>
@@ -334,8 +407,8 @@ const PengisianSPT = () => {
                 name="nim"
                 type="text"
                 placeholder="12345678910"
-                //   value={identityData.kodePT}
-                //   onChange={handleIdentityChange}
+                value={dataSPT.nim}
+                onChange={handleDataSPT}
               />
             </Grid>
             <Grid item xs={12} md={4}>
@@ -346,16 +419,16 @@ const PengisianSPT = () => {
                 defaultValue={studentData?.faculty}
                 fullWidth
                 variant="outlined"
-                name="faculty"
-                value={selectedFaculty}
-                onChange={handleFacultyChange}
+                name="fakultas"
+                value={dataSPT.fakultas}
+                onChange={handleDataSPT}
               >
                 <MenuItem value="" disabled>
                   Select Faculty
                 </MenuItem>
-                {faculties.map((faculty) => (
-                  <MenuItem key={faculty} value={faculty}>
-                    {faculty}
+                {faculties.map((fakultas) => (
+                  <MenuItem key={fakultas} value={fakultas}>
+                    {fakultas}
                   </MenuItem>
                 ))}
               </Select>
@@ -368,16 +441,16 @@ const PengisianSPT = () => {
                 defaultValue={studentData?.major}
                 fullWidth
                 variant="outlined"
-                name="major"
-                value={selectedMajor}
-                onChange={handleMajorChange}
+                name="prodi"
+                value={dataSPT.prodi}
+                onChange={handleDataSPT}
               >
                 <MenuItem value="" disabled>
                   Select Major
                 </MenuItem>
-                {majorsByFaculty[selectedFaculty]?.map((major) => (
-                  <MenuItem key={major} value={major}>
-                    {major}
+                {majorsByFaculty[dataSPT.fakultas]?.map((prodi) => (
+                  <MenuItem key={prodi} value={prodi}>
+                    {prodi}
                   </MenuItem>
                 ))}
               </Select>
@@ -391,8 +464,8 @@ const PengisianSPT = () => {
                 variant="outlined"
                 name="minor"
                 placeholder="Web Developer"
-                //   value={identityData.nim}
-                //   onChange={handleIdentityChange}
+                value={dataSPT.minor}
+                onChange={handleDataSPT}
               />
             </Grid>
             <Grid item sm={12} md={6}>
@@ -402,10 +475,10 @@ const PengisianSPT = () => {
               <TextField
                 fullWidth
                 variant="outlined"
-                name="namaLengkap"
+                name="ibuKandung"
                 placeholder="Ariana Grande"
-                //   value={identityData.nim}
-                //   onChange={handleIdentityChange}
+                value={dataSPT.ibuKandung}
+                onChange={handleDataSPT}
               />
             </Grid>
             <Grid item sm={12} md={6}>
@@ -416,11 +489,25 @@ const PengisianSPT = () => {
                 value={studentData?.phoneNo}
                 fullWidth
                 variant="outlined"
-                name="phoneNumber"
+                name="noTelp"
                 placeholder="12345678910"
-                type="text"
-                //   value={identityData.nim}
-                //   onChange={handleIdentityChange}
+                type="number"
+                value={dataSPT.noTelp}
+                onChange={handleDataSPT}
+              />
+            </Grid>
+            <Grid item sm={12} md={6}>
+              <Typography variant="subtitle1" mb={1}>
+                Email
+              </Typography>
+              <TextField
+                fullWidth
+                variant="outlined"
+                name="email"
+                placeholder="serealsajow18@gmail.com"
+                type="gmail"
+                value={dataSPT.email}
+                onChange={handleDataSPT}
               />
             </Grid>
           </Grid>
@@ -441,15 +528,13 @@ const PengisianSPT = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell>{row.id}</TableCell>
+                {rows.map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{index + 1}</TableCell>
                     <TableCell>
                       <TextField
-                        value={row.column2}
-                        onChange={(e) =>
-                          handleInputChange(e, row.id, "column2")
-                        }
+                        value={row.subject}
+                        onChange={(e) => handleInputChange(e, index, "subject")}
                         fullWidth
                         variant="standard"
                         sx={{
@@ -459,22 +544,21 @@ const PengisianSPT = () => {
                     </TableCell>
                     <TableCell>
                       <TextField
-                        value={row.column3}
-                        onChange={(e) =>
-                          handleInputChange(e, row.id, "column3")
-                        }
+                        value={row.sks}
+                        onChange={(e) => handleInputChange(e, index, "sks")}
                         fullWidth
                         variant="standard"
                         sx={{
                           "& .MuiInputBase-root": { borderBottom: "none" },
                         }}
+                        type="number"
                       />
                     </TableCell>
                     <TableCell>
                       <TextField
-                        value={row.column4}
+                        value={row.keterangan}
                         onChange={(e) =>
-                          handleInputChange(e, row.id, "column4")
+                          handleInputChange(e, index, "keterangan")
                         }
                         fullWidth
                         variant="standard"
@@ -492,14 +576,24 @@ const PengisianSPT = () => {
         <Typography variant="body1" sx={{ lineHeight: 2.5 }}>
           Total SKS yang diambil:
           <span style={{ display: "inline-block", minWidth: "30px" }}>
+            {/* <TextField
+                                //   value={remainingSks}
+                                //   onChange={handleSksChange}
+                                type="number"
+                                variant="outlined"
+                                size="small"
+                                placeholder='23'
+                                sx={{ width: '70px', ml:"10px", marginRight:"10px" }}
+                                /> */}
             <TextField
-              //   value={remainingSks}
-              //   onChange={handleSksChange}
-              type="number"
+              value={totalSKS}
               variant="outlined"
               size="small"
-              placeholder="23"
+              InputProps={{
+                readOnly: true,
+              }}
               sx={{ width: "70px", ml: "10px", marginRight: "10px" }}
+              onChange={handleDataSPT}
             />
           </span>
           sks.
@@ -649,7 +743,13 @@ const PengisianSPT = () => {
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={() => setOpen(false)}>Cancel</Button>
-                    <Button onClick={() => setOpen(false)} autoFocus>
+                    <Button
+                      onClick={(e) => {
+                        setOpen(false);
+                        handleSubmit(e);
+                      }}
+                      autoFocus
+                    >
                       Submit
                     </Button>
                   </DialogActions>
