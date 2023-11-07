@@ -8,6 +8,7 @@ import PengisianSPT from "app/pages/KlabatBridge/Operator/PengisianSPT";
 import DaftarCalonTamatan from "app/pages/KlabatBridge/Operator/DaftarCalonTamatan";
 import HomeAlumni from "app/pages/KlabatBridge/Operator/HomeAlumni";
 import HomeCalonTamatan from "app/pages/KlabatBridge/Operator/HomeCalonTamatan";
+import DaftarAlumniFakultas from "app/pages/KlabatBridge/Operator/DaftarAlumniFakultas";
 
 const operatorRoutes = [
   {
@@ -17,6 +18,10 @@ const operatorRoutes = [
   {
     path: "klabat-bridge/daftar-alumni",
     element: <Page component={DaftarAlumni} />,
+  },
+  {
+    path: "klabat-bridge/daftar-alumni-fakultas",
+    element: <Page component={DaftarAlumniFakultas} />,
   },
   {
     path: "klabat-bridge/form-tracer-study",
@@ -42,6 +47,7 @@ const operatorRoutes = [
     path: "klabat-bridge/home-calon-tamatan",
     element: <Page component={HomeCalonTamatan} />,
   },
+  
   
 ];
 

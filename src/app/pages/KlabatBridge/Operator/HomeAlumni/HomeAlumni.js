@@ -56,7 +56,7 @@ const HomeAlumni = () => {
 
   return (
     <Div >
-      <FormControl sx={{m: 1, minWidth: 120}}>
+      {/* <FormControl sx={{m: 1, minWidth: 120}}>
         <InputLabel htmlFor="grouped-select">Grouping</InputLabel>
         <Select 
           defaultValue="" 
@@ -104,12 +104,12 @@ const HomeAlumni = () => {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> */}
 
 
 
 
-      {/* <Box sx={{
+      <Box sx={{
         backgroundColor:"#E8EBE8", 
         height: "70px", 
         display: 'flex',
@@ -122,7 +122,7 @@ const HomeAlumni = () => {
         }}>
           Silahkan mengisi form Tracer Study
         </Typography>
-      </Box> */}
+      </Box>
       
     </Div>
     

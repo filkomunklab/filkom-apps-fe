@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import {
   TextField,
@@ -40,15 +40,20 @@ import JumboDemoCard from "@jumbo/components/JumboDemoCard";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import axios from "axios";
 
 const FormTracerStudy = () => {
-  const [checked, setChecked] = React.useState(false);
+  //checkbox
+  const [isChecked, setIsChecked] = useState(false);
+  // const handleCheckboxChange = () => {
+  //   setIsChecked((prevChecked) => !prevChecked);
+  // };
 
   //for date pickers
   const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDateChange = (date) => {
-    setSelectedDate(date);
+    setSelectedDate(date || '');
   };
 
   const [identityData, setIdentityData] = useState({
@@ -68,10 +73,11 @@ const FormTracerStudy = () => {
     f504: "",
     f502: "",
     f505: "",
+    f506: "",
     f5a1: "",
     f5a2: "",
     f1101: "",
-    f1102: "", //delete later
+    f1102: "",
     f5b: "",
     f5c: "",
     f5d: "",
@@ -107,49 +113,212 @@ const FormTracerStudy = () => {
     f301: "",
     f302: "",
     f303: "",
-    f401: "",
-    f402: "",
-    f403: "",
-    f404: "",
-    f405: "",
-    f406: "",
-    f407: "",
-    f408: "",
-    f409: "",
-    f410: "",
-    f411: "",
-    f412: "",
-    f413: "",
-    f414: "",
-    f415: "",
+    f401: "0",
+    f402: "0",
+    f403: "0",
+    f404: "0",
+    f405: "0",
+    f406: "0",
+    f407: "0",
+    f408: "0",
+    f409: "0",
+    f410: "0",
+    f411: "0",
+    f412: "0",
+    f413: "0",
+    f414: "0",
+    f415: "0",
     f416: "",
     f6: "",
     f7: "",
     f7a: "",
     f1001: "",
     f1002: "",
-    f1601: "",
-    f1602: "",
-    f1603: "",
-    f1604: "",
-    f1605: "",
-    f1606: "",
-    f1607: "",
-    f1608: "",
-    f1609: "",
-    f1610: "",
-    f1611: "",
-    f1612: "",
-    f1613: "",
+    f1601: "0",
+    f1602: "0",
+    f1603: "0",
+    f1604: "0",
+    f1605: "0",
+    f1606: "0",
+    f1607: "0",
+    f1608: "0",
+    f1609: "0",
+    f1610: "0",
+    f1611: "0",
+    f1612: "0",
+    f1613: "0",
     f1614: "",
   });
 
+  // no. 1
+  // const [question1Response, setQuestion1Response] = useState('');
+
   //no. 3
-  const provinces = ["Province 1", "Province 2", "Province 3"];
+  const provinces = [
+    "Aceh",
+    "Sumatera Utara",
+    "Sumatera Selatan",
+    "Sumatera Barat",
+    "Bengkulu",
+    "Riau",
+    "Kepulauan Riau",
+    "Jambi",
+    "Lampung",
+    "Bangka Belitung",
+    "Kalimantan Barat",
+    "Kalimantan Timur",
+    "Kalimantan Selatan",
+    "Kalimat Tengah",
+    "Kalimantan Utara",
+    "Banten",
+    "DKI Jakarta",
+    "Jawa Barat",
+    "Jawa Tengah",
+    "Daerah Istimewa Yogyakarta",
+    "Jawa Timur",
+    "Bali",
+    "Nusa Tenggara Timur",
+    "Nusa Tenggara Barat",
+    "Gorontalo",
+    "Sulawesi Barat",
+    "Sulawesi Tengah",
+    "Sulawesi Utara",
+    "Sulawesi Tenggara",
+    "Sulawesi Selatan",
+    "Maluku Utara",
+    "Maluku",
+    "Papua Barat",
+    "Papua",
+    "Papua Selatan",
+    "Papua Tengah",
+    "Papua Pegunungan",
+    "Papua Barat Daya",
+  ];
+
   const citiesByProvince = {
-    "Province 1": ["City A", "City B", "City C"],
-    "Province 2": ["City X", "City Y", "City Z"],
-    "Province 3": ["City P", "City Q", "City R"],
+    Aceh: ["Banda Aceh", "Langsa", "Lhokseumawe", "Sabang", "Subulussalam"],
+    "Sumatera Utara": [
+      "Binjai",
+      "Gunungsitoli",
+      "Medan",
+      "Padangsidimpuan",
+      "Pematangsiantar",
+      "Sibolga",
+      "Tanjungbalai",
+      "Tebing Tinggi",
+    ],
+    "Sumatera Selatan": [
+      "Lubuklinggau",
+      "Pagar Alam",
+      "Palembang",
+      "Prabumulih",
+    ],
+    "Sumatera Barat": [
+      "Bukittinggi",
+      "Padang",
+      "Padang Panjang",
+      "Pariaman",
+      "Payakumbuh",
+      "Sawahlunto",
+      "Solok",
+    ],
+    Bengkulu: ["Bengkulu"],
+    Riau: ["Dumai", "Pekanbaru"],
+    "Kepulauan Riau": ["Batam", "Tanjungpinang"],
+    Jambi: ["Sungai Penuh", "Jambi"],
+    Lampung: ["Bandar Lampung", "Metro"],
+    "Bangka Belitung": ["Pangkalpinang"],
+    "Kalimantan Barat": ["Pontianak", "Singkawang"],
+    "Kalimantan Timur": ["Balikpapan", "Bontang", "Samarinda", "Nusantara"],
+    "Kalimantan Selatan": ["Banjarbaru", "Banjarmasin"],
+    "Kalimat Tengah": ["Palangka Raya"],
+    "Kalimantan Utara": ["Tarakan"],
+    Banten: ["Cilegon", "Serang", "Tangerang Selatan", "Tangerang"],
+    "DKI Jakarta": [
+      "Kota Administrasi Jakarta Barat",
+      "Kota Administrasi Jakarta Pusat",
+      "Kota Administrasi Jakarta Selatan",
+      "Kota Administrasi Jakarta Timur",
+      "Kota Administrasi Jakarta Utara",
+    ],
+    "Jawa Barat": [
+      "Bandung",
+      "Bekasi",
+      "Bogor",
+      "Cimahi",
+      "Cirebon",
+      "Depok",
+      "Sukabumi",
+      "Tasikmalaya",
+      "Banjar",
+    ],
+    "Jawa Tengah": [
+      "Magelang",
+      "Pekalongan",
+      "Salatiga",
+      "	Semarang",
+      "Surakarta",
+      "Tegal",
+    ],
+    "Daerah Istimewa Yogyakarta": ["Yogyakarta"],
+    "Jawa Timur": [
+      "Batu",
+      "Blitar",
+      "Kediri",
+      "Madiun",
+      "Malang",
+      "	Mojokerto",
+      "Pasuruan",
+      "Probolinggo",
+      "Surabaya",
+    ],
+    Bali: ["Denpasar"],
+    "Nusa Tenggara Timur": ["Kupang"],
+    "Nusa Tenggara Barat": ["Bima", "Mataram"],
+    Gorontalo: ["Gorontalo"],
+    "Sulawesi Barat": [
+      "Kabupaten Majene",
+      "	Kabupaten Mamasa",
+      "Kabupaten Mamuju",
+      "Kabupaten Mamuju Tengah",
+      "	Kabupaten Pasangkayu",
+      "Kabupaten Polewali Mandar",
+    ],
+    "Sulawesi Tengah": ["Palu"],
+    "Sulawesi Utara": ["Bitung", "Kotamobagu", "Manado", "Tomohon"],
+    "Sulawesi Tenggara": ["	Baubau", "Kendari"],
+    "Sulawesi Selatan": ["Makassar", "Palopo", "Parepare"],
+    "Maluku Utara": ["Ternate", "Tidore Kepulauan"],
+    Maluku: ["Ambon", "Tual"],
+    "Papua Barat": [""],
+    Papua: ["Jayapura"],
+    "Papua Selatan": [
+      "Kabupaten Asmat",
+      "Kabupaten Boven Digoel",
+      "	Kabupaten Mappi",
+      "Kabupaten Merauke",
+    ],
+    "Papua Tengah": [
+      "Kabupaten Deiyai",
+      "Kabupaten Dogiyai",
+      "Kabupaten Intan Jaya",
+      "Kabupaten Mimika",
+      "	Kabupaten Nabire",
+      "Kabupaten Paniai",
+      "Kabupaten Puncak",
+      "	Kabupaten Puncak Jaya",
+    ],
+    "Papua Pegunungan": [
+      "Kabupaten Jayawijaya",
+      "Kabupaten Lanny Jaya",
+      "Kabupaten Mamberamo Tengah",
+      "Kabupaten Nduga",
+      "	Kabupaten Pegunungan Bintang",
+      "Kabupaten Tolikara",
+      "Kabupaten Yalimo",
+      "Kabupaten Yahukimo",
+    ],
+    "Papua Barat Daya": ["Sorong"],
   };
 
   const handleIdentityChange = (event) => {
@@ -159,52 +328,216 @@ const FormTracerStudy = () => {
     });
   };
 
-  const handleQuestionnaireChange = (event) => {
-    setQuestionnaireData({
-      ...questionnaireData,
-      [event.target.name]: event.target.value,
-
-      // const { name, value } = event.target;
-      // setQuestionnaireData({
-      //   ...questionnaireData,
-      //   [name]: value,
-      // });
-
-      //for checkbox
-      //[event.target.name]: event.target.checked,
-
-      // checkbox with textfield
-      // if (name === 'f415' && checked) {
-      //     setQuestionnaireData({
-      //         ...questionnaireData,
-      //         questionnaireData.f415: checked,
-      //         [name]: value
-      //     });
-      // } else {
-      //     setQuestionnaireData({
-      //         ...state,
-      //         questionnaireData.f415: checked,
-      //         [name]: checked ? value : false,
-      //         questionnaireData.f416: ''
-      //     });
-      // }
-    });
-  };
-
-  const handleCheckbox = (event) => {
-    setQuestionnaireData({
-      ...questionnaireData,
-      [event.target.name]: event.target.checked,
-    });
-  };
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   // Handle form submission logic here
-  //   console.log("Identity Data:", identityData);
-  //   console.log("Questionnaire Data:", questionnaireData);
-  //   // You can send the form data to an API, perform validation, etc.
+  // const handleQuestionnaireChange = (event) => {
+  //   setQuestionnaireData({
+  //     ...questionnaireData,
+  //     [event.target.name]: event.target.value,
+  //   });
 
   // };
+
+  // Error statement
+  const [error, setError] = useState("");
+
+  const handleCheckboxChange = (name) => (event) => {
+    const newValue = event.target.checked ? "1" : "0";
+    setQuestionnaireData((prevData) => ({
+      ...prevData,
+      [name]: newValue,
+    }));
+  };
+
+  const handleQuestionnaireChange = (event) => {
+    const { name, value } = event.target;
+
+    // Update the state for the changed field
+    setQuestionnaireData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+
+    // no.4 -- Reset the text field value if the user selects an option other than '5'
+    if (name === "f1101" && value !== "5") {
+      // Set f1102 to an empty string to clear the text field value
+      setQuestionnaireData((prevData) => ({
+        ...prevData,
+        f1102: "",
+      }));
+    }
+
+    // no.9 -- Reset the text field value if the user selects an option other than '5'
+    if (name === "f1201" && value !== "7") {
+      // Set f1202 to an empty string to clear the text field value
+      setQuestionnaireData((prevData) => ({
+        ...prevData,
+        f1202: "",
+      }));
+    }
+
+    // no.14 -- Reset the text field value if the user selects an option other than '5'
+    if (name === "f301" && value !== "1") {
+      // Set f1202 to an empty string to clear the text field value
+      setQuestionnaireData((prevData) => ({
+        ...prevData,
+        f302: "",
+      }));
+    }
+
+    if (name === "f301" && value !== "2") {
+      // Set f1202 to an empty string to clear the text field value
+      setQuestionnaireData((prevData) => ({
+        ...prevData,
+        f303: "",
+      }));
+    }
+
+    //no. 19
+    if (name === "f1001" && value !== "5") {
+      // Set f1202 to an empty string to clear the text field value
+      setQuestionnaireData((prevData) => ({
+        ...prevData,
+        f1002: "",
+      }));
+    }
+
+    // no. 15 -- checkbox
+    if (name === "f415" && value === "0") {
+      // Set f1202 to an empty string to clear the text field value
+      setQuestionnaireData((prevData) => ({
+        ...prevData,
+        f4016: "",
+      }));
+    }
+  };
+
+  // // cek input data
+  // useEffect(() => {
+  // console.log(questionnaireData)
+  //  }, [questionnaireData])
+
+
+  // checkbox
+  // const handleCheckbox = (event) => {
+  //   setQuestionnaireData({
+  //     ...questionnaireData,
+  //     [event.target.name]: event.target.checked,
+  //   })
+  // }
+
+  const handleCheckbox = (event) => {
+    const { checked } = event.target;
+    const newValue = checked ? "1" : "0";
+    setQuestionnaireData((prevData) => ({
+      ...prevData,
+      f401: newValue,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const normalized = {
+      kdptimsmh: identityData.kodePT,
+      kdpstmsmh: identityData.kodeProdi,
+      nimhsmsmh: identityData.nim,
+      nmmhsmsmh: identityData.fullName,
+      telpomsmh: identityData.noTelp,
+      emailmsmh: identityData.email,
+      tahun_lulus: identityData.tahunLulus,
+      nik: identityData.nik,
+      npwp: identityData.npwp,
+      f8: questionnaireData.f8,
+      f504: questionnaireData.f504,
+      f502: questionnaireData.f502,
+      f505: questionnaireData.f505,
+      f506: questionnaireData.f506,
+      f5a1: questionnaireData.f5a1,
+      f5a2: questionnaireData.f5a2,
+      f1101: questionnaireData.f1101,
+      f1102: questionnaireData.f1102,
+      f5b: questionnaireData.f5b,
+      f5c: questionnaireData.f5c,
+      f5d: questionnaireData.f5d,
+      f18a: questionnaireData.f18a,
+      f18b: questionnaireData.f18b,
+      f18c: questionnaireData.f18c,
+      f18d: selectedDate,
+      f1201: questionnaireData.f1201,
+      f1202: questionnaireData.f1202,
+      f14: questionnaireData.f14,
+      f15: questionnaireData.f15,
+      f1761: questionnaireData.f1761,
+      f1762: questionnaireData.f1762,
+      f1763: questionnaireData.f1763,
+      f1764: questionnaireData.f1764,
+      f1765: questionnaireData.f1765,
+      f1766: questionnaireData.f1766,
+      f1767: questionnaireData.f1767,
+      f1768: questionnaireData.f1768,
+      f1769: questionnaireData.f1769,
+      f1770: questionnaireData.f1770,
+      f1771: questionnaireData.f1771,
+      f1772: questionnaireData.f1772,
+      f1773: questionnaireData.f1773,
+      f1774: questionnaireData.f1774,
+      f21: questionnaireData.f21,
+      f22: questionnaireData.f22,
+      f23: questionnaireData.f23,
+      f24: questionnaireData.f24,
+      f25: questionnaireData.f25,
+      f26: questionnaireData.f26,
+      f27: questionnaireData.f27,
+      f301: questionnaireData.f301,
+      f302: questionnaireData.f302,
+      f303: questionnaireData.f303,
+      f401: questionnaireData.f401,
+      f402: questionnaireData.f402,
+      f403: questionnaireData.f403,
+      f404: questionnaireData.f404,
+      f405: questionnaireData.f405,
+      f406: questionnaireData.f406,
+      f407: questionnaireData.f407,
+      f408: questionnaireData.f408,
+      f409: questionnaireData.f409,
+      f410: questionnaireData.f410,
+      f411: questionnaireData.f411,
+      f412: questionnaireData.f412,
+      f413: questionnaireData.f413,
+      f414: questionnaireData.f414,
+      f415: questionnaireData.f415,
+      f416: questionnaireData.f416,
+      f6: questionnaireData.f6,
+      f7: questionnaireData.f7,
+      f7a: questionnaireData.f7a,
+      f1001: questionnaireData.f1001,
+      f1002: questionnaireData.f1002,
+      f1601: questionnaireData.f1601,
+      f1602: questionnaireData.f1602,
+      f1603: questionnaireData.f1603,
+      f1604: questionnaireData.f1604,
+      f1605: questionnaireData.f1605,
+      f1606: questionnaireData.f1606,
+      f1607: questionnaireData.f1607,
+      f1608: questionnaireData.f1608,
+      f1609: questionnaireData.f1609,
+      f1610: questionnaireData.f1610,
+      f1611: questionnaireData.f1611,
+      f1612: questionnaireData.f1612,
+      f1613: questionnaireData.f1613,
+      f1614: questionnaireData.f1614,
+      studentId: identityData.nim,
+
+    }
+    console.log(normalized)
+    try {
+      const res = await axios.post(
+        "http://localhost:2000/api/v1/tracer-study/",
+        normalized
+      );
+      console.log("success", res.data.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   // send button (after filling the form)
   const [open, setOpen] = React.useState(false);
@@ -216,7 +549,7 @@ const FormTracerStudy = () => {
           Tracer Study Form
         </Typography>
         <Box
-          p={8}
+          p={5}
           sx={{
             backgroundColor: "white",
             borderRadius: 1,
@@ -248,7 +581,7 @@ const FormTracerStudy = () => {
                 fullWidth
                 variant="outlined"
                 name="kodePT"
-                placeholder="12345678910"
+                placeholder="UNKLAB: 161002"
                 value={identityData.kodePT}
                 onChange={handleIdentityChange}
               />
@@ -347,6 +680,7 @@ const FormTracerStudy = () => {
             Questionnaire
           </Typography>
           <Grid container spacing={4}>
+            {/* no.1 */}
             <Grid item xs={12}>
               <FormControl component="fieldset">
                 <Typography variant="subtitle1">
@@ -385,7 +719,18 @@ const FormTracerStudy = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            {/* no.2 */}
+            <Grid
+              item
+              xs={12}
+              hidden={
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <FormControl component="fieldset">
                 <Typography variant="subtitle1">
                   2. Apakah Anda telah mendapatkan pekerjaan &lt;= 6 bulan /
@@ -406,7 +751,17 @@ const FormTracerStudy = () => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-            <Grid item md={6}>
+            <Grid
+              item
+              md={6}
+              hidden={
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <Typography variant="subtitle3">
                 Dalam berapa bulan Anda mendapatkan pekerjaan?
               </Typography>
@@ -419,7 +774,17 @@ const FormTracerStudy = () => {
                 onChange={handleQuestionnaireChange}
               />
             </Grid>
-            <Grid item md={6}>
+            <Grid
+              item
+              md={6}
+              hidden={
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <Typography variant="subtitle3">
                 Berapa rata-rata pendapatan Anda per bulan (take home pay)?
               </Typography>
@@ -432,7 +797,18 @@ const FormTracerStudy = () => {
                 onChange={handleQuestionnaireChange}
               />
             </Grid>
-            <Grid item xs={12}>
+            {/* no.3 */}
+            <Grid
+              item
+              xs={12}
+              hidden={
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <Typography variant="subtitle1" style={{ marginBottom: "14px" }}>
                 3. Di mana lokasi tempat Anda bekerja
               </Typography>
@@ -442,14 +818,16 @@ const FormTracerStudy = () => {
                   <Select
                     fullWidth
                     variant="outlined"
-                    name="province"
-                    value={questionnaireData.province}
+                    name="f5a1"
+                    value={questionnaireData.f5a1}
                     onChange={handleQuestionnaireChange}
                   >
-                    <MenuItem value="">Select Province</MenuItem>
-                    {provinces.map((province) => (
-                      <MenuItem key={province} value={province}>
-                        {province}
+                    <MenuItem value="" disabled>
+                      Select Province
+                    </MenuItem>
+                    {provinces.map((f5a1) => (
+                      <MenuItem key={f5a1} value={f5a1}>
+                        {f5a1}
                       </MenuItem>
                     ))}
                   </Select>
@@ -459,26 +837,35 @@ const FormTracerStudy = () => {
                   <Select
                     fullWidth
                     variant="outlined"
-                    name="city"
-                    value={questionnaireData.city}
+                    name="f5a2"
+                    value={questionnaireData.f5a2}
                     onChange={handleQuestionnaireChange}
                   >
                     <MenuItem value="">Select City</MenuItem>
-                    {citiesByProvince[questionnaireData.province]?.map(
-                      (city) => (
-                        <MenuItem key={city} value={city}>
-                          {city}
-                        </MenuItem>
-                      )
-                    )}
+                    {citiesByProvince[questionnaireData.f5a1]?.map((f5a2) => (
+                      <MenuItem key={f5a2} value={f5a2}>
+                        {f5a2}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </Grid>
               </Grid>
             </Grid>
 
-            {/* FIX: CONNECT TEXTFIELD TO RADIO OPTION */}
+            {/* no.4 */}
             <Grid item container xs={12} spacing={4}>
-              <Grid item md={12}>
+              {/* FIX: CONNECT TEXTFIELD TO RADIO OPTION */}
+              <Grid
+                item
+                md={12}
+                hidden={
+                  questionnaireData.f8 === "4" ||
+                  questionnaireData.f8 === "2" ||
+                  questionnaireData.f8 === "5"
+                    ? true
+                    : false
+                }
+              >
                 <FormControl component="fieldset">
                   <Typography variant="subtitle1">
                     4. Apa jenis perusahaan/intansi/institusi tempat anda
@@ -525,32 +912,39 @@ const FormTracerStudy = () => {
                       label="Lainnya, tuliskan"
                     />
                   </RadioGroup>
-                </FormControl>
-              </Grid>
-              <Grid item md={6}>
-                <TextField
-                  fullWidth
-                  id="outlined-basic"
-                  placeholder="lainnya"
-                  variant="outlined"
-                />
 
-                {/* fix: hubungin ke radio button */}
-                {/* {questionnaireData.f1101 === '5' && (
-                  <TextField
-                    fullwidth
-                    label="Text Field"
-                    variant="outlined"
-                    name="f1102"
-                    value={questionnaireData.f1102}
-                    onChange={handleQuestionnaireChange}
-                  />
-                )} */}
+                  <Grid item md={6}>
+                    {/* fix: hubungin ke radio button */}
+                    {questionnaireData.f1101 === "5" && (
+                      <TextField
+                        fullwidth
+                        // label="Text Field"
+                        variant="outlined"
+                        placeholder="lainnya"
+                        name="f1102"
+                        value={questionnaireData.f1102}
+                        onChange={handleQuestionnaireChange}
+                      />
+                    )}
+                  </Grid>
+                </FormControl>
               </Grid>
             </Grid>
 
+            {/* no.5 */}
             <Grid item container xs={12} spacing={4}>
-              <Grid item xs={12} md={6}>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                hidden={
+                  questionnaireData.f8 === "4" ||
+                  questionnaireData.f8 === "2" ||
+                  questionnaireData.f8 === "5"
+                    ? true
+                    : false
+                }
+              >
                 <Typography variant="subtitle1" style={{ marginBottom: "8px" }}>
                   5. Apa nama perusahaan/kantor tempat Anda bekerja?
                 </Typography>
@@ -565,7 +959,19 @@ const FormTracerStudy = () => {
               </Grid>
             </Grid>
 
-            <Grid item xs={12}>
+            {/* no.6 */}
+            <Grid
+              item
+              xs={12}
+              hidden={
+                questionnaireData.f8 === "1" ||
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <Typography variant="subtitle1" style={{ marginBottom: "8px" }}>
                 6. Bila berwiraswasta, apa posisi/jabatan Anda saat ini?
                 (Apabila 1 Menjawab [3] wiraswasta)
@@ -594,7 +1000,18 @@ const FormTracerStudy = () => {
               </Grid>
             </Grid>
 
-            <Grid item xs={12}>
+            {/* no.7 */}
+            <Grid
+              item
+              xs={12}
+              hidden={
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <Typography variant="subtitle1" style={{ marginBottom: "8px" }}>
                 7. Apa tingkat tempat kerja Anda?
               </Typography>
@@ -612,20 +1029,36 @@ const FormTracerStudy = () => {
                       name="f5d"
                       onChange={handleQuestionnaireChange}
                     >
-                      <MenuItem value={1}>
+                      <MenuItem
+                        value={"Lokal/Wilayah/Wiraswasta/tidak berbadan hukum"}
+                      >
                         Lokal/Wilayah/Wiraswasta/tidak berbadan hukum
                       </MenuItem>
-                      <MenuItem value={2}>
+                      <MenuItem value={"Nasional/Wiraswasta berbadan hukum"}>
                         Nasional/Wiraswasta berbadan hukum
                       </MenuItem>
-                      <MenuItem value={3}>Mulitnasional/Internasional</MenuItem>
+                      <MenuItem value={"Mulitnasional/Internasional"}>
+                        Mulitnasional/Internasional
+                      </MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
               </Grid>
             </Grid>
 
-            <Grid item xs={12}>
+            {/* no.8 */}
+            <Grid
+              item
+              xs={12}
+              hidden={
+                questionnaireData.f8 === "1" ||
+                questionnaireData.f8 === "3" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <Typography variant="subtitle1" style={{ marginBottom: "8px" }}>
                 8. Pertanyaan studi lanjut
               </Typography>
@@ -644,8 +1077,8 @@ const FormTracerStudy = () => {
                       value={questionnaireData.f18a}
                       onChange={handleQuestionnaireChange}
                     >
-                      <MenuItem value={1}>Biaya Sendiri</MenuItem>
-                      <MenuItem value={2}>Beasiswa</MenuItem>
+                      <MenuItem value={"Biaya Sendiri"}>Biaya Sendiri</MenuItem>
+                      <MenuItem value={"Beasiswa"}>Beasiswa</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -688,9 +1121,19 @@ const FormTracerStudy = () => {
               </Grid>
             </Grid>
 
-            {/* FIX: CONNECT TEXTFIELD TO RADIO OPTION */}
+            {/* no.9 */}
             <Grid item container xs={12} spacing={4}>
-              <Grid item md={12}>
+              <Grid
+                item
+                md={12}
+                hidden={
+                  questionnaireData.f8 === "4" ||
+                  questionnaireData.f8 === "2" ||
+                  questionnaireData.f8 === "5"
+                    ? true
+                    : false
+                }
+              >
                 <FormControl component="fieldset">
                   <Typography variant="subtitle1">
                     9. Sebutkan sumberdana dalam pembiayaan kuliah? * (bukan
@@ -738,24 +1181,34 @@ const FormTracerStudy = () => {
                     />
                   </RadioGroup>
                   <Grid item md={6}>
-                    <TextField
-                      fullWidth
-                      id="outlined-basic"
-                      label="lainnya"
-                      variant="outlined"
-                      name="f1202"
-                      value={questionnaireData.f1202}
-                      onChange={handleQuestionnaireChange}
-                    />
-                    {/* fix: hubungin ke radio button */}
-                    {/* {questionnaireData.f1201 === '7' && (
-                )} */}
+                    {questionnaireData.f1201 === "7" && (
+                      <TextField
+                        fullWidth
+                        id="outlined-basic"
+                        label="lainnya"
+                        variant="outlined"
+                        name="f1202"
+                        value={questionnaireData.f1202}
+                        onChange={handleQuestionnaireChange}
+                      />
+                    )}
                   </Grid>
                 </FormControl>
               </Grid>
             </Grid>
 
-            <Grid item xs={12}>
+            {/* no.10 */}
+            <Grid
+              item
+              xs={12}
+              hidden={
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <FormControl component="fieldset">
                 {/* <FormLabel component="legend">Answer the first question</FormLabel> */}
                 <Typography variant="subtitle1">
@@ -797,7 +1250,18 @@ const FormTracerStudy = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12}>
+            {/* no.11 */}
+            <Grid
+              item
+              xs={12}
+              hidden={
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <FormControl component="fieldset">
                 {/* <FormLabel component="legend">Answer the first question</FormLabel> */}
                 <Typography variant="subtitle1">
@@ -834,8 +1298,16 @@ const FormTracerStudy = () => {
               </FormControl>
             </Grid>
 
-            {/* no. 12 skip dulu */}
-            <Grid item xs={12}>
+            {/* no.12 */}
+            <Grid
+              item
+              xs={12}
+              hidden={
+                questionnaireData.f8 === "2" || questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <Typography variant="subtitle1">
                 12. Pada saat lulus, pada tingkat mana kompetensi di bawah ini
                 anda : kuasai? (A) Pada saat ini, pada tingkat mana kompetensi
@@ -850,9 +1322,9 @@ const FormTracerStudy = () => {
                     <TableRow
                     //sx={{backgroundColor: "#f5f5f5"}}
                     >
-                      <TableCell style={{ width: "400px" }}>A</TableCell>
-                      <TableCell style={{ width: "200px" }}></TableCell>
-                      <TableCell style={{ width: "400px" }}>B</TableCell>
+                      <TableCell style={{ width: "450px" }}>A</TableCell>
+                      <TableCell style={{ width: "100px" }}></TableCell>
+                      <TableCell style={{ width: "450px" }}>B</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>
@@ -895,9 +1367,9 @@ const FormTracerStudy = () => {
                             <RadioGroup
                               row
                               aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                              //value={questionnaireData.f1761}
-                              //onChange={handleQuestionnaireChange}
+                              name="f1761"
+                              value={questionnaireData.f1761}
+                              onChange={handleQuestionnaireChange}
                             >
                               <FormControlLabel
                                 value="1"
@@ -960,9 +1432,9 @@ const FormTracerStudy = () => {
                             <RadioGroup
                               row
                               aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                              //value={questionnaireData.f1761}
-                              //onChange={handleQuestionnaireChange}
+                              name="f1762"
+                              value={questionnaireData.f1762}
+                              onChange={handleQuestionnaireChange}
                             >
                               <FormControlLabel
                                 value="1"
@@ -1015,9 +1487,9 @@ const FormTracerStudy = () => {
                             <RadioGroup
                               row
                               aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                              //value={questionnaireData.f1761}
-                              //onChange={handleQuestionnaireChange}
+                              name="f1763"
+                              value={questionnaireData.f1763}
+                              onChange={handleQuestionnaireChange}
                             >
                               <FormControlLabel
                                 value="1"
@@ -1080,9 +1552,9 @@ const FormTracerStudy = () => {
                             <RadioGroup
                               row
                               aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                              //value={questionnaireData.f1761}
-                              //onChange={handleQuestionnaireChange}
+                              name="f1764"
+                              value={questionnaireData.f1764}
+                              onChange={handleQuestionnaireChange}
                             >
                               <FormControlLabel
                                 value="1"
@@ -1135,9 +1607,9 @@ const FormTracerStudy = () => {
                             <RadioGroup
                               row
                               aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                              //value={questionnaireData.f1761}
-                              //onChange={handleQuestionnaireChange}
+                              name="f1765"
+                              value={questionnaireData.f1765}
+                              onChange={handleQuestionnaireChange}
                             >
                               <FormControlLabel
                                 value="1"
@@ -1200,9 +1672,9 @@ const FormTracerStudy = () => {
                             <RadioGroup
                               row
                               aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                              //value={questionnaireData.f1761}
-                              //onChange={handleQuestionnaireChange}
+                              name="f1766"
+                              value={questionnaireData.f1766}
+                              onChange={handleQuestionnaireChange}
                             >
                               <FormControlLabel
                                 value="1"
@@ -1255,9 +1727,9 @@ const FormTracerStudy = () => {
                             <RadioGroup
                               row
                               aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                              //value={questionnaireData.f1761}
-                              //onChange={handleQuestionnaireChange}
+                              name="f1767"
+                              value={questionnaireData.f1767}
+                              onChange={handleQuestionnaireChange}
                             >
                               <FormControlLabel
                                 value="1"
@@ -1320,9 +1792,9 @@ const FormTracerStudy = () => {
                             <RadioGroup
                               row
                               aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                              //value={questionnaireData.f1761}
-                              //onChange={handleQuestionnaireChange}
+                              name="f1768"
+                              value={questionnaireData.f1768}
+                              onChange={handleQuestionnaireChange}
                             >
                               <FormControlLabel
                                 value="1"
@@ -1375,9 +1847,9 @@ const FormTracerStudy = () => {
                             <RadioGroup
                               row
                               aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                              //value={questionnaireData.f1761}
-                              //onChange={handleQuestionnaireChange}
+                              name="f1769"
+                              value={questionnaireData.f1769}
+                              onChange={handleQuestionnaireChange}
                             >
                               <FormControlLabel
                                 value="1"
@@ -1440,9 +1912,9 @@ const FormTracerStudy = () => {
                             <RadioGroup
                               row
                               aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                              //value={questionnaireData.f1761}
-                              //onChange={handleQuestionnaireChange}
+                              name="f1770"
+                              value={questionnaireData.f1770}
+                              onChange={handleQuestionnaireChange}
                             >
                               <FormControlLabel
                                 value="1"
@@ -1495,9 +1967,9 @@ const FormTracerStudy = () => {
                             <RadioGroup
                               row
                               aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                              //value={questionnaireData.f1761}
-                              //onChange={handleQuestionnaireChange}
+                              name="f1771"
+                              value={questionnaireData.f1771}
+                              onChange={handleQuestionnaireChange}
                             >
                               <FormControlLabel
                                 value="1"
@@ -1560,9 +2032,9 @@ const FormTracerStudy = () => {
                             <RadioGroup
                               row
                               aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                              //value={questionnaireData.f1761}
-                              //onChange={handleQuestionnaireChange}
+                              name="f1772"
+                              value={questionnaireData.f1772}
+                              onChange={handleQuestionnaireChange}
                             >
                               <FormControlLabel
                                 value="1"
@@ -1615,9 +2087,9 @@ const FormTracerStudy = () => {
                             <RadioGroup
                               row
                               aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                              //value={questionnaireData.f1761}
-                              //onChange={handleQuestionnaireChange}
+                              name="f1773"
+                              value={questionnaireData.f1773}
+                              onChange={handleQuestionnaireChange}
                             >
                               <FormControlLabel
                                 value="1"
@@ -1680,9 +2152,9 @@ const FormTracerStudy = () => {
                             <RadioGroup
                               row
                               aria-labelledby="demo-row-radio-buttons-group-label"
-                              name="row-radio-buttons-group"
-                              //value={questionnaireData.f1761}
-                              //onChange={handleQuestionnaireChange}
+                              name="f1774"
+                              value={questionnaireData.f1774}
+                              onChange={handleQuestionnaireChange}
                             >
                               <FormControlLabel
                                 value="1"
@@ -1724,7 +2196,16 @@ const FormTracerStudy = () => {
               </TableContainer>
             </Grid>
 
-            <Grid item xs={12}>
+            {/* no.13 */}
+            <Grid
+              item
+              xs={12}
+              hidden={
+                questionnaireData.f8 === "2" || questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <FormControl component="fieldset">
                 {/* <FormLabel component="legend">Answer the first question</FormLabel> */}
                 <Typography
@@ -1986,7 +2467,18 @@ const FormTracerStudy = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12}>
+            {/* no.14 */}
+            <Grid
+              item
+              xs={12}
+              hidden={
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <FormControl component="fieldset">
                 {/* <FormLabel component="legend">Answer the first question</FormLabel> */}
                 <Typography variant="subtitle1">
@@ -2050,7 +2542,17 @@ const FormTracerStudy = () => {
               </FormControl>
             </Grid>
 
-            <Grid item>
+            {/* no.15 */}
+            <Grid
+              item
+              hidden={
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <FormControl component="fieldset" variant="standard">
                 <Typography
                   variant="subtitle1"
@@ -2063,9 +2565,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f401}
-                        onChange={handleCheckbox}
-                        name="f401"
+                        checked={questionnaireData.f401 === "1"}
+                        onChange={handleCheckboxChange("f401")}
                       />
                     }
                     label="Melalui iklan di koran/majalah, brosur"
@@ -2073,9 +2574,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f402}
-                        onChange={handleCheckbox}
-                        name="f402"
+                        checked={questionnaireData.f402 === "1"}
+                        onChange={handleCheckboxChange("f402")}
                       />
                     }
                     label="Melamar ke perusahaan tanpa mengetahui lowongan yang ada"
@@ -2083,9 +2583,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f403}
-                        onChange={handleCheckbox}
-                        name="f403"
+                        checked={questionnaireData.f403 === "1"}
+                        onChange={handleCheckboxChange("f403")}
                       />
                     }
                     label="Pergi ke bursa/pameran kerja"
@@ -2093,9 +2592,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f404}
-                        onChange={handleCheckbox}
-                        name="f404"
+                        checked={questionnaireData.f404 === "1"}
+                        onChange={handleCheckboxChange("f404")}
                       />
                     }
                     label="Mencari lewat internet/iklan online/milis"
@@ -2103,9 +2601,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f405}
-                        onChange={handleCheckbox}
-                        name="f405"
+                        checked={questionnaireData.f405 === "1"}
+                        onChange={handleCheckboxChange("f405")}
                       />
                     }
                     label="Dihubungi oleh perusahaan"
@@ -2113,9 +2610,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f406}
-                        onChange={handleCheckbox}
-                        name="f406"
+                        checked={questionnaireData.f406 === "1"}
+                        onChange={handleCheckboxChange("f406")}
                       />
                     }
                     label="Menghubungi Kemenakertrans"
@@ -2123,9 +2619,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f407}
-                        onChange={handleCheckbox}
-                        name="f407"
+                        checked={questionnaireData.f407 === "1"}
+                        onChange={handleCheckboxChange("f407")}
                       />
                     }
                     label="Menghubungi agen tenaga kerja komersial/swasta"
@@ -2133,9 +2628,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f408}
-                        onChange={handleCheckbox}
-                        name="f408"
+                        checked={questionnaireData.f408 === "1"}
+                        onChange={handleCheckboxChange("f408")}
                       />
                     }
                     label="Memeroleh informasi dari pusat/kantor pengembangan karir fakultas/universitas"
@@ -2143,9 +2637,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f409}
-                        onChange={handleCheckbox}
-                        name="f409"
+                        checked={questionnaireData.f409 === "1"}
+                        onChange={handleCheckboxChange("f409")}
                       />
                     }
                     label="Menghubungi kantor kemahasiswaan/hubungan alumni"
@@ -2153,9 +2646,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f410}
-                        onChange={handleCheckbox}
-                        name="f410"
+                        checked={questionnaireData.f410 === "1"}
+                        onChange={handleCheckboxChange("f410")}
                       />
                     }
                     label="Membangun jejaring (network) sejak masih kuliah"
@@ -2163,9 +2655,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f411}
-                        onChange={handleCheckbox}
-                        name="f411"
+                        checked={questionnaireData.f411 === "1"}
+                        onChange={handleCheckboxChange("f411")}
                       />
                     }
                     label="Melalui relasi (misalnya dosen, orang tua, saudara, teman, dll.)"
@@ -2173,9 +2664,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f412}
-                        onChange={handleCheckbox}
-                        name="f412"
+                        checked={questionnaireData.f412 === "1"}
+                        onChange={handleCheckboxChange("f412")}
                       />
                     }
                     label="Membangun bisnis sendiri"
@@ -2183,9 +2673,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f413}
-                        onChange={handleCheckbox}
-                        name="f413"
+                        checked={questionnaireData.f413 === "1"}
+                        onChange={handleCheckboxChange("f413")}
                       />
                     }
                     label="Melalui penempatan kerja atau magang"
@@ -2193,9 +2682,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f414}
-                        onChange={handleCheckbox}
-                        name="f414"
+                        checked={questionnaireData.f414 === "1"}
+                        onChange={handleCheckboxChange("f414")}
                       />
                     }
                     label="Bekerja di tempat yang sama dengan tempat kerja semasa kuliah"
@@ -2203,49 +2691,41 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f415}
-                        onChange={handleCheckbox}
+                        checked={questionnaireData.f415 === "1"}
+                        onChange={handleCheckboxChange("f415")}
                         name="f415"
                       />
                     }
                     label="Lainnya"
                   />
 
-                  <TextField
-                    fullWidth
-                    id="outlined-basic"
-                    label="lainnya"
-                    variant="outlined"
-                    name="f4016"
-                    value={questionnaireData.f4016}
-                    onChange={handleQuestionnaireChange}
-                  />
-
-                  {/* FIX: check the fill in checkbox */}
-                  {/* <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={questionnaireData.f415}
-                        onChange={(e) => handleQuestionnaireChange({ target: { name: 'f415', checked: e.target.checked, value: questionnaireData.f416 } })}
-                        name="f415"
-                      />
-                    }
-                    label="lainnya"
-                  />
-                  {questionnaireData.f415 && (
+                  {questionnaireData.f415 === "1" && (
                     <TextField
-                      label="Other Option"
+                      fullWidth
+                      id="outlined-basic"
+                      label="lainnya"
                       variant="outlined"
-                      value={questionnaireData.f416}
-                      onChange={(e) => handleQuestionnaireChange({ target: { name: 'f415', checked: true, value: e.target.value } })}
-                      style={{ marginTop: '10px' }}
+                      name="f4016"
+                      value={questionnaireData.f4016}
+                      onChange={handleQuestionnaireChange}
                     />
-                  )} */}
+                  )}
                 </FormGroup>
               </FormControl>
             </Grid>
 
-            <Grid item xs={12}>
+            {/* no.16 */}
+            <Grid
+              item
+              xs={12}
+              hidden={
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <Typography variant="subtitle1" style={{ marginBottom: "14px" }}>
                 16. Berapa perusahaan/instansi/institusi yang sudah anda lamar
                 (lewat surat atau e-mail) sebelum anda memeroleh pekerjaan
@@ -2266,7 +2746,18 @@ const FormTracerStudy = () => {
               </Box>
             </Grid>
 
-            <Grid item xs={12}>
+            {/* no.17 */}
+            <Grid
+              item
+              xs={12}
+              hidden={
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <Typography variant="subtitle1" style={{ marginBottom: "14px" }}>
                 17. Berapa banyak perusahaan/instansi/institusi yang merespons
                 lamaran anda?
@@ -2286,7 +2777,18 @@ const FormTracerStudy = () => {
               </Box>
             </Grid>
 
-            <Grid item xs={12}>
+            {/* no.18 */}
+            <Grid
+              item
+              xs={12}
+              hidden={
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <Typography variant="subtitle1" style={{ marginBottom: "14px" }}>
                 18. Berapa banyak perusahaan/instansi/institusi yang mengundang
                 anda untuk wawancara?
@@ -2306,8 +2808,20 @@ const FormTracerStudy = () => {
               </Box>
             </Grid>
 
-            {/* FIX: CONNECT TEXTFIELD TO RADIO OPTION */}
-            <Grid item xs={12} spacing={4}>
+            {/* no.19 */}
+            <Grid
+              item
+              xs={12}
+              spacing={4}
+              hidden={
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
+              {/* FIX: CONNECT TEXTFIELD TO RADIO OPTION */}
               <FormControl component="fieldset">
                 <Typography variant="subtitle1">
                   19. Apakah anda aktif mencari pekerjaan dalam 4 minggu
@@ -2345,19 +2859,32 @@ const FormTracerStudy = () => {
                   />
                 </RadioGroup>
                 <Box xs={{ width: "50ch" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="lainnya..."
-                    variant="outlined"
-                    name="f1002"
-                    value={questionnaireData.f1002}
-                    onChange={handleQuestionnaireChange}
-                  />
+                  {questionnaireData.f1001 === "5" && (
+                    <TextField
+                      id="outlined-basic"
+                      label="lainnya..."
+                      variant="outlined"
+                      name="f1002"
+                      value={questionnaireData.f1002}
+                      onChange={handleQuestionnaireChange}
+                    />
+                  )}
                 </Box>
               </FormControl>
             </Grid>
 
-            <Grid item xs={12}>
+            {/* no.20 */}
+            <Grid
+              item
+              xs={12}
+              hidden={
+                questionnaireData.f8 === "4" ||
+                questionnaireData.f8 === "2" ||
+                questionnaireData.f8 === "5"
+                  ? true
+                  : false
+              }
+            >
               <FormControl component="fieldset" variant="standard">
                 <Typography
                   variant="subtitle1"
@@ -2371,9 +2898,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f1601}
-                        onChange={handleCheckbox}
-                        name="f1601"
+                        checked={questionnaireData.f1601 === "1"}
+                        onChange={handleCheckboxChange("f1601")}
                       />
                     }
                     label="Pertanyaan tidak sesuai; pekerjaan saya sekarang sudah sesuai dengan pendidikan saya."
@@ -2381,9 +2907,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f1602}
-                        onChange={handleCheckbox}
-                        name="f1602"
+                        checked={questionnaireData.f1602 === "1"}
+                        onChange={handleCheckboxChange("f1602")}
                       />
                     }
                     label="Saya belum mendapatkan pekerjaan yang lebih sesuai."
@@ -2391,9 +2916,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f1603}
-                        onChange={handleCheckbox}
-                        name="f1603"
+                        checked={questionnaireData.f1603 === "1"}
+                        onChange={handleCheckboxChange("f1603")}
                       />
                     }
                     label="Di pekerjaan ini saya memeroleh prospek karir yang baik. "
@@ -2401,9 +2925,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f1604}
-                        onChange={handleCheckbox}
-                        name="f1604"
+                        checked={questionnaireData.f1604 === "1"}
+                        onChange={handleCheckboxChange("f1604")}
                       />
                     }
                     label="Saya lebih suka bekerja di area pekerjaan yang tidak ada hubungannya dengan pendidikan saya."
@@ -2411,9 +2934,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f1605}
-                        onChange={handleCheckbox}
-                        name="f1605"
+                        checked={questionnaireData.f1605 === "1"}
+                        onChange={handleCheckboxChange("f1605")}
                       />
                     }
                     label="Saya dipromosikan ke posisi yang kurang berhubungan dengan pendidikan saya dibanding posisi sebelumnya."
@@ -2421,9 +2943,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f1606}
-                        onChange={handleCheckbox}
-                        name="f1606"
+                        checked={questionnaireData.f1606 === "1"}
+                        onChange={handleCheckboxChange("f1606")}
                       />
                     }
                     label="Saya dapat memeroleh pendapatan yang lebih tinggi di pekerjaan ini. "
@@ -2431,9 +2952,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f1607}
-                        onChange={handleCheckbox}
-                        name="f1607"
+                        checked={questionnaireData.f1607 === "1"}
+                        onChange={handleCheckboxChange("f1607")}
                       />
                     }
                     label="Pekerjaan saya saat ini lebih aman/terjamin/secure"
@@ -2441,9 +2961,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f1608}
-                        onChange={handleCheckbox}
-                        name="f1608"
+                        checked={questionnaireData.f1608 === "1"}
+                        onChange={handleCheckboxChange("f1608")}
                       />
                     }
                     label="Pekerjaan saya saat ini lebih menarik"
@@ -2451,9 +2970,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f1609}
-                        onChange={handleCheckbox}
-                        name="f1609"
+                        checked={questionnaireData.f1609 === "1"}
+                        onChange={handleCheckboxChange("f1609")}
                       />
                     }
                     label="Pekerjaan saya saat ini lebih memungkinkan saya mengambil pekerjaan tambahan/jadwal yang fleksibel, dll."
@@ -2461,9 +2979,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f1610}
-                        onChange={handleCheckbox}
-                        name="f1610"
+                        checked={questionnaireData.f1610 === "1"}
+                        onChange={handleCheckboxChange("f1610")}
                       />
                     }
                     label="Pekerjaan saya saat ini lokasinya lebih dekat dari rumah saya."
@@ -2471,9 +2988,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f1611}
-                        onChange={handleCheckbox}
-                        name="f1611"
+                        checked={questionnaireData.f1611 === "1"}
+                        onChange={handleCheckboxChange("f1611")}
                       />
                     }
                     label="Pekerjaan saya saat ini dapat lebih menjamin kebutuhan keluarga saya."
@@ -2481,9 +2997,8 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f1612}
-                        onChange={handleCheckbox}
-                        name="f1612"
+                        checked={questionnaireData.f1612 === "1"}
+                        onChange={handleCheckboxChange("f1612")}
                       />
                     }
                     label="Pada awal meniti karir ini, saya harus menerima pekerjaan yang tidak berhubungan dengan pendidikan saya"
@@ -2491,23 +3006,24 @@ const FormTracerStudy = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={questionnaireData.f1613}
-                        onChange={handleCheckbox}
-                        name="f1613"
+                        checked={questionnaireData.f1613 === "1"}
+                        onChange={handleCheckboxChange("f1613")}
                       />
                     }
                     label="lainnya"
                   />
                   <Grid item md={6} style={{ marginTop: "10px" }}>
-                    <TextField
-                      fullWidth
-                      id="outlined-basic"
-                      label="lainnya"
-                      variant="outlined"
-                      name="f1614"
-                      value={questionnaireData.f1614}
-                      onChange={handleQuestionnaireChange}
-                    />
+                    {questionnaireData.f1613 === "1" && (
+                      <TextField
+                        fullWidth
+                        id="outlined-basic"
+                        label="lainnya"
+                        variant="outlined"
+                        name="f1614"
+                        value={questionnaireData.f1614}
+                        onChange={handleQuestionnaireChange}
+                      />
+                    )}
                   </Grid>
                   {/* FIX: check the fill in checkbox */}
                   {/* <FormControlLabel
@@ -2571,7 +3087,13 @@ const FormTracerStudy = () => {
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => setOpen(false)}>Cancel</Button>
-                <Button onClick={() => setOpen(false)} autoFocus>
+                <Button
+                  onClick={(e) => {
+                    setOpen(false);
+                    handleSubmit(e);
+                  }}
+                  autoFocus
+                >
                   Submit
                 </Button>
               </DialogActions>
