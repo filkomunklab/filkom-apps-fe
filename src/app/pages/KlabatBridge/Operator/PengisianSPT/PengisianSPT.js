@@ -37,7 +37,7 @@ import {
   Input,
   IconButton,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
@@ -45,6 +45,7 @@ import { makeStyles } from "@mui/styles";
 import ClearIcon from "@mui/icons-material/Clear";
 import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
 import axios from "axios";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 // const rows = [
 //     { id: 1, name: 'Row 1', mk: 'Robotics', sks: '3', keterangan: 'Summer 2023' },
@@ -208,18 +209,9 @@ const PengisianSPT = () => {
   //     setSelectedMajor(event.target.value);
   // };
 
-  // alert dialog
-  const [open, setOpen] = React.useState(false);
-
-  // date picker
-  const [selectedDate, setSelectedDate] = useState(null);
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-
-  // pdf upload
-  const [pdfFile, setPdfFile] = useState(null);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -262,10 +254,7 @@ const PengisianSPT = () => {
     };
     console.log(normalized);
     try {
-      const res = await axios.post(
-        "http://localhost:2000/api/v1/spt/",
-        normalized
-      );
+      const res = await jwtAuthAxios.post("/spt/", normalized);
       console.log("success", res.data.data);
     } catch (e) {
       console.log(e);
@@ -357,6 +346,7 @@ const PengisianSPT = () => {
                 <DesktopDatePicker
                   label="Select Date"
                   format="dd/MM/yyyy"
+                  defaultValue={studentData?.dateOfBirth}
                   value={selectedDate}
                   onChange={handleDateChange}
                   renderInput={(params) => <TextField {...params} />}
@@ -409,6 +399,7 @@ const PengisianSPT = () => {
                 Nomor Induk Mahasiswa
               </Typography>
               <TextField
+                value={studentData?.nim}
                 fullWidth
                 variant="outlined"
                 name="nim"
@@ -423,6 +414,7 @@ const PengisianSPT = () => {
                 Fakultas
               </Typography>
               <Select
+                defaultValue={studentData?.faculty}
                 fullWidth
                 variant="outlined"
                 name="fakultas"
@@ -444,6 +436,7 @@ const PengisianSPT = () => {
                 Program Studi
               </Typography>
               <Select
+                defaultValue={studentData?.major}
                 fullWidth
                 variant="outlined"
                 name="prodi"
@@ -491,6 +484,7 @@ const PengisianSPT = () => {
                 Phone Number
               </Typography>
               <TextField
+                value={studentData?.phoneNo}
                 fullWidth
                 variant="outlined"
                 name="noTelp"

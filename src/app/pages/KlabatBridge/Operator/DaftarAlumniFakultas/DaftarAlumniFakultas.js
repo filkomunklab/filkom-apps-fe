@@ -17,11 +17,11 @@ import {
   Box,
   Paper,
   ListSubheader,
-  Dialog, 
-  DialogActions, 
-  DialogContent, 
-  DialogContentText, 
-  DialogTitle, 
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   TextField,
   Divider,
   Checkbox,
@@ -33,15 +33,16 @@ import SearchGlobal from "app/shared/SearchGlobal";
 import React, { useState } from "react";
 import CreateIcon from "@mui/icons-material/Create";
 import MarkunreadIcon from "@mui/icons-material/Markunread";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const DaftarAlumniFakultas = () => {
   const [data, setData] = useState([]);
   const [year, setYear] = useState([]);
   const [major, setMajor] = useState([]);
-  const [filterValue, setFilterValue] = useState('');
-  const [searchValue, setSearchValue] = useState('');
+  const [filterValue, setFilterValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const [searchBtn, setSearchBtn] = useState(false);
 
   // pagination
@@ -63,8 +64,8 @@ const DaftarAlumniFakultas = () => {
 
   // style cancel button
   const buttonStyle = {
-    color: 'black',
-    backgroundColor: 'white',
+    color: "black",
+    backgroundColor: "white",
   };
 
   // // select all button
@@ -89,28 +90,39 @@ const DaftarAlumniFakultas = () => {
       <TableCell>{`${item.firstName} ${item.lastName}`}</TableCell>
       <TableCell>{item.nim}</TableCell>
       <TableCell>{item.faculty}</TableCell>
-      <TableCell>{item.major === "IF" ? "Informatika" : "Sistem Informasi"}</TableCell>
+      <TableCell>
+        {item.major === "IF" ? "Informatika" : "Sistem Informasi"}
+      </TableCell>
       <TableCell>{item.graduate_year}</TableCell>
     </TableRow>
   );
 
   const getData = async () => {
-    await axios.get(`http://localhost:2000/api/v1/fakultas/alumni?search_query=${searchValue}`).then((res) => {
-      console.log(res.data.data);
-      
-      setData(res.data.data);
+    await jwtAuthAxios
+      .get(`/fakultas/alumni?search_query=${searchValue}`)
+      .then((res) => {
+        console.log(res.data.data);
 
-      const uniqueYears = [...new Set(res.data.data.map(item=> item.graduate_year))]
-      const uniquMajor = [...new Set(res.data.data.map(item=> item.major))]
+        setData(res.data.data);
 
-      console.log(uniqueYears);
-      setYear(uniqueYears)
-      setMajor(uniquMajor)
-    });
+        const uniqueYears = [
+          ...new Set(res.data.data.map((item) => item.graduate_year)),
+        ];
+        const uniquMajor = [
+          ...new Set(res.data.data.map((item) => item.major)),
+        ];
+
+        console.log(uniqueYears);
+        setYear(uniqueYears);
+        setMajor(uniquMajor);
+      });
   };
 
   function filterData() {
-    return data.filter(item => item["graduate_year"] === filterValue || item["major"] === filterValue);
+    return data.filter(
+      (item) =>
+        item["graduate_year"] === filterValue || item["major"] === filterValue
+    );
   }
 
   React.useEffect(() => {
@@ -118,8 +130,7 @@ const DaftarAlumniFakultas = () => {
   }, [searchBtn]);
 
   return (
-    <Box
-    >
+    <Box>
       <Div
         sx={{
           display: "flex",
@@ -141,7 +152,7 @@ const DaftarAlumniFakultas = () => {
           }}
         >
           {/* searchbar */}
-           <TextField
+          <TextField
             // label="Search"
             placeholder="Search by Name or NIM"
             variant="outlined"
@@ -150,51 +161,52 @@ const DaftarAlumniFakultas = () => {
             onChange={(e) => setSearchValue(e.target.value)}
             InputProps={{
               endAdornment: (
-                <IconButton 
-                  onClick={()=> setSearchBtn(!searchBtn)} 
-                  edge="end">
+                <IconButton onClick={() => setSearchBtn(!searchBtn)} edge="end">
                   <SearchIcon />
                 </IconButton>
               ),
-              style: { borderRadius: '25px', width: '250px', height: '35px'} // Apply border radius here
+              style: { borderRadius: "25px", width: "250px", height: "35px" }, // Apply border radius here
             }}
           />
-          <FormControl sx={{minWidth: 200}} size="small">
+          <FormControl sx={{ minWidth: 200 }} size="small">
             <InputLabel htmlFor="grouped-select">Filter</InputLabel>
-            <Select 
-              defaultValue="" 
-              id="grouped-select" 
+            <Select
+              defaultValue=""
+              id="grouped-select"
               label="Filter"
-              sx={{borderRadius: 10, maxHeight: '50px'}}
+              sx={{ borderRadius: 10, maxHeight: "50px" }}
               value={filterValue}
-              onChange={(event)=>setFilterValue(event.target.value)}
+              onChange={(event) => setFilterValue(event.target.value)}
             >
               <MenuItem value="">
-                  <em>None</em>
+                <em>None</em>
               </MenuItem>
-              <ListSubheader sx={{color: "#192739F0"}}>Program Study</ListSubheader>
-                {major.map(item => {
-                  let label
-                  switch (item) {
-                    case 'IF':
-                      label='Informatics'
-                      break;
-                    case 'SI':
-                      label='Sistem Information'
-                      break;
-                    // case 'DKV':
-                    //   label='DKV'
-                    //   break;
-                    default:
-                      break;
-                  }
-                  return(
-                <MenuItem value={item}>{label}</MenuItem>
-                )})}
-              <ListSubheader sx={{color: "#192739F0"}}>Gradutaion Year</ListSubheader>
-              {year.map((item)=>{return(
-                 <MenuItem value={item}>{item}</MenuItem>
-              )})}
+              <ListSubheader sx={{ color: "#192739F0" }}>
+                Program Study
+              </ListSubheader>
+              {major.map((item) => {
+                let label;
+                switch (item) {
+                  case "IF":
+                    label = "Informatics";
+                    break;
+                  case "SI":
+                    label = "Sistem Information";
+                    break;
+                  // case 'DKV':
+                  //   label='DKV'
+                  //   break;
+                  default:
+                    break;
+                }
+                return <MenuItem value={item}>{label}</MenuItem>;
+              })}
+              <ListSubheader sx={{ color: "#192739F0" }}>
+                Gradutaion Year
+              </ListSubheader>
+              {year.map((item) => {
+                return <MenuItem value={item}>{item}</MenuItem>;
+              })}
             </Select>
           </FormControl>
         </Div>
@@ -202,7 +214,7 @@ const DaftarAlumniFakultas = () => {
       <TableContainer component={Paper} sx={{ overflow: "auto" }}>
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: '#f5f5f5'}}>
+            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
               <TableCell>No</TableCell>
               <TableCell>Full Name</TableCell>
               <TableCell>NIM</TableCell>
@@ -212,18 +224,18 @@ const DaftarAlumniFakultas = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-          {filterData().length > 0 ? filterData()
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((item, index) => (
-              <TableItem index={index} item={item} />
-            )) : data.map((item, index) => (
-              <TableItem index={index} item={item} />
-            ))}
+            {filterData().length > 0
+              ? filterData()
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => <TableItem index={index} item={item} />)
+              : data.map((item, index) => (
+                  <TableItem index={index} item={item} />
+                ))}
           </TableBody>
         </Table>
       </TableContainer>
 
-      <Grid container justifyContent="flex-end" >
+      <Grid container justifyContent="flex-end">
         <Grid item>
           {/* <Pagination count={10} color="primary" sx={{marginY:5}}/> */}
           <TablePagination
@@ -234,11 +246,10 @@ const DaftarAlumniFakultas = () => {
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            sx={{marginY:2}}
+            sx={{ marginY: 2 }}
           />
         </Grid>
       </Grid>
-      
     </Box>
   );
 };
