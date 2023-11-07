@@ -123,7 +123,6 @@ export const sekretarisMenus = [
         type: "nav-item",
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
         uri: "/bimbingan-akademik/sek-dekan/student-information",
-
       },
       {
         label: "Supervisor Information",
@@ -452,17 +451,17 @@ export const dosenMenus = [
           {
             label: "Review Pre-Registration",
             type: "nav-item",
-            uri: "/bimbingan-akademik/dosen-pembimbing/review-pre-registration",
+            uri: "/bimbingan-akademik/dosen-pembimbing/review-activities/pre-registration",
           },
           {
             label: "Review Certificate",
             type: "nav-item",
-            uri: "/bimbingan-akademik/dosen-pembimbing/review-certificate",
+            uri: "/bimbingan-akademik/dosen-pembimbing/review-activities/certificate",
           },
           {
             label: "Student Consultation",
             type: "nav-item",
-            uri: "/bimbingan-akademik/dosen-pembimbing/student-consultation",
+            uri: "/bimbingan-akademik/dosen-pembimbing/review-activities/consultation",
           },
         ],
       },
@@ -470,13 +469,13 @@ export const dosenMenus = [
         label: "Current Activities",
         type: "nav-item",
         icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/dosen-pembimbing/activity-history",
+        uri: "/bimbingan-akademik/dosen-pembimbing/current-activities",
       },
       {
         label: "History",
         type: "nav-item",
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/dosen-pembimbing/recent-activities",
+        uri: "/bimbingan-akademik/dosen-pembimbing/history",
       },
       {
         label: "Add Activity",
