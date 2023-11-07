@@ -109,7 +109,7 @@ const MenuPenguji = () => {
             </Div>
             {/* Dosen ANGGOTA PANALIS */}
             <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
-              <Link to="#">
+              <Link to="/sistem-informasi-skripsi/uji-proposal-anggota/beranda">
                 <Button
                   sx={{
                     fontSize: "13px",
@@ -303,7 +303,7 @@ const MenuPenguji = () => {
             </Div>
             {/* dosen ANGGOTA PANALIS */}
             <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
-              <Link to="#">
+              <Link to="/sistem-informasi-skripsi/uji-proposal-anggota/konsultasi">
                 <Button
                   sx={{
                     // width: "130px",
@@ -433,7 +433,10 @@ const MenuPenguji = () => {
               </Div>
               {/* DOSEN ANGGOTA PANALIS */}
               <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
-                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                <Link
+                  to="/sistem-informasi-skripsi/uji-proposal-anggota/dokumen-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
                   <MenuItem onClick={() => setAnchorEl(null)}>
                     Dokumen Proposal
                   </MenuItem>
@@ -479,7 +482,10 @@ const MenuPenguji = () => {
               </Div>
               {/* DOSEN ANGGOTA PANALIS */}
               <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
-                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                <Link
+                  to="/sistem-informasi-skripsi/uji-proposal-anggota/berita-acara-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
                   <MenuItem onClick={() => setAnchorEl(null)}>
                     Berita Acara Proposal
                   </MenuItem>
@@ -535,14 +541,6 @@ const MenuPenguji = () => {
                   </MenuItem>
                 </Link>
               </Div>
-              {/* DOSEN ANGGOTA PANALIS */}
-              <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
-                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Dokumen Revisi Proposal
-                  </MenuItem>
-                </Link>
-              </Div>
               {/* DOSEN KETUA PANALIS */}
               <Div hidden={role.includes("KETUA_PANALIS") ? false : true}>
                 <Link
@@ -556,7 +554,10 @@ const MenuPenguji = () => {
               </Div>
               {/* DOSEN ANGGOTA PANALIS */}
               <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
-                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                <Link
+                  to="/sistem-informasi-skripsi/uji-proposal-anggota/dokumen-revisi-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
                   <MenuItem onClick={() => setAnchorEl(null)}>
                     Dokumen Revisi Proposal
                   </MenuItem>
@@ -664,7 +665,7 @@ const MenuPenguji = () => {
               {/* DOSEN ANGGOTA PANALIS */}
               <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
                 <Link
-                  to="/sistem-informasi-skripsi/uji-skripsi-ketua/berita-acara-skripsi"
+                  to="/sistem-informasi-skripsi/uji-proposal-anggota/dokumen-skripsi"
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem onClick={() => setAnchorE2(null)}>
@@ -710,7 +711,10 @@ const MenuPenguji = () => {
               </Div>
               {/* DOSEN ANGGOTA PANALIS */}
               <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
-                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                <Link
+                  to="/sistem-informasi-skripsi/uji-proposal-anggota/berita-acara-skripsi"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
                   <MenuItem onClick={() => setAnchorE2(null)}>
                     Berita Acara Skripsi
                   </MenuItem>
@@ -789,7 +793,10 @@ const MenuPenguji = () => {
               </Div>
               {/* DOSEN ANGGOTA PANALIS */}
               <Div hidden={role.includes("ANGGOTA_PANALIS") ? false : true}>
-                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                <Link
+                  to="/sistem-informasi-skripsi/uji-proposal-anggota/dokumen-revisi-skripsi"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
                   <MenuItem onClick={() => setAnchorE2(null)}>
                     Dokumen Revisi Skripsi
                   </MenuItem>
