@@ -7,8 +7,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Menu,
-  MenuItem,
   Paper,
   Table,
   TableBody,
@@ -19,14 +17,14 @@ import {
   TextField,
   TextareaAutosize,
   Typography,
-  paperClasses,
 } from "@mui/material";
 import React, { useState } from "react";
 import CreateIcon from "@mui/icons-material/Create";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
+import axios from "axios";
 
-const BuatKonsultasiCoAdvisor = () => {
+const BuatKonsultasiAdvisor2 = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [description, setDescription] = useState("");
@@ -64,6 +62,11 @@ const BuatKonsultasiCoAdvisor = () => {
       handleDialogClose(); // Menutup dialog setelah mencatat konsultasi
     }
   };
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log(role);
+
   return (
     <Div>
       <Div
@@ -80,7 +83,6 @@ const BuatKonsultasiCoAdvisor = () => {
           Konsultasi
         </Typography>
       </Div>
-
       <Div
         sx={{
           display: "flex",
@@ -118,7 +120,8 @@ const BuatKonsultasiCoAdvisor = () => {
           }}
         >
           {/* Menu Horizontal Start */}
-          <MenuPenguji />
+          <Div sx={{ width: "100%" }}></Div>
+
           {/* Menu horizontal End */}
 
           <Div
@@ -156,16 +159,21 @@ const BuatKonsultasiCoAdvisor = () => {
                   marginBottom: "25px",
                 }}
               >
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="primary"
-                  sx={{ textTransform: "none" }}
-                  onClick={handleDialogOpen}
+                {/* roll yang bisa akses dosen pembimbing */}
+                <Div
+                  hidden={role.includes("ADVISOR", "CO_ADVISOR") ? false : true}
                 >
-                  <CreateIcon sx={{ margin: "3px", fontSize: "small" }} />
-                  Catat Konsultasi
-                </Button>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    color="primary"
+                    sx={{ textTransform: "none" }}
+                    onClick={handleDialogOpen}
+                  >
+                    <CreateIcon sx={{ margin: "3px", fontSize: "small" }} />
+                    Catat Konsultasi
+                  </Button>
+                </Div>
                 <Dialog
                   open={isDialogOpen}
                   onClose={handleDialogClose}
@@ -289,4 +297,4 @@ const BuatKonsultasiCoAdvisor = () => {
   );
 };
 
-export default BuatKonsultasiCoAdvisor;
+export default BuatKonsultasiAdvisor2;

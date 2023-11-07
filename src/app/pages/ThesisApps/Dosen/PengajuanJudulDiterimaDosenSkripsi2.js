@@ -24,11 +24,10 @@ import {
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
-import MenuPengajuanJudulDosen from "app/shared/MenuHorizontal/MenuPengajuanJudulDosen";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
 
-const PengajuanJudulDiterimaDosenSkripsi = () => {
+const PengajuanJudulDiterimaDosenSkripsi2 = () => {
   const [confirmTolakOpen, setConfirmTolakOpen] = useState(false); // State untuk dialog konfirmasi tolak
   const [confirmTerimaOpen, setConfirmTerimaOpen] = useState(false); // State untuk dialog konfirmasi terima
 
@@ -193,7 +192,7 @@ const PengajuanJudulDiterimaDosenSkripsi = () => {
           >
             <MenuPengajuanSkripsiDosen />
           </Div>
-          {/* Menu horizontal MAHASISWA End */}
+          {/* Menu horizontal DOSEN End */}
           {/* Menu Horizontal MAHASISWA Start */}
           <Div
             hidden={role.includes("MAHASISWA") ? false : true}
@@ -782,4 +781,4 @@ const PengajuanJudulDiterimaDosenSkripsi = () => {
   );
 };
 
-export default PengajuanJudulDiterimaDosenSkripsi;
+export default PengajuanJudulDiterimaDosenSkripsi2;

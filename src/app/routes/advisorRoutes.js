@@ -3,7 +3,8 @@ import BuatKonsultasiAdvisor from "app/pages/ThesisApps/Dosen/BuatKonsultasiAdvi
 import DaftarBimbinganProposalAdvisor from "app/pages/ThesisApps/Dosen/DaftarBimbinganProposalAdvisor";
 import DaftarBimbinganSkripsiAdvisor from "app/pages/ThesisApps/Dosen/DaftarBimbinganSkripsiAdvisor";
 import DocumentPersetujuanDosenPembimbing from "app/pages/ThesisApps/Dosen/DocumentPersetujuanDosenPembimbing";
-import DocumentPersetujuanDosenPembimbing2 from "app/pages/ThesisApps/Dosen/DocumentPersetujuanDosenPembimbing2";
+import DocumentPersetujuanDosenPembimbingProposal2 from "app/pages/ThesisApps/Dosen/DocumentPersetujuanDosenPembimbingProposal2";
+import DocumentPersetujuanDosenPembimbingSkripsi from "app/pages/ThesisApps/Dosen/DocumentPersetujuanDosenPembimbingSkripsi";
 import DocumentRevisiProposalAdvisor from "app/pages/ThesisApps/Dosen/DocumentRevisiProposalAdvisor";
 import DocumentRevisiSkripsiKetuaPenelis from "app/pages/ThesisApps/Dosen/DocumentRevisiSkripsiKetuaPenelis";
 import MengisiBeritaAcaraProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/MengisiBeritaAcaraProposalKetuaPenelis";
@@ -29,6 +30,8 @@ const advisorRoutes = [
     path: "/sistem-informasi-skripsi/riwayat-bimbingan-advisor",
     element: <Page component={RiwayatBimbinganAdvisor} />,
   },
+
+  // BERANDA
   {
     // View Beranda Mahasiswa proposal
     path: "/sistem-informasi-skripsi/bimbingan-proposal-advisor/beranda",
@@ -54,10 +57,12 @@ const advisorRoutes = [
     path: "/sistem-informasi-skripsi/bimbingan-proposal-advisor/dokumen-revisi-proposal",
     element: <Page component={DocumentRevisiProposalAdvisor} />,
   },
+
+  // SKRIPSI
   {
     // Dokumen skripsi
     path: "/sistem-informasi-skripsi/bimbingan-skripsi-advisor/dokumen-skripsi",
-    element: <Page component={DocumentPersetujuanDosenPembimbing2} />,
+    element: <Page component={DocumentPersetujuanDosenPembimbingSkripsi} />,
   },
   {
     // Berita Acara skripsi

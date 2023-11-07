@@ -19,9 +19,9 @@ import React, { useState } from "react";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import WarningIcon from "@mui/icons-material/Warning";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
-import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
+import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
 
-const DocumentPersetujuanDosenPembimbing2 = () => {
+const DocumentPersetujuanDosenPembimbingSkripsi = () => {
   // Advisor setuju dan tolak
   const [isSetujuClicked, setIsSetujuClicked] = useState(false);
   const [isTolakClicked, setIsTolakClicked] = useState(false);
@@ -483,7 +483,7 @@ const DocumentPersetujuanDosenPembimbing2 = () => {
             }
             sx={{ width: "100%" }}
           >
-            <MenuPenguji />
+            <MenuPengajuanSkripsiDosen />
           </Div>
           {/* Menu horizontal Dosen End */}
 
@@ -1476,4 +1476,4 @@ const DocumentPersetujuanDosenPembimbing2 = () => {
   );
 };
 
-export default DocumentPersetujuanDosenPembimbing2;
+export default DocumentPersetujuanDosenPembimbingSkripsi;

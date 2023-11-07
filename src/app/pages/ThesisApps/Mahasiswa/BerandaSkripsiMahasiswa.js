@@ -10,11 +10,16 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
+import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import React from "react";
 
 const BerandaSkripsiMahasiswa = () => {
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log(role);
   return (
     <Div>
       <Div
@@ -68,13 +73,42 @@ const BerandaSkripsiMahasiswa = () => {
             borderRadius: "8px",
           }}
         >
-          {/* Menu Horizontal Start */}
-          <Div sx={{ width: "100%" }}>
+          {/* Menu Horizontal Mahasiswa Start */}
+          <Div
+            hidden={role.includes("MAHASISWA") ? false : true}
+            sx={{ width: "100%" }}
+          >
             <MenuMahasiswa />
           </Div>
-
-          {/* Menu horizontal End */}
-
+          {/* Menu horizontal MahasiswaEnd */}
+          {/* Menu Horizontal Dosen Start */}
+          <Div
+            hidden={
+              role.includes(
+                "DOSEN",
+                "ADVISOR",
+                "CO_ADVISOR",
+                "DOSEN_SKRIPSI",
+                "KETUA_PANALIS",
+                "ANGGOTA_PANALIS",
+                "KAPRODI",
+                "DEKAN"
+              )
+                ? false
+                : true
+            }
+            sx={{ width: "100%" }}
+          >
+            <MenuPengajuanSkripsiDosen />
+          </Div>
+          {/* menu horizontal sekertaris start */}
+          <Div
+            hidden={role.includes("SEKERTARIS") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuSekertaris />
+          </Div>
+          {/* menu horizontal sekertaris end */}
           <Div
             sx={{
               display: "flex",
