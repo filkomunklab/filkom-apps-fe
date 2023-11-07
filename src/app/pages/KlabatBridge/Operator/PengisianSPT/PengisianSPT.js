@@ -209,9 +209,18 @@ const PengisianSPT = () => {
   //     setSelectedMajor(event.target.value);
   // };
 
+  // alert dialog
+  const [open, setOpen] = React.useState(false);
+
+  // date picker
+  const [selectedDate, setSelectedDate] = useState(null);
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+
+  // pdf upload
+  const [pdfFile, setPdfFile] = useState(null);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -346,8 +355,6 @@ const PengisianSPT = () => {
                 <DesktopDatePicker
                   label="Select Date"
                   format="dd/MM/yyyy"
-                  defaultValue={studentData?.dateOfBirth}
-                  value={selectedDate}
                   onChange={handleDateChange}
                   renderInput={(params) => <TextField {...params} />}
                   sx={{ width: "100%" }}
@@ -399,7 +406,6 @@ const PengisianSPT = () => {
                 Nomor Induk Mahasiswa
               </Typography>
               <TextField
-                value={studentData?.nim}
                 fullWidth
                 variant="outlined"
                 name="nim"
@@ -414,7 +420,6 @@ const PengisianSPT = () => {
                 Fakultas
               </Typography>
               <Select
-                defaultValue={studentData?.faculty}
                 fullWidth
                 variant="outlined"
                 name="fakultas"
@@ -436,7 +441,6 @@ const PengisianSPT = () => {
                 Program Studi
               </Typography>
               <Select
-                defaultValue={studentData?.major}
                 fullWidth
                 variant="outlined"
                 name="prodi"
@@ -484,7 +488,6 @@ const PengisianSPT = () => {
                 Phone Number
               </Typography>
               <TextField
-                value={studentData?.phoneNo}
                 fullWidth
                 variant="outlined"
                 name="noTelp"
