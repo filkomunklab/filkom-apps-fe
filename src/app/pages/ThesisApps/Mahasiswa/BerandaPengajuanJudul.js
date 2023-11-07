@@ -10,11 +10,16 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import MenuPengajuanJudulDosen from "app/shared/MenuHorizontal/MenuPengajuanJudulDosen";
+import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import React from "react";
 
 const BerandaPengajuanJudul = () => {
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log(role);
   return (
     <Div>
       <Div
@@ -69,12 +74,20 @@ const BerandaPengajuanJudul = () => {
             borderRadius: "8px",
           }}
         >
-          {/* Menu Horizontal Start */}
-          <Div sx={{ width: "100%" }}>
-            <MenuMahasiswa />
+          <Div
+            hidden={role.includes("DOSEN", "KAPRODI", "DEKAN") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuPengajuanJudulDosen />
           </Div>
-          {/* Menu horizontal End */}
-
+          {/* Menu Horizontal Start */}
+          <Div
+            hidden={role.includes("MAHASISWA") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuMahasiswa />
+            {/* Menu horizontal End */}
+          </Div>
           <Div
             sx={{
               display: "flex",

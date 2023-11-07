@@ -27,7 +27,7 @@ import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 import MenuPengajuanJudulDosen from "app/shared/MenuHorizontal/MenuPengajuanJudulDosen";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 
-const PengajuanJudulDosenSkripsi = () => {
+const PengajuanJudulDiterimaDosenSkripsi = () => {
   const [confirmTolakOpen, setConfirmTolakOpen] = useState(false); // State untuk dialog konfirmasi tolak
   const [confirmTerimaOpen, setConfirmTerimaOpen] = useState(false); // State untuk dialog konfirmasi terima
 
@@ -175,10 +175,22 @@ const PengajuanJudulDosenSkripsi = () => {
         >
           {/* Menu Horizontal DOSEN Start */}
           <Div
-            hidden={role.includes("DOSEN", "KAPRODI", "DEKAN") ? false : true}
+            hidden={
+              role.includes(
+                "DOSEN",
+                "KAPRODI",
+                "DEKAN",
+                "KETUA_PANALIS",
+                "ANGGOTA_PANALIS",
+                "CO_ADVISOR",
+                "ADVISOR"
+              )
+                ? false
+                : true
+            }
             sx={{ width: "100%" }}
           >
-            <MenuPengajuanJudulDosen />
+            <MenuPenguji />
           </Div>
           {/* Menu horizontal MAHASISWA End */}
           {/* Menu Horizontal MAHASISWA Start */}
@@ -769,4 +781,4 @@ const PengajuanJudulDosenSkripsi = () => {
   );
 };
 
-export default PengajuanJudulDosenSkripsi;
+export default PengajuanJudulDiterimaDosenSkripsi;

@@ -189,6 +189,230 @@ const DocumentPersetujuanDosenPembimbing2 = () => {
   // const role = ["ADVISOR", "DOSEN"];
   console.log(role);
 
+  let Actions;
+
+  if (role.includes("ADVISOR")) {
+    Actions = () => (
+      <Div
+        hidden={role.includes("ADVISOR") ? false : true}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {isSetujuClicked || isTolakClicked ? (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "not-allowed",
+              color: "gray",
+              fontSize: "12px",
+              borderTop: "1px solid #000",
+              borderBottom: "1px solid #000",
+              padding: "5px 0",
+            }}
+          >
+            Setuju
+          </span>
+        ) : (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              color: "green",
+              fontSize: "12px",
+              borderTop: "1px solid #000",
+              borderBottom: "1px solid #000",
+              padding: "5px 0",
+            }}
+            onClick={() => {
+              setSelectedActionIndex(1);
+              setSetujuConfirmationDialogOpen(true);
+            }}
+          >
+            Setuju
+          </span>
+        )}
+        {isSetujuClicked || isTolakClicked ? (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "not-allowed",
+              color: "gray",
+              fontSize: "12px",
+            }}
+          >
+            Tolak
+          </span>
+        ) : (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              color: "red",
+              fontSize: "12px",
+            }}
+            onClick={() => {
+              setSelectedActionIndex(2);
+              setTolakConfirmationDialogOpen(true);
+            }}
+          >
+            Tolak
+          </span>
+        )}
+      </Div>
+    );
+  } else if (role.includes("CO_ADVISOR1")) {
+    Actions = () => (
+      <Div
+        hidden={role.includes("CO_ADVISOR1") ? false : true}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {isSetujuClickedCoAdvisor1 || isTolakClickedCoAdvisor1 ? (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "not-allowed",
+              color: "gray",
+              fontSize: "12px",
+              borderTop: "1px solid #000",
+              borderBottom: "1px solid #000",
+              padding: "5px 0",
+            }}
+          >
+            Setuju
+          </span>
+        ) : (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              color: "green",
+              fontSize: "12px",
+              borderTop: "1px solid #000",
+              borderBottom: "1px solid #000",
+              padding: "5px 0",
+            }}
+            onClick={() => {
+              setSelectedActionIndexCoAdvisor1(1);
+              setSetujuConfirmationDialogOpenCoAdvisor1(true);
+            }}
+          >
+            Setuju
+          </span>
+        )}
+        {isSetujuClickedCoAdvisor1 || isTolakClickedCoAdvisor1 ? (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "not-allowed",
+              color: "gray",
+              fontSize: "12px",
+              marginTop: "5px",
+            }}
+          >
+            Tolak
+          </span>
+        ) : (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              color: "red",
+              fontSize: "12px",
+              marginTop: "5px",
+            }}
+            onClick={() => {
+              setSelectedActionIndexCoAdvisor1(2);
+              setTolakConfirmationDialogOpenCoAdvisor1(true);
+            }}
+          >
+            Tolak
+          </span>
+        )}
+      </Div>
+    );
+  } else if (role.includes("CO_ADVISOR2")) {
+    Actions = () => (
+      <Div
+        hidden={role.includes("CO_ADVISOR2") ? false : true}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {isSetujuClickedCoAdvisor2 || isTolakClickedCoAdvisor2 ? (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "not-allowed",
+              color: "gray",
+              fontSize: "12px",
+              borderTop: "1px solid #000",
+              borderBottom: "1px solid #000",
+              padding: "5px 0",
+            }}
+          >
+            Setuju
+          </span>
+        ) : (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              color: "green",
+              fontSize: "12px",
+              borderTop: "1px solid #000",
+              borderBottom: "1px solid #000",
+              padding: "5px 0",
+            }}
+            onClick={() => {
+              setSelectedActionIndexCoAdvisor2(1);
+              setSetujuConfirmationDialogOpenCoAdvisor2(true);
+            }}
+          >
+            Setuju
+          </span>
+        )}
+        {isSetujuClickedCoAdvisor2 || isTolakClickedCoAdvisor2 ? (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "not-allowed",
+              color: "gray",
+              fontSize: "12px",
+              marginTop: "5px",
+            }}
+          >
+            Tolak
+          </span>
+        ) : (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              color: "red",
+              fontSize: "12px",
+              marginTop: "5px",
+            }}
+            onClick={() => {
+              setSelectedActionIndexCoAdvisor2(2);
+              setTolakConfirmationDialogOpenCoAdvisor2(true);
+            }}
+          >
+            Tolak
+          </span>
+        )}
+      </Div>
+    );
+  } else Actions = () => <div style={{ display: "none" }} />;
+
   return (
     <Div>
       <Div
@@ -205,6 +429,7 @@ const DocumentPersetujuanDosenPembimbing2 = () => {
           Dokumen Skripsi
         </Typography>
       </Div>
+
       <Div
         sx={{
           display: "flex",
@@ -511,8 +736,8 @@ const DocumentPersetujuanDosenPembimbing2 = () => {
                             View
                           </span>
                           {/* Button untuk Advisor */}
-                          <Div
-                            hidden={role.includes("ADVISOR") ? false : true}
+                          {/* <Div
+                            hidden={role.includes("DOSEN") ? false : true}
                             style={{
                               display: "flex",
                               flexDirection: "column",
@@ -579,10 +804,16 @@ const DocumentPersetujuanDosenPembimbing2 = () => {
                                 Tolak
                               </span>
                             )}
-                          </Div>
+                          </Div> */}
+                          <Actions />
                           {/* button untuk CoAdvisor1 */}
                           {/* <Div
-                            hidden={role.includes("CO_ADVISOR1") ? false : true} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+                            hidden={role.includes("CO_ADVISOR1") ? false : true}
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                            }}
                           >
                             {isSetujuClickedCoAdvisor1 ||
                             isTolakClickedCoAdvisor1 ? (

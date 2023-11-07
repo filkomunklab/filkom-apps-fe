@@ -161,6 +161,232 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
   // const role = ["ADVISOR", "DOSEN"];
   console.log(role);
 
+  let ActionRevision;
+
+  if (role.includes("ADVISOR")) {
+    ActionRevision = () => (
+      <Div
+        hidden={role.includes("ADVISOR") ? false : true}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {isSetujuClickedAdvisor || isTolakClickedAdvisor ? (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "not-allowed",
+              color: "gray",
+              fontSize: "12px",
+              borderTop: "1px solid #000",
+              borderBottom: "1px solid #000",
+              padding: "5px 0",
+            }}
+          >
+            Setuju
+          </span>
+        ) : (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              color: "green",
+              fontSize: "12px",
+              borderTop: "1px solid #000",
+              borderBottom: "1px solid #000",
+              padding: "5px 0",
+            }}
+            onClick={() => {
+              setSelectedActionIndexAdvisor(1);
+              setSetujuConfirmationDialogOpenAdvisor(true);
+            }}
+          >
+            Setuju
+          </span>
+        )}
+        {isSetujuClickedAdvisor || isTolakClickedAdvisor ? (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "not-allowed",
+              color: "gray",
+              fontSize: "12px",
+              marginTop: "5px",
+            }}
+          >
+            Tolak
+          </span>
+        ) : (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              color: "red",
+              fontSize: "12px",
+              marginTop: "5px",
+            }}
+            onClick={() => {
+              setSelectedActionIndexAdvisor(2);
+              setTolakConfirmationDialogOpenAdvisor(true);
+            }}
+          >
+            Tolak
+          </span>
+        )}
+      </Div>
+    );
+  } else if (role.includes("KETUA_PANALIS")) {
+    ActionRevision = () => (
+      <Div
+        hidden={role.includes("KETUA_PANALIS") ? false : true}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {isSetujuClicked || isTolakClicked ? (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "not-allowed",
+              color: "gray",
+              fontSize: "12px",
+              borderTop: "1px solid #000",
+              borderBottom: "1px solid #000",
+              padding: "5px 0",
+            }}
+          >
+            Setuju
+          </span>
+        ) : (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              color: "green",
+              fontSize: "12px",
+              borderTop: "1px solid #000",
+              borderBottom: "1px solid #000",
+              padding: "5px 0",
+            }}
+            onClick={() => {
+              setSelectedActionIndex(1);
+              setSetujuConfirmationDialogOpen(true);
+            }}
+          >
+            Setuju
+          </span>
+        )}
+        {isSetujuClicked || isTolakClicked ? (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "not-allowed",
+              color: "gray",
+              fontSize: "12px",
+              marginTop: "5px",
+            }}
+          >
+            Tolak
+          </span>
+        ) : (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              color: "red",
+              fontSize: "12px",
+              marginTop: "5px",
+            }}
+            onClick={() => {
+              setSelectedActionIndex(2);
+              setTolakConfirmationDialogOpen(true);
+            }}
+          >
+            Tolak
+          </span>
+        )}
+      </Div>
+    );
+  } else if (role.includes("ANGGOTA_PANALIS")) {
+    ActionRevision = () => (
+      <Div
+        hidden={role.includes("ANGGOTA_PANALIS") ? false : true}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {isSetujuClickedAnggotaPanalis || isTolakClickedAnggotaPanalis ? (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "not-allowed",
+              color: "gray",
+              fontSize: "12px",
+              borderTop: "1px solid #000",
+              borderBottom: "1px solid #000",
+              padding: "5px 0",
+            }}
+          >
+            Setuju
+          </span>
+        ) : (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              color: "green",
+              fontSize: "12px",
+              borderTop: "1px solid #000",
+              borderBottom: "1px solid #000",
+              padding: "5px 0",
+            }}
+            onClick={() => {
+              setSelectedActionIndexAnggotaPanalis(1);
+              setSetujuConfirmationDialogOpenAnggotaPanalis(true);
+            }}
+          >
+            Setuju
+          </span>
+        )}
+        {isSetujuClickedAnggotaPanalis || isTolakClickedAnggotaPanalis ? (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "not-allowed",
+              color: "gray",
+              fontSize: "12px",
+              marginTop: "5px",
+            }}
+          >
+            Tolak
+          </span>
+        ) : (
+          <span
+            style={{
+              textDecoration: "none",
+              cursor: "pointer",
+              color: "red",
+              fontSize: "12px",
+              marginTop: "5px",
+            }}
+            onClick={() => {
+              setSelectedActionIndexAnggotaPanalis(2);
+              setTolakConfirmationDialogOpenAnggotaPanalis(true);
+            }}
+          >
+            Tolak
+          </span>
+        )}
+      </Div>
+    );
+  } else ActionRevision = () => <div style={{ display: "none" }} />;
+
   return (
     <Div>
       <Div
@@ -639,232 +865,8 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
                           >
                             View
                           </span>
-                          {/* button ketua panalis */}
-                          <Div
-                            hidden={
-                              role.includes("KETUA_PANALIS") ? false : true
-                            }
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                            }}
-                          >
-                            {isSetujuClicked || isTolakClicked ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "green",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndex(1);
-                                  setSetujuConfirmationDialogOpen(true);
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            )}
-                            {isSetujuClicked || isTolakClicked ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  marginTop: "5px",
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
-                                  fontSize: "12px",
-                                  marginTop: "5px",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndex(2);
-                                  setTolakConfirmationDialogOpen(true);
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            )}
-                          </Div>
-                          {/* button Anggota panalis */}
-                          {/* <Div
-                            hidden={
-                              role.includes("ANGGOTA_PANALIS") ? false : true
-                            }
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                            }}
-                          >
-                            {isSetujuClickedAnggotaPanalis ||
-                            isTolakClickedAnggotaPanalis ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "green",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndexAnggotaPanalis(1);
-                                  setSetujuConfirmationDialogOpenAnggotaPanalis(
-                                    true
-                                  );
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            )}
-                            {isSetujuClickedAnggotaPanalis ||
-                            isTolakClickedAnggotaPanalis ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  marginTop: "5px",
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
-                                  fontSize: "12px",
-                                  marginTop: "5px",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndexAnggotaPanalis(2);
-                                  setTolakConfirmationDialogOpenAnggotaPanalis(
-                                    true
-                                  );
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            )}
-                          </Div> */}
-                          {/* button Advisor */}
-                          {/* <Div
-                            hidden={role.includes("ADVISOR") ? false : true}
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                            }}
-                          >
-                            {isSetujuClickedAdvisor || isTolakClickedAdvisor ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "green",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndexAdvisor(1);
-                                  setSetujuConfirmationDialogOpenAdvisor(true);
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            )}
-                            {isSetujuClickedAdvisor || isTolakClickedAdvisor ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  marginTop: "5px",
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
-                                  fontSize: "12px",
-                                  marginTop: "5px",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndexAdvisor(2);
-                                  setTolakConfirmationDialogOpenAdvisor(true);
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            )}
-                          </Div> */}
+                          {/* Menampilkan pengisian ADVISOR, KETUA PANALIS, DAN ANGGOTA PANALIS */}
+                          <ActionRevision />
                         </Div>
                       </TableCell>
                     </TableRow>

@@ -13,8 +13,10 @@ import ManajemenKelasDosenSkripsi from "app/pages/ThesisApps/Dosen/ManajemenKela
 import MengisiBeritaAcaraProposalDekan from "app/pages/ThesisApps/Dosen/MengisiBeritaAcaraProposalDekan";
 import MengisiBeritaAcaraProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/MengisiBeritaAcaraProposalKetuaPenelis";
 import MengisiBeritaAcaraSkripsiKetuaPenelis from "app/pages/ThesisApps/Dosen/MengisiBeritaAcaraSkripsiKetuaPenelis";
+import PengajuanJudulDiterimaDosenSkripsi from "app/pages/ThesisApps/Dosen/PengajuanJudulDiterimaDosenSkripsi";
 import PengajuanJudul from "app/pages/ThesisApps/Dosen/PengajuanJudulDosen";
 import PengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/PengajuanJudulDosenSkripsi";
+import BerandaPengajuanJudul from "app/pages/ThesisApps/Mahasiswa/BerandaPengajuanJudul";
 import BerandaProposalMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaProposalMahasiswa";
 import BerandaSkripsiMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaSkripsiMahasiswa";
 
@@ -44,16 +46,20 @@ const dosenSkripsiRoutes = [
     path: "/sistem-informasi-skripsi/manajemen-kelas-dosen-skripsi",
     element: <Page component={ManajemenKelasDosenSkripsi} />,
   },
-  // {
-  //   // beranda mahasiswa pengajuan judul
-  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/beranda",
-  //   element: <Page component={} />,
-  // },
-  // {
-  //   // pengajuan judul mahasiswa
-  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/pengajuan-judul",
-  //   element: <Page component={} />,
-  // },
+
+  //PENGAJUAN JUDUL
+  {
+    // beranda mahasiswa pengajuan judul
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/beranda",
+    element: <Page component={BerandaPengajuanJudul} />,
+  },
+  {
+    // pengajuan judul mahasiswa
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/pengajuan-judul",
+    element: <Page component={PengajuanJudulDosenSkripsi} />,
+  },
+
+  // PROPOSAL
   {
     // Beranda Mahasiswa proposal
     path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/beranda",
@@ -62,7 +68,7 @@ const dosenSkripsiRoutes = [
   {
     // Pengajuan Judul Mahasiswa
     path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/pengajuan-judul",
-    element: <Page component={PengajuanJudulDosenSkripsi} />,
+    element: <Page component={PengajuanJudulDiterimaDosenSkripsi} />,
   },
   {
     // konsultasi mahasiswa proposal
@@ -74,12 +80,13 @@ const dosenSkripsiRoutes = [
     path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-proposal",
     element: <Page component={DocumentPersetujuanDosenPembimbing} />,
   },
-
   {
     // dokuemn revisi proposal
     path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-revisi-proposal",
     element: <Page component={DocumentRevisiProposalKetuaPenelis} />,
   },
+
+  // SKRIPSI
   {
     // Beranda Mahasiswa skripsi
     path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/beranda",
