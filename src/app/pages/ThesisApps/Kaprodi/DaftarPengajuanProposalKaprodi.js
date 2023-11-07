@@ -19,14 +19,15 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
 
-const DaftarPengajuanProposalDosenSkripsi = () => {
+const DaftarPengajuanProposalKaprodi = () => {
   const [daftarPengajuanProposal, setDaftarPengajuanProposal] = useState({
     dashboard: {
       total_group: 0,
-      not_submitted: 0,
-      has_submitted: 0,
-      approved: 0,
-      rejected: 0,
+      not_defence: 0,
+      has_defence: 0,
+      pass: 0,
+      repeat: 0,
+      not_pass: 0,
     },
     semesterData: [],
   });
@@ -39,7 +40,7 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
     const fetchDaftarPengajuanProposalData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/proposal-list-mk",
+          "http://localhost:2000/api/v1/group/proposal-list-kaprodi",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -60,7 +61,7 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
 
   return (
     <Div>
-      {/* Dashboard Start */}
+      {/* Dashboard 1 Start */}
       <Div
         sx={{
           display: "flex",
@@ -110,7 +111,7 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
             </Typography>
           </Div>
         </Div>
-        {/* Belum Mengajukan Proposal */}
+        {/* Belum Maju Sidang */}
         <Div
           sx={{
             display: "flex",
@@ -134,7 +135,7 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Belum Mengajukan Proposal
+              Belum Maju Sidang
             </Typography>
             <Typography
               sx={{
@@ -144,11 +145,11 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.not_submitted} Kelompok
+              {daftarPengajuanProposal.dashboard.not_defence} Kelompok
             </Typography>
           </Div>
         </Div>
-        {/* Sudah Mengajukan Proposal */}
+        {/* Sudah Maju Sidang */}
         <Div
           sx={{
             display: "flex",
@@ -174,7 +175,7 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
                 color: "rgba(28, 48, 74, 0.52)",
               }}
             >
-              Sudah Mengajukan Proposal
+              Sudah Maju Sidang
             </Typography>
             <Typography
               sx={{
@@ -184,92 +185,142 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.has_submitted} Kelompok
-            </Typography>
-          </Div>
-        </Div>
-        {/* proposal yang Di Tolak */}
-        <Div
-          sx={{
-            display: "flex",
-            width: "100%",
-            padding: "10px",
-            alignItems: "center",
-            gap: "20px",
-            background: "rgba(26, 56, 96, 0.10)",
-            borderRadius: "10px",
-            textItem: "center",
-          }}
-        >
-          <ArrowDownwardIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
-          <Div>
-            <Typography
-              sx={{
-                fontSize: "10px",
-                fontStyle: "normal",
-                fontWeight: 400,
-                lineHeight: "20px",
-                color: "rgba(28, 48, 74, 0.52)",
-              }}
-            >
-              Proposal Yang Di Tolak
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: "18px",
-                fontStyle: "normal",
-                fontWeight: 700,
-                lineHeight: "32px",
-              }}
-            >
-              {daftarPengajuanProposal.dashboard.rejected} Proposal
-            </Typography>
-          </Div>
-        </Div>
-        {/* Proposal yang diterima */}
-        <Div
-          sx={{
-            display: "flex",
-            width: "100%",
-            padding: "10px",
-            alignItems: "center",
-            gap: "20px",
-            background: "rgba(26, 56, 96, 0.10)",
-            borderRadius: "10px",
-            textItem: "center",
-          }}
-        >
-          <StarBorderIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
-          <Div>
-            <Typography
-              sx={{
-                fontSize: "10px",
-                fontStyle: "normal",
-                fontWeight: 400,
-                lineHeight: "20px",
-                color: "rgba(28, 48, 74, 0.52)",
-              }}
-            >
-              Proposal Yang Diterima
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: "18px",
-                fontStyle: "normal",
-                fontWeight: 700,
-                lineHeight: "32px",
-              }}
-            >
-              {daftarPengajuanProposal.dashboard.approved} Proposal
+              {daftarPengajuanProposal.dashboard.has_defence} Kelompok
             </Typography>
           </Div>
         </Div>
       </Div>
-      {/* Dashboard End */}
+      {/* Dashboard 1 End */}
+      {/* Dashboard 2 Start */}
+      <Div
+        sx={{
+          display: "flex",
+          width: "100%",
+          padding: "10px 0px",
+          alignItems: "flex-start",
+          gap: "20px",
+        }}
+      >
+        {/* Lulus */}
+        <Div
+          sx={{
+            display: "flex",
+            width: "100%",
+            padding: "10px",
+            alignItems: "center",
+            gap: "20px",
+            background: "rgba(26, 56, 96, 0.10)",
+            borderRadius: "10px",
+            textItem: "center",
+          }}
+        >
+          <PeopleIcon
+            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
+          />
+          <Div>
+            <Typography
+              sx={{
+                fontSize: "10px",
+                fontStyle: "normal",
+                fontWeight: 400,
+                lineHeight: "20px",
+                color: "rgba(28, 48, 74, 0.52)",
+              }}
+            >
+              Lulus
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: "18px",
+                fontStyle: "normal",
+                fontWeight: 700,
+                lineHeight: "32px",
+              }}
+            >
+              {daftarPengajuanProposal.dashboard.pass} Kelompok
+            </Typography>
+          </Div>
+        </Div>
+        {/* Mengulang */}
+        <Div
+          sx={{
+            display: "flex",
+            width: "100%",
+            padding: "10px",
+            alignItems: "center",
+            gap: "20px",
+            background: "rgba(26, 56, 96, 0.10)",
+            borderRadius: "10px",
+            textItem: "center",
+          }}
+        >
+          <EditIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
+          <Div>
+            <Typography
+              sx={{
+                fontSize: "10px",
+                fontStyle: "normal",
+                fontWeight: 400,
+                lineHeight: "20px",
+                color: "rgba(28, 48, 74, 0.52)",
+              }}
+            >
+              Mengulang
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: "18px",
+                fontStyle: "normal",
+                fontWeight: 700,
+                lineHeight: "32px",
+              }}
+            >
+              {daftarPengajuanProposal.dashboard.repeat} Kelompok
+            </Typography>
+          </Div>
+        </Div>
+        {/* Tidak Lulus */}
+        <Div
+          sx={{
+            display: "flex",
+            width: "100%",
+            padding: "10px",
+            alignItems: "center",
+            gap: "20px",
+            background: "rgba(26, 56, 96, 0.10)",
+            borderRadius: "10px",
+            textItem: "center",
+          }}
+        >
+          <ArrowUpwardIcon
+            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
+          />
+          <Div>
+            <Typography
+              sx={{
+                fontSize: "10px",
+                fontStyle: "normal",
+                fontWeight: 400,
+                lineHeight: "20px",
+                color: "rgba(28, 48, 74, 0.52)",
+              }}
+            >
+              Tidak Lulus
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: "18px",
+                fontStyle: "normal",
+                fontWeight: 700,
+                lineHeight: "32px",
+              }}
+            >
+              {daftarPengajuanProposal.dashboard.not_pass} Kelompok
+            </Typography>
+          </Div>
+        </Div>
+      </Div>
+      {/* Dashboard 1 End */}
 
       {/* Table Master Start */}
       <Div
@@ -305,7 +356,7 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
               lineHeight: "32px",
             }}
           >
-            Daftar Pengajuan Proposal
+            Daftar Bimbingan Proposal
           </Typography>
           <Div
             sx={{
@@ -362,15 +413,7 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
                         Mahasiswa
                       </TableCell>
                       <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Disetujui Advisor
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Disetujui Co-Advisor 1
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Disetujui Co-Advisor 2
-                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Status</TableCell>
                       <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
                     </TableRow>
                   </TableHead>
@@ -390,25 +433,25 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
                           {proposal.title}
                         </TableCell>
                         <TableCell sx={{ fontSize: "13px" }}>
-                          {proposal.approve_by_advisor === null ? (
+                          {proposal.is_pass === null ? (
                             <Chip label={"Belum"} />
-                          ) : proposal.approve_by_advisor === "Waiting" ? (
+                          ) : proposal.is_pass === "Repeat" ? (
                             <Chip
-                              label={"Mengunggu"}
+                              label={"Mengulang"}
                               sx={{
                                 background: "rgba(255, 204, 0, 0.10)",
                                 color: "#985211",
                               }}
                             />
-                          ) : proposal.approve_by_advisor === "Approve" ? (
+                          ) : proposal.is_pass === "Pass" ? (
                             <Chip
-                              label={"Diterima"}
+                              label={"Lulus"}
                               sx={{
                                 background: "rgba(21, 131, 67, 0.10)",
                                 color: "#0A7637",
                               }}
                             />
-                          ) : proposal.approve_by_advisor === "Rejected" ? (
+                          ) : proposal.is_pass === "Fail" ? (
                             <Chip
                               label={"Ditolak"}
                               sx={{
@@ -417,69 +460,7 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
                               }}
                             />
                           ) : (
-                            proposal.approve_by_advisor
-                          )}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {proposal.approve_by_co_advisor1 === null ? (
-                            <Chip label={"Belum"} />
-                          ) : proposal.approve_by_co_advisor1 === "Waiting" ? (
-                            <Chip
-                              label={"Mengunggu"}
-                              sx={{
-                                background: "rgba(255, 204, 0, 0.10)",
-                                color: "#985211",
-                              }}
-                            />
-                          ) : proposal.approve_by_co_advisor1 === "Approve" ? (
-                            <Chip
-                              label={"Diterima"}
-                              sx={{
-                                background: "rgba(21, 131, 67, 0.10)",
-                                color: "#0A7637",
-                              }}
-                            />
-                          ) : proposal.approve_by_co_advisor1 === "Rejected" ? (
-                            <Chip
-                              label={"Ditolak"}
-                              sx={{
-                                background: "rgba(226, 29, 18, 0.10)",
-                                color: "#CA150C",
-                              }}
-                            />
-                          ) : (
-                            proposal.approve_by_co_advisor1
-                          )}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {proposal.approve_by_co_advisor2 === null ? (
-                            <Chip label={"Belum"} />
-                          ) : proposal.approve_by_co_advisor2 === "Waiting" ? (
-                            <Chip
-                              label={"Mengunggu"}
-                              sx={{
-                                background: "rgba(255, 204, 0, 0.10)",
-                                color: "#985211",
-                              }}
-                            />
-                          ) : proposal.approve_by_co_advisor2 === "Approve" ? (
-                            <Chip
-                              label={"Diterima"}
-                              sx={{
-                                background: "rgba(21, 131, 67, 0.10)",
-                                color: "#0A7637",
-                              }}
-                            />
-                          ) : proposal.approve_by_co_advisor2 === "Rejected" ? (
-                            <Chip
-                              label={"Ditolak"}
-                              sx={{
-                                background: "rgba(226, 29, 18, 0.10)",
-                                color: "#CA150C",
-                              }}
-                            />
-                          ) : (
-                            proposal.approve_by_co_advisor2
+                            proposal.is_pass
                           )}
                         </TableCell>
                         <TableCell>
@@ -509,4 +490,4 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
   );
 };
 
-export default DaftarPengajuanProposalDosenSkripsi;
+export default DaftarPengajuanProposalKaprodi;

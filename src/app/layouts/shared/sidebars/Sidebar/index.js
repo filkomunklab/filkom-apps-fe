@@ -38,6 +38,11 @@ const roleCheck = () => {
       }
       return mahasiswaMenus;
     case ROLES.DOSEN:
+      if (roles.includes(ROLES.DEKAN)) {
+        return dekanMenus;
+      } else if (roles.includes(ROLES.KAPRODI)) {
+        return kaprodiMenus;
+      }
       return dosenMenus;
     case ROLES.DEKAN:
       return dekanMenus;

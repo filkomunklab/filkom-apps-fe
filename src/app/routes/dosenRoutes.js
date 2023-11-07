@@ -2,12 +2,7 @@ import Page from "@jumbo/shared/Page";
 import DaftarPengajuanJudulDekan from "app/pages/ThesisApps/Dosen/DaftarPengajuanJudulDekan";
 
 // import DaftarDosen from "app/pages/ThesisApps/Dosen/DaftarDosen";
-import DaftarPengajuanJudulDosen from "app/pages/ThesisApps/Dosen/DaftarPengajuanJudulDosen";
-import DaftarPengajuanJudulKaprodi from "app/pages/ThesisApps/Dosen/DaftarPengajuanJudulKaprodi";
-import DaftarPengajuanProposalDekan from "app/pages/ThesisApps/Dosen/DaftarPengajuanProposalDekan";
-import DaftarPengajuanProposalKaprodi from "app/pages/ThesisApps/Dosen/DaftarPengajuanProposalKaprodi";
-import DaftarPengajuanSkripsiDekan from "app/pages/ThesisApps/Dosen/DaftarPengajuanSkripsiDekan";
-import DaftarPengajuanSkripsiKaprodi from "app/pages/ThesisApps/Dosen/DaftarPengajuanSkripsiKaprodi";
+import DaftarKomiteJudulDosen from "app/pages/ThesisApps/Dosen/DaftarKomiteJudulDosen";
 import MengisiBeritaAcaraProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/MengisiBeritaAcaraProposalKetuaPenelis";
 import RiwayatSkripsiDekan from "app/pages/ThesisApps/Dosen/RiwayatSkripsiDekan";
 import RiwayatSkripsiKaprodi from "app/pages/ThesisApps/Dosen/RiwayatSkripsiKaprodi";
@@ -21,8 +16,8 @@ const dosenRoutes = [
     // element: <Page component={DaftarDosen} />,
   },
   {
-    path: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
-    element: <Page component={DaftarPengajuanJudulDosen} />,
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen",
+    element: <Page component={DaftarKomiteJudulDosen} />,
   },
   // {
   //   path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen/pengajuan-judul",
