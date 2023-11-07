@@ -57,7 +57,7 @@ const ManajemenKelasDosenSkripsi = () => {
 
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
-  // console.log("token", token);
+  console.log("token", token);
 
   const fetchDaftarSemuaKelasData = async () => {
     try {

@@ -30,6 +30,7 @@ import Div from "@jumbo/shared/Div";
 import { pdfjs } from "react-pdf";
 import ClearIcon from "@mui/icons-material/Clear";
 import axios from "axios";
+import AttachmentIcon from "@mui/icons-material/Attachment";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 

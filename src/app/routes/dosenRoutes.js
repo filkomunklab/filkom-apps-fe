@@ -7,6 +7,11 @@ import MengisiBeritaAcaraProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/M
 import RiwayatSkripsiDekan from "app/pages/ThesisApps/Dosen/RiwayatSkripsiDekan";
 import RiwayatSkripsiKaprodi from "app/pages/ThesisApps/Dosen/RiwayatSkripsiKaprodi";
 import RiwayatBimbingan from "app/shared/Header/RiwayatBimbingan";
+import DaftarPengajuanProposalDekan from "app/pages/ThesisApps/Dekan/DaftarPengajuanProposalDekan";
+import DaftarPengajuanSkripsiDekan from "app/pages/ThesisApps/Dosen/DaftarPengajuanSkripsiDekan";
+import DaftarPengajuanJudulKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarPengajuanJudulKaprodi";
+import DaftarPengajuanProposalKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarPengajuanProposalKaprodi";
+import DaftarPengajuanSkripsiKaprodi from "app/pages/ThesisApps/Dosen/DaftarPengajuanSkripsiKaprodi";
 
 const dosenRoutes = [
   // Thesis Apps Dosen
@@ -50,28 +55,6 @@ const dosenRoutes = [
     // daftar pengajuan riwayat dekan
     path: "/sistem-informasi-skripsi/riwayat-dekan",
     element: <Page component={RiwayatSkripsiDekan} />,
-  },
-
-  // user kaprodi
-  {
-    // daftar pengajuan judul kaprodi
-    path: "/sistem-informasi-skripsi/pengajuan-judul-kaprodi",
-    element: <Page component={DaftarPengajuanJudulKaprodi} />,
-  },
-  {
-    // daftar pengajuan proposal kaprodi
-    path: "/sistem-informasi-skripsi/pengajuan-proposal-kaprodi",
-    element: <Page component={DaftarPengajuanProposalKaprodi} />,
-  },
-  {
-    // daftar pengajuan Skripsi kaprodi
-    path: "/sistem-informasi-skripsi/pengajuan-skripsi-kaprodi",
-    element: <Page component={DaftarPengajuanSkripsiKaprodi} />,
-  },
-  {
-    // daftar pengajuan riwayat kaprodi
-    path: "/sistem-informasi-skripsi/riwayat-kaprodi",
-    element: <Page component={RiwayatSkripsiKaprodi} />,
   },
 ];
 
