@@ -101,6 +101,7 @@ const StudentInformationMentored = () => {
             fontSize: "15px",
             fontWeight: 400,
             color: "rgba(27, 43, 65, 0.69)",
+            textAlign: "justify",
           }}
         >
           Currently, you are on the Student Information page, where you can
@@ -110,7 +111,7 @@ const StudentInformationMentored = () => {
       </Div>
       <Grid container spacing={2}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">List of mentored students</Typography>
+          <Typography variant="h3">List of mentored students</Typography>
         </Grid>
         <Grid item md={3}>
           <SearchGlobal sx={{ height: "100%" }} />

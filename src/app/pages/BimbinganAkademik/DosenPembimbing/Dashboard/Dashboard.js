@@ -126,11 +126,11 @@ const Dashboard = () => {
   return (
     <Div>
       <Grid container spacing={2}>
-        <Grid item sm={12} md={12} lg={6}>
-          <Card>
+        <Grid item xs={12} sm={12} md={6}>
+          <Card style={{ width: "100%" }}>
             <CardHeader title="Distribution of students" />
-            <CardContent>
-              <ResponsiveContainer width={"100%"} height={250}>
+            <CardContent style={{ width: "100%" }}>
+              <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={data}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
@@ -144,7 +144,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item sm={12} md={6} lg={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <Stack gap={2}>
             <Card>
               <CardHeader title="Number of Guidance Students" />
@@ -187,7 +187,7 @@ const Dashboard = () => {
             </Card>
           </Stack>
         </Grid>
-        <Grid item sm={12} md={6} lg={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardHeader title="Certificate" />
             <CardContent>
@@ -217,7 +217,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item sm={12} md={12} lg={6}>
+        {/* <Grid item sm={12} md={12} lg={6}>
           <Card>
             <CardHeader
               title="Review Certificates"
@@ -296,54 +296,54 @@ const Dashboard = () => {
               </Table>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Div>
   );
 };
 
-const TableHeading = () => {
-  const style = { fontWeight: 400, whiteSpace: "nowrap" };
-  return (
-    <TableRow>
-      <TableCell sx={[style]}>NIM</TableCell>
-      <TableCell sx={[style]}>Student</TableCell>
-      <TableCell sx={[style]}>Semester</TableCell>
-      <TableCell sx={[style]}>Program Studi</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
-    </TableRow>
-  );
-};
+// const TableHeading = () => {
+//   const style = { fontWeight: 400, whiteSpace: "nowrap" };
+//   return (
+//     <TableRow>
+//       <TableCell sx={[style]}>NIM</TableCell>
+//       <TableCell sx={[style]}>Student</TableCell>
+//       <TableCell sx={[style]}>Semester</TableCell>
+//       <TableCell sx={[style]}>Program Studi</TableCell>
+//       <TableCell sx={[style]}>Status</TableCell>
+//     </TableRow>
+//   );
+// };
 
-const TableItem = ({ item, index }) => {
-  const style = { whiteSpace: "nowrap" };
-  return (
-    <TableRow>
-      <TableCell sx={[style]}>{item.nim}</TableCell>
-      <TableCell sx={[style]}>
-        <Stack direction="row" alignItems="center" gap={2}>
-          <img
-            src={item.profileImage}
-            alt="profile"
-            style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "50%",
-              objectFit: "cover",
-            }}
-          />
-          <Typography>{item.name}</Typography>
-        </Stack>
-      </TableCell>
-      <TableCell sx={[style, { textAlign: "center" }]}>
-        {item.semester}
-      </TableCell>
-      <TableCell sx={[style]}>{item.prodi}</TableCell>
-      <TableCell sx={[style, { color: statusColor(item.status) }]}>
-        {item.status}
-      </TableCell>
-    </TableRow>
-  );
-};
+// const TableItem = ({ item, index }) => {
+//   const style = { whiteSpace: "nowrap" };
+//   return (
+//     <TableRow>
+//       <TableCell sx={[style]}>{item.nim}</TableCell>
+//       <TableCell sx={[style]}>
+//         <Stack direction="row" alignItems="center" gap={2}>
+//           <img
+//             src={item.profileImage}
+//             alt="profile"
+//             style={{
+//               width: "40px",
+//               height: "40px",
+//               borderRadius: "50%",
+//               objectFit: "cover",
+//             }}
+//           />
+//           <Typography>{item.name}</Typography>
+//         </Stack>
+//       </TableCell>
+//       <TableCell sx={[style, { textAlign: "center" }]}>
+//         {item.semester}
+//       </TableCell>
+//       <TableCell sx={[style]}>{item.prodi}</TableCell>
+//       <TableCell sx={[style, { color: statusColor(item.status) }]}>
+//         {item.status}
+//       </TableCell>
+//     </TableRow>
+//   );
+// };
 
 export default Dashboard;
