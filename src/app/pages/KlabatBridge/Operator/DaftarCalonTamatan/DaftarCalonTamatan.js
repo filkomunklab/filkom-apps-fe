@@ -308,9 +308,12 @@ const DaftarCalonTamatan = () => {
         <Button
           variant="text"
           color="primary"
+          
           onClick={() => handleOpenModal(item)}
           sx={{
             color: "black",
+            textTransform: "capitalize",
+            textAlign: "left",
             "&:hover": {
               color: "#4C5EFF", // Change background color on hover
             },

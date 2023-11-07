@@ -53,7 +53,7 @@ const FormTracerStudy = () => {
   const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDateChange = (date) => {
-    setSelectedDate(date);
+    setSelectedDate(date || '');
   };
 
   const [identityData, setIdentityData] = useState({
@@ -410,10 +410,11 @@ const FormTracerStudy = () => {
     }
   };
 
-  // cek input data
-  useEffect(() => {
-    console.log(questionnaireData);
-  }, [questionnaireData]);
+  // // cek input data
+  // useEffect(() => {
+  // console.log(questionnaireData)
+  //  }, [questionnaireData])
+
 
   // checkbox
   // const handleCheckbox = (event) => {
@@ -459,7 +460,7 @@ const FormTracerStudy = () => {
       f18a: questionnaireData.f18a,
       f18b: questionnaireData.f18b,
       f18c: questionnaireData.f18c,
-      f18d: questionnaireData.f18d,
+      f18d: selectedDate,
       f1201: questionnaireData.f1201,
       f1202: questionnaireData.f1202,
       f14: questionnaireData.f14,
@@ -523,8 +524,10 @@ const FormTracerStudy = () => {
       f1612: questionnaireData.f1612,
       f1613: questionnaireData.f1613,
       f1614: questionnaireData.f1614,
-    };
-    console.log(normalized);
+      studentId: identityData.nim,
+
+    }
+    console.log(normalized)
     try {
       const res = await axios.post(
         "http://localhost:2000/api/v1/tracer-study/",
@@ -578,7 +581,7 @@ const FormTracerStudy = () => {
                 fullWidth
                 variant="outlined"
                 name="kodePT"
-                placeholder="12345678910"
+                placeholder="UNKLAB: 161002"
                 value={identityData.kodePT}
                 onChange={handleIdentityChange}
               />
