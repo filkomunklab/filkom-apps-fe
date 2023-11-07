@@ -41,6 +41,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import axios from "axios";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const FormTracerStudy = () => {
   //checkbox
@@ -53,7 +54,7 @@ const FormTracerStudy = () => {
   const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDateChange = (date) => {
-    setSelectedDate(date || '');
+    setSelectedDate(date || "");
   };
 
   const [identityData, setIdentityData] = useState({
@@ -415,7 +416,6 @@ const FormTracerStudy = () => {
   // console.log(questionnaireData)
   //  }, [questionnaireData])
 
-
   // checkbox
   // const handleCheckbox = (event) => {
   //   setQuestionnaireData({
@@ -525,14 +525,10 @@ const FormTracerStudy = () => {
       f1613: questionnaireData.f1613,
       f1614: questionnaireData.f1614,
       studentId: identityData.nim,
-
-    }
-    console.log(normalized)
+    };
+    console.log(normalized);
     try {
-      const res = await axios.post(
-        "http://localhost:2000/api/v1/tracer-study/",
-        normalized
-      );
+      const res = await jwtAuthAxios.post("/tracer-study/", normalized);
       console.log("success", res.data.data);
     } catch (e) {
       console.log(e);

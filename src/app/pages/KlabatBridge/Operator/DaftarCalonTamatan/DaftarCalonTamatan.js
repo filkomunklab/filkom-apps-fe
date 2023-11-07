@@ -36,6 +36,7 @@ import React, { useState } from "react";
 import CreateIcon from "@mui/icons-material/Create";
 import MarkunreadIcon from "@mui/icons-material/Markunread";
 import axios from "axios";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const style = {
   position: "absolute",
@@ -308,7 +309,6 @@ const DaftarCalonTamatan = () => {
         <Button
           variant="text"
           color="primary"
-          
           onClick={() => handleOpenModal(item)}
           sx={{
             color: "black",
@@ -335,37 +335,35 @@ const DaftarCalonTamatan = () => {
   );
 
   const getData = async () => {
-    await axios
-      .get(`http://localhost:2000/api/v1/spt?search_query=${searchValue}`)
-      .then((res) => {
-        // await axios.get("http://localhost:2000/api/v1/spt/").then((res) => {
-        console.log(res.data.data);
-        const formattedData = res.data.data.map((item) => {
-          const remaining_classes = JSON.parse(item.remaining_classes);
-          return { ...item, remaining_classes };
-        });
-
-        console.log(formattedData);
-        // console.log(res.data.data);
-
-        setData(formattedData);
-
-        const uniqueStatusByFac = [
-          ...new Set(res.data.data.map((item) => item.approval_fac)),
-        ];
-        const uniqueStatusByReg = [
-          ...new Set(res.data.data.map((item) => item.approval_reg)),
-        ];
-        const uniqueGraduatePlan = [
-          ...new Set(res.data.data.map((item) => item.graduate_plan)),
-        ];
-
-        setStatusByFac(uniqueStatusByFac);
-        setStatusByRegister(uniqueStatusByReg);
-        setGraduatePlan(uniqueGraduatePlan);
-
-        // console.log(uniqueGraduatePlan);
+    await jwtAuthAxios.get(`/spt?search_query=${searchValue}`).then((res) => {
+      // await axios.get("http://localhost:2000/api/v1/spt/").then((res) => {
+      console.log(res.data.data);
+      const formattedData = res.data.data.map((item) => {
+        const remaining_classes = JSON.parse(item.remaining_classes);
+        return { ...item, remaining_classes };
       });
+
+      console.log(formattedData);
+      // console.log(res.data.data);
+
+      setData(formattedData);
+
+      const uniqueStatusByFac = [
+        ...new Set(res.data.data.map((item) => item.approval_fac)),
+      ];
+      const uniqueStatusByReg = [
+        ...new Set(res.data.data.map((item) => item.approval_reg)),
+      ];
+      const uniqueGraduatePlan = [
+        ...new Set(res.data.data.map((item) => item.graduate_plan)),
+      ];
+
+      setStatusByFac(uniqueStatusByFac);
+      setStatusByRegister(uniqueStatusByReg);
+      setGraduatePlan(uniqueGraduatePlan);
+
+      // console.log(uniqueGraduatePlan);
+    });
   };
 
   function filterData() {

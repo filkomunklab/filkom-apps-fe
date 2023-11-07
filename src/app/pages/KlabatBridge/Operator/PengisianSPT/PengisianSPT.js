@@ -45,6 +45,7 @@ import { makeStyles } from "@mui/styles";
 import ClearIcon from "@mui/icons-material/Clear";
 import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
 import axios from "axios";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 // const rows = [
 //     { id: 1, name: 'Row 1', mk: 'Robotics', sks: '3', keterangan: 'Summer 2023' },
@@ -253,10 +254,7 @@ const PengisianSPT = () => {
     };
     console.log(normalized);
     try {
-      const res = await axios.post(
-        "http://localhost:2000/api/v1/spt/",
-        normalized
-      );
+      const res = await jwtAuthAxios.post("/spt/", normalized);
       console.log("success", res.data.data);
     } catch (e) {
       console.log(e);

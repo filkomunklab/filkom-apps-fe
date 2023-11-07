@@ -37,6 +37,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import axios from "axios";
 import { DataArrayRounded } from "@mui/icons-material";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const DaftarAlumni = () => {
   const [data, setData] = useState([]);
@@ -125,10 +126,8 @@ const DaftarAlumni = () => {
   );
 
   const getData = async () => {
-    await axios
-      .get(
-        `http://localhost:2000/api/v1/admin-operator/alumni?search_query=${searchValue}`
-      )
+    await jwtAuthAxios
+      .get(`/admin-operator/alumni?search_query=${searchValue}`)
       .then((res) => {
         console.log(res.data.data);
 
