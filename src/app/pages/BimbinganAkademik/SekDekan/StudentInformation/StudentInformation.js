@@ -8,6 +8,7 @@ import {
   ListSubheader,
   MenuItem,
   Select,
+  TableContainer,
   Table,
   TableBody,
   TableCell,
@@ -18,6 +19,7 @@ import {
   Card,
   CardHeader,
   CardContent,
+  Paper,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { useState } from "react";
@@ -95,10 +97,30 @@ const StudentInformation = () => {
   return (
     <Div>
       <Div>
-        <Typography variant="h1" sx={{ mb: 3 }}>
+        <Typography
+          variant="h1"
+          sx={{
+            mb: 3,
+            "@media (max-width: 650px)": {
+              fontSize: "15px",
+              fontWeight: 500,
+              mb: 1,
+            },
+          }}
+        >
           Student Information
         </Typography>
-        <Typography variant="h6" sx={{ mb: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            mb: 3,
+            textAlign: "justify",
+            "@media (max-width: 650px)": {
+              fontSize: "11px",
+              mb: 1,
+            },
+          }}
+        >
           Currently, you are on the Student Information page, where you can
           easily view all information about all students, including the number,
           status, and other detailed and comprehensive information.
@@ -127,7 +149,17 @@ const StudentInformation = () => {
               <Grid item>
                 <CardHeader title="Informatics Student " />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
+                  <Typography
+                    variant="h3"
+                    color="#006AF5"
+                    fontSize="20px"
+                    sx={{
+                      "@media (max-width: 650px)": {
+                        fontSize: "11px",
+                        mb: 1,
+                      },
+                    }}
+                  >
                     {`11 people`}
                   </Typography>
                   <Typography variant="caption">
@@ -296,31 +328,31 @@ const StudentInformation = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
-        </Grid>
-        <Grid
-          item
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "flex-end",
-            "@media (max-width: 890px)": { justifyContent: "flex-start" },
-          }}
-        >
+          <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
           <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
             rowsPerPageOptions={[10, 25, 50, 100]}
-            component={"div"}
+            component="div"
             count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
@@ -377,25 +409,34 @@ const TableItem = ({ item, index }) => {
         console.log("Path not found");
     }
   };
+  const rowStyle = {
+    "@media (max-width: 650px)": { fontSize: "11px" },
+  };
   return (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{`105022010000`}</TableCell>
+      <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
+      <TableCell sx={[rowStyle]}>{`022407712`}</TableCell>
       <TableCell>
         <Button
           name="profile"
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            textTransform: "capitalize",
+            "@media (max-width: 650px)": { fontSize: "11px" },
+          }}
           onClick={handleButtonNavigate}
         >{`Yuhu, Christopher Darell`}</Button>
       </TableCell>
-      <TableCell>{`Informatika`}</TableCell>
-      <TableCell>{`2021`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`Informatika`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`2021`}</TableCell>
 
       <TableCell>
         <Button
           name="grade"
           onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
         >
           View Grades
         </Button>
@@ -404,12 +445,15 @@ const TableItem = ({ item, index }) => {
         <Button
           name="certificate"
           onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
         >
           View Certificates
         </Button>
       </TableCell>
-      <TableCell>
+      <TableCell sx={[rowStyle]}>
         <Chip label={"Active"} variant="filled" color={"success"} />
       </TableCell>
     </TableRow>
