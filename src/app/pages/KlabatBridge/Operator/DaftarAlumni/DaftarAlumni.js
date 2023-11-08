@@ -152,7 +152,20 @@ const DaftarAlumni = () => {
 
   const handleExportButton = async () => {
     try {
-      await jwtAuthAxios.get("/admin-operator/exportDataTS");
+      const { data } = await jwtAuthAxios.get("/admin-operator/exportDataTS", {
+        responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(
+        new Blob([data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        })
+      );
+      const a = document.createElement("a");
+      a.href = url;
+      const suffix = new Date().toISOString().substring(0, 10);
+      a.download = `tracer-study-${suffix}.xlsx`;
+      a.click();
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.log(error);
     }
