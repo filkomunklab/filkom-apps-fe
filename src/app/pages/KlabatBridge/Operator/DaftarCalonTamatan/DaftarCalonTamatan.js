@@ -136,6 +136,21 @@ const DaftarCalonTamatan = () => {
     setModalOpen(false);
   };
 
+  const handleTolakButton = async (item) => {
+    try {
+      await jwtAuthAxios.patch(`spt/reg-approval/${item.id}?status=REJECTED`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleTerimaButton = async (item) => {
+    try {
+      await jwtAuthAxios.patch(`spt/reg-approval/${item.id}?status=APPROVED`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const TableSPT = ({ index, item }) => (
     <TableRow>
       <TableCell>{index + 1}</TableCell>
@@ -259,13 +274,22 @@ const DaftarCalonTamatan = () => {
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => setModalOpen(false)}
+            onClick={() => {
+              setModalOpen(false);
+              handleTolakButton(item);
+            }}
             style={{ marginRight: "10px" }}
           >
             Tolak
           </Button>
           <Div>
-            <Button variant="contained" onClick={() => setTerimaSPT(true)}>
+            <Button
+              variant="contained"
+              onClick={() => {
+                setTerimaSPT(true);
+                handleTerimaButton(item);
+              }}
+            >
               Terima
             </Button>
             <Dialog
