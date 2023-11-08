@@ -110,13 +110,13 @@ export const sekretarisMenus = [
         icon: <MailIcon sx={{ fontSize: 20 }} />,
         children: [
           {
-            uri: "/sistem-informasi-skripsi/jadwal-proposal",
+            uri: "/sistem-informasi-skripsi/daftar-jadwal-sidang-proposal",
             label: "Jadwal Proposal",
             type: "nav-item",
             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/jadwal-skripsi",
+            uri: "/sistem-informasi-skripsi/daftar-jadwal-sidang-skripsi",
             label: "Jadwal Skripsi",
             type: "nav-item",
             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
