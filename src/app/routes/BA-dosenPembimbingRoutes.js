@@ -11,7 +11,16 @@ import ReviewPreRegistration from "app/pages/BimbinganAkademik/DosenPembimbing/R
 import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/DosenPembimbing/ReviewActivities/ReviewPreRegistration/ReviewPreRegistrationStudent";
 import ReviewCertificate from "app/pages/BimbinganAkademik/DosenPembimbing/ReviewActivities/ReviewCertificate/ReviewCertificate";
 import ReviewCertificateStudent from "app/pages/BimbinganAkademik/DosenPembimbing/ReviewActivities/ReviewCertificate/ReviewCertificateStudent";
-import History from "../pages/BimbinganAkademik/DosenPembimbing/History";
+import History from "app/pages/BimbinganAkademik/DosenPembimbing/History";
+import HistoryActivity from "app/pages/BimbinganAkademik/DosenPembimbing/History/HIstoryActivity/HistoryActivity";
+import HistoryActivity1 from "app/pages/BimbinganAkademik/DosenPembimbing/History/HIstoryActivity/HistoryActivity1";
+import HistoryActivity2 from "app/pages/BimbinganAkademik/DosenPembimbing/History/HIstoryActivity/HistoryActivity2";
+import HistoryActivity3 from "app/pages/BimbinganAkademik/DosenPembimbing/History/HIstoryActivity/HistoryActivity3";
+import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/DosenPembimbing/History/HistoryPreRegis/PreRegistrationApproved";
+import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/DosenPembimbing/History/HistoryPreRegis/PreRegistrationRejected";
+import HistoryCertificateApproved from "app/pages/BimbinganAkademik/DosenPembimbing/History/HistoryCertificate/CertificateApproved";
+import HistoryCertificateRejected from "app/pages/BimbinganAkademik/DosenPembimbing/History/HistoryCertificate/CertificateRejected";
+import HistoryConsultationComplete from "app/pages/BimbinganAkademik/DosenPembimbing/History/HistoryConsultation/ConsultationComplete";
 import CertificateDetail from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentCertificate/CertificateDetail";
 import StudentConsultation from "app/pages/BimbinganAkademik/DosenPembimbing/ReviewActivities/StudentConsultation";
 import ReplyConsultation from "app/pages/BimbinganAkademik/DosenPembimbing/ReviewActivities/StudentConsultation/ReplyConsultation/Consultation";
@@ -91,6 +100,46 @@ const dosenPembimbingRoutes = [
   {
     path: "/bimbingan-akademik/dosen-pembimbing/current-activities",
     element: <Page component={CurrentActivities} />,
+  },
+  {
+    path: "/bimbingan-akademik/dosen-pembimbing/history",
+    element: <Page component={History} />,
+  },
+  {
+    path: "/bimbingan-akademik/dosen-pembimbing/history/activity",
+    element: <Page component={HistoryActivity} />,
+  },
+  {
+    path: "/bimbingan-akademik/dosen-pembimbing/history/activity1",
+    element: <Page component={HistoryActivity1} />,
+  },
+  {
+    path: "/bimbingan-akademik/dosen-pembimbing/history/activity2",
+    element: <Page component={HistoryActivity2} />,
+  },
+  {
+    path: "/bimbingan-akademik/dosen-pembimbing/history/activity3",
+    element: <Page component={HistoryActivity3} />,
+  },
+  {
+    path: "/bimbingan-akademik/dosen-pembimbing/history/pre-registration-approved",
+    element: <Page component={HistoryPreRegistrationApproved} />,
+  },
+  {
+    path: "/bimbingan-akademik/dosen-pembimbing/history/pre-registration-rejected",
+    element: <Page component={HistoryPreRegistrationRejected} />,
+  },
+  {
+    path: "/bimbingan-akademik/dosen-pembimbing/history/certificate-approved",
+    element: <Page component={HistoryCertificateApproved} />,
+  },
+  {
+    path: "/bimbingan-akademik/dosen-pembimbing/history/certificate-rejected",
+    element: <Page component={HistoryCertificateRejected} />,
+  },
+  {
+    path: "/bimbingan-akademik/dosen-pembimbing/history/consultation",
+    element: <Page component={HistoryConsultationComplete} />,
   },
   {
     path: "/bimbingan-akademik/dosen-pembimbing/current-activities/view-activity",
