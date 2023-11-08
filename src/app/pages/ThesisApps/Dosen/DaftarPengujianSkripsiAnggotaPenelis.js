@@ -43,7 +43,7 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
         <TableCell>
           <Typography
             component={Link}
-            to="/halaman-berikutnya"
+            to="/sistem-informasi-skripsi/uji-skripsi-anggota/beranda"
             sx={{
               textDecoration: "none",
               color: "blue",

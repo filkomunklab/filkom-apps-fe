@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
+import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
 
 const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
   // State untuk mengontrol tampilan popup
@@ -322,10 +323,9 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
         >
           {/* Menu Horizontal Start */}
           <Div sx={{ width: "100%" }}>
-            <MenuPenguji />
+            <MenuPengajuanSkripsiDosen />
           </Div>
           {/* Menu horizontal End */}
-
           <Div
             sx={{
               display: "flex",

@@ -40,7 +40,7 @@ const DaftarBimbinganSkripsiAdvisor = () => {
         <TableCell>
           <Typography
             component={Link}
-            to="/halaman-berikutnya"
+            to="/sistem-informasi-skripsi/bimbingan-skripsi-advisor/beranda"
             sx={{
               textDecoration: "none",
               color: "blue",
