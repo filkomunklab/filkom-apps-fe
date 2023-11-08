@@ -196,7 +196,7 @@ const UploadProposal = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Upload Proposal
+          Unggah Proposal
         </Typography>
       </Div>
 
@@ -301,7 +301,7 @@ const UploadProposal = () => {
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
-                    width: "130px",
+                    width: "150px",
                     height: "30px",
                   }}
                 >
@@ -517,7 +517,7 @@ const UploadProposal = () => {
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
-                    width: "130px",
+                    width: "150px",
                     height: "30px",
                   }}
                 >
@@ -672,7 +672,7 @@ const UploadProposal = () => {
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
-                    width: "130px",
+                    width: "150px",
                     height: "30px",
                   }}
                 >

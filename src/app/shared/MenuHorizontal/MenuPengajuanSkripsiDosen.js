@@ -11,7 +11,7 @@ const MenuPengajuanSkripsiDosen = () => {
   const open2 = Boolean(anchorE2);
 
   const { role } = JSON.parse(localStorage.getItem("user"));
-  // const role = ["ADVISOR"];
+  // const role = ["DOSEN"];
   console.log("TEST", role);
 
   let isPengajuanJudulHidden;

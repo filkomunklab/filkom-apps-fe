@@ -110,7 +110,7 @@ const UploadRevisiSkripsi = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Upload Revisi Skripsi
+          Unggah Revisi Skripsi
         </Typography>
       </Div>
 
@@ -391,7 +391,7 @@ const UploadRevisiSkripsi = () => {
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
-                    width: "130px",
+                    width: "150px",
                     height: "30px",
                   }}
                 >

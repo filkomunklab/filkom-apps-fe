@@ -176,7 +176,7 @@ const ManajemenDosenSkripsi = () => {
               width: "50%",
             }}
           >
-            Jadwal Sidang Proposal
+            Manajemen Dosen Skripsi
           </Typography>
           <Div
             sx={{
@@ -253,7 +253,7 @@ const ManajemenDosenSkripsi = () => {
                 </TableCell>
                 <TableCell sx={{ fontSize: "13px" }}>Nama Dosen</TableCell>
                 <TableCell sx={{ fontSize: "13px" }}>NIDN</TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Status</TableCell>
+                {/* <TableCell sx={{ fontSize: "13px" }}>Status</TableCell> */}
                 <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -263,62 +263,8 @@ const ManajemenDosenSkripsi = () => {
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{dosen.nama}</TableCell>
                   <TableCell>{dosen.nidn}</TableCell>
-                  <TableCell sx={{ fontSize: "13px" }}>
-                    <Chip
-                      label={dosen.status}
-                      size="small"
-                      sx={
-                        dosen.status === "Aktif"
-                          ? {
-                              background: "rgba(21, 131, 67, 0.10)",
-                              color: "#0A7637",
-                            }
-                          : {
-                              background: "rgba(226, 29, 18, 0.10)",
-                              color: "#CA150C",
-                            }
-                      }
-                    />
-                  </TableCell>
                   <TableCell sx={{ width: "20%" }}>
                     <Div sx={{ display: "flex" }}>
-                      <span
-                        style={{
-                          textDecoration: "none",
-                          cursor:
-                            dosen.status === "Aktif"
-                              ? "not-allowed"
-                              : "pointer",
-                          color: dosen.status === "Aktif" ? "#E0E0E0" : "blue",
-                        }}
-                        onClick={() => {
-                          if (dosen.status !== "Aktif") {
-                            handleToggleStatus(dosen.id, "Aktif");
-                          }
-                        }}
-                      >
-                        Active
-                      </span>
-                      <Div sx={{ margin: "4px", color: "#E0E0E0" }}>|</Div>
-                      <span
-                        style={{
-                          textDecoration: "none",
-                          cursor:
-                            dosen.status === "Non-Aktif"
-                              ? "not-allowed"
-                              : "pointer",
-                          color:
-                            dosen.status === "Non-Aktif" ? "#E0E0E0" : "red",
-                        }}
-                        onClick={() => {
-                          if (dosen.status !== "Non-Aktif") {
-                            handleOpenConfirmationDialogNonActive(dosen.id);
-                          }
-                        }}
-                      >
-                        Non-Actif
-                      </span>
-                      <Div sx={{ margin: "4px", color: "#E0E0E0" }}>|</Div>
                       <span
                         style={{
                           textDecoration: "none",
@@ -329,7 +275,7 @@ const ManajemenDosenSkripsi = () => {
                           handleOpenDeleteConfirmationDialog(dosen.id)
                         }
                       >
-                        Delete
+                        Hapus
                       </span>
                     </Div>
                   </TableCell>
@@ -370,13 +316,13 @@ const ManajemenDosenSkripsi = () => {
               alignSelf: "stretch",
             }}
           >
-            {/* ketua Penelis */}
+            {/* ketua Panelis */}
             <FormControl fullWidth size="small" sx={{ marginTop: "25px" }}>
-              <InputLabel id="ketua-penelis-label">Ketua Penelis</InputLabel>
+              <InputLabel id="dosen-label">Dosen</InputLabel>
               <Select
-                labelId="ketua-penelis-label"
-                id="ketua-penelis"
-                label="Ketua Penelis"
+                labelId="dosen-label"
+                id="dosen"
+                label="Dosen"
                 value={selectedDosen}
                 onChange={(event) => setSelectedDosen(event.target.value)}
               >

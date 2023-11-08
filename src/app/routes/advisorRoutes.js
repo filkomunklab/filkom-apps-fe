@@ -17,25 +17,25 @@ import BerandaProposalMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaProp
 import BerandaSkripsiMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaSkripsiMahasiswa";
 
 const advisorRoutes = [
-  {
-    // Daftar Bimbingan Proposal Advisor
-    path: "/sistem-informasi-skripsi/bimbingan-proposal-advisor",
-    element: <Page component={DaftarBimbinganProposalAdvisor} />,
-  },
+  // {
+  //   // Daftar Bimbingan Proposal Advisor
+  //   path: "/sistem-informasi-skripsi/bimbingan-proposal-advisor",
+  //   element: <Page component={DaftarBimbinganProposalAdvisor} />,
+  // },
 
-  {
-    // Daftar Bimbingan Skripsi Advisor
-    path: "/sistem-informasi-skripsi/bimbingan-skripsi-advisor",
-    element: <Page component={DaftarBimbinganSkripsiAdvisor} />,
-  },
+  // {
+  //   // Daftar Bimbingan Skripsi Advisor
+  //   path: "/sistem-informasi-skripsi/bimbingan-skripsi-advisor",
+  //   element: <Page component={DaftarBimbinganSkripsiAdvisor} />,
+  // },
 
-  {
-    // Daftar Riwayat Bimbingan Advisor
-    path: "/sistem-informasi-skripsi/riwayat-bimbingan-advisor",
-    element: <Page component={RiwayatBimbinganAdvisor} />,
-  },
+  // {
+  //   // Daftar Riwayat Bimbingan Advisor
+  //   path: "/sistem-informasi-skripsi/riwayat-bimbingan-advisor",
+  //   element: <Page component={RiwayatBimbinganAdvisor} />,
+  // },
 
-  // BERANDA
+  // PROPOSAL
   {
     // View Beranda Mahasiswa proposal
     path: "/sistem-informasi-skripsi/bimbingan-proposal-advisor/beranda",

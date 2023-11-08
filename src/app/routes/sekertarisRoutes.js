@@ -17,61 +17,61 @@ import DokumenSkripsi from "app/pages/ThesisApps/Sekertaris/DokumenSkripsi";
 import KonsultasiSekertaris from "app/pages/ThesisApps/Sekertaris/KonsultasiSekertaris";
 
 const sekertarisRoutes = [
-  {
-    // daftar pengajuan proposal
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal",
-    element: <Page component={DaftarPengajuanProposalSekertaris} />,
-  },
-  {
-    // daftar pengajuan skripsi
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi",
-    element: <Page component={DaftarPengajuanSkripsiSekertaris} />,
-  },
-  {
-    // jadwal proposal
-    path: "/sistem-informasi-skripsi/jadwal-proposal",
-    element: <Page component={JadwalSidangProposal} />,
-  },
-  {
-    // jadwal skripsi
-    path: "/sistem-informasi-skripsi/jadwal-skripsi",
-    element: <Page component={JadwalSidangSkripsi} />,
-  },
-  {
-    // manajemen dosen skripsi
-    path: "/sistem-informasi-skripsi/manajamen-dosen-skripsi",
-    element: <Page component={ManajemenDosenSkripsi} />,
-  },
-  {
-    // beranda proposal
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal/beranda",
-    element: <Page component={BerandaProposal} />,
-  },
-  {
-    // beranda skripsi
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/beranda",
-    element: <Page component={BerandaSkripsi} />,
-  },
-  {
-    // jadwal Sidang
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/jadwal-sidang",
-    element: <Page component={PerbaruiJadwalSidang} />,
-  },
-  {
-    // konsultasi
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/konsultasi",
-    element: <Page component={KonsultasiSekertaris} />,
-  },
-  {
-    // Dokumen Proposal
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/dokumen-proposal",
-    element: <Page component={DokumenProposal} />,
-  },
-  {
-    // Dokumen Skripsi
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/dokumen-skripsi",
-    element: <Page component={DokumenSkripsi} />,
-  },
+  // {
+  //   // daftar pengajuan proposal
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal",
+  //   element: <Page component={DaftarPengajuanProposalSekertaris} />,
+  // },
+  // {
+  //   // daftar pengajuan skripsi
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi",
+  //   element: <Page component={DaftarPengajuanSkripsiSekertaris} />,
+  // },
+  // {
+  //   // jadwal proposal
+  //   path: "/sistem-informasi-skripsi/jadwal-proposal",
+  //   element: <Page component={JadwalSidangProposal} />,
+  // },
+  // {
+  //   // jadwal skripsi
+  //   path: "/sistem-informasi-skripsi/jadwal-skripsi",
+  //   element: <Page component={JadwalSidangSkripsi} />,
+  // },
+  // {
+  //   // manajemen dosen skripsi
+  //   path: "/sistem-informasi-skripsi/manajamen-dosen-skripsi",
+  //   element: <Page component={ManajemenDosenSkripsi} />,
+  // },
+  // {
+  //   // beranda proposal
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal/beranda",
+  //   element: <Page component={BerandaProposal} />,
+  // },
+  // {
+  //   // beranda skripsi
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/beranda",
+  //   element: <Page component={BerandaSkripsi} />,
+  // },
+  // {
+  //   // jadwal Sidang
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/jadwal-sidang",
+  //   element: <Page component={PerbaruiJadwalSidang} />,
+  // },
+  // {
+  //   // konsultasi
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/konsultasi",
+  //   element: <Page component={KonsultasiSekertaris} />,
+  // },
+  // {
+  //   // Dokumen Proposal
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/dokumen-proposal",
+  //   element: <Page component={DokumenProposal} />,
+  // },
+  // {
+  //   // Dokumen Skripsi
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi/dokumen-skripsi",
+  //   element: <Page component={DokumenSkripsi} />,
+  // },
 ];
 
 export default sekertarisRoutes;

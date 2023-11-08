@@ -152,7 +152,7 @@ const JadwalSidangSkripsi = () => {
               lineHeight: "32px",
             }}
           >
-            Jadwal Sidang Skripsi
+            Daftar Jadwal Skripsi
           </Typography>
           <Div
             sx={{
@@ -251,7 +251,7 @@ const JadwalSidangSkripsi = () => {
                         color: "blue",
                       }}
                     >
-                      View
+                      Detail
                     </Typography>
                     <Div sx={{ margin: "2px" }}>|</Div>
                     <span
@@ -262,7 +262,7 @@ const JadwalSidangSkripsi = () => {
                       }}
                       onClick={handleUpdateClick}
                     >
-                      Update
+                      Perbarui
                     </span>
                   </Div>
                 </TableCell>
@@ -304,7 +304,7 @@ const JadwalSidangSkripsi = () => {
                           color: "blue",
                         }}
                       >
-                        View
+                        Detail
                       </Typography>
                       <Div sx={{ margin: "2px" }}>|</Div>
                       <span
@@ -315,7 +315,7 @@ const JadwalSidangSkripsi = () => {
                         }}
                         onClick={handleUpdateClick}
                       >
-                        Update
+                        Perbarui
                       </span>
                     </Div>
                   </TableCell>

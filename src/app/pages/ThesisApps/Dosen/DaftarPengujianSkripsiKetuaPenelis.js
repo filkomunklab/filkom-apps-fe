@@ -25,7 +25,7 @@ const DaftarPengujianSkripsiKetuaPenelis = () => {
         <TableCell sx={{ fontSize: "13px" }}>{index + 1}</TableCell>
         <TableCell sx={{ fontSize: "13px" }}>Geovalga Fransiscus Lim</TableCell>
         <TableCell sx={{ fontSize: "13px" }}>
-          SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
+          SISTEM INFORMASI MANAJEMEN SKRIPSI DI FAKULTAS ILMU KOMPUTER
           UNIVERSITAS KLABAT
         </TableCell>
         <TableCell>
@@ -303,7 +303,7 @@ const DaftarPengujianSkripsiKetuaPenelis = () => {
               lineHeight: "32px",
             }}
           >
-            Daftar Pengujian Skripsi
+            Daftar Pengujian Skripsi Ketua Panelis
           </Typography>
           <Div
             sx={{
