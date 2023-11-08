@@ -23,6 +23,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 import axios from "axios";
+import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
 
 const BuatKonsultasiAdvisor2 = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -120,7 +121,9 @@ const BuatKonsultasiAdvisor2 = () => {
           }}
         >
           {/* Menu Horizontal Start */}
-          <Div sx={{ width: "100%" }}></Div>
+          <Div sx={{ width: "100%" }}>
+            <MenuPengajuanSkripsiDosen />
+          </Div>
 
           {/* Menu horizontal End */}
 

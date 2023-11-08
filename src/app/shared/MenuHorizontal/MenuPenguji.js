@@ -612,6 +612,17 @@ const MenuPenguji = () => {
                   </MenuItem>
                 </Link>
               </Div>
+              {/* DOSEN CO_ADVISOR */}
+              <Div hidden={role.includes("ADVISOR") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/bimbingan-proposal-co-advisor/dokumen-revisi-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Revisi Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
               {/* DOSEN KETUA PANALIS */}
               <Div hidden={role.includes("KETUA_PANALIS") ? false : true}>
                 <Link

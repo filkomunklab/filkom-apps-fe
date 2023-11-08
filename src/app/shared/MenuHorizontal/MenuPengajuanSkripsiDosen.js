@@ -104,7 +104,7 @@ const MenuPengajuanSkripsiDosen = () => {
             </Div> */}
             {/* DOSEN ADVISOR */}
             <Div hidden={role.includes("ADVISOR") ? false : true}>
-              <Link to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/beranda">
+              <Link to="/sistem-informasi-skripsi/bimbingan-skripsi-advisor/beranda">
                 <Button
                   sx={{
                     fontSize: "13px",
@@ -123,7 +123,7 @@ const MenuPengajuanSkripsiDosen = () => {
             </Div>
             {/* DOSEN CO_ADVISOR */}
             <Div hidden={role.includes("CO_ADVISOR") ? false : true}>
-              <Link to="/sistem-informasi-skripsi/bimbingan-proposal-co-advisor/beranda">
+              <Link to="/sistem-informasi-skripsi/bimbingan-skripsi-co-advisor/beranda">
                 <Button
                   sx={{
                     fontSize: "13px",
@@ -317,7 +317,7 @@ const MenuPengajuanSkripsiDosen = () => {
             </Div>
             {/* dosen ADVISOR */}
             <Div hidden={role.includes("ADVISOR") ? false : true}>
-              <Link to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/konsultasi">
+              <Link to="/sistem-informasi-skripsi/bimbingan-skripsi-advisor/konsultasi">
                 <Button
                   sx={{
                     // width: "130px",
@@ -336,7 +336,7 @@ const MenuPengajuanSkripsiDosen = () => {
             </Div>
             {/* dosen CO_ADVISOR */}
             <Div hidden={role.includes("CO_ADVISOR") ? false : true}>
-              <Link to="/sistem-informasi-skripsi/bimbingan-proposal-co-advisor/konsultasi">
+              <Link to="/sistem-informasi-skripsi/bimbingan-skripsi-co-advisor/konsultasi">
                 <Button
                   sx={{
                     // width: "130px",
@@ -461,7 +461,7 @@ const MenuPengajuanSkripsiDosen = () => {
               {/* DOSEN DOSEN_SKRIPSI */}
               <Div hidden={role.includes("DOSEN") ? false : true}>
                 <Link
-                  to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/document proposal"
+                  to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/document-proposal"
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem onClick={() => setAnchorEl(null)}>
@@ -472,7 +472,7 @@ const MenuPengajuanSkripsiDosen = () => {
               {/* DOSEN ADVISOR */}
               <Div hidden={role.includes("ADVISOR") ? false : true}>
                 <Link
-                  to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/dokumen-proposal"
+                  to="/sistem-informasi-skripsi/bimbingan-skripsi-advisor/dokumen-proposal"
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem onClick={() => setAnchorEl(null)}>
@@ -483,7 +483,7 @@ const MenuPengajuanSkripsiDosen = () => {
               {/* DOSEN CO_ADVISOR */}
               <Div hidden={role.includes("CO_ADVISOR") ? false : true}>
                 <Link
-                  to="/sistem-informasi-skripsi/bimbingan-proposal-co-advisor/dokumen-proposal"
+                  to="/sistem-informasi-skripsi/bimbingan-skripsi-co-advisor/dokumen-proposal"
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem onClick={() => setAnchorEl(null)}>
@@ -532,7 +532,7 @@ const MenuPengajuanSkripsiDosen = () => {
               {/* DOSEN ADVISOR */}
               <Div hidden={role.includes("ADVISOR") ? false : true}>
                 <Link
-                  to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/berita-acara-proposal"
+                  to="/sistem-informasi-skripsi/bimbingan-skripsi-advisor/berita-acara-proposal"
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem onClick={() => setAnchorEl(null)}>
@@ -581,7 +581,7 @@ const MenuPengajuanSkripsiDosen = () => {
               {/* DOSEN CO_ADVISOR */}
               <Div hidden={role.includes("CO_ADVISOR") ? false : true}>
                 <Link
-                  to="/sistem-informasi-skripsi/bimbingan-proposal-co-advisor/perubahan-proposal"
+                  to="/sistem-informasi-skripsi/bimbingan-skripsi-co-advisor/perubahan-proposal"
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem onClick={() => setAnchorEl(null)}>
@@ -604,7 +604,18 @@ const MenuPengajuanSkripsiDosen = () => {
               {/* DOSEN ADVISOR */}
               <Div hidden={role.includes("ADVISOR") ? false : true}>
                 <Link
-                  to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/dokumen-revisi-proposal"
+                  to="/sistem-informasi-skripsi/bimbingan-skripsi-advisor/dokumen-revisi-proposal"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem onClick={() => setAnchorEl(null)}>
+                    Dokumen Revisi Proposal
+                  </MenuItem>
+                </Link>
+              </Div>
+              {/* DOSEN CO_ADVISOR */}
+              <Div hidden={role.includes("CO_ADVISOR") ? false : true}>
+                <Link
+                  to="/sistem-informasi-skripsi/bimbingan-skripsi-co-advisor/dokumen-revisi-proposal"
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem onClick={() => setAnchorEl(null)}>

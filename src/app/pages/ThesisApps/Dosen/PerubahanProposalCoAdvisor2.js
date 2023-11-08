@@ -6,14 +6,18 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Menu,
+  MenuItem,
   TextareaAutosize,
   Typography,
 } from "@mui/material";
 import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
+import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
-const PerubahanSkripsiCoAvisor = () => {
+const PerubahanProposalCoAdvisor2 = () => {
   const [coAdvisorChange, setCoAdvisorChange] = useState(""); // State untuk menyimpan perubahan Co-Advisor
   const [displayedChange, setDisplayedChange] = useState(""); // State untuk menampilkan perubahan di Typography
   const [isSubmitted, setIsSubmitted] = useState(false); // Menyimpan status apakah sudah disubmit atau belum
@@ -56,7 +60,7 @@ const PerubahanSkripsiCoAvisor = () => {
         }}
       >
         <Typography variant="subtitle2" sx={{ fontSize: "24px" }}>
-          Perubahan Skripsi
+          Perubahan Proposal
         </Typography>
       </Div>
 
@@ -362,7 +366,7 @@ const PerubahanSkripsiCoAvisor = () => {
           }}
         >
           <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-            Revisi Skripsi
+            Revisi Proposal
           </Typography>
         </DialogTitle>
         <DialogContent>
@@ -396,4 +400,4 @@ const PerubahanSkripsiCoAvisor = () => {
   );
 };
 
-export default PerubahanSkripsiCoAvisor;
+export default PerubahanProposalCoAdvisor2;

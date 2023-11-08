@@ -6,14 +6,11 @@ import DaftarPengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarP
 import DaftarPengajuanProposalDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarPengajuanProposalDosenSkripsi";
 import DaftarPengajuanSkripsiDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarPengajuanSkripsiDosenSkripsi";
 import DocumentPersetujuanDosenPembimbing from "app/pages/ThesisApps/Dosen/DocumentPersetujuanDosenPembimbing";
+import DocumentPersetujuanDosenPembimbingProposal2 from "app/pages/ThesisApps/Dosen/DocumentPersetujuanDosenPembimbingProposal2";
 import DocumentPersetujuanDosenPembimbingSkripsi from "app/pages/ThesisApps/Dosen/DocumentPersetujuanDosenPembimbingSkripsi";
-import DocumentRevisiProposalAdvisor from "app/pages/ThesisApps/Dosen/DocumentRevisiProposalAdvisor";
 import DocumentRevisiSkripsiKetuaPenelis from "app/pages/ThesisApps/Dosen/DocumentRevisiSkripsiKetuaPenelis";
-import DocumentRevisiProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/DokumentRevisiProposalKetuaPenelis";
+import DocumentRevisiProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/DocumentRevisiProposalKetuaPenelis";
 import ManajemenKelasDosenSkripsi from "app/pages/ThesisApps/Dosen/ManajemenKelasDosenSkripsi";
-import MengisiBeritaAcaraProposalDekan from "app/pages/ThesisApps/Dosen/MengisiBeritaAcaraProposalDekan";
-import MengisiBeritaAcaraProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/MengisiBeritaAcaraProposalKetuaPenelis";
-import MengisiBeritaAcaraSkripsiKetuaPenelis from "app/pages/ThesisApps/Dosen/MengisiBeritaAcaraSkripsiKetuaPenelis";
 import PengajuanJudulDiterimaDosenSkripsi from "app/pages/ThesisApps/Dosen/PengajuanJudulDiterimaDosenSkripsi";
 import PengajuanJudulDiterimaDosenSkripsi2 from "app/pages/ThesisApps/Dosen/PengajuanJudulDiterimaDosenSkripsi2";
 import PengajuanJudul from "app/pages/ThesisApps/Dosen/PengajuanJudulDosen";
@@ -21,6 +18,7 @@ import PengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/PengajuanJudu
 import BerandaPengajuanJudul from "app/pages/ThesisApps/Mahasiswa/BerandaPengajuanJudul";
 import BerandaProposalMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaProposalMahasiswa";
 import BerandaSkripsiMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaSkripsiMahasiswa";
+import DocumentRevisiProposalKetuaPenelis2 from "app/pages/ThesisApps/Dosen/DocumentRevisiProposalKetuaPenelis2";
 
 const dosenSkripsiRoutes = [
   {
@@ -106,13 +104,13 @@ const dosenSkripsiRoutes = [
   },
   {
     // document proposal
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/document proposal",
-    element: <Page component={DocumentPersetujuanDosenPembimbing} />,
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/document-proposal",
+    element: <Page component={DocumentPersetujuanDosenPembimbingProposal2} />,
   },
   {
     // dokuemn revisi proposal
     path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/dokumen-revisi-proposal",
-    element: <Page component={DocumentRevisiProposalKetuaPenelis} />,
+    element: <Page component={DocumentRevisiProposalKetuaPenelis2} />,
   },
   {
     // dokumen skripsi
@@ -124,8 +122,6 @@ const dosenSkripsiRoutes = [
     path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/dokumen-revisi-skripsi",
     element: <Page component={DocumentRevisiSkripsiKetuaPenelis} />,
   },
-
-  // dibawah ini akan dihapus
 ];
 
 export default dosenSkripsiRoutes;

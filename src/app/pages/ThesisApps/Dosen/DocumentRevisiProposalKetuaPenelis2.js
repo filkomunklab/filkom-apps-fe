@@ -17,11 +17,10 @@ import {
 import React, { useState } from "react";
 import WarningIcon from "@mui/icons-material/Warning";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
-import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
+import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
 
-const DocumentRevisiSkripsiKetuaPenelis = () => {
+const DocumentRevisiProposalKetuaPenelis2 = () => {
   // state untuk Upload RevisiProposal Ketua Panalis
   const [isSetujuClicked, setIsSetujuClicked] = useState(false);
   const [isTolakClicked, setIsTolakClicked] = useState(false);
@@ -402,7 +401,7 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Document Revisi Skripsi
+          Document Revisi Proposal
         </Typography>
       </Div>
 
@@ -678,7 +677,7 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
                 fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
               }}
             >
-              Document Revisi Skripsi
+              Document Revisi Proposal
             </Typography>
 
             {/* Table 2 Start */}
@@ -1221,4 +1220,4 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
   );
 };
 
-export default DocumentRevisiSkripsiKetuaPenelis;
+export default DocumentRevisiProposalKetuaPenelis2;

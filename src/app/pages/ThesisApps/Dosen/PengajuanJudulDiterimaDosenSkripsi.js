@@ -191,9 +191,9 @@ const PengajuanJudulDiterimaDosenSkripsi = () => {
             }
             sx={{ width: "100%" }}
           >
-            <MenuPengajuanSkripsiDosen />
+            <MenuPenguji />
           </Div>
-          {/* Menu horizontal MAHASISWA End */}
+          {/* Menu horizontal DOSEN End */}
           {/* Menu Horizontal MAHASISWA Start */}
           <Div
             hidden={role.includes("MAHASISWA") ? false : true}
