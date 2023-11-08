@@ -22,6 +22,7 @@ import {
   registerMenus,
   sekretarisMenus,
 } from "./menus";
+import { Rocket } from "@mui/icons-material";
 
 const roleCheck = () => {
   const roles = JSON.parse(localStorage.getItem("user"))?.role;
@@ -49,6 +50,7 @@ const roleCheck = () => {
     case ROLES.KAPRODI:
       return kaprodiMenus;
     case ROLES.SEKRETARIS:
+    case ROLES.OPERATOR_FAKULTAS:
       return sekretarisMenus;
     case ROLES.REGISTER:
       return registerMenus;
