@@ -73,29 +73,103 @@ const DaftarAlumni = () => {
   // select all button
   const [selectAll, setSelectAll] = useState(false);
   const [checkboxes, setCheckboxes] = useState(new Array(10).fill(false));
+  const [selectedEmails, setSelectedEmails] = useState([]);
+  const [selectedPhoneNums, setSelectedPhoneNums] = useState([]);
 
   const handleSelectAll = () => {
+    // If "Select All" is checked, deselect all items, and vice versa
+    if (selectAll) {
+      setSelectedEmails([]);
+      setSelectedPhoneNums([]);
+    } else {
+      // Select all items
+      const allEmails = data.map((item) => item.personal_email);
+      const allPhoneNums = data.map((item) => item.phone_num);
+      setSelectedEmails(allEmails);
+      setSelectedPhoneNums(allPhoneNums);
+    }
     setSelectAll(!selectAll);
-    setCheckboxes(new Array(10).fill(!selectAll));
   };
 
-  const handleCheckboxChange = (index) => {
+  const handleCheckboxChange = (index, email, phoneNumber) => {
     const newCheckboxes = [...checkboxes];
     newCheckboxes[index] = !checkboxes[index];
     setCheckboxes(newCheckboxes);
     setSelectAll(newCheckboxes.every((checkbox) => checkbox));
+
+    setSelectedEmails((prevSelectedEmails) =>
+      prevSelectedEmails.includes(email)
+        ? prevSelectedEmails.filter((selectedEmail) => selectedEmail !== email)
+        : [...prevSelectedEmails, email]
+    );
+
+    // Check if the phone number is already in the array, and toggle its presence
+    setSelectedPhoneNums((prevSelectedPhoneNums) =>
+      prevSelectedPhoneNums.includes(phoneNumber)
+        ? prevSelectedPhoneNums.filter(
+            (selectedPhoneNum) => selectedPhoneNum !== phoneNumber
+          )
+        : [...prevSelectedPhoneNums, phoneNumber]
+    );
+  };
+
+  const handleSendButton = async () => {
+    try {
+      await jwtAuthAxios.post("/operator/send-broadcast-email", {
+        recipientEmails: selectedEmails,
+      });
+      await jwtAuthAxios.post("/operator/alumni/send-broadcast-whatsapp", {
+        phoneNums: selectedPhoneNums,
+        pesan:
+          "Halo, ini adalah pesan broadcast dari Klabat Bridge. Terima kasih.",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleWhatsappButton = async (phoneNum) => {
+    try {
+      await jwtAuthAxios.post("/operator/alumni/send-broadcast-whatsapp", {
+        phoneNums: [phoneNum],
+        pesan:
+          "Halo, ini adalah pesan broadcast dari Klabat Bridge. Terima kasih.",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEmailButton = async (email) => {
+    try {
+      await jwtAuthAxios.post("/operator/send-broadcast-email", {
+        recipientEmails: [email],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleExportButton = async () => {
+    try {
+      await jwtAuthAxios.get("/admin-operator/exportDataTS");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const TableItem = ({ index, item }) => (
     <TableRow>
       <TableCell>
         <Checkbox
-          checked={checkboxes[index]}
-          onChange={() => handleCheckboxChange(index)}
+          checked={selectedEmails.includes(item.personal_email)}
+          onChange={() =>
+            handleCheckboxChange(index, item.personal_email, item.phone_num)
+          }
           color="primary"
         />
       </TableCell>
-      <TableCell>{index + 1}</TableCell>
+      <TableCell>{index + 1 + rowsPerPage * page}</TableCell>
       <TableCell>{`${item.firstName} ${item.lastName}`}</TableCell>
       <TableCell>{item.nim}</TableCell>
       <TableCell>{item.faculty}</TableCell>
@@ -112,39 +186,16 @@ const DaftarAlumni = () => {
             alignItems: "center",
           }}
         >
-          <Button
-          //onClick={() => setResetPassword(true)}
-          >
+          <Button onClick={() => handleWhatsappButton(item.phone_num)}>
             <WhatsAppIcon sx={{ fontSize: 16, color: "black" }} />
           </Button>
-          <Button>
+          <Button onClick={() => handleEmailButton(item.personal_email)}>
             <MarkunreadIcon sx={{ fontSize: 16, color: "black" }} />
           </Button>
         </Box>
       </TableCell>
     </TableRow>
   );
-
-  const getData = async () => {
-    await jwtAuthAxios
-      .get(`/admin-operator/alumni?search_query=${searchValue}`)
-      .then((res) => {
-        console.log(res.data.data);
-
-        setData(res.data.data);
-
-        const uniqueYears = [
-          ...new Set(res.data.data.map((item) => item.graduate_year)),
-        ];
-        const uniqueMajor = [
-          ...new Set(res.data.data.map((item) => item.major)),
-        ];
-
-        console.log(uniqueYears);
-        setYear(uniqueYears);
-        setMajor(uniqueMajor);
-      });
-  };
 
   // React.useEffect(() =>{
 
@@ -167,8 +218,33 @@ const DaftarAlumni = () => {
   }
 
   React.useEffect(() => {
-    getData();
+    let isMounted = true;
+    jwtAuthAxios
+      .get(`/admin-operator/alumni?search_query=${searchValue}`)
+      .then((res) => {
+        if (isMounted) {
+          setData(res.data.data);
+
+          const uniqueYears = [
+            ...new Set(res.data.data.map((item) => item.graduate_year)),
+          ];
+          const uniqueMajor = [
+            ...new Set(res.data.data.map((item) => item.major)),
+          ];
+
+          setYear(uniqueYears);
+          setMajor(uniqueMajor);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
   }, [searchBtn]);
+
+  useEffect(() => {
+    console.log(selectedEmails);
+    console.log(selectedPhoneNums);
+  }, [selectedEmails]);
 
   return (
     <Box>
@@ -262,6 +338,7 @@ const DaftarAlumni = () => {
               // whiteSpace: "nowrap",
               minWidth: 100,
             }}
+            onClick={handleExportButton}
           >
             <Box>Export</Box>
           </Button>
@@ -272,7 +349,7 @@ const DaftarAlumni = () => {
           <TableHead>
             <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
               <TableCell>
-                <Checkbox onClick={handleSelectAll} />
+                <Checkbox checked={selectAll} onChange={handleSelectAll} />
               </TableCell>
               <TableCell>No</TableCell>
               <TableCell>Full Name</TableCell>
@@ -289,9 +366,11 @@ const DaftarAlumni = () => {
               ? filterData()
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => <TableItem index={index} item={item} />)
-              : data.map((item, index) => (
-                  <TableItem index={index} item={item} />
-                ))}
+              : data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem index={index} item={item} />
+                  ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -301,7 +380,7 @@ const DaftarAlumni = () => {
           <TablePagination
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
-            count={data.length}
+            count={filterData().length > 0 ? filterData().length : data.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -314,6 +393,8 @@ const DaftarAlumni = () => {
       <Grid container justifyContent="flex-end">
         <Grid item>
           <Button
+            onClick={handleSendButton}
+            disabled={selectedEmails.length === 0}
             variant="contained"
             color="primary"
             sx={{
