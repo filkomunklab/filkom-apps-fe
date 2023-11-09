@@ -11,8 +11,8 @@ import operatorRoutes from "./operatorRoutes";
 // import advisorRoutes from "./advisorRoutes";
 // import coAdvisorRoutes from "./coAdvisorRoutes";
 // import dosenSkripsiRoutes from "./dosenSkripsiRoutes";
-import ketuaPenelisRoutes from "./ketuaPenelisRoutes";
-import anggotaPenelisRoutes from "./anggotaPenelisRoutes";
+// import ketuaPenelisRoutes from "./ketuaPenelisRoutes";
+// import anggotaPenelisRoutes from "./anggotaPenelisRoutes";
 import dosenPembimbingRoutes from "./BA-dosenPembimbingRoutes";
 import dekanRoutes from "./BA-dekanRoutes";
 import kepalaProgramStudiRoutes from "./BA-kepalaProgramStudiRoutes";
@@ -43,13 +43,12 @@ const routesForAuthenticatedOnly = [
   // ...advisorRoutes,
   // ...coAdvisorRoutes,
   // ...dosenSkripsiRoutes,
-  ...ketuaPenelisRoutes,
-  ...anggotaPenelisRoutes,
+  // ...ketuaPenelisRoutes,
+  // ...anggotaPenelisRoutes,
   // ...calonTamatanRoutes,
   ...dosenPembimbingRoutes,
   ...dekanRoutes,
   ...kepalaProgramStudiRoutes,
-  //...operatorRoutes,
   ...skripsiAppDekanRoutes,
   ...skripsiAppKaprodiRoutes,
   ...skripsiAppDosenRoutes,

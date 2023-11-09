@@ -12,6 +12,8 @@ import DaftarPengujianProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/Daft
 import DaftarPengujianSkripsiKetuaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianSkripsiKetuaPenelis";
 import DaftarPengujianSkripsiAnggotaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianSkripsiAnggotaPenelis";
 import ManajemenKelasDosenSkripsi from "app/pages/ThesisApps/Dosen/ManajemenKelasDosenSkripsi";
+import RiwayatBimbinganAdvisor from "app/pages/ThesisApps/Dosen/RiwayatBimbinganAdvisor";
+import RiwayatBimbinganCoAdvisor from "app/pages/ThesisApps/Dosen/RiwayatbimbinganCoAdvisor";
 
 const dosenRoutes = [
   // KOMITE
@@ -42,12 +44,20 @@ const dosenRoutes = [
     element: <Page component={DaftarBimbinganSkripsiAdvisor} />,
   },
   {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor",
+    element: <Page component={RiwayatBimbinganAdvisor} />,
+  },
+  {
     path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor",
     element: <Page component={DaftarBimbinganProposalCoAdvisor} />,
   },
   {
     path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-co-advisor",
     element: <Page component={DaftarBimbinganSkripsiCoAdvisor} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor",
+    element: <Page component={RiwayatBimbinganCoAdvisor} />,
   },
   // PENGUJIAN
   {

@@ -470,13 +470,13 @@ export const dekanMenus = [
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-bimbingan-advisor",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor",
             label: "RBimb Adv",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-bimbingan-co-advisor",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor",
             label: "RBimb Co-Adv",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
@@ -684,13 +684,13 @@ export const dosenMenus = [
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-bimbingan-advisor",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor",
             label: "RBimb Adv",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-bimbingan-co-advisor",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor",
             label: "RBimb Co-Adv",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
@@ -975,13 +975,13 @@ export const kaprodiMenus = [
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-bimbingan-advisor",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor",
             label: "RBimb Adv",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-bimbingan-co-advisor",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor",
             label: "RBimb Co-Adv",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
