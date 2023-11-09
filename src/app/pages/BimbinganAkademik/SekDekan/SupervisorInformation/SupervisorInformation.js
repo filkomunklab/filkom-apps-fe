@@ -4,10 +4,12 @@ import {
   Chip,
   FormControl,
   Grid,
+  Paper,
   InputLabel,
   ListSubheader,
   MenuItem,
   Select,
+  TableContainer,
   Table,
   TableBody,
   TableCell,
@@ -117,6 +119,12 @@ const SupervisorInformation = () => {
               "&:hover": {
                 backgroundColor: "#E5F0FF",
               },
+              "@media (max-width: 390px)": {
+                width: "90%",
+                "& .MuiCardHeader-title": {
+                  fontSize: "17px",
+                },
+              },
             }}
             onClick={() =>
               navigate(
@@ -128,10 +136,26 @@ const SupervisorInformation = () => {
               <Grid item>
                 <CardHeader title="Informatics Supervisor " />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
+                  <Typography
+                    variant="h3"
+                    color="#006AF5"
+                    sx={{
+                      fontSize: "20px",
+                      "@media (max-width: 390px)": {
+                        fontSize: "13px",
+                      },
+                    }}
+                  >
                     {`11 people`}
                   </Typography>
-                  <Typography variant="caption">
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      "@media (max-width: 390px)": {
+                        fontSize: "11px",
+                      },
+                    }}
+                  >
                     {`last updated: 11 September 2023`}
                   </Typography>
                 </CardContent>
@@ -149,6 +173,12 @@ const SupervisorInformation = () => {
               cursor: "pointer",
               "&:hover": {
                 backgroundColor: "#E5F0FF",
+              },
+              "@media (max-width: 390px)": {
+                width: "90%",
+                "& .MuiCardHeader-title": {
+                  fontSize: "17px",
+                },
               },
             }}
             onClick={() =>
@@ -161,10 +191,26 @@ const SupervisorInformation = () => {
               <Grid item>
                 <CardHeader title="Information System Supervisor" />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
+                  <Typography
+                    variant="h3"
+                    color="#006AF5"
+                    sx={{
+                      fontSize: "20px",
+                      "@media (max-width: 390px)": {
+                        fontSize: "13px",
+                      },
+                    }}
+                  >
                     {`12 people`}
                   </Typography>
-                  <Typography variant="caption">
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      "@media (max-width: 390px)": {
+                        fontSize: "11px",
+                      },
+                    }}
+                  >
                     {`last updated: 11 September 2023`}
                   </Typography>
                 </CardContent>
@@ -183,6 +229,12 @@ const SupervisorInformation = () => {
               "&:hover": {
                 backgroundColor: "#E5F0FF",
               },
+              "@media (max-width: 390px)": {
+                width: "90%",
+                "& .MuiCardHeader-title": {
+                  fontSize: "17px",
+                },
+              },
             }}
             onClick={() =>
               navigate(
@@ -194,10 +246,26 @@ const SupervisorInformation = () => {
               <Grid item>
                 <CardHeader title="Information Technology Supervisor " />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
+                  <Typography
+                    variant="h3"
+                    color="#006AF5"
+                    sx={{
+                      fontSize: "18px",
+                      "@media (max-width: 390px)": {
+                        fontSize: "13px",
+                      },
+                    }}
+                  >
                     {`8 people`}
                   </Typography>
-                  <Typography variant="caption">
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      "@media (max-width: 390px)": {
+                        fontSize: "11px",
+                      },
+                    }}
+                  >
                     {`last updated: 11 September 2023`}
                   </Typography>
                 </CardContent>
@@ -250,32 +318,37 @@ const SupervisorInformation = () => {
             </Button>
           </Link>
         </Grid>
-        <Grid item xs={12} paddingTop={4}>
-          <Table>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
-        </Grid>{" "}
         <Grid
+          sx={{ width: "100%", overflow: "hidden" }}
           item
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "flex-end",
-            "@media (max-width: 650px)": { justifyContent: "flex-start" },
-          }}
+          xs={12}
+          paddingTop={4}
         >
+          <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
           <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
             rowsPerPageOptions={[10, 25, 50, 100]}
-            component={"div"}
+            component="div"
             count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
@@ -289,7 +362,10 @@ const SupervisorInformation = () => {
 };
 
 const TableHeading = ({ index }) => {
-  const style = { fontWeight: 400 };
+  const style = {
+    fontWeight: 400,
+    "@media (max-width: 650px)": { fontSize: "13px" },
+  };
   return (
     <TableRow sx={{ backgroundColor: "#1A38601A" }}>
       <TableCell sx={[style]}>No</TableCell>
@@ -323,28 +399,37 @@ const TableItem = ({ item, index }) => {
         console.log("Path not found");
     }
   };
+
+  const rowStyle = {
+    "@media (max-width: 650px)": { fontSize: "11px" },
+  };
   return (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{`022407712`}</TableCell>
+      <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
+      <TableCell sx={[rowStyle]}>{`022407712`}</TableCell>
       <TableCell>
         <Button
           name="profile"
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            textTransform: "capitalize",
+            "@media (max-width: 650px)": { fontSize: "11px" },
+          }}
           onClick={handleButtonNavigate}
         >{`Yuhu, Christopher Darell`}</Button>
       </TableCell>
-      <TableCell>{`Informatika`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`Informatika`}</TableCell>
       <TableCell>
         <Button
-          name="history"
           onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
         >
           View History
         </Button>
       </TableCell>
-      <TableCell>{`25`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`25`}</TableCell>
     </TableRow>
   );
 };
