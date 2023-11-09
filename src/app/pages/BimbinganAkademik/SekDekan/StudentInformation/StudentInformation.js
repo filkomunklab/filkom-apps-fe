@@ -342,7 +342,6 @@ const StudentInformation = () => {
               </TableBody>
             </Table>
           </TableContainer>
-
           <TablePagination
             sx={{
               width: "100%",
