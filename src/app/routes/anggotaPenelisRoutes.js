@@ -17,89 +17,88 @@ import MengisiBeritaAcaraProposalKetuaPenelis2 from "app/pages/ThesisApps/Dosen/
 import DocumentRevisiProposalKetuaPenelis2 from "app/pages/ThesisApps/Dosen/DocumentRevisiProposalKetuaPenelis2";
 
 const anggotaPenelisRoutes = [
-  {
-    // Daftar Pengujian Proposal Anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-proposal-anggota",
-    element: <Page component={DaftarPengujianProposalAnggotaPenelis} />,
-  },
-  {
-    // Daftar Pengujian Skripsi Anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-skripsi-anggota",
-    element: <Page component={DaftarPengujianSkripsiAnggotaPenelis} />,
-  },
-  {
-    // Daftar Riwayat Anggota Penelis
-    path: "/sistem-informasi-skripsi/riwayat-uji-anggota",
-    element: <Page component={RiwayatPengujianAnggotaPenelis} />,
-  },
-
+  // {
+  //   // Daftar Pengujian Proposal Anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-proposal-anggota",
+  //   element: <Page component={DaftarPengujianProposalAnggotaPenelis} />,
+  // },
+  // {
+  //   // Daftar Pengujian Skripsi Anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-skripsi-anggota",
+  //   element: <Page component={DaftarPengujianSkripsiAnggotaPenelis} />,
+  // },
+  // {
+  //   // Daftar Riwayat Anggota Penelis
+  //   path: "/sistem-informasi-skripsi/riwayat-uji-anggota",
+  //   element: <Page component={RiwayatPengujianAnggotaPenelis} />,
+  // },
   // PROPOSAL
-  {
-    // Beranda proposal Anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-proposal-anggota/beranda",
-    element: <Page component={BerandaProposalMahasiswa} />,
-  },
-  {
-    // Beranda proposal Anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-proposal-anggota/konsultasi",
-    element: <Page component={BuatKonsultasiAdvisor} />,
-  },
-  {
-    // dokumen proposal Anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-proposal-anggota/dokumen-proposal",
-    element: <Page component={DocumentPersetujuanDosenPembimbing} />,
-  },
-  {
-    // Berita acara proposal Anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-proposal-anggota/berita-acara-proposal",
-    element: <Page component={MengisiBeritaAcaraProposalKetuaPenelis} />,
-  },
-  {
-    // dokumen revisi proposal Anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-proposal-anggota/dokumen-revisi-proposal",
-    element: <Page component={DocumentRevisiProposalKetuaPenelis} />,
-  },
+  // {
+  //   // Beranda proposal Anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-proposal-anggota/beranda",
+  //   element: <Page component={BerandaProposalMahasiswa} />,
+  // },
+  // {
+  //   // Beranda proposal Anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-proposal-anggota/konsultasi",
+  //   element: <Page component={BuatKonsultasiAdvisor} />,
+  // },
+  // {
+  //   // dokumen proposal Anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-proposal-anggota/dokumen-proposal",
+  //   element: <Page component={DocumentPersetujuanDosenPembimbing} />,
+  // },
+  // {
+  //   // Berita acara proposal Anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-proposal-anggota/berita-acara-proposal",
+  //   element: <Page component={MengisiBeritaAcaraProposalKetuaPenelis} />,
+  // },
+  // {
+  //   // dokumen revisi proposal Anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-proposal-anggota/dokumen-revisi-proposal",
+  //   element: <Page component={DocumentRevisiProposalKetuaPenelis} />,
+  // },
   // SKRIPSI
-  {
-    // Beranda skripsi anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-skripsi-anggota/beranda",
-    element: <Page component={BerandaSkripsiMahasiswa} />,
-  },
-  {
-    // Konsultasi anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-skripsi-anggota/konsultasi",
-    element: <Page component={BuatKonsultasiAdvisor2} />,
-  },
-  {
-    //  document proposal anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-skripsi-anggota/dokumen-proposal",
-    element: <Page component={DocumentPersetujuanDosenPembimbingProposal2} />,
-  },
-  {
-    //  berita acara proposal anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-skripsi-anggota/berita-acara-proposal",
-    element: <Page component={MengisiBeritaAcaraProposalKetuaPenelis2} />,
-  },
-  {
-    // document revisi proposal anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-skripsi-anggota/dokumen-revisi-proposal",
-    element: <Page component={DocumentRevisiProposalKetuaPenelis2} />,
-  },
-  {
-    // dokumen skripsi Anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-skripsi-anggota/dokumen-skripsi",
-    element: <Page component={DocumentPersetujuanDosenPembimbingSkripsi} />,
-  },
-  {
-    // berita acara skripsi Anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-skripsi-anggota/berita-acara-skripsi",
-    element: <Page component={MengisiBeritaAcaraSkripsiKetuaPenelis} />,
-  },
-  {
-    // dokumen revisi skripsi Anggota Penelis
-    path: "/sistem-informasi-skripsi/uji-skripsi-anggota/dokumen-revisi-skripsi",
-    element: <Page component={DocumentRevisiSkripsiKetuaPenelis} />,
-  },
+  // {
+  //   // Beranda skripsi anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-skripsi-anggota/beranda",
+  //   element: <Page component={BerandaSkripsiMahasiswa} />,
+  // },
+  // {
+  //   // Konsultasi anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-skripsi-anggota/konsultasi",
+  //   element: <Page component={BuatKonsultasiAdvisor2} />,
+  // },
+  // {
+  //   //  document proposal anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-skripsi-anggota/dokumen-proposal",
+  //   element: <Page component={DocumentPersetujuanDosenPembimbingProposal2} />,
+  // },
+  // {
+  //   //  berita acara proposal anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-skripsi-anggota/berita-acara-proposal",
+  //   element: <Page component={MengisiBeritaAcaraProposalKetuaPenelis2} />,
+  // },
+  // {
+  //   // document revisi proposal anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-skripsi-anggota/dokumen-revisi-proposal",
+  //   element: <Page component={DocumentRevisiProposalKetuaPenelis2} />,
+  // },
+  // {
+  //   // dokumen skripsi Anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-skripsi-anggota/dokumen-skripsi",
+  //   element: <Page component={DocumentPersetujuanDosenPembimbingSkripsi} />,
+  // },
+  // {
+  //   // berita acara skripsi Anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-skripsi-anggota/berita-acara-skripsi",
+  //   element: <Page component={MengisiBeritaAcaraSkripsiKetuaPenelis} />,
+  // },
+  // {
+  //   // dokumen revisi skripsi Anggota Penelis
+  //   path: "/sistem-informasi-skripsi/uji-skripsi-anggota/dokumen-revisi-skripsi",
+  //   element: <Page component={DocumentRevisiSkripsiKetuaPenelis} />,
+  // },
 ];
 
 export default anggotaPenelisRoutes;

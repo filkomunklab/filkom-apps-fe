@@ -18,6 +18,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router";
 
 const DaftarPengajuanProposalDosenSkripsi = () => {
   const [daftarPengajuanProposal, setDaftarPengajuanProposal] = useState({
@@ -487,7 +488,7 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
                         <TableCell>
                           <Typography
                             component={Link}
-                            to="/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/beranda/${proposal.id}"
+                            to={`/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/beranda/234987/dosen-skripsi`}
                             sx={{
                               textDecoration: "none",
                               color: "blue",

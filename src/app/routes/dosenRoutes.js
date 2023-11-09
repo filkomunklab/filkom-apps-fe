@@ -15,15 +15,15 @@ import DaftarPengajuanSkripsiKaprodi from "app/pages/ThesisApps/Dosen/DaftarPeng
 
 const dosenRoutes = [
   // Thesis Apps Dosen
-  {
-    // !!! belum ada isi
-    // path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen",
-    // element: <Page component={DaftarDosen} />,
-  },
-  {
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen",
-    element: <Page component={DaftarKomiteJudulDosen} />,
-  },
+  // {
+  //   // !!! belum ada isi
+  //   // path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen",
+  //   // element: <Page component={DaftarDosen} />,
+  // },
+  // {
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen",
+  //   element: <Page component={DaftarKomiteJudulDosen} />,
+  // },
   // {
   //   path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen/pengajuan-judul",
   //   element: <Page component={PengajuanJudulDosen} />,
@@ -34,28 +34,27 @@ const dosenRoutes = [
   //   path: "/sistem-informasi-skripsi/komite-judul-dosen",
   //   element: <Page component={DaftarPengajuanJudulDosen} />,
   // },
-
   // user dekan
-  {
-    // daftar pengajuan judul dekan
-    path: "/sistem-informasi-skripsi/pengajuan-judul-dekan",
-    element: <Page component={DaftarPengajuanJudulDekan} />,
-  },
-  {
-    // daftar pengajuan proposal dekan
-    path: "/sistem-informasi-skripsi/pengajuan-proposal-dekan",
-    element: <Page component={DaftarPengajuanProposalDekan} />,
-  },
-  {
-    // daftar pengajuan skripsi dekan
-    path: "/sistem-informasi-skripsi/pengajuan-skripsi-dekan",
-    element: <Page component={DaftarPengajuanSkripsiDekan} />,
-  },
-  {
-    // daftar pengajuan riwayat dekan
-    path: "/sistem-informasi-skripsi/riwayat-dekan",
-    element: <Page component={RiwayatSkripsiDekan} />,
-  },
+  // {
+  //   // daftar pengajuan judul dekan
+  //   path: "/sistem-informasi-skripsi/pengajuan-judul-dekan",
+  //   element: <Page component={DaftarPengajuanJudulDekan} />,
+  // },
+  // {
+  //   // daftar pengajuan proposal dekan
+  //   path: "/sistem-informasi-skripsi/pengajuan-proposal-dekan",
+  //   element: <Page component={DaftarPengajuanProposalDekan} />,
+  // },
+  // {
+  //   // daftar pengajuan skripsi dekan
+  //   path: "/sistem-informasi-skripsi/pengajuan-skripsi-dekan",
+  //   element: <Page component={DaftarPengajuanSkripsiDekan} />,
+  // },
+  // {
+  //   // daftar pengajuan riwayat dekan
+  //   path: "/sistem-informasi-skripsi/riwayat-dekan",
+  //   element: <Page component={RiwayatSkripsiDekan} />,
+  // },
 ];
 
 export default dosenRoutes;

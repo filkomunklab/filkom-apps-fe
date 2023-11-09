@@ -27,6 +27,7 @@ import GavelIcon from "@mui/icons-material/Gavel";
 import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { DownloadDone, Mail } from "@mui/icons-material";
+import { useParams } from "react-router";
 
 const DaftarPengajuanJudulDosenSkripsi = () => {
   const [daftarPengajuanJudul, setDaftarPengajuanJudul] = useState({

@@ -4,7 +4,7 @@ import Page from "@jumbo/shared/Page";
 import JadwalSidang from "app/pages/ThesisApps/Sekertaris/JadwalSidang";
 import JadwalSidangProposal from "app/pages/ThesisApps/Sekertaris/JadwalSidangProposal";
 import ManajemenDosenSkripsi from "app/pages/ThesisApps/Sekertaris/ManajemenDosenSkripsi";
-import PerbaruiJadwalSidang from "app/pages/ThesisApps/Sekertaris/PerbaruiJadwalSidang";
+import PerbaruiJadwalSidang from "app/pages/ThesisApps/Sekertaris/PerbaruiJadwalSidangProposal";
 import PengajuanJudulDiterima from "app/pages/ThesisApps/Mahasiswa/PengajuanJudulDiterima";
 import DaftarPengajuanProposalSekertaris from "app/pages/ThesisApps/Sekertaris/DaftarPengajuanProposalSekertaris";
 import DaftarPengajuanSkripsiSekertaris from "app/pages/ThesisApps/Sekertaris/DaftarPengajuanSkripsiSekertaris";

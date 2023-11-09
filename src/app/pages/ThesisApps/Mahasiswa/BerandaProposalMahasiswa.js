@@ -10,16 +10,29 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import MenuAdvisorProposal from "app/shared/MenuHorizontal/MenuAdvisorProposal";
+import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPanalisProposal";
+import MenuCoAdvisorProposal from "app/shared/MenuHorizontal/MenuCoAdvisorProposal";
+import MenuKaprodiProposal from "app/shared/MenuHorizontal/MenuKaprodiProposal";
+import MenuKetuaPanalisProposal from "app/shared/MenuHorizontal/MenuKetuaPanalisProposal";
+import MenuKetuaPanelisSkripsi from "app/shared/MenuHorizontal/MenuKetuaPanalisSkripsi";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const BerandaProposalMahasiswa = () => {
   const [mahasiswaData, setMahasiswaData] = useState(null);
-  const [submissionData, setSubmissionData] = useState(null);
+
+  const pengajuanProposal = [
+    {
+      title:
+        "PENGEMBANGAN SISTEM INFORMASI SKRIPSI DI FAKULTAS ILMU KOMPUTER UNIVERSITAS KLABAT",
+    },
+  ];
 
   const dataKelompokMahasiswa = [
     {
@@ -85,35 +98,40 @@ const BerandaProposalMahasiswa = () => {
   const token = localStorage.getItem("token");
   console.log("token", token);
 
-  const { id } = JSON.parse(localStorage.getItem("user"));
-  console.log(id);
+  // const { id } = JSON.parse(localStorage.getItem("user"));
+  const roleTest = useParams().role;
+  console.log(roleTest);
+
+  // const idTest = useParams().id;
+  // const roleTest = useParams().role;
+  // console.log(idTest, roleTest);
 
   const { role } = JSON.parse(localStorage.getItem("user"));
   // const role = ["ADVISOR", "DOSEN"];
   console.log(role);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:2000/api/v1/group/submission_details/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // Atur state 'setMahasiswaData' dengan data dari respons
-        setMahasiswaData(response.data.data);
-      } catch (error) {
-        console.error(
-          "Terjadi kesalahan saat mengambil data mahasiswa:",
-          error
-        );
-      }
-    };
-    fetchData();
-  }, [token, id]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://localhost:2000/api/v1/group/submission_details/${id}`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //       );
+  //       // Atur state 'setMahasiswaData' dengan data dari respons
+  //       setMahasiswaData(response.data.data);
+  //     } catch (error) {
+  //       console.error(
+  //         "Terjadi kesalahan saat mengambil data mahasiswa:",
+  //         error
+  //       );
+  //     }
+  //   };
+  //   fetchData();
+  // }, [token, id]);
 
   return (
     <Div>
@@ -166,43 +184,62 @@ const BerandaProposalMahasiswa = () => {
             borderRadius: "8px",
           }}
         >
-          {/* Menu Horizontal Mahasiswa Start */}
+          {/* DOSEN SKRIPSI */}
           <Div
-            hidden={role.includes("MAHASISWA") ? false : true}
+            hidden={role.includes("DOSEN") ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa />
+            <MenuKetuaPanelisSkripsi />
           </Div>
-          {/* Menu horizontal MahasiswaEnd */}
-          {/* Menu Horizontal Dosen Start */}
+          {/* ADVISOR */}
           <Div
-            hidden={
-              role.includes(
-                "DOSEN",
-                "ADVISOR",
-                "CO_ADVISOR",
-                "DOSEN_SKRIPSI",
-                "KETUA_PANALIS",
-                "ANGGOTA_PANALIS",
-                "KAPRODI",
-                "DEKAN"
-              )
-                ? false
-                : true
-            }
+            hidden={role.includes("ADVISOR") ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuPenguji />
+            <MenuAdvisorProposal />
           </Div>
-          {/* Menu horizontal Dosen End */}
-          {/* Menu Horizontal Dosen Start */}
+          {/* CO_ADVISOR */}
+          <Div
+            hidden={role.includes("CO_ADVISOR") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuCoAdvisorProposal />
+          </Div>
+          {/* KETUA PANALIS */}
+          <Div
+            hidden={role.includes("KETUA_PANALIS") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKetuaPanalisProposal />
+          </Div>
+          {/* ANGGOTA PANALIS */}
+          <Div
+            hidden={role.includes("ANGGOTA_PANALIS") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAnggotaPanalisProposal />
+          </Div>
+          {/* KAPRODI */}
+          {/* <Div
+            hidden={role.includes("KAPRODI") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKaprodiProposal />
+          </Div> */}
+          {/* SEKERTARIS */}
           <Div
             hidden={role.includes("SEKERTARIS") ? false : true}
             sx={{ width: "100%" }}
           >
             <MenuSekertaris />
           </Div>
-          {/* Menu horizontal Dosen End */}
+          {/* MAHASISWA */}
+          <Div
+            hidden={role.includes("MAHASISWA") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuMahasiswa />
+          </Div>
           <Div
             sx={{
               display: "flex",
@@ -217,24 +254,25 @@ const BerandaProposalMahasiswa = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
-              }}
-            >
-              PENGEMBANGAN SISTEM INFORMASI SKRIPSI DI FAKULTAS ILMU KOMPUTER
-              UNIVERSITAS KLABAT
-            </Typography>
-
+            {pengajuanProposal.map((judul) => (
+              <Typography
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  padding: "24px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "10px",
+                  color: "#192434",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  borderRadius: "6px",
+                  fontSize: "12px",
+                  fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+                }}
+              >
+                {judul.title}
+              </Typography>
+            ))}
             {/* Table Start*/}
 
             <Div

@@ -5,26 +5,36 @@ import DaftarPengajuanJudulKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarPeng
 import DaftarPengajuanProposalKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarPengajuanProposalKaprodi";
 
 const kaprodiRoutes = [
+  /*================================================================================================================*/
+  // KAPRODI
+
+  // DAFTAR
   {
-    // daftar pengajuan judul kaprodi
+    // Daftar Pengajuan Judul Kaprodi
     path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-kaprodi",
     element: <Page component={DaftarPengajuanJudulKaprodi} />,
   },
   {
-    // daftar pengajuan proposal karpodi
+    // Daftar Pengajuan Proposal Karpodi
     path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-kaprodi",
     element: <Page component={DaftarPengajuanProposalKaprodi} />,
   },
   {
-    // daftar pengajuan Skripsi kaprodi
+    // Daftar Pengajuan Skripsi Kaprodi
     path: "/sistem-informasi-skripsi/pengajuan-skripsi-kaprodi",
     element: <Page component={DaftarPengajuanSkripsiKaprodi} />,
   },
+
+  // RIWAYAT
   {
-    // daftar pengajuan riwayat kaprodi
+    // Daftar Pengajuan Riwayat Kaprodi
     path: "/sistem-informasi-skripsi/riwayat-kaprodi",
     element: <Page component={RiwayatSkripsiKaprodi} />,
   },
+
+  // PROPOSAL
+
+  // SKRIPSI
 ];
 
 export default kaprodiRoutes;

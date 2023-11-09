@@ -18,6 +18,7 @@ const MenuPenguji = () => {
   let BerandaLink;
   let KonsultasiLInk;
   let PengajuanJudulLink;
+  let DokumenProposalLink;
 
   // PROGRAM KONDISI UNTUK SEMUA ROLL DOSEN
   switch (role[0]) {
@@ -25,23 +26,36 @@ const MenuPenguji = () => {
       console.log("same");
       BerandaLink =
         "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/beranda";
+      PengajuanJudulLink =
+        "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/pengajuan-judul";
+      KonsultasiLInk =
+        "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/konsultasi";
+      DokumenProposalLink =
+        "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-proposal";
+
       break;
     case ROLES.DEKAN:
+      console.log("dekan");
       BerandaLink = "";
       KonsultasiLInk = "";
       break;
 
+    case ROLES.KAPRODI:
+      console.log("kaprodi");
+      BerandaLink = "";
     default:
       console.log("default");
-      BerandaLink = "";
   }
 
   // PROGRAM KONDISI UNTUK 3 ROLL DOSEN SKRIPSI, KAPRODI DAN DEKAN
   switch (role) {
     case ROLES.DOSEN:
+      console.log("same roll pengajuan judul");
+
     case ROLES.DEKAN:
     case ROLES.KAPRODI:
       isPengajuanJudulHidden = false;
+      break;
     default:
       isPengajuanJudulHidden = true;
   }
@@ -219,8 +233,26 @@ const MenuPenguji = () => {
           </Div>
           <Div sx={{ margin: "auto" }}>
             {/* DOSEN SKRIPSI */}
+            {/* <Div hidden={isPengajuanJudulHidden}>
+              <Link to={PengajuanJudulLink}>
+                <Button
+                  sx={{
+                    fontSize: "13px",
+                    padding: "6px 16px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Pengajuan Judul
+                </Button>
+              </Link>
+            </Div> */}
             <Div hidden={role.includes("DOSEN") ? false : true}>
-              <Link to="/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/pengajuan-judul">
+              <Link to={PengajuanJudulLink}>
                 <Button
                   sx={{
                     fontSize: "13px",
@@ -298,7 +330,7 @@ const MenuPenguji = () => {
           <Div sx={{ margin: "auto" }}>
             {/* dosen skripsi */}
             <Div hidden={role.includes("DOSEN") ? false : true}>
-              <Link to="/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/konsultasi">
+              <Link to={KonsultasiLInk}>
                 <Button
                   sx={{
                     // width: "130px",
@@ -315,6 +347,24 @@ const MenuPenguji = () => {
                 </Button>
               </Link>
             </Div>
+            {/* <Div hidden={role.includes("DOSEN") ? false : true}>
+              <Link to="/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/konsultasi">
+                <Button
+                  sx={{
+                    // width: "130px",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    color: "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#006AF5",
+                    },
+                  }}
+                >
+                  Konsultasi
+                </Button>
+              </Link>
+            </Div> */}
             {/* dosen ADVISOR */}
             <Div hidden={role.includes("ADVISOR") ? false : true}>
               <Link to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/konsultasi">
@@ -392,7 +442,7 @@ const MenuPenguji = () => {
               </Link>
             </Div>
             {/* dosen kaprodi */}
-            <Div hidden={role.includes("KAPRODI") ? false : true}>
+            {/* <Div hidden={role.includes("KAPRODI") ? false : true}>
               <Link to="#">
                 <Button
                   sx={{
@@ -409,7 +459,7 @@ const MenuPenguji = () => {
                   Konsultasi
                 </Button>
               </Link>
-            </Div>
+            </Div> */}
             {/* dosen DEKAN */}
             <Div hidden={role.includes("DEKAN") ? false : true}>
               <Link to="#">
@@ -461,7 +511,7 @@ const MenuPenguji = () => {
               {/* DOSEN DOSEN_SKRIPSI */}
               <Div hidden={role.includes("DOSEN") ? false : true}>
                 <Link
-                  to="/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-proposal"
+                  to={DokumenProposalLink}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem onClick={() => setAnchorEl(null)}>

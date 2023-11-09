@@ -293,7 +293,7 @@ const JadwalSidang = ({
   );
 };
 
-const PerbaruiJadwalSidang = () => {
+const PerbaruiJadwalSidangProposal = () => {
   const [ketuaPenelis, setKetuaPenelis] = useState("-");
   const [anggotaPenelis, setAnggotaPenelis] = useState("-");
   const [startTime, setStartTime] = useState("-");
@@ -597,4 +597,4 @@ const PerbaruiJadwalSidang = () => {
   );
 };
 
-export default PerbaruiJadwalSidang;
+export default PerbaruiJadwalSidangProposal;

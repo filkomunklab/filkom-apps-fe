@@ -392,7 +392,7 @@ export const dekanMenus = [
         icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/pengajuan-skripsi-dekan",
+        uri: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dekan",
         label: "Pengajuan Skripsi",
         type: "nav-item",
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
@@ -672,13 +672,13 @@ export const dosenMenus = [
             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/bimbingan-skripsi-advisor",
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor",
             label: "BSkrip Adv",
             type: "nav-item",
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/bimbingan-skripsi-co-advisor",
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-co-advisor",
             label: "BSkrip Co-Adv",
             type: "nav-item",
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
@@ -715,13 +715,13 @@ export const dosenMenus = [
             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/uji-skripsi-ketua",
+            uri: "/sistem-informasi-skripsi/daftar-uji-skripsi-ketua",
             label: "Uji Skripsi Ketua",
             type: "nav-item",
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/uji-skripsi-anggota",
+            uri: "/sistem-informasi-skripsi/daftar-uji-skripsi-anggota",
             label: "Uji Skripsi Anggota",
             type: "nav-item",
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,

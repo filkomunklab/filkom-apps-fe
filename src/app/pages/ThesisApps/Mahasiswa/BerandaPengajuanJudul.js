@@ -17,6 +17,32 @@ import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import React from "react";
 
 const BerandaPengajuanJudul = () => {
+  const pengajuanJudul = [
+    {
+      title:
+        "PENGEMBANGAN SISTEM INFORMASI SKRIPSI DI FAKULTAS ILMU KOMPUTER UNIVERSITAS KLABAT",
+    },
+  ];
+
+  const dataKelompokMahasiswa = [
+    {
+      namaLengkap: "Geovalga Fransiscus Lim",
+      nim: "105021910051",
+      programStudi: "Informatika",
+    },
+    {
+      namaLengkap: "Frances Rully Yong",
+      nim: "105021910051",
+      programStudi: "Informatika",
+    },
+  ];
+
+  const dataStatusRevisiJudul = [
+    {
+      ketuaPenelis: "Waiting",
+    },
+  ];
+
   const { role } = JSON.parse(localStorage.getItem("user"));
   // const role = ["ADVISOR", "DOSEN"];
   console.log(role);
@@ -102,24 +128,25 @@ const BerandaPengajuanJudul = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
-              }}
-            >
-              PENGEMBANGAN SISTEM INFORMASI SKRIPSI DI FAKULTAS ILMU KOMPUTER
-              UNIVERSITAS KLABAT
-            </Typography>
-
+            {pengajuanJudul.map((judul) => (
+              <Typography
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  padding: "24px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "10px",
+                  color: "#192434",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  borderRadius: "6px",
+                  fontSize: "12px",
+                  fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+                }}
+              >
+                {judul.title}
+              </Typography>
+            ))}
             {/* Table Start*/}
 
             <Div
@@ -153,18 +180,14 @@ const BerandaPengajuanJudul = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>Geovalga Fransiscus Lim</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>2</TableCell>
-                      <TableCell>Frances Rully Yong</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
+                    {dataKelompokMahasiswa.map((data, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{data.namaLengkap}</TableCell>
+                        <TableCell>{data.nim}</TableCell>
+                        <TableCell>{data.programStudi}</TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -190,18 +213,72 @@ const BerandaPengajuanJudul = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>
-                        <Chip
-                          label="Menunggu"
-                          sx={{
-                            background: "rgba(255, 204, 0, 0.10)",
-                            color: "#985211",
-                          }}
-                        />
-                      </TableCell>
-                    </TableRow>
+                    {dataStatusRevisiJudul.map((statusPersetujuan, index) => (
+                      <TableRow>
+                        <TableCell>1</TableCell>
+                        <TableCell>
+                          {statusPersetujuan.ketuaPenelis === "Waiting" ? (
+                            <Chip
+                              label={"Menunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : statusPersetujuan.ketuaPenelis === "Approve" ? (
+                            <Chip
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : statusPersetujuan.ketuaPenelis === "Rejected" ? (
+                            <Chip
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            statusPersetujuan.ketuaPenelis
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {statusPersetujuan.anggotaPenelis === "Belum" ? (
+                            <Chip label={"Belum"} />
+                          ) : statusPersetujuan.anggotaPenelis === "Waiting" ? (
+                            <Chip
+                              label={"Menunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : statusPersetujuan.anggotaPenelis === "Approve" ? (
+                            <Chip
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : statusPersetujuan.anggotaPenelis ===
+                            "Rejected" ? (
+                            <Chip
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            statusPersetujuan.anggotaPenelis
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>

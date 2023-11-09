@@ -16,33 +16,35 @@ import UploadSkipsi from "app/pages/ThesisApps/Mahasiswa/UploadSkripsi";
 import UploadRevisiProposal from "app/pages/ThesisApps/Mahasiswa/UploadRevisiProposal";
 
 const mahasiswaRoutes = [
+  /*================================================================================================================*/
+  //  MAHASISWA
+
+  // DAFTAR
   {
-    // Thesis Apps Mahasiswa
+    // Daftar Pengajuan Mahasiswa
     path: "/sistem-informasi-skripsi/daftar-pengajuan",
     element: <Page component={DaftarPengajuan} />,
   },
+
+  // MENU
   {
+    // router untuk beranda pengajuan judul
+    path: "/sistem-informasi-skripsi/daftar-pengajuan/beranda",
+    element: <Page component={BerandaPengajuanJudul} />,
+  },
+  {
+    // Beranda Skripsi Mahasiswa
     path: "/sistem-informasi-skripsi/daftar-pengajuan/beranda-pengajuan-skripsi",
     element: <Page component={BerandaPengajuanSkripsi} />,
   },
-  // beranda pengajuan proposal dan skripsi = sama (hanya ganti isisan)
   {
-    // router untuk konsultasi
+    // konsultasi
     path: "/sistem-informasi-skripsi/daftar-pengajuan/konsultasi",
     element: <Page component={Konsultasi} />,
   },
   {
     path: "/sistem-informasi-skripsi/daftar-pengajuan/pengajuan-judul",
     element: <Page component={PengajuanJudul} />,
-  },
-  // {
-  //   path: "/sistem-informasi-skripsi/daftar-pengajuan/pengajuan-judul-diterima",
-  //   element: <Page component={PengajuanJudulDiterima} />,
-  // },
-  {
-    // router untuk beranda pengajuan judul
-    path: "/sistem-informasi-skripsi/daftar-pengajuan/beranda",
-    element: <Page component={BerandaPengajuanJudul} />,
   },
   {
     // router untuk Upload Proposal

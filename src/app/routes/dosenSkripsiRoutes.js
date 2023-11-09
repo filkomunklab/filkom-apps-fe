@@ -76,43 +76,43 @@ const dosenSkripsiRoutes = [
   // },
 
   //PENGAJUAN JUDUL
-  {
-    // beranda mahasiswa pengajuan judul
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/beranda",
-    element: <Page component={BerandaPengajuanJudul} />,
-  },
-  {
-    // pengajuan judul mahasiswa
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/pengajuan-judul",
-    element: <Page component={PengajuanJudulDosenSkripsi} />,
-  },
+  // {
+  //   // beranda mahasiswa pengajuan judul
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/beranda",
+  //   element: <Page component={BerandaPengajuanJudul} />,
+  // },
+  // {
+  //   // pengajuan judul mahasiswa
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/pengajuan-judul",
+  //   element: <Page component={PengajuanJudulDosenSkripsi} />,
+  // },
 
   // PROPOSAL
-  {
-    // Beranda Mahasiswa proposal
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/beranda/:id",
-    element: <Page component={BerandaProposalMahasiswa} />,
-  },
-  {
-    // Pengajuan Judul Mahasiswa
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/pengajuan-judul",
-    element: <Page component={PengajuanJudulDiterimaDosenSkripsi} />,
-  },
-  {
-    // konsultasi mahasiswa proposal
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/konsultasi",
-    element: <Page component={BuatKonsultasiAdvisor} />,
-  },
-  {
-    // dokumen proposal
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-proposal",
-    element: <Page component={DocumentPersetujuanDosenPembimbing} />,
-  },
-  {
-    // dokuemn revisi proposal
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-revisi-proposal",
-    element: <Page component={DocumentRevisiProposalKetuaPenelis} />,
-  },
+  // {
+  //   // Beranda Mahasiswa proposal
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/beranda/:id",
+  //   element: <Page component={BerandaProposalMahasiswa} />,
+  // },
+  // {
+  //   // Pengajuan Judul Mahasiswa
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/pengajuan-judul",
+  //   element: <Page component={PengajuanJudulDiterimaDosenSkripsi} />,
+  // },
+  // {
+  //   // konsultasi mahasiswa proposal
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/konsultasi",
+  //   element: <Page component={BuatKonsultasiAdvisor} />,
+  // },
+  // {
+  //   // dokumen proposal
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-proposal",
+  //   element: <Page component={DocumentPersetujuanDosenPembimbing} />,
+  // },
+  // {
+  //   // dokuemn revisi proposal
+  //   path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/dokumen-revisi-proposal",
+  //   element: <Page component={DocumentRevisiProposalKetuaPenelis} />,
+  // },
 
   // // SKRIPSI
   // {
