@@ -33,6 +33,7 @@ import RiwayatBimbinganAdvisor from "app/pages/ThesisApps/Dosen/RiwayatBimbingan
 import RiwayatPengujianAnggotaPenelis from "app/pages/ThesisApps/Dosen/RiwayatPengujianAnggotaPenelis";
 import RiwayatPengujianKetuaPenelis from "app/pages/ThesisApps/Dosen/RiwayatPengujianKetuaPenelis";
 import RiwayatBimbinganCoAdvisor from "app/pages/ThesisApps/Dosen/RiwayatbimbinganCoAdvisor";
+import BerandaGlobal from "app/pages/ThesisApps/Mahasiswa/BerandaGlobal";
 import BerandaPengajuanJudul from "app/pages/ThesisApps/Mahasiswa/BerandaPengajuanJudul";
 import BerandaProposalMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaProposalMahasiswa";
 import BerandaSkripsiMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaSkripsiMahasiswa";
@@ -85,7 +86,7 @@ const dosenRoutes = [
   {
     // Beranda Mahasiswa proposal
     path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/beranda/:id/:role",
-    element: <Page component={BerandaProposalMahasiswa} />,
+    element: <Page component={BerandaGlobal} />,
   },
   {
     // Pengajuan Judul Mahasiswa
