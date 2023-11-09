@@ -48,6 +48,7 @@ const DaftarPengujianProposalAnggotaPenelis = () => {
         );
         // Atur state 'setDaftarPengujianProposal' dengan data dari respons
         setDaftarPengujianProposal(response.data.data);
+        console.log("Request get daftar proposal: ", response.data.data);
       } catch (error) {
         console.error(
           "Terjadi kesalahan saat mengambil daftar pengujian proposal:",
@@ -57,43 +58,6 @@ const DaftarPengujianProposalAnggotaPenelis = () => {
     };
     fetchDaftarPengujianProposalData();
   }, [token]);
-
-  const TableItem = ({ index }) => {
-    return (
-      <TableRow key={index}>
-        <TableCell sx={{ fontSize: "13px" }}>{index + 1}</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>Geovalga Fransiscus Lim</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>
-          SISTEM INFORMASI MANAJEMEN SKRIPSI DI FAKULTAS ILMU KOMPUTER
-          UNIVERSITAS KLABAT
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Typography
-            component={Link}
-            to="/halaman-berikutnya"
-            sx={{
-              textDecoration: "none",
-              color: "blue",
-            }}
-          >
-            Detail
-          </Typography>
-        </TableCell>
-      </TableRow>
-    );
-  };
 
   return (
     <Div>

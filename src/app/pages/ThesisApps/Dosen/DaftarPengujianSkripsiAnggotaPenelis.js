@@ -1,5 +1,6 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
-import React from "react";
 import PeopleIcon from "@mui/icons-material/People";
 import {
   Chip,
@@ -19,6 +20,45 @@ import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 
 const DaftarPengujianSkripsiAnggotaPenelis = () => {
+  const [daftarPengujianSkripsi, setDaftarPengujianSkripsi] = useState({
+    dashboard: {
+      total_group: 0,
+      not_defence: 0,
+      has_defence: 0,
+      has_revision: 0,
+      not_revision: 0,
+    },
+    semesterData: [],
+  });
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchDaftarPengujianSkripsiData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:2000/api/v1/group/skripsi-list-chairman",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Atur state 'setDaftarPengujianSkripsi' dengan data dari respons
+        setDaftarPengujianSkripsi(response.data.data);
+        console.log("Request get daftar skripsi: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil daftar pengujian skripsi:",
+          error
+        );
+      }
+    };
+    fetchDaftarPengujianSkripsiData();
+  }, [token]);
+
   const TableItem = ({ index }) => {
     return (
       <TableRow key={index}>
@@ -104,7 +144,7 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
                 lineHeight: "32px",
               }}
             >
-              68 Kelompok
+              {daftarPengujianSkripsi.dashboard.total_group} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -144,7 +184,7 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
                 lineHeight: "32px",
               }}
             >
-              29 Kelompok
+              {daftarPengujianSkripsi.dashboard.not_defence} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -182,7 +222,7 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
                 lineHeight: "32px",
               }}
             >
-              39 Kelompok
+              {daftarPengujianSkripsi.dashboard.has_defence} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -222,7 +262,7 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
                 lineHeight: "32px",
               }}
             >
-              5 Kelompok
+              {daftarPengujianSkripsi.dashboard.has_revision} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -262,7 +302,7 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
                 lineHeight: "32px",
               }}
             >
-              34 Kelompok
+              {daftarPengujianSkripsi.dashboard.not_revision} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -321,61 +361,217 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
         </Div>
         {/* Header End */}
         {/* Semester Start */}
-        <Div
-          sx={{
-            display: "flex",
-            width: "100%",
-            padding: "24px",
-            alignItems: "center",
-            gap: "10px",
-            borderRadius: "6px",
-            background: "rgba(26, 56, 96, 0.10)",
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: "16px",
-              fontStyle: "normal",
-              fontWeight: 500,
-              lineHeight: "24px",
-              color: "#192434",
-            }}
-          >
-            2023/2024-Genap (Skripsi)
-          </Typography>
-        </Div>
-        {/* Semester End */}
-        {/* Table Mahasiswa Skripsi Start */}
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ width: "25px", fontSize: "13px" }}>
-                  Nomor
-                </TableCell>
-                <TableCell sx={{ width: "200px", fontSize: "13px" }}>
-                  Mahasiswa
-                </TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Sidang</TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>
-                  Revisi Ketua Penelis
-                </TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>
-                  Revisi Anggota Penelis
-                </TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Revisi Advisor</TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {[...Array(10)].map((item, index) => (
-                <TableItem index={index} />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        {/* Table Mahasiswa Skripsi End */}
+        {daftarPengujianSkripsi.semesterData.map(
+          (semesterData, semesterIndex) => (
+            <div key={semesterIndex} style={{ width: "100%" }}>
+              <Div
+                sx={{
+                  display: "flex",
+                  width: "100%",
+                  padding: "24px",
+                  alignItems: "center",
+                  gap: "10px",
+                  borderRadius: "6px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "16px",
+                    fontStyle: "normal",
+                    fontWeight: 500,
+                    lineHeight: "24px",
+                    color: "#192434",
+                  }}
+                >
+                  {semesterData.semester}
+                </Typography>
+              </Div>
+              {/* Semester End */}
+              {/* Table Mahasiswa Skripsi Start */}
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ width: "25px", fontSize: "13px" }}>
+                        Nomor
+                      </TableCell>
+                      <TableCell sx={{ width: "200px", fontSize: "13px" }}>
+                        Mahasiswa
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Sidang</TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Revisi Ketua Penelis
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Revisi Anggota Penelis
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Revisi Advisor
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {semesterData.skripsis.map((skripsi, skripsiIndex) => (
+                      <TableRow key={skripsiIndex}>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsiIndex + 1}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.students.map((student) => (
+                            <div key={student.id}>{student.fullName}</div>
+                          ))}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.title}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.defence_status === null ? (
+                            <Chip label={"Belum"} />
+                          ) : skripsi.defence_status === "Repeat" ? (
+                            <Chip
+                              label={"Mengulang"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : skripsi.defence_status === "Pass" ? (
+                            <Chip
+                              label={"Lulus"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : skripsi.defence_status === "Fail" ? (
+                            <Chip
+                              label={"Tidak Lulus"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            skripsi.defence_status
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.approve_chairman === null ? (
+                            <Chip label={"Belum"} />
+                          ) : skripsi.approve_chairman === "Waiting" ? (
+                            <Chip
+                              label={"Mengunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : skripsi.approve_chairman === "Approve" ? (
+                            <Chip
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : skripsi.approve_chairman === "Rejected" ? (
+                            <Chip
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            skripsi.approve_chairman
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.approve_member === null ? (
+                            <Chip label={"Belum"} />
+                          ) : skripsi.approve_member === "Waiting" ? (
+                            <Chip
+                              label={"Mengunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : skripsi.approve_member === "Approve" ? (
+                            <Chip
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : skripsi.approve_member === "Rejected" ? (
+                            <Chip
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            skripsi.approve_member
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.approve_advisor === null ? (
+                            <Chip label={"Belum"} />
+                          ) : skripsi.approve_advisor === "Waiting" ? (
+                            <Chip
+                              label={"Mengunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : skripsi.approve_advisor === "Approve" ? (
+                            <Chip
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : skripsi.approve_advisor === "Rejected" ? (
+                            <Chip
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            skripsi.approve_advisor
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            component={Link}
+                            to="/halaman-berikutnya"
+                            sx={{
+                              textDecoration: "none",
+                              color: "blue",
+                            }}
+                          >
+                            Detail
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* Table Mahasiswa Skripsi End */}
+            </div>
+          )
+        )}
       </Div>
       {/* Table Master End */}
     </Div>
