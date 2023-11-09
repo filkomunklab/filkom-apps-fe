@@ -33,6 +33,7 @@ const roleCheck = () => {
     case ROLES.ADMIN:
       return adminMenus;
     case ROLES.MAHASISWA:
+    case ROLES.ALUMNI:
       if (JSON.parse(localStorage.getItem("user")).status === "GRADUATE") {
         return mahasiswaMenusGraduate;
       }
