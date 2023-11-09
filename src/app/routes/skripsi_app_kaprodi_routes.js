@@ -1,6 +1,6 @@
 import Page from "@jumbo/shared/Page";
 import DaftarPengajuanSkripsiKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarPengajuanSkripsiKaprodi";
-import RiwayatSkripsiKaprodi from "app/pages/ThesisApps/Dosen/RiwayatSkripsiKaprodi";
+import DaftarRiwayatSkripsiKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarRiwayatSkripsiKaprodi";
 import DaftarPengajuanJudulKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarPengajuanJudulKaprodi";
 import DaftarPengajuanProposalKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarPengajuanProposalKaprodi";
 
@@ -22,8 +22,8 @@ const kaprodiRoutes = [
   },
   {
     // daftar pengajuan riwayat kaprodi
-    path: "/sistem-informasi-skripsi/riwayat-kaprodi",
-    element: <Page component={RiwayatSkripsiKaprodi} />,
+    path: "/sistem-informasi-skripsi/daftar-riwayat-skripsi-kaprodi",
+    element: <Page component={DaftarRiwayatSkripsiKaprodi} />,
   },
 ];
 

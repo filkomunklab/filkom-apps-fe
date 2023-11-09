@@ -398,7 +398,7 @@ export const dekanMenus = [
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/riwayat-dekan",
+        uri: "/sistem-informasi-skripsi/daftar-riwayat-skripsi-dekan",
         label: "Riwayat",
         type: "nav-item",
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
@@ -903,7 +903,7 @@ export const kaprodiMenus = [
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/riwayat-kaprodi",
+        uri: "/sistem-informasi-skripsi/daftar-riwayat-skripsi-kaprodi",
         label: "Riwayat",
         type: "nav-item",
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,

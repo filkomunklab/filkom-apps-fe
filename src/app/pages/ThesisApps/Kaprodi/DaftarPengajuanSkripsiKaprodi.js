@@ -357,7 +357,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
               lineHeight: "32px",
             }}
           >
-            Daftar Bimbingan Proposal
+            Daftar Bimbingan Skripsi
           </Typography>
           <Div
             sx={{
@@ -402,7 +402,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
                 </Typography>
               </Div>
               {/* Semester End */}
-              {/* Table Mahasiswa Proposal Start */}
+              {/* Table Mahasiswa Skripsi Start */}
               <TableContainer>
                 <Table>
                   <TableHead>
@@ -484,7 +484,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
             </div>
           )
         )}
-        {/* Table Mahasiswa Proposal End */}
+        {/* Table Mahasiswa Skripsi End */}
       </Div>
       {/* Table Master End */}
     </Div>

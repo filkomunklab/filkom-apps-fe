@@ -11,10 +11,10 @@ import DaftarPengujianProposalAnggotaPenelis from "app/pages/ThesisApps/Dosen/Da
 import DaftarPengujianProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianProposalKetuaPenelis";
 import DaftarPengujianSkripsiKetuaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianSkripsiKetuaPenelis";
 import DaftarPengujianSkripsiAnggotaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianSkripsiAnggotaPenelis";
-import RiwayatBimbinganAdvisor from "app/pages/ThesisApps/Dosen/RiwayatBimbinganAdvisor";
-import RiwayatBimbinganCoAdvisor from "app/pages/ThesisApps/Dosen/RiwayatbimbinganCoAdvisor";
-import RiwayatPengujianKetuaPenelis from "app/pages/ThesisApps/Dosen/RiwayatPengujianKetuaPenelis";
-import RiwayatPengujianAnggota from "app/pages/ThesisApps/Dosen/RiwayatPengujianAnggotaPenelis";
+import DaftarRiwayatBimbinganAdvisor from "app/pages/ThesisApps/Dosen/DaftarRiwayatBimbinganAdvisor";
+import DaftarRiwayatBimbinganCoAdvisor from "app/pages/ThesisApps/Dosen/DaftarRiwayatbimbinganCoAdvisor";
+import DaftarRiwayatPengujianKetuaPenelis from "app/pages/ThesisApps/Dosen/DaftarRiwayatPengujianKetuaPenelis";
+import DaftarRiwayatPengujianAnggota from "app/pages/ThesisApps/Dosen/DaftarRiwayatPengujianAnggotaPenelis";
 
 const dosenRoutes = [
   // KOMITE
@@ -49,7 +49,7 @@ const dosenRoutes = [
   },
   {
     path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor",
-    element: <Page component={RiwayatBimbinganAdvisor} />,
+    element: <Page component={DaftarRiwayatBimbinganAdvisor} />,
   },
   // ----------Co-Advisor
   {
@@ -62,7 +62,7 @@ const dosenRoutes = [
   },
   {
     path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor",
-    element: <Page component={RiwayatBimbinganCoAdvisor} />,
+    element: <Page component={DaftarRiwayatBimbinganCoAdvisor} />,
   },
   // PENGUJIAN
   // ----------Ketua
@@ -76,7 +76,7 @@ const dosenRoutes = [
   },
   {
     path: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-ketua",
-    element: <Page component={RiwayatPengujianKetuaPenelis} />,
+    element: <Page component={DaftarRiwayatPengujianKetuaPenelis} />,
   },
   // ----------Anggota
   {
@@ -89,7 +89,7 @@ const dosenRoutes = [
   },
   {
     path: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-anggota",
-    element: <Page component={RiwayatPengujianAnggota} />,
+    element: <Page component={DaftarRiwayatPengujianAnggota} />,
   },
 ];
 

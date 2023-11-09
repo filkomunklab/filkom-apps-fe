@@ -2,6 +2,7 @@ import Page from "@jumbo/shared/Page";
 import DaftarPengajuanJudulDekan from "app/pages/ThesisApps/Dekan/DaftarPengajuanJudulDekan";
 import DaftarPengajuanProposalDekan from "app/pages/ThesisApps/Dekan/DaftarPengajuanProposalDekan";
 import DaftarPengajuanSkripsiDekan from "app/pages/ThesisApps/Dekan/DaftarPengajuanSkripsiDekan";
+import DaftarRiwayatSkripsiDekan from "app/pages/ThesisApps/Dekan/DaftarRiwayatSkripsiDekan";
 
 const dekanRoutes = [
   {
@@ -15,6 +16,10 @@ const dekanRoutes = [
   {
     path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dekan",
     element: <Page component={DaftarPengajuanSkripsiDekan} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-skripsi-dekan",
+    element: <Page component={DaftarRiwayatSkripsiDekan} />,
   },
 ];
 
