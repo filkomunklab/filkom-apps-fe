@@ -108,7 +108,7 @@ const StudentInformationMentored = () => {
           <Typography variant="h2">List of mentored students</Typography>
         </Grid>
         <Grid item xs={12} sm={8} md={3}>
-          <SearchLocal sx={{ height: "100%" }} />
+          <SearchGlobal sx={{ height: "100%" }} />
         </Grid>
         <Grid item xs={12} sm={4} md={3}>
           <FormControl

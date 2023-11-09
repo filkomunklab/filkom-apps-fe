@@ -55,10 +55,10 @@ const StudentCertificate = () => {
               student.
             </Typography>
           </Grid>
-          <Grid item md={3}>
+          <Grid item xs={12} sm={8} md={3}>
             <SearchLocal />
           </Grid>
-          <Grid item md={3}>
+          <Grid item xs={12} sm={4} md={3}>
             <FormControl sx={{ width: "100%" }}>
               <InputLabel id="sort-label">Sort By</InputLabel>
               <Select
@@ -68,6 +68,13 @@ const StudentCertificate = () => {
                 value={sortBy}
                 label="Sort By"
                 onChange={(event) => setSortBy(event.target.value)}
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxHeight: "37%",
+                    },
+                  },
+                }}
               >
                 <MenuItem value="">
                   <em>None</em>
