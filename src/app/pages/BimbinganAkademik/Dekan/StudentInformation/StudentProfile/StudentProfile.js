@@ -1,4 +1,5 @@
 import Div from "@jumbo/shared/Div";
+import React, { useState } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -7,11 +8,37 @@ import {
   IconButton,
   Stack,
   Typography,
+  Radio,
+  RadioGroup,
+  FormLabel,
+  FormControl,
+  FormControlLabel,
+  Popover,
+  Button,
+  Modal,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 
 const StudentProfile = () => {
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [status, setStatus] = useState("active");
+
+  const handleOpenPopover = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen(true);
+  };
+
+  const handleClosePopover = () => {
+    setAnchorEl(null);
+    setOpen(false);
+  };
+
+  const handleStatusChange = (event) => {
+    setStatus(event.target.value);
+  };
+
   return (
     <Div>
       <Typography
@@ -19,6 +46,7 @@ const StudentProfile = () => {
       >
         Student Profile
       </Typography>
+
       <Accordion defaultExpanded>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -58,12 +86,12 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Stack direction={"row"} gap={1} justifyContent={"space-between"}>
                 <Typography variant="h5">Student Status</Typography>
-                <IconButton size="small">
+                <IconButton size="small" onClick={handleOpenPopover}>
                   <BorderColorIcon fontSize="inherit" />
                 </IconButton>
               </Stack>
               <Typography variant="h6" sx={textSyle}>
-                Active
+                {status}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -152,6 +180,41 @@ const StudentProfile = () => {
             </Grid>
           </Grid>
         </AccordionDetails>
+        <Popover
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClosePopover}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <FormControl component="fieldset">
+            <RadioGroup
+              row
+              aria-label="status"
+              name="status"
+              value={status}
+              onChange={handleStatusChange}
+            >
+              <FormControlLabel
+                value="Active"
+                control={<Radio />}
+                label="Active"
+                sx={{ marginLeft: "3px" }}
+              />
+              <FormControlLabel
+                value="Inactive"
+                control={<Radio />}
+                label="Inactive"
+              />
+            </RadioGroup>
+          </FormControl>
+        </Popover>
       </Accordion>
       <Accordion defaultExpanded>
         <AccordionSummary
