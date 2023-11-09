@@ -11,17 +11,20 @@ import DaftarPengujianProposalAnggotaPenelis from "app/pages/ThesisApps/Dosen/Da
 import DaftarPengujianProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianProposalKetuaPenelis";
 import DaftarPengujianSkripsiKetuaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianSkripsiKetuaPenelis";
 import DaftarPengujianSkripsiAnggotaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianSkripsiAnggotaPenelis";
-import ManajemenKelasDosenSkripsi from "app/pages/ThesisApps/Dosen/ManajemenKelasDosenSkripsi";
 import RiwayatBimbinganAdvisor from "app/pages/ThesisApps/Dosen/RiwayatBimbinganAdvisor";
 import RiwayatBimbinganCoAdvisor from "app/pages/ThesisApps/Dosen/RiwayatbimbinganCoAdvisor";
+import RiwayatPengujianKetuaPenelis from "app/pages/ThesisApps/Dosen/RiwayatPengujianKetuaPenelis";
+import RiwayatPengujianAnggota from "app/pages/ThesisApps/Dosen/RiwayatPengujianAnggotaPenelis";
 
 const dosenRoutes = [
   // KOMITE
+  // ----------Dosen
   {
     path: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
     element: <Page component={DaftarKomiteJudulDosen} />,
   },
   // PENGJAJUAN
+  // ----------Dosen Skripsi
   {
     path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi",
     element: <Page component={DaftarPengajuanJudulDosenSkripsi} />,
@@ -35,6 +38,7 @@ const dosenRoutes = [
     element: <Page component={DaftarPengajuanSkripsiDosenSkripsi} />,
   },
   // BIMBINGAN
+  // ----------Advisor
   {
     path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor",
     element: <Page component={DaftarBimbinganProposalAdvisor} />,
@@ -47,6 +51,7 @@ const dosenRoutes = [
     path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor",
     element: <Page component={RiwayatBimbinganAdvisor} />,
   },
+  // ----------Co-Advisor
   {
     path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor",
     element: <Page component={DaftarBimbinganProposalCoAdvisor} />,
@@ -60,6 +65,7 @@ const dosenRoutes = [
     element: <Page component={RiwayatBimbinganCoAdvisor} />,
   },
   // PENGUJIAN
+  // ----------Ketua
   {
     path: "/sistem-informasi-skripsi/daftar-pengujian-proposal-ketua",
     element: <Page component={DaftarPengujianProposalKetuaPenelis} />,
@@ -69,6 +75,11 @@ const dosenRoutes = [
     element: <Page component={DaftarPengujianSkripsiKetuaPenelis} />,
   },
   {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-ketua",
+    element: <Page component={RiwayatPengujianKetuaPenelis} />,
+  },
+  // ----------Anggota
+  {
     path: "/sistem-informasi-skripsi/daftar-pengujian-proposal-anggota",
     element: <Page component={DaftarPengujianProposalAnggotaPenelis} />,
   },
@@ -77,8 +88,8 @@ const dosenRoutes = [
     element: <Page component={DaftarPengujianSkripsiAnggotaPenelis} />,
   },
   {
-    path: "/sistem-informasi-skripsi/manajemen-kelas-dosen-skripsi",
-    element: <Page component={ManajemenKelasDosenSkripsi} />,
+    path: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-anggota",
+    element: <Page component={RiwayatPengujianAnggota} />,
   },
 ];
 

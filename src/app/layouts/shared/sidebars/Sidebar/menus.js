@@ -513,13 +513,13 @@ export const dekanMenus = [
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-uji-ketua",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-ketua",
             label: "Riwayat Uji Ketua",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-uji-anggota",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-anggota",
             label: "Riwayat Uji Anggota",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
@@ -727,13 +727,13 @@ export const dosenMenus = [
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-uji-ketua",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-ketua",
             label: "Riwayat Uji Ketua",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-uji-anggota",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-anggota",
             label: "Riwayat Uji Anggota",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
@@ -1018,13 +1018,13 @@ export const kaprodiMenus = [
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-uji-ketua",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-ketua",
             label: "Riwayat Uji Ketua",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-uji-anggota",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-anggota",
             label: "Riwayat Uji Anggota",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
