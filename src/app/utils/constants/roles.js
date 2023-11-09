@@ -10,4 +10,5 @@ export const ROLES = {
   DOSEN: "DOSEN",
   SEKRETARIS: "SEKRETARIS",
   REGISTER: "REGISTER",
+  ALUMNI: "ALUMNI",
 };
