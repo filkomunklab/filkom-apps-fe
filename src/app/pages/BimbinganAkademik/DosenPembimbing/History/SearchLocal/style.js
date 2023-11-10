@@ -30,4 +30,9 @@ export const StyledInputBase = styled(InputBase)(({ theme }) => ({
     height: 24,
     borderRadius: 24,
   },
+
+  "@media (max-width: 390px)": {
+    height: "40px",
+    width: "290px",
+  },
 }));
