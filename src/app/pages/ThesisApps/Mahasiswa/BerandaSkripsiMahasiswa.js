@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Chip,
@@ -10,79 +12,34 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
-import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
-import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
-import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-import React from "react";
 
-const BerandaSkripsiMahasiswa = () => {
-  const pengajuanSkripsi = [
-    {
-      title:
-        "PENGEMBANGAN SISTEM INFORMASI SKRIPSI DI FAKULTAS ILMU KOMPUTER UNIVERSITAS KLABAT",
-    },
-  ];
+const BerandaSkripsiMahasiswa = ({ value: groupId }) => {
+  const [details, setDetails] = useState([]);
 
-  const dataKelompokMahasiswa = [
-    {
-      namaLengkap: "Geovalga Fransiscus Lim",
-      nim: "105021910051",
-      programStudi: "Informatika",
-    },
-    {
-      namaLengkap: "Frances Rully Yong",
-      nim: "105021910051",
-      programStudi: "Informatika",
-    },
-  ];
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
 
-  const dataStatusPengajuanSkripsi = [
-    {
-      advisor: "Waiting",
-      coAdvisor1: "Approve",
-      coAdvisor2: "Rejected",
-    },
-  ];
-
-  const dataStatusSiapMajuSidang = [
-    {
-      dokumenSkripsi: "Rejected",
-      buktiPembayaran: "Waiting",
-      hasilCekPlagiat: "Approve",
-    },
-  ];
-
-  const dataTimPanelis = [
-    {
-      ketuaPenelis: "-",
-      anggotaPenelis: "-",
-      advisor: "Andrew T. Liem, MT, PhD",
-    },
-  ];
-
-  const dataJadwalSidangSkripsi = [
-    {
-      mulai: "10:00",
-      selesai: "11:30",
-      tanggal: "12-11-2023",
-      ruangan: "GK1-303",
-    },
-  ];
-
-  const dataStatusSidangSkripsi = [
-    {
-      status: "Belum",
-    },
-  ];
-
-  const dataStatusRevisiSkripsi = [
-    {
-      ketuaPenelis: "Belum",
-      anggotaPenelis: "Belum",
-      advisor: "Belum",
-    },
-  ];
+  useEffect(() => {
+    const fetchDetailsData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/submission_details/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Atur state 'setDetails' dengan data dari respons
+        setDetails(response.data.data);
+        console.log("Request Get details: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil detail:", error);
+      }
+    };
+    fetchDetailsData();
+  }, [token, groupId]);
 
   const { role } = JSON.parse(localStorage.getItem("user"));
   // const role = ["ADVISOR", "DOSEN"];
@@ -92,26 +49,24 @@ const BerandaSkripsiMahasiswa = () => {
     <Div sx={{ width: "100%" }}>
       {/* Element 2 Start */}
 
-      {pengajuanSkripsi.map((judul) => (
-        <Typography
-          sx={{
-            width: "100%",
-            display: "flex",
-            padding: "24px",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#192434",
-            background: "rgba(26, 56, 96, 0.10)",
-            borderRadius: "6px",
-            fontSize: "12px",
-            fontWeight: 600,
-            marginBottom: "25px",
-          }}
-        >
-          {judul.title}
-        </Typography>
-      ))}
-      {/* Table Start*/}
+      <Typography
+        sx={{
+          width: "100%",
+          display: "flex",
+          padding: "24px",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#192434",
+          background: "rgba(26, 56, 96, 0.10)",
+          borderRadius: "6px",
+          fontSize: "12px",
+          fontWeight: 600,
+          marginBottom: "25px",
+          textTransform: "uppercase",
+        }}
+      >
+        {details.title}
+      </Typography>
 
       <Div
         sx={{
@@ -144,12 +99,18 @@ const BerandaSkripsiMahasiswa = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataKelompokMahasiswa.map((data, index) => (
-                <TableRow key={index}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{data.namaLengkap}</TableCell>
-                  <TableCell>{data.nim}</TableCell>
-                  <TableCell>{data.programStudi}</TableCell>
+              {details?.students?.map((student, studentIndex) => (
+                <TableRow key={studentIndex}>
+                  <TableCell>{studentIndex + 1}</TableCell>
+                  <TableCell>{student.fullName}</TableCell>
+                  <TableCell>{student.nim}</TableCell>
+                  <TableCell>
+                    {student.major === "IF"
+                      ? "Informatika"
+                      : student.major === "SI"
+                      ? "Sistem Informasi"
+                      : student.major}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -174,18 +135,54 @@ const BerandaSkripsiMahasiswa = () => {
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
                 <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
                 <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
-                <TableCell sx={{ width: "25%" }}>Co-Advisor 1</TableCell>
-                <TableCell sx={{ width: "25%" }}>Co-Advisor 2</TableCell>
+                {details?.skripsi_status?.co_advisor1_status !== null && (
+                  <TableCell sx={{ width: "25%" }}>Co-Advisor 1</TableCell>
+                )}
+                {details?.skripsi_status?.co_advisor2_status !== null && (
+                  <TableCell sx={{ width: "25%" }}>Co-Advisor 2</TableCell>
+                )}
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataStatusPengajuanSkripsi.map((status, index) => (
-                <TableRow key={index}>
-                  <TableCell>1</TableCell>
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>
+                  {details?.skripsi_status?.advisor_status === null ? (
+                    <Chip label={"Belum"} />
+                  ) : details?.skripsi_status?.advisor_status === "Waiting" ? (
+                    <Chip
+                      label={"Menunggu"}
+                      sx={{
+                        background: "rgba(255, 204, 0, 0.10)",
+                        color: "#985211",
+                      }}
+                    />
+                  ) : details?.skripsi_status?.advisor_status === "Approve" ? (
+                    <Chip
+                      label={"Diterima"}
+                      sx={{
+                        background: "rgba(21, 131, 67, 0.10)",
+                        color: "#0A7637",
+                      }}
+                    />
+                  ) : details?.skripsi_status?.advisor_status === "Rejected" ? (
+                    <Chip
+                      label={"Ditolak"}
+                      sx={{
+                        background: "rgba(226, 29, 18, 0.10)",
+                        color: "#CA150C",
+                      }}
+                    />
+                  ) : (
+                    details?.skripsi_status?.advisor_status
+                  )}
+                </TableCell>
+                {details?.skripsi_status?.co_advisor1_status !== null && (
                   <TableCell>
-                    {status.advisor === "Belum" ? (
+                    {details?.skripsi_status?.co_advisor1_status === null ? (
                       <Chip label={"Belum"} />
-                    ) : status.advisor === "Waiting" ? (
+                    ) : details?.skripsi_status?.co_advisor1_status ===
+                      "Waiting" ? (
                       <Chip
                         label={"Menunggu"}
                         sx={{
@@ -193,7 +190,8 @@ const BerandaSkripsiMahasiswa = () => {
                           color: "#985211",
                         }}
                       />
-                    ) : status.advisor === "Approve" ? (
+                    ) : details?.skripsi_status?.co_advisor1_status ===
+                      "Approve" ? (
                       <Chip
                         label={"Diterima"}
                         sx={{
@@ -201,7 +199,8 @@ const BerandaSkripsiMahasiswa = () => {
                           color: "#0A7637",
                         }}
                       />
-                    ) : status.advisor === "Rejected" ? (
+                    ) : details?.skripsi_status?.co_advisor1_status ===
+                      "Rejected" ? (
                       <Chip
                         label={"Ditolak"}
                         sx={{
@@ -210,44 +209,16 @@ const BerandaSkripsiMahasiswa = () => {
                         }}
                       />
                     ) : (
-                      status.advisor
+                      details?.skripsi_status?.co_advisor1_status
                     )}
                   </TableCell>
-                  <TableCell sx={{ fontSize: "13px" }}>
-                    {status.coAdvisor1 === "Belum" ? (
-                      <Chip label={"Belum"} />
-                    ) : status.coAdvisor1 === "Waiting" ? (
-                      <Chip
-                        label={"Menunggu"}
-                        sx={{
-                          background: "rgba(255, 204, 0, 0.10)",
-                          color: "#985211",
-                        }}
-                      />
-                    ) : status.coAdvisor1 === "Approve" ? (
-                      <Chip
-                        label={"Diterima"}
-                        sx={{
-                          background: "rgba(21, 131, 67, 0.10)",
-                          color: "#0A7637",
-                        }}
-                      />
-                    ) : status.coAdvisor1 === "Rejected" ? (
-                      <Chip
-                        label={"Ditolak"}
-                        sx={{
-                          background: "rgba(226, 29, 18, 0.10)",
-                          color: "#CA150C",
-                        }}
-                      />
-                    ) : (
-                      status.coAdvisor1
-                    )}
-                  </TableCell>
+                )}
+                {details?.skripsi_status?.co_advisor2_status !== null && (
                   <TableCell>
-                    {status.coAdvisor2 === "Belum" ? (
+                    {details?.skripsi_status?.co_advisor2_status === null ? (
                       <Chip label={"Belum"} />
-                    ) : status.coAdvisor2 === "Waiting" ? (
+                    ) : details?.skripsi_status?.co_advisor2_status ===
+                      "Waiting" ? (
                       <Chip
                         label={"Menunggu"}
                         sx={{
@@ -255,7 +226,8 @@ const BerandaSkripsiMahasiswa = () => {
                           color: "#985211",
                         }}
                       />
-                    ) : status.coAdvisor2 === "Approve" ? (
+                    ) : details?.skripsi_status?.co_advisor2_status ===
+                      "Approve" ? (
                       <Chip
                         label={"Diterima"}
                         sx={{
@@ -263,7 +235,8 @@ const BerandaSkripsiMahasiswa = () => {
                           color: "#0A7637",
                         }}
                       />
-                    ) : status.coAdvisor2 === "Rejected" ? (
+                    ) : details?.skripsi_status?.co_advisor2_status ===
+                      "Rejected" ? (
                       <Chip
                         label={"Ditolak"}
                         sx={{
@@ -272,14 +245,15 @@ const BerandaSkripsiMahasiswa = () => {
                         }}
                       />
                     ) : (
-                      status.coAdvisor2
+                      details?.skripsi_status?.co_advisor2_status
                     )}
                   </TableCell>
-                </TableRow>
-              ))}
+                )}
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
+
         {/* Table Pengajuan Skripsi End */}
 
         {/* Table Status Siap Maju Sidang Start*/}
@@ -304,104 +278,62 @@ const BerandaSkripsiMahasiswa = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataStatusSiapMajuSidang.map((statusSidang, index) => (
-                <TableRow key={index}>
-                  <TableCell>1</TableCell>
-                  <TableCell>
-                    {statusSidang.dokumenSkripsi === "Belum" ? (
-                      <Chip label={"Belum"} />
-                    ) : statusSidang.dokumenSkripsi === "Waiting" ? (
-                      <Chip
-                        label={"Menunggu"}
-                        sx={{
-                          background: "rgba(255, 204, 0, 0.10)",
-                          color: "#985211",
-                        }}
-                      />
-                    ) : statusSidang.dokumenSkripsi === "Approve" ? (
-                      <Chip
-                        label={"Diterima"}
-                        sx={{
-                          background: "rgba(21, 131, 67, 0.10)",
-                          color: "#0A7637",
-                        }}
-                      />
-                    ) : statusSidang.dokumenSkripsi === "Rejected" ? (
-                      <Chip
-                        label={"Ditolak"}
-                        sx={{
-                          background: "rgba(226, 29, 18, 0.10)",
-                          color: "#CA150C",
-                        }}
-                      />
-                    ) : (
-                      statusSidang.dokumenSkripsi
-                    )}
-                  </TableCell>
-                  <TableCell sx={{ fontSize: "13px" }}>
-                    {statusSidang.buktiPembayaran === "Belum" ? (
-                      <Chip label={"Belum"} />
-                    ) : statusSidang.buktiPembayaran === "Waiting" ? (
-                      <Chip
-                        label={"Menunggu"}
-                        sx={{
-                          background: "rgba(255, 204, 0, 0.10)",
-                          color: "#985211",
-                        }}
-                      />
-                    ) : statusSidang.buktiPembayaran === "Approve" ? (
-                      <Chip
-                        label={"Diterima"}
-                        sx={{
-                          background: "rgba(21, 131, 67, 0.10)",
-                          color: "#0A7637",
-                        }}
-                      />
-                    ) : statusSidang.buktiPembayaran === "Rejected" ? (
-                      <Chip
-                        label={"Ditolak"}
-                        sx={{
-                          background: "rgba(226, 29, 18, 0.10)",
-                          color: "#CA150C",
-                        }}
-                      />
-                    ) : (
-                      statusSidang.buktiPembayaran
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {statusSidang.hasilCekPlagiat === "Belum" ? (
-                      <Chip label={"Belum"} />
-                    ) : statusSidang.hasilCekPlagiat === "Waiting" ? (
-                      <Chip
-                        label={"Menunggu"}
-                        sx={{
-                          background: "rgba(255, 204, 0, 0.10)",
-                          color: "#985211",
-                        }}
-                      />
-                    ) : statusSidang.hasilCekPlagiat === "Approve" ? (
-                      <Chip
-                        label={"Diterima"}
-                        sx={{
-                          background: "rgba(21, 131, 67, 0.10)",
-                          color: "#0A7637",
-                        }}
-                      />
-                    ) : statusSidang.hasilCekPlagiat === "Rejected" ? (
-                      <Chip
-                        label={"Ditolak"}
-                        sx={{
-                          background: "rgba(226, 29, 18, 0.10)",
-                          color: "#CA150C",
-                        }}
-                      />
-                    ) : (
-                      statusSidang.hasilCekPlagiat
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>
+                  {details?.ready_status?.skripsiDocumentStatus === null ? (
+                    <Chip label={"Belum"} />
+                  ) : details?.ready_status?.skripsiDocumentStatus === false ? (
+                    <Chip label={"Belum"} />
+                  ) : details?.ready_status?.skripsiDocumentStatus === true ? (
+                    <Chip
+                      label={"Sudah"}
+                      sx={{
+                        background: "rgba(21, 131, 67, 0.10)",
+                        color: "#0A7637",
+                      }}
+                    />
+                  ) : (
+                    details?.ready_status?.skripsiDocumentStatus
+                  )}
+                </TableCell>
+                <TableCell>
+                  {details?.ready_status?.skripsiPaymentStatus === null ? (
+                    <Chip label={"Belum"} />
+                  ) : details?.ready_status?.skripsiPaymentStatus === false ? (
+                    <Chip label={"Belum"} />
+                  ) : details?.ready_status?.skripsiPaymentStatus === true ? (
+                    <Chip
+                      label={"Sudah"}
+                      sx={{
+                        background: "rgba(21, 131, 67, 0.10)",
+                        color: "#0A7637",
+                      }}
+                    />
+                  ) : (
+                    details?.ready_status?.skripsiPaymentStatus
+                  )}
+                </TableCell>
+                <TableCell>
+                  {details?.ready_status?.skripsiPlagiarismStatus === null ? (
+                    <Chip label={"Belum"} />
+                  ) : details?.ready_status?.skripsiPlagiarismStatus ===
+                    false ? (
+                    <Chip label={"Belum"} />
+                  ) : details?.ready_status?.skripsiPlagiarismStatus ===
+                    true ? (
+                    <Chip
+                      label={"Sudah"}
+                      sx={{
+                        background: "rgba(21, 131, 67, 0.10)",
+                        color: "#0A7637",
+                      }}
+                    />
+                  ) : (
+                    details?.ready_status?.skripsiPlagiarismStatus
+                  )}
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
@@ -429,14 +361,14 @@ const BerandaSkripsiMahasiswa = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataTimPanelis.map((timPanelis, index) => (
-                <TableRow key={index}>
-                  <TableCell>1</TableCell>
-                  <TableCell>{timPanelis.ketuaPenelis}</TableCell>
-                  <TableCell>{timPanelis.anggotaPenelis}</TableCell>
-                  <TableCell>{timPanelis.advisor}</TableCell>
-                </TableRow>
-              ))}
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>
+                  {details?.panelist_team?.panelist_chairman}
+                </TableCell>
+                <TableCell>{details?.panelist_team?.panelist_member}</TableCell>
+                <TableCell>{details?.panelist_team?.advisor}</TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
@@ -465,15 +397,13 @@ const BerandaSkripsiMahasiswa = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataJadwalSidangSkripsi.map((jadwal, index) => (
-                <TableRow key={index}>
-                  <TableCell>1</TableCell>
-                  <TableCell>{jadwal.mulai}</TableCell>
-                  <TableCell>{jadwal.selesai}</TableCell>
-                  <TableCell>{jadwal.tanggal}</TableCell>
-                  <TableCell>{jadwal.ruangan}</TableCell>
-                </TableRow>
-              ))}
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>{details?.schedule?.start}</TableCell>
+                <TableCell>{details?.schedule?.end}</TableCell>
+                <TableCell>{details?.schedule?.date}</TableCell>
+                <TableCell>{details?.schedule?.room}</TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
@@ -499,42 +429,40 @@ const BerandaSkripsiMahasiswa = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataStatusSidangSkripsi.map((statusSidangSkripsi, index) => (
-                <TableRow>
-                  <TableCell>1</TableCell>
-                  <TableCell>
-                    {statusSidangSkripsi.status === "Belum" ? (
-                      <Chip label={"Belum"} />
-                    ) : statusSidangSkripsi.status === "Waiting" ? (
-                      <Chip
-                        label={"Menunggu"}
-                        sx={{
-                          background: "rgba(255, 204, 0, 0.10)",
-                          color: "#985211",
-                        }}
-                      />
-                    ) : statusSidangSkripsi.status === "Approve" ? (
-                      <Chip
-                        label={"Diterima"}
-                        sx={{
-                          background: "rgba(21, 131, 67, 0.10)",
-                          color: "#0A7637",
-                        }}
-                      />
-                    ) : statusSidangSkripsi.status === "Rejected" ? (
-                      <Chip
-                        label={"Ditolak"}
-                        sx={{
-                          background: "rgba(226, 29, 18, 0.10)",
-                          color: "#CA150C",
-                        }}
-                      />
-                    ) : (
-                      statusSidangSkripsi.status
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>
+                  {details?.defence_status?.status === null ? (
+                    <Chip label={"Belum"} />
+                  ) : details?.defence_status?.status === "Repeat" ? (
+                    <Chip
+                      label={"Mengulang"}
+                      sx={{
+                        background: "rgba(255, 204, 0, 0.10)",
+                        color: "#985211",
+                      }}
+                    />
+                  ) : details?.defence_status?.status === "Pass" ? (
+                    <Chip
+                      label={"Lulus"}
+                      sx={{
+                        background: "rgba(21, 131, 67, 0.10)",
+                        color: "#0A7637",
+                      }}
+                    />
+                  ) : details?.defence_status?.status === "Fail" ? (
+                    <Chip
+                      label={"Tidak Lulus"}
+                      sx={{
+                        background: "rgba(226, 29, 18, 0.10)",
+                        color: "#CA150C",
+                      }}
+                    />
+                  ) : (
+                    details?.defence_status?.status
+                  )}
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
@@ -562,104 +490,102 @@ const BerandaSkripsiMahasiswa = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataStatusRevisiSkripsi.map((statusRevisi, index) => (
-                <TableRow key={index}>
-                  <TableCell>1</TableCell>
-                  <TableCell>
-                    {statusRevisi.ketuaPenelis === "Belum" ? (
-                      <Chip label={"Belum"} />
-                    ) : statusRevisi.ketuaPenelis === "Waiting" ? (
-                      <Chip
-                        label={"Menunggu"}
-                        sx={{
-                          background: "rgba(255, 204, 0, 0.10)",
-                          color: "#985211",
-                        }}
-                      />
-                    ) : statusRevisi.ketuaPenelis === "Approve" ? (
-                      <Chip
-                        label={"Diterima"}
-                        sx={{
-                          background: "rgba(21, 131, 67, 0.10)",
-                          color: "#0A7637",
-                        }}
-                      />
-                    ) : statusRevisi.ketuaPenelis === "Rejected" ? (
-                      <Chip
-                        label={"Ditolak"}
-                        sx={{
-                          background: "rgba(226, 29, 18, 0.10)",
-                          color: "#CA150C",
-                        }}
-                      />
-                    ) : (
-                      statusRevisi.ketuaPenelis
-                    )}
-                  </TableCell>
-                  <TableCell sx={{ fontSize: "13px" }}>
-                    {statusRevisi.anggotaPenelis === "Belum" ? (
-                      <Chip label={"Belum"} />
-                    ) : statusRevisi.anggotaPenelis === "Waiting" ? (
-                      <Chip
-                        label={"Menunggu"}
-                        sx={{
-                          background: "rgba(255, 204, 0, 0.10)",
-                          color: "#985211",
-                        }}
-                      />
-                    ) : statusRevisi.anggotaPenelis === "Approve" ? (
-                      <Chip
-                        label={"Diterima"}
-                        sx={{
-                          background: "rgba(21, 131, 67, 0.10)",
-                          color: "#0A7637",
-                        }}
-                      />
-                    ) : statusRevisi.anggotaPenelis === "Rejected" ? (
-                      <Chip
-                        label={"Ditolak"}
-                        sx={{
-                          background: "rgba(226, 29, 18, 0.10)",
-                          color: "#CA150C",
-                        }}
-                      />
-                    ) : (
-                      statusRevisi.anggotaPenelis
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {statusRevisi.advisor === "Belum" ? (
-                      <Chip label={"Belum"} />
-                    ) : statusRevisi.advisor === "Waiting" ? (
-                      <Chip
-                        label={"Menunggu"}
-                        sx={{
-                          background: "rgba(255, 204, 0, 0.10)",
-                          color: "#985211",
-                        }}
-                      />
-                    ) : statusRevisi.advisor === "Approve" ? (
-                      <Chip
-                        label={"Diterima"}
-                        sx={{
-                          background: "rgba(21, 131, 67, 0.10)",
-                          color: "#0A7637",
-                        }}
-                      />
-                    ) : statusRevisi.advisor === "Rejected" ? (
-                      <Chip
-                        label={"Ditolak"}
-                        sx={{
-                          background: "rgba(226, 29, 18, 0.10)",
-                          color: "#CA150C",
-                        }}
-                      />
-                    ) : (
-                      statusRevisi.advisor
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>
+                  {details?.revisi_status?.chairman_status === "Belum" ? (
+                    <Chip label={"Belum"} />
+                  ) : details?.revisi_status?.chairman_status === "Waiting" ? (
+                    <Chip
+                      label={"Menunggu"}
+                      sx={{
+                        background: "rgba(255, 204, 0, 0.10)",
+                        color: "#985211",
+                      }}
+                    />
+                  ) : details?.revisi_status?.chairman_status === "Approve" ? (
+                    <Chip
+                      label={"Diterima"}
+                      sx={{
+                        background: "rgba(21, 131, 67, 0.10)",
+                        color: "#0A7637",
+                      }}
+                    />
+                  ) : details?.revisi_status?.chairman_status === "Rejected" ? (
+                    <Chip
+                      label={"Ditolak"}
+                      sx={{
+                        background: "rgba(226, 29, 18, 0.10)",
+                        color: "#CA150C",
+                      }}
+                    />
+                  ) : (
+                    details?.revisi_status?.chairman_status
+                  )}
+                </TableCell>
+                <TableCell sx={{ fontSize: "13px" }}>
+                  {details?.revisi_status?.member_status === "Belum" ? (
+                    <Chip label={"Belum"} />
+                  ) : details?.revisi_status?.member_status === "Waiting" ? (
+                    <Chip
+                      label={"Menunggu"}
+                      sx={{
+                        background: "rgba(255, 204, 0, 0.10)",
+                        color: "#985211",
+                      }}
+                    />
+                  ) : details?.revisi_status?.member_status === "Approve" ? (
+                    <Chip
+                      label={"Diterima"}
+                      sx={{
+                        background: "rgba(21, 131, 67, 0.10)",
+                        color: "#0A7637",
+                      }}
+                    />
+                  ) : details?.revisi_status?.member_status === "Rejected" ? (
+                    <Chip
+                      label={"Ditolak"}
+                      sx={{
+                        background: "rgba(226, 29, 18, 0.10)",
+                        color: "#CA150C",
+                      }}
+                    />
+                  ) : (
+                    details?.revisi_status?.member_status
+                  )}
+                </TableCell>
+                <TableCell>
+                  {details?.revisi_status?.advisor_status === "Belum" ? (
+                    <Chip label={"Belum"} />
+                  ) : details?.revisi_status?.advisor_status === "Waiting" ? (
+                    <Chip
+                      label={"Menunggu"}
+                      sx={{
+                        background: "rgba(255, 204, 0, 0.10)",
+                        color: "#985211",
+                      }}
+                    />
+                  ) : details?.revisi_status?.advisor_status === "Approve" ? (
+                    <Chip
+                      label={"Diterima"}
+                      sx={{
+                        background: "rgba(21, 131, 67, 0.10)",
+                        color: "#0A7637",
+                      }}
+                    />
+                  ) : details?.revisi_status?.advisor_status === "Rejected" ? (
+                    <Chip
+                      label={"Ditolak"}
+                      sx={{
+                        background: "rgba(226, 29, 18, 0.10)",
+                        color: "#CA150C",
+                      }}
+                    />
+                  ) : (
+                    details?.revisi_status?.advisor_status
+                  )}
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>

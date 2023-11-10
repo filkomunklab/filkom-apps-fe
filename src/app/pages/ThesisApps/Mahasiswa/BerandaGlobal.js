@@ -1,40 +1,44 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import { Typography } from "@mui/material";
-import MenuPengajuanJudulDosen from "app/shared/MenuHorizontal/MenuPengajuanJudulDosen";
+// import MenuPengajuanJudulDosen from "app/shared/MenuHorizontal/MenuPengajuanJudulDosen";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-import React, { useState } from "react";
-import BerandaPengajuanJudul from "./BerandaPengajuanJudul";
+// import BerandaPengajuanJudul from "./BerandaPengajuanJudul";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPanalisProposal";
 import MenuKetuaPanalisProposal from "app/shared/MenuHorizontal/MenuKetuaPanalisProposal";
 import MenuCoAdvisorProposal from "app/shared/MenuHorizontal/MenuCoAdvisorProposal";
 import MenuAdvisorProposal from "app/shared/MenuHorizontal/MenuAdvisorProposal";
-import { useParams } from "react-router-dom";
 import BerandaProposalMahasiswa from "./BerandaProposalMahasiswa";
 import BerandaSkripsiMahasiswa from "./BerandaSkripsiMahasiswa";
 
 const BerandaGlobal = () => {
+  const groupId = useParams().groupId;
+  console.log("group id: ", groupId);
+  const [progress, setProgress] = useState(null);
+
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
   console.log("token", token);
+  const role = useParams().role;
+  console.log(role);
 
   // const { id } = JSON.parse(localStorage.getItem("user"));
-
-  const roleTest = useParams().role;
-  console.log(roleTest);
 
   // const idTest = useParams().id;
   // const roleTest = useParams().role;
   // console.log(idTest, roleTest);
 
-  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const { role } = JSON.parse(localStorage.getItem("user"));
   // const role = ["ADVISOR", "DOSEN"];
-  console.log(role);
+  // console.log(role);
 
   // kondisi beranda
   // State untuk melacak kondisi
-  const [kondisi, setKondisi] = useState("berandaPengajuanJudul");
+  const [kondisi, setKondisi] = useState("berandaPengajuanSkripsi");
 
   // Fungsi untuk mengubah kondisi
   const handleKondisiBeranda = () => {
@@ -82,7 +86,11 @@ const BerandaGlobal = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          <Riwayatlog />
+          {/* jika progress tidak null maka menyimpannya di setProgress */}
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(progress) => progress && setProgress(progress)}
+          />
         </Div>
         {/* Element 1 End */}
 
@@ -150,7 +158,7 @@ const BerandaGlobal = () => {
           </Div>
           {/* MAHASISWA */}
           <Div
-            hidden={role.includes("MAHASISWA") ? false : true}
+            hidden={role.includes("mahasiswa") ? false : true}
             sx={{ width: "100%" }}
           >
             <MenuMahasiswa />
@@ -170,15 +178,25 @@ const BerandaGlobal = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
-            {kondisi === "berandaPengajuanJudul" && (
-              <BerandaPengajuanJudul onTerima={handleKondisiBeranda} />
-            )}
-            {kondisi === "berandaPengajuanProposal" && (
-              <BerandaProposalMahasiswa onTerima={handleKondisiBeranda} />
-            )}
-            {kondisi === "berandaPengajuanSkripsi" && (
-              <BerandaSkripsiMahasiswa onTerima={handleKondisiBeranda} />
-            )}
+            {/* {kondisi === "berandaPengajuanJudul" && (
+              <BerandaPengajuanJudul
+                value={groupId}
+                onTerima={handleKondisiBeranda}
+              />
+            )} */}
+            {/* {kondisi === "berandaPengajuanProposal" && (
+              <BerandaProposalMahasiswa
+                value={groupId}
+                onTerima={handleKondisiBeranda}
+              />
+            )} */}
+            {progress === "Skripsi" ||
+              (progress === "Finished" && (
+                <BerandaSkripsiMahasiswa
+                  value={groupId}
+                  onTerima={handleKondisiBeranda}
+                />
+              ))}
           </Div>
         </Div>
         {/* Element 2 End */}

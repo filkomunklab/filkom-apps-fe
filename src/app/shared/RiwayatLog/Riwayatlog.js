@@ -1,8 +1,59 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import { Typography } from "@mui/material";
-import React from "react";
 
-const Riwayatlog = () => {
+const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
+  // const [riwayat, setRiwayat] = useState(null);
+  const [timPembimbing, setTimPembimbing] = useState();
+
+  const token = localStorage.getItem("token");
+  // console.log("token", token);
+  console.log("GroupId di komponen riwayatlog", groupId);
+
+  useEffect(() => {
+    // const fetchRiwayatData = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       `http://localhost:2000/api/v1/group/submission_details/${groupId}`,
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${token}`,
+    //         },
+    //       }
+    //     );
+    //     // Atur state 'setRiwayat' dengan data dari respons
+    //     setRiwayat(response.data.data);
+    //     console.log("Request Get riwayat: ", response.data.data);
+    //   } catch (error) {
+    //     console.error("Terjadi kesalahan saat mengambil riwayat:", error);
+    //   }
+    // };
+    const fetchTimPembimbingData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/advisor-group/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Atur state 'setTimPembimbing' dengan data dari respons
+        setTimPembimbing(response.data.data);
+        riwayatData(response.data.data.progress);
+        console.log("Request Get tim pembimbing: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil tim pembimbing:",
+          error
+        );
+      }
+    };
+    // fetchRiwayatData();
+    fetchTimPembimbingData();
+  }, [token, groupId]);
+
   return (
     <Div sx={{ width: "100%" }}>
       {/* Riwayat Log Start */}
@@ -65,86 +116,91 @@ const Riwayatlog = () => {
             }}
           >
             <Typography sx={{ fontSize: "12px" }}>
-              Oktoverano H. Lengkong, SKom, MDs, MM
+              {timPembimbing?.advisor ? timPembimbing?.advisor : ""}
             </Typography>
           </Div>
         </Div>
+
         {/* Co-Advisor 1*/}
-        <Div
-          sx={{
-            display: "flex",
-            width: "100%",
-            alignItems: "flex-start",
-          }}
-        >
-          <Div
-            variant="subtitle2"
-            sx={{
-              display: "flex",
-              width: "120px",
-              padding: "14px 16px",
-              alignItems: "center",
-              background: "#F5F5F5",
-            }}
-          >
-            <Typography
-              variant="subtitle2"
-              gutterBottom
-              sx={{ fontSize: "12px" }}
-            >
-              Co-Advisor 1
-            </Typography>
-          </Div>
+        {timPembimbing?.co_advisor1 && (
           <Div
             sx={{
               display: "flex",
-              padding: "10px 16px",
+              width: "100%",
               alignItems: "flex-start",
             }}
           >
-            <Typography sx={{ fontSize: "12px" }}>
-              Oktoverano H. Lengkong, SKom, MDs, MM
-            </Typography>
+            <Div
+              variant="subtitle2"
+              sx={{
+                display: "flex",
+                width: "120px",
+                padding: "14px 16px",
+                alignItems: "center",
+                background: "#F5F5F5",
+              }}
+            >
+              <Typography
+                variant="subtitle2"
+                gutterBottom
+                sx={{ fontSize: "12px" }}
+              >
+                Co-Advisor 1
+              </Typography>
+            </Div>
+            <Div
+              sx={{
+                display: "flex",
+                padding: "10px 16px",
+                alignItems: "flex-start",
+              }}
+            >
+              <Typography sx={{ fontSize: "12px" }}>
+                {timPembimbing.co_advisor1 ? timPembimbing.co_advisor1 : ""}
+              </Typography>
+            </Div>
           </Div>
-        </Div>
+        )}
         {/* Co-Advisor 2*/}
-        <Div
-          sx={{
-            display: "flex",
-            width: "100%",
-            alignItems: "flex-start",
-          }}
-        >
-          <Div
-            variant="subtitle2"
-            sx={{
-              display: "flex",
-              width: "120px",
-              padding: "14px 16px",
-              alignItems: "center",
-              background: "#F5F5F5",
-            }}
-          >
-            <Typography
-              variant="subtitle2"
-              gutterBottom
-              sx={{ fontSize: "12px" }}
-            >
-              Co-Advisor 2
-            </Typography>
-          </Div>
+        {timPembimbing?.co_advisor2 && (
           <Div
             sx={{
               display: "flex",
-              padding: "10px 16px",
+              width: "100%",
               alignItems: "flex-start",
             }}
           >
-            <Typography sx={{ fontSize: "12px" }}>
-              Oktoverano H. Lengkong, SKom, MDs, MM
-            </Typography>
+            <Div
+              variant="subtitle2"
+              sx={{
+                display: "flex",
+                width: "120px",
+                padding: "14px 16px",
+                alignItems: "center",
+                background: "#F5F5F5",
+              }}
+            >
+              <Typography
+                variant="subtitle2"
+                gutterBottom
+                sx={{ fontSize: "12px" }}
+              >
+                Co-Advisor 2
+              </Typography>
+            </Div>
+            <Div
+              sx={{
+                display: "flex",
+                padding: "10px 16px",
+                alignItems: "flex-start",
+              }}
+            >
+              <Typography sx={{ fontSize: "12px" }}>
+                {timPembimbing.co_advisor2 ? timPembimbing.co_advisor2 : ""}
+              </Typography>
+            </Div>
           </Div>
-        </Div>
+        )}
       </Div>
       {/* Dosen Pembimbing End */}
     </Div>

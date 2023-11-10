@@ -20,44 +20,6 @@ import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 
 const DaftarPengujianSkripsiKetuaPenelis = () => {
-<<<<<<< HEAD
-  const TableItem = ({ index }) => {
-    return (
-      <TableRow key={index}>
-        <TableCell sx={{ fontSize: "13px" }}>{index + 1}</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>Geovalga Fransiscus Lim</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>
-          SISTEM INFORMASI MANAJEMEN SKRIPSI DI FAKULTAS ILMU KOMPUTER
-          UNIVERSITAS KLABAT
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Typography
-            component={Link}
-            to="/sistem-informasi-skripsi/uji-skripsi-ketua/beranda"
-            sx={{
-              textDecoration: "none",
-              color: "blue",
-            }}
-          >
-            Detail
-          </Typography>
-        </TableCell>
-      </TableRow>
-    );
-  };
-=======
   const [daftarPengujianSkripsi, setDaftarPengujianSkripsi] = useState({
     dashboard: {
       total_group: 0,
@@ -96,7 +58,6 @@ const DaftarPengujianSkripsiKetuaPenelis = () => {
     };
     fetchDaftarPengujianSkripsiData();
   }, [token]);
->>>>>>> 81f2205cec0482e82e52c71638cff83632d4e9e5
 
   return (
     <Div>
