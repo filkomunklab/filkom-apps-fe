@@ -29,12 +29,12 @@ import PengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/PengajuanJudu
 import PerubahanProposalCoAvisor from "app/pages/ThesisApps/Dosen/PerubahanProposalCoAdvisor";
 import PerubahanProposalCoAdvisor2 from "app/pages/ThesisApps/Dosen/PerubahanProposalCoAdvisor2";
 import PerubahanSkripsiCoAvisor from "app/pages/ThesisApps/Dosen/PerubahanSkripsiCoAdvisor";
-import RiwayatBimbinganAdvisor from "app/pages/ThesisApps/Dosen/RiwayatBimbinganAdvisor";
-import RiwayatPengujianAnggotaPenelis from "app/pages/ThesisApps/Dosen/RiwayatPengujianAnggotaPenelis";
-import RiwayatPengujianKetuaPenelis from "app/pages/ThesisApps/Dosen/RiwayatPengujianKetuaPenelis";
-import RiwayatBimbinganCoAdvisor from "app/pages/ThesisApps/Dosen/RiwayatbimbinganCoAdvisor";
+// import RiwayatBimbinganAdvisor from "app/pages/ThesisApps/Dosen/RiwayatBimbinganAdvisor";
+// import RiwayatPengujianAnggotaPenelis from "app/pages/ThesisApps/Dosen/RiwayatPengujianAnggotaPenelis";
+// import RiwayatPengujianKetuaPenelis from "app/pages/ThesisApps/Dosen/RiwayatPengujianKetuaPenelis";
+// import RiwayatBimbinganCoAdvisor from "app/pages/ThesisApps/Dosen/RiwayatbimbinganCoAdvisor";
 import BerandaGlobal from "app/pages/ThesisApps/Mahasiswa/BerandaGlobal";
-import BerandaPengajuanJudul from "app/pages/ThesisApps/Mahasiswa/BerandaPengajuanJudul";
+// import BerandaPengajuanJudul from "app/pages/ThesisApps/Mahasiswa/BerandaPengajuanJudul";
 import BerandaProposalMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaProposalMahasiswa";
 import BerandaSkripsiMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaSkripsiMahasiswa";
 
@@ -160,12 +160,12 @@ const dosenRoutes = [
     element: <Page component={DaftarBimbinganSkripsiAdvisor} />,
   },
 
-  // RIWAYAT
-  {
-    // Daftar Riwayat Bimbingan Advisor
-    path: "/sistem-informasi-skripsi/riwayat-bimbingan-advisor",
-    element: <Page component={RiwayatBimbinganAdvisor} />,
-  },
+  // // RIWAYAT
+  // {
+  //   // Daftar Riwayat Bimbingan Advisor
+  //   path: "/sistem-informasi-skripsi/riwayat-bimbingan-advisor",
+  //   element: <Page component={RiwayatBimbinganAdvisor} />,
+  // },
 
   // PROPOSAL
   {
@@ -252,11 +252,11 @@ const dosenRoutes = [
   },
 
   // RIWAYAT
-  {
-    // Daftar Riwayat Bimbingan Co-Advisor
-    path: "/sistem-informasi-skripsi/riwayat-bimbingan-co-advisor",
-    element: <Page component={RiwayatBimbinganCoAdvisor} />,
-  },
+  // {
+  //   // Daftar Riwayat Bimbingan Co-Advisor
+  //   path: "/sistem-informasi-skripsi/riwayat-bimbingan-co-advisor",
+  //   element: <Page component={RiwayatBimbinganCoAdvisor} />,
+  // },
 
   // PROPOSAL
   {
@@ -343,11 +343,11 @@ const dosenRoutes = [
   },
 
   // RIWAYAT
-  {
-    // Daftar Riwayat Bimbingan Co-Advisor
-    path: "/sistem-informasi-skripsi/riwayat-bimbingan-co-advisor",
-    element: <Page component={RiwayatBimbinganCoAdvisor} />,
-  },
+  // {
+  //   // Daftar Riwayat Bimbingan Co-Advisor
+  //   path: "/sistem-informasi-skripsi/riwayat-bimbingan-co-advisor",
+  //   element: <Page component={RiwayatBimbinganCoAdvisor} />,
+  // },
 
   // PROPOSAL
   {
@@ -417,11 +417,11 @@ const dosenRoutes = [
     path: "/sistem-informasi-skripsi/daftar-uji-skripsi-ketua/dokumen-revisi-skripsi",
     element: <Page component={DocumentRevisiSkripsiKetuaPenelis} />,
   },
-  {
-    // Daftar Riwayat Ketua Panalis
-    path: "/sistem-informasi-skripsi/riwayat-uji-ketua",
-    element: <Page component={RiwayatPengujianKetuaPenelis} />,
-  },
+  // {
+  //   // Daftar Riwayat Ketua Panalis
+  //   path: "/sistem-informasi-skripsi/riwayat-uji-ketua",
+  //   element: <Page component={RiwayatPengujianKetuaPenelis} />,
+  // },
 
   /*================================================================================================================*/
   // DOSEN ANGGOTA PANALIS
@@ -439,11 +439,11 @@ const dosenRoutes = [
   },
 
   // RIWAYAT
-  {
-    // Daftar Riwayat Anggota Penelis
-    path: "/sistem-informasi-skripsi/riwayat-uji-anggota",
-    element: <Page component={RiwayatPengujianAnggotaPenelis} />,
-  },
+  // {
+  //   // Daftar Riwayat Anggota Penelis
+  //   path: "/sistem-informasi-skripsi/riwayat-uji-anggota",
+  //   element: <Page component={RiwayatPengujianAnggotaPenelis} />,
+  // },
 
   // PROPOSAL
   {

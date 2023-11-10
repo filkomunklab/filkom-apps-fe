@@ -20,41 +20,6 @@ import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
 
 const DaftarBimbinganSkripsiAdvisor = () => {
-<<<<<<< HEAD
-  const TableItem = ({ index }) => {
-    return (
-      <TableRow key={index}>
-        <TableCell sx={{ fontSize: "13px" }}>{index + 1}</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>Geovalga Fransiscus Lim</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>
-          SISTEM INFORMASI MANAJEMEN SKRIPSI DI FAKULTAS ILMU KOMPUTER
-          UNIVERSITAS KLABAT
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Typography
-            component={Link}
-            to="/sistem-informasi-skripsi/bimbingan-skripsi-advisor/beranda"
-            sx={{
-              textDecoration: "none",
-              color: "blue",
-            }}
-          >
-            Detail
-          </Typography>
-        </TableCell>
-      </TableRow>
-    );
-  };
-=======
   const [daftarBimbinganSkripsi, setDaftarBimbinganSkripsi] = useState({
     dashboard: {
       total_group: 0,
@@ -93,7 +58,6 @@ const DaftarBimbinganSkripsiAdvisor = () => {
     };
     fetchDaftarBimbinganSkripsiData();
   }, [token]);
->>>>>>> 81f2205cec0482e82e52c71638cff83632d4e9e5
 
   return (
     <Div>

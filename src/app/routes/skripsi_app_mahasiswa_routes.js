@@ -1,5 +1,5 @@
 import Page from "@jumbo/shared/Page";
-import Beranda from "app/pages/ThesisApps/Mahasiswa/Beranda";
+import Beranda from "app/pages/ThesisApps/Mahasiswa/BerandaGlobal";
 import DaftarPengajuan from "app/pages/ThesisApps/Mahasiswa/DaftarPengajuan";
 
 const mahasiswaRoutes = [

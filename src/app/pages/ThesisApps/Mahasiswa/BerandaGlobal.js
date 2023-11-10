@@ -3,7 +3,7 @@ import { Typography } from "@mui/material";
 import MenuPengajuanJudulDosen from "app/shared/MenuHorizontal/MenuPengajuanJudulDosen";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import React, { useState } from "react";
-import BerandaPengajuanJudul from "./BerandaPengajuanJudul";
+// import BerandaPengajuanJudul from "./BerandaPengajuanJudul";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPanalisProposal";
@@ -170,9 +170,9 @@ const BerandaGlobal = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
-            {kondisi === "berandaPengajuanJudul" && (
+            {/* {kondisi === "berandaPengajuanJudul" && (
               <BerandaPengajuanJudul onTerima={handleKondisiBeranda} />
-            )}
+            )} */}
             {kondisi === "berandaPengajuanProposal" && (
               <BerandaProposalMahasiswa onTerima={handleKondisiBeranda} />
             )}

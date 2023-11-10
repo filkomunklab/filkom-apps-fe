@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Div from "@jumbo/shared/Div";
-<<<<<<< HEAD
-import React, { useState, useEffect } from "react";
-=======
->>>>>>> 81f2205cec0482e82e52c71638cff83632d4e9e5
 import PeopleIcon from "@mui/icons-material/People";
 import {
   Button,
@@ -33,7 +29,6 @@ import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
-import axios from "axios";
 
 const JadwalSidangProposal = () => {
   // state - daftar jadwal
