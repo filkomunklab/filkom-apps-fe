@@ -54,6 +54,7 @@ const DaftarPengajuanProposalKaprodi = () => {
         );
         // Atur state 'setDaftarPengajuanProposal' dengan data dari respons
         setDaftarPengajuanProposal(response.data.data);
+        console.log("Request get daftar proposal: ", response.data.data);
       } catch (error) {
         console.error(
           "Terjadi kesalahan saat mengambil daftar pengajuan:",

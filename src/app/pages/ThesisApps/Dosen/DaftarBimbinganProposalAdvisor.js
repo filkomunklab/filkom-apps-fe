@@ -48,6 +48,7 @@ const DaftarBimbinganProposalAdvisor = () => {
         );
         // Atur state 'setDaftarBimbinganProposal' dengan data dari respons
         setDaftarBimbinganProposal(response.data.data);
+        console.log("Request get daftar proposal: ", response.data.data);
       } catch (error) {
         console.error(
           "Terjadi kesalahan saat mengambil daftar bimbingan proposal:",

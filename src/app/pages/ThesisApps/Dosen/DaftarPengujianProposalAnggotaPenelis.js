@@ -48,6 +48,7 @@ const DaftarPengujianProposalAnggotaPenelis = () => {
         );
         // Atur state 'setDaftarPengujianProposal' dengan data dari respons
         setDaftarPengujianProposal(response.data.data);
+        console.log("Request get daftar proposal: ", response.data.data);
       } catch (error) {
         console.error(
           "Terjadi kesalahan saat mengambil daftar pengujian proposal:",
@@ -58,6 +59,7 @@ const DaftarPengujianProposalAnggotaPenelis = () => {
     fetchDaftarPengujianProposalData();
   }, [token]);
 
+<<<<<<< HEAD
   const TableItem = ({ index }) => {
     return (
       <TableRow key={index}>
@@ -95,6 +97,8 @@ const DaftarPengujianProposalAnggotaPenelis = () => {
     );
   };
 
+=======
+>>>>>>> 81f2205cec0482e82e52c71638cff83632d4e9e5
   return (
     <Div>
       {/* Dashboard Start */}
