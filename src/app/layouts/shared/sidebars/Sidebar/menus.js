@@ -37,6 +37,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import ScheduleIcon from "@mui/icons-material/Schedule";
+import ChecklistIcon from "@mui/icons-material/Checklist";
 
 export const sekretarisMenus = [
   {
@@ -739,6 +740,12 @@ export const dosenMenus = [
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
           },
         ],
+      },
+      {
+        uri: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
+        label: "Riwayat Nilai",
+        type: "nav-item",
+        icon: <ChecklistIcon sx={{ fontSize: 20 }} />,
       },
     ],
   },
