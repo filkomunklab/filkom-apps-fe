@@ -13,6 +13,7 @@ import JadwalSidangSkripsi from "app/pages/ThesisApps/Sekertaris/JadwalSidangSkr
 import ManajemenDosenSkripsi from "app/pages/ThesisApps/Sekertaris/ManajemenDosenSkripsi";
 import PerbaruiJadwalSidang from "app/pages/ThesisApps/Sekertaris/PerbaruiJadwalSidangProposal";
 import PerbaruiJadwalSidangSkripsi from "app/pages/ThesisApps/Sekertaris/PerbaruiJadwalSidangSkripsi";
+import ManajemenKelasDosenSkripsi from "app/pages/ThesisApps/Dosen/ManajemenKelasDosenSkripsi";
 
 const sekretarisRoutes = [
   /*================================================================================================================*/

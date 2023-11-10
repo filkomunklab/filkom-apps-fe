@@ -1,9 +1,10 @@
 import Page from "@jumbo/shared/Page";
-import DaftarPengajuanSkripsiKaprodi from "app/pages/ThesisApps/Dosen/DaftarPengajuanSkripsiKaprodi";
-import RiwayatSkripsiKaprodi from "app/pages/ThesisApps/Dosen/RiwayatSkripsiKaprodi";
+import DaftarPengajuanSkripsiKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarPengajuanSkripsiKaprodi";
+import DaftarRiwayatSkripsiKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarRiwayatSkripsiKaprodi";
 import DaftarPengajuanJudulKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarPengajuanJudulKaprodi";
 import DaftarPengajuanProposalKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarPengajuanProposalKaprodi";
 import BerandaGlobal from "app/pages/ThesisApps/Mahasiswa/BerandaGlobal";
+import RiwayatSkripsiKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarRiwayatSkripsiKaprodi";
 
 const kaprodiRoutes = [
   /*================================================================================================================*/
@@ -21,8 +22,8 @@ const kaprodiRoutes = [
     element: <Page component={DaftarPengajuanProposalKaprodi} />,
   },
   {
-    // Daftar Pengajuan Skripsi Kaprodi
-    path: "/sistem-informasi-skripsi/pengajuan-skripsi-kaprodi",
+    // daftar pengajuan Skripsi kaprodi
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-kaprodi",
     element: <Page component={DaftarPengajuanSkripsiKaprodi} />,
   },
 

@@ -58,6 +58,7 @@ const DaftarPengajuanJudulDosenSkripsi = () => {
         );
         // Atur state 'setDaftarPengajuanJudul' dengan data dari respons
         setDaftarPengajuanJudul(response.data.data);
+        console.log("Request get daftar judul: ", response.data.data);
       } catch (error) {
         console.error(
           "Terjadi kesalahan saat mengambil daftar pengajuan:",

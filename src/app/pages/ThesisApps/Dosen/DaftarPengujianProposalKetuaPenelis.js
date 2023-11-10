@@ -39,7 +39,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
     const fetchDaftarPengujianProposalData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/proposal-list-chairman",
+          "http://localhost:2000/api/v1/group/proposal-list-member",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -48,6 +48,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
         );
         // Atur state 'setDaftarPengujianProposal' dengan data dari respons
         setDaftarPengujianProposal(response.data.data);
+        console.log("Request get daftar proposal: ", response.data.data);
       } catch (error) {
         console.error(
           "Terjadi kesalahan saat mengambil daftar pengujian proposal:",
@@ -58,6 +59,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
     fetchDaftarPengujianProposalData();
   }, [token]);
 
+<<<<<<< HEAD
   const TableItem = ({ index }) => {
     return (
       <TableRow key={index}>
@@ -95,6 +97,8 @@ const DaftarPengujianProposalKetuaPenelis = () => {
     );
   };
 
+=======
+>>>>>>> 81f2205cec0482e82e52c71638cff83632d4e9e5
   return (
     <Div>
       {/* Dashboard Start */}

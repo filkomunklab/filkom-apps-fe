@@ -31,7 +31,7 @@ import VisionMisionGoals from "app/pages/BimbinganAkademik/Mahasiswa/VisionMisio
 import StudentGrade from "app/pages/BimbinganAkademik/Mahasiswa/Grades/StudentGrade";
 import DaftarAlumni from "app/pages/Mahasiswa/KlabatBridge/DaftarAlumni";
 import ArsipDocument from "app/pages/ThesisApps/Mahasiswa/ArsipDocument";
-import BerandaPengajuanJudul from "app/pages/ThesisApps/Mahasiswa/BerandaPengajuanJudul";
+import BerandaPengajuanJudul from "app/pages/ThesisApps/Mahasiswa/Beranda";
 import BerandaProposalMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaProposalMahasiswa";
 import BerandaSkripsiMahasiswa from "app/pages/ThesisApps/Mahasiswa/BerandaSkripsiMahasiswa";
 import DaftarPengajuan from "app/pages/ThesisApps/Mahasiswa/DaftarPengajuan";

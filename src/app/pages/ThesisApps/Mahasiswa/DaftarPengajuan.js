@@ -84,6 +84,7 @@ function DaftarPengajuan() {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   // State - error message
   const [judulError, setJudulError] = useState(""); // State untuk pesan error judul
+  // State - group id
 
   // const [judulPengajuan, setJudulPengajuan] = useState([]);
 
@@ -442,9 +443,6 @@ function DaftarPengajuan() {
     setCoAdvisor2(e.target.value);
   };
 
-  const groupId = daftarPengajuan.group_id; // Ganti dengan nilai yang sesuai
-  const linkTo = `/sistem-informasi-skripsi/daftar-pengajuan/beranda?groupId=${groupId}`;
-
   return (
     <Div>
       <Div>
@@ -518,11 +516,29 @@ function DaftarPengajuan() {
                 <TableCell>{pengajuan.title}</TableCell>
                 <TableCell>
                   {pengajuan.is_approve === "Waiting" ? (
-                    <Chip label={"Mengunggu"} />
+                    <Chip
+                      label={"Mengunggu"}
+                      sx={{
+                        background: "rgba(255, 204, 0, 0.10)",
+                        color: "#985211",
+                      }}
+                    />
                   ) : pengajuan.is_approve === "Approve" ? (
-                    <Chip label={"Diterima"} />
+                    <Chip
+                      label={"Diterima"}
+                      sx={{
+                        background: "rgba(21, 131, 67, 0.10)",
+                        color: "#0A7637",
+                      }}
+                    />
                   ) : pengajuan.is_approve === "Rejected" ? (
-                    <Chip label={"Ditolak"} />
+                    <Chip
+                      label={"Ditolak"}
+                      sx={{
+                        background: "rgba(226, 29, 18, 0.10)",
+                        color: "#CA150C",
+                      }}
+                    />
                   ) : (
                     pengajuan.is_approve
                   )}
@@ -530,12 +546,30 @@ function DaftarPengajuan() {
                 <TableCell>
                   {pengajuan.is_pass_proposal === null ? (
                     <Chip label={"Belum"} />
-                  ) : pengajuan.is_pass_proposal === "Waiting" ? (
-                    <Chip label={"Mengunggu"} />
-                  ) : pengajuan.is_pass_proposal === "Approve" ? (
-                    <Chip label={"Diterima"} />
-                  ) : pengajuan.is_pass_proposal === "Rejected" ? (
-                    <Chip label={"Ditolak"} />
+                  ) : pengajuan.is_pass_proposal === "Repeat" ? (
+                    <Chip
+                      label={"Mengulang"}
+                      sx={{
+                        background: "rgba(255, 204, 0, 0.10)",
+                        color: "#985211",
+                      }}
+                    />
+                  ) : pengajuan.is_pass_proposal === "Pass" ? (
+                    <Chip
+                      label={"Lulus"}
+                      sx={{
+                        background: "rgba(21, 131, 67, 0.10)",
+                        color: "#0A7637",
+                      }}
+                    />
+                  ) : pengajuan.is_pass_proposal === "Fail" ? (
+                    <Chip
+                      label={"Tidak Lulus"}
+                      sx={{
+                        background: "rgba(226, 29, 18, 0.10)",
+                        color: "#CA150C",
+                      }}
+                    />
                   ) : (
                     pengajuan.is_pass_proposal
                   )}
@@ -543,12 +577,30 @@ function DaftarPengajuan() {
                 <TableCell>
                   {pengajuan.is_pass_skripsi === null ? (
                     <Chip label={"Belum"} />
-                  ) : pengajuan.is_pass_skripsi === "Waiting" ? (
-                    <Chip label={"Mengunggu"} />
-                  ) : pengajuan.is_pass_skripsi === "Approve" ? (
-                    <Chip label={"Diterima"} />
-                  ) : pengajuan.is_pass_skripsi === "Rejected" ? (
-                    <Chip label={"Ditolak"} />
+                  ) : pengajuan.is_pass_skripsi === "Repeat" ? (
+                    <Chip
+                      label={"Mengulang"}
+                      sx={{
+                        background: "rgba(255, 204, 0, 0.10)",
+                        color: "#985211",
+                      }}
+                    />
+                  ) : pengajuan.is_pass_skripsi === "Pass" ? (
+                    <Chip
+                      label={"Lulus"}
+                      sx={{
+                        background: "rgba(21, 131, 67, 0.10)",
+                        color: "#0A7637",
+                      }}
+                    />
+                  ) : pengajuan.is_pass_skripsi === "Fail" ? (
+                    <Chip
+                      label={"Tidak Lulus"}
+                      sx={{
+                        background: "rgba(226, 29, 18, 0.10)",
+                        color: "#CA150C",
+                      }}
+                    />
                   ) : (
                     pengajuan.is_pass_skripsi
                   )}
@@ -556,7 +608,7 @@ function DaftarPengajuan() {
                 <TableCell>
                   <Link
                     href="#"
-                    to={linkTo}
+                    to={`/sistem-informasi-skripsi/daftar-pengajuan/beranda/${pengajuan.group_id}/student`}
                     style={{
                       textDecoration: "none",
                       color: "blue",

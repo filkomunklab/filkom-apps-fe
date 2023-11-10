@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import Div from "@jumbo/shared/Div";
 import {
   Chip,
@@ -10,7 +11,12 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+<<<<<<< HEAD:src/app/pages/ThesisApps/Mahasiswa/BerandaPengajuanJudul.js
 import React from "react";
+=======
+import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
+import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
+>>>>>>> 81f2205cec0482e82e52c71638cff83632d4e9e5:src/app/pages/ThesisApps/Mahasiswa/Beranda.js
 
 const BerandaPengajuanJudul = () => {
   const pengajuanJudul = [
