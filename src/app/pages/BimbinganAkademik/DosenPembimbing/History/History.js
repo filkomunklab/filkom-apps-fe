@@ -9,10 +9,12 @@ import {
   ListItemText,
   Stack,
   Divider,
+  Grid,
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import { Link } from "react-router-dom";
 import SearchLocal from "./SearchLocal/SearchLocal";
+import SearchGlobal from "app/shared/SearchGlobal";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -67,6 +69,7 @@ const History = (props) => {
           fontSize: "15px",
           fontWeight: 400,
           color: "rgba(27, 43, 65, 0.69)",
+          textAlign: "justify",
         }}
       >
         Currently you are in the history page, all the activities you have done
@@ -75,8 +78,21 @@ const History = (props) => {
         approved will be displayed on this page.
       </Typography>
 
-      <SearchLocal />
-      <div sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Grid container>
+        <Grid item xs={12} sm={12} md={12} lg={12} sx={{ paddingBottom: 4 }}>
+          <SearchGlobal
+            sx={{
+              width: "40%",
+              "@media (max-width: 600px)": {
+                height: "40px",
+                width: "100%",
+              },
+            }}
+          />
+        </Grid>
+      </Grid>
+
+      <div sx={{ borderBottom: 1, borderColor: "divider", paddingTop: "16px" }}>
         <Tabs
           value={value}
           variant="scrollable"
@@ -142,26 +158,48 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Form untuk memasukan Pre-Registration Course telah
                         dibuka.
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Tidak ada pertemuan tatap muka. Diharapkan semua untuk
                         mengisi.
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 7, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -186,25 +224,47 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Akan Diadakan Pertemuan pada 10 Februari 2024
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Pertemuan dilaksanakan di gedung GK3 lt.2. Diwajibkan
                         memakai sepatu.
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 7, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -228,25 +288,47 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Pemasukan sertifikat
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Himbauan untuk memasukan sertifikat yang telah didapat
                         dari fakultas
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 7, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -284,25 +366,47 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
-                        Silahkan memasukkan nilai semester anda sebelumnya
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                        Silakan memasukkan nilai semester anda sebelumnya
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Saat ini sedang masa pemasukkan nilai semester
                         sebelumnya. Harap semuanya dapat mengisi
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 2, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -361,24 +465,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Adzana, Shaliha Gracia
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Preregistrasi semester II tahun ajaran 2023/2024
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Jan 8, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -401,24 +527,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Peter, Parker Judith
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Preregistrasi semester II tahun ajaran 2023/2024
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Jan 8, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -441,24 +589,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Banner, Tony Stark
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Preregistrasi semester II tahun ajaran 2023/2024
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Jan 8, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -481,24 +651,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Shaliha, Gracia Mandag
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Preregistrasi semester II tahun ajaran 2023/2024
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Jan 8, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -535,24 +727,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Adzana, Shaliha Gracia
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Preregistrasi semester I tahun ajaran 2023/2024
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Aug 6, 2023" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -575,24 +789,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Banner, Tony Stark
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Preregistrasi semester II tahun ajaran 2023/2024
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Jan 6, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -615,24 +851,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Banner, Tony Stark
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Preregistrasi semester II tahun ajaran 2023/2024
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Jan 6, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -655,24 +913,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Banner, Tony Stark
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Preregistrasi semester II tahun ajaran 2023/2024
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Jan 6, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -733,24 +1013,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Adzana, Shaliha Gracia
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Seminar "Apa itu IT"
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 7, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -787,24 +1089,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Banner, Tony Stark
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Juara 2 saat mengikuti lomba melukis
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 2, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -827,24 +1151,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
-                        Adzana, Shaliha Gracia{" "}
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                        Adzana, Shaliha Gracia
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Menang lomba desain prototype
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 2, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -867,24 +1213,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Banner, Tony Stark
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Juara 2 saat mengikuti lomba melukis
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 2, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -945,24 +1313,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Banner, Tony Stark
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Academic
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="May 29, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -985,24 +1375,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Adzana, Shaliha Gracia
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Others
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="May 29, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -1040,64 +1452,46 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Banner, Tony Stark
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Non-Academic
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 2, 2024" />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-              <ListItem
-                button
-                component={Link}
-                to="consultation"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Consultation"}
-                      sx={{
-                        backgroundColor: "rgba(223, 11, 146, 0.1)",
-                        color: "rgba(223, 11, 146, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      {" "}
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
                       <Typography
                         sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
                         }}
                       >
-                        Adzana, Shaliha Gracia{" "}
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
-                        Others
-                      </Typography>{" "}
-                    </>
-                  }
-                />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 2, 2024" />
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -1120,24 +1514,108 @@ const History = (props) => {
                   }
                   secondary={
                     <>
-                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
                           paddingLeft: "8px",
                           paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
+                        Adzana, Shaliha Gracia
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
+                        Others
+                      </Typography>
+                    </>
+                  }
+                />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                button
+                component={Link}
+                to="consultation"
+                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
+              >
+                <ListItemText
+                  primary={
+                    <Chip
+                      size={"small"}
+                      label={"Consultation"}
+                      sx={{
+                        backgroundColor: "rgba(223, 11, 146, 0.1)",
+                        color: "rgba(223, 11, 146, 1)",
+                      }}
+                    />
+                  }
+                  secondary={
+                    <>
+                      <Typography
+                        sx={{
+                          color: "rgba(0, 0, 0, 1)",
+                          paddingLeft: "8px",
+                          paddingTop: "5px",
+                          fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
                         Banner, Tony Stark
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
+                      </Typography>
+                      <Typography
+                        sx={{
+                          paddingLeft: "8px",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
                         Academic
-                      </Typography>{" "}
+                      </Typography>
                     </>
                   }
                 />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 2, 2024" />
+                <Box
+                  sx={{
+                    marginLeft: { xs: "auto", md: 0 },
+                    width: { xs: "100%", md: "45%" },
+                    textAlign: "right",
+                  }}
+                >
+                  <ListItemText
+                    secondary={
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "10px", md: "12px" },
+                          color: "rgba(27, 43, 65, 0.69)",
+                        }}
+                      >
+                        02:00 PM
+                      </Typography>
+                    }
+                  />
                 </Box>
               </ListItem>
               <Divider component="li" />
