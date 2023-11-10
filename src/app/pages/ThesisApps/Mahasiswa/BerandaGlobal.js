@@ -1,18 +1,8 @@
 import Div from "@jumbo/shared/Div";
-import {
-  Chip,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
+import { Typography } from "@mui/material";
 import MenuPengajuanJudulDosen from "app/shared/MenuHorizontal/MenuPengajuanJudulDosen";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-import React from "react";
+import React, { useState } from "react";
 import BerandaPengajuanJudul from "./BerandaPengajuanJudul";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
@@ -20,7 +10,7 @@ import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPan
 import MenuKetuaPanalisProposal from "app/shared/MenuHorizontal/MenuKetuaPanalisProposal";
 import MenuCoAdvisorProposal from "app/shared/MenuHorizontal/MenuCoAdvisorProposal";
 import MenuAdvisorProposal from "app/shared/MenuHorizontal/MenuAdvisorProposal";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import BerandaProposalMahasiswa from "./BerandaProposalMahasiswa";
 import BerandaSkripsiMahasiswa from "./BerandaSkripsiMahasiswa";
 
@@ -31,8 +21,8 @@ const BerandaGlobal = () => {
 
   // const { id } = JSON.parse(localStorage.getItem("user"));
 
-  //   const roleTest = useParams().role;
-  //   console.log(roleTest);
+  const roleTest = useParams().role;
+  console.log(roleTest);
 
   // const idTest = useParams().id;
   // const roleTest = useParams().role;
@@ -41,6 +31,20 @@ const BerandaGlobal = () => {
   const { role } = JSON.parse(localStorage.getItem("user"));
   // const role = ["ADVISOR", "DOSEN"];
   console.log(role);
+
+  // kondisi beranda
+  // State untuk melacak kondisi
+  const [kondisi, setKondisi] = useState("berandaPengajuanJudul");
+
+  // Fungsi untuk mengubah kondisi
+  const handleKondisiBeranda = () => {
+    if (kondisi === "berandaPengajuanJudul") {
+      setKondisi("berandaPengajuanProposal");
+    } else if (kondisi === "berandaPengajuanProposal") {
+      setKondisi("berandaPengajuanSkripsi");
+    }
+  };
+
   return (
     <Div>
       <Div
@@ -166,7 +170,15 @@ const BerandaGlobal = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
-            <BerandaSkripsiMahasiswa />
+            {kondisi === "berandaPengajuanJudul" && (
+              <BerandaPengajuanJudul onTerima={handleKondisiBeranda} />
+            )}
+            {kondisi === "berandaPengajuanProposal" && (
+              <BerandaProposalMahasiswa onTerima={handleKondisiBeranda} />
+            )}
+            {kondisi === "berandaPengajuanSkripsi" && (
+              <BerandaSkripsiMahasiswa onTerima={handleKondisiBeranda} />
+            )}
           </Div>
         </Div>
         {/* Element 2 End */}

@@ -15,7 +15,6 @@ const MenuKetuaPanalisProposal = () => {
         <Div
           sx={{
             display: "flex",
-            // padding: "5px 16px",
             width: "100%",
             alignSelf: "stretch",
             borderRadius: "8px",

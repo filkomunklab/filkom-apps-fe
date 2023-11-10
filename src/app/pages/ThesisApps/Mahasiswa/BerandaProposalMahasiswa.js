@@ -99,8 +99,8 @@ const BerandaProposalMahasiswa = () => {
   console.log("token", token);
 
   // const { id } = JSON.parse(localStorage.getItem("user"));
-  const roleTest = useParams().role;
-  console.log(roleTest);
+  // const roleTest = useParams().role;
+  // console.log(roleTest);
 
   // const idTest = useParams().id;
   // const roleTest = useParams().role;

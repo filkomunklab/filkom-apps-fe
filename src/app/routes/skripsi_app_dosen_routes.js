@@ -73,8 +73,8 @@ const dosenRoutes = [
   //PENGAJUAN JUDUL
   {
     // Beranda Mahasiswa Pengajuan Judul
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/beranda",
-    element: <Page component={BerandaPengajuanJudul} />,
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/beranda/:id/:role",
+    element: <Page component={BerandaGlobal} />,
   },
   {
     // Pengajuan Judul Mahasiswa
@@ -90,7 +90,7 @@ const dosenRoutes = [
   },
   {
     // Pengajuan Judul Mahasiswa
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/pengajuan-judul",
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/pengajuan-judul/",
     element: <Page component={PengajuanJudulDiterimaDosenSkripsi} />,
   },
   {
@@ -112,8 +112,8 @@ const dosenRoutes = [
   // SKRIPSI
   {
     // Beranda Mahasiswa skripsi
-    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/beranda",
-    element: <Page component={BerandaSkripsiMahasiswa} />,
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi/beranda/:id/:role",
+    element: <Page component={BerandaGlobal} />,
   },
   {
     // pengajuan judul Mahasiswa skripsi

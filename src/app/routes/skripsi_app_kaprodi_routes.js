@@ -3,6 +3,7 @@ import DaftarPengajuanSkripsiKaprodi from "app/pages/ThesisApps/Dosen/DaftarPeng
 import RiwayatSkripsiKaprodi from "app/pages/ThesisApps/Dosen/RiwayatSkripsiKaprodi";
 import DaftarPengajuanJudulKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarPengajuanJudulKaprodi";
 import DaftarPengajuanProposalKaprodi from "app/pages/ThesisApps/Kaprodi/DaftarPengajuanProposalKaprodi";
+import BerandaGlobal from "app/pages/ThesisApps/Mahasiswa/BerandaGlobal";
 
 const kaprodiRoutes = [
   /*================================================================================================================*/
@@ -32,8 +33,19 @@ const kaprodiRoutes = [
     element: <Page component={RiwayatSkripsiKaprodi} />,
   },
 
-  // PROPOSAL
+  // PENGAJUAN JUDUL
+  {
+    // Beranda
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-kaprodi/beranda/:id/:role",
+    element: <Page component={BerandaGlobal} />,
+  },
 
+  // PROPOSAL
+  {
+    // Beranda
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-kaprodi/beranda/:id/:role",
+    element: <Page component={BerandaGlobal} />,
+  },
   // SKRIPSI
 ];
 

@@ -456,7 +456,7 @@ const DaftarPengajuanJudulDosenSkripsi = () => {
                           <TableCell>
                             <Typography
                               component={Link}
-                              to="/halaman-berikutnya"
+                              to="/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/beranda/3453782342/dosen-skripsi"
                               sx={{
                                 textDecoration: "none",
                                 color: "blue",
