@@ -57,6 +57,7 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
         // Atur state 'setTimPembimbing' dengan data dari respons
         setTimPembimbing(response.data.data);
         riwayatData(response.data.data.progress);
+        console.log("Progress dari Riwayat: ", response.data.data.progress);
         console.log("Request Get tim pembimbing: ", response.data.data);
       } catch (error) {
         console.error(

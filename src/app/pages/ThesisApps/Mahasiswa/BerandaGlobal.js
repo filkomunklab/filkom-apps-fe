@@ -26,6 +26,10 @@ const BerandaGlobal = () => {
   const role = useParams().role;
   console.log(role);
 
+  if (progress !== null) {
+    console.log("Progress:", progress);
+  }
+
   // const { id } = JSON.parse(localStorage.getItem("user"));
 
   // const idTest = useParams().id;
@@ -178,25 +182,21 @@ const BerandaGlobal = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
-            {/* {kondisi === "berandaPengajuanJudul" && (
+            {/* {progress === "Submission" && (
               <BerandaPengajuanJudul
                 value={groupId}
                 onTerima={handleKondisiBeranda}
               />
             )} */}
-            {/* {kondisi === "berandaPengajuanProposal" && (
-              <BerandaProposalMahasiswa
-                value={groupId}
-                onTerima={handleKondisiBeranda}
-              />
-            )} */}
-            {progress === "Skripsi" ||
-              (progress === "Finished" && (
-                <BerandaSkripsiMahasiswa
-                  value={groupId}
-                  onTerima={handleKondisiBeranda}
-                />
-              ))}
+            {progress === "Proposal" && (
+              <BerandaProposalMahasiswa value={groupId} />
+            )}
+            {progress === "Skripsi" && (
+              <BerandaSkripsiMahasiswa value={groupId} />
+            )}
+            {progress === "Finished" && (
+              <BerandaSkripsiMahasiswa value={groupId} />
+            )}
           </Div>
         </Div>
         {/* Element 2 End */}
