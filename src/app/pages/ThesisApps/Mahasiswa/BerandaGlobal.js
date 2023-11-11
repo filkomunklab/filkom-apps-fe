@@ -5,7 +5,7 @@ import Div from "@jumbo/shared/Div";
 import { Typography } from "@mui/material";
 // import MenuPengajuanJudulDosen from "app/shared/MenuHorizontal/MenuPengajuanJudulDosen";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-// import BerandaPengajuanJudul from "./BerandaPengajuanJudul";
+import BerandaPengajuanJudul from "./BerandaPengajuanJudul";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPanalisProposal";
@@ -183,11 +183,11 @@ const BerandaGlobal = () => {
             }}
           >
             {/* {progress === "Submission" && (
-              <BerandaPengajuanJudul
-                value={groupId}
-                onTerima={handleKondisiBeranda}
-              />
+              <BerandaPengajuanJudul value={groupId} />
             )} */}
+            {progress === "Submission" && (
+              <BerandaPengajuanJudul value={groupId} />
+            )}
             {progress === "Proposal" && (
               <BerandaProposalMahasiswa value={groupId} />
             )}

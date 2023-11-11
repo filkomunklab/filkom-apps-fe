@@ -41,9 +41,9 @@ const BerandaSkripsiMahasiswa = ({ value: groupId }) => {
     fetchDetailsData();
   }, [token, groupId]);
 
-  const { role } = JSON.parse(localStorage.getItem("user"));
-  // const role = ["ADVISOR", "DOSEN"];
-  console.log(role);
+  // const { role } = JSON.parse(localStorage.getItem("user"));
+  // // const role = ["ADVISOR", "DOSEN"];
+  // console.log(role);
 
   return (
     <Div sx={{ width: "100%" }}>
