@@ -13,6 +13,7 @@ import DaftarPengujianProposalAnggotaPenelis from "app/pages/ThesisApps/Dosen/Da
 import DaftarPengujianProposalKetuaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianProposalKetuaPenelis";
 import DaftarPengujianSkripsiAnggotaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianSkripsiAnggotaPenelis";
 import DaftarPengujianSkripsiKetuaPenelis from "app/pages/ThesisApps/Dosen/DaftarPengujianSkripsiKetuaPenelis";
+import DaftarRiwayatNilaiDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarRiwayatNilaiDosenSkripsi";
 import DocumentPersetujuanDosenPembimbing from "app/pages/ThesisApps/Dosen/DocumentPersetujuanDosenPembimbing";
 import DocumentPersetujuanDosenPembimbingProposal2 from "app/pages/ThesisApps/Dosen/DocumentPersetujuanDosenPembimbingProposal2";
 import DocumentPersetujuanDosenPembimbingSkripsi from "app/pages/ThesisApps/Dosen/DocumentPersetujuanDosenPembimbingSkripsi";
@@ -68,6 +69,11 @@ const dosenRoutes = [
     // Manajemen Kelas Dosen Skripsi
     path: "/sistem-informasi-skripsi/manajemen-kelas-dosen-skripsi",
     element: <Page component={ManajemenKelasDosenSkripsi} />,
+  },
+  {
+    // Daftar Riwayat Nilai Dosen Skripsi
+    path: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
+    element: <Page component={DaftarRiwayatNilaiDosenSkripsi} />,
   },
 
   //PENGAJUAN JUDUL

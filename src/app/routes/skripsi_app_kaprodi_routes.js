@@ -30,7 +30,7 @@ const kaprodiRoutes = [
   // RIWAYAT
   {
     // Daftar Pengajuan Riwayat Kaprodi
-    path: "/sistem-informasi-skripsi/riwayat-kaprodi",
+    path: "/sistem-informasi-skripsi/daftar-riwayat-skripsi-kaprodi",
     element: <Page component={RiwayatSkripsiKaprodi} />,
   },
 

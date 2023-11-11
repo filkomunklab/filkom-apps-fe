@@ -527,6 +527,12 @@ export const dekanMenus = [
           },
         ],
       },
+      {
+        uri: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
+        label: "Riwayat Nilai",
+        type: "nav-item",
+        icon: <ChecklistIcon sx={{ fontSize: 20 }} />,
+      },
     ],
   },
 ];
@@ -741,12 +747,6 @@ export const dosenMenus = [
           },
         ],
       },
-      {
-        uri: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
-        label: "Riwayat Nilai",
-        type: "nav-item",
-        icon: <ChecklistIcon sx={{ fontSize: 20 }} />,
-      },
     ],
   },
 ];
@@ -953,6 +953,12 @@ export const kaprodiMenus = [
         icon: <CollectionsBookmarkIcon sx={{ fontSize: 20 }} />,
       },
       {
+        uri: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
+        label: "Riwayat Nilai",
+        type: "nav-item",
+        icon: <ChecklistIcon sx={{ fontSize: 20 }} />,
+      },
+      {
         label: "Bimbingan",
         type: "collapsible",
         icon: <MailIcon sx={{ fontSize: 20 }} />,
@@ -1037,6 +1043,12 @@ export const kaprodiMenus = [
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
           },
         ],
+      },
+      {
+        uri: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
+        label: "Riwayat Nilai",
+        type: "nav-item",
+        icon: <ChecklistIcon sx={{ fontSize: 20 }} />,
       },
     ],
   },

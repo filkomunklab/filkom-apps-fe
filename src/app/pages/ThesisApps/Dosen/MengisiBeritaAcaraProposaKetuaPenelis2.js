@@ -20,10 +20,13 @@ import {
   FormControlLabel,
   DialogContentText,
   TextareaAutosize,
+  Paper,
 } from "@mui/material";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
-import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
+import MenuAdvisorProposal from "app/shared/MenuHorizontal/MenuAdvisorProposal";
+import MenuKetuaPanalisProposal from "app/shared/MenuHorizontal/MenuKetuaPanalisProposal";
+import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPanalisProposal";
 
 const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
   // State untuk mengontrol tampilan popup
@@ -35,16 +38,21 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
   const [isRevisionEnabled, setIsRevisionEnabled] = useState(true);
   const [isScoreEnabled, setIsScoreEnabled] = useState(true);
   const [isSignInEnabled, setIsSignInEnabled] = useState(true);
+  const [openSignInConfirmationDialog, setOpenSignInConfirmationDialog] =
+    useState(false);
   const [isSubmitButtonVisible, setIsSubmitButtonVisible] = useState(true);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false); // State untuk mengecek apakah sudah disubmit
   const [nilai, setNilai] = useState("");
   const [perubahan, setPerubahan] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
   const [errorMessageKesimpulan, setErrorMessageKesimpulan] = useState();
   const [errorMessagePenilaian, setErrorMessagePenilaian] = useState();
-  const [openSignInConfirmationDialog, setOpenSignInConfirmationDialog] =
-    useState(false);
+  const [ketuaPanalisTanggalSign, setKetuaPanalisTanggalSign] = useState("");
 
+  const handleSubmit = () => {
+    // Setelah disubmit, radio button akan diganti dengan teks
+    setIsSubmitted(true);
+  };
   const handleOpenSignInConfirmationDialog = () => {
     setOpenSignInConfirmationDialog(true);
   };
@@ -54,7 +62,7 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
   };
 
   const { role } = JSON.parse(localStorage.getItem("user"));
-  // const role = ["KETUA_PANELIS", "DOSEN"];
+  // const role = ["KETUA_PANALIS", "DOSEN"];
   console.log(role);
 
   const handleStatusChange = (event) => {
@@ -95,13 +103,12 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
 
   // Fungsi yang akan dijalankan ketika pengguna mengklik tombol "Ya" di dialog konfirmasi
   const handleSubmitData = () => {
-    // Di sini Anda dapat menambahkan logika untuk mengirim data atau tindakan yang diperlukan
-
     // Setelah tindakan selesai, tutup dialog konfirmasi
     handleCloseConfirmationBeritaAcaraDialog();
+  };
 
-    // Navigasi ke halaman lain
-    // history.push("/halaman-lain"); // Gantilah "/halaman-lain" dengan URL halaman yang sesuai
+  const handleConfirmClick = () => {
+    setIsSubmitButtonVisible(false);
   };
 
   const [ketuaPenelisStatusBeritaAcara, setKetuaPenelisStatusBeritaAcara] =
@@ -113,6 +120,15 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
   const [isSudmit, setIsSudmited] = useState(false);
 
   const handleSignClick = () => {
+    // Mendapatkan tanggal sekarang
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    const yyyy = today.getFullYear();
+    const currentDate = dd + "-" + mm + "-" + yyyy;
+
+    // Set state tanggal sign dekan fakultas
+    setKetuaPanalisTanggalSign(currentDate);
     // Logika untuk mengubah status
     if (!isSigned) {
       setKetuaPenelisStatusBeritaAcara("Sudah");
@@ -138,18 +154,6 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
   };
 
   const handleOpenConfirmationDialog = () => {
-    // Memeriksa apakah salah satu opsi tidak terpilih
-    if (
-      selectedValues.value1 === "" ||
-      selectedValues.value2 === "" ||
-      selectedValues.value3 === "" ||
-      selectedValues.value4 === ""
-    ) {
-      setErrorMessagePenilaian(
-        "Anda harus memilih semua opsi sebelum mengirim penilaian."
-      );
-      return;
-    }
     setOpenConfirmationDialog(true);
   };
 
@@ -322,10 +326,37 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
           }}
         >
           {/* Menu Horizontal Start */}
-          <Div sx={{ width: "100%" }}>
-            <MenuPengajuanSkripsiDosen />
+
+          {/* ADVISOR */}
+          <Div
+            hidden={role.includes("ADVISOR") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAdvisorProposal />
           </Div>
+          {/* KETUA PANALIS */}
+          <Div
+            hidden={role.includes("KETUA_PANALIS") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKetuaPanalisProposal />
+          </Div>
+          {/* ANGGOTA PANALIS */}
+          <Div
+            hidden={role.includes("ANGGOTA_PANALIS") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAnggotaPanalisProposal />
+          </Div>
+          {/* KAPRODI */}
+          {/* <Div
+            hidden={role.includes("KAPRODI") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKaprodiProposal />
+          </Div> */}
           {/* Menu horizontal End */}
+
           <Div
             sx={{
               display: "flex",
@@ -359,7 +390,7 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
             </Typography>
             {/* Table Penilaian Start */}
 
-            <TableContainer sx={{ marginBottom: "50px" }}>
+            <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
               <Typography
                 variant="subtitle2"
                 sx={{
@@ -376,7 +407,7 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
                   <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
                     <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
                     <TableCell sx={{ width: "25%" }}>Mahasiswa</TableCell>
-                    <TableCell sx={{ width: "25%" }}>Ketua Penelis</TableCell>
+                    <TableCell sx={{ width: "25%" }}>Ketua Panalis</TableCell>
                     <TableCell sx={{ width: "25%" }}>Anggota Penelis</TableCell>
                     <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
                     <TableCell sx={{ width: "25%" }}>Action</TableCell>
@@ -412,7 +443,7 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
             {/* Table Penilaian End */}
 
             {/* Table Perubahan Start */}
-            <TableContainer sx={{ marginBottom: "50px" }}>
+            <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
               <Typography
                 variant="subtitle2"
                 sx={{
@@ -428,7 +459,7 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
                 <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                   <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
                     <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                    <TableCell sx={{ width: "25%" }}>Ketua Penelis</TableCell>
+                    <TableCell sx={{ width: "25%" }}>Ketua Panalis</TableCell>
                     <TableCell sx={{ width: "25%" }}>Anggota Penelis</TableCell>
                     <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
                     <TableCell sx={{ width: "25%" }}>Co-Advisor</TableCell>
@@ -493,7 +524,7 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
             {/* Table Perubahan End */}
 
             {/* Table Berita Acara Start */}
-            <TableContainer sx={{ marginBottom: "50px" }}>
+            <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
               <Typography
                 variant="subtitle2"
                 sx={{
@@ -509,11 +540,10 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
                 <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                   <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
                     <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                    <TableCell sx={{ width: "12%" }}>Dekan Fakultas</TableCell>
-                    <TableCell sx={{ width: "12%" }}>Ketua Penelis</TableCell>
-                    <TableCell sx={{ width: "12%" }}>Anggota Penelis</TableCell>
-                    <TableCell sx={{ width: "12%" }}>Advisor</TableCell>
-                    <TableCell sx={{ width: "12%" }}>Co-Advisor</TableCell>
+                    <TableCell sx={{ width: "15%" }}>Dekan Fakultas</TableCell>
+                    <TableCell sx={{ width: "15%" }}>Ketua Panalis</TableCell>
+                    <TableCell sx={{ width: "15%" }}>Anggota Penelis</TableCell>
+                    <TableCell sx={{ width: "15%" }}>Advisor</TableCell>
                     <TableCell sx={{ width: "5%" }}>Action</TableCell>
                   </TableRow>
                 </TableHead>
@@ -534,9 +564,6 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
                           color: isSigned ? "#0A7637" : undefined,
                         }}
                       />
-                    </TableCell>
-                    <TableCell>
-                      <Chip label="Belum" size="small" />
                     </TableCell>
                     <TableCell>
                       <Chip label="Belum" size="small" />
@@ -568,14 +595,27 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
                       </span>
                     </TableCell>
                   </TableRow>
+                  <TableRow>
+                    <TableCell>2</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell>
+                      {ketuaPanalisTanggalSign ? ketuaPanalisTanggalSign : ""}
+                    </TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
             {/* Table Berita Acara End */}
             {/* Radio Button Penilaian Akhir Start */}
 
-            {/* Kesimpulan dari Pengujian Ketua penelis start */}
-            <Div hidden={role.includes("KETUA_PANELIS") ? false : true}>
+            {/* Kesimpulan dari Pengujian Ketua Panalis start */}
+            <Div
+              hidden={role.includes("KETUA_PANALIS") ? false : true}
+              sx={{ width: "100%" }}
+            >
               <Div
                 sx={{
                   display: "flex",
@@ -586,7 +626,7 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
                 }}
               >
                 <Typography variant="subtitle2">
-                  Kesimpulan Ujian Proposal
+                  Kesimpulan Ujian Skripsi
                 </Typography>
                 {isSubmitted ? (
                   <Div>
@@ -619,6 +659,7 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
                   </Div>
                 )}
               </Div>
+
               <Div
                 sx={{
                   display: "flex",
@@ -798,6 +839,7 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
                   </Div>
                 )}
               </Div>
+
               {/* Radio Button Penilaian Akhir End */}
               {isSubmitButtonVisible && (
                 <Div
@@ -822,8 +864,10 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
                   </Button>
                 </Div>
               )}
+              {/* </Div> */}
+              {/* Kesimpulan dari Pengujian Ketua penelis start */}
             </Div>
-            {/* Kesimpulan dari Pengujian Ketua penelis start */}
+            {/* Kesimpulan dari Pengujian Ketua Panalis start */}
           </Div>
         </Div>
         {/* Element 2 End */}
@@ -1579,7 +1623,7 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
                   background: "#F5F5F5",
                 }}
               >
-                Ketua Penelis
+                Ketua Panalis
               </Div>
               <Div
                 sx={{
@@ -1746,7 +1790,11 @@ const MengisiBeritaAcaraProposalKetuaPenelis2 = () => {
             Batal
           </Button>
           <Button
-            onClick={handleSubmitData} // Anda perlu membuat fungsi handleSubmitData sesuai dengan kebutuhan Anda
+            onClick={() => {
+              handleSubmitData();
+              handleSubmit();
+              handleConfirmClick();
+            }}
             variant="contained"
             sx={{ textTransform: "none" }}
             color="primary"

@@ -21,6 +21,13 @@ import WarningIcon from "@mui/icons-material/Warning";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
+import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
+import MenuDekanProposal from "app/shared/MenuHorizontal/MenuDekanProposal";
+import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPanalisProposal";
+import MenuKetuaPanalisProposal from "app/shared/MenuHorizontal/MenuKetuaPanalisProposal";
+import MenuCoAdvisorProposal from "app/shared/MenuHorizontal/MenuCoAdvisorProposal";
+import MenuAdvisorProposal from "app/shared/MenuHorizontal/MenuAdvisorProposal";
+import MenuDosenSkripsiProposal from "app/shared/MenuHorizontal/MenuDosenSkripsiProposal";
 
 const DocumentPersetujuanDosenPembimbingProposal2 = () => {
   // Advisor setuju dan tolak
@@ -468,32 +475,68 @@ const DocumentPersetujuanDosenPembimbingProposal2 = () => {
           }}
         >
           {/* Menu Horizontal Dosen Start */}
+          {/* DOSEN SKRIPSI */}
           <Div
-            hidden={
-              role.includes(
-                "DOSEN",
-                "ADVISOR",
-                "CO_ADVISOR",
-                "KETUA_PANALIS",
-                "ANGGOTA_PANALIS",
-                "KAPRODI",
-                "DEKAN"
-              )
-                ? false
-                : true
-            }
+            hidden={role.includes("DOSEN") ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuPengajuanSkripsiDosen />
+            <MenuDosenSkripsiProposal />
           </Div>
-          {/* Menu horizontal Dosen End */}
-
-          {/* Menu Horizontal Sekertaris Start */}
+          {/* ADVISOR */}
+          <Div
+            hidden={role.includes("ADVISOR") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAdvisorProposal />
+          </Div>
+          {/* CO_ADVISOR */}
+          <Div
+            hidden={role.includes("CO_ADVISOR") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuCoAdvisorProposal />
+          </Div>
+          {/* KETUA PANALIS */}
+          <Div
+            hidden={role.includes("KETUA_PANALIS") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKetuaPanalisProposal />
+          </Div>
+          {/* ANGGOTA PANALIS */}
+          <Div
+            hidden={role.includes("ANGGOTA_PANALIS") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAnggotaPanalisProposal />
+          </Div>
+          {/* KAPRODI */}
+          {/* <Div
+            hidden={role.includes("KAPRODI") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKaprodiProposal />
+          </Div> */}
+          {/* SEKERTARIS */}
+          {/* DEKAN */}
+          <Div
+            hidden={role.includes("DEKAN") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDekanProposal />
+          </Div>
           <Div
             hidden={role.includes("SEKERTARIS") ? false : true}
             sx={{ width: "100%" }}
           >
             <MenuSekertaris />
+          </Div>
+          {/* MAHASISWA */}
+          <Div
+            hidden={role.includes("MAHASISWA") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuMahasiswa />
           </Div>
           {/* Menu horizontal Sekertaris End */}
           <Div

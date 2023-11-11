@@ -20,10 +20,14 @@ import {
   FormControlLabel,
   DialogContentText,
   TextareaAutosize,
+  Paper,
 } from "@mui/material";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
+import MenuAdvisorProposal from "app/shared/MenuHorizontal/MenuAdvisorProposal";
+import MenuKetuaPanalisProposal from "app/shared/MenuHorizontal/MenuKetuaPanalisProposal";
+import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPanalisProposal";
 
 const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
   // State untuk mengontrol tampilan popup
@@ -44,6 +48,7 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
   const [deskripsi, setDeskripsi] = useState("");
   const [errorMessageKesimpulan, setErrorMessageKesimpulan] = useState();
   const [errorMessagePenilaian, setErrorMessagePenilaian] = useState();
+  const [ketuaPanalisTanggalSign, setKetuaPanalisTanggalSign] = useState("");
 
   const handleSubmit = () => {
     // Setelah disubmit, radio button akan diganti dengan teks
@@ -58,7 +63,7 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
   };
 
   const { role } = JSON.parse(localStorage.getItem("user"));
-  // const role = ["KETUA_PANELIS", "DOSEN"];
+  // const role = ["KETUA_PANALIS", "DOSEN"];
   console.log(role);
 
   const handleStatusChange = (event) => {
@@ -116,6 +121,15 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
   const [isSudmit, setIsSudmited] = useState(false);
 
   const handleSignClick = () => {
+    // Mendapatkan tanggal sekarang
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    const yyyy = today.getFullYear();
+    const currentDate = dd + "-" + mm + "-" + yyyy;
+
+    // Set state tanggal sign dekan fakultas
+    setKetuaPanalisTanggalSign(currentDate);
     // Logika untuk mengubah status
     if (!isSigned) {
       setKetuaPenelisStatusBeritaAcara("Sudah");
@@ -313,9 +327,35 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
           }}
         >
           {/* Menu Horizontal Start */}
-          <Div sx={{ width: "100%" }}>
-            <MenuPengajuanSkripsiDosen />
+          {/* ADVISOR */}
+          <Div
+            hidden={role.includes("ADVISOR") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAdvisorProposal />
           </Div>
+          {/* KETUA PANALIS */}
+          <Div
+            hidden={role.includes("KETUA_PANALIS") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKetuaPanalisProposal />
+          </Div>
+          {/* ANGGOTA PANALIS */}
+          <Div
+            hidden={role.includes("ANGGOTA_PANALIS") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAnggotaPanalisProposal />
+          </Div>
+          {/* KAPRODI */}
+          {/* <Div
+            hidden={role.includes("KAPRODI") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKaprodiProposal />
+          </Div> */}
+          {/* SEKERTARIS */}
           {/* Menu horizontal End */}
 
           <Div
@@ -351,7 +391,7 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
             </Typography>
             {/* Table Penilaian Start */}
 
-            <TableContainer sx={{ marginBottom: "50px" }}>
+            <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
               <Typography
                 variant="subtitle2"
                 sx={{
@@ -404,7 +444,7 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
             {/* Table Penilaian End */}
 
             {/* Table Perubahan Start */}
-            <TableContainer sx={{ marginBottom: "50px" }}>
+            <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
               <Typography
                 variant="subtitle2"
                 sx={{
@@ -485,7 +525,7 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
             {/* Table Perubahan End */}
 
             {/* Table Berita Acara Start */}
-            <TableContainer sx={{ marginBottom: "50px" }}>
+            <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
               <Typography
                 variant="subtitle2"
                 sx={{
@@ -501,11 +541,10 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
                 <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                   <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
                     <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                    <TableCell sx={{ width: "12%" }}>Dekan Fakultas</TableCell>
-                    <TableCell sx={{ width: "12%" }}>Ketua Penelis</TableCell>
-                    <TableCell sx={{ width: "12%" }}>Anggota Penelis</TableCell>
-                    <TableCell sx={{ width: "12%" }}>Advisor</TableCell>
-                    <TableCell sx={{ width: "12%" }}>Co-Advisor</TableCell>
+                    <TableCell sx={{ width: "15%" }}>Dekan Fakultas</TableCell>
+                    <TableCell sx={{ width: "15%" }}>Ketua Penelis</TableCell>
+                    <TableCell sx={{ width: "15%" }}>Anggota Penelis</TableCell>
+                    <TableCell sx={{ width: "15%" }}>Advisor</TableCell>
                     <TableCell sx={{ width: "5%" }}>Action</TableCell>
                   </TableRow>
                 </TableHead>
@@ -530,9 +569,7 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
                     <TableCell>
                       <Chip label="Belum" size="small" />
                     </TableCell>
-                    <TableCell>
-                      <Chip label="Belum" size="small" />
-                    </TableCell>
+
                     <TableCell>
                       <Chip
                         label="Sudah"
@@ -560,6 +597,16 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
                       </span>
                     </TableCell>
                   </TableRow>
+                  <TableRow>
+                    <TableCell>2</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell>
+                      {ketuaPanalisTanggalSign ? ketuaPanalisTanggalSign : ""}
+                    </TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
@@ -567,257 +614,261 @@ const MengisiBeritaAcaraSkripsiKetuaPenelis = () => {
             {/* Radio Button Penilaian Akhir Start */}
 
             {/* Kesimpulan dari Pengujian Ketua penelis start */}
-            {/* <Div hidden={role.includes("KETUA_PANELIS") ? false : true}> */}
             <Div
-              sx={{
-                display: "flex",
-                padding: "0px 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-              }}
+              hidden={role.includes("KETUA_PANALIS") ? false : true}
+              sx={{ width: "100%" }}
             >
-              <Typography variant="subtitle2">
-                Kesimpulan Ujian Skripsi
-              </Typography>
-              {isSubmitted ? (
-                <Div>
-                  <Typography variant="body1">{status}</Typography>
-                </Div>
-              ) : (
-                <Div>
-                  <FormControl component="fieldset">
-                    <RadioGroup
-                      row
-                      aria-label="status"
-                      name="status"
-                      value={status}
-                      onChange={handleStatusChange}
-                    >
-                      <FormControlLabel
-                        value="Diterima"
-                        control={<Radio />}
-                        label="Diterima"
-                        onChange={(e) => setStatus(e.target.value)}
-                      />
-                      <FormControlLabel
-                        value="Ditolak"
-                        control={<Radio />}
-                        label="Ditolak"
-                        onChange={(e) => setStatus(e.target.value)}
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                </Div>
-              )}
-            </Div>
+              <Div
+                sx={{
+                  display: "flex",
+                  padding: "0px 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                }}
+              >
+                <Typography variant="subtitle2">
+                  Kesimpulan Ujian Skripsi
+                </Typography>
+                {isSubmitted ? (
+                  <Div>
+                    <Typography variant="body1">{status}</Typography>
+                  </Div>
+                ) : (
+                  <Div>
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        row
+                        aria-label="status"
+                        name="status"
+                        value={status}
+                        onChange={handleStatusChange}
+                      >
+                        <FormControlLabel
+                          value="Diterima"
+                          control={<Radio />}
+                          label="Diterima"
+                          onChange={(e) => setStatus(e.target.value)}
+                        />
+                        <FormControlLabel
+                          value="Ditolak"
+                          control={<Radio />}
+                          label="Ditolak"
+                          onChange={(e) => setStatus(e.target.value)}
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </Div>
+                )}
+              </Div>
 
-            <Div
-              sx={{
-                display: "flex",
-                padding: "0px 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-              }}
-            >
-              {isSubmitted ? (
-                <Div>
-                  <Typography variant="subtitle2">Perubahan</Typography>
-                  <Typography variant="body1">{perubahan}</Typography>
-                </Div>
-              ) : (
-                <Div>
+              <Div
+                sx={{
+                  display: "flex",
+                  padding: "0px 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                }}
+              >
+                {isSubmitted ? (
                   <Div>
                     <Typography variant="subtitle2">Perubahan</Typography>
+                    <Typography variant="body1">{perubahan}</Typography>
+                  </Div>
+                ) : (
+                  <Div>
                     <Div>
-                      <FormControl component="fieldset">
-                        <RadioGroup
-                          row
-                          aria-label="perubahan"
-                          name="perubahan"
-                          value={perubahan}
-                          onChange={(e) => setPerubahan(e.target.value)}
-                        >
-                          <FormControlLabel
-                            value="Major"
-                            control={<Radio />}
-                            label="Major"
-                          />
-                          <FormControlLabel
-                            value="Minor"
-                            control={<Radio />}
-                            label="Minor"
-                          />
-                        </RadioGroup>
-                      </FormControl>
+                      <Typography variant="subtitle2">Perubahan</Typography>
+                      <Div>
+                        <FormControl component="fieldset">
+                          <RadioGroup
+                            row
+                            aria-label="perubahan"
+                            name="perubahan"
+                            value={perubahan}
+                            onChange={(e) => setPerubahan(e.target.value)}
+                          >
+                            <FormControlLabel
+                              value="Major"
+                              control={<Radio />}
+                              label="Major"
+                            />
+                            <FormControlLabel
+                              value="Minor"
+                              control={<Radio />}
+                              label="Minor"
+                            />
+                          </RadioGroup>
+                        </FormControl>
+                      </Div>
                     </Div>
                   </Div>
-                </Div>
-              )}
-            </Div>
-            <Div
-              sx={{
-                display: "flex",
-                padding: "0px 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-              }}
-            >
-              {isSubmitted ? (
-                <Div>
-                  <Typography variant="subtitle2">
-                    Nilai Kesimpulan Ujian Skripsi
-                  </Typography>
-                  <Typography variant="body1">{nilai}</Typography>
-                </Div>
-              ) : (
-                <Div>
+                )}
+              </Div>
+              <Div
+                sx={{
+                  display: "flex",
+                  padding: "0px 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
+                }}
+              >
+                {isSubmitted ? (
                   <Div>
                     <Typography variant="subtitle2">
                       Nilai Kesimpulan Ujian Skripsi
                     </Typography>
-                    <Div>
-                      <FormControl component="fieldset">
-                        <RadioGroup
-                          row
-                          aria-label="nilai"
-                          name="nilai"
-                          value={nilai}
-                          onChange={(e) => setNilai(e.target.value)}
-                        >
-                          <FormControlLabel
-                            value="A"
-                            control={<Radio />}
-                            label="A"
-                          />
-                          <FormControlLabel
-                            value="A-"
-                            control={<Radio />}
-                            label="A-"
-                          />
-                          <FormControlLabel
-                            value="B+"
-                            control={<Radio />}
-                            label="B+"
-                          />
-                          <FormControlLabel
-                            value="B"
-                            control={<Radio />}
-                            label="B"
-                          />
-                          <FormControlLabel
-                            value="B-"
-                            control={<Radio />}
-                            label="B-"
-                          />
-                          <FormControlLabel
-                            value="C+"
-                            control={<Radio />}
-                            label="C+"
-                          />
-                          <FormControlLabel
-                            value="C"
-                            control={<Radio />}
-                            label="C"
-                          />
-                          <FormControlLabel
-                            value="C-"
-                            control={<Radio />}
-                            label="C-"
-                          />
-                          <FormControlLabel
-                            value="D+"
-                            control={<Radio />}
-                            label="D+"
-                          />
-                        </RadioGroup>
-                      </FormControl>
-                    </Div>
+                    <Typography variant="body1">{nilai}</Typography>
                   </Div>
-                </Div>
-              )}
-            </Div>
-            <Div
-              sx={{
-                display: "flex",
-                padding: "0px 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-              }}
-            >
-              {isSubmitted ? (
-                <Div>
-                  <Typography variant="subtitle2">Deskripsi</Typography>
-                  <Typography variant="body1">{deskripsi}</Typography>
-                </Div>
-              ) : (
-                <Div>
+                ) : (
                   <Div>
-                    <Typography variant="subtitle2">Deskripsi</Typography>
                     <Div>
-                      <FormControl component="fieldset">
-                        <RadioGroup
-                          row
-                          aria-label="deskripsi"
-                          name="deskripsi"
-                          value={deskripsi}
-                          onChange={(e) => setDeskripsi(e.target.value)}
-                        >
-                          <FormControlLabel
-                            value="Lulus"
-                            control={<Radio />}
-                            label="Lulus"
-                          />
-                          <FormControlLabel
-                            value="Tidak Lulus"
-                            control={<Radio />}
-                            label="Tidak Lulus"
-                          />
-                          <FormControlLabel
-                            value="Mengulang"
-                            control={<Radio />}
-                            label="Mengulang"
-                          />
-                        </RadioGroup>
-                      </FormControl>
+                      <Typography variant="subtitle2">
+                        Nilai Kesimpulan Ujian Skripsi
+                      </Typography>
+                      <Div>
+                        <FormControl component="fieldset">
+                          <RadioGroup
+                            row
+                            aria-label="nilai"
+                            name="nilai"
+                            value={nilai}
+                            onChange={(e) => setNilai(e.target.value)}
+                          >
+                            <FormControlLabel
+                              value="A"
+                              control={<Radio />}
+                              label="A"
+                            />
+                            <FormControlLabel
+                              value="A-"
+                              control={<Radio />}
+                              label="A-"
+                            />
+                            <FormControlLabel
+                              value="B+"
+                              control={<Radio />}
+                              label="B+"
+                            />
+                            <FormControlLabel
+                              value="B"
+                              control={<Radio />}
+                              label="B"
+                            />
+                            <FormControlLabel
+                              value="B-"
+                              control={<Radio />}
+                              label="B-"
+                            />
+                            <FormControlLabel
+                              value="C+"
+                              control={<Radio />}
+                              label="C+"
+                            />
+                            <FormControlLabel
+                              value="C"
+                              control={<Radio />}
+                              label="C"
+                            />
+                            <FormControlLabel
+                              value="C-"
+                              control={<Radio />}
+                              label="C-"
+                            />
+                            <FormControlLabel
+                              value="D+"
+                              control={<Radio />}
+                              label="D+"
+                            />
+                          </RadioGroup>
+                        </FormControl>
+                      </Div>
                     </Div>
                   </Div>
-                  <Typography style={{ color: "red" }}>
-                    {errorMessageKesimpulan}
-                  </Typography>
-                </Div>
-              )}
-            </Div>
-
-            {/* Radio Button Penilaian Akhir End */}
-            {isSubmitButtonVisible && (
+                )}
+              </Div>
               <Div
                 sx={{
                   display: "flex",
-                  width: "100%",
-                  height: "59.43px",
-                  padding: "12px 24px 12px 0px",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  gap: "12px",
-                  background: "#F5F5F5",
+                  padding: "0px 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  alignSelf: "stretch",
                 }}
               >
-                <Button
-                  variant="contained"
-                  sx={{ textTransform: "none" }}
-                  color="primary"
-                  onClick={handleOpenConfirmationBeritaAcaraDialog}
-                >
-                  Submit
-                </Button>
+                {isSubmitted ? (
+                  <Div>
+                    <Typography variant="subtitle2">Deskripsi</Typography>
+                    <Typography variant="body1">{deskripsi}</Typography>
+                  </Div>
+                ) : (
+                  <Div>
+                    <Div>
+                      <Typography variant="subtitle2">Deskripsi</Typography>
+                      <Div>
+                        <FormControl component="fieldset">
+                          <RadioGroup
+                            row
+                            aria-label="deskripsi"
+                            name="deskripsi"
+                            value={deskripsi}
+                            onChange={(e) => setDeskripsi(e.target.value)}
+                          >
+                            <FormControlLabel
+                              value="Lulus"
+                              control={<Radio />}
+                              label="Lulus"
+                            />
+                            <FormControlLabel
+                              value="Tidak Lulus"
+                              control={<Radio />}
+                              label="Tidak Lulus"
+                            />
+                            <FormControlLabel
+                              value="Mengulang"
+                              control={<Radio />}
+                              label="Mengulang"
+                            />
+                          </RadioGroup>
+                        </FormControl>
+                      </Div>
+                    </Div>
+                    <Typography style={{ color: "red" }}>
+                      {errorMessageKesimpulan}
+                    </Typography>
+                  </Div>
+                )}
               </Div>
-            )}
-            {/* </Div> */}
-            {/* Kesimpulan dari Pengujian Ketua penelis start */}
+
+              {/* Radio Button Penilaian Akhir End */}
+              {isSubmitButtonVisible && (
+                <Div
+                  sx={{
+                    display: "flex",
+                    width: "100%",
+                    height: "59.43px",
+                    padding: "12px 24px 12px 0px",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    gap: "12px",
+                    background: "#F5F5F5",
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                    color="primary"
+                    onClick={handleOpenConfirmationBeritaAcaraDialog}
+                  >
+                    Submit
+                  </Button>
+                </Div>
+              )}
+              {/* </Div> */}
+              {/* Kesimpulan dari Pengujian Ketua penelis start */}
+            </Div>
           </Div>
         </Div>
         {/* Element 2 End */}

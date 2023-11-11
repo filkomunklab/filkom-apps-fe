@@ -13,6 +13,8 @@ import MenuAdvisorProposal from "app/shared/MenuHorizontal/MenuAdvisorProposal";
 import { useParams } from "react-router-dom";
 import BerandaProposalMahasiswa from "./BerandaProposalMahasiswa";
 import BerandaSkripsiMahasiswa from "./BerandaSkripsiMahasiswa";
+import BerandaPengajuanJudul from "./Beranda";
+import MenuDekanProposal from "app/shared/MenuHorizontal/MenuDekanProposal";
 
 const BerandaGlobal = () => {
   // fungsi untuk mendapatkan token JWT
@@ -142,6 +144,13 @@ const BerandaGlobal = () => {
             <MenuKaprodiProposal />
           </Div> */}
           {/* SEKERTARIS */}
+          {/* DEKAN */}
+          <Div
+            hidden={role.includes("DEKAN") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDekanProposal />
+          </Div>
           <Div
             hidden={role.includes("SEKERTARIS") ? false : true}
             sx={{ width: "100%" }}
@@ -170,9 +179,9 @@ const BerandaGlobal = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
-            {/* {kondisi === "berandaPengajuanJudul" && (
+            {kondisi === "berandaPengajuanJudul" && (
               <BerandaPengajuanJudul onTerima={handleKondisiBeranda} />
-            )} */}
+            )}
             {kondisi === "berandaPengajuanProposal" && (
               <BerandaProposalMahasiswa onTerima={handleKondisiBeranda} />
             )}
