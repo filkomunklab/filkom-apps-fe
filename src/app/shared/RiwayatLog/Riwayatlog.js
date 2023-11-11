@@ -1,34 +1,49 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Div from "@jumbo/shared/Div";
-import { Typography } from "@mui/material";
+import {
+  Button,
+  Step,
+  StepContent,
+  StepLabel,
+  Stepper,
+  Typography,
+} from "@mui/material";
 
 const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
-  // const [riwayat, setRiwayat] = useState(null);
+  const [riwayat, setRiwayat] = useState([]);
   const [timPembimbing, setTimPembimbing] = useState();
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [selectedStep, setSelectedStep] = React.useState(0);
+  // const [steps, setSteps] = useState([]);
+
+  const handleStepClick = (index) => {
+    setSelectedStep(index); // Memperbarui langkah terpilih
+    setActiveStep(index);
+  };
 
   const token = localStorage.getItem("token");
   // console.log("token", token);
   console.log("GroupId di komponen riwayatlog", groupId);
 
   useEffect(() => {
-    // const fetchRiwayatData = async () => {
-    //   try {
-    //     const response = await axios.get(
-    //       `http://localhost:2000/api/v1/group/submission_details/${groupId}`,
-    //       {
-    //         headers: {
-    //           Authorization: `Bearer ${token}`,
-    //         },
-    //       }
-    //     );
-    //     // Atur state 'setRiwayat' dengan data dari respons
-    //     setRiwayat(response.data.data);
-    //     console.log("Request Get riwayat: ", response.data.data);
-    //   } catch (error) {
-    //     console.error("Terjadi kesalahan saat mengambil riwayat:", error);
-    //   }
-    // };
+    const fetchRiwayatData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/thesis_history/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Atur state 'setRiwayat' dengan data dari respons
+        setRiwayat(response.data.data);
+        console.log("Request Get riwayat: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil riwayat:", error);
+      }
+    };
     const fetchTimPembimbingData = async () => {
       try {
         const response = await axios.get(
@@ -50,7 +65,7 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
         );
       }
     };
-    // fetchRiwayatData();
+    fetchRiwayatData();
     fetchTimPembimbingData();
   }, [token, groupId]);
 
@@ -66,7 +81,38 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
           background: "#FFF",
         }}
       >
-        Riwayat Log
+        {/* Steper Start */}
+        <Div
+          sx={{
+            maxWidth: 400,
+            marginLeft: "20px",
+
+            maxHeight: "100%",
+            overflowY: "auto",
+          }}
+        >
+          <Stepper
+            activeStep={activeStep}
+            orientation="vertical"
+            sx={{ marginBottom: "20px" }}
+          >
+            {riwayat?.map((step, index) => (
+              <Step key={step.description} completed={false}>
+                <StepLabel
+                  onClick={() => handleStepClick(index)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {step.description}
+                </StepLabel>
+                <StepContent>
+                  <Typography>{step.user}</Typography>
+                  <Typography>{step.date}</Typography>
+                </StepContent>
+              </Step>
+            ))}
+          </Stepper>
+        </Div>
+        {/* Steper End */}
       </Div>
       {/* Riwayat Log End */}
 
