@@ -3,7 +3,7 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const MenuMahasiswa = () => {
+const MenuMahasiswa = ({ value: groupId }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open1 = Boolean(anchorEl);
   const [anchorE2, setAnchorE2] = useState(null);
@@ -26,7 +26,9 @@ const MenuMahasiswa = () => {
       >
         <Div sx={{ width: "100%", display: "flex" }}>
           <Div sx={{ margin: "auto" }}>
-            <Link to="/sistem-informasi-skripsi/daftar-pengajuan/beranda">
+            <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan/beranda/${groupId}/MAHASISWA`}
+            >
               <Button
                 sx={{
                   fontSize: "13px",
@@ -52,7 +54,9 @@ const MenuMahasiswa = () => {
             }}
           ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="/sistem-informasi-skripsi/daftar-pengajuan/pengajuan-judul">
+            <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan/pengajuan-judul/${groupId}/MAHASISWA`}
+            >
               <Button
                 sx={{
                   // width: "150px",

@@ -20,9 +20,6 @@ const BerandaGlobal = () => {
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
 
-  // fungsi untuk mendapatkan token JWT
-  const token = localStorage.getItem("token");
-  console.log("token", token);
   const role = useParams().role;
   console.log(role);
 
@@ -93,7 +90,7 @@ const BerandaGlobal = () => {
           {/* jika progress tidak null maka menyimpannya di setProgress */}
           <Riwayatlog
             value={groupId}
-            riwayatData={(progress) => progress && setProgress(progress)}
+            riwayatData={(data) => data && setProgress(data.progress)}
           />
         </Div>
         {/* Element 1 End */}
@@ -162,10 +159,10 @@ const BerandaGlobal = () => {
           </Div>
           {/* MAHASISWA */}
           <Div
-            hidden={role.includes("mahasiswa") ? false : true}
+            hidden={role.includes("MAHASISWA") ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa />
+            <MenuMahasiswa value={groupId} />
           </Div>
 
           <Div
@@ -182,9 +179,6 @@ const BerandaGlobal = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
-            {/* {progress === "Submission" && (
-              <BerandaPengajuanJudul value={groupId} />
-            )} */}
             {progress === "Submission" && (
               <BerandaPengajuanJudul value={groupId} />
             )}
