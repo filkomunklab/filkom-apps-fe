@@ -435,7 +435,7 @@ const PengajuanJudul = () => {
             hidden={role.includes("MAHASISWA") ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa value={groupId} />
+            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
           </Div>
           {/* Menu horizontal End */}
 

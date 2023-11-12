@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Paper,
@@ -11,9 +14,43 @@ import {
 } from "@mui/material";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-import React from "react";
 
 const Konsultasi = () => {
+  // state - simpan request konsultasi
+  const [konsultasi, setKonsultasi] = useState();
+  // state - simpan progress dari riwayat
+  const [progress, setProgress] = useState(null);
+
+  const groupId = useParams().groupId;
+  // console.log("group id: ", groupId);
+
+  const role = useParams().role;
+  // console.log(role);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchKonsultasiData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/consultation/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setKonsultasi(response.data.data);
+        console.log("Request Get konsultasi: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil daftar dosen:", error);
+      }
+    };
+    fetchKonsultasiData();
+  }, [token, groupId]);
+
   const data = [
     {
       deskripsi: "Diskusi Tentang Judul",
@@ -79,7 +116,14 @@ const Konsultasi = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          <Riwayatlog />
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(data) => {
+              if (data) {
+                setProgress(data.progress);
+              }
+            }}
+          />
         </Div>
         {/* Element 1 End */}
         {/* Element 2 Start */}
@@ -96,8 +140,12 @@ const Konsultasi = () => {
           }}
         >
           {/* Menu Horizontal Start */}
-          <Div sx={{ width: "100%" }}>
-            <MenuMahasiswa />
+          {/* MAHASISWA */}
+          <Div
+            hidden={role.includes("MAHASISWA") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
           </Div>
           {/* Menu horizontal End */}
 
@@ -136,12 +184,12 @@ const Konsultasi = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {data.map((item, index) => (
+                    {konsultasi?.constultation.map((item, index) => (
                       <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
-                        <TableCell>{item.deskripsi}</TableCell>
-                        <TableCell>{item.tanggal}</TableCell>
-                        <TableCell>{item.tertera}</TableCell>
+                        <TableCell>{item.description}</TableCell>
+                        <TableCell>{item.date}</TableCell>
+                        <TableCell>{item.dosen}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

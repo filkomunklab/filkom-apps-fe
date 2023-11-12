@@ -3,11 +3,21 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const MenuMahasiswa = ({ value: groupId }) => {
+const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open1 = Boolean(anchorEl);
   const [anchorE2, setAnchorE2] = useState(null);
   const open2 = Boolean(anchorE2);
+
+  const [isKonsultasiDisabled, setIsKonsultasiDisabled] = useState(
+    progress !== "Proposal" && progress !== "Skripsi" && progress !== "Finished"
+  );
+  const [isProposalDisabled, setIsProposalDisabled] = useState(
+    progress !== "Proposal" && progress !== "Skripsi" && progress !== "Finished"
+  );
+  const [isSkripsiDisabled, setIsSkripsiDisabled] = useState(
+    progress !== "Skripsi" && progress !== "Finished"
+  );
   return (
     <Div>
       {/* Menu Horizontal Start */}
@@ -82,22 +92,31 @@ const MenuMahasiswa = ({ value: groupId }) => {
             }}
           ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="/sistem-informasi-skripsi/daftar-pengajuan/konsultasi">
-              <Button
-                sx={{
-                  // width: "130px",
-                  fontSize: "13px",
-                  fontWeight: 500,
-                  color: "#192434",
-                  textTransform: "none",
-                  "&:hover": {
-                    color: "#006AF5",
-                  },
-                }}
-              >
-                Konsultasi
-              </Button>
-            </Link>
+            {/* <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan/konsultasi/${groupId}/MAHASISWA`}
+            > */}
+            <Button
+              component={Link}
+              to={`/sistem-informasi-skripsi/daftar-pengajuan/konsultasi/${groupId}/MAHASISWA`}
+              sx={{
+                // width: "130px",
+                fontSize: "13px",
+                fontWeight: 500,
+                color: "#192434",
+                textTransform: "none",
+                "&:hover": {
+                  color: "#006AF5",
+                },
+              }}
+              disabled={
+                progress !== "Proposal" &&
+                progress !== "Skripsi" &&
+                progress !== "Finished"
+              }
+            >
+              Konsultasi
+            </Button>
+            {/* </Link> */}
           </Div>
           <Div
             sx={{
@@ -119,6 +138,11 @@ const MenuMahasiswa = ({ value: groupId }) => {
                   color: "#006AF5",
                 },
               }}
+              disabled={
+                progress !== "Proposal" &&
+                progress !== "Skripsi" &&
+                progress !== "Finished"
+              }
             >
               Pengajuan Proposal
             </Button>
@@ -177,6 +201,7 @@ const MenuMahasiswa = ({ value: groupId }) => {
                   color: "#006AF5",
                 },
               }}
+              disabled={progress !== "Skripsi" && progress !== "Finished"}
             >
               Pengajuan Skripsi
             </Button>
