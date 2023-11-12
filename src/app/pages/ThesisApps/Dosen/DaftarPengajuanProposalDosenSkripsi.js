@@ -398,7 +398,7 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
                             <Chip label={"Belum"} />
                           ) : proposal.approve_by_advisor === "Waiting" ? (
                             <Chip
-                              label={"Mengunggu"}
+                              label={"Menunggu"}
                               sx={{
                                 background: "rgba(255, 204, 0, 0.10)",
                                 color: "#985211",
@@ -429,7 +429,7 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
                             <Chip label={"Belum"} />
                           ) : proposal.approve_by_co_advisor1 === "Waiting" ? (
                             <Chip
-                              label={"Mengunggu"}
+                              label={"Menunggu"}
                               sx={{
                                 background: "rgba(255, 204, 0, 0.10)",
                                 color: "#985211",
@@ -460,7 +460,7 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
                             <Chip label={"Belum"} />
                           ) : proposal.approve_by_co_advisor2 === "Waiting" ? (
                             <Chip
-                              label={"Mengunggu"}
+                              label={"Menunggu"}
                               sx={{
                                 background: "rgba(255, 204, 0, 0.10)",
                                 color: "#985211",

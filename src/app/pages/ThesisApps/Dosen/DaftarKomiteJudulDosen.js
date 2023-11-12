@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Div from "@jumbo/shared/Div";
-import PeopleIcon from "@mui/icons-material/People";
-import EmailIcon from "@mui/icons-material/Email";
-import DraftsIcon from "@mui/icons-material/Drafts";
-import ClearIcon from "@mui/icons-material/Clear";
 
 import {
-  Button,
   Chip,
   Table,
   TableBody,
@@ -17,17 +12,8 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
-import DateRangeIcon from "@mui/icons-material/DateRange";
-import GavelIcon from "@mui/icons-material/Gavel";
-import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
-import { DownloadDone, Mail } from "@mui/icons-material";
 
 const DaftarKomiteJudulDosen = () => {
   const [daftarKomiteJudul, setDaftarKomiteJudul] = useState([]);
@@ -206,7 +192,7 @@ const DaftarKomiteJudulDosen = () => {
                         <TableCell sx={{ fontSize: "13px" }}>
                           {submission.is_approve === "Waiting" ? (
                             <Chip
-                              label={"Mengunggu"}
+                              label={"Menunggu"}
                               sx={{
                                 background: "rgba(255, 204, 0, 0.10)",
                                 color: "#985211",

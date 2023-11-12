@@ -433,7 +433,7 @@ const DaftarPengajuanJudulKaprodi = () => {
                           <TableCell sx={{ fontSize: "13px" }}>
                             {submission.is_approve === "Waiting" ? (
                               <Chip
-                                label={"Mengunggu"}
+                                label={"Menunggu"}
                                 sx={{
                                   background: "rgba(255, 204, 0, 0.10)",
                                   color: "#985211",
