@@ -9,15 +9,6 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
   const [anchorE2, setAnchorE2] = useState(null);
   const open2 = Boolean(anchorE2);
 
-  const [isKonsultasiDisabled, setIsKonsultasiDisabled] = useState(
-    progress !== "Proposal" && progress !== "Skripsi" && progress !== "Finished"
-  );
-  const [isProposalDisabled, setIsProposalDisabled] = useState(
-    progress !== "Proposal" && progress !== "Skripsi" && progress !== "Finished"
-  );
-  const [isSkripsiDisabled, setIsSkripsiDisabled] = useState(
-    progress !== "Skripsi" && progress !== "Finished"
-  );
   return (
     <Div>
       {/* Menu Horizontal Start */}

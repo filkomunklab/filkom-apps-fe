@@ -15,6 +15,10 @@ import DaftarRiwayatBimbinganAdvisor from "app/pages/ThesisApps/Dosen/DaftarRiwa
 import DaftarRiwayatBimbinganCoAdvisor from "app/pages/ThesisApps/Dosen/DaftarRiwayatbimbinganCoAdvisor";
 import DaftarRiwayatPengujianKetuaPenelis from "app/pages/ThesisApps/Dosen/DaftarRiwayatPengujianKetuaPenelis";
 import DaftarRiwayatPengujianAnggota from "app/pages/ThesisApps/Dosen/DaftarRiwayatPengujianAnggotaPenelis";
+import BerandaGlobal from "app/pages/ThesisApps/Mahasiswa/BerandaGlobal";
+import Konsultasi from "app/pages/ThesisApps/Mahasiswa/Konsultasi";
+import DocumentPersetujuanDosenPembimbingProposal2 from "app/pages/ThesisApps/Dosen/DocumentPersetujuanDosenPembimbingProposal2";
+import PengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/PengajuanJudulDosenSkripsi";
 
 const dosenRoutes = [
   // KOMITE
@@ -36,6 +40,34 @@ const dosenRoutes = [
   {
     path: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi",
     element: <Page component={DaftarPengajuanSkripsiDosenSkripsi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/beranda/:groupId/:role",
+    element: <Page component={BerandaGlobal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/pengajuan-judul/:groupId/:role",
+    element: <Page component={PengajuanJudulDosenSkripsi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/konsultasi/:groupId/:role",
+    element: <Page component={Konsultasi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/dokumen-proposal/:groupId/:role",
+    element: <Page component={DocumentPersetujuanDosenPembimbingProposal2} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/dokumen-revisi-proposal/:groupId/:role",
+    element: <Page component={Konsultasi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/dokumen-skripsi/:groupId/:role",
+    element: <Page component={Konsultasi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi/dokumen-revisi-skripsi/:groupId/:role",
+    element: <Page component={Konsultasi} />,
   },
   // BIMBINGAN
   // ----------Advisor

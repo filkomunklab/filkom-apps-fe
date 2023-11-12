@@ -8,6 +8,7 @@ import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import BerandaPengajuanJudul from "./BerandaPengajuanJudul";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
+import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
 import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPanalisProposal";
 import MenuKetuaPanalisProposal from "app/shared/MenuHorizontal/MenuKetuaPanalisProposal";
 import MenuCoAdvisorProposal from "app/shared/MenuHorizontal/MenuCoAdvisorProposal";
@@ -36,19 +37,6 @@ const BerandaGlobal = () => {
   // const { role } = JSON.parse(localStorage.getItem("user"));
   // const role = ["ADVISOR", "DOSEN"];
   // console.log(role);
-
-  // kondisi beranda
-  // State untuk melacak kondisi
-  const [kondisi, setKondisi] = useState("berandaPengajuanSkripsi");
-
-  // Fungsi untuk mengubah kondisi
-  const handleKondisiBeranda = () => {
-    if (kondisi === "berandaPengajuanJudul") {
-      setKondisi("berandaPengajuanProposal");
-    } else if (kondisi === "berandaPengajuanProposal") {
-      setKondisi("berandaPengajuanSkripsi");
-    }
-  };
 
   return (
     <Div>
@@ -110,10 +98,10 @@ const BerandaGlobal = () => {
         >
           {/* DOSEN SKRIPSI */}
           <Div
-            hidden={role.includes("DOSEN") ? false : true}
+            hidden={role.includes("DOSEN_MK") ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuKetuaPanalisProposal />
+            <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
           </Div>
           {/* ADVISOR */}
           <Div
