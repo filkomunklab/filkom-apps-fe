@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
@@ -10,7 +13,6 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
 import { pdfjs } from "react-pdf";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
@@ -72,6 +74,98 @@ const PDFViewerSourceCode = ({ sourceCodeFile }) => {
 };
 
 const ArsipDocument = () => {
+  // state - menyimpan request data
+  const [HKI, setHKI] = useState();
+  const [jurnal, seJurnal] = useState();
+  const [sourceCode, setSourceCode] = useState();
+  const [linkSourceCode, setLinkSourceCode] = useState();
+
+  const groupId = useParams().groupId;
+  console.log("group id: ", groupId);
+  const [progress, setProgress] = useState(null);
+  const [skrkipsiId, setSkripsiId] = useState(null);
+
+  const role = useParams().role;
+  console.log(role);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchHKIData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/hki/${skrkipsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setHKI(response.data.data);
+        console.log("Request Get HKI: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil HKI:", error);
+      }
+    };
+    const fetchJurnalData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/journal/${skrkipsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setHKI(response.data.data);
+        console.log("Request Get jurnal: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil jurnal:", error);
+      }
+    };
+    const fetchSourceCodeData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/source-code/${skrkipsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setHKI(response.data.data);
+        console.log("Request Get source code: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil source code:", error);
+      }
+    };
+    const fetchLinkSourceCodeData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/link-source-code/${skrkipsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setHKI(response.data.data);
+        console.log("Request Get link source code: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil link source code:",
+          error
+        );
+      }
+    };
+    fetchHKIData();
+    fetchJurnalData();
+    fetchSourceCodeData();
+    fetchLinkSourceCodeData();
+  }, [token, skrkipsiId]);
+
   // state untuk Upload HKI
   const [HKIUploadedFiles, setHKIUploadedFiles] = useState([]);
   const [selectedHKIFileName, setSelectedHKIFileName] = useState("");
@@ -255,7 +349,15 @@ const ArsipDocument = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          <Riwayatlog />
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(data) => {
+              if (data) {
+                setProgress(data.progress);
+                setSkripsiId(data.skripsi_id);
+              }
+            }}
+          />
         </Div>
         {/* Element 1 End */}
 
@@ -273,8 +375,12 @@ const ArsipDocument = () => {
           }}
         >
           {/* Menu Horizontal Start */}
-          <Div sx={{ width: "100%" }}>
-            <MenuMahasiswa />
+          {/* MAHASISWA */}
+          <Div
+            hidden={role.includes("MAHASISWA") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
           </Div>
           {/* Menu horizontal End */}
           <Div
@@ -335,6 +441,7 @@ const ArsipDocument = () => {
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
+                    padding: "6px 12px",
                     width: "130px",
                     height: "30px",
                   }}
@@ -493,6 +600,7 @@ const ArsipDocument = () => {
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
+                    padding: "6px 12px",
                     width: "130px",
                     height: "30px",
                   }}
@@ -652,6 +760,7 @@ const ArsipDocument = () => {
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
+                    padding: "6px 12px",
                     width: "130px",
                     height: "30px",
                   }}
@@ -794,6 +903,7 @@ const ArsipDocument = () => {
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
+                    padding: "6px 12px",
                     width: "130px",
                     height: "30px",
                   }}

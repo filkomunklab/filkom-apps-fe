@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
@@ -11,7 +14,6 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
 import { pdfjs } from "react-pdf";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
@@ -20,10 +22,10 @@ import AttachmentIcon from "@mui/icons-material/Attachment";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 // View Document Proposal
-const PDFViewerProposal = ({ proposalFile }) => {
-  const viewPDFProposal = () => {
+const PDFViewerSkripsi = ({ skripsiFile }) => {
+  const viewPDFSkripsi = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(proposalFile);
+    const pdfURL = URL.createObjectURL(skripsiFile);
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -31,7 +33,7 @@ const PDFViewerProposal = ({ proposalFile }) => {
 
   return (
     <div>
-      <span sx={{ fontSize: "10px" }} onClick={viewPDFProposal}>
+      <span sx={{ fontSize: "10px" }} onClick={viewPDFSkripsi}>
         View
       </span>
     </div>
@@ -72,11 +74,91 @@ const PDFViewerCekPlagiat = ({ plagiarismFile }) => {
   );
 };
 
-const UploadProposal = () => {
-  // state untuk Upload Proposal
-  const [proposalUploadedFiles, setProposalUploadedFiles] = useState([]);
-  const [selectedProposalFileName, setSelectedProposalFileName] = useState("");
-  const [proposalFile, setProposalFile] = useState(null);
+const UploadSkipsi = () => {
+  // state - menyimpan request data
+  const [dokumenSkripsi, setDokumenSkripsi] = useState();
+  const [buktiPembayaran, setBuktiPembayaran] = useState();
+  const [hasilCekPlagiat, setHasilCekPlagiat] = useState();
+
+  const groupId = useParams().groupId;
+  console.log("group id: ", groupId);
+  const [progress, setProgress] = useState(null);
+  const [skrkipsiId, setSkripsiId] = useState(null);
+
+  const role = useParams().role;
+  console.log(role);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchDokumenSkripsiData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/skripsi-document/${skrkipsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDokumenSkripsi(response.data.data);
+        console.log("Request Get dokumen skripsi: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil dokumen skripsi:",
+          error
+        );
+      }
+    };
+    const fetchBuktiPembayaranData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/skripsi-payment/${skrkipsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setBuktiPembayaran(response.data.data);
+        console.log("Request Get bukti pembayaran: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil bukti pembayaran:",
+          error
+        );
+      }
+    };
+    const fetchHasilCekPlagiatData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/${skrkipsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setHasilCekPlagiat(response.data.data);
+        console.log("Request Get hasil cek plagiat: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil hail cek plagiat:",
+          error
+        );
+      }
+    };
+    fetchDokumenSkripsiData();
+    fetchBuktiPembayaranData();
+    fetchHasilCekPlagiatData();
+  }, [token, skrkipsiId]);
+
+  // state untuk Upload Skripsi
+  const [SkripsiUploadedFiles, setSkripsiUploadedFiles] = useState([]);
+  const [selectedSkripsiFileName, setSelectedSkripsiFileName] = useState("");
+  const [SkripsiFile, setSkripsiFile] = useState(null);
 
   // State untuk Bukti Pembayaran
   const [paymentFile, setPaymentFile] = useState(null);
@@ -92,9 +174,9 @@ const UploadProposal = () => {
   const onProposalFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      if (proposalUploadedFiles.length === 0) {
-        setProposalFile(file);
-        setSelectedProposalFileName(file.name);
+      if (SkripsiUploadedFiles.length === 0) {
+        setSkripsiFile(file);
+        setSelectedSkripsiFileName(file.name);
 
         const newFileData = {
           name: file.name,
@@ -105,7 +187,7 @@ const UploadProposal = () => {
           coAdvisor2: "",
         };
 
-        setProposalUploadedFiles([newFileData]);
+        setSkripsiUploadedFiles([newFileData]);
       }
     }
   };
@@ -126,9 +208,9 @@ const UploadProposal = () => {
 
         setPaymentUploadedFiles([newFileData]);
       } else {
-        alert(
-          "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-        );
+        // alert(
+        //   "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
+        // );
       }
     }
   };
@@ -149,20 +231,20 @@ const UploadProposal = () => {
 
         setPlagiarismUploadedFiles([newFileData]);
       } else {
-        alert(
-          "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-        );
+        // alert(
+        //   "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
+        // );
       }
     }
   };
 
   // fungsi untuk menghapus file Proposal
   const handleDeleteProposalFile = (index) => {
-    const updatedFiles = [...proposalUploadedFiles];
+    const updatedFiles = [...SkripsiUploadedFiles];
     updatedFiles.splice(index, 1);
-    setProposalUploadedFiles(updatedFiles);
-    setProposalFile(null);
-    setSelectedProposalFileName("");
+    setSkripsiUploadedFiles(updatedFiles);
+    setSkripsiFile(null);
+    setSelectedSkripsiFileName("");
   };
 
   // Fungsi untuk menghapus file bukti pembayaran
@@ -196,7 +278,7 @@ const UploadProposal = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Unggah Proposal
+          Unggah Skripsi
         </Typography>
       </Div>
 
@@ -220,7 +302,15 @@ const UploadProposal = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          <Riwayatlog />
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(data) => {
+              if (data) {
+                setProgress(data.progress);
+                setSkripsiId(data.skripsi_id);
+              }
+            }}
+          />
         </Div>
         {/* Element 1 End */}
 
@@ -238,10 +328,13 @@ const UploadProposal = () => {
           }}
         >
           {/* Menu Horizontal Start */}
-          <Div sx={{ width: "100%" }}>
-            <MenuMahasiswa />
+          {/* MAHASISWA */}
+          <Div
+            hidden={role.includes("MAHASISWA") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
           </Div>
-
           {/* Menu horizontal End */}
           <Div
             sx={{
@@ -271,7 +364,7 @@ const UploadProposal = () => {
                 fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
               }}
             >
-              Unggah Dokumen Proposal
+              Unggah Dokumen Skripsi
             </Typography>
 
             {/* Table 1 Start*/}
@@ -383,7 +476,7 @@ const UploadProposal = () => {
                   </TableHead>
 
                   <TableBody>
-                    {proposalUploadedFiles.map((file, index) => (
+                    {SkripsiUploadedFiles.map((file, index) => (
                       <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
@@ -438,10 +531,8 @@ const UploadProposal = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {proposalFile && (
-                                <PDFViewerProposal
-                                  proposalFile={proposalFile}
-                                />
+                              {SkripsiFile && (
+                                <PDFViewerSkripsi skripsiFile={SkripsiFile} />
                               )}
                             </span>
                             <Div
@@ -793,4 +884,4 @@ const UploadProposal = () => {
   );
 };
 
-export default UploadProposal;
+export default UploadSkipsi;

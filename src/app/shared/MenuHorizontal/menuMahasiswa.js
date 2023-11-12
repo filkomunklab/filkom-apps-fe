@@ -160,7 +160,7 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
               }}
             >
               <Link
-                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-proposal"
+                to={`/sistem-informasi-skripsi/daftar-pengajuan/unggah-proposal/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <MenuItem
@@ -171,7 +171,7 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
                 </MenuItem>
               </Link>
               <Link
-                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-revisi-proposal"
+                to={`/sistem-informasi-skripsi/daftar-pengajuan/unggah-revisi-proposal/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <MenuItem onClick={() => setAnchorEl(null)}>
@@ -219,7 +219,7 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
               }}
             >
               <Link
-                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-skripsi"
+                to={`/sistem-informasi-skripsi/daftar-pengajuan/unggah-skripsi/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <MenuItem onClick={() => setAnchorE2(null)}>
@@ -227,7 +227,7 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
                 </MenuItem>
               </Link>
               <Link
-                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-revisi-skripsi"
+                to={`/sistem-informasi-skripsi/daftar-pengajuan/unggah-revisi-skripsi/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <MenuItem onClick={() => setAnchorE2(null)}>
@@ -235,7 +235,7 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
                 </MenuItem>
               </Link>
               <Link
-                to="/sistem-informasi-skripsi/daftar-pengajuan/arsip-document"
+                to={`/sistem-informasi-skripsi/daftar-pengajuan/arsip-document/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <MenuItem onClick={() => setAnchorE2(null)}>
@@ -243,7 +243,7 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
                 </MenuItem>
               </Link>
               <Link
-                to="/sistem-informasi-skripsi/daftar-pengajuan/metadata-repository"
+                to={`/sistem-informasi-skripsi/daftar-pengajuan/metadata-repository/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <MenuItem onClick={() => setAnchorE2(null)}>
