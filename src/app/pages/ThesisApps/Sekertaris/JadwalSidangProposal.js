@@ -11,6 +11,7 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  FormHelperText,
   Grid,
   InputAdornment,
   InputLabel,
@@ -114,7 +115,60 @@ const JadwalSidangProposal = () => {
     setRuangan("");
   };
 
+  const [errorMessages, setErrorMessages] = useState({
+    mulaiWaktu: "",
+    selesaiWaktu: "",
+    mulaiTanggal: "",
+    selectedKetuaPenelis: "",
+    selectedAnggotaPenelis: "",
+    ruangan: "",
+  });
+
   const handlePerbarui = (selectedProposalId) => {
+    let hasError = false;
+    const newErrorMessages = {};
+
+    // Validasi input waktu
+    if (!mulaiWaktu) {
+      newErrorMessages.mulaiWaktu = "Mulai Waktu harus diisi";
+      hasError = true;
+    }
+
+    if (!selesaiWaktu) {
+      newErrorMessages.selesaiWaktu = "Selesai Waktu harus diisi";
+      hasError = true;
+    }
+
+    // Validasi input tanggal
+    if (!mulaiTanggal) {
+      newErrorMessages.mulaiTanggal = "Mulai Tanggal harus diisi";
+      hasError = true;
+    }
+
+    // Validasi ketua panelis
+    if (!selectedKetuaPenelis) {
+      newErrorMessages.selectedKetuaPenelis = "Ketua panelis harus dipilih";
+      hasError = true;
+    }
+
+    // Validasi anggota panelis
+    if (!selectedAnggotaPenelis) {
+      newErrorMessages.selectedAnggotaPenelis = "Anggota panelis harus dipilih";
+      hasError = true;
+    }
+
+    // Validasi input ruangan
+    if (!ruangan) {
+      newErrorMessages.ruangan = "Ruangan harus diisi";
+      hasError = true;
+    }
+
+    if (hasError) {
+      setErrorMessages(newErrorMessages);
+      // Tampilkan pesan kesalahan
+    } else {
+    }
+
     // Buat objek jadwal baru
     const jadwalBaru = {
       panelist_chairman_id: selectedKetuaPenelis || null,
@@ -254,10 +308,10 @@ const JadwalSidangProposal = () => {
                       <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
                       <TableCell sx={{ fontSize: "13px" }}>Advisor</TableCell>
                       <TableCell sx={{ fontSize: "13px" }}>
-                        Ketua Penelis
+                        Ketua Panelis
                       </TableCell>
                       <TableCell sx={{ fontSize: "13px" }}>
-                        Anggota Penelis
+                        Anggota Panelis
                       </TableCell>
                       <TableCell sx={{ fontSize: "13px" }}>Mulai</TableCell>
                       <TableCell sx={{ fontSize: "13px" }}>Selesai</TableCell>
@@ -479,17 +533,18 @@ const JadwalSidangProposal = () => {
                 alignSelf: "stretch",
               }}
             >
-              {/* ketua Penelis */}
+              {/* Ketua Panelis */}
               <FormControl fullWidth size="small">
-                <InputLabel id="ketua-penelis-label">Ketua Penelis</InputLabel>
+                <InputLabel id="ketua-penelis-label">Ketua Panelis</InputLabel>
                 <Select
                   labelId="ketua-penelis-label"
                   id="ketua-penelis"
-                  label="Ketua Penelis"
+                  label="Ketua Panelis"
                   value={selectedKetuaPenelis}
                   onChange={(event) =>
                     setSelectedKetuaPenelis(event.target.value)
                   }
+                  error={!!errorMessages.selectedKetuaPenelis}
                 >
                   {daftarDosen.map((dosen) => (
                     <MenuItem key={dosen.id} value={dosen.id}>
@@ -497,7 +552,11 @@ const JadwalSidangProposal = () => {
                     </MenuItem>
                   ))}
                 </Select>
+                <FormHelperText error={!!errorMessages.selectedKetuaPenelis}>
+                  {errorMessages.selectedKetuaPenelis}
+                </FormHelperText>
               </FormControl>
+
               {/* Anggota Penelis */}
               <FormControl fullWidth size="small">
                 <InputLabel id="anggota-penelis-label">
@@ -511,6 +570,7 @@ const JadwalSidangProposal = () => {
                   onChange={(event) =>
                     setSelectedAnggotaPenelis(event.target.value)
                   }
+                  error={!!errorMessages.selectedAnggotaPenelis}
                 >
                   {daftarDosen.map((dosen) => (
                     <MenuItem key={dosen.id} value={dosen.id}>
@@ -518,7 +578,11 @@ const JadwalSidangProposal = () => {
                     </MenuItem>
                   ))}
                 </Select>
+                <FormHelperText error={!!errorMessages.selectedAnggotaPenelis}>
+                  {errorMessages.selectedAnggotaPenelis}
+                </FormHelperText>
               </FormControl>
+
               {/* Advisor */}
               <FormControl fullWidth size="small">
                 <TextField
@@ -578,8 +642,11 @@ const JadwalSidangProposal = () => {
                   value={mulaiWaktu}
                   onChange={(event) => setMulaiWaktu(event.target.value)}
                   placeholder="08.00"
+                  error={!!errorMessages.mulaiWaktu}
+                  helperText={errorMessages.mulaiWaktu}
                 />
               </Grid>
+
               <Grid item xs={6}>
                 <TextField
                   id="end-time"
@@ -601,6 +668,8 @@ const JadwalSidangProposal = () => {
                   value={selesaiWaktu}
                   onChange={(event) => setSelesaiWaktu(event.target.value)}
                   placeholder="13.00"
+                  error={!!errorMessages.selesaiWaktu}
+                  helperText={errorMessages.selesaiWaktu}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -621,8 +690,11 @@ const JadwalSidangProposal = () => {
                   value={mulaiTanggal}
                   onChange={(event) => setMulaiTanggal(event.target.value)}
                   placeholder="dd/mm/yyyy"
+                  error={!!errorMessages.mulaiTanggal}
+                  helperText={errorMessages.mulaiTanggal}
                 />
               </Grid>
+              {/* Ruangan */}
               <Grid item xs={6}>
                 <TextField
                   id="room-name"
@@ -631,6 +703,8 @@ const JadwalSidangProposal = () => {
                   size="small"
                   value={ruangan}
                   onChange={(event) => setRuangan(event.target.value)}
+                  error={!!errorMessages.ruangan}
+                  helperText={errorMessages.ruangan}
                 />
               </Grid>
             </Grid>
@@ -651,7 +725,7 @@ const JadwalSidangProposal = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => setKonfirmasiDialog(true)}
+            onClick={handlePerbarui}
             sx={{ textTransform: "none" }}
           >
             Perbarui

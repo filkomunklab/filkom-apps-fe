@@ -24,6 +24,7 @@ import {
   FormControl,
   InputLabel,
   Paper,
+  FormHelperText,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
@@ -344,27 +345,35 @@ function DaftarPengajuan() {
     setFileUploaded(false);
   };
 
+  const [errorMessages, setErrorMessages] = useState({
+    judulPengajuanBaru: "",
+    selectedClassroomId: "",
+    selectedAdvisorId: "",
+    selectedOption: "",
+  });
+
   // fungsi - tombol Ajukan
   const handleSubmit = async () => {
     let isFormValid = true;
+    let newErrorMessages = {};
 
     if (!judulPengajuanBaru) {
-      setJudulError("Judul harus diisi");
-      isFormValid = false;
-    }
-
-    if (!selectedAdvisorId) {
-      setDosenPembibingError("Anda harus mengusulkan advisor");
+      newErrorMessages.judulPengajuanBaru = "Judul harus diisi";
       isFormValid = false;
     }
 
     if (!selectedClassroomId) {
-      setSelectKelasError("Anda harus memilih kelas");
+      newErrorMessages.selectedClassroomId = "Kelas harus diisi";
+      isFormValid = false;
+    }
+
+    if (!selectedAdvisorId) {
+      newErrorMessages.selectedAdvisorId = "Advisor harus diisi";
       isFormValid = false;
     }
 
     if (!selectedOption) {
-      setSelectedOptionError("Anda harus mengisi option ini");
+      newErrorMessages.selectedOption = "Harus memasukkan konsultasi di sini";
       isFormValid = false;
     }
 
@@ -375,9 +384,11 @@ function DaftarPengajuan() {
 
     if (isFormValid) {
       setIsConfirmDialogOpen(true);
+    } else {
+      setErrorMessages(newErrorMessages);
+      // Tampilkan pesan kesalahan
     }
   };
-
   // fungsi - menutup konfirmasi pengajuan
   const handleCloseConfirmDialog = () => {
     setIsConfirmDialogOpen(false);
@@ -674,13 +685,22 @@ function DaftarPengajuan() {
                 value={selectedClassroomId}
                 label="Kelas"
                 onChange={handleKelasChange}
+                error={!!errorMessages.selectedClassroomId}
+                helperText={errorMessages.kelas}
               >
+                <MenuItem value>-</MenuItem>
                 {daftarKelas.map((kelasItem, index) => (
                   <MenuItem key={index} value={kelasItem.value}>
                     {kelasItem.label}
                   </MenuItem>
                 ))}
               </Select>
+              <FormHelperText
+                sx={{ fontSize: "14px" }}
+                error={!!errorMessages.selectedClassroomId}
+              >
+                {errorMessages.selectedClassroomId}
+              </FormHelperText>
             </FormControl>
           </Div>
           <Div>
@@ -783,17 +803,20 @@ function DaftarPengajuan() {
                   marginBottom: "25px",
                   display: "block",
                   resize: "vertical",
-                  borderColor: judulError ? "red" : "", // Tambahkan border merah jika ada error
+                  borderColor: errorMessages.judulPengajuanBaru ? "red" : "",
                 }}
                 value={judulPengajuanBaru}
                 onChange={(e) => {
                   setJudulPengajuanBaru(e.target.value);
-                  setJudulError(""); // Bersihkan pesan error saat pengguna mengubah judul
+                  setErrorMessages({
+                    ...errorMessages,
+                    judulPengajuanBaru: "",
+                  }); // Bersihkan pesan error saat pengguna mengubah judul
                 }}
               />
-              {judulError && (
+              {errorMessages.judulPengajuanBaru && (
                 <Typography style={{ color: "red", marginTop: "-20px" }}>
-                  {judulError}
+                  {errorMessages.judulPengajuanBaru}
                 </Typography>
               )}
             </Div>
@@ -954,6 +977,7 @@ function DaftarPengajuan() {
                   value={selectedAdvisorId}
                   label="Mengusulkan Advisor"
                   onChange={handleAdvisorChange}
+                  error={!!errorMessages.selectedAdvisorId}
                 >
                   <MenuItem value="">-</MenuItem>
                   {daftarDosen.map((dosen) => (
@@ -962,6 +986,12 @@ function DaftarPengajuan() {
                     </MenuItem>
                   ))}
                 </Select>
+                <FormHelperText
+                  sx={{ fontSize: "14px" }}
+                  error={!!errorMessages.selectedAdvisorId}
+                >
+                  {errorMessages.selectedAdvisorId}
+                </FormHelperText>
               </FormControl>
               <FormControl fullWidth sx={{ margin: "0 25px" }} size="small">
                 <InputLabel id="demo-simple-select-label">
@@ -1002,17 +1032,6 @@ function DaftarPengajuan() {
                 </Select>
               </FormControl>
             </Div>
-            {dosenPembibingError && (
-              <div
-                style={{
-                  color: "red",
-                  marginTop: "-20px",
-                  marginBottom: "20px",
-                }}
-              >
-                {dosenPembibingError}
-              </div>
-            )}
             {/* Select Dosen Pembimbing End */}
             {/* Radio Button Start */}
             <Div
@@ -1033,6 +1052,8 @@ function DaftarPengajuan() {
                 }}
                 value={selectedOption}
                 onChange={handleOptionChange}
+                error={!!errorMessages.selectedOption}
+                helperText={errorMessages.selectedOption}
               >
                 <FormControlLabel value="ya" control={<Radio />} label="Ya" />
                 <FormControlLabel
@@ -1041,8 +1062,10 @@ function DaftarPengajuan() {
                   label="Tidak"
                 />
               </RadioGroup>
-              {selectedOptionError && (
-                <div style={{ color: "red" }}>{selectedOptionError}</div>
+              {errorMessages.selectedOption && (
+                <div style={{ color: "red" }}>
+                  {errorMessages.selectedOption}
+                </div>
               )}
             </Div>
             {/* Radio Button End*/}
