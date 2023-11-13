@@ -22,10 +22,10 @@ import AttachmentIcon from "@mui/icons-material/Attachment";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 // View Document Proposal
-const PDFViewerProposal = ({ proposalFile }) => {
+const PDFViewerProposal = ({ dokumenProposal }) => {
   const viewPDFProposal = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(proposalFile);
+    const pdfURL = URL.createObjectURL(dokumenProposal);
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -41,10 +41,10 @@ const PDFViewerProposal = ({ proposalFile }) => {
 };
 
 // View Document Payment
-const PDFViewerPayment = ({ paymentFile }) => {
+const PDFViewerPayment = ({ buktiPembayaran }) => {
   const viewPDFPayment = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(paymentFile);
+    const pdfURL = URL.createObjectURL(buktiPembayaran);
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -58,10 +58,10 @@ const PDFViewerPayment = ({ paymentFile }) => {
 };
 
 // View Document Cek Plagiat
-const PDFViewerCekPlagiat = ({ plagiarismFile }) => {
+const PDFViewerCekPlagiat = ({ hasilCekPlagiat }) => {
   const viewPDFCekPlagiat = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(plagiarismFile);
+    const pdfURL = URL.createObjectURL(hasilCekPlagiat);
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -246,6 +246,33 @@ const UnggahProposal = () => {
     setProposalFile(null);
     setSelectedProposalFileName("");
   };
+
+  // const handleDeleteProposalFile = async (proposalId) => {
+  //   try {
+  //     const response = await axios.delete(
+  //       `http://localhost:2000/api/v1/proposal/proposal-document/${proposalId}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`, // Ganti 'token' dengan nilai token yang sesuai
+  //         },
+  //       }
+  //     );
+
+  //     if (response.status === 200) {
+  //       // Proposal berhasil dihapus dari server, sekarang hapus dari tampilan
+  //       const updatedProposalFiles = proposalUploadedFiles.filter(
+  //         (file) => file.id !== proposalId
+  //       );
+  //       setProposalUploadedFiles(updatedProposalFiles);
+  //       setProposalFile(null);
+  //       setSelectedProposalFileName("");
+  //       console.log('Proposal berhasil dihapus.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Terjadi kesalahan saat menghapus proposal:', error);
+  //     // Handle error or provide an appropriate message to the user
+  //   }
+  // };
 
   // Fungsi untuk menghapus file bukti pembayaran
   const handleDeletePaymentFile = (index) => {
@@ -476,50 +503,122 @@ const UnggahProposal = () => {
                   </TableHead>
 
                   <TableBody>
-                    {proposalUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{index + 1}</TableCell>
+                    {dokumenProposal && (
+                      <TableRow key={dokumenProposal.id}>
+                        <TableCell>1</TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.date}
+                          {dokumenProposal.file_name_proposal}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
+                          {dokumenProposal.upload_date_proposal}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "12px" }}>
+                          {dokumenProposal.file_size_proposal}
                         </TableCell>
                         <TableCell>
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                            }}
-                          />
+                          {dokumenProposal.is_proposal_approve_by_advisor ===
+                          "Waiting" ? (
+                            <Chip
+                              size="small"
+                              label={"Menunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : dokumenProposal.is_proposal_approve_by_advisor ===
+                            "Approve" ? (
+                            <Chip
+                              size="small"
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : dokumenProposal.is_proposal_approve_by_advisor ===
+                            "Rejected" ? (
+                            <Chip
+                              size="small"
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            dokumenProposal.is_proposal_approve_by_advisor
+                          )}
                         </TableCell>
                         <TableCell>
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                            }}
-                          />
+                          {dokumenProposal.is_proposal_approve_by_co_advisor1 ===
+                          "Waiting" ? (
+                            <Chip
+                              size="small"
+                              label={"Menunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : dokumenProposal.is_proposal_approve_by_co_advisor1 ===
+                            "Approve" ? (
+                            <Chip
+                              size="small"
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : dokumenProposal.is_proposal_approve_by_co_advisor1 ===
+                            "Rejected" ? (
+                            <Chip
+                              size="small"
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            dokumenProposal.is_proposal_approve_by_co_advisor1
+                          )}
                         </TableCell>
                         <TableCell>
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                            }}
-                          />
+                          {dokumenProposal.is_proposal_approve_by_co_advisor2 ===
+                          "Waiting" ? (
+                            <Chip
+                              size="small"
+                              label={"Menunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : dokumenProposal.is_proposal_approve_by_co_advisor2 ===
+                            "Approve" ? (
+                            <Chip
+                              size="small"
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : dokumenProposal.is_proposal_approve_by_co_advisor2 ===
+                            "Rejected" ? (
+                            <Chip
+                              size="small"
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            dokumenProposal.is_proposal_approve_by_co_advisor2
+                          )}
                         </TableCell>
                         <TableCell>
                           <Div sx={{ display: "flex" }}>
@@ -531,9 +630,9 @@ const UnggahProposal = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {proposalFile && (
+                              {dokumenProposal && (
                                 <PDFViewerProposal
-                                  proposalFile={proposalFile}
+                                  dokumenProposal={dokumenProposal}
                                 />
                               )}
                             </span>
@@ -552,14 +651,14 @@ const UnggahProposal = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() => handleDeleteProposalFile(index)}
+                              onClick={() => handleDeleteProposalFile}
                             >
                               Delete
                             </span>
                           </Div>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -664,19 +763,17 @@ const UnggahProposal = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {paymentUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
+                    {buktiPembayaran && (
+                      <TableRow key={buktiPembayaran.id}>
+                        <TableCell sx={{ fontSize: "12px" }}>1</TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {index + 1}
+                          {buktiPembayaran.file_name_payment}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
+                          {buktiPembayaran.upload_date_payment}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.date}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
+                          {buktiPembayaran.file_size_payment}
                         </TableCell>
                         <TableCell>
                           <Div sx={{ display: "flex" }}>
@@ -688,8 +785,10 @@ const UnggahProposal = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {paymentFile && (
-                                <PDFViewerPayment paymentFile={paymentFile} />
+                              {buktiPembayaran && (
+                                <PDFViewerPayment
+                                  buktiPembayaran={buktiPembayaran}
+                                />
                               )}
                             </span>
                             <Div
@@ -707,14 +806,14 @@ const UnggahProposal = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() => handleDeletePaymentFile(index)}
+                              onClick={() => handleDeletePaymentFile}
                             >
                               Delete
                             </span>
                           </Div>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -819,19 +918,17 @@ const UnggahProposal = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {plagiarismUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
+                    {hasilCekPlagiat && (
+                      <TableRow key={hasilCekPlagiat.id}>
+                        <TableCell sx={{ fontSize: "12px" }}>1</TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {index + 1}
+                          {hasilCekPlagiat.file_name_plagiarismcheck}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
+                          {hasilCekPlagiat.upload_date_plagiarismcheck}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.date}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
+                          {hasilCekPlagiat.file_size_plagiarismcheck}
                         </TableCell>
                         <TableCell>
                           <Div sx={{ display: "flex" }}>
@@ -843,9 +940,9 @@ const UnggahProposal = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {plagiarismFile && (
+                              {hasilCekPlagiat && (
                                 <PDFViewerCekPlagiat
-                                  plagiarismFile={plagiarismFile}
+                                  hasilCekPlagiat={hasilCekPlagiat}
                                 />
                               )}
                             </span>
@@ -864,14 +961,14 @@ const UnggahProposal = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() => handleDeletePlagiarismFile(index)}
+                              onClick={() => handleDeletePlagiarismFile}
                             >
                               Delete
                             </span>
                           </Div>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>

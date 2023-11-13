@@ -822,11 +822,15 @@ const PengajuanJudul = () => {
                         handleClose();
                         handleCancelEdit();
                       }}
-                      style={{
+                      size="small"
+                      sx={{
+                        textTransform: "none",
                         borderRadius: "6px",
-                        border: "##E0E0E0",
+                        border: "#E0E0E0",
                         background: "#FFFF",
+                        boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
                         color: "black",
+                        marginRight: "25px",
                       }}
                     >
                       Kembali

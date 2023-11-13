@@ -27,10 +27,10 @@ import AttachmentIcon from "@mui/icons-material/Attachment";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 // View Document Proposal
-const PDFViewerRevisiProposal = ({ RevisiProposalFile }) => {
+const PDFViewerRevisiProposal = ({ dokumenRevisi }) => {
   const viewPDFRevisiProposal = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(RevisiProposalFile);
+    const pdfURL = URL.createObjectURL(dokumenRevisi);
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -550,17 +550,17 @@ const UploadRevisiProposal = () => {
                       <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
                       >
+                        Ketua Panelis
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
+                      >
+                        Anggota Panelis
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
+                      >
                         Advisor
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
-                      >
-                        Co-Advisor 1
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
-                      >
-                        Co-Advisor 2
                       </TableCell>
                       <TableCell
                         sx={{
@@ -576,50 +576,122 @@ const UploadRevisiProposal = () => {
                   </TableHead>
 
                   <TableBody>
-                    {RevisiProposalUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{index + 1}</TableCell>
+                    {dokumenRevisi && (
+                      <TableRow key={dokumenRevisi.id}>
+                        <TableCell>1</TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.date}
+                          {dokumenRevisi.file_name_revision}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
+                          {dokumenRevisi.upload_date_revision}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "12px" }}>
+                          {dokumenRevisi.file_size_revision}
                         </TableCell>
                         <TableCell>
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                            }}
-                          />
+                          {dokumenRevisi.is_revision_approve_by_panelist_chairman ===
+                          "Waiting" ? (
+                            <Chip
+                              size="small"
+                              label={"Menunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : dokumenRevisi.is_revision_approve_by_panelist_chairman ===
+                            "Approve" ? (
+                            <Chip
+                              size="small"
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : dokumenRevisi.is_revision_approve_by_panelist_chairman ===
+                            "Rejected" ? (
+                            <Chip
+                              size="small"
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            dokumenRevisi.is_revision_approve_by_panelist_chairman
+                          )}
                         </TableCell>
                         <TableCell>
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                            }}
-                          />
+                          {dokumenRevisi.is_revision_approve_by_panelist_member ===
+                          "Waiting" ? (
+                            <Chip
+                              size="small"
+                              label={"Menunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : dokumenRevisi.is_revision_approve_by_panelist_member ===
+                            "Approve" ? (
+                            <Chip
+                              size="small"
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : dokumenRevisi.is_revision_approve_by_panelist_member ===
+                            "Rejected" ? (
+                            <Chip
+                              size="small"
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            dokumenRevisi.is_revision_approve_by_panelist_member
+                          )}
                         </TableCell>
                         <TableCell>
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                            }}
-                          />
+                          {dokumenRevisi.is_revision_approve_by_advisor ===
+                          "Waiting" ? (
+                            <Chip
+                              size="small"
+                              label={"Menunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : dokumenRevisi.is_revision_approve_by_advisor ===
+                            "Approve" ? (
+                            <Chip
+                              size="small"
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : dokumenRevisi.is_revision_approve_by_advisor ===
+                            "Rejected" ? (
+                            <Chip
+                              size="small"
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            dokumenRevisi.is_revision_approve_by_advisor
+                          )}
                         </TableCell>
                         <TableCell>
                           <Div sx={{ display: "flex" }}>
@@ -631,9 +703,9 @@ const UploadRevisiProposal = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {RevisiProposalFile && (
+                              {dokumenRevisi && (
                                 <PDFViewerRevisiProposal
-                                  RevisiProposalFile={RevisiProposalFile}
+                                  dokumenRevisi={dokumenRevisi}
                                 />
                               )}
                             </span>
@@ -652,16 +724,14 @@ const UploadRevisiProposal = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() =>
-                                handleDeleteRevisiProposalFile(index)
-                              }
+                              onClick={() => handleDeleteRevisiProposalFile}
                             >
                               Delete
                             </span>
                           </Div>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>

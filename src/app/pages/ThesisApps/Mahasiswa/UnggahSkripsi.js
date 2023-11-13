@@ -18,14 +18,15 @@ import { pdfjs } from "react-pdf";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
+import DokumenProposal from "../Sekertaris/DokumenProposal";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 // View Document Proposal
-const PDFViewerSkripsi = ({ skripsiFile }) => {
+const PDFViewerSkripsi = ({ dokumenSkripsi }) => {
   const viewPDFSkripsi = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(skripsiFile);
+    const pdfURL = URL.createObjectURL(dokumenSkripsi);
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -476,50 +477,122 @@ const UploadSkipsi = () => {
                   </TableHead>
 
                   <TableBody>
-                    {SkripsiUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{index + 1}</TableCell>
+                    {dokumenSkripsi && (
+                      <TableRow key={dokumenSkripsi.id}>
+                        <TableCell>1</TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.date}
+                          {dokumenSkripsi.file_name_skripsi}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
+                          {dokumenSkripsi.upload_date_skripsi}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "12px" }}>
+                          {dokumenSkripsi.file_size_skripsi}
                         </TableCell>
                         <TableCell>
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                            }}
-                          />
+                          {dokumenSkripsi.is_skripsi_approve_by_advisor ===
+                          "Waiting" ? (
+                            <Chip
+                              size="small"
+                              label={"Menunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : dokumenSkripsi.is_skripsi_approve_by_advisor ===
+                            "Approve" ? (
+                            <Chip
+                              size="small"
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : dokumenSkripsi.is_skripsi_approve_by_advisor ===
+                            "Rejected" ? (
+                            <Chip
+                              size="small"
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            dokumenSkripsi.is_skripsi_approve_by_advisor
+                          )}
                         </TableCell>
                         <TableCell>
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                            }}
-                          />
+                          {dokumenSkripsi.is_skripsi_approve_by_co_advisor1 ===
+                          "Waiting" ? (
+                            <Chip
+                              size="small"
+                              label={"Menunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : dokumenSkripsi.is_skripsi_approve_by_co_advisor1 ===
+                            "Approve" ? (
+                            <Chip
+                              size="small"
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : dokumenSkripsi.is_skripsi_approve_by_co_advisor1 ===
+                            "Rejected" ? (
+                            <Chip
+                              size="small"
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            dokumenSkripsi.is_skripsi_approve_by_co_advisor1
+                          )}
                         </TableCell>
                         <TableCell>
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                            }}
-                          />
+                          {dokumenSkripsi.is_skripsi_approve_by_co_advisor2 ===
+                          "Waiting" ? (
+                            <Chip
+                              size="small"
+                              label={"Menunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : dokumenSkripsi.is_skripsi_approve_by_co_advisor2 ===
+                            "Approve" ? (
+                            <Chip
+                              size="small"
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : dokumenSkripsi.is_skripsi_approve_by_co_advisor2 ===
+                            "Rejected" ? (
+                            <Chip
+                              size="small"
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            dokumenSkripsi.is_skripsi_approve_by_co_advisor2
+                          )}
                         </TableCell>
                         <TableCell>
                           <Div sx={{ display: "flex" }}>
@@ -531,8 +604,12 @@ const UploadSkipsi = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {SkripsiFile && (
-                                <PDFViewerSkripsi skripsiFile={SkripsiFile} />
+                              {dokumenSkripsi && (
+                                <PDFViewerSkripsi
+                                  dokumenSkripsi={
+                                    dokumenSkripsi.file_path_skripsi
+                                  }
+                                />
                               )}
                             </span>
                             <Div
@@ -550,14 +627,14 @@ const UploadSkipsi = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() => handleDeleteProposalFile(index)}
+                              onClick={() => handleDeleteProposalFile}
                             >
                               Delete
                             </span>
                           </Div>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -662,19 +739,17 @@ const UploadSkipsi = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {paymentUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
+                    {buktiPembayaran && (
+                      <TableRow key={buktiPembayaran.id}>
+                        <TableCell sx={{ fontSize: "12px" }}>1</TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {index + 1}
+                          {buktiPembayaran.file_name_payment}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
+                          {buktiPembayaran.upload_date_payment}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.date}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
+                          {buktiPembayaran.file_size_payment}
                         </TableCell>
                         <TableCell>
                           <Div sx={{ display: "flex" }}>
@@ -686,8 +761,10 @@ const UploadSkipsi = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {paymentFile && (
-                                <PDFViewerPayment paymentFile={paymentFile} />
+                              {buktiPembayaran && (
+                                <PDFViewerPayment
+                                  buktiPembayaran={buktiPembayaran}
+                                />
                               )}
                             </span>
                             <Div
@@ -705,14 +782,14 @@ const UploadSkipsi = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() => handleDeletePaymentFile(index)}
+                              onClick={() => handleDeletePaymentFile}
                             >
                               Delete
                             </span>
                           </Div>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -817,19 +894,17 @@ const UploadSkipsi = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {plagiarismUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
+                    {hasilCekPlagiat && (
+                      <TableRow key={hasilCekPlagiat.id}>
+                        <TableCell sx={{ fontSize: "12px" }}>1</TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {index + 1}
+                          {hasilCekPlagiat.file_name_plagiarismcheck}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
+                          {hasilCekPlagiat.upload_date_plagiarismcheck}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.date}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
+                          {hasilCekPlagiat.file_size_plagiarismcheck}
                         </TableCell>
                         <TableCell>
                           <Div sx={{ display: "flex" }}>
@@ -841,9 +916,9 @@ const UploadSkipsi = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {plagiarismFile && (
+                              {hasilCekPlagiat && (
                                 <PDFViewerCekPlagiat
-                                  plagiarismFile={plagiarismFile}
+                                  hasilCekPlagiat={hasilCekPlagiat}
                                 />
                               )}
                             </span>
@@ -862,14 +937,14 @@ const UploadSkipsi = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() => handleDeletePlagiarismFile(index)}
+                              onClick={() => handleDeletePlagiarismFile}
                             >
                               Delete
                             </span>
                           </Div>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
