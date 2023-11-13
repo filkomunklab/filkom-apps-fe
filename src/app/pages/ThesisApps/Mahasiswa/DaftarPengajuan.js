@@ -630,7 +630,7 @@ function DaftarPengajuan() {
                 <TableCell>
                   <Link
                     href="#"
-                    to={`/sistem-informasi-skripsi/daftar-pengajuan/beranda/${pengajuan.group_id}/student`}
+                    to={`/sistem-informasi-skripsi/daftar-pengajuan/beranda/${pengajuan.group_id}/MAHASISWA`}
                     style={{
                       textDecoration: "none",
                       color: "blue",

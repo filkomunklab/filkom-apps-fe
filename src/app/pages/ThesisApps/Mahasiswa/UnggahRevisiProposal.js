@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
@@ -5,7 +8,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Paper,
   Table,
@@ -16,20 +18,19 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
 import { pdfjs } from "react-pdf";
 import WarningIcon from "@mui/icons-material/Warning";
-import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
+import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-// View Document Skripsi
-const PDFViewerRevisiSkripsi = ({ RevisiSkripsiFile }) => {
-  const viewPDFRevisiSkripsi = () => {
+// View Document Proposal
+const PDFViewerRevisiProposal = ({ RevisiProposalFile }) => {
+  const viewPDFRevisiProposal = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(RevisiSkripsiFile);
+    const pdfURL = URL.createObjectURL(RevisiProposalFile);
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -37,32 +38,93 @@ const PDFViewerRevisiSkripsi = ({ RevisiSkripsiFile }) => {
 
   return (
     <div>
-      <span sx={{ fontSize: "10px" }} onClick={viewPDFRevisiSkripsi}>
+      <span sx={{ fontSize: "10px" }} onClick={viewPDFRevisiProposal}>
         View
       </span>
     </div>
   );
 };
 
-const UploadRevisiSkripsi = () => {
-  // state untuk Upload Revisi Skripsi
-  const [RevisiSkripsiUploadedFiles, setRevisiSkripsiUploadedFiles] = useState(
-    []
-  );
-  const [selectedRevisiSkripsiFileName, setSelectedRevisiSkripsiFileName] =
+const UploadRevisiProposal = () => {
+  // state - menyimpan request data
+  const [dokumenRevisi, setDokumenRevisi] = useState();
+  const [perubahan, setPerubahan] = useState();
+
+  const groupId = useParams().groupId;
+  console.log("group id: ", groupId);
+  const [progress, setProgress] = useState(null);
+  const [proposalId, setProposalId] = useState(null);
+
+  const role = useParams().role;
+  console.log(role);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchDokumenProposalData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDokumenRevisi(response.data.data);
+        console.log(
+          "Request Get dokumen revisi proposal: ",
+          response.data.data
+        );
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil dokumen revisi proposal:",
+          error
+        );
+      }
+    };
+    const fetchPerubahanData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setPerubahan(response.data.data);
+        console.log("Request Get perubahan proposal: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil perubahan proposal:",
+          error
+        );
+      }
+    };
+    fetchDokumenProposalData();
+    fetchPerubahanData();
+  }, [token, proposalId]);
+
+  // state untuk Upload RevisiProposal
+  const [RevisiProposalUploadedFiles, setRevisiProposalUploadedFiles] =
+    useState([]);
+  const [selectedRevisiProposalFileName, setSelectedRevisiProposalFileName] =
     useState("");
-  const [RevisiSkripsiFile, setRevisiSkripsiFile] = useState(null);
+  const [RevisiProposalFile, setRevisiProposalFile] = useState(null);
 
   // popup delete konfirmasi
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [deletingIndex, setDeletingIndex] = useState(null);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [deletingIndex, setDeletingIndex] = useState(-1);
 
-  const onRevisiSkripsiFileChange = (event) => {
+  const onRevisiProposalFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      if (RevisiSkripsiUploadedFiles.length === 0) {
-        setRevisiSkripsiFile(file);
-        setSelectedRevisiSkripsiFileName(file.name);
+      if (RevisiProposalUploadedFiles.length === 0) {
+        setRevisiProposalFile(file);
+        setSelectedRevisiProposalFileName(file.name);
 
         const newFileData = {
           name: file.name,
@@ -73,28 +135,30 @@ const UploadRevisiSkripsi = () => {
           coAdvisor2: "",
         };
 
-        setRevisiSkripsiUploadedFiles([newFileData]);
+        setRevisiProposalUploadedFiles([newFileData]);
       }
     }
   };
 
   // fungsi untuk menghapus file Proposal
-  const handleDeleteRevisiSkripsiFile = (index) => {
-    const updatedFiles = [...RevisiSkripsiUploadedFiles];
-    updatedFiles.splice(index, 1);
-    setRevisiSkripsiUploadedFiles(updatedFiles);
-    setRevisiSkripsiFile(null);
-    setSelectedRevisiSkripsiFileName("");
-  };
-
-  const openConfirmDialog = (index) => {
+  const handleDeleteRevisiProposalFile = (index) => {
     setDeletingIndex(index);
-    setConfirmDialogOpen(true);
+    setDeleteConfirmationOpen(true);
   };
 
-  const closeConfirmDialog = () => {
-    setDeletingIndex(null);
-    setConfirmDialogOpen(false);
+  const handleConfirmDelete = () => {
+    const updatedFiles = [...RevisiProposalUploadedFiles];
+    updatedFiles.splice(deletingIndex, 1);
+    setRevisiProposalUploadedFiles(updatedFiles);
+    setRevisiProposalFile(null);
+    setSelectedRevisiProposalFileName("");
+    setDeleteConfirmationOpen(false);
+    setDeletingIndex(-1);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmationOpen(false);
+    setDeletingIndex(-1);
   };
 
   return (
@@ -110,7 +174,7 @@ const UploadRevisiSkripsi = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Unggah Revisi Skripsi
+          Unggah Revisi Proposal
         </Typography>
       </Div>
 
@@ -134,7 +198,15 @@ const UploadRevisiSkripsi = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          <Riwayatlog />
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(data) => {
+              if (data) {
+                setProgress(data.progress);
+                setProposalId(data.proposal_id);
+              }
+            }}
+          />
         </Div>
         {/* Element 1 End */}
 
@@ -152,8 +224,12 @@ const UploadRevisiSkripsi = () => {
           }}
         >
           {/* Menu Horizontal Start */}
-          <Div sx={{ width: "100%" }}>
-            <MenuMahasiswa />
+          {/* MAHASISWA */}
+          <Div
+            hidden={role.includes("MAHASISWA") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
           </Div>
           {/* Menu horizontal End */}
           <Div
@@ -187,7 +263,7 @@ const UploadRevisiSkripsi = () => {
               Perubahan
             </Typography>
 
-            {/* View Perubahan Start*/}
+            {/* View PerubahanStart*/}
             <Div
               sx={{
                 display: "flex",
@@ -229,10 +305,7 @@ const UploadRevisiSkripsi = () => {
                     borderRadius: "0 0 6px 6px",
                   }}
                 >
-                  <Typography>
-                    1.Ubah Judul. 2.Ganti Metode. 3.Ganti MongoDB menjadi
-                    PostgreSQL. 4. Perbaiki Typo penulisan di Bab 1 dan 2.
-                  </Typography>
+                  <Typography>{perubahan?.changes_by_chairman}</Typography>
                 </Div>
               </Div>
               {/* Perubahan Anggota Penelis */}
@@ -266,11 +339,7 @@ const UploadRevisiSkripsi = () => {
                     borderRadius: "0 0 6px 6px",
                   }}
                 >
-                  <Typography>
-                    Tambahkan perbandingan metode-metode yang digunakan.
-                    Menambahkan metode Perbaiki font dan ukuran menggunakan
-                    standar kampus
-                  </Typography>
+                  <Typography>{perubahan?.changes_by_member}</Typography>
                 </Div>
               </Div>
               {/* Perubahan Advisor */}
@@ -304,47 +373,81 @@ const UploadRevisiSkripsi = () => {
                     borderRadius: "0 0 6px 6px",
                   }}
                 >
-                  <Typography>
-                    Tambahkan sebuah fitur-fitur. Tambahkan user Mahasiswa.
-                  </Typography>
+                  <Typography>{perubahan?.changes_by_advisor}</Typography>
                 </Div>
               </Div>
-              {/* Perubahan Co-Advisor */}
-              <Div
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  alignSelf: "stretch",
-                }}
-              >
+              {/* Perubahan Co-Advisor 1*/}
+              {perubahan?.changes_by_co_advisor1 !== null && (
                 <Div
                   sx={{
                     display: "flex",
+                    flexDirection: "column",
                     alignItems: "flex-start",
                     alignSelf: "stretch",
-                    background: "rgba(26, 56, 96, 0.10)",
-                    padding: "14px 16px",
-                    borderRadius: "6px",
                   }}
                 >
-                  <Typography variant="subtitle2">Co-Advisor</Typography>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      alignSelf: "stretch",
+                      background: "rgba(26, 56, 96, 0.10)",
+                      padding: "14px 16px",
+                      borderRadius: "6px",
+                    }}
+                  >
+                    <Typography variant="subtitle2">Co-Advisor 1</Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      alignSelf: "stretch",
+                      padding: "14px 16px",
+                      border: "2px solid rgba(26, 56, 96, 0.10)",
+                      borderRadius: "0 0 6px 6px",
+                    }}
+                  >
+                    <Typography>{perubahan?.changes_by_co_advisor1}</Typography>
+                  </Div>
                 </Div>
+              )}
+              {/* Perubahan Co-Advisor 2*/}
+              {perubahan?.changes_by_co_advisor2 !== null && (
                 <Div
                   sx={{
                     display: "flex",
+                    flexDirection: "column",
                     alignItems: "flex-start",
                     alignSelf: "stretch",
-                    padding: "14px 16px",
-                    border: "2px solid rgba(26, 56, 96, 0.10)",
-                    borderRadius: "0 0 6px 6px",
                   }}
                 >
-                  <Typography>
-                    Tambahkan sebuah fitur-fitur. Tambahkan user Mahasiswa.
-                  </Typography>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      alignSelf: "stretch",
+                      background: "rgba(26, 56, 96, 0.10)",
+                      padding: "14px 16px",
+                      borderRadius: "6px",
+                    }}
+                  >
+                    <Typography variant="subtitle2">Co-Advisor 2</Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      alignSelf: "stretch",
+                      padding: "14px 16px",
+                      border: "2px solid rgba(26, 56, 96, 0.10)",
+                      borderRadius: "0 0 6px 6px",
+                    }}
+                  >
+                    <Typography>{perubahan?.changes_by_co_advisor2}</Typography>
+                  </Div>
                 </Div>
-              </Div>
+              )}
             </Div>
             {/* View Perubahan End */}
             <Typography
@@ -374,7 +477,7 @@ const UploadRevisiSkripsi = () => {
                 gap: "25px",
               }}
             >
-              {/* file upload Revisi Skripsi */}
+              {/* Upload Revisi Proposal*/}
               <Div
                 sx={{
                   display: "flex",
@@ -398,16 +501,16 @@ const UploadRevisiSkripsi = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    onChange={onRevisiSkripsiFileChange}
+                    onChange={onRevisiProposalFileChange}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
                   Unggah file
                 </Button>
               </Div>
-              {/* file upload end for Revisi Pripsi */}
+              {/* Upload Revisi Proposal End */}
 
-              {/* Table Upload Revisi Skripsi Start*/}
+              {/* Table Upload Revisi Proposal Start*/}
               <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
@@ -473,7 +576,7 @@ const UploadRevisiSkripsi = () => {
                   </TableHead>
 
                   <TableBody>
-                    {RevisiSkripsiUploadedFiles.map((file, index) => (
+                    {RevisiProposalUploadedFiles.map((file, index) => (
                       <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
@@ -528,9 +631,9 @@ const UploadRevisiSkripsi = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {RevisiSkripsiFile && (
-                                <PDFViewerRevisiSkripsi
-                                  RevisiSkripsiFile={RevisiSkripsiFile}
+                              {RevisiProposalFile && (
+                                <PDFViewerRevisiProposal
+                                  RevisiProposalFile={RevisiProposalFile}
                                 />
                               )}
                             </span>
@@ -549,7 +652,9 @@ const UploadRevisiSkripsi = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() => openConfirmDialog(index)}
+                              onClick={() =>
+                                handleDeleteRevisiProposalFile(index)
+                              }
                             >
                               Delete
                             </span>
@@ -560,69 +665,66 @@ const UploadRevisiSkripsi = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* Table UplRevisi Skripsi End*/}
+              {/* Table Upload Revisi Proposal End*/}
             </Div>
             {/* Table 2 End */}
+            <Dialog
+              open={deleteConfirmationOpen}
+              onClose={handleCancelDelete}
+              fullWidth
+              maxWidth="sm"
+            >
+              <DialogTitle
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  alignSelf: "stretch",
+                }}
+              >
+                <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
+                <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
+                  Menghapus Dokumen
+                </Typography>
+              </DialogTitle>
+              <DialogContent>
+                <Typography>
+                  Apakah Anda yakin ingin menghapus dokumen ini?
+                </Typography>
+              </DialogContent>
+              <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                <Button
+                  onClick={handleCancelDelete}
+                  sx={{
+                    background: "white",
+                    boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                    textTransform: "none",
+                    color: "black",
+                  }}
+                >
+                  Batal
+                </Button>
+                <Button
+                  onClick={handleConfirmDelete}
+                  sx={{
+                    textTransform: "none",
+                    background: "#FC0",
+                    color: "#263445",
+                    "&:hover": {
+                      color: "#FC0",
+                    },
+                  }}
+                >
+                  Hapus
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Div>
           {/* Element 2 End */}
         </Div>
-        <Dialog
-          open={confirmDialogOpen}
-          onClose={closeConfirmDialog}
-          maxWidth="sm"
-          fullWidth
-        >
-          <DialogTitle
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              alignSelf: "stretch",
-            }}
-          >
-            <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
-            <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-              Menghapus Dokumen
-            </Typography>
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Apakah Anda yakin ingin menghapus file ini?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-            <Button
-              onClick={closeConfirmDialog}
-              sx={{
-                background: "white",
-                boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-                textTransform: "none",
-                color: "black",
-              }}
-            >
-              Batal
-            </Button>
-            <Button
-              onClick={() => {
-                handleDeleteRevisiSkripsiFile(deletingIndex);
-                closeConfirmDialog();
-              }}
-              sx={{
-                textTransform: "none",
-                background: "#FC0",
-                color: "#263445",
-                "&:hover": {
-                  color: "#FC0",
-                },
-              }}
-            >
-              Hapus
-            </Button>
-          </DialogActions>
-        </Dialog>
       </Div>
     </Div>
   );
 };
 
-export default UploadRevisiSkripsi;
+export default UploadRevisiProposal;

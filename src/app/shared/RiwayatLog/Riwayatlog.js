@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
@@ -7,39 +9,10 @@ import {
   Stepper,
   Typography,
 } from "@mui/material";
-import Paper from "@mui/material/Paper";
-import React, { useState } from "react";
-import JumboDemoCard from "@jumbo/components/JumboDemoCard";
-import { Box } from "@mui/system";
 
-const steps = [
-  {
-    label: "Pengajuan Judul",
-    user: "Mahasiswa",
-    date: "23-03-2023",
-    time: "11:00 ",
-  },
-  {
-    label: "Pengajuan Judul Diterima",
-    user: "Dosen Skripsi",
-    date: "24-03-2023",
-    time: "03:00 ",
-  },
-  {
-    label: "Membuat Konsultasi",
-    user: "Advisor",
-    date: "26-03-2023",
-    time: "15:00 ",
-  },
-  {
-    label: "Membuat Konsultasi",
-    user: "Advisor",
-    date: "28-03-2023",
-    time: "15:00 ",
-  },
-];
-
-const Riwayatlog = () => {
+const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
+  const [riwayat, setRiwayat] = useState([]);
+  const [timPembimbing, setTimPembimbing] = useState();
   const [activeStep, setActiveStep] = React.useState(0);
   const [selectedStep, setSelectedStep] = React.useState(0);
   // const [steps, setSteps] = useState([]);
@@ -49,41 +22,53 @@ const Riwayatlog = () => {
     setActiveStep(index);
   };
 
-  // // fungsi untuk mendapatkan token JWT
-  // const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
   // console.log("token", token);
+  console.log("GroupId di komponen riwayatlog", groupId);
 
-  // const { id } = JSON.parse(localStorage.getItem("user"));
-  // console.log(id);
-
-  // const { groupId } = useParams();
-
-  // useEffect(() => {
-  //   const fetchDaftarDataRiwayatLog = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:2000/api/v1/group/thesis_history/${groupId}`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       );
-  //       // Pastikan response.data adalah array sebelum mengatur state
-  //       if (Array.isArray(response.data)) {
-  //         setSteps(response.data);
-  //       } else {
-  //         console.error("Data yang diterima bukanlah array:", response.data);
-  //       }
-  //     } catch (error) {
-  //       console.error(
-  //         "Terjadi kesalahan saat mengambil data Riwayat log:",
-  //         error
-  //       );
-  //     }
-  //   };
-  //   fetchDaftarDataRiwayatLog();
-  // }, [token, groupId]);
+  useEffect(() => {
+    const fetchRiwayatData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/thesis_history/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Atur state 'setRiwayat' dengan data dari respons
+        setRiwayat(response.data.data);
+        console.log("Request Get riwayat: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil riwayat:", error);
+      }
+    };
+    const fetchTimPembimbingData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/advisor-group/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Atur state 'setTimPembimbing' dengan data dari respons
+        setTimPembimbing(response.data.data);
+        riwayatData(response.data.data);
+        console.log("Progress dari Riwayat: ", response.data.data);
+        console.log("Request Get tim pembimbing: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil tim pembimbing:",
+          error
+        );
+      }
+    };
+    fetchRiwayatData();
+    fetchTimPembimbingData();
+  }, [token, groupId]);
 
   return (
     <Div sx={{ width: "100%" }}>
@@ -112,19 +97,17 @@ const Riwayatlog = () => {
             orientation="vertical"
             sx={{ marginBottom: "20px" }}
           >
-            {steps.map((step, index) => (
-              <Step key={step.label} completed={false}>
+            {riwayat?.map((step, index) => (
+              <Step key={step.description} completed={false}>
                 <StepLabel
                   onClick={() => handleStepClick(index)}
                   style={{ cursor: "pointer" }}
                 >
-                  {step.label}
+                  {step.description}
                 </StepLabel>
                 <StepContent>
                   <Typography>{step.user}</Typography>
-                  <Typography>
-                    {step.date} {step.time}
-                  </Typography>
+                  <Typography>{step.date}</Typography>
                 </StepContent>
               </Step>
             ))}
@@ -179,86 +162,91 @@ const Riwayatlog = () => {
             }}
           >
             <Typography sx={{ fontSize: "12px" }}>
-              Oktoverano H. Lengkong, SKom, MDs, MM
+              {timPembimbing?.advisor ? timPembimbing?.advisor : ""}
             </Typography>
           </Div>
         </Div>
+
         {/* Co-Advisor 1*/}
-        <Div
-          sx={{
-            display: "flex",
-            width: "100%",
-            alignItems: "flex-start",
-          }}
-        >
-          <Div
-            variant="subtitle2"
-            sx={{
-              display: "flex",
-              width: "120px",
-              padding: "14px 16px",
-              alignItems: "center",
-              background: "#F5F5F5",
-            }}
-          >
-            <Typography
-              variant="subtitle2"
-              gutterBottom
-              sx={{ fontSize: "12px" }}
-            >
-              Co-Advisor 1
-            </Typography>
-          </Div>
+        {timPembimbing?.co_advisor1 && (
           <Div
             sx={{
               display: "flex",
-              padding: "10px 16px",
+              width: "100%",
               alignItems: "flex-start",
             }}
           >
-            <Typography sx={{ fontSize: "12px" }}>
-              Oktoverano H. Lengkong, SKom, MDs, MM
-            </Typography>
+            <Div
+              variant="subtitle2"
+              sx={{
+                display: "flex",
+                width: "120px",
+                padding: "14px 16px",
+                alignItems: "center",
+                background: "#F5F5F5",
+              }}
+            >
+              <Typography
+                variant="subtitle2"
+                gutterBottom
+                sx={{ fontSize: "12px" }}
+              >
+                Co-Advisor 1
+              </Typography>
+            </Div>
+            <Div
+              sx={{
+                display: "flex",
+                padding: "10px 16px",
+                alignItems: "flex-start",
+              }}
+            >
+              <Typography sx={{ fontSize: "12px" }}>
+                {timPembimbing.co_advisor1 ? timPembimbing.co_advisor1 : ""}
+              </Typography>
+            </Div>
           </Div>
-        </Div>
+        )}
         {/* Co-Advisor 2*/}
-        <Div
-          sx={{
-            display: "flex",
-            width: "100%",
-            alignItems: "flex-start",
-          }}
-        >
-          <Div
-            variant="subtitle2"
-            sx={{
-              display: "flex",
-              width: "120px",
-              padding: "14px 16px",
-              alignItems: "center",
-              background: "#F5F5F5",
-            }}
-          >
-            <Typography
-              variant="subtitle2"
-              gutterBottom
-              sx={{ fontSize: "12px" }}
-            >
-              Co-Advisor 2
-            </Typography>
-          </Div>
+        {timPembimbing?.co_advisor2 && (
           <Div
             sx={{
               display: "flex",
-              padding: "10px 16px",
+              width: "100%",
               alignItems: "flex-start",
             }}
           >
-            <Typography sx={{ fontSize: "12px" }}>
-              Oktoverano H. Lengkong, SKom, MDs, MM
-            </Typography>
+            <Div
+              variant="subtitle2"
+              sx={{
+                display: "flex",
+                width: "120px",
+                padding: "14px 16px",
+                alignItems: "center",
+                background: "#F5F5F5",
+              }}
+            >
+              <Typography
+                variant="subtitle2"
+                gutterBottom
+                sx={{ fontSize: "12px" }}
+              >
+                Co-Advisor 2
+              </Typography>
+            </Div>
+            <Div
+              sx={{
+                display: "flex",
+                padding: "10px 16px",
+                alignItems: "flex-start",
+              }}
+            >
+              <Typography sx={{ fontSize: "12px" }}>
+                {timPembimbing.co_advisor2 ? timPembimbing.co_advisor2 : ""}
+              </Typography>
+            </Div>
           </Div>
-        </Div>
+        )}
       </Div>
       {/* Dosen Pembimbing End */}
     </Div>

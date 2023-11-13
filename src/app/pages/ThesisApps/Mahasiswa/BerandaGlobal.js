@@ -1,51 +1,43 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import { Typography } from "@mui/material";
-import MenuPengajuanJudulDosen from "app/shared/MenuHorizontal/MenuPengajuanJudulDosen";
+// import MenuPengajuanJudulDosen from "app/shared/MenuHorizontal/MenuPengajuanJudulDosen";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-import React, { useState } from "react";
-// import BerandaPengajuanJudul from "./BerandaPengajuanJudul";
+import BerandaPengajuanJudul from "./BerandaPengajuanJudul";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
+import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
 import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPanalisProposal";
 import MenuKetuaPanalisProposal from "app/shared/MenuHorizontal/MenuKetuaPanalisProposal";
 import MenuCoAdvisorProposal from "app/shared/MenuHorizontal/MenuCoAdvisorProposal";
 import MenuAdvisorProposal from "app/shared/MenuHorizontal/MenuAdvisorProposal";
-import { useParams } from "react-router-dom";
 import BerandaProposalMahasiswa from "./BerandaProposalMahasiswa";
 import BerandaSkripsiMahasiswa from "./BerandaSkripsiMahasiswa";
-import BerandaPengajuanJudul from "./Beranda";
 import MenuDekanProposal from "app/shared/MenuHorizontal/MenuDekanProposal";
 
 const BerandaGlobal = () => {
-  // fungsi untuk mendapatkan token JWT
-  const token = localStorage.getItem("token");
-  console.log("token", token);
+  const groupId = useParams().groupId;
+  console.log("group id: ", groupId);
+  const [progress, setProgress] = useState(null);
+
+  const role = useParams().role;
+  console.log(role);
+
+  if (progress !== null) {
+    console.log("Progress:", progress);
+  }
 
   // const { id } = JSON.parse(localStorage.getItem("user"));
-
-  const roleTest = useParams().role;
-  console.log(roleTest);
 
   // const idTest = useParams().id;
   // const roleTest = useParams().role;
   // console.log(idTest, roleTest);
 
-  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const { role } = JSON.parse(localStorage.getItem("user"));
   // const role = ["ADVISOR", "DOSEN"];
-  console.log(role);
-
-  // kondisi beranda
-  // State untuk melacak kondisi
-  const [kondisi, setKondisi] = useState("berandaPengajuanJudul");
-
-  // Fungsi untuk mengubah kondisi
-  const handleKondisiBeranda = () => {
-    if (kondisi === "berandaPengajuanJudul") {
-      setKondisi("berandaPengajuanProposal");
-    } else if (kondisi === "berandaPengajuanProposal") {
-      setKondisi("berandaPengajuanSkripsi");
-    }
-  };
+  // console.log(role);
 
   return (
     <Div>
@@ -84,7 +76,11 @@ const BerandaGlobal = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          <Riwayatlog />
+          {/* jika progress tidak null maka menyimpannya di setProgress */}
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(data) => data && setProgress(data.progress)}
+          />
         </Div>
         {/* Element 1 End */}
 
@@ -103,10 +99,10 @@ const BerandaGlobal = () => {
         >
           {/* DOSEN SKRIPSI */}
           <Div
-            hidden={role.includes("DOSEN") ? false : true}
+            hidden={role.includes("DOSEN_MK") ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuKetuaPanalisProposal />
+            <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
           </Div>
           {/* ADVISOR */}
           <Div
@@ -162,7 +158,7 @@ const BerandaGlobal = () => {
             hidden={role.includes("MAHASISWA") ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa />
+            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
           </Div>
 
           <Div
@@ -179,14 +175,17 @@ const BerandaGlobal = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
-            {kondisi === "berandaPengajuanJudul" && (
-              <BerandaPengajuanJudul onTerima={handleKondisiBeranda} />
+            {progress === "Submission" && (
+              <BerandaPengajuanJudul value={groupId} />
             )}
-            {kondisi === "berandaPengajuanProposal" && (
-              <BerandaProposalMahasiswa onTerima={handleKondisiBeranda} />
+            {progress === "Proposal" && (
+              <BerandaProposalMahasiswa value={groupId} />
             )}
-            {kondisi === "berandaPengajuanSkripsi" && (
-              <BerandaSkripsiMahasiswa onTerima={handleKondisiBeranda} />
+            {progress === "Skripsi" && (
+              <BerandaSkripsiMahasiswa value={groupId} />
+            )}
+            {progress === "Finished" && (
+              <BerandaSkripsiMahasiswa value={groupId} />
             )}
           </Div>
         </Div>

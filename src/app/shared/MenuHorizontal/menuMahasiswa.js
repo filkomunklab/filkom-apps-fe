@@ -3,11 +3,12 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const MenuMahasiswa = () => {
+const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open1 = Boolean(anchorEl);
   const [anchorE2, setAnchorE2] = useState(null);
   const open2 = Boolean(anchorE2);
+
   return (
     <Div>
       {/* Menu Horizontal Start */}
@@ -26,7 +27,9 @@ const MenuMahasiswa = () => {
       >
         <Div sx={{ width: "100%", display: "flex" }}>
           <Div sx={{ margin: "auto" }}>
-            <Link to="/sistem-informasi-skripsi/daftar-pengajuan/beranda">
+            <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan/beranda/${groupId}/MAHASISWA`}
+            >
               <Button
                 sx={{
                   fontSize: "13px",
@@ -52,7 +55,9 @@ const MenuMahasiswa = () => {
             }}
           ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="/sistem-informasi-skripsi/daftar-pengajuan/pengajuan-judul">
+            <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan/pengajuan-judul/${groupId}/MAHASISWA`}
+            >
               <Button
                 sx={{
                   // width: "150px",
@@ -78,22 +83,31 @@ const MenuMahasiswa = () => {
             }}
           ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="/sistem-informasi-skripsi/daftar-pengajuan/konsultasi">
-              <Button
-                sx={{
-                  // width: "130px",
-                  fontSize: "13px",
-                  fontWeight: 500,
-                  color: "#192434",
-                  textTransform: "none",
-                  "&:hover": {
-                    color: "#006AF5",
-                  },
-                }}
-              >
-                Konsultasi
-              </Button>
-            </Link>
+            {/* <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan/konsultasi/${groupId}/MAHASISWA`}
+            > */}
+            <Button
+              component={Link}
+              to={`/sistem-informasi-skripsi/daftar-pengajuan/konsultasi/${groupId}/MAHASISWA`}
+              sx={{
+                // width: "130px",
+                fontSize: "13px",
+                fontWeight: 500,
+                color: "#192434",
+                textTransform: "none",
+                "&:hover": {
+                  color: "#006AF5",
+                },
+              }}
+              disabled={
+                progress !== "Proposal" &&
+                progress !== "Skripsi" &&
+                progress !== "Finished"
+              }
+            >
+              Konsultasi
+            </Button>
+            {/* </Link> */}
           </Div>
           <Div
             sx={{
@@ -115,6 +129,11 @@ const MenuMahasiswa = () => {
                   color: "#006AF5",
                 },
               }}
+              disabled={
+                progress !== "Proposal" &&
+                progress !== "Skripsi" &&
+                progress !== "Finished"
+              }
             >
               Pengajuan Proposal
             </Button>
@@ -132,7 +151,7 @@ const MenuMahasiswa = () => {
               }}
             >
               <Link
-                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-proposal"
+                to={`/sistem-informasi-skripsi/daftar-pengajuan/unggah-proposal/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <MenuItem
@@ -143,7 +162,7 @@ const MenuMahasiswa = () => {
                 </MenuItem>
               </Link>
               <Link
-                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-revisi-proposal"
+                to={`/sistem-informasi-skripsi/daftar-pengajuan/unggah-revisi-proposal/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <MenuItem onClick={() => setAnchorEl(null)}>
@@ -173,6 +192,7 @@ const MenuMahasiswa = () => {
                   color: "#006AF5",
                 },
               }}
+              disabled={progress !== "Skripsi" && progress !== "Finished"}
             >
               Pengajuan Skripsi
             </Button>
@@ -190,7 +210,7 @@ const MenuMahasiswa = () => {
               }}
             >
               <Link
-                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-skripsi"
+                to={`/sistem-informasi-skripsi/daftar-pengajuan/unggah-skripsi/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <MenuItem onClick={() => setAnchorE2(null)}>
@@ -198,7 +218,7 @@ const MenuMahasiswa = () => {
                 </MenuItem>
               </Link>
               <Link
-                to="/sistem-informasi-skripsi/daftar-pengajuan/unggah-revisi-skripsi"
+                to={`/sistem-informasi-skripsi/daftar-pengajuan/unggah-revisi-skripsi/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <MenuItem onClick={() => setAnchorE2(null)}>
@@ -206,7 +226,7 @@ const MenuMahasiswa = () => {
                 </MenuItem>
               </Link>
               <Link
-                to="/sistem-informasi-skripsi/daftar-pengajuan/arsip-document"
+                to={`/sistem-informasi-skripsi/daftar-pengajuan/arsip-document/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <MenuItem onClick={() => setAnchorE2(null)}>
@@ -214,7 +234,7 @@ const MenuMahasiswa = () => {
                 </MenuItem>
               </Link>
               <Link
-                to="/sistem-informasi-skripsi/daftar-pengajuan/metadata-repository"
+                to={`/sistem-informasi-skripsi/daftar-pengajuan/metadata-repository/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <MenuItem onClick={() => setAnchorE2(null)}>
