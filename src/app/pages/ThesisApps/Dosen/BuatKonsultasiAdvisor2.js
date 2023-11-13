@@ -31,7 +31,7 @@ import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPan
 import MenuKetuaPanalisProposal from "app/shared/MenuHorizontal/MenuKetuaPanalisProposal";
 import MenuCoAdvisorProposal from "app/shared/MenuHorizontal/MenuCoAdvisorProposal";
 import MenuAdvisorProposal from "app/shared/MenuHorizontal/MenuAdvisorProposal";
-import MenuDosenSkripsiProposal from "app/shared/MenuHorizontal/MenuDosenSkripsiProposal";
+// import MenuDosenSkripsiProposal from "app/shared/MenuHorizontal/MenuDosenSkripsiProposal";
 
 const BuatKonsultasiAdvisor2 = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -130,12 +130,12 @@ const BuatKonsultasiAdvisor2 = () => {
         >
           {/* Menu Horizontal Start */}
           {/* DOSEN SKRIPSI */}
-          <Div
+          {/* <Div
             hidden={role.includes("DOSEN") ? false : true}
             sx={{ width: "100%" }}
           >
             <MenuDosenSkripsiProposal />
-          </Div>
+          </Div> */}
           {/* ADVISOR */}
           <Div
             hidden={role.includes("ADVISOR") ? false : true}

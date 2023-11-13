@@ -21,7 +21,6 @@ import {
 import React, { useState } from "react";
 import CreateIcon from "@mui/icons-material/Create";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 import axios from "axios";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
@@ -30,7 +29,7 @@ import MenuKetuaPanalisProposal from "app/shared/MenuHorizontal/MenuKetuaPanalis
 import MenuCoAdvisorProposal from "app/shared/MenuHorizontal/MenuCoAdvisorProposal";
 import MenuAdvisorProposal from "app/shared/MenuHorizontal/MenuAdvisorProposal";
 import MenuDekanProposal from "app/shared/MenuHorizontal/MenuDekanProposal";
-import MenuDosenSkripsiProposal from "app/shared/MenuHorizontal/MenuDosenSkripsiProposal";
+// import MenuDosenSkripsiProposal from "app/shared/MenuHorizontal/MenuDosenSkripsiProposal";
 
 const BuatKonsultasiAdvisor = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -129,12 +128,12 @@ const BuatKonsultasiAdvisor = () => {
         >
           {/* Menu Horizontal Start */}
           {/* DOSEN SKRIPSI */}
-          <Div
+          {/* <Div
             hidden={role.includes("DOSEN") ? false : true}
             sx={{ width: "100%" }}
           >
             <MenuDosenSkripsiProposal />
-          </Div>
+          </Div> */}
           {/* ADVISOR */}
           <Div
             hidden={role.includes("ADVISOR") ? false : true}
