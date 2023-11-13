@@ -13,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
+import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 
 const Konsultasi = () => {
@@ -146,6 +147,13 @@ const Konsultasi = () => {
             sx={{ width: "100%" }}
           >
             <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
+          </Div>
+          {/* DOSEN SKRIPSI */}
+          <Div
+            hidden={role.includes("DOSEN_MK") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
           </Div>
           {/* Menu horizontal End */}
 

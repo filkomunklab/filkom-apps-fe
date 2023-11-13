@@ -489,7 +489,7 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
                         <TableCell>
                           <Typography
                             component={Link}
-                            to={`/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/beranda/234987/dosen-skripsi`}
+                            to={`/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/beranda/${proposal.group_id}/DOSEN_MK`}
                             sx={{
                               textDecoration: "none",
                               color: "blue",

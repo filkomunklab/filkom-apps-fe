@@ -486,7 +486,7 @@ const DaftarBimbinganSkripsiAdvisor = () => {
                         <TableCell>
                           <Typography
                             component={Link}
-                            to="/halaman-berikutnya"
+                            to={`/sistem-informasi-skripsi/daftar-pengajuan-skripsi-advisor/beranda/${skripsi.group_id}/ADVISOR`}
                             sx={{
                               textDecoration: "none",
                               color: "blue",

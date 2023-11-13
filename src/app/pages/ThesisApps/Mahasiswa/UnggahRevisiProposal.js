@@ -39,7 +39,7 @@ const PDFViewerRevisiProposal = ({ RevisiProposalFile }) => {
   return (
     <div>
       <span sx={{ fontSize: "10px" }} onClick={viewPDFRevisiProposal}>
-        View
+        Lihat
       </span>
     </div>
   );
