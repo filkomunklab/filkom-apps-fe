@@ -80,7 +80,9 @@ const History = (props) => {
     <Div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Back</StyledLink>
+          <StyledLink to="/bimbingan-akademik/sek-dekan/supervisor-information">
+            Back
+          </StyledLink>
           <Typography color="text.primary">History</Typography>
         </Breadcrumbs>
       </div>

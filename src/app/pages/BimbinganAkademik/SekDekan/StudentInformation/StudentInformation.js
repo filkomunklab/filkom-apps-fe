@@ -101,10 +101,10 @@ const StudentInformation = () => {
           variant="h1"
           sx={{
             mb: 3,
-            "@media (max-width: 650px)": {
-              fontSize: "15px",
+            "@media (max-width: 390px)": {
+              fontSize: "17px",
               fontWeight: 500,
-              mb: 1,
+              mb: "10px",
             },
           }}
         >
@@ -115,9 +115,9 @@ const StudentInformation = () => {
           sx={{
             mb: 3,
             textAlign: "justify",
-            "@media (max-width: 650px)": {
+            "@media (max-width: 390px)": {
               fontSize: "11px",
-              mb: 1,
+              mb: "15px",
             },
           }}
         >
@@ -126,8 +126,16 @@ const StudentInformation = () => {
           status, and other detailed and comprehensive information.
         </Typography>
       </Div>
-      <Grid container spacing={2} sx={{ paddingBottom: 4, paddingTop: 2 }}>
-        <Grid item sx={12} sm={4} md={4} lg={4} xs={12}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mb: 3,
+        }}
+      >
+        <Grid item sm={4} md={4} lg={4} xs={12}>
           <Card
             sx={{
               height: "100%",
@@ -138,81 +146,13 @@ const StudentInformation = () => {
               "&:hover": {
                 backgroundColor: "#E5F0FF",
               },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/sek-dekan/student-information/informatics"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Informatics Student " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography
-                    variant="h3"
-                    color="#006AF5"
-                    fontSize="20px"
-                    sx={{
-                      "@media (max-width: 650px)": {
-                        fontSize: "11px",
-                        mb: 1,
-                      },
-                    }}
-                  >
-                    {`11 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sx={12} sm={4} md={4} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/sek-dekan/student-information/information-system"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Information System Student" />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`12 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sx={12} sm={4} md={4} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
+
+              "@media (max-width: 390px)": {
+                width: "102%",
+                margin: "auto",
+                "& .MuiCardHeader-title": {
+                  fontSize: "15px",
+                },
               },
             }}
             onClick={() =>
@@ -223,12 +163,142 @@ const StudentInformation = () => {
           >
             <Grid container>
               <Grid item>
-                <CardHeader title="Information Technology Student " />
+                <CardHeader title="Informatics Student" />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
+                  <Typography
+                    variant="h3"
+                    color="#006AF5"
+                    sx={{
+                      fontSize: "20px",
+                      "@media (max-width: 390px)": {
+                        fontSize: "15px",
+                      },
+                    }}
+                  >
+                    {`11 people`}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      "@media (max-width: 390px)": {
+                        fontSize: "11px",
+                      },
+                    }}
+                  >
+                    {`last updated: 11 September 2023`}
+                  </Typography>
+                </CardContent>
+              </Grid>
+            </Grid>
+          </Card>
+        </Grid>
+        <Grid item sm={4} md={4} lg={4} xs={12}>
+          <Card
+            sx={{
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "#E5F0FF",
+              },
+
+              "@media (max-width: 390px)": {
+                width: "100%",
+                margin: "auto",
+                "& .MuiCardHeader-title": {
+                  fontSize: "15px",
+                },
+              },
+            }}
+            onClick={() =>
+              navigate(
+                "/bimbingan-akademik/sek-dekan/student-information/information-technology"
+              )
+            }
+          >
+            <Grid container>
+              <Grid item>
+                <CardHeader title="   Information System Student" />
+                <CardContent sx={{ position: "relative", paddingY: 0 }}>
+                  <Typography
+                    variant="h3"
+                    color="#006AF5"
+                    sx={{
+                      fontSize: "20px",
+                      "@media (max-width: 390px)": {
+                        fontSize: "15px",
+                      },
+                    }}
+                  >
+                    {`12 people`}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      "@media (max-width: 390px)": {
+                        fontSize: "11px",
+                      },
+                    }}
+                  >
+                    {`last updated: 11 September 2023`}
+                  </Typography>
+                </CardContent>
+              </Grid>
+            </Grid>
+          </Card>
+        </Grid>
+        <Grid item sm={4} md={4} lg={4} xs={12}>
+          <Card
+            sx={{
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "#E5F0FF",
+              },
+
+              "@media (max-width: 390px)": {
+                width: "102%",
+                margin: "auto",
+                "& .MuiCardHeader-title": {
+                  fontSize: "15px",
+                },
+              },
+            }}
+            onClick={() =>
+              navigate(
+                "/bimbingan-akademik/sek-dekan/student-information/information-technology"
+              )
+            }
+          >
+            <Grid container>
+              <Grid item>
+                <CardHeader title=" Information Technology Student" />
+                <CardContent sx={{ position: "relative", paddingY: 0 }}>
+                  <Typography
+                    variant="h3"
+                    color="#006AF5"
+                    sx={{
+                      fontSize: "18px",
+                      "@media (max-width: 390px)": {
+                        fontSize: "15px",
+                      },
+                    }}
+                  >
                     {`8 people`}
                   </Typography>
-                  <Typography variant="caption">
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      "@media (max-width: 390px)": {
+                        fontSize: "11px",
+                      },
+                    }}
+                  >
                     {`last updated: 11 September 2023`}
                   </Typography>
                 </CardContent>
@@ -239,12 +309,28 @@ const StudentInformation = () => {
       </Grid>
       <Grid container spacing={2}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: "justify",
+              "@media (max-width: 390px)": {
+                fontSize: "16px",
+                fontWeight: 500,
+              },
+            }}
+          >
             Computer Sciences Faculty Students
           </Typography>
         </Grid>
         <Grid item xs={12} sm={8} md={3}>
-          <SearchGlobal sx={{ height: "100%" }} />
+          <SearchGlobal
+            sx={{
+              height: "100%",
+              "@media (max-width: 390px)": {
+                height: "40px",
+              },
+            }}
+          />
         </Grid>
         <Grid item xs={12} sm={4} md={3}>
           <FormControl
@@ -252,9 +338,14 @@ const StudentInformation = () => {
               width: "100%",
             }}
           >
-            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
+            <InputLabel>Filter</InputLabel>
             <Select
-              sx={{ borderRadius: 50 }}
+              sx={{
+                borderRadius: 50,
+                "@media (max-width: 390px)": {
+                  height: "45px",
+                },
+              }}
               multiple
               value={filter}
               label="Grouping"
@@ -328,7 +419,12 @@ const StudentInformation = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
+          <TableContainer
+            sx={{
+              maxHeight: 440,
+            }}
+            component={Paper}
+          >
             <Table stickyHeader>
               <TableHead>
                 <TableHeading />
@@ -409,7 +505,7 @@ const TableItem = ({ item, index }) => {
     }
   };
   const rowStyle = {
-    "@media (max-width: 650px)": { fontSize: "11px" },
+    "@media (max-width: 390px)": { fontSize: "11px" },
   };
   return (
     <TableRow>
@@ -420,7 +516,7 @@ const TableItem = ({ item, index }) => {
           name="profile"
           sx={{
             textTransform: "capitalize",
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (max-width: 390px)": { fontSize: "11px" },
           }}
           onClick={handleButtonNavigate}
         >{`Yuhu, Christopher Darell`}</Button>
@@ -433,7 +529,7 @@ const TableItem = ({ item, index }) => {
           name="grade"
           onClick={handleButtonNavigate}
           sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (max-width: 390px)": { fontSize: "11px" },
             textTransform: "capitalize",
           }}
         >
@@ -445,7 +541,7 @@ const TableItem = ({ item, index }) => {
           name="certificate"
           onClick={handleButtonNavigate}
           sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (max-width: 390px)": { fontSize: "11px" },
             textTransform: "capitalize",
           }}
         >
