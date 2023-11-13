@@ -17,12 +17,13 @@ import DaftarRiwayatPengujianKetuaPenelis from "app/pages/ThesisApps/Dosen/Dafta
 import DaftarRiwayatPengujianAnggota from "app/pages/ThesisApps/Dosen/DaftarRiwayatPengujianAnggotaPenelis";
 import BerandaGlobal from "app/pages/ThesisApps/Mahasiswa/BerandaGlobal";
 import Konsultasi from "app/pages/ThesisApps/Mahasiswa/Konsultasi";
-import DocumentPersetujuanDosenPembimbingProposal2 from "app/pages/ThesisApps/Dosen/DocumentPersetujuanDosenPembimbingProposal2";
 import PengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/PengajuanJudulDosenSkripsi";
 import DokumenProposal from "app/pages/ThesisApps/Dosen/DokumenProposal";
 import DokumenRevisiProposal from "app/pages/ThesisApps/Dosen/DokumenRevisiProposal";
 import DokumenSkripsi from "app/pages/ThesisApps/Dosen/DokumenSkripsi";
 import DokumenRevisiSkripsi from "app/pages/ThesisApps/Dosen/DokumenRevisiSkripsi";
+import KonsultasiAdvisorDanCoAdvisor from "app/pages/ThesisApps/Dosen/KonsultasiAdvisorDanCoAdvisor";
+import BeritaAcaraProposal from "app/pages/ThesisApps/Dosen/BeritaAcaraProposal";
 
 const dosenRoutes = [
   // KOMITE
@@ -94,6 +95,34 @@ const dosenRoutes = [
   {
     path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor",
     element: <Page component={DaftarRiwayatBimbinganAdvisor} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/beranda/:groupId/:role",
+    element: <Page component={BerandaGlobal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor/beranda/:groupId/:role",
+    element: <Page component={BerandaGlobal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor/beranda/:groupId/:role",
+    element: <Page component={BerandaGlobal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/konsultasi/:groupId/:role",
+    element: <Page component={KonsultasiAdvisorDanCoAdvisor} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/dokumen-proposal/:groupId/:role",
+    element: <Page component={DokumenProposal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/berita-acara-proposal/:groupId/:role",
+    element: <Page component={BeritaAcaraProposal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/dokumen-revisi-proposal/:groupId/:role",
+    element: <Page component={DokumenRevisiProposal} />,
   },
   // ----------Co-Advisor
   {

@@ -3,7 +3,10 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const MenuAdvisorProposal = () => {
+const MenuAdvisorProposal = ({
+  dataGroupId: groupId,
+  dataProgress: progress,
+}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open1 = Boolean(anchorEl);
   const [anchorE2, setAnchorE2] = React.useState(null);
@@ -28,7 +31,9 @@ const MenuAdvisorProposal = () => {
           <Div sx={{ width: "100%", display: "flex" }}>
             <Div sx={{ margin: "auto" }}>
               {/* BERANDA */}
-              <Link to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/beranda">
+              <Link
+                to={`/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/beranda/${groupId}/ADVISOR`}
+              >
                 <Button
                   sx={{
                     fontSize: "13px",
@@ -55,7 +60,9 @@ const MenuAdvisorProposal = () => {
             ></Div>
             <Div sx={{ margin: "auto" }}>
               {/* KONSULTASI */}
-              <Link to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/konsultasi">
+              <Link
+                to={`/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/konsultasi/${groupId}/ADVISOR`}
+              >
                 <Button
                   sx={{
                     // width: "130px",
@@ -111,7 +118,7 @@ const MenuAdvisorProposal = () => {
               >
                 {/* DOKUMEN PROPOSAL */}
                 <Link
-                  to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/dokumen-proposal"
+                  to={`/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/dokumen-proposal/${groupId}/ADVISOR`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -123,7 +130,7 @@ const MenuAdvisorProposal = () => {
                 </Link>
                 {/* BERITA ACARA PROPOSAL */}
                 <Link
-                  to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/berita-acara-proposal"
+                  to={`/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/berita-acara-proposal/${groupId}/ADVISOR`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem onClick={() => setAnchorEl(null)}>
@@ -132,7 +139,7 @@ const MenuAdvisorProposal = () => {
                 </Link>
                 {/* DOKUMEN REVISI PROPOSAL */}
                 <Link
-                  to="/sistem-informasi-skripsi/bimbingan-proposal-advisor/dokumen-revisi-proposal"
+                  to={`/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/dokumen-revisi-proposal/${groupId}/ADVISOR`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem onClick={() => setAnchorEl(null)}>
@@ -163,6 +170,7 @@ const MenuAdvisorProposal = () => {
                     color: "#006AF5",
                   },
                 }}
+                disabled={progress !== "Skripsi" && progress !== "Finished"}
               >
                 Pengajuan Skripsi
               </Button>

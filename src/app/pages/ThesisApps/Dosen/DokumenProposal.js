@@ -21,6 +21,7 @@ import {
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import WarningIcon from "@mui/icons-material/Warning";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
+import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
@@ -30,6 +31,8 @@ const DokumenProposal = () => {
   const [dokumenProposal, setDokumenProposal] = useState();
   const [buktiPembayaran, setBuktiPembayaran] = useState();
   const [hasilCekPlagiat, setHasilCekPlagiat] = useState();
+
+  const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
 
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
@@ -275,7 +278,7 @@ const DokumenProposal = () => {
 
   let Actions;
 
-  if (role.includes("ADVISOR")) {
+  if (userRole.includes("ADVISOR")) {
     Actions = () => (
       <Div
         hidden={role.includes("ADVISOR") ? false : true}
@@ -285,7 +288,7 @@ const DokumenProposal = () => {
           alignItems: "center",
         }}
       >
-        {isSetujuClicked || isTolakClicked ? (
+        {dokumenProposal?.is_proposal_approve_by_advisor === "Approve" ? (
           <span
             style={{
               textDecoration: "none",
@@ -318,7 +321,8 @@ const DokumenProposal = () => {
             Setuju
           </span>
         )}
-        {isSetujuClicked || isTolakClicked ? (
+        {dokumenProposal?.is_proposal_approve_by_advisor === "Approve" ||
+        dokumenProposal?.is_proposal_approve_by_advisor === "Rejected" ? (
           <span
             style={{
               textDecoration: "none",
@@ -347,7 +351,7 @@ const DokumenProposal = () => {
         )}
       </Div>
     );
-  } else if (role.includes("CO_ADVISOR1")) {
+  } else if (userRole.includes("CO_ADVISOR1")) {
     Actions = () => (
       <Div
         hidden={role.includes("CO_ADVISOR1") ? false : true}
@@ -421,7 +425,7 @@ const DokumenProposal = () => {
         )}
       </Div>
     );
-  } else if (role.includes("CO_ADVISOR2")) {
+  } else if (userRole.includes("CO_ADVISOR2")) {
     Actions = () => (
       <Div
         hidden={role.includes("CO_ADVISOR2") ? false : true}
@@ -540,6 +544,10 @@ const DokumenProposal = () => {
               if (data) {
                 setProgress(data.progress);
                 setProposalId(data.proposal_id);
+                setAdvisorAndCoAdvisor({
+                  coAdvisor1: data.co_advisor1,
+                  coAdvisor2: data.co_advisor2,
+                });
               }
             }}
           />
@@ -565,6 +573,13 @@ const DokumenProposal = () => {
             sx={{ width: "100%" }}
           >
             <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
+          </Div>
+          {/* ADVISOR */}
+          <Div
+            hidden={userRole.includes("ADVISOR") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAdvisor dataGroupId={groupId} dataProgress={progress} />
           </Div>
           {/* Menu horizontal End */}
           <Div
@@ -650,16 +665,28 @@ const DokumenProposal = () => {
                       >
                         Advisor
                       </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
-                      >
-                        Co-Advisor 1
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
-                      >
-                        Co-Advisor 2
-                      </TableCell>
+                      {advisorAndCoAdvisor?.coAdvisor1 && (
+                        <TableCell
+                          sx={{
+                            fontSize: "12px",
+                            padding: "11px",
+                            width: "15%",
+                          }}
+                        >
+                          Co-Advisor 1
+                        </TableCell>
+                      )}
+                      {advisorAndCoAdvisor?.coAdvisor2 && (
+                        <TableCell
+                          sx={{
+                            fontSize: "12px",
+                            padding: "11px",
+                            width: "15%",
+                          }}
+                        >
+                          Co-Advisor 2
+                        </TableCell>
+                      )}
                       <TableCell
                         sx={{
                           fontSize: "12px",
@@ -726,85 +753,89 @@ const DokumenProposal = () => {
                         ) : null}
                       </TableCell>
                       {/* status CoAdvisor1 */}
-                      <TableCell>
-                        {dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
-                        null ? (
-                          ""
-                        ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
-                          "Approve" ? (
-                          <Chip
-                            size="small"
-                            label="Disetujui"
-                            sx={{
-                              background: "rgba(0, 255, 0, 0.10)",
-                              color: "#008000",
-                              fontSize: "10px",
-                            }}
-                          />
-                        ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
-                          "Rejected" ? (
-                          <Chip
-                            size="small"
-                            label="Ditolak"
-                            sx={{
-                              background: "rgba(255, 0, 0, 0.10)",
-                              color: "#FF0000",
-                              fontSize: "10px",
-                            }}
-                          />
-                        ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
-                          "Waiting" ? (
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                            }}
-                          />
-                        ) : null}
-                      </TableCell>
+                      {advisorAndCoAdvisor?.coAdvisor1 && (
+                        <TableCell>
+                          {dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                          null ? (
+                            ""
+                          ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                            "Approve" ? (
+                            <Chip
+                              size="small"
+                              label="Disetujui"
+                              sx={{
+                                background: "rgba(0, 255, 0, 0.10)",
+                                color: "#008000",
+                                fontSize: "10px",
+                              }}
+                            />
+                          ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                            "Rejected" ? (
+                            <Chip
+                              size="small"
+                              label="Ditolak"
+                              sx={{
+                                background: "rgba(255, 0, 0, 0.10)",
+                                color: "#FF0000",
+                                fontSize: "10px",
+                              }}
+                            />
+                          ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                            "Waiting" ? (
+                            <Chip
+                              size="small"
+                              label="Menunggu"
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                                fontSize: "10px",
+                              }}
+                            />
+                          ) : null}
+                        </TableCell>
+                      )}
                       {/* Status CoAdvisor2 */}
-                      <TableCell>
-                        {dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
-                        null ? (
-                          ""
-                        ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
-                          "Approve" ? (
-                          <Chip
-                            size="small"
-                            label="Disetujui"
-                            sx={{
-                              background: "rgba(0, 255, 0, 0.10)",
-                              color: "#008000",
-                              fontSize: "10px",
-                            }}
-                          />
-                        ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
-                          "Rejected" ? (
-                          <Chip
-                            size="small"
-                            label="Ditolak"
-                            sx={{
-                              background: "rgba(255, 0, 0, 0.10)",
-                              color: "#FF0000",
-                              fontSize: "10px",
-                            }}
-                          />
-                        ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
-                          "Waiting" ? (
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                            }}
-                          />
-                        ) : null}
-                      </TableCell>
+                      {advisorAndCoAdvisor?.coAdvisor1 && (
+                        <TableCell>
+                          {dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                          null ? (
+                            ""
+                          ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                            "Approve" ? (
+                            <Chip
+                              size="small"
+                              label="Disetujui"
+                              sx={{
+                                background: "rgba(0, 255, 0, 0.10)",
+                                color: "#008000",
+                                fontSize: "10px",
+                              }}
+                            />
+                          ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                            "Rejected" ? (
+                            <Chip
+                              size="small"
+                              label="Ditolak"
+                              sx={{
+                                background: "rgba(255, 0, 0, 0.10)",
+                                color: "#FF0000",
+                                fontSize: "10px",
+                              }}
+                            />
+                          ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                            "Waiting" ? (
+                            <Chip
+                              size="small"
+                              label="Menunggu"
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                                fontSize: "10px",
+                              }}
+                            />
+                          ) : null}
+                        </TableCell>
+                      )}
                       <TableCell>
                         <Div
                           style={{

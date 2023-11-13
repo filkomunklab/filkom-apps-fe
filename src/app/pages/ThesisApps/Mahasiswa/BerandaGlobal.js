@@ -12,7 +12,7 @@ import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
 import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPanalisProposal";
 import MenuKetuaPanalisProposal from "app/shared/MenuHorizontal/MenuKetuaPanalisProposal";
 import MenuCoAdvisorProposal from "app/shared/MenuHorizontal/MenuCoAdvisorProposal";
-import MenuAdvisorProposal from "app/shared/MenuHorizontal/MenuAdvisorProposal";
+import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
 import BerandaProposalMahasiswa from "./BerandaProposalMahasiswa";
 import BerandaSkripsiMahasiswa from "./BerandaSkripsiMahasiswa";
 
@@ -108,29 +108,29 @@ const BerandaGlobal = () => {
             hidden={role.includes("ADVISOR") ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuAdvisorProposal />
+            <MenuAdvisor dataGroupId={groupId} dataProgress={progress} />
           </Div>
           {/* CO_ADVISOR */}
-          <Div
+          {/* <Div
             hidden={role.includes("CO_ADVISOR") ? false : true}
             sx={{ width: "100%" }}
           >
             <MenuCoAdvisorProposal />
-          </Div>
+          </Div> */}
           {/* KETUA PANALIS */}
-          <Div
+          {/* <Div
             hidden={role.includes("KETUA_PANALIS") ? false : true}
             sx={{ width: "100%" }}
           >
             <MenuKetuaPanalisProposal />
-          </Div>
+          </Div> */}
           {/* ANGGOTA PANALIS */}
-          <Div
+          {/* <Div
             hidden={role.includes("ANGGOTA_PANALIS") ? false : true}
             sx={{ width: "100%" }}
           >
             <MenuAnggotaPanalisProposal />
-          </Div>
+          </Div> */}
           {/* KAPRODI */}
           {/* <Div
             hidden={role.includes("KAPRODI") ? false : true}
@@ -139,12 +139,12 @@ const BerandaGlobal = () => {
             <MenuKaprodiProposal />
           </Div> */}
           {/* SEKERTARIS */}
-          <Div
+          {/* <Div
             hidden={role.includes("SEKERTARIS") ? false : true}
             sx={{ width: "100%" }}
           >
             <MenuSekertaris />
-          </Div>
+          </Div> */}
           {/* MAHASISWA */}
           <Div
             hidden={role.includes("MAHASISWA") ? false : true}

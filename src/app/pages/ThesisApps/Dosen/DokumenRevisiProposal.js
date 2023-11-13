@@ -21,11 +21,14 @@ import WarningIcon from "@mui/icons-material/Warning";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
+import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
 
 const DokumenRevisiProposal = () => {
   // state - menyimpan request data
   const [dokumenRevisi, setDokumenRevisi] = useState();
   const [perubahan, setPerubahan] = useState();
+
+  const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
 
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
@@ -228,7 +231,7 @@ const DokumenRevisiProposal = () => {
 
   let ActionRevision;
 
-  if (role.includes("ADVISOR")) {
+  if (userRole.includes("ADVISOR")) {
     ActionRevision = () => (
       <Div
         hidden={role.includes("ADVISOR") ? false : true}
@@ -238,7 +241,7 @@ const DokumenRevisiProposal = () => {
           alignItems: "center",
         }}
       >
-        {isSetujuClickedAdvisor || isTolakClickedAdvisor ? (
+        {dokumenRevisi?.is_revision_approve_by_advisor === "Approve" ? (
           <span
             style={{
               textDecoration: "none",
@@ -271,7 +274,8 @@ const DokumenRevisiProposal = () => {
             Setuju
           </span>
         )}
-        {isSetujuClickedAdvisor || isTolakClickedAdvisor ? (
+        {dokumenRevisi?.is_revision_approve_by_advisor === "Approve" ||
+        dokumenRevisi?.is_revision_approve_by_advisor === "Rejected" ? (
           <span
             style={{
               textDecoration: "none",
@@ -302,7 +306,7 @@ const DokumenRevisiProposal = () => {
         )}
       </Div>
     );
-  } else if (role.includes("KETUA_PANALIS")) {
+  } else if (userRole.includes("KETUA_PANALIS")) {
     ActionRevision = () => (
       <Div
         hidden={role.includes("KETUA_PANALIS") ? false : true}
@@ -376,7 +380,7 @@ const DokumenRevisiProposal = () => {
         )}
       </Div>
     );
-  } else if (role.includes("ANGGOTA_PANALIS")) {
+  } else if (userRole.includes("ANGGOTA_PANALIS")) {
     ActionRevision = () => (
       <Div
         hidden={role.includes("ANGGOTA_PANALIS") ? false : true}
@@ -496,6 +500,10 @@ const DokumenRevisiProposal = () => {
               if (data) {
                 setProgress(data.progress);
                 setProposalId(data.proposal_id);
+                setAdvisorAndCoAdvisor({
+                  coAdvisor1: data.co_advisor1,
+                  coAdvisor2: data.co_advisor2,
+                });
               }
             }}
           />
@@ -523,6 +531,13 @@ const DokumenRevisiProposal = () => {
             sx={{ width: "100%" }}
           >
             <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
+          </Div>
+          {/* DOSEN ADVISOR */}
+          <Div
+            hidden={userRole.includes("ADVISOR") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAdvisor dataGroupId={groupId} dataProgress={progress} />
           </Div>
           {/* Menu horizontal End */}
           <Div
@@ -670,7 +685,7 @@ const DokumenRevisiProposal = () => {
                 </Div>
               </Div>
               {/* Perubahan Co-Advisor 1 */}
-              {perubahan?.changes_by_co_advisor1 !== null && (
+              {advisorAndCoAdvisor?.coAdvisor1 && (
                 <Div
                   sx={{
                     display: "flex",
@@ -706,7 +721,7 @@ const DokumenRevisiProposal = () => {
                 </Div>
               )}
               {/* Perubahan Co-Advisor 2 */}
-              {perubahan?.changes_by_co_advisor2 !== null && (
+              {advisorAndCoAdvisor?.coAdvisor2 && (
                 <Div
                   sx={{
                     display: "flex",

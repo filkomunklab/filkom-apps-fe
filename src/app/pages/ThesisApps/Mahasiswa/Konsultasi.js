@@ -192,7 +192,7 @@ const Konsultasi = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {konsultasi?.constultation.map((item, index) => (
+                    {konsultasi?.constultation?.map((item, index) => (
                       <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{item.description}</TableCell>
