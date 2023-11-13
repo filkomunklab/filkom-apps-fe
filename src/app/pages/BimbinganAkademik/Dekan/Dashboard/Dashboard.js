@@ -30,6 +30,7 @@ import {
 } from "recharts";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import LinearProgressWithLabel from "app/shared/LinearProgressWithLabel";
+import BubbleChartIcon from "@mui/icons-material/BubbleChart";
 import Div from "@jumbo/shared/Div";
 import moment from "moment";
 import { Link } from "react-router-dom";
@@ -89,7 +90,7 @@ const data02 = [
   },
 ];
 
-const data03 = [...Array(5).keys()].map((i) => ({
+const data03 = [...Array(10).keys()].map((i) => ({
   title: "Menang lomba desain prototype",
   name: "Mukesh K",
   profileImage:
@@ -98,7 +99,7 @@ const data03 = [...Array(5).keys()].map((i) => ({
   status: "Waiting",
 }));
 
-const data04 = [...Array(4).keys()].map((_) => ({
+const data04 = [...Array(10).keys()].map((_) => ({
   nim: "105022010000",
   name: "Yuhu, Christopher Darell",
   profileImage:
@@ -125,11 +126,11 @@ const Dashboard = () => {
   return (
     <Div>
       <Grid container spacing={2}>
-        <Grid item sm={12} md={12} lg={6} xs={12}>
-          <Card>
+        <Grid item xs={12} sm={12} md={6}>
+          <Card style={{ width: "100%" }}>
             <CardHeader title="Distribution of students" />
-            <CardContent>
-              <ResponsiveContainer width={"100%"} height={250}>
+            <CardContent style={{ width: "100%" }}>
+              <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={data}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
@@ -143,8 +144,51 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item sm={12} md={12} lg={6} xs={12}>
-          <Card sx={{ height: "100%" }}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Stack gap={2}>
+            <Card>
+              <CardHeader title="Number of Guidance Students" />
+              <CardContent sx={{ position: "relative", paddingY: 0 }}>
+                <Typography
+                  variant="h3"
+                  color="#006AF5"
+                >{`85 people`}</Typography>
+                <Typography variant="caption">{`last updated: 11 September 2023`}</Typography>
+                <PeopleOutlinedIcon
+                  sx={{
+                    position: "absolute",
+                    right: 0,
+                    fontSize: 50,
+                    bottom: 0,
+                    color: "#006AF5",
+                  }}
+                />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader title="Student Status" />
+              <CardContent
+                sx={{ position: "relative", paddingRight: 6.5, paddingY: 0 }}
+              >
+                <Typography variant="body1">{`Active`}</Typography>
+                <LinearProgressWithLabel value={80} />
+                <Typography variant="body1">{`Non-active`}</Typography>
+                <LinearProgressWithLabel value={20} color="warning" />
+                <BubbleChartIcon
+                  sx={{
+                    position: "absolute",
+                    right: 0,
+                    fontSize: 50,
+                    bottom: 0,
+                    color: "#006AF5",
+                  }}
+                />
+              </CardContent>
+            </Card>
+          </Stack>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
             <CardHeader title="Certificate" />
             <CardContent>
               <ResponsiveContainer width={"100%"} height={250}>
@@ -154,9 +198,9 @@ const Dashboard = () => {
                     dataKey="value"
                     nameKey="name"
                     cx="50%"
-                    cy="55%"
-                    innerRadius={50}
-                    outerRadius={100}
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
                     fill="#82ca9d"
                     label
                   >
@@ -173,116 +217,8 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item sm={12} md={12} lg={6} xs={12}>
-          <Card>
-            <Grid container>
-              <Grid item xs={6}>
-                <CardHeader title="Number of Mentored Students " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="26px">
-                    {`85 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-              <Grid item xs={6}>
-                <CardHeader title="Student Status" />
-                <CardContent
-                  sx={{
-                    position: "relative",
-                    paddingRight: 2.5,
-                    paddingY: 0,
-                  }}
-                >
-                  <Typography variant="body1">{`Active`}</Typography>
-                  <LinearProgressWithLabel value={80} />
-                  <Typography variant="body1">{`Non-active`}</Typography>
-                  <LinearProgressWithLabel value={20} color="warning" />
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={6} xs={12}>
-          <Card>
-            <Grid container>
-              <Grid item xs={6}>
-                <CardHeader title="Faculty of Computer Science Students" />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="26px">
-                    {`85 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-              <Grid item xs={6}>
-                <CardHeader title="Student Status" />
-                <CardContent
-                  sx={{
-                    position: "relative",
-                    paddingRight: 2.5,
-                    paddingY: 0,
-                  }}
-                >
-                  <Typography variant="body1">{`Active`}</Typography>
-                  <LinearProgressWithLabel value={80} />
-                  <Typography variant="body1">{`Non-active`}</Typography>
-                  <LinearProgressWithLabel value={20} color="warning" />
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
       </Grid>
     </Div>
-  );
-};
-
-const TableHeading = () => {
-  const style = { fontWeight: 400, whiteSpace: "nowrap" };
-  return (
-    <TableRow>
-      <TableCell sx={[style]}>NIM</TableCell>
-      <TableCell sx={[style]}>Student</TableCell>
-      <TableCell sx={[style]}>Semester</TableCell>
-      <TableCell sx={[style]}>Program Studi</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
-    </TableRow>
-  );
-};
-
-const TableItem = ({ item, index }) => {
-  const style = { whiteSpace: "nowrap" };
-  return (
-    <TableRow>
-      <TableCell sx={[style]}>{item.nim}</TableCell>
-      <TableCell sx={[style]}>
-        <Stack direction="row" alignItems="center" gap={2}>
-          <img
-            src={item.profileImage}
-            alt="profile"
-            style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "50%",
-              objectFit: "cover",
-            }}
-          />
-          <Typography>{item.name}</Typography>
-        </Stack>
-      </TableCell>
-      <TableCell sx={[style, { textAlign: "center" }]}>
-        {item.semester}
-      </TableCell>
-      <TableCell sx={[style]}>{item.prodi}</TableCell>
-      <TableCell sx={[style, { color: statusColor(item.status) }]}>
-        {item.status}
-      </TableCell>
-    </TableRow>
   );
 };
 
