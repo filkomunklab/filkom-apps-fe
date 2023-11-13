@@ -53,9 +53,14 @@ const AcademicGuide = () => {
           <AccordionDetails>
             <Typography
               sx={{
-                paddingLeft: "26px",
-                paddingRight: "26px",
+                paddingLeft: "25px",
+                paddingRight: "25px",
                 textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
               }}
             >
               <ol sx={{ listStylePosition: "inside" }}>
@@ -112,9 +117,14 @@ const AcademicGuide = () => {
           <AccordionDetails>
             <Typography
               sx={{
-                paddingLeft: "26px",
-                paddingRight: "26px",
+                paddingLeft: "25px",
+                paddingRight: "25px",
                 textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
               }}
             >
               <ol sx={{ listStylePosition: "inside" }}>
@@ -175,9 +185,14 @@ const AcademicGuide = () => {
           <AccordionDetails>
             <Typography
               sx={{
-                paddingLeft: "26px",
-                paddingRight: "26px",
+                paddingLeft: "25px",
+                paddingRight: "25px",
                 textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
               }}
             >
               <ol sx={{ listStylePosition: "inside" }}>
@@ -235,9 +250,14 @@ const AcademicGuide = () => {
           <AccordionDetails>
             <Typography
               sx={{
-                paddingLeft: "26px",
-                paddingRight: "26px",
+                paddingLeft: "25px",
+                paddingRight: "25px",
                 textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
               }}
             >
               <ol sx={{ listStylePosition: "inside" }}>
@@ -284,9 +304,14 @@ const AcademicGuide = () => {
           <AccordionDetails>
             <Typography
               sx={{
-                paddingLeft: "26px",
-                paddingRight: "26px",
+                paddingLeft: "25px",
+                paddingRight: "25px",
                 textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
               }}
             >
               <ol sx={{ listStylePosition: "inside" }}>
@@ -332,9 +357,14 @@ const AcademicGuide = () => {
           <AccordionDetails>
             <Typography
               sx={{
-                paddingLeft: "26px",
-                paddingRight: "26px",
+                paddingLeft: "25px",
+                paddingRight: "25px",
                 textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
               }}
             >
               <ol sx={{ listStylePosition: "inside" }}>
@@ -365,9 +395,14 @@ const AcademicGuide = () => {
           <AccordionDetails>
             <Typography
               sx={{
-                paddingLeft: "26px",
-                paddingRight: "26px",
+                paddingLeft: "25px",
+                paddingRight: "25px",
                 textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
               }}
             >
               <ol sx={{ listStylePosition: "inside" }}>
