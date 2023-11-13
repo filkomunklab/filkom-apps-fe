@@ -97,6 +97,11 @@ const MenuDosenSkripsiProposal = ({
                     color: "#006AF5",
                   },
                 }}
+                disabled={
+                  progress !== "Proposal" &&
+                  progress !== "Skripsi" &&
+                  progress !== "Finished"
+                }
               >
                 Konsultasi
               </Button>
@@ -122,6 +127,11 @@ const MenuDosenSkripsiProposal = ({
                     color: "#006AF5",
                   },
                 }}
+                disabled={
+                  progress !== "Proposal" &&
+                  progress !== "Skripsi" &&
+                  progress !== "Finished"
+                }
               >
                 Pengajuan Proposal
               </Button>

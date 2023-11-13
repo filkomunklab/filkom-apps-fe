@@ -26,21 +26,88 @@ import {
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuPengajuanJudulDosen from "app/shared/MenuHorizontal/MenuPengajuanJudulDosen";
-import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
+import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
 
-const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
+const PengajuanJudulDosenSkripsi = () => {
   // state - simpan request pengajuan judul
   const [pengajuanJudul, setPengajuanJudul] = useState();
+  const [daftarDosen, setDaftarDosen] = useState();
+
+  const groupId = useParams().groupId;
+  // console.log("group id: ", groupId);
+  const [progress, setProgress] = useState(null);
+  const [submissionId, setSubmissionId] = useState(null);
+
+  const userRole = useParams().role;
+  console.log("role user akses page: ", userRole);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log("role user yang sign in: ", role);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchPengajuanJudulData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/submission/${submissionId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Atur state 'setPengajuanJudul' dengan data dari respons
+        setPengajuanJudul(response.data.data);
+
+        // Setel visibility tombol sesuai kondisi is_approve
+        setGantiAdvisorCoAdvisorButtonVisible(
+          response.data.data.is_approve === "Waiting"
+        );
+        setTolakTerimaButtonsVisible(
+          response.data.data.is_approve === "Waiting"
+        );
+        console.log("Request Get pengajuan judul: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil pengajuan judul:",
+          error
+        );
+      }
+    };
+    const fetchDaftarDosenData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/dosen-list`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDaftarDosen(response.data.data);
+        console.log("Request Get daftar dosen: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil daftar dosen:", error);
+      }
+    };
+    fetchPengajuanJudulData();
+    fetchDaftarDosenData();
+  }, [token, submissionId]);
+
   const [confirmTolakOpen, setConfirmTolakOpen] = useState(false); // State untuk dialog konfirmasi tolak
   const [confirmTerimaOpen, setConfirmTerimaOpen] = useState(false); // State untuk dialog konfirmasi terima
 
   const [
     gantiAdvisorCoAdvisorButtonVisible,
     setGantiAdvisorCoAdvisorButtonVisible,
-  ] = useState(true);
+  ] = useState(false);
 
   const [tolakTerimaButtonsVisible, setTolakTerimaButtonsVisible] =
-    useState(true);
+    useState(false);
 
   const handleTolakClick = () => {
     // Menampilkan dialog konfirmasi tolak
@@ -53,25 +120,120 @@ const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
   };
 
   const handleTolak = () => {
-    setTolakTerimaButtonsVisible(false);
-    setGantiAdvisorCoAdvisorButtonVisible(false);
     // Di sini Anda bisa menambahkan logika untuk menolak pengajuan setelah konfirmasi
     // Setelah pengajuan ditolak, update status menjadi "Ditolak"
-    setStatus("Ditolak");
+    // setStatus("Ditolak");
 
     // Tutup dialog konfirmasi
     setConfirmTolakOpen(false);
+    console.log("token di handle tolak: ", token);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/submission/reject/${submissionId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        setTolakTerimaButtonsVisible(false);
+        setGantiAdvisorCoAdvisorButtonVisible(false);
+
+        console.log("Berhasil menolak pengajuan ");
+        // Ambil data terbaru dari database
+        const fetchPengajuanJudulData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/submission/${submissionId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            // Atur state 'setPengajuanJudul' dengan data dari respons
+            setPengajuanJudul(response.data.data);
+
+            // Setel visibility tombol sesuai kondisi is_approve
+            setGantiAdvisorCoAdvisorButtonVisible(
+              response.data.data.is_approve === "Waiting"
+            );
+            setTolakTerimaButtonsVisible(
+              response.data.data.is_approve === "Waiting"
+            );
+            console.log("Request Get pengajuan judul: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil pengajuan judul:",
+              error
+            );
+          }
+        };
+        fetchPengajuanJudulData();
+      })
+      .catch((error) => {
+        console.error("Terjadi kesalahan saat menolak pengajuan:", error);
+      });
   };
 
   const handleTerima = () => {
-    setTolakTerimaButtonsVisible(false);
-    setGantiAdvisorCoAdvisorButtonVisible(false);
     // Di sini Anda bisa menambahkan logika untuk menerima pengajuan setelah konfirmasi
     // Setelah pengajuan diterima, update status menjadi "Diterima"
-    setStatus("Diterima");
+    // setStatus("Diterima");
 
     // Tutup dialog konfirmasi
     setConfirmTerimaOpen(false);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/submission/approve/${submissionId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        setTolakTerimaButtonsVisible(false);
+        setGantiAdvisorCoAdvisorButtonVisible(false);
+
+        console.log("Berhasil menerima pengajuan ");
+        // Ambil data terbaru dari database
+        const fetchPengajuanJudulData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/submission/${submissionId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            // Atur state 'setPengajuanJudul' dengan data dari respons
+            setPengajuanJudul(response.data.data);
+
+            // Setel visibility tombol sesuai kondisi is_approve
+            setGantiAdvisorCoAdvisorButtonVisible(
+              response.data.data.is_approve === "Waiting"
+            );
+            setTolakTerimaButtonsVisible(
+              response.data.data.is_approve === "Waiting"
+            );
+            console.log("Request Get pengajuan judul: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil pengajuan judul:",
+              error
+            );
+          }
+        };
+        fetchPengajuanJudulData();
+      })
+      .catch((error) => {
+        console.error("Terjadi kesalahan saat menolak pengajuan:", error);
+      });
   };
 
   const [status, setStatus] = useState("Menunggu"); // Tambahkan state untuk status
@@ -104,10 +266,18 @@ const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
   const [coAdvisor2, setCoAdvisor2] = useState("");
 
   const handleClickOpen = () => {
+    // isi state advisor dan co advisor dengan nilai awal sebelum diganti
+    setAdvisor(pengajuanJudul?.proposed_advisor_id);
+    setCoAdvisor1(pengajuanJudul?.proposed_co_advisor1_id);
+    setCoAdvisor2(pengajuanJudul?.proposed_co_advisor2_id);
     setOpenDialog(true);
   };
 
   const handleClose = () => {
+    // set advisor dan co advisor ke nilai awal
+    setAdvisor(pengajuanJudul?.proposed_advisor_id);
+    setCoAdvisor1(pengajuanJudul?.proposed_co_advisor1_id);
+    setCoAdvisor2(pengajuanJudul?.proposed_co_advisor2_id);
     setOpenDialog(false);
   };
 
@@ -117,11 +287,60 @@ const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
 
     // Setelah Anda menyimpan perubahan, Anda bisa menutup dialog.
     handleClose();
-  };
 
-  const { role } = JSON.parse(localStorage.getItem("user"));
-  // const role = ["ADVISOR", "DOSEN"];
-  console.log(role);
+    const data = {
+      proposed_advisor_id: advisor,
+      proposed_co_advisor1_id: coAdvisor1 || null,
+      proposed_co_advisor2_id: coAdvisor2 || null,
+    };
+    console.log(data);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/submission/advisor-and-co-advisor/${submissionId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil mengganti advisor dan co-advisor ");
+        // Ambil data terbaru dari database
+        const fetchPengajuanJudulData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/submission/${submissionId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            // Atur state 'setPengajuanJudul' dengan data dari respons
+            setPengajuanJudul(response.data.data);
+
+            // Setel visibility tombol sesuai kondisi is_approve
+            setGantiAdvisorCoAdvisorButtonVisible(
+              response.data.data.is_approve === "Waiting"
+            );
+            setTolakTerimaButtonsVisible(
+              response.data.data.is_approve === "Waiting"
+            );
+            console.log("Request Get pengajuan judul: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil pengajuan judul:",
+              error
+            );
+          }
+        };
+        fetchPengajuanJudulData();
+      })
+      .catch((error) => {
+        console.error("Terjadi kesalahan saat mengganti pembimbing:", error);
+      });
+  };
 
   return (
     <Div>
@@ -160,7 +379,15 @@ const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          <Riwayatlog />
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(data) => {
+              if (data) {
+                setProgress(data.progress);
+                setSubmissionId(data.submission_id);
+              }
+            }}
+          />
         </Div>
         {/* Element 1 End */}
         {/* Element 2 Start */}
@@ -177,21 +404,20 @@ const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
           }}
         >
           {/* Menu Horizontal DOSEN Start */}
-          <Div
+          {/* <Div
             hidden={role.includes("DOSEN", "KAPRODI", "DEKAN") ? false : true}
             sx={{ width: "100%" }}
           >
             <MenuPengajuanJudulDosen />
-          </Div>
+          </Div> */}
           {/* Menu horizontal MAHASISWA End */}
-          {/* Menu Horizontal MAHASISWA Start */}
+          {/* DOSEN SKRIPSI */}
           <Div
-            hidden={role.includes("MAHASISWA") ? false : true}
+            hidden={userRole.includes("DOSEN_MK") ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa />
+            <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
           </Div>
-          {/* Menu horizontal MAHASISWA End */}
           <Div
             sx={{
               display: "flex",
@@ -208,24 +434,34 @@ const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
           >
             <Div sx={{ marginBottom: "25px" }}>
               <Typography variant="subtitle2">Status</Typography>
-              <Chip
-                label={status} // Gunakan nilai status yang diperbarui
-                sx={{
-                  background:
-                    status === "Menunggu"
-                      ? "rgba(255, 204, 0, 0.10)"
-                      : status === "Ditolak"
-                      ? "rgba(226, 29, 18, 0.10)"
-                      : "rgba(21, 131, 67, 0.1)",
-                  color:
-                    status === "Menunggu"
-                      ? "#985211"
-                      : status === "Diterima"
-                      ? "rgba(10, 118, 55, 1)"
-                      : "#CA150C",
-                  height: "25px",
-                }}
-              />
+              {pengajuanJudul?.is_approve === "Waiting" ? (
+                <Chip
+                  label="Menunggu"
+                  sx={{
+                    background: "rgba(255, 204, 0, 0.10)",
+                    color: "#985211",
+                    height: "25px",
+                  }}
+                />
+              ) : pengajuanJudul?.is_approve === "Approve" ? (
+                <Chip
+                  label={"Diterima"}
+                  sx={{
+                    background: "rgba(21, 131, 67, 0.10)",
+                    color: "#0A7637",
+                  }}
+                />
+              ) : pengajuanJudul?.is_approve === "Rejected" ? (
+                <Chip
+                  label={"Ditolak"}
+                  sx={{
+                    background: "rgba(226, 29, 18, 0.10)",
+                    color: "#CA150C",
+                  }}
+                />
+              ) : (
+                pengajuanJudul?.is_approve
+              )}
             </Div>
             {/* Table Start*/}
             <Div
@@ -260,18 +496,20 @@ const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>Geovalga Fransiscus Lim</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>2</TableCell>
-                      <TableCell>Frances Rully Yong</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
+                    {pengajuanJudul?.students?.map((student, studentIndex) => (
+                      <TableRow>
+                        <TableCell>{studentIndex + 1}</TableCell>
+                        <TableCell>{student.fullName}</TableCell>
+                        <TableCell>{student.nim}</TableCell>
+                        <TableCell>
+                          {student.major === "IF"
+                            ? "Informatika"
+                            : student.major === "SI"
+                            ? "Sistem Informasi"
+                            : student.major}
+                        </TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -279,7 +517,9 @@ const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
               {/* Judul Start */}
               <Div sx={{ marginBottom: "25px" }}>
                 <Typography variant="subtitle2">Judul</Typography>
-                <Typography sx={{ whiteSpace: "pre-line" }}>{judul}</Typography>
+                <Typography sx={{ whiteSpace: "pre-line" }}>
+                  {pengajuanJudul?.title}
+                </Typography>
               </Div>
               <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
                 <Table>
@@ -321,14 +561,13 @@ const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
                     <TableRow>
                       <TableCell>1</TableCell>
                       <TableCell sx={{ fontSize: "12px" }}>
-                        SISTEM INFORMASI PELAYANAN PUSKESMAS TALAWAAN BERBASIS
-                        WEB-APPLICATION
+                        {pengajuanJudul?.file_name}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }}>
-                        08/09/2023
+                        {pengajuanJudul?.upload_date}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }}>
-                        5.6321 bytes
+                        {pengajuanJudul?.file_size}
                       </TableCell>
                       <TableCell>
                         <span
@@ -340,7 +579,7 @@ const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
                             padding: "5px 0",
                           }}
                         >
-                          View
+                          Lihat
                         </span>
                       </TableCell>
                     </TableRow>
@@ -376,39 +615,72 @@ const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
                     }}
                   >
                     {/* Menampilkan Advisor */}
-                    <Typography variant="subtitle2">Advisor</Typography>
-                    <Typography>{advisor}</Typography>
+                    <Typography variant="subtitle2">
+                      Mengusulkan Advisor
+                    </Typography>
+                    <Typography>
+                      {
+                        daftarDosen?.find(
+                          (dosen) =>
+                            dosen.id === pengajuanJudul?.proposed_advisor_id
+                        )?.name
+                      }
+                    </Typography>
                   </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      gap: "15px",
-                    }}
-                  >
-                    {/* Menampilkan Co-advisor 1 */}
-                    <Typography variant="subtitle2">Co-Advisor 1</Typography>
-                    <Typography>{coAdvisor1}</Typography>
-                  </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      gap: "15px",
-                    }}
-                  >
-                    {/* Menampilkan co-advisor 2 */}
-                    <Typography variant="subtitle2">Co-Advisor 2</Typography>
-                    <Typography>{coAdvisor2}</Typography>
-                  </Div>
+                  {pengajuanJudul?.proposed_co_advisor1_id !== null && (
+                    <Div
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        gap: "15px",
+                      }}
+                    >
+                      {/* Menampilkan Co-advisor 1 */}
+                      <Typography variant="subtitle2">
+                        Mengusulkan Co-Advisor 1
+                      </Typography>
+                      <Typography>
+                        {
+                          daftarDosen?.find(
+                            (dosen) =>
+                              dosen.id ===
+                              pengajuanJudul?.proposed_co_advisor1_id
+                          )?.name
+                        }
+                      </Typography>
+                    </Div>
+                  )}
+                  {pengajuanJudul?.proposed_co_advisor2_id !== null && (
+                    <Div
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        gap: "15px",
+                      }}
+                    >
+                      {/* Menampilkan co-advisor 2 */}
+                      <Typography variant="subtitle2">
+                        Mengusulkan Co-Advisor 2
+                      </Typography>
+                      <Typography>
+                        {
+                          daftarDosen?.find(
+                            (dosen) =>
+                              dosen.id ===
+                              pengajuanJudul?.proposed_co_advisor2_id
+                          )?.name
+                        }
+                      </Typography>
+                    </Div>
+                  )}
                 </Div>
               </Div>
               {/* Select Dosen Pembimbing End */}
 
               {/* Button Ganti Dosen Pembimbing Start */}
-              <Div hidden={role.includes("DOSEN") ? false : true}>
+              <Div hidden={role.includes("DOSEN_MK") ? false : true}>
                 {gantiAdvisorCoAdvisorButtonVisible && (
                   <Button
                     size="small"
@@ -430,16 +702,22 @@ const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
                     flexDirection: "column",
                   }}
                 >
-                  <Typography component="div">
+                  <Typography variant="subtitle2" component="div">
                     Apakah Anda sudah melakukan konsultasi dengan Advisor
                     sebelum mengajukan judul?
                   </Typography>
-                  <Typography>Ya</Typography>
+                  <Typography>
+                    {pengajuanJudul?.is_consultation === true
+                      ? "Ya"
+                      : pengajuanJudul?.is_consultation === false
+                      ? "Tidak"
+                      : pengajuanJudul?.is_consultation}
+                  </Typography>
                 </Div>
               </Div>
             </Div>
             <Div
-              hidden={role.includes("DOSEN") ? false : true}
+              hidden={role.includes("DOSEN_MK") ? false : true}
               sx={{ width: "100%" }}
             >
               {tolakTerimaButtonsVisible && (
@@ -496,180 +774,48 @@ const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
           </DialogTitle>
           <DialogContent>
             <FormControl fullWidth sx={{ margin: "25px 0 25px 0" }}>
-              <InputLabel>Advisor</InputLabel>
+              <InputLabel>Mengusulkan Advisor</InputLabel>
               <Select
-                label="Advisor"
+                label="Mengusulkan Advisor"
                 value={advisor}
                 onChange={handleAdvisorChange}
               >
-                <MenuItem value="">None</MenuItem>
-                <MenuItem value={"Andrew T. Liem, MT, PhD"}>
-                  Andrew T. Liem, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Green Mandias, SKom, MCs"}>
-                  Green Mandias, SKom, MCs
-                </MenuItem>
-                <MenuItem value={"Stenly R. Pungus, MT, PhD"}>
-                  Stenly R. Pungus, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Debby E. Sondakh, MT, PhD"}>
-                  Debby E. Sondakh, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Ir. Edson Y. Putra, MKom"}>
-                  Ir. Edson Y. Putra, MKom
-                </MenuItem>
-                <MenuItem value={"Green A. Sandag, SKom, MS"}>
-                  Green A. Sandag, SKom, MS
-                </MenuItem>
-                <MenuItem value={"Jacquline M. S. Waworundeng, ST, MT"}>
-                  Jacquline M. S. Waworundeng, ST, MT
-                </MenuItem>
-                <MenuItem value={"Jimmy H. Moedjahedy, SKom, MKom, MM"}>
-                  Jimmy H. Moedjahedy, SKom, MKom, MM
-                </MenuItem>
-                <MenuItem value={"Joe Y. Mambu, BSIT, MCIS"}>
-                  Joe Y. Mambu, BSIT, MCIS
-                </MenuItem>
-                <MenuItem value={"Lidya C. Laoh, SKom, MMSi"}>
-                  Lidya C. Laoh, SKom, MMSi
-                </MenuItem>
-                <MenuItem value={"Marshal Tombeng,"}>Marshal Tombeng,</MenuItem>
-                <MenuItem value={"Oktoverano H. Lengkong, SKom, MDs, MM"}>
-                  Oktoverano H. Lengkong, SKom, MDs, MM
-                </MenuItem>
-                <MenuItem value={"Reymon Rotikan, SKom, MS, MM"}>
-                  Reymon Rotikan, SKom, MS, MM
-                </MenuItem>
-                <MenuItem value={"Reynoldus A. Sahulata, SKom, MM"}>
-                  Reynoldus A. Sahulata, SKom, MM
-                </MenuItem>
-                <MenuItem value={"Rolly Lontaan, MKom"}>
-                  Rolly Lontaan, MKom
-                </MenuItem>
-                <MenuItem value={"Semmy W. Taju, SKom"}>
-                  Semmy W. Taju, SKom
-                </MenuItem>
-                <MenuItem value={"Senly I. Adam, SKom, MSc"}>
-                  Senly I. Adam, SKom, MSc
-                </MenuItem>
+                <MenuItem value="">-</MenuItem>
+                {daftarDosen?.map((dosen) => (
+                  <MenuItem key={dosen.id} value={dosen.id}>
+                    {dosen.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <FormControl fullWidth sx={{ marginBottom: "25px" }}>
-              <InputLabel>Co-Advisor 1</InputLabel>
+              <InputLabel>Mengusulkan Co-Advisor 1</InputLabel>
               <Select
-                label="Co-Advisor 1"
+                label="Mengusulkan Co-Advisor 1"
                 value={coAdvisor1}
                 onChange={handleCoAdvisor1Change}
               >
-                <MenuItem value="">None</MenuItem>
-                <MenuItem value={"Andrew T. Liem, MT, PhD"}>
-                  Andrew T. Liem, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Green Mandias, SKom, MCs"}>
-                  Green Mandias, SKom, MCs
-                </MenuItem>
-                <MenuItem value={"Stenly R. Pungus, MT, PhD"}>
-                  Stenly R. Pungus, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Debby E. Sondakh, MT, PhD"}>
-                  Debby E. Sondakh, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Ir. Edson Y. Putra, MKom"}>
-                  Ir. Edson Y. Putra, MKom
-                </MenuItem>
-                <MenuItem value={"Green A. Sandag, SKom, MS"}>
-                  Green A. Sandag, SKom, MS
-                </MenuItem>
-                <MenuItem value={"Jacquline M. S. Waworundeng, ST, MT"}>
-                  Jacquline M. S. Waworundeng, ST, MT
-                </MenuItem>
-                <MenuItem value={"Jimmy H. Moedjahedy, SKom, MKom, MM"}>
-                  Jimmy H. Moedjahedy, SKom, MKom, MM
-                </MenuItem>
-                <MenuItem value={"Joe Y. Mambu, BSIT, MCIS"}>
-                  Joe Y. Mambu, BSIT, MCIS
-                </MenuItem>
-                <MenuItem value={"Lidya C. Laoh, SKom, MMSi"}>
-                  Lidya C. Laoh, SKom, MMSi
-                </MenuItem>
-                <MenuItem value={"Marshal Tombeng,"}>Marshal Tombeng,</MenuItem>
-                <MenuItem value={"Oktoverano H. Lengkong, SKom, MDs, MM"}>
-                  Oktoverano H. Lengkong, SKom, MDs, MM
-                </MenuItem>
-                <MenuItem value={"Reymon Rotikan, SKom, MS, MM"}>
-                  Reymon Rotikan, SKom, MS, MM
-                </MenuItem>
-                <MenuItem value={"Reynoldus A. Sahulata, SKom, MM"}>
-                  Reynoldus A. Sahulata, SKom, MM
-                </MenuItem>
-                <MenuItem value={"Rolly Lontaan, MKom"}>
-                  Rolly Lontaan, MKom
-                </MenuItem>
-                <MenuItem value={"Semmy W. Taju, SKom"}>
-                  Semmy W. Taju, SKom
-                </MenuItem>
-                <MenuItem value={"Senly I. Adam, SKom, MSc"}>
-                  Senly I. Adam, SKom, MSc
-                </MenuItem>
+                <MenuItem value="">-</MenuItem>
+                {daftarDosen?.map((dosen) => (
+                  <MenuItem key={dosen.id} value={dosen.id}>
+                    {dosen.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <FormControl fullWidth>
-              <InputLabel>Co-Advisor 2</InputLabel>
+              <InputLabel>Mengusulkan Co-Advisor 2</InputLabel>
               <Select
-                label="Co-Advisor 2"
+                label="Mengusulkan Co-Advisor 2"
                 value={coAdvisor2}
                 onChange={handleCoAdvisor2Change}
               >
-                <MenuItem value="">None</MenuItem>
-                <MenuItem value={"Andrew T. Liem, MT, PhD"}>
-                  Andrew T. Liem, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Green Mandias, SKom, MCs"}>
-                  Green Mandias, SKom, MCs
-                </MenuItem>
-                <MenuItem value={"Stenly R. Pungus, MT, PhD"}>
-                  Stenly R. Pungus, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Debby E. Sondakh, MT, PhD"}>
-                  Debby E. Sondakh, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Ir. Edson Y. Putra, MKom"}>
-                  Ir. Edson Y. Putra, MKom
-                </MenuItem>
-                <MenuItem value={"Green A. Sandag, SKom, MS"}>
-                  Green A. Sandag, SKom, MS
-                </MenuItem>
-                <MenuItem value={"Jacquline M. S. Waworundeng, ST, MT"}>
-                  Jacquline M. S. Waworundeng, ST, MT
-                </MenuItem>
-                <MenuItem value={"Jimmy H. Moedjahedy, SKom, MKom, MM"}>
-                  Jimmy H. Moedjahedy, SKom, MKom, MM
-                </MenuItem>
-                <MenuItem value={"Joe Y. Mambu, BSIT, MCIS"}>
-                  Joe Y. Mambu, BSIT, MCIS
-                </MenuItem>
-                <MenuItem value={"Lidya C. Laoh, SKom, MMSi"}>
-                  Lidya C. Laoh, SKom, MMSi
-                </MenuItem>
-                <MenuItem value={"Marshal Tombeng,"}>Marshal Tombeng,</MenuItem>
-                <MenuItem value={"Oktoverano H. Lengkong, SKom, MDs, MM"}>
-                  Oktoverano H. Lengkong, SKom, MDs, MM
-                </MenuItem>
-                <MenuItem value={"Reymon Rotikan, SKom, MS, MM"}>
-                  Reymon Rotikan, SKom, MS, MM
-                </MenuItem>
-                <MenuItem value={"Reynoldus A. Sahulata, SKom, MM"}>
-                  Reynoldus A. Sahulata, SKom, MM
-                </MenuItem>
-                <MenuItem value={"Rolly Lontaan, MKom"}>
-                  Rolly Lontaan, MKom
-                </MenuItem>
-                <MenuItem value={"Semmy W. Taju, SKom"}>
-                  Semmy W. Taju, SKom
-                </MenuItem>
-                <MenuItem value={"Senly I. Adam, SKom, MSc"}>
-                  Senly I. Adam, SKom, MSc
-                </MenuItem>
+                <MenuItem value="">-</MenuItem>
+                {daftarDosen?.map((dosen) => (
+                  <MenuItem key={dosen.id} value={dosen.id}>
+                    {dosen.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </DialogContent>
@@ -687,7 +833,7 @@ const PengajuanJudulDosenSkripsi = ({ value: groupId }) => {
               Batal
             </Button>
             <Button onClick={handleSave} color="primary" variant="contained">
-              Simpan
+              Ganti
             </Button>
           </DialogActions>
         </Dialog>
