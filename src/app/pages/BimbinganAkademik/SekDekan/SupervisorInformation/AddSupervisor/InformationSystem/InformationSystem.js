@@ -92,7 +92,7 @@ const InformationSystem = () => {
   return (
     <Div sx={{ padding: 2 }}>
       <Div role="presentation" onClick={handleClick}>
-        <Breadcrumbs aria-label="breadcrumb">
+        <Breadcrumbs sx={{ paddingBottom: "20px" }} aria-label="breadcrumb">
           <StyledLink to="/bimbingan-akademik/sek-dekan/supervisor-information/">
             Supervisor Information
           </StyledLink>
@@ -104,30 +104,37 @@ const InformationSystem = () => {
           </Typography>
         </Breadcrumbs>
       </Div>
-      <Div sx={{ padding: 2 }}>
+      <Grid
+        container
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Grid item md={8} sm={7} xs={12}>
+          <Typography variant="h4" sx={{ fontWeight: 600 }}>
+            List of Students Majoring in Information System
+          </Typography>
+        </Grid>
         <Grid
-          container
+          item
+          md={4}
+          sm={5}
+          xs={12}
           display="flex"
           flexDirection="row"
           alignItems="center"
-          justifyContent="space-between"
+          sx={{
+            paddingLeft: "5px",
+            "@media (max-width: 573px)": {
+              paddingTop: "15px",
+              paddingBottom: "15px",
+            },
+          }}
         >
-          <Grid item md={6}>
-            <Typography variant="h4" sx={{ fontWeight: 600 }}>
-              List of Students Majoring in Information System
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            md={4}
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-          >
-            <SearchLocal />
-          </Grid>
+          <SearchLocal sx={{ width: "110%" }} />
         </Grid>
-      </Div>
+      </Grid>
       <Div>
         <Table>
           <TableHead>
@@ -163,23 +170,39 @@ const InformationSystem = () => {
               ))}
           </TableBody>
         </Table>
+      </Div>{" "}
+      <Grid
+        item
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "flex-end",
+          "@media (max-width: 890px)": {
+            justifyContent: "flex-start",
+            paddingLeft: "0",
+          },
+        }}
+      >
         <TablePagination
           rowsPerPageOptions={[10, 25, 50, 100]}
-          component="div"
+          component={"div"}
           count={data.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      </Div>
-      <Grid display="flex" alignItems="center" gap={4}>
-        <Grid item md={4}>
-          <Div sx={{ alignItems: "center" }}>
-            <CountStudent selected={selected} totalStudents={data.length} />
-          </Div>
+      </Grid>
+      <Grid
+        display="flex"
+        alignItems="center"
+        gap={4}
+        sx={{ "@media (max-width: 583px)": { flexDirection: "column" } }}
+      >
+        <Grid item md={4} paddingLeft={3} sm={12}>
+          <CountStudent selected={selected} totalStudents={data.length} />
         </Grid>
-        <Grid item md={4}>
+        <Grid item md={4} sm={12}>
           <Link
             to={`/bimbingan-akademik/sek-dekan/supervisor-information/add-supervisor`}
           >
