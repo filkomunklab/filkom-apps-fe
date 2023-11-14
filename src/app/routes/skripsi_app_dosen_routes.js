@@ -24,6 +24,7 @@ import DokumenSkripsi from "app/pages/ThesisApps/Dosen/DokumenSkripsi";
 import DokumenRevisiSkripsi from "app/pages/ThesisApps/Dosen/DokumenRevisiSkripsi";
 import KonsultasiAdvisorDanCoAdvisor from "app/pages/ThesisApps/Dosen/KonsultasiAdvisorDanCoAdvisor";
 import BeritaAcaraProposal from "app/pages/ThesisApps/Dosen/BeritaAcaraProposal";
+import BeritaAcaraSkripsi from "app/pages/ThesisApps/Dosen/BeritaAcaraSkripsi";
 
 const dosenRoutes = [
   // KOMITE
@@ -123,6 +124,18 @@ const dosenRoutes = [
   {
     path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/dokumen-revisi-proposal/:groupId/:role",
     element: <Page component={DokumenRevisiProposal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor/dokumen-skripsi/:groupId/:role",
+    element: <Page component={DokumenSkripsi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor/berita-acara-skripsi/:groupId/:role",
+    element: <Page component={BeritaAcaraSkripsi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor/dokumen-revisi-skripsi/:groupId/:role",
+    element: <Page component={DokumenRevisiSkripsi} />,
   },
   // ----------Co-Advisor
   {

@@ -44,7 +44,7 @@ const BeritaAcara = () => {
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
-  const [proposalId, setProposalId] = useState(null);
+  const [skripsiId, setSkripsiId] = useState(null);
 
   const userRole = useParams().role;
   console.log("role user akses page: ", userRole);
@@ -61,7 +61,7 @@ const BeritaAcara = () => {
     const fetchIsOpenData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-report/open-access/${proposalId}`,
+          `http://localhost:2000/api/v1/skripsi/skripsi-report/open-access/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -69,10 +69,10 @@ const BeritaAcara = () => {
           }
         );
         setIsOpen(response.data.data);
-        console.log("Request Get proposal dibuka?: ", response.data.data);
+        console.log("Request Get skripsi dibuka?: ", response.data.data);
       } catch (error) {
         console.error(
-          "Terjadi kesalahan saat mengambil proposal dibuka?:",
+          "Terjadi kesalahan saat mengambil skripsi dibuka?:",
           error
         );
       }
@@ -80,7 +80,7 @@ const BeritaAcara = () => {
     const fetchPenilaianData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-assessment/${proposalId}`,
+          `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -96,7 +96,7 @@ const BeritaAcara = () => {
     const fetchPerubahanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+          `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -112,7 +112,7 @@ const BeritaAcara = () => {
     const fetchBeritaAcaraData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-report/${proposalId}`,
+          `http://localhost:2000/api/v1/skripsi/skripsi-report/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -128,7 +128,7 @@ const BeritaAcara = () => {
     const fetchKesimpulanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-report/conclusion/${proposalId}`,
+          `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -146,7 +146,7 @@ const BeritaAcara = () => {
     fetchPerubahanData();
     fetchBeritaAcaraData();
     fetchKesimpulanData();
-  }, [token, proposalId]);
+  }, [token, skripsiId]);
 
   // State untuk mengontrol tampilan popup
   const [openScoreDialog, setOpenScoreDialog] = useState(false);
@@ -223,7 +223,7 @@ const BeritaAcara = () => {
     };
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-report/conclusion/${proposalId}`,
+        `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion/${skripsiId}`,
         kesimpulan,
         {
           headers: {
@@ -241,7 +241,7 @@ const BeritaAcara = () => {
         const fetchKesimpulanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-report/conclusion/${proposalId}`,
+              `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -277,7 +277,7 @@ const BeritaAcara = () => {
     if (!isSigned) {
       axios
         .put(
-          `http://localhost:2000/api/v1/proposal/proposal-report/${proposalId}`,
+          `http://localhost:2000/api/v1/skripsi/skripsi-report/${skripsiId}`,
           {},
           {
             headers: {
@@ -296,7 +296,7 @@ const BeritaAcara = () => {
           const fetchBeritaAcaraData = async () => {
             try {
               const response = await axios.get(
-                `http://localhost:2000/api/v1/proposal/proposal-report/${proposalId}`,
+                `http://localhost:2000/api/v1/skripsi/skripsi-report/${skripsiId}`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -336,7 +336,7 @@ const BeritaAcara = () => {
     const fetchPerubahanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+          `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -395,7 +395,7 @@ const BeritaAcara = () => {
     };
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-assessment/${proposalId}`,
+        `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
         nilai,
         {
           headers: {
@@ -432,7 +432,7 @@ const BeritaAcara = () => {
         const fetchPenilaianData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-assessment/${proposalId}`,
+              `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -546,7 +546,7 @@ const BeritaAcara = () => {
     };
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+        `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
         perubahan,
         {
           headers: {
@@ -565,7 +565,7 @@ const BeritaAcara = () => {
         const fetchPerubahanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+              `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -598,7 +598,7 @@ const BeritaAcara = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Berita Acara Proposal
+          Berita Acara Skripsi
         </Typography>
       </Div>
 
@@ -627,7 +627,7 @@ const BeritaAcara = () => {
             riwayatData={(data) => {
               if (data) {
                 setProgress(data.progress);
-                setProposalId(data.proposal_id);
+                setSkripsiId(data.skripsi_id);
                 setAdvisorAndCoAdvisor({
                   coAdvisor1: data.co_advisor1,
                   coAdvisor2: data.co_advisor2,
@@ -1387,7 +1387,7 @@ const BeritaAcara = () => {
                       }}
                     >
                       <Typography variant="subtitle2">
-                        Kesimpulan Ujian Proposal
+                        Kesimpulan Ujian Skripsi
                       </Typography>
                       <Div>
                         <FormControl component="fieldset">
@@ -1607,7 +1607,7 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography variant="subtitle2">
-                      Kesimpulan Ujian Proposal
+                      Kesimpulan Ujian Skripsi
                     </Typography>
                     <Div>
                       <Typography variant="body1">
@@ -1719,7 +1719,7 @@ const BeritaAcara = () => {
               alignSelf: "stretch",
             }}
           >
-            <Typography sx={{ width: "100px" }}>Judul Proposal</Typography>
+            <Typography sx={{ width: "100px" }}>Judul Skripsi</Typography>
             <Typography>:</Typography>
             <Typography>
               {isOpen && isOpen.title ? isOpen.title.toUpperCase() : ""}
@@ -2252,7 +2252,7 @@ const BeritaAcara = () => {
               alignSelf: "stretch",
             }}
           >
-            <Typography sx={{ width: "100px" }}>Judul Proposal</Typography>
+            <Typography sx={{ width: "100px" }}>Judul Skripsi</Typography>
             <Typography>:</Typography>
             <Typography>
               {isOpen && isOpen.title ? isOpen.title.toUpperCase() : ""}
@@ -2396,7 +2396,7 @@ const BeritaAcara = () => {
               alignSelf: "stretch",
             }}
           >
-            <Typography sx={{ width: "100px" }}>Judul Proposal</Typography>
+            <Typography sx={{ width: "100px" }}>Judul Skripsi</Typography>
             <Typography>:</Typography>
             <Typography>
               {isOpen && isOpen.title ? isOpen.title.toUpperCase() : ""}
@@ -2621,14 +2621,14 @@ const BeritaAcara = () => {
       </Dialog>
       {/* Melihat Perubahan End */}
 
-      {/* Konfirmasi Sidang Proposal Start*/}
+      {/* Konfirmasi Sidang Skripsi Start*/}
       <Dialog
         open={openConfirmationBeritaAcaraDialog}
         onClose={handleCloseConfirmationBeritaAcaraDialog}
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>Sidang Proposal</DialogTitle>
+        <DialogTitle>Sidang Skripsi</DialogTitle>
         <DialogContent>
           <Typography>
             Apakah Anda yakin ingin menyetujui hasil sidang ini?
@@ -2656,7 +2656,7 @@ const BeritaAcara = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      {/* konfrimasi Sidang Proposal End */}
+      {/* konfrimasi Sidang Skripsi End */}
       <Dialog
         open={openSignInConfirmationDialog}
         onClose={handleCloseSignInConfirmationDialog}

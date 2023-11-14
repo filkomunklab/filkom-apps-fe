@@ -234,75 +234,78 @@ const DokumenRevisiProposal = () => {
   if (userRole.includes("ADVISOR")) {
     ActionRevision = () => (
       <Div
-        hidden={role.includes("ADVISOR") ? false : true}
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {dokumenRevisi?.is_revision_approve_by_advisor === "Approve" ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndexAdvisor(1);
-              setSetujuConfirmationDialogOpenAdvisor(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {dokumenRevisi?.is_revision_approve_by_advisor === "Approve" ||
-        dokumenRevisi?.is_revision_approve_by_advisor === "Rejected" ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-            onClick={() => {
-              setSelectedActionIndexAdvisor(2);
-              setTolakConfirmationDialogOpenAdvisor(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenRevisi?.file_name_revision !== null && (
+          <>
+            {dokumenRevisi?.is_revision_approve_by_advisor === "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexAdvisor(1);
+                  setSetujuConfirmationDialogOpenAdvisor(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+            {dokumenRevisi?.is_revision_approve_by_advisor === "Approve" ||
+            dokumenRevisi?.is_revision_approve_by_advisor === "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexAdvisor(2);
+                  setTolakConfirmationDialogOpenAdvisor(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
@@ -981,17 +984,19 @@ const DokumenRevisiProposal = () => {
                             alignItems: "center",
                           }}
                         >
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
-                              fontSize: "12px",
-                              padding: "5px 0",
-                            }}
-                          >
-                            Lihat
-                          </span>
+                          {dokumenRevisi?.file_name_revision !== null && (
+                            <span
+                              style={{
+                                textDecoration: "none",
+                                cursor: "pointer",
+                                color: "blue",
+                                fontSize: "12px",
+                                padding: "5px 0",
+                              }}
+                            >
+                              Lihat
+                            </span>
+                          )}
                           {/* Menampilkan pengisian ADVISOR, KETUA PANALIS, DAN ANGGOTA PANALIS */}
                           <ActionRevision />
                         </Div>

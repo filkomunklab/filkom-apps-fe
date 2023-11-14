@@ -189,7 +189,7 @@ const MenuAdvisorProposal = ({
               >
                 {/* DOKUMEN SKRIPSI */}
                 <Link
-                  to="/sistem-informasi-skripsi/bimbingan-skripsi-advisor/dokumen-skripsi"
+                  to={`/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor/dokumen-skripsi/${groupId}/ADVISOR`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem onClick={() => setAnchorE2(null)}>
@@ -198,7 +198,7 @@ const MenuAdvisorProposal = ({
                 </Link>
                 {/* BERITA ACARA SKRIPSI */}
                 <Link
-                  to="/sistem-informasi-skripsi/bimbingan-skripsi-advisor/berita-acara-skripsi"
+                  to={`/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor/berita-acara-skripsi/${groupId}/ADVISOR`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem onClick={() => setAnchorE2(null)}>
@@ -207,7 +207,7 @@ const MenuAdvisorProposal = ({
                 </Link>
                 {/* DOKUMEN REVISI SKRIPSI */}
                 <Link
-                  to="/sistem-informasi-skripsi/bimbingan-skripsi-advisor/dokumen-revisi-skripsi"
+                  to={`/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor/dokumen-revisi-skripsi/${groupId}/ADVISOR`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem onClick={() => setAnchorE2(null)}>

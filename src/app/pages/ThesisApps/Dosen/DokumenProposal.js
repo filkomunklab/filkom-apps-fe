@@ -281,73 +281,77 @@ const DokumenProposal = () => {
   if (userRole.includes("ADVISOR")) {
     Actions = () => (
       <Div
-        hidden={role.includes("ADVISOR") ? false : true}
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {dokumenProposal?.is_proposal_approve_by_advisor === "Approve" ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndex(1);
-              setSetujuConfirmationDialogOpen(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {dokumenProposal?.is_proposal_approve_by_advisor === "Approve" ||
-        dokumenProposal?.is_proposal_approve_by_advisor === "Rejected" ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-            }}
-            onClick={() => {
-              setSelectedActionIndex(2);
-              setTolakConfirmationDialogOpen(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenProposal?.file_name_proposal !== null && (
+          <>
+            {dokumenProposal?.is_proposal_approve_by_advisor === "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndex(1);
+                  setSetujuConfirmationDialogOpen(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+
+            {dokumenProposal?.is_proposal_approve_by_advisor === "Approve" ||
+            dokumenProposal?.is_proposal_approve_by_advisor === "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndex(2);
+                  setTolakConfirmationDialogOpen(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
@@ -795,7 +799,7 @@ const DokumenProposal = () => {
                         </TableCell>
                       )}
                       {/* Status CoAdvisor2 */}
-                      {advisorAndCoAdvisor?.coAdvisor1 && (
+                      {advisorAndCoAdvisor?.coAdvisor2 && (
                         <TableCell>
                           {dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
                           null ? (
@@ -844,17 +848,19 @@ const DokumenProposal = () => {
                             alignItems: "center",
                           }}
                         >
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
-                              fontSize: "12px",
-                              padding: "5px 0",
-                            }}
-                          >
-                            Lihat
-                          </span>
+                          {dokumenProposal?.file_name_proposal !== null && (
+                            <span
+                              style={{
+                                textDecoration: "none",
+                                cursor: "pointer",
+                                color: "blue",
+                                fontSize: "12px",
+                                padding: "5px 0",
+                              }}
+                            >
+                              Lihat
+                            </span>
+                          )}
                           {/* Button untuk Advisor */}
                           {/* <Div
                             hidden={role.includes("DOSEN") ? false : true}
@@ -1486,17 +1492,19 @@ const DokumenProposal = () => {
                         {buktiPembayaran?.file_size_payment}
                       </TableCell>
                       <TableCell>
-                        <span
-                          style={{
-                            textDecoration: "none",
-                            cursor: "pointer",
-                            color: "blue",
-                            fontSize: "12px",
-                            alignItems: "center",
-                          }}
-                        >
-                          Lihat
-                        </span>
+                        {buktiPembayaran?.file_name_payment !== null && (
+                          <span
+                            style={{
+                              textDecoration: "none",
+                              cursor: "pointer",
+                              color: "blue",
+                              fontSize: "12px",
+                              alignItems: "center",
+                            }}
+                          >
+                            Lihat
+                          </span>
+                        )}
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -1577,17 +1585,20 @@ const DokumenProposal = () => {
                         {hasilCekPlagiat?.file_size_plagiarismcheck}
                       </TableCell>
                       <TableCell>
-                        <span
-                          style={{
-                            textDecoration: "none",
-                            cursor: "pointer",
-                            color: "blue",
-                            fontSize: "12px",
-                            alignItems: "center",
-                          }}
-                        >
-                          Lihat
-                        </span>
+                        {hasilCekPlagiat?.file_name_plagiarismcheck !==
+                          null && (
+                          <span
+                            style={{
+                              textDecoration: "none",
+                              cursor: "pointer",
+                              color: "blue",
+                              fontSize: "12px",
+                              alignItems: "center",
+                            }}
+                          >
+                            Lihat
+                          </span>
+                        )}
                       </TableCell>
                     </TableRow>
                   </TableBody>

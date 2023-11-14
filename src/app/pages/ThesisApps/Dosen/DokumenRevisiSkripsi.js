@@ -21,11 +21,14 @@ import WarningIcon from "@mui/icons-material/Warning";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
+import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
 
 const DokumenRevisiSkripsi = () => {
   // state - menyimpan request data
   const [dokumenRevisi, setDokumenRevisi] = useState();
   const [perubahan, setPerubahan] = useState();
+
+  const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
 
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
@@ -225,81 +228,85 @@ const DokumenRevisiSkripsi = () => {
 
   let ActionRevision;
 
-  if (role.includes("ADVISOR")) {
+  if (userRole.includes("ADVISOR")) {
     ActionRevision = () => (
       <Div
-        hidden={role.includes("ADVISOR") ? false : true}
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {isSetujuClickedAdvisor || isTolakClickedAdvisor ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndexAdvisor(1);
-              setSetujuConfirmationDialogOpenAdvisor(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {isSetujuClickedAdvisor || isTolakClickedAdvisor ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-            onClick={() => {
-              setSelectedActionIndexAdvisor(2);
-              setTolakConfirmationDialogOpenAdvisor(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenRevisi?.file_name_revision !== null && (
+          <>
+            {dokumenRevisi?.is_revision_approve_by_advisor === "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexAdvisor(1);
+                  setSetujuConfirmationDialogOpenAdvisor(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+            {dokumenRevisi?.is_revision_approve_by_advisor === "Approve" ||
+            dokumenRevisi?.is_revision_approve_by_advisor === "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexAdvisor(2);
+                  setTolakConfirmationDialogOpenAdvisor(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
-  } else if (role.includes("KETUA_PANALIS")) {
+  } else if (userRole.includes("KETUA_PANALIS")) {
     ActionRevision = () => (
       <Div
         hidden={role.includes("KETUA_PANALIS") ? false : true}
@@ -373,7 +380,7 @@ const DokumenRevisiSkripsi = () => {
         )}
       </Div>
     );
-  } else if (role.includes("ANGGOTA_PANALIS")) {
+  } else if (userRole.includes("ANGGOTA_PANALIS")) {
     ActionRevision = () => (
       <Div
         hidden={role.includes("ANGGOTA_PANALIS") ? false : true}
@@ -493,6 +500,10 @@ const DokumenRevisiSkripsi = () => {
               if (data) {
                 setProgress(data.progress);
                 setSkripsiId(data.skripsi_id);
+                setAdvisorAndCoAdvisor({
+                  coAdvisor1: data.co_advisor1,
+                  coAdvisor2: data.co_advisor2,
+                });
               }
             }}
           />
@@ -520,6 +531,13 @@ const DokumenRevisiSkripsi = () => {
             sx={{ width: "100%" }}
           >
             <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
+          </Div>
+          {/* DOSEN ADVISOR */}
+          <Div
+            hidden={userRole.includes("ADVISOR") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAdvisor dataGroupId={groupId} dataProgress={progress} />
           </Div>
           {/* Menu horizontal End */}
           <Div
@@ -667,7 +685,7 @@ const DokumenRevisiSkripsi = () => {
                 </Div>
               </Div>
               {/* Perubahan Co-Advisor 1 */}
-              {perubahan?.changes_by_co_advisor1 !== null && (
+              {advisorAndCoAdvisor?.coAdvisor1 && (
                 <Div
                   sx={{
                     display: "flex",
@@ -703,7 +721,7 @@ const DokumenRevisiSkripsi = () => {
                 </Div>
               )}
               {/* Perubahan Co-Advisor 2 */}
-              {perubahan?.changes_by_co_advisor2 !== null && (
+              {advisorAndCoAdvisor?.coAdvisor2 && (
                 <Div
                   sx={{
                     display: "flex",
@@ -963,17 +981,19 @@ const DokumenRevisiSkripsi = () => {
                             alignItems: "center",
                           }}
                         >
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
-                              fontSize: "12px",
-                              padding: "5px 0",
-                            }}
-                          >
-                            Lihat
-                          </span>
+                          {dokumenRevisi?.file_name_revision !== null && (
+                            <span
+                              style={{
+                                textDecoration: "none",
+                                cursor: "pointer",
+                                color: "blue",
+                                fontSize: "12px",
+                                padding: "5px 0",
+                              }}
+                            >
+                              Lihat
+                            </span>
+                          )}
                           {/* Menampilkan pengisian ADVISOR, KETUA PANALIS, DAN ANGGOTA PANALIS */}
                           <ActionRevision />
                         </Div>
