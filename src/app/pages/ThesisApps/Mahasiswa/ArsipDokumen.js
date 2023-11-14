@@ -30,7 +30,7 @@ const PDFViewerHKI = ({ HKIFile }) => {
   return (
     <div>
       <span sx={{ fontSize: "10px" }} onClick={viewPDFHKI}>
-        View
+        Detail
       </span>
     </div>
   );
@@ -48,7 +48,7 @@ const PDFViewerArtikelJurnal = ({ jurnal }) => {
 
   return (
     <div>
-      <span onClick={viewPDFArtikelJurnal}>View</span>
+      <span onClick={viewPDFArtikelJurnal}>Detail</span>
     </div>
   );
 };
@@ -65,7 +65,7 @@ const PDFViewerSourceCode = ({ sourceCode }) => {
 
   return (
     <div>
-      <span onClick={viewPDFSourceCode}>View</span>
+      <span onClick={viewPDFSourceCode}>Detail</span>
     </div>
   );
 };
@@ -491,6 +491,8 @@ const ArsipDocument = () => {
                       <TableCell
                         sx={{
                           fontSize: "12px",
+                          padding: "11px",
+                          textAlign: "center",
                           width: "12%",
                         }}
                       >
@@ -540,7 +542,7 @@ const ArsipDocument = () => {
                               }}
                               onClick={() => handleDeleteHKIFile}
                             >
-                              Delete
+                              Hapus
                             </span>
                           </Div>
                         </TableCell>
@@ -695,7 +697,7 @@ const ArsipDocument = () => {
                               }}
                               onClick={() => handleDeleteArtikelJurnalFile}
                             >
-                              Delete
+                              Hapus
                             </span>
                           </Div>
                         </TableCell>
@@ -849,7 +851,7 @@ const ArsipDocument = () => {
                               }}
                               onClick={() => handleDeleteSourceCodeFile}
                             >
-                              Delete
+                              Hapus
                             </span>
                           </Div>
                         </TableCell>
@@ -924,7 +926,12 @@ const ArsipDocument = () => {
                         Tanggal
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "12%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          textAlign: "center",
+                          width: "12%",
+                        }}
                       >
                         Action
                       </TableCell>
@@ -961,10 +968,11 @@ const ArsipDocument = () => {
                               cursor: "pointer",
                               color: "red",
                               fontSize: "12px",
+                              textAlign: "center",
                             }}
                             onClick={() => clearLink}
                           >
-                            Delete
+                            Hapus
                           </span>
                         </TableCell>
                       </TableRow>

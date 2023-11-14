@@ -31,7 +31,7 @@ const PDFViewerProposal = ({ dokumenProposal }) => {
   return (
     <div>
       <span sx={{ fontSize: "10px" }} onClick={viewPDFProposal}>
-        View
+        Detail
       </span>
     </div>
   );
@@ -49,7 +49,7 @@ const PDFViewerPayment = ({ buktiPembayaran }) => {
 
   return (
     <div>
-      <span onClick={viewPDFPayment}>View</span>
+      <span onClick={viewPDFPayment}>Detail</span>
     </div>
   );
 };
@@ -66,7 +66,7 @@ const PDFViewerCekPlagiat = ({ hasilCekPlagiat }) => {
 
   return (
     <div>
-      <span onClick={viewPDFCekPlagiat}>View</span>
+      <span onClick={viewPDFCekPlagiat}>Detail</span>
     </div>
   );
 };
@@ -650,7 +650,7 @@ const UnggahProposal = () => {
                               }}
                               onClick={() => handleDeleteProposalFile}
                             >
-                              Delete
+                              Hapus
                             </span>
                           </Div>
                         </TableCell>
@@ -805,7 +805,7 @@ const UnggahProposal = () => {
                               }}
                               onClick={() => handleDeletePaymentFile}
                             >
-                              Delete
+                              Hapus
                             </span>
                           </Div>
                         </TableCell>
@@ -960,7 +960,7 @@ const UnggahProposal = () => {
                               }}
                               onClick={() => handleDeletePlagiarismFile}
                             >
-                              Delete
+                              Hapus
                             </span>
                           </Div>
                         </TableCell>

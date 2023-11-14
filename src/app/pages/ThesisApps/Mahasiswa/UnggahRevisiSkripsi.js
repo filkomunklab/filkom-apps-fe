@@ -36,7 +36,7 @@ const PDFViewerRevisiSkripsi = ({ dokumenRevisi }) => {
   return (
     <div>
       <span sx={{ fontSize: "10px" }} onClick={viewPDFRevisiSkripsi}>
-        View
+        Detail
       </span>
     </div>
   );
@@ -719,7 +719,7 @@ const UploadRevisiSkripsi = () => {
                               }}
                               onClick={() => openConfirmDialog}
                             >
-                              Delete
+                              Hapus
                             </span>
                           </Div>
                         </TableCell>

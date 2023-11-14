@@ -36,7 +36,7 @@ const PDFViewerRevisiProposal = ({ dokumenRevisi }) => {
   return (
     <div>
       <span sx={{ fontSize: "10px" }} onClick={viewPDFRevisiProposal}>
-        View
+        Detail
       </span>
     </div>
   );
@@ -723,7 +723,7 @@ const UploadRevisiProposal = () => {
                               }}
                               onClick={() => handleDeleteRevisiProposalFile}
                             >
-                              Delete
+                              Hapus
                             </span>
                           </Div>
                         </TableCell>

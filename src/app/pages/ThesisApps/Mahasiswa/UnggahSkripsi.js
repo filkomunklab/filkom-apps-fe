@@ -31,7 +31,7 @@ const PDFViewerSkripsi = ({ dokumenSkripsi }) => {
   return (
     <div>
       <span sx={{ fontSize: "10px" }} onClick={viewPDFSkripsi}>
-        View
+        Detail
       </span>
     </div>
   );
@@ -49,7 +49,7 @@ const PDFViewerPayment = ({ paymentFile }) => {
 
   return (
     <div>
-      <span onClick={viewPDFPayment}>View</span>
+      <span onClick={viewPDFPayment}>Detail</span>
     </div>
   );
 };
@@ -66,7 +66,7 @@ const PDFViewerCekPlagiat = ({ plagiarismFile }) => {
 
   return (
     <div>
-      <span onClick={viewPDFCekPlagiat}>View</span>
+      <span onClick={viewPDFCekPlagiat}>Detail</span>
     </div>
   );
 };
@@ -625,7 +625,7 @@ const UploadSkipsi = () => {
                               }}
                               onClick={() => handleDeleteProposalFile}
                             >
-                              Delete
+                              Hapus
                             </span>
                           </Div>
                         </TableCell>
@@ -780,7 +780,7 @@ const UploadSkipsi = () => {
                               }}
                               onClick={() => handleDeletePaymentFile}
                             >
-                              Delete
+                              Hapus
                             </span>
                           </Div>
                         </TableCell>
@@ -935,7 +935,7 @@ const UploadSkipsi = () => {
                               }}
                               onClick={() => handleDeletePlagiarismFile}
                             >
-                              Delete
+                              Hapus
                             </span>
                           </Div>
                         </TableCell>
