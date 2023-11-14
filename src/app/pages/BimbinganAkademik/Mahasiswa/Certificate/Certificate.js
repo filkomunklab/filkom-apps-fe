@@ -99,12 +99,7 @@ const Certificate = () => {
   }, [handleOpenSecondModal]);
 
   const checkFormValidity = () => {
-    if (
-      title.trim() !== "" &&
-      category !== "" &&
-      description.trim() !== "" &&
-      selectedFile
-    ) {
+    if (title.trim() !== "" && category !== "" && selectedFile) {
       setFormValid(true);
     } else {
       setFormValid(false);
@@ -442,7 +437,7 @@ const Certificate = () => {
                     id="modal-modal-description"
                     style={{ marginTop: "16px", marginBottom: "20px" }}
                   >
-                    You have successfully preregistered for the course.
+                    You have successfully submitted your certificate.
                   </Typography>
                 </div>
               </Modal>
@@ -480,7 +475,7 @@ const Certificate = () => {
                     id="modal-modal-description"
                     style={{ marginTop: "16px", marginBottom: "20px" }}
                   >
-                    error.
+                    Error: Failed to submit the certificate. Please try again.
                   </Typography>
                 </div>
               </Modal>
