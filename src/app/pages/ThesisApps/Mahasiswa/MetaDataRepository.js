@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Autocomplete,
@@ -16,11 +19,9 @@ import {
   TextareaAutosize,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
-import AttachmentIcon from "@mui/icons-material/Attachment";
 
 const keywords = [
   "informatika",
@@ -31,6 +32,13 @@ const keywords = [
 ];
 
 const MetaDataRepository = () => {
+  const groupId = useParams().groupId;
+  console.log("group id: ", groupId);
+  const [progress, setProgress] = useState(null);
+
+  const role = useParams().role;
+  console.log(role);
+
   const [openDialog, setOpenDialog] = useState(false);
   const [penulisCount, setPenulisCount] = useState(1); // Awalnya satu input select
   const [selectedKeywords, setSelectedKeywords] = useState([]);
@@ -95,7 +103,14 @@ const MetaDataRepository = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          <Riwayatlog />
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(data) => {
+              if (data) {
+                setProgress(data.progress);
+              }
+            }}
+          />
         </Div>
         {/* Element 1 End */}
 
@@ -113,8 +128,12 @@ const MetaDataRepository = () => {
           }}
         >
           {/* Menu Horizontal Start */}
-          <Div sx={{ width: "100%" }}>
-            <MenuMahasiswa />
+          {/* MAHASISWA */}
+          <Div
+            hidden={role.includes("MAHASISWA") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
           </Div>
           {/* Menu horizontal End */}
           <Div
@@ -131,360 +150,6 @@ const MetaDataRepository = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
-              }}
-            >
-              Penulis
-            </Typography>
-            {/* Input select Nama penulis Start*/}
-            <Div
-              sx={{
-                width: "100%",
-                padding: "0 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "25px",
-              }}
-            >
-              {Array.from({ length: penulisCount }).map((_, index) => (
-                <div key={index}>
-                  <FormControl style={{ m: 1, width: "100%" }} size="small">
-                    <InputLabel id={`penulis-select-${index}`}>
-                      Nama Penulis
-                    </InputLabel>
-                    <Select
-                      labelId={`penulis-select-${index}`}
-                      id={`penulis-select-${index}`}
-                      label={`Nama Penulis ${index + 1}`}
-                      fullWidth
-                      style={{ marginBottom: "25px", width: "100%" }}
-                    >
-                      <MenuItem>Option 1</MenuItem>
-                      <MenuItem>Option 2</MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
-              ))}
-              {penulisCount < 5 && ( // Tampilkan tombol hanya jika jumlah penulis kurang dari 5
-                <Button
-                  onClick={handleTambahPenulis}
-                  style={{
-                    fontSize: "12px",
-                    marginBottom: "25px",
-                    textTransform: "none",
-                  }}
-                >
-                  <AddIcon fontSize="small" />
-                  Tambah Penulis
-                </Button>
-              )}
-            </Div>
-            {/* Input select Nama Penulis End */}
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
-              }}
-            >
-              Pembimbing
-            </Typography>
-            {/* Input Select Dosen Pembimbing Start */}
-            <Div
-              sx={{
-                width: "100%",
-                padding: "0 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "25px",
-              }}
-            >
-              {/* Dosen Pembimbing Advisor */}
-              <FormControl style={{ m: 1, width: "100%" }} size="small">
-                <InputLabel id="Advisor">Advisor</InputLabel>
-                <Select
-                  labelId="Advisor"
-                  id="Advisor"
-                  label="Advisor"
-                  fullWidth
-                  style={{ marginBottom: "25px", width: "100%" }}
-                >
-                  <MenuItem value={10}>Andrew T. Liem, MT, PhD</MenuItem>
-                  <MenuItem value={20}>Green Mandias, SKom, MCs</MenuItem>
-                  <MenuItem value={30}>Stenly R. Pungus, MT, PhD</MenuItem>
-                  <MenuItem value={40}>Debby E. Sondakh, MT, PhD</MenuItem>
-                  <MenuItem value={50}>Ir. Edson Y. Putra, MKom</MenuItem>
-                  <MenuItem value={60}>Green A. Sandag, SKom, MS</MenuItem>
-                  <MenuItem value={70}>
-                    Jacquline M. S. Waworundeng, ST, MT
-                  </MenuItem>
-                  <MenuItem value={80}>
-                    Jimmy H. Moedjahedy, SKom, MKom, MM
-                  </MenuItem>
-                  <MenuItem value={90}>Joe Y. Mambu, BSIT, MCIS</MenuItem>
-                  <MenuItem value={100}>Lidya C. Laoh, SKom, MMSi</MenuItem>
-                  <MenuItem value={110}>Marshal Tombeng,</MenuItem>
-                  <MenuItem value={120}>
-                    Oktoverano H. Lengkong, SKom, MDs, MM
-                  </MenuItem>
-                  <MenuItem value={130}>Reymon Rotikan, SKom, MS, MM</MenuItem>
-                  <MenuItem value={140}>
-                    Reynoldus A. Sahulata, SKom, MM
-                  </MenuItem>
-                  <MenuItem value={150}>Rolly Lontaan, MKom</MenuItem>
-                  <MenuItem value={160}>Semmy W. Taju, SKom</MenuItem>
-                  <MenuItem value={170}>Senly I. Adam, SKom, MSc</MenuItem>
-                </Select>
-              </FormControl>
-              {/* Dosen Pembimbing Co-Advisor 1 */}
-              <FormControl style={{ m: 1, width: "100%" }} size="small">
-                <InputLabel id="Co-Advisor1">Co-Advisor 1</InputLabel>
-                <Select
-                  labelId="Co-Advisor1"
-                  id="Co-Advisor1"
-                  label="Co-Advisor 1"
-                  fullWidth
-                  style={{ marginBottom: "25px", width: "100%" }}
-                >
-                  <MenuItem value={10}>Andrew T. Liem, MT, PhD</MenuItem>
-                  <MenuItem value={20}>Green Mandias, SKom, MCs</MenuItem>
-                  <MenuItem value={30}>Stenly R. Pungus, MT, PhD</MenuItem>
-                  <MenuItem value={40}>Debby E. Sondakh, MT, PhD</MenuItem>
-                  <MenuItem value={50}>Ir. Edson Y. Putra, MKom</MenuItem>
-                  <MenuItem value={60}>Green A. Sandag, SKom, MS</MenuItem>
-                  <MenuItem value={70}>
-                    Jacquline M. S. Waworundeng, ST, MT
-                  </MenuItem>
-                  <MenuItem value={80}>
-                    Jimmy H. Moedjahedy, SKom, MKom, MM
-                  </MenuItem>
-                  <MenuItem value={90}>Joe Y. Mambu, BSIT, MCIS</MenuItem>
-                  <MenuItem value={100}>Lidya C. Laoh, SKom, MMSi</MenuItem>
-                  <MenuItem value={110}>Marshal Tombeng,</MenuItem>
-                  <MenuItem value={120}>
-                    Oktoverano H. Lengkong, SKom, MDs, MM
-                  </MenuItem>
-                  <MenuItem value={130}>Reymon Rotikan, SKom, MS, MM</MenuItem>
-                  <MenuItem value={140}>
-                    Reynoldus A. Sahulata, SKom, MM
-                  </MenuItem>
-                  <MenuItem value={150}>Rolly Lontaan, MKom</MenuItem>
-                  <MenuItem value={160}>Semmy W. Taju, SKom</MenuItem>
-                  <MenuItem value={170}>Senly I. Adam, SKom, MSc</MenuItem>
-                </Select>
-              </FormControl>
-              {/* Dosen Pembimbing Co-Advisor 2 */}
-              <FormControl style={{ m: 1, width: "100%" }} size="small">
-                <InputLabel id="Co-Advisor2">Co-Advisor 2</InputLabel>
-                <Select
-                  labelId="Co-Advisor2"
-                  id="Co-Advisor2"
-                  label="Co-Advisor 2"
-                  fullWidth
-                  style={{ marginBottom: "25px", width: "100%" }}
-                >
-                  <MenuItem value={10}>Andrew T. Liem, MT, PhD</MenuItem>
-                  <MenuItem value={20}>Green Mandias, SKom, MCs</MenuItem>
-                  <MenuItem value={30}>Stenly R. Pungus, MT, PhD</MenuItem>
-                  <MenuItem value={40}>Debby E. Sondakh, MT, PhD</MenuItem>
-                  <MenuItem value={50}>Ir. Edson Y. Putra, MKom</MenuItem>
-                  <MenuItem value={60}>Green A. Sandag, SKom, MS</MenuItem>
-                  <MenuItem value={70}>
-                    Jacquline M. S. Waworundeng, ST, MT
-                  </MenuItem>
-                  <MenuItem value={80}>
-                    Jimmy H. Moedjahedy, SKom, MKom, MM
-                  </MenuItem>
-                  <MenuItem value={90}>Joe Y. Mambu, BSIT, MCIS</MenuItem>
-                  <MenuItem value={100}>Lidya C. Laoh, SKom, MMSi</MenuItem>
-                  <MenuItem value={110}>Marshal Tombeng,</MenuItem>
-                  <MenuItem value={120}>
-                    Oktoverano H. Lengkong, SKom, MDs, MM
-                  </MenuItem>
-                  <MenuItem value={130}>Reymon Rotikan, SKom, MS, MM</MenuItem>
-                  <MenuItem value={140}>
-                    Reynoldus A. Sahulata, SKom, MM
-                  </MenuItem>
-                  <MenuItem value={150}>Rolly Lontaan, MKom</MenuItem>
-                  <MenuItem value={160}>Semmy W. Taju, SKom</MenuItem>
-                  <MenuItem value={170}>Senly I. Adam, SKom, MSc</MenuItem>
-                </Select>
-              </FormControl>
-            </Div>
-            {/* Input Select Dosen Pembimbing End */}
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600,
-              }}
-            >
-              Penelis
-            </Typography>
-            {/* Input Select Dosen Penelis Start */}
-            <Div
-              sx={{
-                width: "100%",
-                padding: "0 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "25px",
-              }}
-            >
-              {/* Dosen Ketua Penelis */}
-              <FormControl style={{ m: 1, width: "100%" }} size="small">
-                <InputLabel id="KetuaPenelis">Ketua Penelis</InputLabel>
-                <Select
-                  labelId="KetuaPenelis"
-                  id="KetuaPenelis"
-                  label="Ketua Penelis"
-                  fullWidth
-                  style={{ marginBottom: "25px", width: "100%" }}
-                >
-                  <MenuItem value={10}>Andrew T. Liem, MT, PhD</MenuItem>
-                  <MenuItem value={20}>Green Mandias, SKom, MCs</MenuItem>
-                  <MenuItem value={30}>Stenly R. Pungus, MT, PhD</MenuItem>
-                  <MenuItem value={40}>Debby E. Sondakh, MT, PhD</MenuItem>
-                  <MenuItem value={50}>Ir. Edson Y. Putra, MKom</MenuItem>
-                  <MenuItem value={60}>Green A. Sandag, SKom, MS</MenuItem>
-                  <MenuItem value={70}>
-                    Jacquline M. S. Waworundeng, ST, MT
-                  </MenuItem>
-                  <MenuItem value={80}>
-                    Jimmy H. Moedjahedy, SKom, MKom, MM
-                  </MenuItem>
-                  <MenuItem value={90}>Joe Y. Mambu, BSIT, MCIS</MenuItem>
-                  <MenuItem value={100}>Lidya C. Laoh, SKom, MMSi</MenuItem>
-                  <MenuItem value={110}>Marshal Tombeng,</MenuItem>
-                  <MenuItem value={120}>
-                    Oktoverano H. Lengkong, SKom, MDs, MM
-                  </MenuItem>
-                  <MenuItem value={130}>Reymon Rotikan, SKom, MS, MM</MenuItem>
-                  <MenuItem value={140}>
-                    Reynoldus A. Sahulata, SKom, MM
-                  </MenuItem>
-                  <MenuItem value={150}>Rolly Lontaan, MKom</MenuItem>
-                  <MenuItem value={160}>Semmy W. Taju, SKom</MenuItem>
-                  <MenuItem value={170}>Senly I. Adam, SKom, MSc</MenuItem>
-                </Select>
-              </FormControl>
-              {/* Dosen Penelis Anggota Penelis */}
-              <FormControl style={{ m: 1, width: "100%" }} size="small">
-                <InputLabel id="AnggotaPenelis">Anggota Penelis</InputLabel>
-                <Select
-                  labelId="AnggotaPenelis"
-                  id="AnggotaPenelis"
-                  label="Anggota Penelis"
-                  fullWidth
-                  style={{ marginBottom: "25px", width: "100%" }}
-                >
-                  <MenuItem value={10}>Andrew T. Liem, MT, PhD</MenuItem>
-                  <MenuItem value={20}>Green Mandias, SKom, MCs</MenuItem>
-                  <MenuItem value={30}>Stenly R. Pungus, MT, PhD</MenuItem>
-                  <MenuItem value={40}>Debby E. Sondakh, MT, PhD</MenuItem>
-                  <MenuItem value={50}>Ir. Edson Y. Putra, MKom</MenuItem>
-                  <MenuItem value={60}>Green A. Sandag, SKom, MS</MenuItem>
-                  <MenuItem value={70}>
-                    Jacquline M. S. Waworundeng, ST, MT
-                  </MenuItem>
-                  <MenuItem value={80}>
-                    Jimmy H. Moedjahedy, SKom, MKom, MM
-                  </MenuItem>
-                  <MenuItem value={90}>Joe Y. Mambu, BSIT, MCIS</MenuItem>
-                  <MenuItem value={100}>Lidya C. Laoh, SKom, MMSi</MenuItem>
-                  <MenuItem value={110}>Marshal Tombeng,</MenuItem>
-                  <MenuItem value={120}>
-                    Oktoverano H. Lengkong, SKom, MDs, MM
-                  </MenuItem>
-                  <MenuItem value={130}>Reymon Rotikan, SKom, MS, MM</MenuItem>
-                  <MenuItem value={140}>
-                    Reynoldus A. Sahulata, SKom, MM
-                  </MenuItem>
-                  <MenuItem value={150}>Rolly Lontaan, MKom</MenuItem>
-                  <MenuItem value={160}>Semmy W. Taju, SKom</MenuItem>
-                  <MenuItem value={170}>Senly I. Adam, SKom, MSc</MenuItem>
-                </Select>
-              </FormControl>
-              {/* Dosen Penelis Advisor */}
-              <FormControl style={{ m: 1, width: "100%" }} size="small">
-                <InputLabel id="Advisor">Advisor</InputLabel>
-                <Select
-                  labelId="Advisor"
-                  id="Advisor"
-                  label="Advisor"
-                  fullWidth
-                  style={{ marginBottom: "25px", width: "100%" }}
-                >
-                  <MenuItem value={10}>Andrew T. Liem, MT, PhD</MenuItem>
-                  <MenuItem value={20}>Green Mandias, SKom, MCs</MenuItem>
-                  <MenuItem value={30}>Stenly R. Pungus, MT, PhD</MenuItem>
-                  <MenuItem value={40}>Debby E. Sondakh, MT, PhD</MenuItem>
-                  <MenuItem value={50}>Ir. Edson Y. Putra, MKom</MenuItem>
-                  <MenuItem value={60}>Green A. Sandag, SKom, MS</MenuItem>
-                  <MenuItem value={70}>
-                    Jacquline M. S. Waworundeng, ST, MT
-                  </MenuItem>
-                  <MenuItem value={80}>
-                    Jimmy H. Moedjahedy, SKom, MKom, MM
-                  </MenuItem>
-                  <MenuItem value={90}>Joe Y. Mambu, BSIT, MCIS</MenuItem>
-                  <MenuItem value={100}>Lidya C. Laoh, SKom, MMSi</MenuItem>
-                  <MenuItem value={110}>Marshal Tombeng,</MenuItem>
-                  <MenuItem value={120}>
-                    Oktoverano H. Lengkong, SKom, MDs, MM
-                  </MenuItem>
-                  <MenuItem value={130}>Reymon Rotikan, SKom, MS, MM</MenuItem>
-                  <MenuItem value={140}>
-                    Reynoldus A. Sahulata, SKom, MM
-                  </MenuItem>
-                  <MenuItem value={150}>Rolly Lontaan, MKom</MenuItem>
-                  <MenuItem value={160}>Semmy W. Taju, SKom</MenuItem>
-                  <MenuItem value={170}>Senly I. Adam, SKom, MSc</MenuItem>
-                </Select>
-              </FormControl>
-            </Div>
-            {/* Input Select Dosen Penelis End */}
-            {/* Judul */}
-            <Div sx={{ width: "100%" }}>
-              <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-                Judul
-              </DialogContentText>
-              <TextareaAutosize
-                aria-label="minimum height"
-                minRows={3}
-                placeholder="Judul Penelitian"
-                style={{
-                  width: "100%",
-                  display: "block",
-                  resize: "vertical",
-                }}
-              />
-            </Div>
             {/* kata kunci */}
             <Div sx={{ width: "100%" }}>
               <Autocomplete

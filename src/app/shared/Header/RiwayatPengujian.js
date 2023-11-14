@@ -33,7 +33,7 @@ const RiwayatPengujian = () => {
           lineHeight: "32px",
         }}
       >
-        Riwayat Pengujian
+        Daftar Riwayat Pengujian Anggota Panelis
       </Typography>
       <Div
         sx={{

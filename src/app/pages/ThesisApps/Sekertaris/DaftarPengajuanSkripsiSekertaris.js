@@ -23,7 +23,7 @@ const DaftarPengajuanSkripsiSekertaris = () => {
         <TableCell sx={{ fontSize: "13px" }}>{index + 1}</TableCell>
         <TableCell sx={{ fontSize: "13px" }}>Geovalga Fransiscus Lim</TableCell>
         <TableCell sx={{ fontSize: "13px" }}>
-          SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
+          SISTEM INFORMASI MANAJEMEN SKRIPSI DI FAKULTAS ILMU KOMPUTER
           UNIVERSITAS KLABAT
         </TableCell>
         <TableCell>
@@ -38,13 +38,13 @@ const DaftarPengajuanSkripsiSekertaris = () => {
         <TableCell>
           <Typography
             component={Link}
-            to="/halaman-berikutnya"
+            to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi/beranda"
             sx={{
               textDecoration: "none",
               color: "blue",
             }}
           >
-            View
+            Detail
           </Typography>
         </TableCell>
       </TableRow>

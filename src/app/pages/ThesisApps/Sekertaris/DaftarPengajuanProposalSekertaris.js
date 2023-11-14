@@ -1,5 +1,6 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
-import React, { useState } from "react";
 import PeopleIcon from "@mui/icons-material/People";
 import {
   Chip,
@@ -16,40 +17,44 @@ import { Link } from "react-router-dom";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 
-const DaftarBimbinganProposalSekertaris = () => {
-  const TableItem = ({ index }) => {
-    return (
-      <TableRow key={index}>
-        <TableCell sx={{ fontSize: "13px" }}>{index + 1}</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>Geovalga Fransiscus Lim</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>
-          SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
-          UNIVERSITAS KLABAT
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Typography
-            component={Link}
-            to="/halaman-berikutnya"
-            sx={{
-              textDecoration: "none",
-              color: "blue",
-            }}
-          >
-            View
-          </Typography>
-        </TableCell>
-      </TableRow>
-    );
-  };
+const DaftarPengajuanProposalSekertaris = () => {
+  const [daftarPengajuanProposal, setDaftarPengajuanProposal] = useState({
+    dashboard: {
+      total_group: 0,
+      ready: 0,
+      not_ready: 0,
+      have_schedule: 0,
+      not_schedule: 0,
+    },
+    semesterData: [],
+  });
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchDaftarPengajuanProposalData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:2000/api/v1/group/proposal-list-sekretaris",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Atur state 'setDaftarPengajuanProposal' dengan data dari respons
+        setDaftarPengajuanProposal(response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil daftar bimbingan proposal:",
+          error
+        );
+      }
+    };
+    fetchDaftarPengajuanProposalData();
+  }, [token]);
 
   return (
     <Div>
@@ -99,7 +104,7 @@ const DaftarBimbinganProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              68 Kelompok
+              {daftarPengajuanProposal.dashboard.total_group} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -139,7 +144,7 @@ const DaftarBimbinganProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              34 Kelompok
+              {daftarPengajuanProposal.dashboard.ready} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -179,7 +184,7 @@ const DaftarBimbinganProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              5 Kelompok
+              {daftarPengajuanProposal.dashboard.not_ready} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -231,7 +236,7 @@ const DaftarBimbinganProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              34 Kelompok
+              {daftarPengajuanProposal.dashboard.have_schedule} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -271,7 +276,7 @@ const DaftarBimbinganProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              5 Kelompok
+              {daftarPengajuanProposal.dashboard.not_schedule} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -330,62 +335,141 @@ const DaftarBimbinganProposalSekertaris = () => {
         </Div>
         {/* Header End */}
         {/* Semester Start */}
-        <Div
-          sx={{
-            display: "flex",
-            width: "100%",
-            padding: "24px",
-            alignItems: "center",
-            gap: "10px",
-            borderRadius: "6px",
-            background: "rgba(26, 56, 96, 0.10)",
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: "16px",
-              fontStyle: "normal",
-              fontWeight: 500,
-              lineHeight: "24px",
-              color: "#192434",
-            }}
-          >
-            2023/2024-Genap (Proposal)
-          </Typography>
-        </Div>
-        {/* Semester End */}
-        {/* Table Mahasiswa Proposal Start */}
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ width: "25px", fontSize: "13px" }}>
-                  Nomor
-                </TableCell>
-                <TableCell sx={{ width: "200px", fontSize: "13px" }}>
-                  Mahasiswa
-                </TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>
-                  Dokumen Proposal
-                </TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Pembayaran</TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Cek Plagiat</TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {[...Array(10)].map((item, index) => (
-                <TableItem index={index} />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        {/* Table Mahasiswa Proposal End */}
+        {daftarPengajuanProposal.semesterData.map(
+          (semesterData, semesterIndex) => (
+            <div key={semesterIndex} style={{ width: "100%" }}>
+              <Div
+                sx={{
+                  display: "flex",
+                  width: "100%",
+                  padding: "24px",
+                  alignItems: "center",
+                  gap: "10px",
+                  borderRadius: "6px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "16px",
+                    fontStyle: "normal",
+                    fontWeight: 500,
+                    lineHeight: "24px",
+                    color: "#192434",
+                  }}
+                >
+                  {semesterData.semester}
+                </Typography>
+              </Div>
+              {/* Semester End */}
+              {/* Table Mahasiswa Proposal Start */}
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ width: "25px", fontSize: "13px" }}>
+                        Nomor
+                      </TableCell>
+                      <TableCell sx={{ width: "200px", fontSize: "13px" }}>
+                        Mahasiswa
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Dokumen Proposal
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Pembayaran
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Cek Plagiat
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {semesterData.proposals.map((proposal, proposalIndex) => (
+                      <TableRow key={proposalIndex}>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposalIndex + 1}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.students.map((student) => (
+                            <div key={student.id}>{student.fullName}</div>
+                          ))}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.title}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.proposal_status === false ? (
+                            <Chip label={"Belum"} />
+                          ) : proposal.proposal_status === true ? (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : (
+                            proposal.proposal_status
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.paymant_status === false ? (
+                            <Chip label={"Belum"} />
+                          ) : proposal.paymant_status === true ? (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : (
+                            proposal.paymant_status
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.plagiarism === false ? (
+                            <Chip label={"Belum"} />
+                          ) : proposal.plagiarism === true ? (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : (
+                            proposal.plagiarism
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            component={Link}
+                            to="/halaman-berikutnya"
+                            sx={{
+                              textDecoration: "none",
+                              color: "blue",
+                            }}
+                          >
+                            Detail
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* Table Mahasiswa Proposal End */}
+            </div>
+          )
+        )}
       </Div>
       {/* Table Master End */}
     </Div>
   );
 };
 
-export default DaftarBimbinganProposalSekertaris;
+export default DaftarPengajuanProposalSekertaris;
