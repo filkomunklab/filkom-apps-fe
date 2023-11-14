@@ -39,7 +39,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
     const fetchDaftarPengujianProposalData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/proposal-list-member",
+          "http://localhost:2000/api/v1/group/proposal-list-chairman",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -517,7 +517,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
                         <TableCell>
                           <Typography
                             component={Link}
-                            to="/halaman-berikutnya"
+                            to={`/sistem-informasi-skripsi/daftar-pengujian-proposal-ketua/beranda/${proposal.group_id}/KETUA_PANELIS`}
                             sx={{
                               textDecoration: "none",
                               color: "blue",

@@ -24,8 +24,11 @@ import {
   TextareaAutosize,
 } from "@mui/material";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
+import MenuKetuaPanelis from "app/shared/MenuHorizontal/MenuKetuaPanelis";
+import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
+import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
+import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 
 const BeritaAcara = () => {
   // state - menyimpan request data
@@ -662,9 +665,53 @@ const BeritaAcara = () => {
               page={"Berita Acara Proposal"}
             />
           </Div>
+          {/* KETUA_PANELIS */}
+          <Div
+            hidden={userRole === "KETUA_PANELIS" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKetuaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Berita Acara Proposal"}
+            />
+          </Div>
+          {/* ANGGOTA_PANELIS */}
+          <Div
+            hidden={userRole === "ANGGOTA_PANELIS" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAnggotaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Berita Acara Proposal"}
+            />
+          </Div>
+          {/* DEKAN */}
+          <Div
+            hidden={userRole === "DEKAN" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDekan
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Berita Acara Proposal"}
+            />
+          </Div>
+          {/* KAPRODI */}
+          <Div
+            hidden={userRole === "KAPRODI" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKaprodi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Berita Acara Proposal"}
+            />
+          </Div>
           {/* Menu horizontal End */}
           {/* Berita acara belum dibuka */}
-          {!userRole.includes("KETUA_PANELIS") && isOpen?.is_open === null && (
+          {userRole !== "KETUA_PANELIS" && isOpen?.is_open === null && (
             <Div
               sx={{
                 display: "flex",
@@ -698,7 +745,7 @@ const BeritaAcara = () => {
             </Div>
           )}
           {/* Buka berita acara */}
-          {userRole.includes("KETUA_PANELIS") && isOpen?.is_open === null && (
+          {userRole === "KETUA_PANELIS" && isOpen?.is_open === null && (
             <Div
               sx={{
                 display: "flex",
@@ -787,11 +834,11 @@ const BeritaAcara = () => {
                         Anggota Penelis
                       </TableCell>
                       <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
-                      {userRole.includes("KETUA_PANELIS") ||
-                        userRole.includes("ANGGOTA_PANELIS") ||
-                        (userRole.includes("ADVISOR") && (
-                          <TableCell sx={{ width: "25%" }}>Action</TableCell>
-                        ))}
+                      {(userRole === "KETUA_PANELIS" ||
+                        userRole === "ANGGOTA_PANELIS" ||
+                        userRole === "ADVISOR") && (
+                        <TableCell sx={{ width: "25%" }}>Action</TableCell>
+                      )}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -802,7 +849,7 @@ const BeritaAcara = () => {
                         <TableCell>{student.value_by_chairman}</TableCell>
                         <TableCell>{student.value_by_member}</TableCell>
                         <TableCell>{student.value_by_advisor}-</TableCell>
-                        {userRole.includes("KETUA_PANELIS") && (
+                        {userRole === "KETUA_PANELIS" && (
                           <TableCell>
                             <span
                               style={{
@@ -836,7 +883,7 @@ const BeritaAcara = () => {
                             </span>
                           </TableCell>
                         )}
-                        {userRole.includes("ANGGOTA_PANELIS") && (
+                        {userRole === "ANGGOTA_PANELIS" && (
                           <TableCell>
                             <span
                               style={{
@@ -870,7 +917,7 @@ const BeritaAcara = () => {
                             </span>
                           </TableCell>
                         )}
-                        {userRole.includes("ADVISOR") && (
+                        {userRole === "ADVISOR" && (
                           <TableCell>
                             <span
                               style={{
@@ -943,9 +990,9 @@ const BeritaAcara = () => {
                           Co-Advisor 2
                         </TableCell>
                       )}
-                      {(userRole.includes("ADVISOR") ||
-                        userRole.includes("KETUA_PANELIS") ||
-                        userRole.includes("ANGGOTA_PANELIS")) && (
+                      {(userRole === "ADVISOR" ||
+                        userRole === "KETUA_PANELIS" ||
+                        userRole === "ANGGOTA_PANELIS") && (
                         <TableCell sx={{ width: "25%" }}>Action</TableCell>
                       )}
                     </TableRow>
@@ -1043,7 +1090,7 @@ const BeritaAcara = () => {
                         >
                           Lihat
                         </span>
-                        {userRole.includes("KETUA_PANELIS") && (
+                        {userRole === "KETUA_PANELIS" && (
                           <>
                             <Div sx={{ margin: "2px", color: "#E0E0E0" }}>
                               |
@@ -1072,7 +1119,7 @@ const BeritaAcara = () => {
                             </span>
                           </>
                         )}
-                        {userRole.includes("ANGGOTA_PANELIS") && (
+                        {userRole === "ANGGOTA_PANELIS" && (
                           <>
                             <Div sx={{ margin: "2px", color: "#E0E0E0" }}>
                               |
@@ -1099,7 +1146,7 @@ const BeritaAcara = () => {
                             </span>
                           </>
                         )}
-                        {userRole.includes("ADVISOR") && (
+                        {userRole === "ADVISOR" && (
                           <>
                             <Div sx={{ margin: "2px", color: "#E0E0E0" }}>
                               |
@@ -1254,7 +1301,7 @@ const BeritaAcara = () => {
                           <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
-                      {userRole.includes("DEKAN") && (
+                      {userRole === "DEKAN" && (
                         <TableCell>
                           <span
                             style={{
@@ -1283,7 +1330,7 @@ const BeritaAcara = () => {
                           </span>
                         </TableCell>
                       )}
-                      {userRole.includes("KETUA_PANELIS") && (
+                      {userRole === "KETUA_PANELIS" && (
                         <TableCell>
                           <span
                             style={{
@@ -1312,7 +1359,7 @@ const BeritaAcara = () => {
                           </span>
                         </TableCell>
                       )}
-                      {userRole.includes("ANGGOTA_PANELIS") && (
+                      {userRole === "ANGGOTA_PANELIS" && (
                         <TableCell>
                           <span
                             style={{
@@ -1341,7 +1388,7 @@ const BeritaAcara = () => {
                           </span>
                         </TableCell>
                       )}
-                      {userRole.includes("ADVISOR") && (
+                      {userRole === "ADVISOR" && (
                         <TableCell>
                           <span
                             style={{
@@ -1378,226 +1425,225 @@ const BeritaAcara = () => {
               {/* Radio Button Penilaian Akhir Start */}
 
               {/* Kesimpulan dari Pengujian Ketua penelis start */}
-              {userRole.includes("KETUA_PANELIS") &&
-                isOpen?.is_open === true && (
-                  <Div>
-                    <Div
-                      sx={{
-                        display: "flex",
-                        padding: "0px 25px",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        alignSelf: "stretch",
-                      }}
-                    >
-                      <Typography variant="subtitle2">
-                        Kesimpulan Ujian Proposal
-                      </Typography>
-                      <Div>
-                        <FormControl component="fieldset">
-                          <RadioGroup
-                            row
-                            aria-label="status"
-                            name="status"
-                            value={status}
-                            onChange={handleStatusChange}
-                          >
-                            <FormControlLabel
-                              value="Diterima"
-                              control={<Radio />}
-                              label="Diterima"
-                              onChange={(e) => setStatus(e.target.value)}
-                            />
-                            <FormControlLabel
-                              value="Ditolak"
-                              control={<Radio />}
-                              label="Ditolak"
-                              onChange={(e) => setStatus(e.target.value)}
-                            />
-                          </RadioGroup>
-                        </FormControl>
-                      </Div>
-                    </Div>
-                    <Div
-                      sx={{
-                        display: "flex",
-                        padding: "0px 25px",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        alignSelf: "stretch",
-                      }}
-                    >
-                      <Div>
-                        <Div>
-                          <Typography variant="subtitle2">Perubahan</Typography>
-                          <Div>
-                            <FormControl component="fieldset">
-                              <RadioGroup
-                                row
-                                aria-label="perubahan"
-                                name="perubahan"
-                                value={perubahan}
-                                onChange={(e) => setPerubahan(e.target.value)}
-                              >
-                                <FormControlLabel
-                                  value="Major"
-                                  control={<Radio />}
-                                  label="Major"
-                                />
-                                <FormControlLabel
-                                  value="Minor"
-                                  control={<Radio />}
-                                  label="Minor"
-                                />
-                              </RadioGroup>
-                            </FormControl>
-                          </Div>
-                        </Div>
-                      </Div>
-                    </Div>
-                    <Div
-                      sx={{
-                        display: "flex",
-                        padding: "0px 25px",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        alignSelf: "stretch",
-                      }}
-                    >
-                      <Div>
-                        <Div>
-                          <Typography variant="subtitle2">
-                            Nilai Kesimpulan Ujian Skripsi
-                          </Typography>
-                          <Div>
-                            <FormControl component="fieldset">
-                              <RadioGroup
-                                row
-                                aria-label="nilai"
-                                name="nilai"
-                                value={nilai}
-                                onChange={(e) => setNilai(e.target.value)}
-                              >
-                                <FormControlLabel
-                                  value="A"
-                                  control={<Radio />}
-                                  label="A"
-                                />
-                                <FormControlLabel
-                                  value="A-"
-                                  control={<Radio />}
-                                  label="A-"
-                                />
-                                <FormControlLabel
-                                  value="B+"
-                                  control={<Radio />}
-                                  label="B+"
-                                />
-                                <FormControlLabel
-                                  value="B"
-                                  control={<Radio />}
-                                  label="B"
-                                />
-                                <FormControlLabel
-                                  value="B-"
-                                  control={<Radio />}
-                                  label="B-"
-                                />
-                                <FormControlLabel
-                                  value="C+"
-                                  control={<Radio />}
-                                  label="C+"
-                                />
-                                <FormControlLabel
-                                  value="C"
-                                  control={<Radio />}
-                                  label="C"
-                                />
-                                <FormControlLabel
-                                  value="C-"
-                                  control={<Radio />}
-                                  label="C-"
-                                />
-                                <FormControlLabel
-                                  value="D+"
-                                  control={<Radio />}
-                                  label="D+"
-                                />
-                              </RadioGroup>
-                            </FormControl>
-                          </Div>
-                        </Div>
-                      </Div>
-                    </Div>
-                    <Div
-                      sx={{
-                        display: "flex",
-                        padding: "0px 25px",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        alignSelf: "stretch",
-                      }}
-                    >
-                      <Div>
-                        <Div>
-                          <Typography variant="subtitle2">Deskripsi</Typography>
-                          <Div>
-                            <FormControl component="fieldset">
-                              <RadioGroup
-                                row
-                                aria-label="deskripsi"
-                                name="deskripsi"
-                                value={deskripsi}
-                                onChange={(e) => setDeskripsi(e.target.value)}
-                              >
-                                <FormControlLabel
-                                  value="Lulus"
-                                  control={<Radio />}
-                                  label="Lulus"
-                                />
-                                <FormControlLabel
-                                  value="Tidak Lulus"
-                                  control={<Radio />}
-                                  label="Tidak Lulus"
-                                />
-                                <FormControlLabel
-                                  value="Mengulang"
-                                  control={<Radio />}
-                                  label="Mengulang"
-                                />
-                              </RadioGroup>
-                            </FormControl>
-                          </Div>
-                        </Div>
-                        <Typography style={{ color: "red" }}>
-                          {errorMessageKesimpulan}
-                        </Typography>
-                      </Div>
-                    </Div>
-                    {/* Radio Button Penilaian Akhir End */}
-                    <Div
-                      sx={{
-                        display: "flex",
-                        width: "100%",
-                        height: "59.43px",
-                        padding: "12px 24px 12px 0px",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                        gap: "12px",
-                        background: "#F5F5F5",
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        sx={{ textTransform: "none" }}
-                        color="primary"
-                        onClick={handleOpenConfirmationBeritaAcaraDialog}
-                      >
-                        Submit
-                      </Button>
+              {userRole === "KETUA_PANELIS" && isOpen?.is_open === true && (
+                <Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "0px 25px",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography variant="subtitle2">
+                      Kesimpulan Ujian Proposal
+                    </Typography>
+                    <Div>
+                      <FormControl component="fieldset">
+                        <RadioGroup
+                          row
+                          aria-label="status"
+                          name="status"
+                          value={status}
+                          onChange={handleStatusChange}
+                        >
+                          <FormControlLabel
+                            value="Diterima"
+                            control={<Radio />}
+                            label="Diterima"
+                            onChange={(e) => setStatus(e.target.value)}
+                          />
+                          <FormControlLabel
+                            value="Ditolak"
+                            control={<Radio />}
+                            label="Ditolak"
+                            onChange={(e) => setStatus(e.target.value)}
+                          />
+                        </RadioGroup>
+                      </FormControl>
                     </Div>
                   </Div>
-                )}
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "0px 25px",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Div>
+                      <Div>
+                        <Typography variant="subtitle2">Perubahan</Typography>
+                        <Div>
+                          <FormControl component="fieldset">
+                            <RadioGroup
+                              row
+                              aria-label="perubahan"
+                              name="perubahan"
+                              value={perubahan}
+                              onChange={(e) => setPerubahan(e.target.value)}
+                            >
+                              <FormControlLabel
+                                value="Major"
+                                control={<Radio />}
+                                label="Major"
+                              />
+                              <FormControlLabel
+                                value="Minor"
+                                control={<Radio />}
+                                label="Minor"
+                              />
+                            </RadioGroup>
+                          </FormControl>
+                        </Div>
+                      </Div>
+                    </Div>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "0px 25px",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Div>
+                      <Div>
+                        <Typography variant="subtitle2">
+                          Nilai Kesimpulan Ujian Skripsi
+                        </Typography>
+                        <Div>
+                          <FormControl component="fieldset">
+                            <RadioGroup
+                              row
+                              aria-label="nilai"
+                              name="nilai"
+                              value={nilai}
+                              onChange={(e) => setNilai(e.target.value)}
+                            >
+                              <FormControlLabel
+                                value="A"
+                                control={<Radio />}
+                                label="A"
+                              />
+                              <FormControlLabel
+                                value="A-"
+                                control={<Radio />}
+                                label="A-"
+                              />
+                              <FormControlLabel
+                                value="B+"
+                                control={<Radio />}
+                                label="B+"
+                              />
+                              <FormControlLabel
+                                value="B"
+                                control={<Radio />}
+                                label="B"
+                              />
+                              <FormControlLabel
+                                value="B-"
+                                control={<Radio />}
+                                label="B-"
+                              />
+                              <FormControlLabel
+                                value="C+"
+                                control={<Radio />}
+                                label="C+"
+                              />
+                              <FormControlLabel
+                                value="C"
+                                control={<Radio />}
+                                label="C"
+                              />
+                              <FormControlLabel
+                                value="C-"
+                                control={<Radio />}
+                                label="C-"
+                              />
+                              <FormControlLabel
+                                value="D+"
+                                control={<Radio />}
+                                label="D+"
+                              />
+                            </RadioGroup>
+                          </FormControl>
+                        </Div>
+                      </Div>
+                    </Div>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "0px 25px",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Div>
+                      <Div>
+                        <Typography variant="subtitle2">Deskripsi</Typography>
+                        <Div>
+                          <FormControl component="fieldset">
+                            <RadioGroup
+                              row
+                              aria-label="deskripsi"
+                              name="deskripsi"
+                              value={deskripsi}
+                              onChange={(e) => setDeskripsi(e.target.value)}
+                            >
+                              <FormControlLabel
+                                value="Lulus"
+                                control={<Radio />}
+                                label="Lulus"
+                              />
+                              <FormControlLabel
+                                value="Tidak Lulus"
+                                control={<Radio />}
+                                label="Tidak Lulus"
+                              />
+                              <FormControlLabel
+                                value="Mengulang"
+                                control={<Radio />}
+                                label="Mengulang"
+                              />
+                            </RadioGroup>
+                          </FormControl>
+                        </Div>
+                      </Div>
+                      <Typography style={{ color: "red" }}>
+                        {errorMessageKesimpulan}
+                      </Typography>
+                    </Div>
+                  </Div>
+                  {/* Radio Button Penilaian Akhir End */}
+                  <Div
+                    sx={{
+                      display: "flex",
+                      width: "100%",
+                      height: "59.43px",
+                      padding: "12px 24px 12px 0px",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                      gap: "12px",
+                      background: "#F5F5F5",
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      sx={{ textTransform: "none" }}
+                      color="primary"
+                      onClick={handleOpenConfirmationBeritaAcaraDialog}
+                    >
+                      Submit
+                    </Button>
+                  </Div>
+                </Div>
+              )}
               {/* Kesimpulan dari Pengujian Ketua penelis start */}
               {isOpen?.is_open === false && (
                 <Div>

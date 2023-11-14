@@ -3,7 +3,7 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const MenuDosenSkripsiProposal = ({
+const MenuKetuaPanelisProposal = ({
   dataGroupId: groupId,
   dataProgress: progress,
   page: setPage,
@@ -19,7 +19,6 @@ const MenuDosenSkripsiProposal = ({
         <Div
           sx={{
             display: "flex",
-            // padding: "5px 16px",
             width: "100%",
             alignSelf: "stretch",
             borderRadius: "8px",
@@ -34,12 +33,13 @@ const MenuDosenSkripsiProposal = ({
               {/* BERANDA */}
               <Button
                 component={Link}
-                to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                  (progress === "Submissioni" && "judul-") ||
+                to={`/sistem-informasi-skripsi/daftar-${
+                  progress === "Finished" ? "riwayat-" : ""
+                }pengujian-${
                   (progress === "Proposal" && "proposal-") ||
                   (progress === "Skripsi" && "skripsi-") ||
-                  (progress === "Finished" && "skripsi-")
-                }dosen-skripsi/beranda/${groupId}/DOSEN_MK`}
+                  (progress === "Finished" && "")
+                }ketua/beranda/${groupId}/KETUA_PANELIS`}
                 sx={{
                   fontSize: "13px",
                   padding: "6px 16px",
@@ -63,47 +63,16 @@ const MenuDosenSkripsiProposal = ({
               }}
             ></Div>
             <Div sx={{ margin: "auto" }}>
-              <Button
-                component={Link}
-                to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                  (progress === "Submissioni" && "judul-") ||
-                  (progress === "Proposal" && "proposal-") ||
-                  (progress === "Skripsi" && "skripsi-") ||
-                  (progress === "Finished" && "skripsi-")
-                }dosen-skripsi/pengajuan-judul/${groupId}/DOSEN_MK`}
-                sx={{
-                  fontSize: "13px",
-                  padding: "6px 16px",
-                  fontWeight: 500,
-                  color: setPage === "Pengajuan Judul" ? "#006AF5" : "#192434",
-                  textTransform: "none",
-                  "&:hover": {
-                    color:
-                      setPage === "Pengajuan Judul" ? "#006AF5" : "#006AF5",
-                  },
-                }}
-              >
-                Pengajuan Judul
-              </Button>
-            </Div>
-            <Div
-              sx={{
-                width: "1px",
-                transform: "90px",
-                alignSelf: "stretch",
-                background: "rgba(26, 56, 96, 0.10)",
-              }}
-            ></Div>
-            <Div sx={{ margin: "auto" }}>
               {/* KONSULTASI */}
               <Button
                 component={Link}
-                to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                  (progress === "Submissioni" && "judul-") ||
+                to={`/sistem-informasi-skripsi/daftar-${
+                  progress === "Finished" ? "riwayat-" : ""
+                }pengujian-${
                   (progress === "Proposal" && "proposal-") ||
                   (progress === "Skripsi" && "skripsi-") ||
-                  (progress === "Finished" && "skripsi-")
-                }dosen-skripsi/konsultasi/${groupId}/DOSEN_MK`}
+                  (progress === "Finished" && "")
+                }ketua/konsultasi/${groupId}/KETUA_PANELIS`}
                 sx={{
                   // width: "130px",
                   fontSize: "13px",
@@ -114,11 +83,6 @@ const MenuDosenSkripsiProposal = ({
                     color: setPage === "Konsultasi" ? "#006AF5" : "#006AF5",
                   },
                 }}
-                disabled={
-                  progress !== "Proposal" &&
-                  progress !== "Skripsi" &&
-                  progress !== "Finished"
-                }
               >
                 Konsultasi
               </Button>
@@ -140,6 +104,7 @@ const MenuDosenSkripsiProposal = ({
                   fontWeight: 500,
                   color:
                     setPage === "Dokumen Proposal" ||
+                    setPage === "Berita Acara Proposal" ||
                     setPage === "Dokumen Revisi Proposal"
                       ? "#006AF5"
                       : "#192434",
@@ -147,16 +112,12 @@ const MenuDosenSkripsiProposal = ({
                   "&:hover": {
                     color:
                       setPage === "Dokumen Proposal" ||
+                      setPage === "Berita Acara Proposal" ||
                       setPage === "Dokumen Revisi Proposal"
                         ? "#006AF5"
                         : "#006AF5",
                   },
                 }}
-                disabled={
-                  progress !== "Proposal" &&
-                  progress !== "Skripsi" &&
-                  progress !== "Finished"
-                }
               >
                 Pengajuan Proposal
               </Button>
@@ -175,12 +136,13 @@ const MenuDosenSkripsiProposal = ({
               >
                 {/* DOKUMEN PROPOSAL */}
                 <Link
-                  to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                    (progress === "Submissioni" && "judul-") ||
+                  to={`/sistem-informasi-skripsi/daftar-${
+                    progress === "Finished" ? "riwayat-" : ""
+                  }pengujian-${
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
-                    (progress === "Finished" && "skripsi-")
-                  }dosen-skripsi/dokumen-proposal/${groupId}/DOSEN_MK`}
+                    (progress === "Finished" && "")
+                  }ketua/dokumen-proposal/${groupId}/KETUA_PANELIS`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -200,14 +162,45 @@ const MenuDosenSkripsiProposal = ({
                     Dokumen Proposal
                   </MenuItem>
                 </Link>
-                {/* DOKUMEN REVISI PROPOSAL */}
+                {/* BERITA ACARA PROPOSAL */}
                 <Link
-                  to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                    (progress === "Submissioni" && "judul-") ||
+                  to={`/sistem-informasi-skripsi/daftar-${
+                    progress === "Finished" ? "riwayat-" : ""
+                  }pengujian-${
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
-                    (progress === "Finished" && "skripsi-")
-                  }dosen-skripsi/dokumen-revisi-proposal/${groupId}/DOSEN_MK`}
+                    (progress === "Finished" && "")
+                  }ketua/berita-acara-proposal/${groupId}/KETUA_PANELIS`}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem
+                    onClick={() => setAnchorEl(null)}
+                    style={{
+                      color:
+                        setPage === "Berita Acara Proposal"
+                          ? "#006AF5"
+                          : "#192434",
+                      textTransform: "none",
+                      "&:hover": {
+                        color:
+                          setPage === "Berita Acara Proposal"
+                            ? "#006AF5"
+                            : "#006AF5",
+                      },
+                    }}
+                  >
+                    Berita Acara Proposal
+                  </MenuItem>
+                </Link>
+                {/* DOKUMEN REVISI PROPOSAL */}
+                <Link
+                  to={`/sistem-informasi-skripsi/daftar-${
+                    progress === "Finished" ? "riwayat-" : ""
+                  }pengujian-${
+                    (progress === "Proposal" && "proposal-") ||
+                    (progress === "Skripsi" && "skripsi-") ||
+                    (progress === "Finished" && "")
+                  }ketua/dokumen-revisi-proposal/${groupId}/KETUA_PANELIS`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -249,6 +242,7 @@ const MenuDosenSkripsiProposal = ({
                   fontWeight: 500,
                   color:
                     setPage === "Dokumen Skripsi" ||
+                    setPage === "Berita Acara Skripsi" ||
                     setPage === "Dokumen Revisi Skripsi"
                       ? "#006AF5"
                       : "#192434",
@@ -256,12 +250,12 @@ const MenuDosenSkripsiProposal = ({
                   "&:hover": {
                     color:
                       setPage === "Dokumen Skripsi" ||
+                      setPage === "Berita Acara Skripsi" ||
                       setPage === "Dokumen Revisi Skripsi"
                         ? "#006AF5"
                         : "#006AF5",
                   },
                 }}
-                disabled={progress !== "Skripsi" && progress !== "Finished"}
               >
                 Pengajuan Skripsi
               </Button>
@@ -280,12 +274,13 @@ const MenuDosenSkripsiProposal = ({
               >
                 {/* DOKUMEN SKRIPSI */}
                 <Link
-                  to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                    (progress === "Submissioni" && "judul-") ||
+                  to={`/sistem-informasi-skripsi/daftar-${
+                    progress === "Finished" ? "riwayat-" : ""
+                  }pengujian-${
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
-                    (progress === "Finished" && "skripsi-")
-                  }dosen-skripsi/dokumen-skripsi/${groupId}/DOSEN_MK`}
+                    (progress === "Finished" && "")
+                  }ketua/dokumen-skripsi/${groupId}/KETUA_PANELIS`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -303,14 +298,45 @@ const MenuDosenSkripsiProposal = ({
                     Dokumen Skripsi
                   </MenuItem>
                 </Link>
-                {/* DOKUMEN REVISI SKRIPSI */}
+                {/* BERITA ACARA SKRIPSI */}
                 <Link
-                  to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                    (progress === "Submissioni" && "judul-") ||
+                  to={`/sistem-informasi-skripsi/daftar-${
+                    progress === "Finished" ? "riwayat-" : ""
+                  }pengujian-${
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
-                    (progress === "Finished" && "skripsi-")
-                  }dosen-skripsi/dokumen-revisi-skripsi/${groupId}/DOSEN_MK`}
+                    (progress === "Finished" && "")
+                  }ketua/berita-acara-skripsi/${groupId}/KETUA_PANELIS`}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem
+                    onClick={() => setAnchorE2(null)}
+                    style={{
+                      color:
+                        setPage === "Berita Acara Skripsi"
+                          ? "#006AF5"
+                          : "#192434",
+                      textTransform: "none",
+                      "&:hover": {
+                        color:
+                          setPage === "Berita Acara Skripsi"
+                            ? "#006AF5"
+                            : "#006AF5",
+                      },
+                    }}
+                  >
+                    Berita Acara Skripsi
+                  </MenuItem>
+                </Link>
+                {/* DOKUMEN REVISI SKRIPSI */}
+                <Link
+                  to={`/sistem-informasi-skripsi/daftar-${
+                    progress === "Finished" ? "riwayat-" : ""
+                  }pengujian-${
+                    (progress === "Proposal" && "proposal-") ||
+                    (progress === "Skripsi" && "skripsi-") ||
+                    (progress === "Finished" && "")
+                  }ketua/dokumen-revisi-skripsi/${groupId}/KETUA_PANELIS`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -342,4 +368,4 @@ const MenuDosenSkripsiProposal = ({
   );
 };
 
-export default MenuDosenSkripsiProposal;
+export default MenuKetuaPanelisProposal;

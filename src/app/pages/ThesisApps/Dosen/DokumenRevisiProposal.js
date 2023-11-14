@@ -22,6 +22,10 @@ import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
 import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
 import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
+import MenuKetuaPanelis from "app/shared/MenuHorizontal/MenuKetuaPanelis";
+import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
+import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
+import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 
 const DokumenRevisiProposal = () => {
   // state - menyimpan request data
@@ -309,7 +313,7 @@ const DokumenRevisiProposal = () => {
         )}
       </Div>
     );
-  } else if (userRole === "KETUA_PANALIS") {
+  } else if (userRole === "KETUA_PANELIS") {
     ActionRevision = () => (
       <Div
         sx={{
@@ -318,71 +322,79 @@ const DokumenRevisiProposal = () => {
           alignItems: "center",
         }}
       >
-        {isSetujuClicked || isTolakClicked ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndex(1);
-              setSetujuConfirmationDialogOpen(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {isSetujuClicked || isTolakClicked ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-            onClick={() => {
-              setSelectedActionIndex(2);
-              setTolakConfirmationDialogOpen(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenRevisi?.file_name_revision !== null && (
+          <>
+            {dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+            "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndex(1);
+                  setSetujuConfirmationDialogOpen(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+            {dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+              "Approve" ||
+            dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+              "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndex(2);
+                  setTolakConfirmationDialogOpen(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
-  } else if (userRole === "ANGGOTA_PANALIS") {
+  } else if (userRole === "ANGGOTA_PANELIS") {
     ActionRevision = () => (
       <Div
         style={{
@@ -391,67 +403,75 @@ const DokumenRevisiProposal = () => {
           alignItems: "center",
         }}
       >
-        {isSetujuClickedAnggotaPanalis || isTolakClickedAnggotaPanalis ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndexAnggotaPanalis(1);
-              setSetujuConfirmationDialogOpenAnggotaPanalis(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {isSetujuClickedAnggotaPanalis || isTolakClickedAnggotaPanalis ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-            onClick={() => {
-              setSelectedActionIndexAnggotaPanalis(2);
-              setTolakConfirmationDialogOpenAnggotaPanalis(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenRevisi?.file_name_revision !== null && (
+          <>
+            {dokumenRevisi?.is_revision_approve_by_panelist_member ===
+            "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexAnggotaPanalis(1);
+                  setSetujuConfirmationDialogOpenAnggotaPanalis(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+            {dokumenRevisi?.is_revision_approve_by_panelist_member ===
+              "Approve" ||
+            dokumenRevisi?.is_revision_approve_by_panelist_member ===
+              "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexAnggotaPanalis(2);
+                  setTolakConfirmationDialogOpenAnggotaPanalis(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
@@ -558,6 +578,50 @@ const DokumenRevisiProposal = () => {
             sx={{ width: "100%" }}
           >
             <MenuCoAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Revisi Proposal"}
+            />
+          </Div>
+          {/* KETUA_PANELIS */}
+          <Div
+            hidden={userRole === "KETUA_PANELIS" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKetuaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Revisi Proposal"}
+            />
+          </Div>
+          {/* ANGGOTA_PANELIS */}
+          <Div
+            hidden={userRole === "ANGGOTA_PANELIS" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAnggotaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Revisi Proposal"}
+            />
+          </Div>
+          {/* DEKAN */}
+          <Div
+            hidden={userRole === "DEKAN" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDekan
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Revisi Proposal"}
+            />
+          </Div>
+          {/* KAPRODI */}
+          <Div
+            hidden={userRole === "KAPRODI" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKaprodi
               dataGroupId={groupId}
               dataProgress={progress}
               page={"Dokumen Revisi Proposal"}

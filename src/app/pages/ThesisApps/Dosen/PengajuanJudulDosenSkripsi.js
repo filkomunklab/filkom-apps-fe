@@ -25,7 +25,6 @@ import {
 } from "@mui/material";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-import MenuPengajuanJudulDosen from "app/shared/MenuHorizontal/MenuPengajuanJudulDosen";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
 
 const PengajuanJudulDosenSkripsi = () => {

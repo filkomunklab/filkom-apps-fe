@@ -14,6 +14,11 @@ import {
 } from "@mui/material";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
+import MenuKetuaPanelis from "app/shared/MenuHorizontal/MenuKetuaPanelis";
+import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
+import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
+import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
+import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 
 const Konsultasi = () => {
@@ -25,7 +30,7 @@ const Konsultasi = () => {
   const groupId = useParams().groupId;
   // console.log("group id: ", groupId);
 
-  const role = useParams().role;
+  const userRole = useParams().role;
   // console.log(role);
 
   // fungsi untuk mendapatkan token JWT
@@ -141,19 +146,82 @@ const Konsultasi = () => {
           }}
         >
           {/* Menu Horizontal Start */}
-          {/* MAHASISWA */}
-          <Div
-            hidden={role.includes("MAHASISWA") ? false : true}
-            sx={{ width: "100%" }}
-          >
-            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
-          </Div>
           {/* DOSEN SKRIPSI */}
           <Div
-            hidden={role.includes("DOSEN_MK") ? false : true}
+            hidden={userRole === "DOSEN_MK" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
+            <MenuDosenSkripsi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
+          {/* KETUA_PANELIS */}
+          <Div
+            hidden={userRole === "KETUA_PANELIS" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKetuaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
+          {/* ANGGOTA_PANELIS */}
+          <Div
+            hidden={userRole === "ANGGOTA_PANELIS" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAnggotaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
+          {/* DEKAN */}
+          <Div
+            hidden={userRole === "DEKAN" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDekan
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
+          {/* KAPRODI */}
+          <Div
+            hidden={userRole === "KAPRODI" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKaprodi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
+          {/* SEKRETARIS */}
+          <Div
+            hidden={userRole === "OPERATOR_FILKOM" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuSekertaris
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
+          {/* MAHASISWA */}
+          <Div
+            hidden={userRole === "MAHASISWA" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuMahasiswa
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
           </Div>
           {/* Menu horizontal End */}
 

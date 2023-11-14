@@ -23,6 +23,11 @@ import WarningIcon from "@mui/icons-material/Warning";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
 import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
 import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
+import MenuKetuaPanelis from "app/shared/MenuHorizontal/MenuKetuaPanelis";
+import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
+import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
+import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
+import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 
 const DokumenSkripsi = () => {
   // state - menyimpan request data
@@ -608,6 +613,61 @@ const DokumenSkripsi = () => {
             sx={{ width: "100%" }}
           >
             <MenuCoAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
+          </Div>
+          {/* KETUA_PANELIS */}
+          <Div
+            hidden={userRole === "KETUA_PANELIS" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKetuaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
+          </Div>
+          {/* ANGGOTA_PANELIS */}
+          <Div
+            hidden={userRole === "ANGGOTA_PANELIS" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAnggotaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
+          </Div>
+          {/* DEKAN */}
+          <Div
+            hidden={userRole === "DEKAN" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDekan
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
+          </Div>
+          {/* KAPRODI */}
+          <Div
+            hidden={userRole === "KAPRODI" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKaprodi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
+          </Div>
+          {/* SEKRETARIS */}
+          <Div
+            hidden={userRole === "OPERATOR_FILKOM" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuSekertaris
               dataGroupId={groupId}
               dataProgress={progress}
               page={"Dokumen Skripsi"}
@@ -1447,194 +1507,236 @@ const DokumenSkripsi = () => {
                 </DialogActions>
               </Dialog>
             </Div>
-            {/* Table 1 End */}
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
-              }}
-            >
-              Bukti Pembayaran
-            </Typography>
+            {userRole !== "KETUA_PANELIS" && userRole !== "ANGGOTA_PANELIS" && (
+              <>
+                {/* Table 1 End */}
+                <Typography
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    padding: "24px",
+                    alignItems: "center",
+                    gap: "10px",
+                    color: "#192434",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+                  }}
+                >
+                  Bukti Pembayaran
+                </Typography>
 
-            {/* Table 2 Start */}
-            <Div
-              sx={{
-                width: "100%",
-                padding: "0 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "25px",
-              }}
-            >
-              {/* Table Upload Payment Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
-                <Table>
-                  <TableHead sx={{ background: "#F5F5F5" }}>
-                    <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
-                      {/* <TableCell
+                {/* Table 2 Start */}
+                <Div
+                  sx={{
+                    width: "100%",
+                    padding: "0 25px",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    gap: "25px",
+                  }}
+                >
+                  {/* Table Upload Payment Start*/}
+                  <TableContainer
+                    sx={{ marginBottom: "25px" }}
+                    component={Paper}
+                  >
+                    <Table>
+                      <TableHead sx={{ background: "#F5F5F5" }}>
+                        <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
+                          {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
                       </TableCell> */}
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
-                      >
-                        Nama File
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Tanggal
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Ukuran
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "5%" }}
-                      >
-                        Action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      {/* <TableCell>{row.nomor}</TableCell> */}
-                      <TableCell>
-                        {buktiPembayaran?.file_name_payment}
-                      </TableCell>
-                      <TableCell>
-                        {buktiPembayaran?.upload_date_payment}
-                      </TableCell>
-                      <TableCell>
-                        {buktiPembayaran?.file_size_payment}
-                      </TableCell>
-                      <TableCell>
-                        {buktiPembayaran?.file_name_payment !== null && (
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
+                          <TableCell
+                            sx={{
                               fontSize: "12px",
-                              alignItems: "center",
+                              padding: "11px",
+                              width: "45%",
                             }}
                           >
-                            Lihat
-                          </span>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Upload Payment End*/}
-            </Div>
-            {/* Table 2 End */}
+                            Nama File
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "20%",
+                            }}
+                          >
+                            Tanggal
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "20%",
+                            }}
+                          >
+                            Ukuran
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "5%",
+                            }}
+                          >
+                            Action
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          {/* <TableCell>{row.nomor}</TableCell> */}
+                          <TableCell>
+                            {buktiPembayaran?.file_name_payment}
+                          </TableCell>
+                          <TableCell>
+                            {buktiPembayaran?.upload_date_payment}
+                          </TableCell>
+                          <TableCell>
+                            {buktiPembayaran?.file_size_payment}
+                          </TableCell>
+                          <TableCell>
+                            {buktiPembayaran?.file_name_payment !== null && (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                Lihat
+                              </span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  {/* Table Upload Payment End*/}
+                </Div>
+                {/* Table 2 End */}
 
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
-              }}
-            >
-              Hasil Cek plagiat
-            </Typography>
-            {/* Table 3 Start */}
-            <Div
-              sx={{
-                width: "100%",
-                padding: "0 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "25px",
-              }}
-            >
-              {/* Table Upload Payment Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
-                <Table>
-                  <TableHead sx={{ background: "#F5F5F5" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      {/* <TableCell
+                <Typography
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    padding: "24px",
+                    alignItems: "center",
+                    gap: "10px",
+                    color: "#192434",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+                  }}
+                >
+                  Hasil Cek plagiat
+                </Typography>
+                {/* Table 3 Start */}
+                <Div
+                  sx={{
+                    width: "100%",
+                    padding: "0 25px",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    gap: "25px",
+                  }}
+                >
+                  {/* Table Upload Payment Start*/}
+                  <TableContainer
+                    sx={{ marginBottom: "25px" }}
+                    component={Paper}
+                  >
+                    <Table>
+                      <TableHead sx={{ background: "#F5F5F5" }}>
+                        <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                          {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
                       </TableCell> */}
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
-                      >
-                        Nama File
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Tanggal
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Ukuran
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "5%" }}
-                      >
-                        Action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      {/* <TableCell>{row.nomor}</TableCell> */}
-                      <TableCell>
-                        {hasilCekPlagiat?.file_name_plagiarismcheck}
-                      </TableCell>
-                      <TableCell>
-                        {hasilCekPlagiat?.upload_date_plagiarismcheck}
-                      </TableCell>
-                      <TableCell>
-                        {hasilCekPlagiat?.file_size_plagiarismcheck}
-                      </TableCell>
-                      <TableCell>
-                        {hasilCekPlagiat?.file_name_plagiarismcheck !==
-                          null && (
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
+                          <TableCell
+                            sx={{
                               fontSize: "12px",
-                              alignItems: "center",
+                              padding: "11px",
+                              width: "45%",
                             }}
                           >
-                            Lihat
-                          </span>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Upload Payment End*/}
-            </Div>
-            {/* Table 3 End */}
+                            Nama File
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "20%",
+                            }}
+                          >
+                            Tanggal
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "20%",
+                            }}
+                          >
+                            Ukuran
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "5%",
+                            }}
+                          >
+                            Action
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          {/* <TableCell>{row.nomor}</TableCell> */}
+                          <TableCell>
+                            {hasilCekPlagiat?.file_name_plagiarismcheck}
+                          </TableCell>
+                          <TableCell>
+                            {hasilCekPlagiat?.upload_date_plagiarismcheck}
+                          </TableCell>
+                          <TableCell>
+                            {hasilCekPlagiat?.file_size_plagiarismcheck}
+                          </TableCell>
+                          <TableCell>
+                            {hasilCekPlagiat?.file_name_plagiarismcheck !==
+                              null && (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                Lihat
+                              </span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  {/* Table Upload Payment End*/}
+                </Div>
+                {/* Table 3 End */}
+              </>
+            )}
           </Div>
           {/* Element 2 End */}
         </Div>

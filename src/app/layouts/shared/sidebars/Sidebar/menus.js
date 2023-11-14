@@ -501,7 +501,7 @@ export const dekanMenus = [
             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/daftar-pengujian--skripsi-ketua",
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-skripsi-ketua",
             label: "Uji Skripsi Ketua",
             type: "nav-item",
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
@@ -715,7 +715,7 @@ export const dosenMenus = [
             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/daftar-pengujian--skripsi-ketua",
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-skripsi-ketua",
             label: "Uji Skripsi Ketua",
             type: "nav-item",
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
@@ -1006,7 +1006,7 @@ export const kaprodiMenus = [
             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/daftar-pengujian--skripsi-ketua",
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-skripsi-ketua",
             label: "Uji Skripsi Ketua",
             type: "nav-item",
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
