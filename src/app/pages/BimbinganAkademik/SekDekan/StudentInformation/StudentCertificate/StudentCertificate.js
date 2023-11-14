@@ -71,16 +71,16 @@ const StudentCertificate = () => {
           <Typography variant="h6">Yuhu, Darell Deil</Typography>
         </Stack>
         <Grid container spacing={2} alignItems={"center"}>
-          <Grid item md={6}>
+          <Grid item md={12} xs={12}>
             <Typography variant="h6">
               Here is the data of the attached certificates belonging to this
               student.
             </Typography>
           </Grid>
-          <Grid item md={3}>
+          <Grid item xs={12} sm={8} md={3}>
             <SearchLocal />
           </Grid>
-          <Grid item md={3}>
+          <Grid item xs={12} sm={4} md={3}>
             <FormControl sx={{ width: "100%" }}>
               <InputLabel id="sort-label">Sort By</InputLabel>
               <Select
@@ -111,8 +111,18 @@ const StudentCertificate = () => {
               ))}
           </TableBody>
         </Table>
+      </Stack>{" "}
+      <Grid
+        item
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "flex-end",
+          "@media (max-width: 890px)": { justifyContent: "flex-start" },
+        }}
+      >
         <TablePagination
-          rowsPerPageOptions={[10, 25]}
+          rowsPerPageOptions={[10, 25, 50, 100]}
           component={"div"}
           count={data.length}
           rowsPerPage={rowsPerPage}
@@ -120,7 +130,7 @@ const StudentCertificate = () => {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      </Stack>
+      </Grid>
     </Div>
   );
 };

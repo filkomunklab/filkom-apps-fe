@@ -14,7 +14,9 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TableContainer,
   Typography,
+  Paper,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { useState } from "react";
@@ -74,7 +76,7 @@ const data = Array.from(Array(15).keys()).map((item, index) => ({
   status: `Active`,
 }));
 
-const StudentInformation = () => {
+const StudentInformationMentored = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -94,7 +96,16 @@ const StudentInformation = () => {
         <Typography variant="h1" sx={{ mb: 3 }}>
           Student Information
         </Typography>
-        <Typography variant="h6" sx={{ mb: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            paddingBottom: "25px",
+            fontSize: "15px",
+            fontWeight: 400,
+            color: "rgba(27, 43, 65, 0.69)",
+            textAlign: "justify",
+          }}
+        >
           Currently, you are on the Student Information page, where you can
           easily view all information about your mentored students, including
           the number, status, and other detailed and comprehensive information.
@@ -102,24 +113,54 @@ const StudentInformation = () => {
       </Div>
       <Grid container spacing={2}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">List of mentored students</Typography>
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: "justify",
+              "@media (max-width: 390px)": {
+                fontSize: "16px",
+                fontWeight: 500,
+              },
+            }}
+          >
+            List of Mentored Students
+          </Typography>
         </Grid>
-        <Grid item md={3}>
-          <SearchGlobal sx={{ height: "100%" }} />
+        <Grid item xs={12} sm={8} md={3}>
+          <SearchGlobal
+            sx={{
+              height: "100%",
+              "@media (max-width: 390px)": {
+                height: "40px",
+              },
+            }}
+          />
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={4} md={3}>
           <FormControl
             sx={{
               width: "100%",
             }}
           >
-            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
+            <InputLabel>Filter</InputLabel>
             <Select
-              sx={{ borderRadius: 50 }}
+              sx={{
+                borderRadius: 50,
+                "@media (max-width: 390px)": {
+                  height: "45px",
+                },
+              }}
               multiple
               value={filter}
               label="Grouping"
               renderValue={(selected) => selected.join(", ")}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: "37%",
+                  },
+                },
+              }}
             >
               <MenuItem value="">
                 <em>None</em>
@@ -127,8 +168,24 @@ const StudentInformation = () => {
               <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
                 Status
               </ListSubheader>
-              <MenuItem value={"activeStudent"}>Active</MenuItem>
-              <MenuItem value={"nonactiveStudent"}>Nonactive</MenuItem>
+              <MenuItem
+                sx={{
+                  backgroundColor: "#FAFAFA",
+                  borderRadius: "5px",
+                }}
+                value={"activeStudent"}
+              >
+                Active
+              </MenuItem>
+              <MenuItem
+                sx={{
+                  backgroundColor: "#FAFAFA",
+                  borderRadius: "5px",
+                }}
+                value={"nonactiveStudent"}
+              >
+                Nonactive
+              </MenuItem>
               <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
                 Tahun Masuk
               </ListSubheader>
@@ -139,7 +196,6 @@ const StudentInformation = () => {
                   sx={{
                     backgroundColor: "#FAFAFA",
                     borderRadius: "5px",
-                    margin: "5px",
                   }}
                 >
                   {item.label}
@@ -157,7 +213,6 @@ const StudentInformation = () => {
                     sx={{
                       backgroundColor: "#FAFAFA",
                       borderRadius: "5px",
-                      justifyContent: "center",
                     }}
                   >
                     {item.label}
@@ -168,21 +223,35 @@ const StudentInformation = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
+          <TableContainer
+            sx={{
+              maxHeight: 440,
+            }}
+            component={Paper}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
             rowsPerPageOptions={[10, 25, 50, 100]}
-            component={"div"}
+            component="div"
             count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
@@ -215,18 +284,24 @@ const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(`/bimbingan-akademik/student-information/${item.nim}`);
+    // navigate(
+    //   `/bimbingan-akademik/dosen-pembimbing/student-information/${item.nim}`
+    // );
 
     switch (name) {
       case "profile":
-        navigate(`/bimbingan-akademik/student-information/${item.nim}`);
+        navigate(
+          `/bimbingan-akademik/dosen-pembimbing/student-information/${item.nim}`
+        );
         break;
       case "grade":
-        navigate(`/bimbingan-akademik/student-information/${item.nim}/grade`);
+        navigate(
+          `/bimbingan-akademik/dosen-pembimbing/student-information/${item.nim}/grade`
+        );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/student-information/${item.nim}/certificate`
+          `/bimbingan-akademik/dosen-pembimbing/student-information/${item.nim}/certificate`
         );
         break;
 
@@ -273,4 +348,4 @@ const TableItem = ({ item, index }) => {
   );
 };
 
-export default StudentInformation;
+export default StudentInformationMentored;

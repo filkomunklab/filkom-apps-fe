@@ -121,10 +121,10 @@ const InformationTechnology = () => {
             Information Technology Students List
           </Typography>
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={8} md={3}>
           <SearchGlobal sx={{ height: "100%" }} />
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={4} md={3}>
           <FormControl
             sx={{
               width: "100%",
@@ -137,6 +137,13 @@ const InformationTechnology = () => {
               value={filter}
               label="Grouping"
               renderValue={(selected) => selected.join(", ")}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: "37%",
+                  },
+                },
+              }}
             >
               <MenuItem value="">
                 <em>None</em>
@@ -144,8 +151,24 @@ const InformationTechnology = () => {
               <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
                 Status
               </ListSubheader>
-              <MenuItem value={"activeStudent"}>Active</MenuItem>
-              <MenuItem value={"nonactiveStudent"}>Nonactive</MenuItem>
+              <MenuItem
+                sx={{
+                  backgroundColor: "#FAFAFA",
+                  borderRadius: "5px",
+                }}
+                value={"activeStudent"}
+              >
+                Active
+              </MenuItem>
+              <MenuItem
+                sx={{
+                  backgroundColor: "#FAFAFA",
+                  borderRadius: "5px",
+                }}
+                value={"nonactiveStudent"}
+              >
+                Nonactive
+              </MenuItem>
               <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
                 Tahun Masuk
               </ListSubheader>
@@ -156,7 +179,6 @@ const InformationTechnology = () => {
                   sx={{
                     backgroundColor: "#FAFAFA",
                     borderRadius: "5px",
-                    margin: "5px",
                   }}
                 >
                   {item.label}
@@ -174,7 +196,6 @@ const InformationTechnology = () => {
                     sx={{
                       backgroundColor: "#FAFAFA",
                       borderRadius: "5px",
-                      justifyContent: "center",
                     }}
                   >
                     {item.label}
@@ -197,6 +218,16 @@ const InformationTechnology = () => {
                 ))}
             </TableBody>
           </Table>
+        </Grid>
+        <Grid
+          item
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            "@media (max-width: 890px)": { justifyContent: "flex-start" },
+          }}
+        >
           <TablePagination
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}

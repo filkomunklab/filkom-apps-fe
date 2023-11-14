@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Div from "@jumbo/shared/Div";
 import {
   Box,
   Typography,
@@ -9,11 +10,25 @@ import {
   ListItemText,
   Stack,
   Divider,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Breadcrumbs,
+  experimentalStyled as styled,
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
-import { Link } from "react-router-dom";
 import SearchLocal from "./SearchLocal/SearchLocal";
+import { Link, useNavigate } from "react-router-dom";
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
 
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -43,6 +58,12 @@ function a11yProps(index) {
 
 const History = (props) => {
   const [value, setValue] = React.useState(0);
+  const navigate = useNavigate();
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigate(-1);
+  };
 
   useEffect(() => {
     const storedValue = localStorage.getItem("historyTabValue");
@@ -56,26 +77,43 @@ const History = (props) => {
   }, [value]);
 
   return (
-    <div>
-      <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
-        History
-      </Typography>
-      <Typography
-        sx={{
-          paddingTop: "22px",
-          paddingBottom: "28px",
-          fontSize: "15px",
-          fontWeight: 400,
-          color: "rgba(27, 43, 65, 0.69)",
-        }}
-      >
-        Currently you are in the history page, all the activities you have done
-        in terms of activity handling, student pre-registration, student
-        certificate approval, student study result card, everything you have
-        approved will be displayed on this page.
-      </Typography>
+    <Div>
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink>Back</StyledLink>
+          <Typography color="text.primary">Student Profile</Typography>
+        </Breadcrumbs>
+      </div>
+      <Stack gap={3} paddingTop={3}>
+        <Stack direction={"row"} justifyContent={"space-between"}>
+          <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
+            History
+          </Typography>{" "}
+          <Typography variant="h6" paddingRight={"33px"}>
+            Yuhu, Darell Deil
+          </Typography>
+        </Stack>
+        <Grid container spacing={2} alignItems={"center"}>
+          <Grid item md={8}>
+            <Typography
+              variant="h6"
+              sx={{
+                paddingBottom: "28px",
+                fontSize: "15px",
+                color: "rgba(27, 43, 65, 0.69)",
+              }}
+            >
+              Here is the history page of this supervisor, where you can view
+              the history of all activities, pre-registration approvals, and
+              certificate approvals conducted by the supervisor.
+            </Typography>
+          </Grid>
+          <Grid item md={3}>
+            <SearchLocal />
+          </Grid>
+        </Grid>
+      </Stack>
 
-      <SearchLocal />
       <div sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}
@@ -87,8 +125,6 @@ const History = (props) => {
           <Tab label="Activity" {...a11yProps(0)} />
           <Tab label="Pre-registration" {...a11yProps(1)} />
           <Tab label="Certificate" {...a11yProps(2)} />
-          <Tab label="Grade" {...a11yProps(3)} />
-          <Tab label="Consultation" {...a11yProps(4)} />
         </Tabs>
       </div>
 
@@ -124,9 +160,10 @@ const History = (props) => {
               </Box>
 
               <ListItem
+                size="small"
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/activity/"
+                to="activity2"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -150,7 +187,8 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Tolong kumpulkan kartu hasil study kalian
+                        Form untuk memasukan Pre-Registration Course telah
+                        dibuka.
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Tidak ada pertemuan tatap muka. Diharapkan semua untuk
@@ -166,9 +204,10 @@ const History = (props) => {
               <Divider component="li" />
 
               <ListItem
+                size="small"
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/activity/"
+                to="activity1"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -207,9 +246,10 @@ const History = (props) => {
               </ListItem>
               <Divider component="li" />
               <ListItem
+                size="small"
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/activity/"
+                to="activity"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -262,9 +302,10 @@ const History = (props) => {
                 </Typography>
               </Box>
               <ListItem
+                size="small"
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/activity/"
+                to="activity3"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -341,7 +382,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/pre-registrationwaiting/"
+                to="pre-registration-rejected"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -365,7 +406,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pre-registrasi Adzana, Shaliha Gracia
+                        Adzana, Shaliha Gracia
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Preregistrasi semester II tahun ajaran 2023/2024
@@ -378,23 +419,10 @@ const History = (props) => {
                 </Box>
               </ListItem>
               <Divider component="li" />
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Sunday, Aug 6, 2023
-                </Typography>
-              </Box>
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/pre-registrationapproved/"
+                to="pre-registration-approved"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -418,36 +446,23 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pre-registrasi Adzana, Shaliha Gracia
+                        Peter, Parker Judith
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
-                        Preregistrasi semester I tahun ajaran 2023/2024
+                        Preregistrasi semester II tahun ajaran 2023/2024
                       </Typography>{" "}
                     </>
                   }
                 />
                 <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Aug 6, 2023" />
+                  <ListItemText secondary="Jan 8, 2024" />
                 </Box>
               </ListItem>
               <Divider component="li" />
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Sunday, Mar 12, 2023
-                </Typography>
-              </Box>
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/pre-registrationrejected/"
+                to="pre-registration-rejected"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -463,6 +478,7 @@ const History = (props) => {
                   }
                   secondary={
                     <>
+                      {" "}
                       <Typography
                         sx={{
                           color: "rgba(0, 0, 0, 1)",
@@ -470,16 +486,230 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pre-registrasi Adzana, Shaliha Gracia
+                        Banner, Tony Stark
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
-                        Preregistrasi semester II tahun ajaran 2022/2023
-                      </Typography>
+                        Preregistrasi semester II tahun ajaran 2023/2024
+                      </Typography>{" "}
+                    </>
+                  }
+                />
+                <Box sx={{ marginLeft: "auto" }}>
+                  <ListItemText secondary="Jan 8, 2024" />
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                button
+                component={Link}
+                to="pre-registration-approved"
+                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
+              >
+                <ListItemText
+                  primary={
+                    <Chip
+                      size={"small"}
+                      label={"Pre-registration"}
+                      sx={{
+                        backgroundColor: "rgba(21, 131, 67, 0.1)",
+                        color: "rgba(21, 131, 67, 1)",
+                      }}
+                    />
+                  }
+                  secondary={
+                    <>
+                      {" "}
+                      <Typography
+                        sx={{
+                          color: "rgba(0, 0, 0, 1)",
+                          paddingLeft: "8px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        Shaliha, Gracia Mandag
+                      </Typography>{" "}
+                      <Typography sx={{ paddingLeft: "8px" }}>
+                        Preregistrasi semester II tahun ajaran 2023/2024
+                      </Typography>{" "}
+                    </>
+                  }
+                />
+                <Box sx={{ marginLeft: "auto" }}>
+                  <ListItemText secondary="Jan 8, 2024" />
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+
+              <Box
+                sx={{
+                  height: "50px",
+                  backgroundColor: "rgba(235, 235, 235, 1)",
+                  display: "flex",
+                  alignItems: "center",
+                  paddingLeft: "35px",
+                }}
+              >
+                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
+                  Sunday, Jan 6, 2023
+                </Typography>
+              </Box>
+              <ListItem
+                button
+                component={Link}
+                to="pre-registration-rejected"
+                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
+              >
+                <ListItemText
+                  primary={
+                    <Chip
+                      size={"small"}
+                      label={"Pre-registration"}
+                      sx={{
+                        backgroundColor: "rgba(21, 131, 67, 0.1)",
+                        color: "rgba(21, 131, 67, 1)",
+                      }}
+                    />
+                  }
+                  secondary={
+                    <>
+                      {" "}
+                      <Typography
+                        sx={{
+                          color: "rgba(0, 0, 0, 1)",
+                          paddingLeft: "8px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        Adzana, Shaliha Gracia
+                      </Typography>{" "}
+                      <Typography sx={{ paddingLeft: "8px" }}>
+                        Preregistrasi semester I tahun ajaran 2023/2024
+                      </Typography>{" "}
                     </>
                   }
                 />
                 <Box sx={{ marginLeft: "auto" }}>
                   <ListItemText secondary="Aug 6, 2023" />
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                button
+                component={Link}
+                to="pre-registration-approved"
+                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
+              >
+                <ListItemText
+                  primary={
+                    <Chip
+                      size={"small"}
+                      label={"Pre-registration"}
+                      sx={{
+                        backgroundColor: "rgba(21, 131, 67, 0.1)",
+                        color: "rgba(21, 131, 67, 1)",
+                      }}
+                    />
+                  }
+                  secondary={
+                    <>
+                      {" "}
+                      <Typography
+                        sx={{
+                          color: "rgba(0, 0, 0, 1)",
+                          paddingLeft: "8px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        Banner, Tony Stark
+                      </Typography>{" "}
+                      <Typography sx={{ paddingLeft: "8px" }}>
+                        Preregistrasi semester II tahun ajaran 2023/2024
+                      </Typography>{" "}
+                    </>
+                  }
+                />
+                <Box sx={{ marginLeft: "auto" }}>
+                  <ListItemText secondary="Jan 6, 2024" />
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                button
+                component={Link}
+                to="pre-registration-approved"
+                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
+              >
+                <ListItemText
+                  primary={
+                    <Chip
+                      size={"small"}
+                      label={"Pre-registration"}
+                      sx={{
+                        backgroundColor: "rgba(21, 131, 67, 0.1)",
+                        color: "rgba(21, 131, 67, 1)",
+                      }}
+                    />
+                  }
+                  secondary={
+                    <>
+                      {" "}
+                      <Typography
+                        sx={{
+                          color: "rgba(0, 0, 0, 1)",
+                          paddingLeft: "8px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        Banner, Tony Stark
+                      </Typography>{" "}
+                      <Typography sx={{ paddingLeft: "8px" }}>
+                        Preregistrasi semester II tahun ajaran 2023/2024
+                      </Typography>{" "}
+                    </>
+                  }
+                />
+                <Box sx={{ marginLeft: "auto" }}>
+                  <ListItemText secondary="Jan 6, 2024" />
+                </Box>
+              </ListItem>
+              <Divider component="li" />
+              <ListItem
+                button
+                component={Link}
+                to="pre-registration-rejected"
+                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
+              >
+                <ListItemText
+                  primary={
+                    <Chip
+                      size={"small"}
+                      label={"Pre-registration"}
+                      sx={{
+                        backgroundColor: "rgba(21, 131, 67, 0.1)",
+                        color: "rgba(21, 131, 67, 1)",
+                      }}
+                    />
+                  }
+                  secondary={
+                    <>
+                      {" "}
+                      <Typography
+                        sx={{
+                          color: "rgba(0, 0, 0, 1)",
+                          paddingLeft: "8px",
+                          paddingTop: "5px",
+                        }}
+                      >
+                        Banner, Tony Stark
+                      </Typography>{" "}
+                      <Typography sx={{ paddingLeft: "8px" }}>
+                        Preregistrasi semester II tahun ajaran 2023/2024
+                      </Typography>{" "}
+                    </>
+                  }
+                />
+                <Box sx={{ marginLeft: "auto" }}>
+                  <ListItemText secondary="Jan 6, 2024" />
                 </Box>
               </ListItem>
               <Divider component="li" />
@@ -524,7 +754,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/student-certificate-waiting"
+                to="certificate-approved"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -548,7 +778,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pengumpulan Sertifikat Adzana, Shaliha Gracia
+                        Adzana, Shaliha Gracia
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Seminar "Apa itu IT"
@@ -578,7 +808,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/student-certificate-approved"
+                to="certificate-approved"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -602,7 +832,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pengumpulan Sertifikat Adzana, Shaliha Gracia{" "}
+                        Banner, Tony Stark
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Juara 2 saat mengikuti lomba melukis
@@ -618,7 +848,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/student-certificate-rejected"
+                to="certificate-rejected"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -642,7 +872,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pengumpulan Sertifikat Adzana, Shaliha Gracia{" "}
+                        Adzana, Shaliha Gracia{" "}
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Menang lomba desain prototype
@@ -658,7 +888,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/student-certificate-approved"
+                to="certificate-approved"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -682,7 +912,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pengumpulan Sertifikat Adzana, Shaliha Gracia{" "}
+                        Banner, Tony Stark
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Juara 2 saat mengikuti lomba melukis
@@ -700,393 +930,7 @@ const History = (props) => {
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>
       </TabPanel>
-
-      <TabPanel value={value} index={3}>
-        <div>
-          <Typography sx={{ padding: "10px" }}></Typography>
-          <Stack
-            direction={"row"}
-            flexWrap={"wrap"}
-            justifyContent={"flex-start"}
-          >
-            <List
-              sx={{
-                width: "100%",
-                maxWidth: 2000,
-                bgcolor: "background.paper",
-                paddingTop: "0px",
-                paddingBottom: "0px",
-              }}
-            >
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Yesterday
-                </Typography>
-              </Box>
-
-              <Divider component="li" />
-              <ListItem
-                button
-                component={Link}
-                to="/bimbingan-akademik/history/grade-waiting"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Grade"}
-                      sx={{
-                        backgroundColor: "rgba(101, 10, 204, 0.1)",
-                        color: "rgba(101, 10, 204, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      {" "}
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                        }}
-                      >
-                        Pemasukan Nilai Adzana, Shaliha Gracia{" "}
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
-                        Semester 4
-                      </Typography>{" "}
-                    </>
-                  }
-                />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 7, 2024" />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Tuesday, Aug 2, 2023
-                </Typography>
-              </Box>
-
-              <ListItem
-                button
-                component={Link}
-                to="/bimbingan-akademik/history/grade-approved"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Grade"}
-                      sx={{
-                        backgroundColor: "rgba(101, 10, 204, 0.1)",
-                        color: "rgba(101, 10, 204, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      {" "}
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                        }}
-                      >
-                        Pemasukan Nilai Adzana, Shaliha Gracia{" "}
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
-                        Semester 3
-                      </Typography>{" "}
-                    </>
-                  }
-                />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Aug 2, 2023" />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-            </List>
-          </Stack>
-          <Typography sx={{ padding: "20px" }}></Typography>
-        </div>
-      </TabPanel>
-
-      <TabPanel value={value} index={4}>
-        <div>
-          <Typography sx={{ padding: "10px" }}></Typography>
-          <Stack
-            direction={"row"}
-            flexWrap={"wrap"}
-            justifyContent={"flex-start"}
-          >
-            <List
-              sx={{
-                width: "100%",
-                maxWidth: 2000,
-                bgcolor: "background.paper",
-                paddingTop: "0px",
-                paddingBottom: "0px",
-              }}
-            >
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Today
-                </Typography>
-              </Box>
-
-              <Divider component="li" />
-              <ListItem
-                button
-                component={Link}
-                to="/bimbingan-akademik/history/consultationWaiting"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Consultation"}
-                      sx={{
-                        backgroundColor: "rgba(223, 11, 146, 0.1)",
-                        color: "rgba(223, 11, 146, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      {" "}
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                        }}
-                      >
-                        Adzana, Shaliha Gracia
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
-                        Academic
-                      </Typography>{" "}
-                    </>
-                  }
-                />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="May 29, 2024" />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-              <ListItem
-                button
-                component={Link}
-                to="/bimbingan-akademik/history/consultationOnProcess"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Consultation"}
-                      sx={{
-                        backgroundColor: "rgba(223, 11, 146, 0.1)",
-                        color: "rgba(223, 11, 146, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      {" "}
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                        }}
-                      >
-                        Adzana, Shaliha Gracia
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
-                        Others
-                      </Typography>{" "}
-                    </>
-                  }
-                />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="May 29, 2024" />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Tuesday, Feb 2, 2024
-                </Typography>
-              </Box>
-              <Divider component="li" />
-
-              <ListItem
-                button
-                component={Link}
-                to="/bimbingan-akademik/history/consultationComplete"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Consultation"}
-                      sx={{
-                        backgroundColor: "rgba(223, 11, 146, 0.1)",
-                        color: "rgba(223, 11, 146, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      {" "}
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                        }}
-                      >
-                        Adzana, Shaliha Gracia{" "}
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
-                        Non-Academic
-                      </Typography>{" "}
-                    </>
-                  }
-                />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 2, 2024" />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-              <ListItem
-                button
-                component={Link}
-                to="/bimbingan-akademik/history/consultationComplete"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Consultation"}
-                      sx={{
-                        backgroundColor: "rgba(223, 11, 146, 0.1)",
-                        color: "rgba(223, 11, 146, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      {" "}
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                        }}
-                      >
-                        Adzana, Shaliha Gracia{" "}
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
-                        Others
-                      </Typography>{" "}
-                    </>
-                  }
-                />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 2, 2024" />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-              <ListItem
-                button
-                component={Link}
-                to="/bimbingan-akademik/history/consultationComplete"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Consultation"}
-                      sx={{
-                        backgroundColor: "rgba(223, 11, 146, 0.1)",
-                        color: "rgba(223, 11, 146, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      {" "}
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                        }}
-                      >
-                        Adzana, Shaliha Gracia{" "}
-                      </Typography>{" "}
-                      <Typography sx={{ paddingLeft: "8px" }}>
-                        Academic
-                      </Typography>{" "}
-                    </>
-                  }
-                />
-                <Box sx={{ marginLeft: "auto" }}>
-                  <ListItemText secondary="Feb 2, 2024" />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-            </List>
-          </Stack>
-          <Typography sx={{ padding: "20px" }}></Typography>
-        </div>
-      </TabPanel>
-    </div>
+    </Div>
   );
 };
 

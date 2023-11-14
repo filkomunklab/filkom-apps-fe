@@ -105,10 +105,12 @@ const AdvisorProfile = () => {
     setPage(0);
   };
 
+  const navigate = useNavigate();
+
   const handleClick = (event) => {
     event.preventDefault();
+    navigate(-1);
   };
-
   const handleUbahJurusan = (event) => {
     setPilihJurusan(event.target.value);
   };
@@ -127,9 +129,7 @@ const AdvisorProfile = () => {
         sx={{ paddingBottom: "15px" }}
       >
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/dekan/supervisor-information/">
-            Supervisor Information
-          </StyledLink>
+          <StyledLink>Supervisor Information</StyledLink>
           <Typography color="text.primary">Advisor Profile</Typography>
         </Breadcrumbs>
       </Div>
@@ -352,16 +352,18 @@ const TableItem = ({ item, index }) => {
     const { name } = event.currentTarget;
     switch (name) {
       case "profile":
-        navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+        navigate(
+          `/bimbingan-akademik/kaprodi/supervisor-information/student-information/${item.nim}`
+        );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/grade`
+          `/bimbingan-akademik/kaprodi/supervisor-information/${item.nim}/grade`
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/certificate`
+          `/bimbingan-akademik/kaprodi/supervisor-information/${item.nim}/certificate`
         );
         break;
 

@@ -7,16 +7,19 @@ import {
   InputLabel,
   ListSubheader,
   MenuItem,
+  Paper,
   Select,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TablePagination,
   TableRow,
   Typography,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
+import SearchLocal from "app/shared/SearchLocal";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -104,10 +107,10 @@ const StudentInformationMentored = () => {
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
           <Typography variant="h2">List of mentored students</Typography>
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={8} md={3}>
           <SearchGlobal sx={{ height: "100%" }} />
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={4} md={3}>
           <FormControl
             sx={{
               width: "100%",
@@ -120,6 +123,13 @@ const StudentInformationMentored = () => {
               value={filter}
               label="Grouping"
               renderValue={(selected) => selected.join(", ")}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: "37%",
+                  },
+                },
+              }}
             >
               <MenuItem value="">
                 <em>None</em>
@@ -168,19 +178,28 @@ const StudentInformationMentored = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
+          <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
             count={data.length}
@@ -236,25 +255,34 @@ const TableItem = ({ item, index }) => {
         console.log("Path not found");
     }
   };
+  const rowStyle = {
+    "@media (max-width: 650px)": { fontSize: "11px" },
+  };
   return (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{`105022010000`}</TableCell>
+      <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
+      <TableCell sx={[rowStyle]}>{`022407712`}</TableCell>
       <TableCell>
         <Button
           name="profile"
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            textTransform: "capitalize",
+            "@media (max-width: 650px)": { fontSize: "11px" },
+          }}
           onClick={handleButtonNavigate}
         >{`Yuhu, Christopher Darell`}</Button>
       </TableCell>
-      <TableCell>{`Informatika`}</TableCell>
-      <TableCell>{`2021`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`Informatika`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`2021`}</TableCell>
 
       <TableCell>
         <Button
           name="grade"
           onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
         >
           View Grades
         </Button>
@@ -263,12 +291,15 @@ const TableItem = ({ item, index }) => {
         <Button
           name="certificate"
           onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
         >
           View Certificates
         </Button>
       </TableCell>
-      <TableCell>
+      <TableCell sx={[rowStyle]}>
         <Chip label={"Active"} variant="filled" color={"success"} />
       </TableCell>
     </TableRow>

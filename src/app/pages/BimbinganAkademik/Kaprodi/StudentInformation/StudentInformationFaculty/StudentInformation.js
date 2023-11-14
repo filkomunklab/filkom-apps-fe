@@ -127,7 +127,7 @@ const StudentInformationFaculty = () => {
             }}
             onClick={() =>
               navigate(
-                "/bimbingan-akademik/dekan/student-information-faculty/informatics"
+                "/bimbingan-akademik/kaprodi/student-information/faculty-student/informatics"
               )
             }
           >
@@ -160,7 +160,7 @@ const StudentInformationFaculty = () => {
             }}
             onClick={() =>
               navigate(
-                "/bimbingan-akademik/dekan/student-information-faculty/information-system"
+                "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-system"
               )
             }
           >
@@ -193,7 +193,7 @@ const StudentInformationFaculty = () => {
             }}
             onClick={() =>
               navigate(
-                "/bimbingan-akademik/dekan/student-information-faculty/information-technology"
+                "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-technology"
               )
             }
           >
@@ -331,20 +331,24 @@ const TableItem = ({ item, index }) => {
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+    navigate(
+      `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}`
+    );
 
     switch (name) {
       case "profile":
-        navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+        navigate(
+          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}`
+        );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/grade`
+          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}/grade`
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/certificate`
+          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}/certificate`
         );
         break;
 

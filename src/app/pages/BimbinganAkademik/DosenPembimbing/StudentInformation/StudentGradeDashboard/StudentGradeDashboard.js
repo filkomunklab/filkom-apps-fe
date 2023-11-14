@@ -5,8 +5,17 @@ import {
   Typography,
   experimentalStyled as styled,
   Paper,
+  Breadcrumbs,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -31,6 +40,11 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const StudentGradeDashboard = () => {
+  const navigate = useNavigate();
+
+  const handleClick = (event) => {
+    event.preventDefault();
+  };
   const semesterNames = [
     { label: "Semester 1", value: 1 },
     { label: "Semester 2", value: 2 },
@@ -41,7 +55,15 @@ const StudentGradeDashboard = () => {
   const id = "105022010000";
   return (
     <Div>
-      <Stack gap={3}>
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink to="/bimbingan-akademik/dosen-pembimbing/student-information">
+            Back
+          </StyledLink>
+          <Typography color="text.primary">Student Profile</Typography>
+        </Breadcrumbs>
+      </div>
+      <Stack gap={3} paddingTop={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography variant="h1">Nilai Mahasiswa</Typography>
           <Typography variant="h6">Yuhu, Darell Deil</Typography>
@@ -57,7 +79,7 @@ const StudentGradeDashboard = () => {
           {semesterNames.reverse().map((semester, index) => (
             <Grid item xs={2} sm={4} md={4} key={index}>
               <Link
-                to={`/bimbingan-akademik/student-information/${id}/grade/semester/${semester.value}`}
+                to={`/bimbingan-akademik/dosen-pembimbing/student-information/${id}/grade/semester/${semester.value}`}
                 style={{ textDecoration: "none" }}
               >
                 <Item>

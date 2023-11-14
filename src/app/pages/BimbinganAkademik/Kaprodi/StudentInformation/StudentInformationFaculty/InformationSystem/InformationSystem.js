@@ -82,7 +82,7 @@ const prodiList = [
 const data = Array.from(Array(15).keys()).map((item, index) => ({
   nim: `105022010000`,
   name: `Yuhu, Christopher Darell`,
-  prodi: `Informatika`,
+  prodi: `Information System`,
   year: `2021`,
   status: `Active`,
 }));
@@ -100,18 +100,18 @@ const InformationSystem = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+  const navigate = useNavigate();
 
   const handleClick = (event) => {
     event.preventDefault();
+    navigate(-1);
   };
 
   return (
     <Div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/dekan/student-information-faculty">
-            Faculty Student
-          </StyledLink>
+          <StyledLink> Faculty Student</StyledLink>
           <Typography color="text.primary">Information System</Typography>
         </Breadcrumbs>
       </div>
@@ -230,20 +230,24 @@ const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+    navigate(
+      `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}`
+    );
 
     switch (name) {
       case "profile":
-        navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+        navigate(
+          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}`
+        );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/grade`
+          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}/grade`
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/certificate`
+          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}/certificate`
         );
         break;
 
@@ -262,7 +266,7 @@ const TableItem = ({ item, index }) => {
           onClick={handleButtonNavigate}
         >{`Yuhu, Christopher Darell`}</Button>
       </TableCell>
-      <TableCell>{`Informatika`}</TableCell>
+      <TableCell>{`Information System`}</TableCell>
       <TableCell>{`2021`}</TableCell>
 
       <TableCell>

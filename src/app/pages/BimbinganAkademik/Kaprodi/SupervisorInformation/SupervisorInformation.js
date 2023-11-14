@@ -83,7 +83,6 @@ const SupervisorInformation = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const navigate = useNavigate();
-  const [showLabel, setShowLabel] = useState(true);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -100,94 +99,155 @@ const SupervisorInformation = () => {
         <Typography variant="h1" sx={{ mb: 3 }}>
           Supervisor Information
         </Typography>
-        <Typography
-          variant="h6"
-          sx={{
-            paddingBottom: "8px",
-            fontSize: "15px",
-            fontWeight: 400,
-            color: "rgba(27, 43, 65, 0.69)",
-          }}
-        >
+        <Typography variant="h6" sx={{ mb: 3 }}>
           Currently, you are on the Academic Supervisor Information page, here
           you can easily see all information about academic supervisors in your
           department, along with their students.
         </Typography>
       </Div>
-
-      <Grid container spacing={2} marginTop={1}>
-        <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">Informatics Supervisor List</Typography>
-        </Grid>
-        <Grid item md={3}>
-          <SearchGlobal sx={{ height: "100%" }} />
-        </Grid>
-        <Grid item md={3}>
-          <FormControl
+      <Grid container spacing={2} sx={{ mb: 5, mt: 2 }}>
+        <Grid item sm={12} md={12} lg={4} xs={12}>
+          <Card
             sx={{
-              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "#E5F0FF",
+              },
             }}
+            onClick={() =>
+              navigate(
+                "/bimbingan-akademik/kaprodi/supervisor-information/informatics"
+              )
+            }
           >
-            <InputLabel shrink={false}>{showLabel ? "Filter" : ""}</InputLabel>
-            <Select
-              sx={{ borderRadius: 50 }}
-              multiple
-              value={filter}
-              renderValue={(selected) => selected.join(", ")}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: "37%",
-                  },
+            <Grid container>
+              <Grid item>
+                <CardHeader title="Informatics Supervisor " />
+                <CardContent sx={{ position: "relative", paddingY: 0 }}>
+                  <Typography variant="h3" color="#006AF5" fontSize="20px">
+                    {`11 people`}
+                  </Typography>
+                  <Typography variant="caption">
+                    {`last updated: 11 September 2023`}
+                  </Typography>
+                </CardContent>
+              </Grid>
+            </Grid>
+          </Card>
+        </Grid>
+        <Grid item sm={12} md={12} lg={4} xs={12}>
+          <Card
+            sx={{
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "#E5F0FF",
+              },
+            }}
+            onClick={() =>
+              navigate(
+                "/bimbingan-akademik/kaprodi/supervisor-information/information-system"
+              )
+            }
+          >
+            <Grid container>
+              <Grid item>
+                <CardHeader title="Information System Supervisor" />
+                <CardContent sx={{ position: "relative", paddingY: 0 }}>
+                  <Typography variant="h3" color="#006AF5" fontSize="20px">
+                    {`12 people`}
+                  </Typography>
+                  <Typography variant="caption">
+                    {`last updated: 11 September 2023`}
+                  </Typography>
+                </CardContent>
+              </Grid>
+            </Grid>
+          </Card>
+        </Grid>
+        <Grid item sm={12} md={12} lg={4} xs={12}>
+          <Card
+            sx={{
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "#E5F0FF",
+              },
+            }}
+            onClick={() =>
+              navigate(
+                "/bimbingan-akademik/kaprodi/supervisor-information/information-technology"
+              )
+            }
+          >
+            <Grid container>
+              <Grid item>
+                <CardHeader title="Information Technology Supervisor " />
+                <CardContent sx={{ position: "relative", paddingY: 0 }}>
+                  <Typography variant="h3" color="#006AF5" fontSize="20px">
+                    {`8 people`}
+                  </Typography>
+                  <Typography variant="caption">
+                    {`last updated: 11 September 2023`}
+                  </Typography>
+                </CardContent>
+              </Grid>
+            </Grid>
+          </Card>
+        </Grid>
+      </Grid>
+      <Grid container spacing={2}>
+        <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
+          <Typography variant="h2">List of Academic Supervisors</Typography>
+        </Grid>
+        <Grid item md={4}>
+          <SearchGlobal sx={{ height: "100%", width: "100%" }} />
+        </Grid>
+        <Grid
+          item
+          md={2}
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Link
+            style={{ textDecoration: "none", color: "white" }}
+            to="/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor"
+          >
+            <Button
+              sx={{
+                backgroundColor: "#006AF5",
+                borderRadius: "24px",
+                color: "white",
+                whiteSpace: "nowrap",
+                minWidth: "132px",
+                fontSize: "12px",
+                padding: "10px",
+                gap: "6px",
+
+                "&:hover": {
+                  backgroundColor: "#025ED8",
                 },
               }}
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Status
-              </ListSubheader>
-              <MenuItem value={"activeStudent"}>Active</MenuItem>
-              <MenuItem value={"nonactiveStudent"}>Nonactive</MenuItem>
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Tahun Masuk
-              </ListSubheader>
-              {yearList.map((item) => (
-                <MenuItem
-                  key={item.value}
-                  value={item.value}
-                  sx={{
-                    backgroundColor: "#FAFAFA",
-                    borderRadius: "5px",
-                    margin: "5px",
-                  }}
-                >
-                  {item.label}
-                </MenuItem>
-              ))}
-              <Div>
-                <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                  Prodi
-                </ListSubheader>
-                {prodiList.map((item) => (
-                  <MenuItem
-                    key={item.value}
-                    onChange={(event) => console.log(event.currentTarget.value)}
-                    value={item.value}
-                    sx={{
-                      backgroundColor: "#FAFAFA",
-                      borderRadius: "5px",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Div>
-            </Select>
-          </FormControl>
+              <AddIcon sx={{ fontSize: "14px" }} />
+              Add Dosen
+            </Button>
+          </Link>
         </Grid>
+
         <Grid item xs={12}>
           <Table>
             <TableHead>
@@ -234,16 +294,16 @@ const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(`/bimbingan-akademik/student-information/${item.nidn}`);
 
     switch (name) {
       case "profile":
-        navigate(`/bimbingan-akademik/student-information/${item.nidn}`);
+        navigate(
+          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${item.nidn}`
+        );
         break;
       case "history":
-        navigate(
-          `/bimbingan-akademik/student-information/${item.nidn}/history`
-        );
+        navigate(`/bimbingan-akademik/kaprodi/supervisor-information/history`);
+
         break;
 
       default:

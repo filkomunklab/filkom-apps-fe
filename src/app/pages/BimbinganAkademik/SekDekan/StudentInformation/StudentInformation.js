@@ -8,6 +8,7 @@ import {
   ListSubheader,
   MenuItem,
   Select,
+  TableContainer,
   Table,
   TableBody,
   TableCell,
@@ -18,6 +19,7 @@ import {
   Card,
   CardHeader,
   CardContent,
+  Paper,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { useState } from "react";
@@ -95,17 +97,45 @@ const StudentInformation = () => {
   return (
     <Div>
       <Div>
-        <Typography variant="h1" sx={{ mb: 3 }}>
+        <Typography
+          variant="h1"
+          sx={{
+            mb: 3,
+            "@media (max-width: 390px)": {
+              fontSize: "17px",
+              fontWeight: 500,
+              mb: "10px",
+            },
+          }}
+        >
           Student Information
         </Typography>
-        <Typography variant="h6" sx={{ mb: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            mb: 3,
+            textAlign: "justify",
+            "@media (max-width: 390px)": {
+              fontSize: "11px",
+              mb: "15px",
+            },
+          }}
+        >
           Currently, you are on the Student Information page, where you can
           easily view all information about all students, including the number,
           status, and other detailed and comprehensive information.
         </Typography>
       </Div>
-      <Grid container spacing={2} sx={{ paddingBottom: 4, paddingTop: 2 }}>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mb: 3,
+        }}
+      >
+        <Grid item sm={4} md={4} lg={4} xs={12}>
           <Card
             sx={{
               height: "100%",
@@ -116,71 +146,13 @@ const StudentInformation = () => {
               "&:hover": {
                 backgroundColor: "#E5F0FF",
               },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/sek-dekan/student-information/informatics"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Informatics Student " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`11 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/sek-dekan/student-information/information-system"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Information System Student" />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`12 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
+
+              "@media (max-width: 390px)": {
+                width: "102%",
+                margin: "auto",
+                "& .MuiCardHeader-title": {
+                  fontSize: "15px",
+                },
               },
             }}
             onClick={() =>
@@ -191,12 +163,142 @@ const StudentInformation = () => {
           >
             <Grid container>
               <Grid item>
-                <CardHeader title="Information Technology Student " />
+                <CardHeader title="Informatics Student" />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
+                  <Typography
+                    variant="h3"
+                    color="#006AF5"
+                    sx={{
+                      fontSize: "20px",
+                      "@media (max-width: 390px)": {
+                        fontSize: "15px",
+                      },
+                    }}
+                  >
+                    {`11 people`}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      "@media (max-width: 390px)": {
+                        fontSize: "11px",
+                      },
+                    }}
+                  >
+                    {`last updated: 11 September 2023`}
+                  </Typography>
+                </CardContent>
+              </Grid>
+            </Grid>
+          </Card>
+        </Grid>
+        <Grid item sm={4} md={4} lg={4} xs={12}>
+          <Card
+            sx={{
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "#E5F0FF",
+              },
+
+              "@media (max-width: 390px)": {
+                width: "100%",
+                margin: "auto",
+                "& .MuiCardHeader-title": {
+                  fontSize: "15px",
+                },
+              },
+            }}
+            onClick={() =>
+              navigate(
+                "/bimbingan-akademik/sek-dekan/student-information/information-technology"
+              )
+            }
+          >
+            <Grid container>
+              <Grid item>
+                <CardHeader title="   Information System Student" />
+                <CardContent sx={{ position: "relative", paddingY: 0 }}>
+                  <Typography
+                    variant="h3"
+                    color="#006AF5"
+                    sx={{
+                      fontSize: "20px",
+                      "@media (max-width: 390px)": {
+                        fontSize: "15px",
+                      },
+                    }}
+                  >
+                    {`12 people`}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      "@media (max-width: 390px)": {
+                        fontSize: "11px",
+                      },
+                    }}
+                  >
+                    {`last updated: 11 September 2023`}
+                  </Typography>
+                </CardContent>
+              </Grid>
+            </Grid>
+          </Card>
+        </Grid>
+        <Grid item sm={4} md={4} lg={4} xs={12}>
+          <Card
+            sx={{
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "#E5F0FF",
+              },
+
+              "@media (max-width: 390px)": {
+                width: "102%",
+                margin: "auto",
+                "& .MuiCardHeader-title": {
+                  fontSize: "15px",
+                },
+              },
+            }}
+            onClick={() =>
+              navigate(
+                "/bimbingan-akademik/sek-dekan/student-information/information-technology"
+              )
+            }
+          >
+            <Grid container>
+              <Grid item>
+                <CardHeader title=" Information Technology Student" />
+                <CardContent sx={{ position: "relative", paddingY: 0 }}>
+                  <Typography
+                    variant="h3"
+                    color="#006AF5"
+                    sx={{
+                      fontSize: "18px",
+                      "@media (max-width: 390px)": {
+                        fontSize: "15px",
+                      },
+                    }}
+                  >
                     {`8 people`}
                   </Typography>
-                  <Typography variant="caption">
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      "@media (max-width: 390px)": {
+                        fontSize: "11px",
+                      },
+                    }}
+                  >
                     {`last updated: 11 September 2023`}
                   </Typography>
                 </CardContent>
@@ -207,26 +309,54 @@ const StudentInformation = () => {
       </Grid>
       <Grid container spacing={2}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">
-            Computer Sciences Faculty Students List
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: "justify",
+              "@media (max-width: 390px)": {
+                fontSize: "16px",
+                fontWeight: 500,
+              },
+            }}
+          >
+            Computer Sciences Faculty Students
           </Typography>
         </Grid>
-        <Grid item md={3}>
-          <SearchGlobal sx={{ height: "100%" }} />
+        <Grid item xs={12} sm={8} md={3}>
+          <SearchGlobal
+            sx={{
+              height: "100%",
+              "@media (max-width: 390px)": {
+                height: "40px",
+              },
+            }}
+          />
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={4} md={3}>
           <FormControl
             sx={{
               width: "100%",
             }}
           >
-            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
+            <InputLabel>Filter</InputLabel>
             <Select
-              sx={{ borderRadius: 50 }}
+              sx={{
+                borderRadius: 50,
+                "@media (max-width: 390px)": {
+                  height: "45px",
+                },
+              }}
               multiple
               value={filter}
               label="Grouping"
               renderValue={(selected) => selected.join(", ")}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: "37%",
+                  },
+                },
+              }}
             >
               <MenuItem value="">
                 <em>None</em>
@@ -234,8 +364,24 @@ const StudentInformation = () => {
               <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
                 Status
               </ListSubheader>
-              <MenuItem value={"activeStudent"}>Active</MenuItem>
-              <MenuItem value={"nonactiveStudent"}>Nonactive</MenuItem>
+              <MenuItem
+                sx={{
+                  backgroundColor: "#FAFAFA",
+                  borderRadius: "5px",
+                }}
+                value={"activeStudent"}
+              >
+                Active
+              </MenuItem>
+              <MenuItem
+                sx={{
+                  backgroundColor: "#FAFAFA",
+                  borderRadius: "5px",
+                }}
+                value={"nonactiveStudent"}
+              >
+                Nonactive
+              </MenuItem>
               <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
                 Tahun Masuk
               </ListSubheader>
@@ -246,7 +392,6 @@ const StudentInformation = () => {
                   sx={{
                     backgroundColor: "#FAFAFA",
                     borderRadius: "5px",
-                    margin: "5px",
                   }}
                 >
                   {item.label}
@@ -264,7 +409,6 @@ const StudentInformation = () => {
                     sx={{
                       backgroundColor: "#FAFAFA",
                       borderRadius: "5px",
-                      justifyContent: "center",
                     }}
                   >
                     {item.label}
@@ -275,21 +419,35 @@ const StudentInformation = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
+          <TableContainer
+            sx={{
+              maxHeight: 440,
+            }}
+            component={Paper}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
             rowsPerPageOptions={[10, 25, 50, 100]}
-            component={"div"}
+            component="div"
             count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
@@ -346,25 +504,34 @@ const TableItem = ({ item, index }) => {
         console.log("Path not found");
     }
   };
+  const rowStyle = {
+    "@media (max-width: 390px)": { fontSize: "11px" },
+  };
   return (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{`105022010000`}</TableCell>
+      <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
+      <TableCell sx={[rowStyle]}>{`022407712`}</TableCell>
       <TableCell>
         <Button
           name="profile"
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            textTransform: "capitalize",
+            "@media (max-width: 390px)": { fontSize: "11px" },
+          }}
           onClick={handleButtonNavigate}
         >{`Yuhu, Christopher Darell`}</Button>
       </TableCell>
-      <TableCell>{`Informatika`}</TableCell>
-      <TableCell>{`2021`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`Informatika`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`2021`}</TableCell>
 
       <TableCell>
         <Button
           name="grade"
           onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 390px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
         >
           View Grades
         </Button>
@@ -373,12 +540,15 @@ const TableItem = ({ item, index }) => {
         <Button
           name="certificate"
           onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 390px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
         >
           View Certificates
         </Button>
       </TableCell>
-      <TableCell>
+      <TableCell sx={[rowStyle]}>
         <Chip label={"Active"} variant="filled" color={"success"} />
       </TableCell>
     </TableRow>

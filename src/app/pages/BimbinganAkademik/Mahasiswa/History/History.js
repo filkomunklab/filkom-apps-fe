@@ -365,7 +365,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pre-registrasi Adzana, Shaliha Gracia
+                        Adzana, Shaliha Gracia
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Preregistrasi semester II tahun ajaran 2023/2024
@@ -418,7 +418,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pre-registrasi Adzana, Shaliha Gracia
+                        Adzana, Shaliha Gracia
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Preregistrasi semester I tahun ajaran 2023/2024
@@ -470,7 +470,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pre-registrasi Adzana, Shaliha Gracia
+                        Adzana, Shaliha Gracia
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Preregistrasi semester II tahun ajaran 2022/2023
@@ -548,7 +548,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pengumpulan Sertifikat Adzana, Shaliha Gracia
+                        Adzana, Shaliha Gracia
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Seminar "Apa itu IT"
@@ -602,7 +602,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pengumpulan Sertifikat Adzana, Shaliha Gracia{" "}
+                        Adzana, Shaliha Gracia{" "}
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Juara 2 saat mengikuti lomba melukis
@@ -642,7 +642,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pengumpulan Sertifikat Adzana, Shaliha Gracia{" "}
+                        Adzana, Shaliha Gracia{" "}
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Menang lomba desain prototype
@@ -682,7 +682,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pengumpulan Sertifikat Adzana, Shaliha Gracia{" "}
+                        Adzana, Shaliha Gracia{" "}
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Juara 2 saat mengikuti lomba melukis
@@ -760,7 +760,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pemasukan Nilai Adzana, Shaliha Gracia{" "}
+                        Adzana, Shaliha Gracia{" "}
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Semester 4
@@ -815,7 +815,7 @@ const History = (props) => {
                           paddingTop: "5px",
                         }}
                       >
-                        Pemasukan Nilai Adzana, Shaliha Gracia{" "}
+                        Adzana, Shaliha Gracia{" "}
                       </Typography>{" "}
                       <Typography sx={{ paddingLeft: "8px" }}>
                         Semester 3

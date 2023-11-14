@@ -7,6 +7,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Paper,
 } from "@mui/material";
 
 const tableData1 = [
@@ -1006,6 +1007,15 @@ const TableItem = ({ data }) => (
 );
 
 const Curriculum = () => {
+  const styleHeader = {
+    "@media (max-width: 650px)": { fontSize: "13px" },
+  };
+  const tableItemStyle = {
+    fontSize: "11px",
+    "@media (max-width: 650px)": {
+      fontSize: "11px",
+    },
+  };
   return (
     <div>
       <Typography
@@ -1017,261 +1027,207 @@ const Curriculum = () => {
       >
         Curriculum Informatika 2020
       </Typography>
-      <TableContainer sx={{ overflow: "auto", backgroundColor: "white" }}>
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+
+      <TableContainer
+        sx={{ overflow: "auto", maxHeight: 440 }}
+        component={Paper}
+      >
+        <Table stickyHeader>
+          <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "80px" }}>Number</TableCell>
-              <TableCell sx={{ width: "110px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
-              <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
-              <TableCell sx={{ width: "120px" }}>Type</TableCell>
-              <TableCell sx={{ width: "288px" }}>Prerequisite</TableCell>
+              <TableCell colSpan={6} sx={{ top: 0, backgroundColor: "white" }}>
+                PREREQUISITE
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ width: "80px", top: 57 }}>Number</TableCell>
+              <TableCell sx={{ width: "110px", top: 57 }}>Code</TableCell>
+              <TableCell sx={{ width: "400px", top: 57 }}>Name</TableCell>
+              <TableCell sx={{ width: "80px", top: 57 }}>Credit(s)</TableCell>
+              <TableCell sx={{ width: "120px", top: 57 }}>Type</TableCell>
+              <TableCell sx={{ width: "288px", top: 57 }}>
+                Prerequisite
+              </TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {tableData1.map((data, index) => (
-              <TableItem key={index} data={data} />
-            ))}
-            <div>
-              <Typography
-                sx={{
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  margin: "18px",
-                  width: "100%",
-                }}
-              >
-                SEMESTER 1
-              </Typography>
-            </div>
-          </TableBody>
-        </Table>
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+          {tableData1.map((data, index) => (
+            <TableItem key={index} data={data} />
+          ))}
+          <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "80px" }}>Number</TableCell>
-              <TableCell sx={{ width: "110px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Name</TableCell>
-              <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
-              <TableCell sx={{ width: "120px" }}>Type</TableCell>
-              <TableCell sx={{ width: "288px" }}>Prerequisite</TableCell>
+              <TableCell colSpan={6} sx={{ top: 0, backgroundColor: "white" }}>
+                SEMESTER 1
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ width: "80px", top: 57 }}>Number</TableCell>
+              <TableCell sx={{ width: "110px", top: 57 }}>Code</TableCell>
+              <TableCell sx={{ width: "400px", top: 57 }}>Name</TableCell>
+              <TableCell sx={{ width: "80px", top: 57 }}>Credit(s)</TableCell>
+              <TableCell sx={{ width: "120px", top: 57 }}>Type</TableCell>
+              <TableCell sx={{ width: "288px", top: 57 }}>
+                Prerequisite
+              </TableCell>
             </TableRow>
           </TableHead>
           {tableData2.map((data, index) => (
             <TableItem key={index} data={data} />
           ))}
-          <div>
-            <Typography
-              sx={{
-                fontSize: "14px",
-                fontWeight: 500,
-                margin: "18px",
-                width: "100%",
-              }}
-            >
-              SEMESTER 2
-            </Typography>
-          </div>
-        </Table>
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+          <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "80px" }}>Number</TableCell>
-              <TableCell sx={{ width: "110px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Name</TableCell>
-              <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
-              <TableCell sx={{ width: "120px" }}>Type</TableCell>
-              <TableCell sx={{ width: "288px" }}>Prerequisite</TableCell>
+              <TableCell colSpan={6} sx={{ top: 0, backgroundColor: "white" }}>
+                SEMESTER 2
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ width: "80px", top: 57 }}>Number</TableCell>
+              <TableCell sx={{ width: "110px", top: 57 }}>Code</TableCell>
+              <TableCell sx={{ width: "400px", top: 57 }}>Name</TableCell>
+              <TableCell sx={{ width: "80px", top: 57 }}>Credit(s)</TableCell>
+              <TableCell sx={{ width: "120px", top: 57 }}>Type</TableCell>
+              <TableCell sx={{ width: "288px", top: 57 }}>
+                Prerequisite
+              </TableCell>
             </TableRow>
           </TableHead>
           {tableData3.map((data, index) => (
             <TableItem key={index} data={data} />
           ))}
-          <div>
-            <Typography
-              sx={{
-                fontSize: "14px",
-                fontWeight: 500,
-                margin: "18px",
-                width: "100%",
-              }}
-            >
-              SEMESTER 3
-            </Typography>
-          </div>
-        </Table>
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+          <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "80px" }}>Number</TableCell>
-              <TableCell sx={{ width: "110px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Name</TableCell>
-              <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
-              <TableCell sx={{ width: "120px" }}>Type</TableCell>
-              <TableCell sx={{ width: "288px" }}>Prerequisite</TableCell>
+              <TableCell colSpan={6} sx={{ top: 0, backgroundColor: "white" }}>
+                SEMESTER 3
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ width: "80px", top: 57 }}>Number</TableCell>
+              <TableCell sx={{ width: "110px", top: 57 }}>Code</TableCell>
+              <TableCell sx={{ width: "400px", top: 57 }}>Name</TableCell>
+              <TableCell sx={{ width: "80px", top: 57 }}>Credit(s)</TableCell>
+              <TableCell sx={{ width: "120px", top: 57 }}>Type</TableCell>
+              <TableCell sx={{ width: "288px", top: 57 }}>
+                Prerequisite
+              </TableCell>
             </TableRow>
           </TableHead>
           {tableData4.map((data, index) => (
             <TableItem key={index} data={data} />
           ))}
-          <div>
-            <Typography
-              sx={{
-                fontSize: "14px",
-                fontWeight: 500,
-                margin: "18px",
-                width: "100%",
-              }}
-            >
-              SEMESTER 4
-            </Typography>
-          </div>
-        </Table>
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+          <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "80px" }}>Number</TableCell>
-              <TableCell sx={{ width: "110px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Name</TableCell>
-              <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
-              <TableCell sx={{ width: "120px" }}>Type</TableCell>
-              <TableCell sx={{ width: "288px" }}>Prerequisite</TableCell>
+              <TableCell colSpan={6} sx={{ top: 0, backgroundColor: "white" }}>
+                SEMESTER 4
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ width: "80px", top: 57 }}>Number</TableCell>
+              <TableCell sx={{ width: "110px", top: 57 }}>Code</TableCell>
+              <TableCell sx={{ width: "400px", top: 57 }}>Name</TableCell>
+              <TableCell sx={{ width: "80px", top: 57 }}>Credit(s)</TableCell>
+              <TableCell sx={{ width: "120px", top: 57 }}>Type</TableCell>
+              <TableCell sx={{ width: "288px", top: 57 }}>
+                Prerequisite
+              </TableCell>
             </TableRow>
           </TableHead>
           {tableData5.map((data, index) => (
             <TableItem key={index} data={data} />
           ))}
-          <div>
-            <Typography
-              sx={{
-                fontSize: "14px",
-                fontWeight: 500,
-                margin: "18px",
-                width: "100%",
-              }}
-            >
-              SEMESTER 5
-            </Typography>
-          </div>
-        </Table>
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+          <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "80px" }}>Number</TableCell>
-              <TableCell sx={{ width: "110px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Name</TableCell>
-              <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
-              <TableCell sx={{ width: "120px" }}>Type</TableCell>
-              <TableCell sx={{ width: "288px" }}>Prerequisite</TableCell>
+              <TableCell colSpan={6} sx={{ top: 0, backgroundColor: "white" }}>
+                SEMESTER 5
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ width: "80px", top: 57 }}>Number</TableCell>
+              <TableCell sx={{ width: "110px", top: 57 }}>Code</TableCell>
+              <TableCell sx={{ width: "400px", top: 57 }}>Name</TableCell>
+              <TableCell sx={{ width: "80px", top: 57 }}>Credit(s)</TableCell>
+              <TableCell sx={{ width: "120px", top: 57 }}>Type</TableCell>
+              <TableCell sx={{ width: "288px", top: 57 }}>
+                Prerequisite
+              </TableCell>
             </TableRow>
           </TableHead>
           {tableData6.map((data, index) => (
             <TableItem key={index} data={data} />
           ))}
-          <div>
-            <Typography
-              sx={{
-                fontSize: "14px",
-                fontWeight: 500,
-                margin: "18px",
-                width: "100%",
-              }}
-            >
-              SEMESTER 6
-            </Typography>
-          </div>
-        </Table>
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+          <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "80px" }}>Number</TableCell>
-              <TableCell sx={{ width: "110px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Name</TableCell>
-              <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
-              <TableCell sx={{ width: "120px" }}>Type</TableCell>
-              <TableCell sx={{ width: "288px" }}>Prerequisite</TableCell>
+              <TableCell colSpan={6} sx={{ top: 0, backgroundColor: "white" }}>
+                SEMESTER 6
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ width: "80px", top: 57 }}>Number</TableCell>
+              <TableCell sx={{ width: "110px", top: 57 }}>Code</TableCell>
+              <TableCell sx={{ width: "400px", top: 57 }}>Name</TableCell>
+              <TableCell sx={{ width: "80px", top: 57 }}>Credit(s)</TableCell>
+              <TableCell sx={{ width: "120px", top: 57 }}>Type</TableCell>
+              <TableCell sx={{ width: "288px", top: 57 }}>
+                Prerequisite
+              </TableCell>
             </TableRow>
           </TableHead>
           {tableData7.map((data, index) => (
             <TableItem key={index} data={data} />
           ))}
-          <div>
-            <Typography
-              sx={{
-                fontSize: "14px",
-                fontWeight: 500,
-                margin: "18px",
-                width: "100%",
-              }}
-            >
-              SEMESTER 7
-            </Typography>
-          </div>
-        </Table>
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+          <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "80px" }}>Number</TableCell>
-              <TableCell sx={{ width: "110px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Name</TableCell>
-              <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
-              <TableCell sx={{ width: "120px" }}>Type</TableCell>
-              <TableCell sx={{ width: "288px" }}>Prerequisite</TableCell>
+              <TableCell colSpan={6} sx={{ top: 0, backgroundColor: "white" }}>
+                SEMESTER 7
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ width: "80px", top: 57 }}>Number</TableCell>
+              <TableCell sx={{ width: "110px", top: 57 }}>Code</TableCell>
+              <TableCell sx={{ width: "400px", top: 57 }}>Name</TableCell>
+              <TableCell sx={{ width: "80px", top: 57 }}>Credit(s)</TableCell>
+              <TableCell sx={{ width: "120px", top: 57 }}>Type</TableCell>
+              <TableCell sx={{ width: "288px", top: 57 }}>
+                Prerequisite
+              </TableCell>
             </TableRow>
           </TableHead>
           {tableData8.map((data, index) => (
             <TableItem key={index} data={data} />
           ))}
-          <div>
-            <Typography
-              sx={{
-                fontSize: "14px",
-                fontWeight: 500,
-                margin: "18px",
-                width: "100%",
-              }}
-            >
-              SEMESTER 8
-            </Typography>
-          </div>
-        </Table>
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+          <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "80px" }}>Number</TableCell>
-              <TableCell sx={{ width: "110px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Name</TableCell>
-              <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
-              <TableCell sx={{ width: "120px" }}>Type</TableCell>
-              <TableCell sx={{ width: "288px" }}>Prerequisite</TableCell>
+              <TableCell colSpan={6} sx={{ top: 0, backgroundColor: "white" }}>
+                SEMESTER 8
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ width: "80px", top: 57 }}>Number</TableCell>
+              <TableCell sx={{ width: "110px", top: 57 }}>Code</TableCell>
+              <TableCell sx={{ width: "400px", top: 57 }}>Name</TableCell>
+              <TableCell sx={{ width: "80px", top: 57 }}>Credit(s)</TableCell>
+              <TableCell sx={{ width: "120px", top: 57 }}>Type</TableCell>
+              <TableCell sx={{ width: "288px", top: 57 }}>
+                Prerequisite
+              </TableCell>
             </TableRow>
           </TableHead>
           {tableData9.map((data, index) => (
             <TableItem key={index} data={data} />
           ))}
-          <div>
-            <Typography
-              sx={{
-                fontSize: "14px",
-                fontWeight: 500,
-                margin: "18px",
-                width: "100%",
-              }}
-            >
-              SEMESTER 9
-            </Typography>
-          </div>
-        </Table>
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+          <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "80px" }}>Number</TableCell>
-              <TableCell sx={{ width: "110px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Name</TableCell>
-              <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
-              <TableCell sx={{ width: "120px" }}>Type</TableCell>
-              <TableCell sx={{ width: "288px" }}>Prerequisite</TableCell>
+              <TableCell colSpan={6} sx={{ top: 0, backgroundColor: "white" }}>
+                SEMESTER 9
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ width: "80px", top: 57 }}>Number</TableCell>
+              <TableCell sx={{ width: "110px", top: 57 }}>Code</TableCell>
+              <TableCell sx={{ width: "400px", top: 57 }}>Name</TableCell>
+              <TableCell sx={{ width: "80px", top: 57 }}>Credit(s)</TableCell>
+              <TableCell sx={{ width: "120px", top: 57 }}>Type</TableCell>
+              <TableCell sx={{ width: "288px", top: 57 }}>
+                Prerequisite
+              </TableCell>
             </TableRow>
           </TableHead>
           {tableData10.map((data, index) => (
@@ -1296,101 +1252,3 @@ const Curriculum = () => {
 };
 
 export default Curriculum;
-
-// import React, { useState, useEffect } from "react";
-// import {
-//   Typography,
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableContainer,
-//   TableHead,
-//   TableRow,
-//   FormControl,
-//   InputLabel,
-//   Select,
-//   MenuItem,
-// } from "@mui/material";
-
-// const Curriculum = () => {
-//   const [curriculumData, setCurriculumData] = useState([]);
-//   const [selectedCurriculum, setSelectedCurriculum] = useState("");
-
-//   useEffect(() => {
-//     // dpe URL API endpoint
-//     const apiUrl = process.env.REACT_APP_BASE_URL_API + "/curriculum";
-
-//     // Fetch dpe data dari API
-//     fetch(apiUrl)
-//       .then((response) => response.json())
-//       .then((data) => setCurriculumData(data))
-//       .catch((error) => console.error("Error fetching curriculum data", error));
-//   }, []);
-
-//   const handleChange = (event) => {
-//     setSelectedCurriculum(event.target.value);
-//   };
-
-//   return (
-//     <div>
-//       <Typography
-//         sx={{
-//           fontSize: "24px",
-//           fontWeight: 500,
-//           paddingBottom: "24px",
-//         }}
-//       >
-//         Curriculum Teknologi Informasi 2023
-//       </Typography>
-
-//       <FormControl sx={{ minWidth: 120, marginBottom: "16px" }}>
-//         <InputLabel id="curriculum-select-label">Select Curriculum</InputLabel>
-//         <Select
-//           labelId="curriculum-select-label"
-//           id="curriculum-select"
-//           value={selectedCurriculum}
-//           label="Select Curriculum"
-//           onChange={handleChange}
-//         >
-//           <MenuItem value="">Select Curriculum</MenuItem>
-//           <MenuItem value="Informatika">Kurikulum Informatika</MenuItem>
-//           <MenuItem value="SistemInformasi">Kurikulum Sistem Informasi</MenuItem>
-//           <MenuItem value="TeknologiInformasi">Kurikulum Teknologi Informasi</MenuItem>
-//         </Select>
-//       </FormControl>
-
-//       {selectedCurriculum && (
-//         <TableContainer sx={{ overflow: "auto" }}>
-//           <Table>
-//             <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
-//               <TableRow>
-//                 <TableCell sx={{ width: "80px" }}>Number</TableCell>
-//                 <TableCell sx={{ width: "110px" }}>Code</TableCell>
-//                 <TableCell sx={{ width: "400px" }}>Name</TableCell>
-//                 <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
-//                 <TableCell sx={{ width: "120px" }}>Type</TableCell>
-//                 <TableCell sx={{ width: "288px" }}>Prerequisite</TableCell>
-//               </TableRow>
-//             </TableHead>
-//             <TableBody>
-//               {curriculumData
-//                 .filter((data) => data.type === selectedCurriculum)
-//                 .map((data, index) => (
-//                   <TableRow key={index}>
-//                     <TableCell>{data.number}</TableCell>
-//                     <TableCell>{data.code}</TableCell>
-//                     <TableCell>{data.name}</TableCell>
-//                     <TableCell>{data.credits}</TableCell>
-//                     <TableCell>{data.type}</TableCell>
-//                     <TableCell>{data.prerequisite}</TableCell>
-//                   </TableRow>
-//                 ))}
-//             </TableBody>
-//           </Table>
-//         </TableContainer>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Curriculum;
