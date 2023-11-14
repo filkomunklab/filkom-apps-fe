@@ -18,7 +18,6 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { pdfjs } from "react-pdf";
 import WarningIcon from "@mui/icons-material/Warning";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";

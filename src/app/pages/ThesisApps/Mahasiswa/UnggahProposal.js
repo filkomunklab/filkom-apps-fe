@@ -14,12 +14,9 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { pdfjs } from "react-pdf";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 // View Document Proposal
 const PDFViewerProposal = ({ dokumenProposal }) => {
