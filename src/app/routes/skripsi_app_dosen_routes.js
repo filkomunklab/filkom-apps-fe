@@ -25,6 +25,8 @@ import DokumenRevisiSkripsi from "app/pages/ThesisApps/Dosen/DokumenRevisiSkrips
 import KonsultasiAdvisorDanCoAdvisor from "app/pages/ThesisApps/Dosen/KonsultasiAdvisorDanCoAdvisor";
 import BeritaAcaraProposal from "app/pages/ThesisApps/Dosen/BeritaAcaraProposal";
 import BeritaAcaraSkripsi from "app/pages/ThesisApps/Dosen/BeritaAcaraSkripsi";
+import PerubahanProposalCoAdvisor from "app/pages/ThesisApps/Dosen/PerubahanProposalCoAdvisor";
+import PerubahanSkripsiCoAvisor from "app/pages/ThesisApps/Dosen/PerubahanSkripsiCoAdvisor";
 
 const dosenRoutes = [
   // KOMITE
@@ -97,6 +99,7 @@ const dosenRoutes = [
     path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor",
     element: <Page component={DaftarRiwayatBimbinganAdvisor} />,
   },
+
   {
     path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/beranda/:groupId/:role",
     element: <Page component={BerandaGlobal} />,
@@ -109,6 +112,7 @@ const dosenRoutes = [
     path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor/beranda/:groupId/:role",
     element: <Page component={BerandaGlobal} />,
   },
+  //-----------------------proposal
   {
     path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/konsultasi/:groupId/:role",
     element: <Page component={KonsultasiAdvisorDanCoAdvisor} />,
@@ -126,6 +130,35 @@ const dosenRoutes = [
     element: <Page component={DokumenRevisiProposal} />,
   },
   {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/dokumen-skripsi/:groupId/:role",
+    element: <Page component={DokumenSkripsi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/berita-acara-skripsi/:groupId/:role",
+    element: <Page component={BeritaAcaraSkripsi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor/dokumen-revisi-skripsi/:groupId/:role",
+    element: <Page component={DokumenRevisiSkripsi} />,
+  },
+  //-----------------------skripsi
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor/konsultasi/:groupId/:role",
+    element: <Page component={KonsultasiAdvisorDanCoAdvisor} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor/dokumen-proposal/:groupId/:role",
+    element: <Page component={DokumenProposal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor/berita-acara-proposal/:groupId/:role",
+    element: <Page component={BeritaAcaraProposal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor/dokumen-revisi-proposal/:groupId/:role",
+    element: <Page component={DokumenRevisiProposal} />,
+  },
+  {
     path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor/dokumen-skripsi/:groupId/:role",
     element: <Page component={DokumenSkripsi} />,
   },
@@ -135,6 +168,35 @@ const dosenRoutes = [
   },
   {
     path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor/dokumen-revisi-skripsi/:groupId/:role",
+    element: <Page component={DokumenRevisiSkripsi} />,
+  },
+  //-----------------------finish
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor/konsultasi/:groupId/:role",
+    element: <Page component={KonsultasiAdvisorDanCoAdvisor} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor/dokumen-proposal/:groupId/:role",
+    element: <Page component={DokumenProposal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor/berita-acara-proposal/:groupId/:role",
+    element: <Page component={BeritaAcaraProposal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor/dokumen-revisi-proposal/:groupId/:role",
+    element: <Page component={DokumenRevisiProposal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor/dokumen-skripsi/:groupId/:role",
+    element: <Page component={DokumenSkripsi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor/berita-acara-skripsi/:groupId/:role",
+    element: <Page component={BeritaAcaraSkripsi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor/dokumen-revisi-skripsi/:groupId/:role",
     element: <Page component={DokumenRevisiSkripsi} />,
   },
   // ----------Co-Advisor
@@ -149,6 +211,106 @@ const dosenRoutes = [
   {
     path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor",
     element: <Page component={DaftarRiwayatBimbinganCoAdvisor} />,
+  },
+
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor/beranda/:groupId/:role",
+    element: <Page component={BerandaGlobal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-co-advisor/beranda/:groupId/:role",
+    element: <Page component={BerandaGlobal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor/beranda/:groupId/:role",
+    element: <Page component={BerandaGlobal} />,
+  },
+  //-----------------------proposal
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor/konsultasi/:groupId/:role",
+    element: <Page component={KonsultasiAdvisorDanCoAdvisor} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor/dokumen-proposal/:groupId/:role",
+    element: <Page component={DokumenProposal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor/perubahan-proposal/:groupId/:role",
+    element: <Page component={PerubahanProposalCoAdvisor} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor/dokumen-revisi-proposal/:groupId/:role",
+    element: <Page component={DokumenRevisiProposal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor/dokumen-skripsi/:groupId/:role",
+    element: <Page component={DokumenSkripsi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor/perubahan-skripsi/:groupId/:role",
+    element: <Page component={PerubahanSkripsiCoAvisor} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor/dokumen-revisi-skripsi/:groupId/:role",
+    element: <Page component={DokumenRevisiSkripsi} />,
+  },
+  //-----------------------skripsi
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-co-advisor/konsultasi/:groupId/:role",
+    element: <Page component={KonsultasiAdvisorDanCoAdvisor} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-co-advisor/dokumen-proposal/:groupId/:role",
+    element: <Page component={DokumenProposal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-co-advisor/perubahan-proposal/:groupId/:role",
+    element: <Page component={PerubahanProposalCoAdvisor} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-co-advisor/dokumen-revisi-proposal/:groupId/:role",
+    element: <Page component={DokumenRevisiProposal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-co-advisor/dokumen-skripsi/:groupId/:role",
+    element: <Page component={DokumenSkripsi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-co-advisor/perubahan-skripsi/:groupId/:role",
+    element: <Page component={PerubahanSkripsiCoAvisor} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-co-advisor/dokumen-revisi-skripsi/:groupId/:role",
+    element: <Page component={DokumenRevisiSkripsi} />,
+  },
+  //-----------------------riwayat
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor/konsultasi/:groupId/:role",
+    element: <Page component={KonsultasiAdvisorDanCoAdvisor} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor/dokumen-proposal/:groupId/:role",
+    element: <Page component={DokumenProposal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor/perubahan-proposal/:groupId/:role",
+    element: <Page component={PerubahanProposalCoAdvisor} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor/dokumen-revisi-proposal/:groupId/:role",
+    element: <Page component={DokumenRevisiProposal} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor/dokumen-skripsi/:groupId/:role",
+    element: <Page component={DokumenSkripsi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor/perubahan-skripsi/:groupId/:role",
+    element: <Page component={PerubahanSkripsiCoAvisor} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor/dokumen-revisi-skripsi/:groupId/:role",
+    element: <Page component={DokumenRevisiSkripsi} />,
   },
   // PENGUJIAN
   // ----------Ketua

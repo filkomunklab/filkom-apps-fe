@@ -20,10 +20,9 @@ import {
 } from "@mui/material";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import WarningIcon from "@mui/icons-material/Warning";
-import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
 import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
-import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
+import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
 
 const DokumenSkripsi = () => {
   // state - menyimpan request data
@@ -277,7 +276,7 @@ const DokumenSkripsi = () => {
 
   let Actions;
 
-  if (userRole.includes("ADVISOR")) {
+  if (userRole === "ADVISOR") {
     Actions = () => (
       <Div
         style={{
@@ -353,151 +352,159 @@ const DokumenSkripsi = () => {
         )}
       </Div>
     );
-  } else if (role.includes("CO_ADVISOR1")) {
+  } else if (role === "CO_ADVISOR1") {
     Actions = () => (
       <Div
-        hidden={role.includes("CO_ADVISOR1") ? false : true}
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {isSetujuClickedCoAdvisor1 || isTolakClickedCoAdvisor1 ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndexCoAdvisor1(1);
-              setSetujuConfirmationDialogOpenCoAdvisor1(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {isSetujuClickedCoAdvisor1 || isTolakClickedCoAdvisor1 ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-            onClick={() => {
-              setSelectedActionIndexCoAdvisor1(2);
-              setTolakConfirmationDialogOpenCoAdvisor1(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenSkripsi?.file_name_skripsi !== null && (
+          <>
+            {dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 === "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexCoAdvisor1(1);
+                  setSetujuConfirmationDialogOpenCoAdvisor1(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+            {dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 === "Approve" ||
+            dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 === "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexCoAdvisor1(2);
+                  setTolakConfirmationDialogOpenCoAdvisor1(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
-  } else if (role.includes("CO_ADVISOR2")) {
+  } else if (role === "CO_ADVISOR2") {
     Actions = () => (
       <Div
-        hidden={role.includes("CO_ADVISOR2") ? false : true}
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {isSetujuClickedCoAdvisor2 || isTolakClickedCoAdvisor2 ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndexCoAdvisor2(1);
-              setSetujuConfirmationDialogOpenCoAdvisor2(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {isSetujuClickedCoAdvisor2 || isTolakClickedCoAdvisor2 ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-            onClick={() => {
-              setSelectedActionIndexCoAdvisor2(2);
-              setTolakConfirmationDialogOpenCoAdvisor2(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenSkripsi?.file_name_skripsi !== null && (
+          <>
+            {dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 === "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexCoAdvisor2(1);
+                  setSetujuConfirmationDialogOpenCoAdvisor2(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+            {dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 === "Approve" ||
+            dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 === "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexCoAdvisor2(2);
+                  setTolakConfirmationDialogOpenCoAdvisor2(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
@@ -571,17 +578,40 @@ const DokumenSkripsi = () => {
           {/* Menu Horizontal Start */}
           {/* DOSEN SKRIPSI */}
           <Div
-            hidden={userRole.includes("DOSEN_MK") ? false : true}
+            hidden={userRole === "DOSEN_MK" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
+            <MenuDosenSkripsi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
           </Div>
           {/* ADVISOR */}
           <Div
-            hidden={userRole.includes("ADVISOR") ? false : true}
+            hidden={userRole === "ADVISOR" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuAdvisor dataGroupId={groupId} dataProgress={progress} />
+            <MenuAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
+          </Div>
+          {/* CO_ADVISOR */}
+          <Div
+            hidden={
+              userRole === "CO_ADVISOR1" || userRole === "CO_ADVISOR2"
+                ? false
+                : true
+            }
+            sx={{ width: "100%" }}
+          >
+            <MenuCoAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
           </Div>
           {/* Menu horizontal End */}
           <Div

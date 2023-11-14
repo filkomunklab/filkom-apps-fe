@@ -9,10 +9,8 @@ import BerandaPengajuanJudul from "./BerandaPengajuanJudul";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
-import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPanalisProposal";
-import MenuKetuaPanalisProposal from "app/shared/MenuHorizontal/MenuKetuaPanalisProposal";
-import MenuCoAdvisorProposal from "app/shared/MenuHorizontal/MenuCoAdvisorProposal";
 import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
+import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
 import BerandaProposalMahasiswa from "./BerandaProposalMahasiswa";
 import BerandaSkripsiMahasiswa from "./BerandaSkripsiMahasiswa";
 
@@ -98,25 +96,39 @@ const BerandaGlobal = () => {
         >
           {/* DOSEN SKRIPSI */}
           <Div
-            hidden={role.includes("DOSEN_MK") ? false : true}
+            hidden={role === "DOSEN_MK" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
+            <MenuDosenSkripsi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Beranda"}
+            />
           </Div>
           {/* ADVISOR */}
           <Div
-            hidden={role.includes("ADVISOR") ? false : true}
+            hidden={role === "ADVISOR" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuAdvisor dataGroupId={groupId} dataProgress={progress} />
+            <MenuAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Beranda"}
+            />
           </Div>
           {/* CO_ADVISOR */}
-          {/* <Div
-            hidden={role.includes("CO_ADVISOR") ? false : true}
+          <Div
+            hidden={
+              role === "CO_ADVISOR1" || role === "CO_ADVISOR2" ? false : true
+            }
             sx={{ width: "100%" }}
           >
-            <MenuCoAdvisorProposal />
-          </Div> */}
+            <MenuCoAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Beranda"}
+            />
+          </Div>
           {/* KETUA PANALIS */}
           {/* <Div
             hidden={role.includes("KETUA_PANALIS") ? false : true}

@@ -653,10 +653,14 @@ const BeritaAcara = () => {
           {/* Menu Horizontal Start */}
           {/* ADVISOR */}
           <Div
-            hidden={userRole.includes("ADVISOR") ? false : true}
+            hidden={userRole === "ADVISOR" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuAdvisor dataGroupId={groupId} dataProgress={progress} />
+            <MenuAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Berita Acara Proposal"}
+            />
           </Div>
           {/* Menu horizontal End */}
           {/* Berita acara belum dibuka */}

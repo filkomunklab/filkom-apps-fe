@@ -19,9 +19,9 @@ import {
 } from "@mui/material";
 import WarningIcon from "@mui/icons-material/Warning";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
 import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
+import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
 
 const DokumenRevisiProposal = () => {
   // state - menyimpan request data
@@ -231,7 +231,7 @@ const DokumenRevisiProposal = () => {
 
   let ActionRevision;
 
-  if (userRole.includes("ADVISOR")) {
+  if (userRole === "ADVISOR") {
     ActionRevision = () => (
       <Div
         sx={{
@@ -309,10 +309,9 @@ const DokumenRevisiProposal = () => {
         )}
       </Div>
     );
-  } else if (userRole.includes("KETUA_PANALIS")) {
+  } else if (userRole === "KETUA_PANALIS") {
     ActionRevision = () => (
       <Div
-        hidden={role.includes("KETUA_PANALIS") ? false : true}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -383,10 +382,9 @@ const DokumenRevisiProposal = () => {
         )}
       </Div>
     );
-  } else if (userRole.includes("ANGGOTA_PANALIS")) {
+  } else if (userRole === "ANGGOTA_PANALIS") {
     ActionRevision = () => (
       <Div
-        hidden={role.includes("ANGGOTA_PANALIS") ? false : true}
         style={{
           display: "flex",
           flexDirection: "column",
@@ -530,17 +528,40 @@ const DokumenRevisiProposal = () => {
           {/* Menu Horizontal Start */}
           {/* DOSEN SKRIPSI */}
           <Div
-            hidden={userRole.includes("DOSEN_MK") ? false : true}
+            hidden={userRole === "DOSEN_MK" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
+            <MenuDosenSkripsi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Revisi Proposal"}
+            />
           </Div>
           {/* DOSEN ADVISOR */}
           <Div
-            hidden={userRole.includes("ADVISOR") ? false : true}
+            hidden={userRole === "ADVISOR" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuAdvisor dataGroupId={groupId} dataProgress={progress} />
+            <MenuAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Revisi Proposal"}
+            />
+          </Div>
+          {/* DOSEN CO_ADVISOR1 */}
+          <Div
+            hidden={
+              userRole === "CO_ADVISOR1" || userRole === "CO_ADVISOR2"
+                ? false
+                : true
+            }
+            sx={{ width: "100%" }}
+          >
+            <MenuCoAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Revisi Proposal"}
+            />
           </Div>
           {/* Menu horizontal End */}
           <Div

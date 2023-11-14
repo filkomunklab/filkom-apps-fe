@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 const MenuDosenSkripsiProposal = ({
   dataGroupId: groupId,
   dataProgress: progress,
+  page: setPage,
 }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open1 = Boolean(anchorEl);

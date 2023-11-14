@@ -24,6 +24,7 @@ import {
 import CreateIcon from "@mui/icons-material/Create";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
+import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
 
 const BuatKonsultasi = () => {
   // state - simpan request konsultasi
@@ -203,10 +204,29 @@ const BuatKonsultasi = () => {
           {/* Menu Horizontal Start */}
           {/* ADVISOR */}
           <Div
-            hidden={userRole.includes("ADVISOR") ? false : true}
+            hidden={userRole === "ADVISOR" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuAdvisor dataGroupId={groupId} dataProgress={progress} />
+            <MenuAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
+
+          <Div
+            hidden={
+              userRole === "CO_ADVISOR1" || userRole === "CO_ADVISOR2"
+                ? false
+                : true
+            }
+            sx={{ width: "100%" }}
+          >
+            <MenuCoAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
           </Div>
           {/* Menu horizontal End */}
 
