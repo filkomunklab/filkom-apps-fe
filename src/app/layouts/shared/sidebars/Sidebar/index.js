@@ -107,12 +107,23 @@ const Sidebar = () => {
 };
 
 const SidebarHeader = () => {
+  const navigate = useNavigate();
+
   // const { sidebarOptions, setSidebarOptions } = useJumboLayoutSidebar();
   // const { sidebarTheme } = useJumboSidebarTheme();
 
   // const isMiniAndClosed = React.useMemo(() => {
   //   return sidebarOptions?.view === SIDEBAR_VIEWS.MINI && !sidebarOptions?.open;
   // }, [sidebarOptions.view, sidebarOptions.open]);
+  const name = JSON.parse(localStorage.getItem("user"))?.name;
+  const role = JSON.parse(localStorage.getItem("user"))?.role;
+
+  const checkArrayRole = () =>
+    role?.find((role) => role === ROLES.DEKAN || role === ROLES.KAPRODI)
+      ? role?.find((role) => role === ROLES.DEKAN || role === ROLES.KAPRODI)
+      : "DOSEN";
+
+  const accessRole = typeof role === "string" ? role : checkArrayRole();
 
   return (
     <React.Fragment>
@@ -125,7 +136,11 @@ const SidebarHeader = () => {
           borderBottomColor: "divider",
           display: "flex",
           gap: "16px",
+          ":hover": {
+            cursor: "pointer",
+          },
         }}
+        onClick={() => navigate("/bimbingan-akademik/profile")}
       >
         <Avatar
           //   src={authUser.profile_pic}
@@ -133,9 +148,9 @@ const SidebarHeader = () => {
           sx={{ width: 48, height: 48 }}
         />
         <Div>
-          <Typography variant={"h5"}>{`Darell Yuhu`}</Typography>
+          <Typography variant={"h5"}>{name}</Typography>
           <Typography variant={""} color="text.secondary">
-            Mahasiswa Ganteng :v
+            {accessRole}
           </Typography>
         </Div>
       </Div>
