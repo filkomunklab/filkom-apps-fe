@@ -18,15 +18,12 @@ import { pdfjs } from "react-pdf";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
-import DokumenProposal from "../Sekertaris/DokumenProposal";
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 // View Document Proposal
 const PDFViewerSkripsi = ({ dokumenSkripsi }) => {
   const viewPDFSkripsi = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(dokumenSkripsi);
+    const pdfURL = dokumenSkripsi.file_path_skripsi;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -45,7 +42,7 @@ const PDFViewerSkripsi = ({ dokumenSkripsi }) => {
 const PDFViewerPayment = ({ paymentFile }) => {
   const viewPDFPayment = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(paymentFile);
+    const pdfURL = paymentFile.file_path_payment;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -62,7 +59,7 @@ const PDFViewerPayment = ({ paymentFile }) => {
 const PDFViewerCekPlagiat = ({ plagiarismFile }) => {
   const viewPDFCekPlagiat = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(plagiarismFile);
+    const pdfURL = plagiarismFile.file_path_plagiarismcheck;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");

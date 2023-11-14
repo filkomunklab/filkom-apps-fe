@@ -24,7 +24,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 const PDFViewerHKI = ({ HKIFile }) => {
   const viewPDFHKI = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(HKIFile);
+    const pdfURL = HKIFile.file_path_hki;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -40,10 +40,10 @@ const PDFViewerHKI = ({ HKIFile }) => {
 };
 
 // View Document Artikel Jurnal
-const PDFViewerArtikelJurnal = ({ artikelJurnalFile }) => {
+const PDFViewerArtikelJurnal = ({ jurnal }) => {
   const viewPDFArtikelJurnal = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(artikelJurnalFile);
+    const pdfURL = jurnal.file_path_journal;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -57,10 +57,10 @@ const PDFViewerArtikelJurnal = ({ artikelJurnalFile }) => {
 };
 
 // View Document Source Code
-const PDFViewerSourceCode = ({ sourceCodeFile }) => {
+const PDFViewerSourceCode = ({ sourceCode }) => {
   const viewPDFSourceCode = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(sourceCodeFile);
+    const pdfURL = sourceCode.file_path_sourcecode;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -76,7 +76,7 @@ const PDFViewerSourceCode = ({ sourceCodeFile }) => {
 const ArsipDocument = () => {
   // state - menyimpan request data
   const [HKI, setHKI] = useState();
-  const [jurnal, seJurnal] = useState();
+  const [jurnal, setJurnal] = useState();
   const [sourceCode, setSourceCode] = useState();
   const [linkSourceCode, setLinkSourceCode] = useState();
 
@@ -119,7 +119,7 @@ const ArsipDocument = () => {
             },
           }
         );
-        setHKI(response.data.data);
+        setJurnal(response.data.data);
         console.log("Request Get jurnal: ", response.data.data);
       } catch (error) {
         console.error("Terjadi kesalahan saat mengambil jurnal:", error);
@@ -135,7 +135,7 @@ const ArsipDocument = () => {
             },
           }
         );
-        setHKI(response.data.data);
+        setSourceCode(response.data.data);
         console.log("Request Get source code: ", response.data.data);
       } catch (error) {
         console.error("Terjadi kesalahan saat mengambil source code:", error);
@@ -151,7 +151,7 @@ const ArsipDocument = () => {
             },
           }
         );
-        setHKI(response.data.data);
+        setLinkSourceCode(response.data.data);
         console.log("Request Get link source code: ", response.data.data);
       } catch (error) {
         console.error(
@@ -502,17 +502,17 @@ const ArsipDocument = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {HKIUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{index + 1}</TableCell>
+                    {HKI && (
+                      <TableRow>
+                        <TableCell>1</TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
+                          {HKI?.file_name_hki}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.date}
+                          {HKI?.upload_date_hki}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
+                          {HKI?.file_size_hki}
                         </TableCell>
                         <TableCell>
                           <Div sx={{ display: "flex" }}>
@@ -524,7 +524,7 @@ const ArsipDocument = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {HKIFile && <PDFViewerHKI HKIFile={HKIFile} />}
+                              {HKI && <PDFViewerHKI HKI={HKI} />}
                             </span>
                             <Div
                               style={{
@@ -541,14 +541,14 @@ const ArsipDocument = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() => handleDeleteHKIFile(index)}
+                              onClick={() => handleDeleteHKIFile}
                             >
                               Delete
                             </span>
                           </Div>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -655,19 +655,17 @@ const ArsipDocument = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {artikelJurnalUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
+                    {jurnal && (
+                      <TableRow key={jurnal.id}>
+                        <TableCell sx={{ fontSize: "12px" }}>1</TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {index + 1}
+                          {jurnal.file_name_journal}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
+                          {jurnal.upload_date_journal}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.date}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
+                          {jurnal.file_size_journal}
                         </TableCell>
                         <TableCell>
                           <Div sx={{ display: "flex" }}>
@@ -679,10 +677,8 @@ const ArsipDocument = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {artikelJurnalFile && (
-                                <PDFViewerArtikelJurnal
-                                  artikelJurnalFile={artikelJurnalFile}
-                                />
+                              {jurnal && (
+                                <PDFViewerArtikelJurnal jurnal={jurnal} />
                               )}
                             </span>
                             <Div
@@ -700,16 +696,14 @@ const ArsipDocument = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() =>
-                                handleDeleteArtikelJurnalFile(index)
-                              }
+                              onClick={() => handleDeleteArtikelJurnalFile}
                             >
                               Delete
                             </span>
                           </Div>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -815,19 +809,17 @@ const ArsipDocument = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {sourceCodeUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
+                    {sourceCode && (
+                      <TableRow>
+                        <TableCell sx={{ fontSize: "12px" }}>1</TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {index + 1}
+                          {sourceCode.file_name_sourcecode}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
+                          {sourceCode.upload_date_sourcecode}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {file.date}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
+                          {sourceCode.file_size_sourcecode}
                         </TableCell>
                         <TableCell>
                           <Div sx={{ display: "flex" }}>
@@ -839,10 +831,8 @@ const ArsipDocument = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {sourceCodeFile && (
-                                <PDFViewerSourceCode
-                                  sourceCodeFile={sourceCodeFile}
-                                />
+                              {sourceCode && (
+                                <PDFViewerSourceCode sourceCode={sourceCode} />
                               )}
                             </span>
                             <Div
@@ -860,14 +850,14 @@ const ArsipDocument = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() => handleDeleteSourceCodeFile(index)}
+                              onClick={() => handleDeleteSourceCodeFile}
                             >
                               Delete
                             </span>
                           </Div>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -944,9 +934,9 @@ const ArsipDocument = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {links.map((link, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{index + 1}</TableCell>
+                    {linkSourceCode && (
+                      <TableRow>
+                        <TableCell>1</TableCell>
                         <TableCell>
                           <span
                             style={{
@@ -955,12 +945,18 @@ const ArsipDocument = () => {
                               color: "blue",
                               fontSize: "12px",
                             }}
-                            onClick={() => openLink(link)}
+                            onClick={() =>
+                              openLink(linkSourceCode.link_soucecode)
+                            }
                           >
-                            {breakLongLink(link)}
+                            {breakLongLink(linkSourceCode.link_soucecode)}
                           </span>
                         </TableCell>
-                        <TableCell>{new Date().toLocaleDateString()}</TableCell>
+                        <TableCell>
+                          {new Date(
+                            linkSourceCode.upload_date_link_soucecode
+                          ).toLocaleDateString()}
+                        </TableCell>
                         <TableCell>
                           <span
                             style={{
@@ -969,13 +965,13 @@ const ArsipDocument = () => {
                               color: "red",
                               fontSize: "12px",
                             }}
-                            onClick={() => clearLink(index)}
+                            onClick={() => clearLink}
                           >
                             Delete
                           </span>
                         </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>

@@ -25,7 +25,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 const PDFViewerProposal = ({ dokumenProposal }) => {
   const viewPDFProposal = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(dokumenProposal);
+    const pdfURL = dokumenProposal.file_path_proposal;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -44,7 +44,7 @@ const PDFViewerProposal = ({ dokumenProposal }) => {
 const PDFViewerPayment = ({ buktiPembayaran }) => {
   const viewPDFPayment = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(buktiPembayaran);
+    const pdfURL = buktiPembayaran.file_path_payment;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -61,7 +61,7 @@ const PDFViewerPayment = ({ buktiPembayaran }) => {
 const PDFViewerCekPlagiat = ({ hasilCekPlagiat }) => {
   const viewPDFCekPlagiat = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(hasilCekPlagiat);
+    const pdfURL = hasilCekPlagiat.file_path_plagiarismcheck;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -171,72 +171,72 @@ const UnggahProposal = () => {
     useState("");
   const [plagiarismUploadedFiles, setPlagiarismUploadedFiles] = useState([]);
 
-  const onProposalFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (proposalUploadedFiles.length === 0) {
-        setProposalFile(file);
-        setSelectedProposalFileName(file.name);
+  // const onProposalFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     if (proposalUploadedFiles.length === 0) {
+  //       setProposalFile(file);
+  //       setSelectedProposalFileName(file.name);
 
-        const newFileData = {
-          name: file.name,
-          date: new Date().toLocaleDateString(),
-          size: file.size,
-          advisor: "",
-          coAdvisor1: "",
-          coAdvisor2: "",
-        };
+  //       const newFileData = {
+  //         name: file.name,
+  //         date: new Date().toLocaleDateString(),
+  //         size: file.size,
+  //         advisor: "",
+  //         coAdvisor1: "",
+  //         coAdvisor2: "",
+  //       };
 
-        setProposalUploadedFiles([newFileData]);
-      }
-    }
-  };
+  //       setProposalUploadedFiles([newFileData]);
+  //     }
+  //   }
+  // };
 
-  const onPaymentFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (paymentUploadedFiles.length === 0) {
-        setPaymentFile(file);
-        setSelectedPaymentFileName(file.name);
+  // const onPaymentFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     if (paymentUploadedFiles.length === 0) {
+  //       setPaymentFile(file);
+  //       setSelectedPaymentFileName(file.name);
 
-        // Tambahkan data file baru ke state paymentUploadedFiles
-        const newFileData = {
-          name: file.name,
-          date: new Date().toLocaleDateString(),
-          size: file.size,
-        };
+  //       // Tambahkan data file baru ke state paymentUploadedFiles
+  //       const newFileData = {
+  //         name: file.name,
+  //         date: new Date().toLocaleDateString(),
+  //         size: file.size,
+  //       };
 
-        setPaymentUploadedFiles([newFileData]);
-      } else {
-        alert(
-          "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-        );
-      }
-    }
-  };
+  //       setPaymentUploadedFiles([newFileData]);
+  //     } else {
+  //       alert(
+  //         "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
+  //       );
+  //     }
+  //   }
+  // };
 
-  const onPlagiarismFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (plagiarismUploadedFiles.length === 0) {
-        setPlagiarismFile(file);
-        setSelectedPlagiarismFileName(file.name);
+  // const onPlagiarismFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     if (plagiarismUploadedFiles.length === 0) {
+  //       setPlagiarismFile(file);
+  //       setSelectedPlagiarismFileName(file.name);
 
-        // Tambahkan data file baru ke state plagiarismUploadedFiles
-        const newFileData = {
-          name: file.name,
-          date: new Date().toLocaleDateString(),
-          size: file.size,
-        };
+  //       // Tambahkan data file baru ke state plagiarismUploadedFiles
+  //       const newFileData = {
+  //         name: file.name,
+  //         date: new Date().toLocaleDateString(),
+  //         size: file.size,
+  //       };
 
-        setPlagiarismUploadedFiles([newFileData]);
-      } else {
-        alert(
-          "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-        );
-      }
-    }
-  };
+  //       setPlagiarismUploadedFiles([newFileData]);
+  //     } else {
+  //       alert(
+  //         "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
+  //       );
+  //     }
+  //   }
+  // };
 
   // fungsi untuk menghapus file Proposal
   const handleDeleteProposalFile = (index) => {
@@ -428,7 +428,7 @@ const UnggahProposal = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    onChange={onProposalFileChange}
+                    // onChange={onProposalFileChange}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
@@ -716,7 +716,7 @@ const UnggahProposal = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    onChange={onPaymentFileChange}
+                    // onChange={onPaymentFileChange}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
@@ -871,7 +871,7 @@ const UnggahProposal = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    onChange={onPlagiarismFileChange}
+                    // onChange={onPlagiarismFileChange}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />

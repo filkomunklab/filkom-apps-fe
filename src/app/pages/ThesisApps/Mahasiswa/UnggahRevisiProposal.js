@@ -24,13 +24,11 @@ import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-
 // View Document Proposal
 const PDFViewerRevisiProposal = ({ dokumenRevisi }) => {
   const viewPDFRevisiProposal = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(dokumenRevisi);
+    const pdfURL = dokumenRevisi.file_path_revision;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
