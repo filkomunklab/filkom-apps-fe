@@ -15,6 +15,9 @@ import { Link } from "react-router-dom";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
+import { BASE_URL_API } from "../../../../../@jumbo/config/env";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const requiredStyle = {
   color: "red",
@@ -62,18 +65,28 @@ const style2 = {
 };
 
 const Certificate = () => {
+  const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [buffer, setBuffer] = useState("");
+
   const [showLabel, setShowLabel] = useState(true);
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileName, setSelectedFileName] = useState("");
 
   const [openFirstModal, setOpenFirstModal] = React.useState(false);
   const [openSecondModal, setOpenSecondModal] = React.useState(false);
+  const [openErrorModal, setOpenErrorModal] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formValid, setFormValid] = useState(false);
 
   const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
   const handleOpenSecondModal = () => setOpenSecondModal(true);
   const handleCloseSecondModal = () => setOpenSecondModal(false);
+
+  const handleOpenErrorModal = () => setOpenErrorModal(true);
+  const handleCloseErrorModal = () => setOpenErrorModal(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -85,9 +98,38 @@ const Certificate = () => {
     };
   }, [handleOpenSecondModal]);
 
+  const checkFormValidity = () => {
+    if (
+      title.trim() !== "" &&
+      category !== "" &&
+      description.trim() !== "" &&
+      selectedFile
+    ) {
+      setFormValid(true);
+    } else {
+      setFormValid(false);
+    }
+  };
+
+  useEffect(() => {
+    checkFormValidity();
+  }, [title, category, description, selectedFile]);
+
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
+
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+      const base64Data = event.target.result;
+
+      let splitArray = base64Data.split(",");
+      let base64Part = splitArray[1].trim();
+      setBuffer(base64Part);
+    };
+
+    reader.readAsDataURL(file);
 
     const labelElement = document.getElementById("certificate-label");
     if (labelElement) {
@@ -101,13 +143,62 @@ const Certificate = () => {
     }
   };
 
-  const handleSubmitFirstModal = () => {
+  const handleSubmitFirstModal = async () => {
     handleCloseFirstModal();
-    handleOpenSecondModal();
+    setLoading(true);
+    const certificateFile = {
+      filename: selectedFile.name,
+      buffer,
+    };
+
+    const data = {
+      title,
+      category,
+      description,
+      certificateFile,
+    };
+
+    try {
+      const result = await axios.post(
+        `${BASE_URL_API}/certificate/10502201001`,
+        data
+      );
+
+      if (result.data.status === "OK") {
+        handleOpenSecondModal();
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log("ini error: ", error);
+      handleOpenErrorModal();
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    console.log("ini url: ", BASE_URL_API);
+  }, []);
 
   return (
     <div>
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(34, 34, 34, 0.7)",
+            zIndex: 2003,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )}
       <Typography
         sx={{
           fontSize: "24px",
@@ -122,6 +213,8 @@ const Certificate = () => {
         <RTypography>Title</RTypography>
         <TextField
           id="outlined-basic-1"
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
           variant="outlined"
           placeholder="Ex. Menang lomba desain prototype"
           fullWidth
@@ -166,7 +259,7 @@ const Certificate = () => {
             >
               <Input
                 type="file"
-                accept=".jpg, .jpeg, .png"
+                accept=".pdf"
                 id="certificate-photo"
                 onChange={handleFileInputChange}
                 disableUnderline
@@ -212,6 +305,8 @@ const Certificate = () => {
               sx={{ backgroundColor: "white" }}
               id="outlined-basic"
               variant="outlined"
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
               placeholder="Add Descriptions"
               fullWidth
               multiline
@@ -230,49 +325,27 @@ const Certificate = () => {
                 justifyContent: "flex-end",
               }}
             >
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="/bimbingan-akademik/certificates/"
-              >
-                <Button
-                  sx={{
-                    backgroundColor: "darkgrey",
-                    borderRadius: "24px",
-                    color: "black",
-                    whiteSpace: "nowrap",
-                    minWidth: "132px",
-                    fontSize: "12px",
-                    padding: "10px",
-                    marginRight: "24px",
-
-                    "&:hover": {
-                      backgroundColor: "grey",
-                    },
-                  }}
-                >
-                  Cancel
-                </Button>
-              </Link>
-
               <Button
                 onClick={handleOpenFirstModal}
                 sx={{
-                  backgroundColor: "#006AF5",
+                  backgroundColor: formValid ? "#006AF5" : "#1A38601A",
                   borderRadius: "24px",
-                  color: "white",
+                  color: formValid ? "white" : "black",
                   whiteSpace: "nowrap",
                   minWidth: "132px",
                   fontSize: "12px",
                   padding: "10px",
                   gap: "6px",
-
                   "&:hover": {
-                    backgroundColor: "#025ED8",
+                    backgroundColor: formValid ? "#025ED8" : "grey",
                   },
+                  cursor: formValid ? "pointer" : "not-allowed",
+                  opacity: formValid ? 1 : 0.5,
                 }}
               >
                 Submit
               </Button>
+
               <Modal
                 open={openFirstModal}
                 onClose={handleCloseFirstModal}
@@ -370,6 +443,44 @@ const Certificate = () => {
                     style={{ marginTop: "16px", marginBottom: "20px" }}
                   >
                     You have successfully preregistered for the course.
+                  </Typography>
+                </div>
+              </Modal>
+
+              <Modal
+                open={openErrorModal}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <div style={style2}>
+                  <IconButton
+                    edge="end"
+                    color="#D9D9D9"
+                    onClick={handleCloseErrorModal}
+                    aria-label="close"
+                    sx={{
+                      position: "absolute",
+                      top: "10px",
+                      right: "20px",
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                  <Typography
+                    id="modal-modal-title"
+                    variant="h4"
+                    component="h2"
+                    sx={{
+                      fontWeight: 600,
+                    }}
+                  >
+                    Error Submission!
+                  </Typography>
+                  <Typography
+                    id="modal-modal-description"
+                    style={{ marginTop: "16px", marginBottom: "20px" }}
+                  >
+                    error.
                   </Typography>
                 </div>
               </Modal>
