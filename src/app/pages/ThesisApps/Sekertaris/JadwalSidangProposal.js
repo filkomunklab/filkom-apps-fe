@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Div from "@jumbo/shared/Div";
-import PeopleIcon from "@mui/icons-material/People";
 import {
   Button,
-  Chip,
   Container,
   Dialog,
   DialogActions,
@@ -28,8 +26,8 @@ import {
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
-import EventAvailableIcon from "@mui/icons-material/EventAvailable";
-import EventBusyIcon from "@mui/icons-material/EventBusy";
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 const JadwalSidangProposal = () => {
   // state - daftar jadwal
@@ -55,6 +53,12 @@ const JadwalSidangProposal = () => {
   // fungsi untuk mendapatkan data token JWT
   const token = localStorage.getItem("token");
   // console.log("token", token);
+
+  const formatDate = (date) => {
+    const options = { year: "numeric", month: "numeric", day: "numeric" };
+    return new Intl.DateTimeFormat("id-ID", options).format(date);
+    return date.toISOString().split("T")[0];
+  };
 
   useEffect(() => {
     const fetchDaftarJadwalProposal = async () => {
@@ -544,6 +548,20 @@ const JadwalSidangProposal = () => {
                   onChange={(event) =>
                     setSelectedKetuaPenelis(event.target.value)
                   }
+                  MenuProps={{
+                    anchorOrigin: {
+                      vertical: "bottom",
+                      horizontal: "left",
+                    },
+                    transformOrigin: {
+                      vertical: "top",
+                      horizontal: "left",
+                    },
+                    getContentAnchorEl: null,
+                    style: {
+                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                    },
+                  }}
                   error={!!errorMessages.selectedKetuaPenelis}
                 >
                   {daftarDosen.map((dosen) => (
@@ -570,6 +588,20 @@ const JadwalSidangProposal = () => {
                   onChange={(event) =>
                     setSelectedAnggotaPenelis(event.target.value)
                   }
+                  MenuProps={{
+                    anchorOrigin: {
+                      vertical: "bottom",
+                      horizontal: "left",
+                    },
+                    transformOrigin: {
+                      vertical: "top",
+                      horizontal: "left",
+                    },
+                    getContentAnchorEl: null,
+                    style: {
+                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                    },
+                  }}
                   error={!!errorMessages.selectedAnggotaPenelis}
                 >
                   {daftarDosen.map((dosen) => (
@@ -625,7 +657,7 @@ const JadwalSidangProposal = () => {
                 <TextField
                   id="start-time"
                   label="Mulai Waktu"
-                  type="text"
+                  type="time"
                   fullWidth
                   InputLabelProps={{
                     shrink: true,
@@ -646,12 +678,11 @@ const JadwalSidangProposal = () => {
                   helperText={errorMessages.mulaiWaktu}
                 />
               </Grid>
-
               <Grid item xs={6}>
                 <TextField
                   id="end-time"
                   label="Selesai Waktu"
-                  type="text"
+                  type="time"
                   fullWidth
                   InputLabelProps={{
                     shrink: true,
@@ -676,16 +707,20 @@ const JadwalSidangProposal = () => {
                 <TextField
                   id="start-date"
                   label="Mulai Tanggal"
-                  type="text"
+                  type="date"
                   fullWidth
                   InputLabelProps={{
                     shrink: true,
                   }}
                   size="small"
                   InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start"></InputAdornment>
-                    ),
+                    inputProps: {
+                      min: "1900-01-01",
+                      max: formatDate(new Date()), // Set the max date to today
+                    },
+                    style: {
+                      marginRight: 0, // You can adjust the marginRight value to fit your needs
+                    },
                   }}
                   value={mulaiTanggal}
                   onChange={(event) => setMulaiTanggal(event.target.value)}

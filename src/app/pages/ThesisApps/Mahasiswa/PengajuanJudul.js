@@ -690,6 +690,20 @@ const PengajuanJudul = () => {
                     label="Mengusulkan Advisor"
                     onChange={(e) => setAdvisor(e.target.value)}
                     disabled={!isEditing}
+                    MenuProps={{
+                      anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: "left",
+                      },
+                      transformOrigin: {
+                        vertical: "top",
+                        horizontal: "left",
+                      },
+                      getContentAnchorEl: null,
+                      style: {
+                        maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                      },
+                    }}
                     sx={{
                       width: "230px",
                       overflow: "hidden",
@@ -722,6 +736,20 @@ const PengajuanJudul = () => {
                           label="Mengusulkan Co-Advisor 1"
                           onChange={(e) => setCoAdvisor1(e.target.value)}
                           disabled={!isEditing}
+                          MenuProps={{
+                            anchorOrigin: {
+                              vertical: "bottom",
+                              horizontal: "left",
+                            },
+                            transformOrigin: {
+                              vertical: "top",
+                              horizontal: "left",
+                            },
+                            getContentAnchorEl: null,
+                            style: {
+                              maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                            },
+                          }}
                           sx={{
                             width: "230px",
                             overflow: "hidden",
@@ -750,6 +778,20 @@ const PengajuanJudul = () => {
                           label="Mengusulkan Co-Advisor 2"
                           onChange={(e) => setCoAdvisor2(e.target.value)}
                           disabled={!isEditing}
+                          MenuProps={{
+                            anchorOrigin: {
+                              vertical: "bottom",
+                              horizontal: "left",
+                            },
+                            transformOrigin: {
+                              vertical: "top",
+                              horizontal: "left",
+                            },
+                            getContentAnchorEl: null,
+                            style: {
+                              maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                            },
+                          }}
                           sx={{
                             width: "230px",
                             overflow: "hidden",

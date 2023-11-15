@@ -18,7 +18,6 @@ import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import BerandaProposalMahasiswa from "./BerandaProposalMahasiswa";
 import BerandaSkripsiMahasiswa from "./BerandaSkripsiMahasiswa";
-import MenuDekanProposal from "app/shared/MenuHorizontal/MenuDekanProposal";
 
 const BerandaGlobal = () => {
   const groupId = useParams().groupId;

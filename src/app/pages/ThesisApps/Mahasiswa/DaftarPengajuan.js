@@ -687,6 +687,20 @@ function DaftarPengajuan() {
                 onChange={handleKelasChange}
                 error={!!errorMessages.selectedClassroomId}
                 helperText={errorMessages.kelas}
+                MenuProps={{
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "left",
+                  },
+                  transformOrigin: {
+                    vertical: "top",
+                    horizontal: "left",
+                  },
+                  getContentAnchorEl: null,
+                  style: {
+                    maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                  },
+                }}
               >
                 <MenuItem value>-</MenuItem>
                 {daftarKelas.map((kelasItem, index) => (
@@ -978,6 +992,20 @@ function DaftarPengajuan() {
                   label="Mengusulkan Advisor"
                   onChange={handleAdvisorChange}
                   error={!!errorMessages.selectedAdvisorId}
+                  MenuProps={{
+                    anchorOrigin: {
+                      vertical: "bottom",
+                      horizontal: "left",
+                    },
+                    transformOrigin: {
+                      vertical: "top",
+                      horizontal: "left",
+                    },
+                    getContentAnchorEl: null,
+                    style: {
+                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                    },
+                  }}
                 >
                   <MenuItem value="">-</MenuItem>
                   {daftarDosen.map((dosen) => (
@@ -986,6 +1014,7 @@ function DaftarPengajuan() {
                     </MenuItem>
                   ))}
                 </Select>
+
                 <FormHelperText
                   sx={{ fontSize: "14px" }}
                   error={!!errorMessages.selectedAdvisorId}
@@ -1003,6 +1032,20 @@ function DaftarPengajuan() {
                   value={selectedCoAdvisor1Id}
                   label="Mengusulkan Co-Advisor 1"
                   onChange={(e) => setSelectedCoAdvisor1Id(e.target.value)}
+                  MenuProps={{
+                    anchorOrigin: {
+                      vertical: "bottom",
+                      horizontal: "left",
+                    },
+                    transformOrigin: {
+                      vertical: "top",
+                      horizontal: "left",
+                    },
+                    getContentAnchorEl: null,
+                    style: {
+                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                    },
+                  }}
                 >
                   <MenuItem value="">-</MenuItem>
                   {daftarDosen.map((dosen) => (
@@ -1022,6 +1065,20 @@ function DaftarPengajuan() {
                   value={selectedCoAdvisor2Id}
                   label="Mengusulkan Co-Advisor 2"
                   onChange={(e) => setSelectedCoAdvisor2Id(e.target.value)}
+                  MenuProps={{
+                    anchorOrigin: {
+                      vertical: "bottom",
+                      horizontal: "left",
+                    },
+                    transformOrigin: {
+                      vertical: "top",
+                      horizontal: "left",
+                    },
+                    getContentAnchorEl: null,
+                    style: {
+                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                    },
+                  }}
                 >
                   <MenuItem value="">-</MenuItem>
                   {daftarDosen.map((dosen) => (
