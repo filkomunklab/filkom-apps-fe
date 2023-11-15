@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
@@ -18,22 +21,51 @@ import {
   TextareaAutosize,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
 import CreateIcon from "@mui/icons-material/Create";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
-import axios from "axios";
-import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
-import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
-import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
-import MenuDekanProposal from "app/shared/MenuHorizontal/MenuDekanProposal";
-import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPanalisProposal";
-import MenuKetuaPanalisProposal from "app/shared/MenuHorizontal/MenuKetuaPanalisProposal";
-import MenuCoAdvisorProposal from "app/shared/MenuHorizontal/MenuCoAdvisorProposal";
-import MenuAdvisorProposal from "app/shared/MenuHorizontal/MenuAdvisorProposal";
-// import MenuDosenSkripsiProposal from "app/shared/MenuHorizontal/MenuDosenSkripsiProposal";
+import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
+import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
 
-const BuatKonsultasiAdvisor2 = () => {
+const BuatKonsultasi = () => {
+  // state - simpan request konsultasi
+  const [konsultasi, setKonsultasi] = useState();
+
+  const groupId = useParams().groupId;
+  console.log("group id: ", groupId);
+  const [progress, setProgress] = useState(null);
+  const [proposalId, setProposalId] = useState(null);
+
+  const userRole = useParams().role;
+  console.log("role user akses page: ", userRole);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log("role user yang sign in: ", role);
+
+  useEffect(() => {
+    const fetchKonsultasiData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/consultation/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setKonsultasi(response.data.data);
+        console.log("Request Get konsultasi: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil daftar dosen:", error);
+      }
+    };
+    fetchKonsultasiData();
+  }, [token, groupId]);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [description, setDescription] = useState("");
@@ -44,6 +76,8 @@ const BuatKonsultasiAdvisor2 = () => {
   };
 
   const handleDialogClose = () => {
+    setSelectedDate(""); // Mengatur ulang nilai tanggal menjadi kosong
+    setDescription(""); // Mengatur ulang nilai deskripsi menjadi kosong
     setIsDialogOpen(false);
   };
 
@@ -60,21 +94,57 @@ const BuatKonsultasiAdvisor2 = () => {
       // Validasi gagal jika tanggal atau deskripsi kosong
       alert("Harap isi tanggal dan deskripsi sebelum mencatat konsultasi.");
     } else {
-      // Validasi berhasil, catat konsultasi dan atur ulang input
-      const newConsultation = {
-        date: selectedDate,
+      //   // Validasi berhasil, catat konsultasi dan atur ulang input
+      //   const newConsultation = {
+      //     date: selectedDate,
+      //     description: description,
+      //   };
+      //   setConsultations([...consultations, newConsultation]);
+
+      const data = {
+        group_id: groupId,
         description: description,
+        date: selectedDate,
       };
-      setConsultations([...consultations, newConsultation]);
-      setSelectedDate(""); // Mengatur ulang nilai tanggal menjadi kosong
-      setDescription(""); // Mengatur ulang nilai deskripsi menjadi kosong
-      handleDialogClose(); // Menutup dialog setelah mencatat konsultasi
+      console.log(data);
+      axios
+        .post(`http://localhost:2000/api/v1/consultation`, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Berhasil mencatat konsultasi ");
+          setSelectedDate(""); // Mengatur ulang nilai tanggal menjadi kosong
+          setDescription(""); // Mengatur ulang nilai deskripsi menjadi kosong
+          handleDialogClose(); // Menutup dialog setelah mencatat konsultasi
+
+          const fetchKonsultasiData = async () => {
+            try {
+              const response = await axios.get(
+                `http://localhost:2000/api/v1/consultation/${groupId}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+              setKonsultasi(response.data.data);
+              console.log("Request Get konsultasi: ", response.data.data);
+            } catch (error) {
+              console.error(
+                "Terjadi kesalahan saat mengambil daftar dosen:",
+                error
+              );
+            }
+          };
+          fetchKonsultasiData();
+        })
+        .catch((error) => {
+          console.error("Terjadi kesalahan saat mengganti pembimbing:", error);
+        });
     }
   };
-
-  const { role } = JSON.parse(localStorage.getItem("user"));
-  // const role = ["ADVISOR", "DOSEN"];
-  console.log(role);
 
   return (
     <Div>
@@ -112,7 +182,10 @@ const BuatKonsultasiAdvisor2 = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          <Riwayatlog />
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(data) => data && setProgress(data.progress)}
+          />
         </Div>
         {/* Element 1 End */}
         {/* Element 2 Start */}
@@ -129,70 +202,32 @@ const BuatKonsultasiAdvisor2 = () => {
           }}
         >
           {/* Menu Horizontal Start */}
-          {/* DOSEN SKRIPSI */}
-          {/* <Div
-            hidden={role.includes("DOSEN") ? false : true}
-            sx={{ width: "100%" }}
-          >
-            <MenuDosenSkripsiProposal />
-          </Div> */}
           {/* ADVISOR */}
           <Div
-            hidden={role.includes("ADVISOR") ? false : true}
+            hidden={userRole === "ADVISOR" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuAdvisorProposal />
-          </Div>
-          {/* CO_ADVISOR */}
-          <Div
-            hidden={role.includes("CO_ADVISOR") ? false : true}
-            sx={{ width: "100%" }}
-          >
-            <MenuCoAdvisorProposal />
-          </Div>
-          {/* KETUA PANALIS */}
-          <Div
-            hidden={role.includes("KETUA_PANALIS") ? false : true}
-            sx={{ width: "100%" }}
-          >
-            <MenuKetuaPanalisProposal />
-          </Div>
-          {/* ANGGOTA PANALIS */}
-          <Div
-            hidden={role.includes("ANGGOTA_PANALIS") ? false : true}
-            sx={{ width: "100%" }}
-          >
-            <MenuAnggotaPanalisProposal />
-          </Div>
-          {/* KAPRODI */}
-          {/* <Div
-            hidden={role.includes("KAPRODI") ? false : true}
-            sx={{ width: "100%" }}
-          >
-            <MenuKaprodiProposal />
-          </Div> */}
-          {/* DEKAN */}
-          <Div
-            hidden={role.includes("DEKAN") ? false : true}
-            sx={{ width: "100%" }}
-          >
-            <MenuDekanProposal />
-          </Div>
-          {/* SEKERTARIS */}
-          <Div
-            hidden={role.includes("SEKERTARIS") ? false : true}
-            sx={{ width: "100%" }}
-          >
-            <MenuSekertaris />
-          </Div>
-          {/* MAHASISWA */}
-          <Div
-            hidden={role.includes("MAHASISWA") ? false : true}
-            sx={{ width: "100%" }}
-          >
-            <MenuMahasiswa />
+            <MenuAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
           </Div>
 
+          <Div
+            hidden={
+              userRole === "CO_ADVISOR1" || userRole === "CO_ADVISOR2"
+                ? false
+                : true
+            }
+            sx={{ width: "100%" }}
+          >
+            <MenuCoAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
           {/* Menu horizontal End */}
 
           <Div
@@ -232,7 +267,9 @@ const BuatKonsultasiAdvisor2 = () => {
               >
                 {/* roll yang bisa akses dosen pembimbing */}
                 <Div
-                  hidden={role.includes("ADVISOR", "CO_ADVISOR") ? false : true}
+                  hidden={
+                    userRole.includes("ADVISOR", "CO_ADVISOR") ? false : true
+                  }
                 >
                   <Button
                     size="small"
@@ -278,8 +315,9 @@ const BuatKonsultasiAdvisor2 = () => {
                     <TextField
                       id="date"
                       label="Tanggal"
-                      type="date"
+                      type="text"
                       fullWidth
+                      placeholder="dd/mm/yyyy"
                       value={selectedDate}
                       onChange={handleDateChange}
                       sx={{ marginTop: "25px" }}
@@ -347,12 +385,12 @@ const BuatKonsultasiAdvisor2 = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {consultations.map((consultation, index) => (
+                    {konsultasi?.constultation?.map((consultation, index) => (
                       <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{consultation.description}</TableCell>
                         <TableCell>{consultation.date}</TableCell>
-                        <TableCell>Tertera</TableCell>
+                        <TableCell>{consultation.dosen}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -368,4 +406,4 @@ const BuatKonsultasiAdvisor2 = () => {
   );
 };
 
-export default BuatKonsultasiAdvisor2;
+export default BuatKonsultasi;

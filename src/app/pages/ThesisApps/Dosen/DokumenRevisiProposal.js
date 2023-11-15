@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
@@ -14,14 +17,85 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
 import WarningIcon from "@mui/icons-material/Warning";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
-import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
-import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
+import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
+import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
+import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
+import MenuKetuaPanelis from "app/shared/MenuHorizontal/MenuKetuaPanelis";
+import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
+import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
+import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 
-const DocumentRevisiSkripsiKetuaPenelis = () => {
+const DokumenRevisiProposal = () => {
+  // state - menyimpan request data
+  const [dokumenRevisi, setDokumenRevisi] = useState();
+  const [perubahan, setPerubahan] = useState();
+
+  const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
+
+  const groupId = useParams().groupId;
+  console.log("group id: ", groupId);
+  const [progress, setProgress] = useState(null);
+  const [proposalId, setProposalId] = useState(null);
+
+  const userRole = useParams().role;
+  console.log("role user akses page: ", userRole);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log("role user yang sign in: ", role);
+
+  useEffect(() => {
+    const fetchDokumenProposalData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDokumenRevisi(response.data.data);
+        console.log(
+          "Request Get dokumen revisi proposal: ",
+          response.data.data
+        );
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil dokumen revisi proposal:",
+          error
+        );
+      }
+    };
+    const fetchPerubahanData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setPerubahan(response.data.data);
+        console.log("Request Get perubahan proposal: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil perubahan proposal:",
+          error
+        );
+      }
+    };
+    fetchDokumenProposalData();
+    fetchPerubahanData();
+  }, [token, proposalId]);
+
   // state untuk Upload RevisiProposal Ketua Panalis
   const [isSetujuClicked, setIsSetujuClicked] = useState(false);
   const [isTolakClicked, setIsTolakClicked] = useState(false);
@@ -159,231 +233,245 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
     }
   };
 
-  const { role } = JSON.parse(localStorage.getItem("user"));
-  // const role = ["ADVISOR", "DOSEN"];
-  console.log(role);
-
   let ActionRevision;
 
-  if (role.includes("ADVISOR")) {
+  if (userRole === "ADVISOR") {
     ActionRevision = () => (
       <Div
-        hidden={role.includes("ADVISOR") ? false : true}
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {isSetujuClickedAdvisor || isTolakClickedAdvisor ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndexAdvisor(1);
-              setSetujuConfirmationDialogOpenAdvisor(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {isSetujuClickedAdvisor || isTolakClickedAdvisor ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-            onClick={() => {
-              setSelectedActionIndexAdvisor(2);
-              setTolakConfirmationDialogOpenAdvisor(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenRevisi?.file_name_revision !== null && (
+          <>
+            {dokumenRevisi?.is_revision_approve_by_advisor === "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexAdvisor(1);
+                  setSetujuConfirmationDialogOpenAdvisor(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+            {dokumenRevisi?.is_revision_approve_by_advisor === "Approve" ||
+            dokumenRevisi?.is_revision_approve_by_advisor === "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexAdvisor(2);
+                  setTolakConfirmationDialogOpenAdvisor(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
-  } else if (role.includes("KETUA_PANALIS")) {
+  } else if (userRole === "KETUA_PANELIS") {
     ActionRevision = () => (
       <Div
-        hidden={role.includes("KETUA_PANALIS") ? false : true}
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {isSetujuClicked || isTolakClicked ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndex(1);
-              setSetujuConfirmationDialogOpen(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {isSetujuClicked || isTolakClicked ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-            onClick={() => {
-              setSelectedActionIndex(2);
-              setTolakConfirmationDialogOpen(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenRevisi?.file_name_revision !== null && (
+          <>
+            {dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+            "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndex(1);
+                  setSetujuConfirmationDialogOpen(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+            {dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+              "Approve" ||
+            dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+              "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndex(2);
+                  setTolakConfirmationDialogOpen(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
-  } else if (role.includes("ANGGOTA_PANALIS")) {
+  } else if (userRole === "ANGGOTA_PANELIS") {
     ActionRevision = () => (
       <Div
-        hidden={role.includes("ANGGOTA_PANALIS") ? false : true}
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {isSetujuClickedAnggotaPanalis || isTolakClickedAnggotaPanalis ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndexAnggotaPanalis(1);
-              setSetujuConfirmationDialogOpenAnggotaPanalis(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {isSetujuClickedAnggotaPanalis || isTolakClickedAnggotaPanalis ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-            onClick={() => {
-              setSelectedActionIndexAnggotaPanalis(2);
-              setTolakConfirmationDialogOpenAnggotaPanalis(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenRevisi?.file_name_revision !== null && (
+          <>
+            {dokumenRevisi?.is_revision_approve_by_panelist_member ===
+            "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexAnggotaPanalis(1);
+                  setSetujuConfirmationDialogOpenAnggotaPanalis(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+            {dokumenRevisi?.is_revision_approve_by_panelist_member ===
+              "Approve" ||
+            dokumenRevisi?.is_revision_approve_by_panelist_member ===
+              "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexAnggotaPanalis(2);
+                  setTolakConfirmationDialogOpenAnggotaPanalis(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
@@ -402,7 +490,7 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Document Revisi Skripsi
+          Dokumen Revisi Proposal
         </Typography>
       </Div>
 
@@ -427,7 +515,19 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
           }}
         >
           {/* Riwayat Log Start */}
-          <Riwayatlog />
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(data) => {
+              if (data) {
+                setProgress(data.progress);
+                setProposalId(data.proposal_id);
+                setAdvisorAndCoAdvisor({
+                  coAdvisor1: data.co_advisor1,
+                  coAdvisor2: data.co_advisor2,
+                });
+              }
+            }}
+          />
           {/* Riwayat Log End */}
         </Div>
         {/* Element 1 End */}
@@ -445,34 +545,89 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
             borderRadius: "8px",
           }}
         >
-          {/* Menu Horizontal DOSEN Start */}
+          {/* Menu Horizontal Start */}
+          {/* DOSEN SKRIPSI */}
+          <Div
+            hidden={userRole === "DOSEN_MK" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDosenSkripsi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Revisi Proposal"}
+            />
+          </Div>
+          {/* DOSEN ADVISOR */}
+          <Div
+            hidden={userRole === "ADVISOR" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Revisi Proposal"}
+            />
+          </Div>
+          {/* DOSEN CO_ADVISOR1 */}
           <Div
             hidden={
-              role.includes(
-                "DOSEN",
-                "KAPRODI",
-                "DEKAN",
-                "KETUA_PANALIS",
-                "ANGGOTA_PANALIS",
-                "CO_ADVISOR",
-                "ADVISOR"
-              )
+              userRole === "CO_ADVISOR1" || userRole === "CO_ADVISOR2"
                 ? false
                 : true
             }
             sx={{ width: "100%" }}
           >
-            <MenuPengajuanSkripsiDosen />
+            <MenuCoAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Revisi Proposal"}
+            />
           </Div>
-          {/* Menu horizontal MAHASISWA End */}
-          {/* Menu Horizontal DOSEN Start */}
+          {/* KETUA_PANELIS */}
           <Div
-            hidden={role.includes("SEKERTARIS") ? false : true}
+            hidden={userRole === "KETUA_PANELIS" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuSekertaris />
+            <MenuKetuaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Revisi Proposal"}
+            />
           </Div>
-          {/* Menu horizontal MAHASISWA End */}
+          {/* ANGGOTA_PANELIS */}
+          <Div
+            hidden={userRole === "ANGGOTA_PANELIS" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAnggotaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Revisi Proposal"}
+            />
+          </Div>
+          {/* DEKAN */}
+          <Div
+            hidden={userRole === "DEKAN" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDekan
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Revisi Proposal"}
+            />
+          </Div>
+          {/* KAPRODI */}
+          <Div
+            hidden={userRole === "KAPRODI" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKaprodi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Revisi Proposal"}
+            />
+          </Div>
+          {/* Menu horizontal End */}
           <Div
             sx={{
               display: "flex",
@@ -546,10 +701,7 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
                     borderRadius: "0 0 6px 6px",
                   }}
                 >
-                  <Typography>
-                    1.Ubah Judul. 2.Ganti Metode. 3.Ganti MongoDB menjadi
-                    PostgreSQL. 4. Perbaiki Typo penulisan di Bab 1 dan 2.
-                  </Typography>
+                  <Typography>{perubahan?.changes_by_chairman}</Typography>
                 </Div>
               </Div>
               {/* Perubahan Anggota Panalis */}
@@ -583,11 +735,7 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
                     borderRadius: "0 0 6px 6px",
                   }}
                 >
-                  <Typography>
-                    Tambahkan perbandingan metode-metode yang digunakan.
-                    Menambahkan metode Perbaiki font dan ukuran menggunakan
-                    standar kampus
-                  </Typography>
+                  <Typography>{perubahan?.changes_by_member}</Typography>
                 </Div>
               </Div>
               {/* Perubahan Advisor */}
@@ -621,47 +769,81 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
                     borderRadius: "0 0 6px 6px",
                   }}
                 >
-                  <Typography>
-                    Tambahkan sebuah fitur-fitur. Tambahkan user Mahasiswa.
-                  </Typography>
+                  <Typography>{perubahan?.changes_by_advisor}</Typography>
                 </Div>
               </Div>
-              {/* Perubahan Co-Advisor */}
-              <Div
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  alignSelf: "stretch",
-                }}
-              >
+              {/* Perubahan Co-Advisor 1 */}
+              {advisorAndCoAdvisor?.coAdvisor1 && (
                 <Div
                   sx={{
                     display: "flex",
+                    flexDirection: "column",
                     alignItems: "flex-start",
                     alignSelf: "stretch",
-                    background: "rgba(26, 56, 96, 0.10)",
-                    padding: "14px 16px",
-                    borderRadius: "6px",
                   }}
                 >
-                  <Typography variant="subtitle2">Co-Advisor</Typography>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      alignSelf: "stretch",
+                      background: "rgba(26, 56, 96, 0.10)",
+                      padding: "14px 16px",
+                      borderRadius: "6px",
+                    }}
+                  >
+                    <Typography variant="subtitle2">Co-Advisor 1</Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      alignSelf: "stretch",
+                      padding: "14px 16px",
+                      border: "2px solid rgba(26, 56, 96, 0.10)",
+                      borderRadius: "0 0 6px 6px",
+                    }}
+                  >
+                    <Typography>{perubahan?.changes_by_co_advisor1}</Typography>
+                  </Div>
                 </Div>
+              )}
+              {/* Perubahan Co-Advisor 2 */}
+              {advisorAndCoAdvisor?.coAdvisor2 && (
                 <Div
                   sx={{
                     display: "flex",
+                    flexDirection: "column",
                     alignItems: "flex-start",
                     alignSelf: "stretch",
-                    padding: "14px 16px",
-                    border: "2px solid rgba(26, 56, 96, 0.10)",
-                    borderRadius: "0 0 6px 6px",
                   }}
                 >
-                  <Typography>
-                    Tambahkan sebuah fitur-fitur. Tambahkan user Mahasiswa.
-                  </Typography>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      alignSelf: "stretch",
+                      background: "rgba(26, 56, 96, 0.10)",
+                      padding: "14px 16px",
+                      borderRadius: "6px",
+                    }}
+                  >
+                    <Typography variant="subtitle2">Co-Advisor 2</Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      alignSelf: "stretch",
+                      padding: "14px 16px",
+                      border: "2px solid rgba(26, 56, 96, 0.10)",
+                      borderRadius: "0 0 6px 6px",
+                    }}
+                  >
+                    <Typography>{perubahan?.changes_by_co_advisor2}</Typography>
+                  </Div>
                 </Div>
-              </Div>
+              )}
             </Div>
             {/* View Perubahan End */}
             <Typography
@@ -678,7 +860,7 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
                 fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
               }}
             >
-              Document Revisi Skripsi
+              Dokumen Revisi Proposal
             </Typography>
 
             {/* Table 2 Start */}
@@ -696,11 +878,11 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                      {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{
                           fontSize: "12px",
@@ -758,30 +940,31 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
 
                   <TableBody>
                     <TableRow>
-                      <TableCell>1</TableCell>
+                      {/* <TableCell>1</TableCell> */}
                       <TableCell sx={{ fontSize: "12px" }}>
-                        SISTEM INFORMASI PELAYANAN PUSKESMAS TALAWAAN BERBASIS
-                        WEB-APPLICATION
+                        {dokumenRevisi?.file_name_revision}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }}>
-                        08/09/2023
+                        {dokumenRevisi?.upload_date_revision}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }}>
-                        5.6321 bytes
+                        {dokumenRevisi?.file_size_revision}
                       </TableCell>
                       {/* status ketua panalis */}
                       <TableCell>
-                        {ketuaPenelisStatus === "Setuju" ? (
+                        {dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                        "Approve" ? (
                           <Chip
                             size="small"
-                            label="Diterima"
+                            label="Disetujui"
                             sx={{
                               background: "rgba(0, 255, 0, 0.10)",
                               color: "#008000",
                               fontSize: "10px",
                             }}
                           />
-                        ) : ketuaPenelisStatus === "Tolak" ? (
+                        ) : dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                          "Rejected" ? (
                           <Chip
                             size="small"
                             label="Ditolak"
@@ -791,7 +974,8 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
                               fontSize: "10px",
                             }}
                           />
-                        ) : (
+                        ) : dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                          "Waiting" ? (
                           <Chip
                             size="small"
                             label="Menunggu"
@@ -801,21 +985,23 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
                               fontSize: "10px",
                             }}
                           />
-                        )}
+                        ) : null}
                       </TableCell>
                       {/* status Anggota panalis */}
                       <TableCell>
-                        {AnggotaPanalisStatus === "Setuju" ? (
+                        {dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                        "Approve" ? (
                           <Chip
                             size="small"
-                            label="Diterima"
+                            label="Disetujui"
                             sx={{
                               background: "rgba(0, 255, 0, 0.10)",
                               color: "#008000",
                               fontSize: "10px",
                             }}
                           />
-                        ) : AnggotaPanalisStatus === "Tolak" ? (
+                        ) : dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                          "Rejected" ? (
                           <Chip
                             size="small"
                             label="Ditolak"
@@ -825,7 +1011,8 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
                               fontSize: "10px",
                             }}
                           />
-                        ) : (
+                        ) : dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                          "Waiting" ? (
                           <Chip
                             size="small"
                             label="Menunggu"
@@ -835,21 +1022,23 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
                               fontSize: "10px",
                             }}
                           />
-                        )}
+                        ) : null}
                       </TableCell>
                       {/* status advisor */}
                       <TableCell>
-                        {AdvisorStatus === "Setuju" ? (
+                        {dokumenRevisi?.is_revision_approve_by_advisor ===
+                        "Approve" ? (
                           <Chip
                             size="small"
-                            label="Diterima"
+                            label="Disetujui"
                             sx={{
                               background: "rgba(0, 255, 0, 0.10)",
                               color: "#008000",
                               fontSize: "10px",
                             }}
                           />
-                        ) : AdvisorStatus === "Tolak" ? (
+                        ) : dokumenRevisi?.is_revision_approve_by_advisor ===
+                          "Rejected" ? (
                           <Chip
                             size="small"
                             label="Ditolak"
@@ -859,7 +1048,8 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
                               fontSize: "10px",
                             }}
                           />
-                        ) : (
+                        ) : dokumenRevisi?.is_revision_approve_by_advisor ===
+                          "Waiting" ? (
                           <Chip
                             size="small"
                             label="Menunggu"
@@ -869,7 +1059,7 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
                               fontSize: "10px",
                             }}
                           />
-                        )}
+                        ) : null}
                       </TableCell>
                       <TableCell>
                         <Div
@@ -879,17 +1069,19 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
                             alignItems: "center",
                           }}
                         >
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
-                              fontSize: "12px",
-                              padding: "5px 0",
-                            }}
-                          >
-                            View
-                          </span>
+                          {dokumenRevisi?.file_name_revision !== null && (
+                            <span
+                              style={{
+                                textDecoration: "none",
+                                cursor: "pointer",
+                                color: "blue",
+                                fontSize: "12px",
+                                padding: "5px 0",
+                              }}
+                            >
+                              Lihat
+                            </span>
+                          )}
                           {/* Menampilkan pengisian ADVISOR, KETUA PANALIS, DAN ANGGOTA PANALIS */}
                           <ActionRevision />
                         </Div>
@@ -1221,4 +1413,4 @@ const DocumentRevisiSkripsiKetuaPenelis = () => {
   );
 };
 
-export default DocumentRevisiSkripsiKetuaPenelis;
+export default DokumenRevisiProposal;

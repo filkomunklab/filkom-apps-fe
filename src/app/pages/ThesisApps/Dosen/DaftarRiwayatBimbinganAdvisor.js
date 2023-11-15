@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
 import {
   FormControl,
@@ -221,30 +222,26 @@ const RiwayatBimbinganAdvisor = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {riwayat.skripsis.map((skripsi) =>
-                    skripsi.students.map((student, index) => (
-                      <TableRow key={skripsi.group_id + index}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{student.fullName}</TableCell>
-                        <TableCell>{skripsi.title}</TableCell>
-                        {/* Tambahkan tanggal diterima jika tersedia */}
-                        <TableCell>
-                          {/* Tambahkan tanggal diterima di sini */}
+                  {riwayat.skripsis.map((skripsi, index) => (
+                    <TableRow key={skripsi.group_id + index}>
+                      <TableCell>{index + 1}</TableCell>
+                      {skripsi.students.map((student, studentIndex) => (
+                        <TableCell key={studentIndex}>
+                          {student.fullName}
                         </TableCell>
-                        <TableCell>
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
-                            }}
-                          >
-                            Detail
-                          </span>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
+                      ))}
+                      <TableCell>{skripsi.title}</TableCell>
+                      <TableCell>{skripsi.approve_date}</TableCell>
+                      <TableCell>
+                        <Link
+                          to={`/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor/beranda/${skripsi.group_id}/ADVISOR`}
+                          style={{ textDecoration: "none", color: "blue" }}
+                        >
+                          Detail
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TableContainer>

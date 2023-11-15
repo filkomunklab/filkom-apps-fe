@@ -35,6 +35,7 @@ const DaftarKomiteJudulDosen = () => {
         );
         // Atur state 'setDaftarKomiteJudul' dengan data dari respons
         setDaftarKomiteJudul(response.data.data);
+        console.log("Request data daftar komite judul: ", response.data.data);
       } catch (error) {
         console.error(
           "Terjadi kesalahan saat mengambil daftar pengajuan:",

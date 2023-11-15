@@ -1,3 +1,6 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
@@ -15,13 +18,104 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import WarningIcon from "@mui/icons-material/Warning";
+import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
+import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
+import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
+import MenuKetuaPanelis from "app/shared/MenuHorizontal/MenuKetuaPanelis";
+import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
+import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
+import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
-import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
 
-const DocumentPersetujuanDosenPembimbing = () => {
+const DokumenSkripsi = () => {
+  // state - menyimpan request data
+  const [dokumenSkripsi, setDokumenSkripsi] = useState();
+  const [buktiPembayaran, setBuktiPembayaran] = useState();
+  const [hasilCekPlagiat, setHasilCekPlagiat] = useState();
+
+  const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
+
+  const groupId = useParams().groupId;
+  console.log("group id: ", groupId);
+  const [progress, setProgress] = useState(null);
+  const [skripsiId, setSkripsiId] = useState(null);
+
+  const userRole = useParams().role;
+  console.log("role user akses page: ", userRole);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log("role user yang sign in: ", role);
+
+  useEffect(() => {
+    const fetchDokumenSkripsiData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/skripsi-document/${skripsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDokumenSkripsi(response.data.data);
+        console.log("Request Get dokumen skripsi: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil dokumen skripsi:",
+          error
+        );
+      }
+    };
+    const fetchBuktiPembayaranData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/skripsi-payment/${skripsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setBuktiPembayaran(response.data.data);
+        console.log("Request Get bukti pembayaran: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil bukti pembayaran:",
+          error
+        );
+      }
+    };
+    const fetchHasilCekPlagiatData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/${skripsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setHasilCekPlagiat(response.data.data);
+        console.log("Request Get hasil cek plagiat: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil hail cek plagiat:",
+          error
+        );
+      }
+    };
+    fetchDokumenSkripsiData();
+    fetchBuktiPembayaranData();
+    fetchHasilCekPlagiatData();
+  }, [token, skripsiId]);
+
   // Advisor setuju dan tolak
   const [isSetujuClicked, setIsSetujuClicked] = useState(false);
   const [isTolakClicked, setIsTolakClicked] = useState(false);
@@ -185,229 +279,237 @@ const DocumentPersetujuanDosenPembimbing = () => {
 
   const cekPlagiatData = generateCekPlagiatData();
 
-  const { role } = JSON.parse(localStorage.getItem("user"));
-  // const role = ["ADVISOR", "DOSEN"];
-  console.log(role);
-
   let Actions;
 
-  if (role.includes("ADVISOR")) {
+  if (userRole === "ADVISOR") {
     Actions = () => (
       <Div
-        hidden={role.includes("ADVISOR") ? false : true}
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {isSetujuClicked || isTolakClicked ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndex(1);
-              setSetujuConfirmationDialogOpen(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {isSetujuClicked || isTolakClicked ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-            }}
-            onClick={() => {
-              setSelectedActionIndex(2);
-              setTolakConfirmationDialogOpen(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenSkripsi?.file_name_skripsi !== null && (
+          <>
+            {dokumenSkripsi?.is_skripsi_approve_by_advisor === "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndex(1);
+                  setSetujuConfirmationDialogOpen(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+            {dokumenSkripsi?.is_skripsi_approve_by_advisor === "Approve" ||
+            dokumenSkripsi?.is_skripsi_approve_by_advisor === "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndex(2);
+                  setTolakConfirmationDialogOpen(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
-  } else if (role.includes("CO_ADVISOR1")) {
+  } else if (role === "CO_ADVISOR1") {
     Actions = () => (
       <Div
-        hidden={role.includes("CO_ADVISOR1") ? false : true}
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {isSetujuClickedCoAdvisor1 || isTolakClickedCoAdvisor1 ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndexCoAdvisor1(1);
-              setSetujuConfirmationDialogOpenCoAdvisor1(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {isSetujuClickedCoAdvisor1 || isTolakClickedCoAdvisor1 ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-            onClick={() => {
-              setSelectedActionIndexCoAdvisor1(2);
-              setTolakConfirmationDialogOpenCoAdvisor1(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenSkripsi?.file_name_skripsi !== null && (
+          <>
+            {dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 === "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexCoAdvisor1(1);
+                  setSetujuConfirmationDialogOpenCoAdvisor1(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+            {dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 === "Approve" ||
+            dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 === "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexCoAdvisor1(2);
+                  setTolakConfirmationDialogOpenCoAdvisor1(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
-  } else if (role.includes("CO_ADVISOR2")) {
+  } else if (role === "CO_ADVISOR2") {
     Actions = () => (
       <Div
-        hidden={role.includes("CO_ADVISOR2") ? false : true}
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {isSetujuClickedCoAdvisor2 || isTolakClickedCoAdvisor2 ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndexCoAdvisor2(1);
-              setSetujuConfirmationDialogOpenCoAdvisor2(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {isSetujuClickedCoAdvisor2 || isTolakClickedCoAdvisor2 ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-            onClick={() => {
-              setSelectedActionIndexCoAdvisor2(2);
-              setTolakConfirmationDialogOpenCoAdvisor2(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenSkripsi?.file_name_skripsi !== null && (
+          <>
+            {dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 === "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexCoAdvisor2(1);
+                  setSetujuConfirmationDialogOpenCoAdvisor2(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+            {dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 === "Approve" ||
+            dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 === "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexCoAdvisor2(2);
+                  setTolakConfirmationDialogOpenCoAdvisor2(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
@@ -426,7 +528,7 @@ const DocumentPersetujuanDosenPembimbing = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Dokumen Proposal
+          Dokumen Skripsi
         </Typography>
       </Div>
 
@@ -450,7 +552,19 @@ const DocumentPersetujuanDosenPembimbing = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          <Riwayatlog />
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(data) => {
+              if (data) {
+                setProgress(data.progress);
+                setSkripsiId(data.skripsi_id);
+                setAdvisorAndCoAdvisor({
+                  coAdvisor1: data.co_advisor1,
+                  coAdvisor2: data.co_advisor2,
+                });
+              }
+            }}
+          />
         </Div>
         {/* Element 1 End */}
         {/* Element 2 Start */}
@@ -466,35 +580,100 @@ const DocumentPersetujuanDosenPembimbing = () => {
             borderRadius: "8px",
           }}
         >
-          {/* Menu Horizontal Dosen Start */}
+          {/* Menu Horizontal Start */}
+          {/* DOSEN SKRIPSI */}
+          <Div
+            hidden={userRole === "DOSEN_MK" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDosenSkripsi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
+          </Div>
+          {/* ADVISOR */}
+          <Div
+            hidden={userRole === "ADVISOR" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
+          </Div>
+          {/* CO_ADVISOR */}
           <Div
             hidden={
-              role.includes(
-                "DOSEN",
-                "ADVISOR",
-                "CO_ADVISOR",
-                "KETUA_PANALIS",
-                "ANGGOTA_PANALIS",
-                "KAPRODI",
-                "DEKAN"
-              )
+              userRole === "CO_ADVISOR1" || userRole === "CO_ADVISOR2"
                 ? false
                 : true
             }
             sx={{ width: "100%" }}
           >
-            <MenuPenguji />
+            <MenuCoAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
           </Div>
-          {/* Menu horizontal Dosen End */}
-
-          {/* Menu Horizontal Sekertaris Start */}
+          {/* KETUA_PANELIS */}
           <Div
-            hidden={role.includes("SEKERTARIS") ? false : true}
+            hidden={userRole === "KETUA_PANELIS" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuSekertaris />
+            <MenuKetuaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
           </Div>
-          {/* Menu horizontal Sekertaris End */}
+          {/* ANGGOTA_PANELIS */}
+          <Div
+            hidden={userRole === "ANGGOTA_PANELIS" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAnggotaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
+          </Div>
+          {/* DEKAN */}
+          <Div
+            hidden={userRole === "DEKAN" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDekan
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
+          </Div>
+          {/* KAPRODI */}
+          <Div
+            hidden={userRole === "KAPRODI" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKaprodi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
+          </Div>
+          {/* SEKRETARIS */}
+          <Div
+            hidden={userRole === "OPERATOR_FILKOM" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuSekertaris
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Skripsi"}
+            />
+          </Div>
+          {/* Menu horizontal End */}
           <Div
             sx={{
               display: "flex",
@@ -523,7 +702,7 @@ const DocumentPersetujuanDosenPembimbing = () => {
                 fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
               }}
             >
-              Dokumen Proposal
+              Dokumen Skripsi
             </Typography>
 
             {/* Table 1 Start*/}
@@ -541,11 +720,11 @@ const DocumentPersetujuanDosenPembimbing = () => {
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                      {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{
                           fontSize: "12px",
@@ -578,16 +757,28 @@ const DocumentPersetujuanDosenPembimbing = () => {
                       >
                         Advisor
                       </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
-                      >
-                        Co-Advisor 1
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
-                      >
-                        Co-Advisor 2
-                      </TableCell>
+                      {advisorAndCoAdvisor?.coAdvisor1 && (
+                        <TableCell
+                          sx={{
+                            fontSize: "12px",
+                            padding: "11px",
+                            width: "15%",
+                          }}
+                        >
+                          Co-Advisor 1
+                        </TableCell>
+                      )}
+                      {advisorAndCoAdvisor?.coAdvisor2 && (
+                        <TableCell
+                          sx={{
+                            fontSize: "12px",
+                            padding: "11px",
+                            width: "15%",
+                          }}
+                        >
+                          Co-Advisor 2
+                        </TableCell>
+                      )}
                       <TableCell
                         sx={{
                           fontSize: "12px",
@@ -603,30 +794,34 @@ const DocumentPersetujuanDosenPembimbing = () => {
 
                   <TableBody>
                     <TableRow>
-                      <TableCell>1</TableCell>
+                      {/* <TableCell>1</TableCell> */}
                       <TableCell sx={{ fontSize: "12px" }}>
-                        SISTEM INFORMASI PELAYANAN PUSKESMAS TALAWAAN BERBASIS
-                        WEB-APPLICATION
+                        {dokumenSkripsi?.file_name_skripsi}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }}>
-                        08/09/2023
+                        {dokumenSkripsi?.upload_date_skripsi}
                       </TableCell>
                       <TableCell sx={{ fontSize: "12px" }}>
-                        5.6321 bytes
+                        {dokumenSkripsi?.file_size_skripsi}
                       </TableCell>
                       {/* status Advisor */}
                       <TableCell>
-                        {advisorStatus === "Setuju" ? (
+                        {dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                        null ? (
+                          ""
+                        ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                          "Approve" ? (
                           <Chip
                             size="small"
-                            label="Diterima"
+                            label="Disetujui"
                             sx={{
                               background: "rgba(0, 255, 0, 0.10)",
                               color: "#008000",
                               fontSize: "10px",
                             }}
                           />
-                        ) : advisorStatus === "Tolak" ? (
+                        ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                          "Rejected" ? (
                           <Chip
                             size="small"
                             label="Ditolak"
@@ -636,7 +831,8 @@ const DocumentPersetujuanDosenPembimbing = () => {
                               fontSize: "10px",
                             }}
                           />
-                        ) : (
+                        ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                          "Waiting" ? (
                           <Chip
                             size="small"
                             label="Menunggu"
@@ -646,76 +842,92 @@ const DocumentPersetujuanDosenPembimbing = () => {
                               fontSize: "10px",
                             }}
                           />
-                        )}
+                        ) : null}
                       </TableCell>
                       {/* status CoAdvisor1 */}
-                      <TableCell>
-                        {coAdvisor1Status === "Setuju" ? (
-                          <Chip
-                            size="small"
-                            label="Diterima"
-                            sx={{
-                              background: "rgba(0, 255, 0, 0.10)",
-                              color: "#008000",
-                              fontSize: "10px",
-                            }}
-                          />
-                        ) : coAdvisor1Status === "Tolak" ? (
-                          <Chip
-                            size="small"
-                            label="Ditolak"
-                            sx={{
-                              background: "rgba(255, 0, 0, 0.10)",
-                              color: "#FF0000",
-                              fontSize: "10px",
-                            }}
-                          />
-                        ) : (
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                            }}
-                          />
-                        )}
-                      </TableCell>
+                      {advisorAndCoAdvisor?.coAdvisor1 && (
+                        <TableCell>
+                          {dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                          null ? (
+                            ""
+                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                            "Approve" ? (
+                            <Chip
+                              size="small"
+                              label="Disetujui"
+                              sx={{
+                                background: "rgba(0, 255, 0, 0.10)",
+                                color: "#008000",
+                                fontSize: "10px",
+                              }}
+                            />
+                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                            "Rejected" ? (
+                            <Chip
+                              size="small"
+                              label="Ditolak"
+                              sx={{
+                                background: "rgba(255, 0, 0, 0.10)",
+                                color: "#FF0000",
+                                fontSize: "10px",
+                              }}
+                            />
+                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                            "Waiting" ? (
+                            <Chip
+                              size="small"
+                              label="Menunggu"
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                                fontSize: "10px",
+                              }}
+                            />
+                          ) : null}
+                        </TableCell>
+                      )}
                       {/* Status CoAdvisor2 */}
-                      <TableCell>
-                        {coAdvisor2Status === "Setuju" ? (
-                          <Chip
-                            size="small"
-                            label="Diterima"
-                            sx={{
-                              background: "rgba(0, 255, 0, 0.10)",
-                              color: "#008000",
-                              fontSize: "10px",
-                            }}
-                          />
-                        ) : coAdvisor2Status === "Tolak" ? (
-                          <Chip
-                            size="small"
-                            label="Ditolak"
-                            sx={{
-                              background: "rgba(255, 0, 0, 0.10)",
-                              color: "#FF0000",
-                              fontSize: "10px",
-                            }}
-                          />
-                        ) : (
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                            }}
-                          />
-                        )}
-                      </TableCell>
+                      {advisorAndCoAdvisor?.coAdvisor2 && (
+                        <TableCell>
+                          {dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                          null ? (
+                            ""
+                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                            "Approve" ? (
+                            <Chip
+                              size="small"
+                              label="Disetujui"
+                              sx={{
+                                background: "rgba(0, 255, 0, 0.10)",
+                                color: "#008000",
+                                fontSize: "10px",
+                              }}
+                            />
+                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                            "Rejected" ? (
+                            <Chip
+                              size="small"
+                              label="Ditolak"
+                              sx={{
+                                background: "rgba(255, 0, 0, 0.10)",
+                                color: "#FF0000",
+                                fontSize: "10px",
+                              }}
+                            />
+                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                            "Waiting" ? (
+                            <Chip
+                              size="small"
+                              label="Menunggu"
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                                fontSize: "10px",
+                              }}
+                            />
+                          ) : null}
+                        </TableCell>
+                      )}
                       <TableCell>
                         <Div
                           style={{
@@ -724,17 +936,19 @@ const DocumentPersetujuanDosenPembimbing = () => {
                             alignItems: "center",
                           }}
                         >
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
-                              fontSize: "12px",
-                              padding: "5px 0",
-                            }}
-                          >
-                            View
-                          </span>
+                          {dokumenSkripsi?.file_name_skripsi !== null && (
+                            <span
+                              style={{
+                                textDecoration: "none",
+                                cursor: "pointer",
+                                color: "blue",
+                                fontSize: "12px",
+                                padding: "5px 0",
+                              }}
+                            >
+                              Lihat
+                            </span>
+                          )}
                           {/* Button untuk Advisor */}
                           {/* <Div
                             hidden={role.includes("DOSEN") ? false : true}
@@ -1293,181 +1507,236 @@ const DocumentPersetujuanDosenPembimbing = () => {
                 </DialogActions>
               </Dialog>
             </Div>
-            {/* Table 1 End */}
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
-              }}
-            >
-              Bukti Pembayaran
-            </Typography>
+            {userRole !== "KETUA_PANELIS" && userRole !== "ANGGOTA_PANELIS" && (
+              <>
+                {/* Table 1 End */}
+                <Typography
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    padding: "24px",
+                    alignItems: "center",
+                    gap: "10px",
+                    color: "#192434",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+                  }}
+                >
+                  Bukti Pembayaran
+                </Typography>
 
-            {/* Table 2 Start */}
-            <Div
-              sx={{
-                width: "100%",
-                padding: "0 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "25px",
-              }}
-            >
-              {/* Table Upload Payment Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
-                <Table>
-                  <TableHead sx={{ background: "#F5F5F5" }}>
-                    <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                {/* Table 2 Start */}
+                <Div
+                  sx={{
+                    width: "100%",
+                    padding: "0 25px",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    gap: "25px",
+                  }}
+                >
+                  {/* Table Upload Payment Start*/}
+                  <TableContainer
+                    sx={{ marginBottom: "25px" }}
+                    component={Paper}
+                  >
+                    <Table>
+                      <TableHead sx={{ background: "#F5F5F5" }}>
+                        <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
+                          {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
-                      >
-                        Nama File
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Tanggal
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Ukuran
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "5%" }}
-                      >
-                        Action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {buktiPembayaranData.map((row, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{row.nomor}</TableCell>
-                        <TableCell>{row.namaFile}</TableCell>
-                        <TableCell>{row.tanggal}</TableCell>
-                        <TableCell>{row.ukuran}</TableCell>
-                        <TableCell>
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
+                      </TableCell> */}
+                          <TableCell
+                            sx={{
                               fontSize: "12px",
-                              alignItems: "center",
+                              padding: "11px",
+                              width: "45%",
                             }}
                           >
-                            View
-                          </span>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Upload Payment End*/}
-            </Div>
-            {/* Table 2 End */}
+                            Nama File
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "20%",
+                            }}
+                          >
+                            Tanggal
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "20%",
+                            }}
+                          >
+                            Ukuran
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "5%",
+                            }}
+                          >
+                            Action
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          {/* <TableCell>{row.nomor}</TableCell> */}
+                          <TableCell>
+                            {buktiPembayaran?.file_name_payment}
+                          </TableCell>
+                          <TableCell>
+                            {buktiPembayaran?.upload_date_payment}
+                          </TableCell>
+                          <TableCell>
+                            {buktiPembayaran?.file_size_payment}
+                          </TableCell>
+                          <TableCell>
+                            {buktiPembayaran?.file_name_payment !== null && (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                Lihat
+                              </span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  {/* Table Upload Payment End*/}
+                </Div>
+                {/* Table 2 End */}
 
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
-              }}
-            >
-              Hasil Cek plagiat
-            </Typography>
-            {/* Table 3 Start */}
-            <Div
-              sx={{
-                width: "100%",
-                padding: "0 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "25px",
-              }}
-            >
-              {/* Table Upload Payment Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
-                <Table>
-                  <TableHead sx={{ background: "#F5F5F5" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                <Typography
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    padding: "24px",
+                    alignItems: "center",
+                    gap: "10px",
+                    color: "#192434",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+                  }}
+                >
+                  Hasil Cek plagiat
+                </Typography>
+                {/* Table 3 Start */}
+                <Div
+                  sx={{
+                    width: "100%",
+                    padding: "0 25px",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    gap: "25px",
+                  }}
+                >
+                  {/* Table Upload Payment Start*/}
+                  <TableContainer
+                    sx={{ marginBottom: "25px" }}
+                    component={Paper}
+                  >
+                    <Table>
+                      <TableHead sx={{ background: "#F5F5F5" }}>
+                        <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                          {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
-                      >
-                        Nama File
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Tanggal
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Ukuran
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "5%" }}
-                      >
-                        Action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {cekPlagiatData.map((row, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{row.nomor}</TableCell>
-                        <TableCell>{row.namaFile}</TableCell>
-                        <TableCell>{row.tanggal}</TableCell>
-                        <TableCell>{row.ukuran}</TableCell>
-                        <TableCell>
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
+                      </TableCell> */}
+                          <TableCell
+                            sx={{
                               fontSize: "12px",
-                              alignItems: "center",
+                              padding: "11px",
+                              width: "45%",
                             }}
                           >
-                            View
-                          </span>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Upload Payment End*/}
-            </Div>
-            {/* Table 3 End */}
+                            Nama File
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "20%",
+                            }}
+                          >
+                            Tanggal
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "20%",
+                            }}
+                          >
+                            Ukuran
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "5%",
+                            }}
+                          >
+                            Action
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          {/* <TableCell>{row.nomor}</TableCell> */}
+                          <TableCell>
+                            {hasilCekPlagiat?.file_name_plagiarismcheck}
+                          </TableCell>
+                          <TableCell>
+                            {hasilCekPlagiat?.upload_date_plagiarismcheck}
+                          </TableCell>
+                          <TableCell>
+                            {hasilCekPlagiat?.file_size_plagiarismcheck}
+                          </TableCell>
+                          <TableCell>
+                            {hasilCekPlagiat?.file_name_plagiarismcheck !==
+                              null && (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                Lihat
+                              </span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  {/* Table Upload Payment End*/}
+                </Div>
+                {/* Table 3 End */}
+              </>
+            )}
           </Div>
           {/* Element 2 End */}
         </Div>
@@ -1476,4 +1745,4 @@ const DocumentPersetujuanDosenPembimbing = () => {
   );
 };
 
-export default DocumentPersetujuanDosenPembimbing;
+export default DokumenSkripsi;

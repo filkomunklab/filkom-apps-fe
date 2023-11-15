@@ -517,7 +517,7 @@ const DaftarPengujianProposalAnggotaPenelis = () => {
                         <TableCell>
                           <Typography
                             component={Link}
-                            to="/halaman-berikutnya"
+                            to={`/sistem-informasi-skripsi/daftar-pengujian-proposal-anggota/beranda/${proposal.group_id}/ANGGOTA_PANELIS`}
                             sx={{
                               textDecoration: "none",
                               color: "blue",

@@ -22,7 +22,7 @@ import AttachmentIcon from "@mui/icons-material/Attachment";
 const PDFViewerProposal = ({ dokumenProposal }) => {
   const viewPDFProposal = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = dokumenProposal.file_path_proposal;
+    const pdfURL = dokumenProposal?.file_path_proposal;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -77,13 +77,15 @@ const UnggahProposal = () => {
   const [buktiPembayaran, setBuktiPembayaran] = useState();
   const [hasilCekPlagiat, setHasilCekPlagiat] = useState();
 
+  const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
+
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
   const [proposalId, setProposalId] = useState(null);
 
-  const role = useParams().role;
-  console.log(role);
+  const userRole = useParams().role;
+  console.log(userRole);
 
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
@@ -153,140 +155,439 @@ const UnggahProposal = () => {
   }, [token, proposalId]);
 
   // state untuk Upload Proposal
-  const [proposalUploadedFiles, setProposalUploadedFiles] = useState([]);
-  const [selectedProposalFileName, setSelectedProposalFileName] = useState("");
-  const [proposalFile, setProposalFile] = useState(null);
+  // const [proposalUploadedFiles, setProposalUploadedFiles] = useState([]);
+  // const [selectedProposalFileName, setSelectedProposalFileName] = useState("");
+  // const [proposalFile, setProposalFile] = useState(null);
+  const [fileDokumenProposal, setFileDokumenProposal] = useState();
 
   // State untuk Bukti Pembayaran
-  const [paymentFile, setPaymentFile] = useState(null);
-  const [selectedPaymentFileName, setSelectedPaymentFileName] = useState("");
-  const [paymentUploadedFiles, setPaymentUploadedFiles] = useState([]);
+  // const [paymentFile, setPaymentFile] = useState(null);
+  // const [selectedPaymentFileName, setSelectedPaymentFileName] = useState("");
+  // const [paymentUploadedFiles, setPaymentUploadedFiles] = useState([]);
+  const [fileBuktiPembayaran, setFileBuktiPembayaran] = useState();
 
   // State untuk Hasil Cek Plagiat
-  const [plagiarismFile, setPlagiarismFile] = useState(null);
-  const [selectedPlagiarismFileName, setSelectedPlagiarismFileName] =
-    useState("");
-  const [plagiarismUploadedFiles, setPlagiarismUploadedFiles] = useState([]);
+  // const [plagiarismFile, setPlagiarismFile] = useState(null);
+  // const [selectedPlagiarismFileName, setSelectedPlagiarismFileName] =
+  //   useState("");
+  // const [plagiarismUploadedFiles, setPlagiarismUploadedFiles] = useState([]);
+  const [filePlagiat, setFilePlagiat] = useState([]);
 
-  // const onProposalFileChange = (event) => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     if (proposalUploadedFiles.length === 0) {
-  //       setProposalFile(file);
-  //       setSelectedProposalFileName(file.name);
+  const handleUnggahDokumenProposal = (event) => {
+    const file = event.target.files[0];
 
-  //       const newFileData = {
-  //         name: file.name,
-  //         date: new Date().toLocaleDateString(),
-  //         size: file.size,
-  //         advisor: "",
-  //         coAdvisor1: "",
-  //         coAdvisor2: "",
-  //       };
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
 
-  //       setProposalUploadedFiles([newFileData]);
-  //     }
-  //   }
-  // };
+    if (!file || !allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid atau file tidak ada");
+      return;
+    }
 
-  // const onPaymentFileChange = (event) => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     if (paymentUploadedFiles.length === 0) {
-  //       setPaymentFile(file);
-  //       setSelectedPaymentFileName(file.name);
+    const reader = new FileReader();
 
-  //       // Tambahkan data file baru ke state paymentUploadedFiles
-  //       const newFileData = {
-  //         name: file.name,
-  //         date: new Date().toLocaleDateString(),
-  //         size: file.size,
-  //       };
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
 
-  //       setPaymentUploadedFiles([newFileData]);
-  //     } else {
-  //       alert(
-  //         "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-  //       );
-  //     }
-  //   }
-  // };
+    reader.onload = (e) => {
+      const dataURL = e.target.result;
 
-  // const onPlagiarismFileChange = (event) => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     if (plagiarismUploadedFiles.length === 0) {
-  //       setPlagiarismFile(file);
-  //       setSelectedPlagiarismFileName(file.name);
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1];
 
-  //       // Tambahkan data file baru ke state plagiarismUploadedFiles
-  //       const newFileData = {
-  //         name: file.name,
-  //         date: new Date().toLocaleDateString(),
-  //         size: file.size,
-  //       };
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
 
-  //       setPlagiarismUploadedFiles([newFileData]);
-  //     } else {
-  //       alert(
-  //         "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-  //       );
-  //     }
-  //   }
-  // };
+      // Logika pengolahan file
+      const data = {
+        proposal_file: {
+          file_name_proposal: file.name,
+          file_size_proposal: fileSizeString,
+          buffer: base64String,
+        },
+      };
 
-  // fungsi untuk menghapus file Proposal
-  const handleDeleteProposalFile = (index) => {
-    const updatedFiles = [...proposalUploadedFiles];
-    updatedFiles.splice(index, 1);
-    setProposalUploadedFiles(updatedFiles);
-    setProposalFile(null);
-    setSelectedProposalFileName("");
+      // Panggil fungsi untuk mengirim file ke server
+      sendDokumenProposalToServer(data);
+    };
+
+    reader.readAsDataURL(file);
   };
 
-  // const handleDeleteProposalFile = async (proposalId) => {
-  //   try {
-  //     const response = await axios.delete(
-  //       `http://localhost:2000/api/v1/proposal/proposal-document/${proposalId}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`, // Ganti 'token' dengan nilai token yang sesuai
-  //         },
-  //       }
-  //     );
+  const sendDokumenProposalToServer = (data) => {
+    console.log("Dokumen proposal yang akan diunggah: ", data);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/proposal/proposal-document/${proposalId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil unggah dokumen proposal: ", response.data.data);
 
-  //     if (response.status === 200) {
-  //       // Proposal berhasil dihapus dari server, sekarang hapus dari tampilan
-  //       const updatedProposalFiles = proposalUploadedFiles.filter(
-  //         (file) => file.id !== proposalId
-  //       );
-  //       setProposalUploadedFiles(updatedProposalFiles);
-  //       setProposalFile(null);
-  //       setSelectedProposalFileName("");
-  //       console.log('Proposal berhasil dihapus.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Terjadi kesalahan saat menghapus proposal:', error);
-  //     // Handle error or provide an appropriate message to the user
-  //   }
-  // };
-
-  // Fungsi untuk menghapus file bukti pembayaran
-  const handleDeletePaymentFile = (index) => {
-    const updatedFiles = [...paymentUploadedFiles];
-    updatedFiles.splice(index, 1);
-    setPaymentUploadedFiles(updatedFiles);
-    setPaymentFile(null);
-    setSelectedPaymentFileName("");
+        // request data
+        const fetchDokumenProposalData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/proposal/proposal-document/${proposalId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDokumenProposal(response.data.data);
+            console.log("Request Get dokumen proposal: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil dokumen proposal:",
+              error
+            );
+          }
+        };
+        fetchDokumenProposalData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah dokumen proposal:",
+          error.response.data.message
+        );
+      });
   };
 
-  // Fungsi untuk menghapus file hasil cek plagiat
-  const handleDeletePlagiarismFile = (index) => {
-    const updatedFiles = [...plagiarismUploadedFiles];
-    updatedFiles.splice(index, 1);
-    setPlagiarismUploadedFiles(updatedFiles);
-    setPlagiarismFile(null);
-    setSelectedPlagiarismFileName("");
+  const handleUnggahBuktiPembayaran = (event) => {
+    const file = event.target.files[0];
+
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
+
+    if (!file || !allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid atau file tidak ada");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
+
+    reader.onload = (e) => {
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1];
+
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
+
+      // Logika pengolahan file
+      const data = {
+        payment_file: {
+          file_name_payment: file.name,
+          file_size_payment: fileSizeString,
+          buffer: base64String,
+        },
+      };
+
+      // Panggil fungsi untuk mengirim file ke server
+      sendBuktiPembayaranToServer(data);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const sendBuktiPembayaranToServer = (data) => {
+    console.log("Bukti pembayaran yang akan diunggah: ", data);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/proposal/proposal-payment/${proposalId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil unggah bukti pembayaran: ", response.data.data);
+
+        // request data
+        const fetchBuktiPembayaranData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/proposal/proposal-payment/${proposalId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setBuktiPembayaran(response.data.data);
+            console.log("Request Get bukti pembayaran: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil bukti pembayaran:",
+              error
+            );
+          }
+        };
+        fetchBuktiPembayaranData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah bukti pembayaran:",
+          error.response.data.message
+        );
+      });
+  };
+
+  const handleUnggahPlagiat = (event) => {
+    const file = event.target.files[0];
+
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
+
+    if (!file || !allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid atau file tidak ada");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
+
+    reader.onload = (e) => {
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1];
+
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
+
+      // Logika pengolahan file
+      const data = {
+        plagiarism_file: {
+          file_name_plagiarismcheck: file.name,
+          file_size_plagiarismcheck: fileSizeString,
+          buffer: base64String,
+        },
+      };
+
+      // Panggil fungsi untuk mengirim file ke server
+      sendPlagiatToServer(data);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const sendPlagiatToServer = (data) => {
+    console.log("Hasil cek plagiat yang akan diunggah: ", data);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/proposal/proposal-plagiarism-check/${proposalId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil unggah hasil cek plagiat: ", response.data.data);
+
+        // request data
+        const fetchHasilCekPlagiatData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/proposal/proposal-plagiarism-check/${proposalId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setHasilCekPlagiat(response.data.data);
+            console.log("Request Get hasil cek plagiat: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil hail cek plagiat:",
+              error
+            );
+          }
+        };
+        fetchHasilCekPlagiatData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah hasil cek plagiat:",
+          error.response.data.message
+        );
+      });
+  };
+
+  const handleHapusDokumenProposal = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/proposal/proposal-document/delete/${proposalId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(
+          "Berhasil menghapus dokumen proposal: ",
+          response.data.data
+        );
+
+        // request data
+        const fetchDokumenProposalData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/proposal/proposal-document/${proposalId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDokumenProposal(response.data.data);
+            console.log("Request Get dokumen proposal: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil dokumen proposal:",
+              error
+            );
+          }
+        };
+        fetchDokumenProposalData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat menghapus dokumen proposal:",
+          error.response.data.message
+        );
+      });
+  };
+
+  const handleHapusBuktiPembayaran = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/proposal/proposal-payment/delete/${proposalId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(
+          "Berhasil menghapus bukti pembayaran: ",
+          response.data.data
+        );
+
+        // request data
+        const fetchBuktiPembayaranData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/proposal/proposal-payment/${proposalId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setBuktiPembayaran(response.data.data);
+            console.log("Request Get bukti pembayaran: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil bukti pembayaran:",
+              error
+            );
+          }
+        };
+        fetchBuktiPembayaranData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat menghapus bukti pembayaran:",
+          error.response.data.message
+        );
+      });
+  };
+
+  const handleHapusPlagiat = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/proposal/proposal-plagiarism-check/delete/${proposalId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(
+          "Berhasil menghapus hasil cek plagiat: ",
+          response.data.data
+        );
+
+        // request data
+        const fetchHasilCekPlagiatData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/proposal/proposal-plagiarism-check/${proposalId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setHasilCekPlagiat(response.data.data);
+            console.log("Request Get hasil cek plagiat: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil hail cek plagiat:",
+              error
+            );
+          }
+        };
+        fetchHasilCekPlagiatData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat menghapus hasil cek plagiat:",
+          error.response.data.message
+        );
+      });
   };
 
   return (
@@ -332,6 +633,10 @@ const UnggahProposal = () => {
               if (data) {
                 setProgress(data.progress);
                 setProposalId(data.proposal_id);
+                setAdvisorAndCoAdvisor({
+                  coAdvisor1: data.co_advisor1,
+                  coAdvisor2: data.co_advisor2,
+                });
               }
             }}
           />
@@ -354,10 +659,14 @@ const UnggahProposal = () => {
           {/* Menu Horizontal Start */}
           {/* MAHASISWA */}
           <Div
-            hidden={role.includes("MAHASISWA") ? false : true}
+            hidden={userRole === "MAHASISWA" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
+            <MenuMahasiswa
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Proposal"}
+            />
           </Div>
           {/* Menu horizontal End */}
           <Div
@@ -425,7 +734,7 @@ const UnggahProposal = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    // onChange={onProposalFileChange}
+                    onChange={handleUnggahDokumenProposal}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
@@ -439,11 +748,11 @@ const UnggahProposal = () => {
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                      {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{
                           fontSize: "12px",
@@ -476,16 +785,28 @@ const UnggahProposal = () => {
                       >
                         Advisor
                       </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
-                      >
-                        Co-Advisor 1
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
-                      >
-                        Co-Advisor 2
-                      </TableCell>
+                      {advisorAndCoAdvisor?.coAdvisor1 && (
+                        <TableCell
+                          sx={{
+                            fontSize: "12px",
+                            padding: "11px",
+                            width: "15%",
+                          }}
+                        >
+                          Co-Advisor 1
+                        </TableCell>
+                      )}
+                      {advisorAndCoAdvisor?.is_proposal_approve_by_co_advisor2 && (
+                        <TableCell
+                          sx={{
+                            fontSize: "12px",
+                            padding: "11px",
+                            width: "15%",
+                          }}
+                        >
+                          Co-Advisor 2
+                        </TableCell>
+                      )}
                       <TableCell
                         sx={{
                           fontSize: "12px",
@@ -501,19 +822,20 @@ const UnggahProposal = () => {
 
                   <TableBody>
                     {dokumenProposal && (
-                      <TableRow key={dokumenProposal.id}>
-                        <TableCell>1</TableCell>
+                      <TableRow key={dokumenProposal?.id}>
+                        {/* <TableCell>1</TableCell> */}
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {dokumenProposal.file_name_proposal}
+                          {dokumenProposal?.file_name_proposal}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {dokumenProposal.upload_date_proposal}
+                          {dokumenProposal?.upload_date_proposal}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {dokumenProposal.file_size_proposal}
+                          {dokumenProposal?.file_size_proposal}
                         </TableCell>
+                        {/* status Advisor */}
                         <TableCell>
-                          {dokumenProposal.is_proposal_approve_by_advisor ===
+                          {dokumenProposal?.is_proposal_approve_by_advisor ===
                           "Waiting" ? (
                             <Chip
                               size="small"
@@ -523,7 +845,7 @@ const UnggahProposal = () => {
                                 color: "#985211",
                               }}
                             />
-                          ) : dokumenProposal.is_proposal_approve_by_advisor ===
+                          ) : dokumenProposal?.is_proposal_approve_by_advisor ===
                             "Approve" ? (
                             <Chip
                               size="small"
@@ -533,7 +855,7 @@ const UnggahProposal = () => {
                                 color: "#0A7637",
                               }}
                             />
-                          ) : dokumenProposal.is_proposal_approve_by_advisor ===
+                          ) : dokumenProposal?.is_proposal_approve_by_advisor ===
                             "Rejected" ? (
                             <Chip
                               size="small"
@@ -544,115 +866,123 @@ const UnggahProposal = () => {
                               }}
                             />
                           ) : (
-                            dokumenProposal.is_proposal_approve_by_advisor
+                            dokumenProposal?.is_proposal_approve_by_advisor
                           )}
                         </TableCell>
+                        {/* status CoAdvisor 1 */}
+                        {advisorAndCoAdvisor?.coAdvisor1 && (
+                          <TableCell>
+                            {dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                            "Waiting" ? (
+                              <Chip
+                                size="small"
+                                label={"Menunggu"}
+                                sx={{
+                                  background: "rgba(255, 204, 0, 0.10)",
+                                  color: "#985211",
+                                }}
+                              />
+                            ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                              "Approve" ? (
+                              <Chip
+                                size="small"
+                                label={"Diterima"}
+                                sx={{
+                                  background: "rgba(21, 131, 67, 0.10)",
+                                  color: "#0A7637",
+                                }}
+                              />
+                            ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                              "Rejected" ? (
+                              <Chip
+                                size="small"
+                                label={"Ditolak"}
+                                sx={{
+                                  background: "rgba(226, 29, 18, 0.10)",
+                                  color: "#CA150C",
+                                }}
+                              />
+                            ) : (
+                              dokumenProposal?.is_proposal_approve_by_co_advisor1
+                            )}
+                          </TableCell>
+                        )}
+                        {/* status CoAdvisor 2 */}
+                        {advisorAndCoAdvisor?.coAdvisor2 && (
+                          <TableCell>
+                            {dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                            "Waiting" ? (
+                              <Chip
+                                size="small"
+                                label={"Menunggu"}
+                                sx={{
+                                  background: "rgba(255, 204, 0, 0.10)",
+                                  color: "#985211",
+                                }}
+                              />
+                            ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                              "Approve" ? (
+                              <Chip
+                                size="small"
+                                label={"Diterima"}
+                                sx={{
+                                  background: "rgba(21, 131, 67, 0.10)",
+                                  color: "#0A7637",
+                                }}
+                              />
+                            ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                              "Rejected" ? (
+                              <Chip
+                                size="small"
+                                label={"Ditolak"}
+                                sx={{
+                                  background: "rgba(226, 29, 18, 0.10)",
+                                  color: "#CA150C",
+                                }}
+                              />
+                            ) : (
+                              dokumenProposal?.is_proposal_approve_by_co_advisor2
+                            )}
+                          </TableCell>
+                        )}
                         <TableCell>
-                          {dokumenProposal.is_proposal_approve_by_co_advisor1 ===
-                          "Waiting" ? (
-                            <Chip
-                              size="small"
-                              label={"Menunggu"}
-                              sx={{
-                                background: "rgba(255, 204, 0, 0.10)",
-                                color: "#985211",
-                              }}
-                            />
-                          ) : dokumenProposal.is_proposal_approve_by_co_advisor1 ===
-                            "Approve" ? (
-                            <Chip
-                              size="small"
-                              label={"Diterima"}
-                              sx={{
-                                background: "rgba(21, 131, 67, 0.10)",
-                                color: "#0A7637",
-                              }}
-                            />
-                          ) : dokumenProposal.is_proposal_approve_by_co_advisor1 ===
-                            "Rejected" ? (
-                            <Chip
-                              size="small"
-                              label={"Ditolak"}
-                              sx={{
-                                background: "rgba(226, 29, 18, 0.10)",
-                                color: "#CA150C",
-                              }}
-                            />
-                          ) : (
-                            dokumenProposal.is_proposal_approve_by_co_advisor1
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {dokumenProposal.is_proposal_approve_by_co_advisor2 ===
-                          "Waiting" ? (
-                            <Chip
-                              size="small"
-                              label={"Menunggu"}
-                              sx={{
-                                background: "rgba(255, 204, 0, 0.10)",
-                                color: "#985211",
-                              }}
-                            />
-                          ) : dokumenProposal.is_proposal_approve_by_co_advisor2 ===
-                            "Approve" ? (
-                            <Chip
-                              size="small"
-                              label={"Diterima"}
-                              sx={{
-                                background: "rgba(21, 131, 67, 0.10)",
-                                color: "#0A7637",
-                              }}
-                            />
-                          ) : dokumenProposal.is_proposal_approve_by_co_advisor2 ===
-                            "Rejected" ? (
-                            <Chip
-                              size="small"
-                              label={"Ditolak"}
-                              sx={{
-                                background: "rgba(226, 29, 18, 0.10)",
-                                color: "#CA150C",
-                              }}
-                            />
-                          ) : (
-                            dokumenProposal.is_proposal_approve_by_co_advisor2
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <Div sx={{ display: "flex" }}>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "blue",
-                                fontSize: "12px",
-                              }}
-                            >
-                              {dokumenProposal && (
-                                <PDFViewerProposal
-                                  dokumenProposal={dokumenProposal}
-                                />
-                              )}
-                            </span>
-                            <Div
-                              style={{
-                                margin: "0 5px", // Margin di sekitar garis vertikal
-                                color: "#E0E0E0",
-                              }}
-                            >
-                              |
+                          {dokumenProposal?.file_name_proposal !== null && (
+                            <Div sx={{ display: "flex" }}>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                }}
+                              >
+                                {dokumenProposal && (
+                                  <PDFViewerProposal
+                                    dokumenProposal={dokumenProposal}
+                                  />
+                                )}
+                              </span>
+                              <Div
+                                style={{
+                                  margin: "0 5px", // Margin di sekitar garis vertikal
+                                  color: "#E0E0E0",
+                                }}
+                              >
+                                |
+                              </Div>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "red",
+                                  fontSize: "12px",
+                                }}
+                                onClick={handleHapusDokumenProposal}
+                              >
+                                Hapus
+                              </span>
                             </Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
-                                fontSize: "12px",
-                              }}
-                              onClick={() => handleDeleteProposalFile}
-                            >
-                              Hapus
-                            </span>
-                          </Div>
+                          )}
                         </TableCell>
                       </TableRow>
                     )}
@@ -713,7 +1043,7 @@ const UnggahProposal = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    // onChange={onPaymentFileChange}
+                    onChange={handleUnggahBuktiPembayaran}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
@@ -727,11 +1057,11 @@ const UnggahProposal = () => {
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                      {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
                       >
@@ -762,7 +1092,7 @@ const UnggahProposal = () => {
                   <TableBody>
                     {buktiPembayaran && (
                       <TableRow key={buktiPembayaran.id}>
-                        <TableCell sx={{ fontSize: "12px" }}>1</TableCell>
+                        {/* <TableCell sx={{ fontSize: "12px" }}>1</TableCell> */}
                         <TableCell sx={{ fontSize: "12px" }}>
                           {buktiPembayaran.file_name_payment}
                         </TableCell>
@@ -773,41 +1103,43 @@ const UnggahProposal = () => {
                           {buktiPembayaran.file_size_payment}
                         </TableCell>
                         <TableCell>
-                          <Div sx={{ display: "flex" }}>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "blue",
-                                fontSize: "12px",
-                              }}
-                            >
-                              {buktiPembayaran && (
-                                <PDFViewerPayment
-                                  buktiPembayaran={buktiPembayaran}
-                                />
-                              )}
-                            </span>
-                            <Div
-                              style={{
-                                margin: "0 5px", // Margin di sekitar garis vertikal
-                                color: "#E0E0E0",
-                              }}
-                            >
-                              |
+                          {buktiPembayaran.file_name_payment !== null && (
+                            <Div sx={{ display: "flex" }}>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                }}
+                              >
+                                {buktiPembayaran && (
+                                  <PDFViewerPayment
+                                    buktiPembayaran={buktiPembayaran}
+                                  />
+                                )}
+                              </span>
+                              <Div
+                                style={{
+                                  margin: "0 5px", // Margin di sekitar garis vertikal
+                                  color: "#E0E0E0",
+                                }}
+                              >
+                                |
+                              </Div>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "red",
+                                  fontSize: "12px",
+                                }}
+                                onClick={handleHapusBuktiPembayaran}
+                              >
+                                Hapus
+                              </span>
                             </Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
-                                fontSize: "12px",
-                              }}
-                              onClick={() => handleDeletePaymentFile}
-                            >
-                              Hapus
-                            </span>
-                          </Div>
+                          )}
                         </TableCell>
                       </TableRow>
                     )}
@@ -868,7 +1200,7 @@ const UnggahProposal = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    // onChange={onPlagiarismFileChange}
+                    onChange={handleUnggahPlagiat}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
@@ -882,11 +1214,11 @@ const UnggahProposal = () => {
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                      {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
                       >
@@ -917,7 +1249,7 @@ const UnggahProposal = () => {
                   <TableBody>
                     {hasilCekPlagiat && (
                       <TableRow key={hasilCekPlagiat.id}>
-                        <TableCell sx={{ fontSize: "12px" }}>1</TableCell>
+                        {/* <TableCell sx={{ fontSize: "12px" }}>1</TableCell> */}
                         <TableCell sx={{ fontSize: "12px" }}>
                           {hasilCekPlagiat.file_name_plagiarismcheck}
                         </TableCell>
@@ -928,41 +1260,44 @@ const UnggahProposal = () => {
                           {hasilCekPlagiat.file_size_plagiarismcheck}
                         </TableCell>
                         <TableCell>
-                          <Div sx={{ display: "flex" }}>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "blue",
-                                fontSize: "12px",
-                              }}
-                            >
-                              {hasilCekPlagiat && (
-                                <PDFViewerCekPlagiat
-                                  hasilCekPlagiat={hasilCekPlagiat}
-                                />
-                              )}
-                            </span>
-                            <Div
-                              style={{
-                                margin: "0 5px", // Margin di sekitar garis vertikal
-                                color: "#E0E0E0",
-                              }}
-                            >
-                              |
+                          {hasilCekPlagiat.file_name_plagiarismcheck !==
+                            null && (
+                            <Div sx={{ display: "flex" }}>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                }}
+                              >
+                                {hasilCekPlagiat && (
+                                  <PDFViewerCekPlagiat
+                                    hasilCekPlagiat={hasilCekPlagiat}
+                                  />
+                                )}
+                              </span>
+                              <Div
+                                style={{
+                                  margin: "0 5px", // Margin di sekitar garis vertikal
+                                  color: "#E0E0E0",
+                                }}
+                              >
+                                |
+                              </Div>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "red",
+                                  fontSize: "12px",
+                                }}
+                                onClick={handleHapusPlagiat}
+                              >
+                                Hapus
+                              </span>
                             </Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
-                                fontSize: "12px",
-                              }}
-                              onClick={() => handleDeletePlagiarismFile}
-                            >
-                              Hapus
-                            </span>
-                          </Div>
+                          )}
                         </TableCell>
                       </TableRow>
                     )}

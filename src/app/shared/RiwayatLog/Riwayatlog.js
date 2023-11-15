@@ -98,7 +98,7 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
             sx={{ marginBottom: "20px" }}
           >
             {riwayat?.map((step, index) => (
-              <Step key={step.description} completed={false}>
+              <Step key={index} completed={false}>
                 <StepLabel
                   onClick={() => handleStepClick(index)}
                   style={{ cursor: "pointer" }}

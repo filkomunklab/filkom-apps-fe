@@ -7,12 +7,15 @@ import { Typography } from "@mui/material";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import BerandaPengajuanJudul from "./BerandaPengajuanJudul";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
-import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
+import MenuDosen from "app/shared/MenuHorizontal/MenuDosen";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
-import MenuAnggotaPanalisProposal from "app/shared/MenuHorizontal/MenuAnggotaPanalisProposal";
-import MenuKetuaPanalisProposal from "app/shared/MenuHorizontal/MenuKetuaPanalisProposal";
-import MenuCoAdvisorProposal from "app/shared/MenuHorizontal/MenuCoAdvisorProposal";
-import MenuAdvisorProposal from "app/shared/MenuHorizontal/MenuAdvisorProposal";
+import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
+import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
+import MenuKetuaPanelis from "app/shared/MenuHorizontal/MenuKetuaPanelis";
+import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
+import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
+import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
+import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import BerandaProposalMahasiswa from "./BerandaProposalMahasiswa";
 import BerandaSkripsiMahasiswa from "./BerandaSkripsiMahasiswa";
 import MenuDekanProposal from "app/shared/MenuHorizontal/MenuDekanProposal";
@@ -22,8 +25,8 @@ const BerandaGlobal = () => {
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
 
-  const role = useParams().role;
-  console.log(role);
+  const userRole = useParams().role;
+  console.log(userRole);
 
   if (progress !== null) {
     console.log("Progress:", progress);
@@ -97,70 +100,118 @@ const BerandaGlobal = () => {
             borderRadius: "8px",
           }}
         >
-          {/* DOSEN SKRIPSI */}
+          {/* Menu Horizontal Start */}
+          {/* DOSEN */}
           <Div
-            hidden={role.includes("DOSEN_MK") ? false : true}
+            hidden={userRole === "DOSEN" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
+            <MenuDosen
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Beranda"}
+            />
+          </Div>
+          {/* DOSEN SKRIPSI */}
+          <Div
+            hidden={userRole === "DOSEN_MK" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDosenSkripsi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Beranda"}
+            />
           </Div>
           {/* ADVISOR */}
           <Div
-            hidden={role.includes("ADVISOR") ? false : true}
+            hidden={userRole === "ADVISOR" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuAdvisorProposal />
+            <MenuAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Beranda"}
+            />
           </Div>
           {/* CO_ADVISOR */}
           <Div
-            hidden={role.includes("CO_ADVISOR") ? false : true}
+            hidden={
+              userRole === "CO_ADVISOR1" || userRole === "CO_ADVISOR2"
+                ? false
+                : true
+            }
             sx={{ width: "100%" }}
           >
-            <MenuCoAdvisorProposal />
+            <MenuCoAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Beranda"}
+            />
           </Div>
-          {/* KETUA PANALIS */}
+          {/* KETUA_PANELIS */}
           <Div
-            hidden={role.includes("KETUA_PANALIS") ? false : true}
+            hidden={userRole === "KETUA_PANELIS" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuKetuaPanalisProposal />
+            <MenuKetuaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Beranda"}
+            />
           </Div>
-          {/* ANGGOTA PANALIS */}
+          {/* ANGGOTA_PANELIS */}
           <Div
-            hidden={role.includes("ANGGOTA_PANALIS") ? false : true}
+            hidden={userRole === "ANGGOTA_PANELIS" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuAnggotaPanalisProposal />
+            <MenuAnggotaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Beranda"}
+            />
           </Div>
-          {/* KAPRODI */}
-          {/* <Div
-            hidden={role.includes("KAPRODI") ? false : true}
-            sx={{ width: "100%" }}
-          >
-            <MenuKaprodiProposal />
-          </Div> */}
-          {/* SEKERTARIS */}
           {/* DEKAN */}
           <Div
-            hidden={role.includes("DEKAN") ? false : true}
+            hidden={userRole === "DEKAN" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuDekanProposal />
+            <MenuDekan
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Beranda"}
+            />
           </Div>
+          {/* KAPRODI */}
           <Div
-            hidden={role.includes("SEKERTARIS") ? false : true}
+            hidden={userRole === "KAPRODI" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuSekertaris />
+            <MenuKaprodi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Beranda"}
+            />
+          </Div>
+          {/* SEKRETARIS */}
+          <Div
+            hidden={userRole === "OPERATOR_FILKOM" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuSekertaris
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Beranda"}
+            />
           </Div>
           {/* MAHASISWA */}
           <Div
-            hidden={role.includes("MAHASISWA") ? false : true}
+            hidden={userRole === "MAHASISWA" ? false : true}
             sx={{ width: "100%" }}
           >
             <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
           </Div>
-
+          {/* Menu horizontal End */}
           <Div
             sx={{
               display: "flex",
