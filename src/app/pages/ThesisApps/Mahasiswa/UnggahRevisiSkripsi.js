@@ -23,8 +23,6 @@ import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-
 // View Document Skripsi
 const PDFViewerRevisiSkripsi = ({ dokumenRevisi }) => {
   const viewPDFRevisiSkripsi = () => {
