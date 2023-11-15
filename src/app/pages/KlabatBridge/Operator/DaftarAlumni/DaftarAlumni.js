@@ -248,6 +248,7 @@ const DaftarAlumni = () => {
           setMajor(uniqueMajor);
         }
       });
+      
     return () => {
       isMounted = false;
     };
@@ -258,6 +259,7 @@ const DaftarAlumni = () => {
     console.log(selectedPhoneNums);
   }, [selectedEmails]);
 
+  console.log(data)
   return (
     <Box>
       <Div
