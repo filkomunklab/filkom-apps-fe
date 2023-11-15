@@ -18,8 +18,8 @@ import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 
-// View Document Proposal
-const PDFViewerSkripsi = ({ dokumenSkripsi }) => {
+// View Document Skripsi
+const PDFViewerSkripsi = ({ skripsiFile }) => {
   const viewPDFSkripsi = () => {
     // Buat URL objek untuk file PDF
     const pdfURL = dokumenSkripsi.file_path_skripsi;
@@ -77,13 +77,18 @@ const UploadSkipsi = () => {
   const [buktiPembayaran, setBuktiPembayaran] = useState();
   const [hasilCekPlagiat, setHasilCekPlagiat] = useState();
 
+  const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
+
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
-  const [skrkipsiId, setSkripsiId] = useState(null);
+  const [skripsiId, setSkripsiId] = useState(null);
 
-  const role = useParams().role;
-  console.log(role);
+  const userRole = useParams().role;
+  console.log("role user akses page: ", userRole);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  console.log("role user yang sign in: ", role);
 
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
@@ -93,7 +98,7 @@ const UploadSkipsi = () => {
     const fetchDokumenSkripsiData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-document/${skrkipsiId}`,
+          `http://localhost:2000/api/v1/skripsi/skripsi-document/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -112,7 +117,7 @@ const UploadSkipsi = () => {
     const fetchBuktiPembayaranData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-payment/${skrkipsiId}`,
+          `http://localhost:2000/api/v1/skripsi/skripsi-payment/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -131,7 +136,7 @@ const UploadSkipsi = () => {
     const fetchHasilCekPlagiatData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/${skrkipsiId}`,
+          `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -150,116 +155,420 @@ const UploadSkipsi = () => {
     fetchDokumenSkripsiData();
     fetchBuktiPembayaranData();
     fetchHasilCekPlagiatData();
-  }, [token, skrkipsiId]);
+  }, [token, skripsiId]);
 
-  // state untuk Upload Skripsi
-  const [SkripsiUploadedFiles, setSkripsiUploadedFiles] = useState([]);
-  const [selectedSkripsiFileName, setSelectedSkripsiFileName] = useState("");
-  const [SkripsiFile, setSkripsiFile] = useState(null);
-
-  // State untuk Bukti Pembayaran
-  const [paymentFile, setPaymentFile] = useState(null);
-  const [selectedPaymentFileName, setSelectedPaymentFileName] = useState("");
-  const [paymentUploadedFiles, setPaymentUploadedFiles] = useState([]);
-
-  // State untuk Hasil Cek Plagiat
-  const [plagiarismFile, setPlagiarismFile] = useState(null);
-  const [selectedPlagiarismFileName, setSelectedPlagiarismFileName] =
-    useState("");
-  const [plagiarismUploadedFiles, setPlagiarismUploadedFiles] = useState([]);
-
-  const onProposalFileChange = (event) => {
+  const handleUnggahDokumenProposal = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      if (SkripsiUploadedFiles.length === 0) {
-        setSkripsiFile(file);
-        setSelectedSkripsiFileName(file.name);
 
-        const newFileData = {
-          name: file.name,
-          date: new Date().toLocaleDateString(),
-          size: file.size,
-          advisor: "",
-          coAdvisor1: "",
-          coAdvisor2: "",
-        };
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
 
-        setSkripsiUploadedFiles([newFileData]);
-      }
+    if (!file || !allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid atau file tidak ada");
+      return;
     }
+
+    const reader = new FileReader();
+
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
+
+    reader.onload = (e) => {
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1];
+
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
+
+      // Logika pengolahan file
+      const data = {
+        skripsi_file: {
+          file_name_skripsi: file.name,
+          file_size_skripsi: fileSizeString,
+          buffer: base64String,
+        },
+      };
+
+      // Panggil fungsi untuk mengirim file ke server
+      sendDokumenSkripsiToServer(data);
+    };
+
+    reader.readAsDataURL(file);
   };
 
-  const onPaymentFileChange = (event) => {
+  const sendDokumenSkripsiToServer = (data) => {
+    console.log("Dokumen skripsi yang akan diunggah: ", data);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/skripsi-document/${skripsiId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil unggah dokumen skripsi: ", response.data.data);
+
+        // request data
+        const fetchDokumenSkripsiData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-document/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDokumenSkripsi(response.data.data);
+            console.log("Request Get dokumen skripsi: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil dokumen skripsi:",
+              error
+            );
+          }
+        };
+        fetchDokumenSkripsiData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah dokumen skripsi:",
+          error.response.data.message
+        );
+      });
+  };
+
+  const handleUnggahBuktiPembayaran = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      if (paymentUploadedFiles.length === 0) {
-        setPaymentFile(file);
-        setSelectedPaymentFileName(file.name);
 
-        // Tambahkan data file baru ke state paymentUploadedFiles
-        const newFileData = {
-          name: file.name,
-          date: new Date().toLocaleDateString(),
-          size: file.size,
-        };
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
 
-        setPaymentUploadedFiles([newFileData]);
-      } else {
-        // alert(
-        //   "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-        // );
-      }
+    if (!file || !allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid atau file tidak ada");
+      return;
     }
+
+    const reader = new FileReader();
+
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
+
+    reader.onload = (e) => {
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1];
+
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
+
+      // Logika pengolahan file
+      const data = {
+        payment_file: {
+          file_name_payment: file.name,
+          file_size_payment: fileSizeString,
+          buffer: base64String,
+        },
+      };
+
+      // Panggil fungsi untuk mengirim file ke server
+      sendBuktiPembayaranToServer(data);
+    };
+
+    reader.readAsDataURL(file);
   };
 
-  const onPlagiarismFileChange = (event) => {
+  const sendBuktiPembayaranToServer = (data) => {
+    console.log("Bukti pembayaran yang akan diunggah: ", data);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/skripsi-payment/${skripsiId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil unggah bukti pembayaran: ", response.data.data);
+
+        // request data
+        const fetchBuktiPembayaranData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-payment/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setBuktiPembayaran(response.data.data);
+            console.log("Request Get bukti pembayaran: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil bukti pembayaran:",
+              error
+            );
+          }
+        };
+        fetchBuktiPembayaranData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah bukti pembayaran:",
+          error.response.data.message
+        );
+      });
+  };
+
+  const handleUnggahPlagiat = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      if (plagiarismUploadedFiles.length === 0) {
-        setPlagiarismFile(file);
-        setSelectedPlagiarismFileName(file.name);
 
-        // Tambahkan data file baru ke state plagiarismUploadedFiles
-        const newFileData = {
-          name: file.name,
-          date: new Date().toLocaleDateString(),
-          size: file.size,
-        };
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
 
-        setPlagiarismUploadedFiles([newFileData]);
-      } else {
-        // alert(
-        //   "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-        // );
-      }
+    if (!file || !allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid atau file tidak ada");
+      return;
     }
+
+    const reader = new FileReader();
+
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
+
+    reader.onload = (e) => {
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1];
+
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
+
+      // Logika pengolahan file
+      const data = {
+        plagiarism_file: {
+          file_name_plagiarismcheck: file.name,
+          file_size_plagiarismcheck: fileSizeString,
+          buffer: base64String,
+        },
+      };
+
+      // Panggil fungsi untuk mengirim file ke server
+      sendPlagiatToServer(data);
+    };
+
+    reader.readAsDataURL(file);
   };
 
-  // fungsi untuk menghapus file Proposal
-  const handleDeleteProposalFile = (index) => {
-    const updatedFiles = [...SkripsiUploadedFiles];
-    updatedFiles.splice(index, 1);
-    setSkripsiUploadedFiles(updatedFiles);
-    setSkripsiFile(null);
-    setSelectedSkripsiFileName("");
+  const sendPlagiatToServer = (data) => {
+    console.log("Hasil cek plagiat yang akan diunggah: ", data);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/${skripsiId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil unggah hasil cek plagiat: ", response.data.data);
+
+        // request data
+        const fetchHasilCekPlagiatData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setHasilCekPlagiat(response.data.data);
+            console.log("Request Get hasil cek plagiat: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil hail cek plagiat:",
+              error
+            );
+          }
+        };
+        fetchHasilCekPlagiatData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah hasil cek plagiat:",
+          error.response.data.message
+        );
+      });
   };
 
-  // Fungsi untuk menghapus file bukti pembayaran
-  const handleDeletePaymentFile = (index) => {
-    const updatedFiles = [...paymentUploadedFiles];
-    updatedFiles.splice(index, 1);
-    setPaymentUploadedFiles(updatedFiles);
-    setPaymentFile(null);
-    setSelectedPaymentFileName("");
+  const handleHapusDokumenSkripsi = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/skripsi-document/delete/${skripsiId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil menghapus dokumen skripsi: ", response.data.data);
+
+        // request data
+        const fetchDokumenSkripsiData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-document/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDokumenSkripsi(response.data.data);
+            console.log("Request Get dokumen skripsi: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil dokumen skripsi:",
+              error
+            );
+          }
+        };
+        fetchDokumenSkripsiData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat menghapus dokumen skripsi:",
+          error.response.data.message
+        );
+      });
   };
 
-  // Fungsi untuk menghapus file hasil cek plagiat
-  const handleDeletePlagiarismFile = (index) => {
-    const updatedFiles = [...plagiarismUploadedFiles];
-    updatedFiles.splice(index, 1);
-    setPlagiarismUploadedFiles(updatedFiles);
-    setPlagiarismFile(null);
-    setSelectedPlagiarismFileName("");
+  const handleHapusBuktiPembayaran = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/skripsi-payment/delete/${skripsiId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(
+          "Berhasil menghapus bukti pembayaran: ",
+          response.data.data
+        );
+
+        // request data
+        const fetchBuktiPembayaranData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-payment/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setBuktiPembayaran(response.data.data);
+            console.log("Request Get bukti pembayaran: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil bukti pembayaran:",
+              error
+            );
+          }
+        };
+        fetchBuktiPembayaranData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat menghapus bukti pembayaran:",
+          error.response.data.message
+        );
+      });
+  };
+
+  const handleHapusPlagiat = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/delete/${skripsiId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(
+          "Berhasil menghapus hasil cek plagiat: ",
+          response.data.data
+        );
+
+        // request data
+        const fetchHasilCekPlagiatData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setHasilCekPlagiat(response.data.data);
+            console.log("Request Get hasil cek plagiat: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil hail cek plagiat:",
+              error
+            );
+          }
+        };
+        fetchHasilCekPlagiatData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat menghapus hasil cek plagiat:",
+          error.response.data.message
+        );
+      });
   };
 
   return (
@@ -305,6 +614,10 @@ const UploadSkipsi = () => {
               if (data) {
                 setProgress(data.progress);
                 setSkripsiId(data.skripsi_id);
+                setAdvisorAndCoAdvisor({
+                  coAdvisor1: data.co_advisor1,
+                  coAdvisor2: data.co_advisor2,
+                });
               }
             }}
           />
@@ -327,10 +640,14 @@ const UploadSkipsi = () => {
           {/* Menu Horizontal Start */}
           {/* MAHASISWA */}
           <Div
-            hidden={role.includes("MAHASISWA") ? false : true}
+            hidden={userRole === "MAHASISWA" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
+            <MenuMahasiswa
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Unggah Skripsi"}
+            />
           </Div>
           {/* Menu horizontal End */}
           <Div
@@ -398,7 +715,7 @@ const UploadSkipsi = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    onChange={onProposalFileChange}
+                    onChange={handleUnggahDokumenProposal}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
@@ -407,16 +724,16 @@ const UploadSkipsi = () => {
               </Div>
               {/* file upload end */}
 
-              {/* Table Upload Proposal Start*/}
+              {/* Table Upload Skripsi Start*/}
               <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                      {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{
                           fontSize: "12px",
@@ -449,16 +766,28 @@ const UploadSkipsi = () => {
                       >
                         Advisor
                       </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
-                      >
-                        Co-Advisor 1
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
-                      >
-                        Co-Advisor 2
-                      </TableCell>
+                      {advisorAndCoAdvisor?.coAdvisor1 && (
+                        <TableCell
+                          sx={{
+                            fontSize: "12px",
+                            padding: "11px",
+                            width: "15%",
+                          }}
+                        >
+                          Co-Advisor 1
+                        </TableCell>
+                      )}
+                      {advisorAndCoAdvisor?.coAdvisor2 && (
+                        <TableCell
+                          sx={{
+                            fontSize: "12px",
+                            padding: "11px",
+                            width: "15%",
+                          }}
+                        >
+                          Co-Advisor 2
+                        </TableCell>
+                      )}
                       <TableCell
                         sx={{
                           fontSize: "12px",
@@ -473,20 +802,57 @@ const UploadSkipsi = () => {
                   </TableHead>
 
                   <TableBody>
-                    {dokumenSkripsi && (
-                      <TableRow key={dokumenSkripsi.id}>
-                        <TableCell>1</TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {dokumenSkripsi.file_name_skripsi}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {dokumenSkripsi.upload_date_skripsi}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {dokumenSkripsi.file_size_skripsi}
-                        </TableCell>
+                    <TableRow>
+                      {/* <TableCell>{index + 1}</TableCell> */}
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {dokumenSkripsi?.file_name_skripsi}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {dokumenSkripsi?.upload_date_skripsi}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {dokumenSkripsi?.file_size_skripsi}
+                      </TableCell>
+                      {/* status Advisor */}
+                      <TableCell>
+                        {dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                        "Waiting" ? (
+                          <Chip
+                            size="small"
+                            label={"Menunggu"}
+                            sx={{
+                              background: "rgba(255, 204, 0, 0.10)",
+                              color: "#985211",
+                            }}
+                          />
+                        ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                          "Approve" ? (
+                          <Chip
+                            size="small"
+                            label={"Disetujui"}
+                            sx={{
+                              background: "rgba(21, 131, 67, 0.10)",
+                              color: "#0A7637",
+                            }}
+                          />
+                        ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                          "Rejected" ? (
+                          <Chip
+                            size="small"
+                            label={"Ditolak"}
+                            sx={{
+                              background: "rgba(226, 29, 18, 0.10)",
+                              color: "#CA150C",
+                            }}
+                          />
+                        ) : (
+                          dokumenSkripsi?.is_skripsi_approve_by_advisor
+                        )}
+                      </TableCell>
+                      {/* status CoAdvisor 1 */}
+                      {advisorAndCoAdvisor?.coAdvisor1 && (
                         <TableCell>
-                          {dokumenSkripsi.is_skripsi_approve_by_advisor ===
+                          {dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
                           "Waiting" ? (
                             <Chip
                               size="small"
@@ -496,17 +862,17 @@ const UploadSkipsi = () => {
                                 color: "#985211",
                               }}
                             />
-                          ) : dokumenSkripsi.is_skripsi_approve_by_advisor ===
+                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
                             "Approve" ? (
                             <Chip
                               size="small"
-                              label={"Diterima"}
+                              label={"Disetujui"}
                               sx={{
                                 background: "rgba(21, 131, 67, 0.10)",
                                 color: "#0A7637",
                               }}
                             />
-                          ) : dokumenSkripsi.is_skripsi_approve_by_advisor ===
+                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
                             "Rejected" ? (
                             <Chip
                               size="small"
@@ -517,11 +883,14 @@ const UploadSkipsi = () => {
                               }}
                             />
                           ) : (
-                            dokumenSkripsi.is_skripsi_approve_by_advisor
+                            dokumenSkripsi?.is_skripsi_approve_by_co_advisor1
                           )}
                         </TableCell>
+                      )}
+                      {/* status CoAdvisor 2 */}
+                      {advisorAndCoAdvisor?.coAdvisor2 && (
                         <TableCell>
-                          {dokumenSkripsi.is_skripsi_approve_by_co_advisor1 ===
+                          {dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
                           "Waiting" ? (
                             <Chip
                               size="small"
@@ -531,17 +900,17 @@ const UploadSkipsi = () => {
                                 color: "#985211",
                               }}
                             />
-                          ) : dokumenSkripsi.is_skripsi_approve_by_co_advisor1 ===
+                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
                             "Approve" ? (
                             <Chip
                               size="small"
-                              label={"Diterima"}
+                              label={"Disetujui"}
                               sx={{
                                 background: "rgba(21, 131, 67, 0.10)",
                                 color: "#0A7637",
                               }}
                             />
-                          ) : dokumenSkripsi.is_skripsi_approve_by_co_advisor1 ===
+                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
                             "Rejected" ? (
                             <Chip
                               size="small"
@@ -552,45 +921,12 @@ const UploadSkipsi = () => {
                               }}
                             />
                           ) : (
-                            dokumenSkripsi.is_skripsi_approve_by_co_advisor1
+                            dokumenSkripsi?.is_skripsi_approve_by_co_advisor2
                           )}
                         </TableCell>
-                        <TableCell>
-                          {dokumenSkripsi.is_skripsi_approve_by_co_advisor2 ===
-                          "Waiting" ? (
-                            <Chip
-                              size="small"
-                              label={"Menunggu"}
-                              sx={{
-                                background: "rgba(255, 204, 0, 0.10)",
-                                color: "#985211",
-                              }}
-                            />
-                          ) : dokumenSkripsi.is_skripsi_approve_by_co_advisor2 ===
-                            "Approve" ? (
-                            <Chip
-                              size="small"
-                              label={"Diterima"}
-                              sx={{
-                                background: "rgba(21, 131, 67, 0.10)",
-                                color: "#0A7637",
-                              }}
-                            />
-                          ) : dokumenSkripsi.is_skripsi_approve_by_co_advisor2 ===
-                            "Rejected" ? (
-                            <Chip
-                              size="small"
-                              label={"Ditolak"}
-                              sx={{
-                                background: "rgba(226, 29, 18, 0.10)",
-                                color: "#CA150C",
-                              }}
-                            />
-                          ) : (
-                            dokumenSkripsi.is_skripsi_approve_by_co_advisor2
-                          )}
-                        </TableCell>
-                        <TableCell>
+                      )}
+                      <TableCell>
+                        {dokumenSkripsi?.file_name_skripsi !== null && (
                           <Div sx={{ display: "flex" }}>
                             <span
                               style={{
@@ -600,13 +936,7 @@ const UploadSkipsi = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {dokumenSkripsi && (
-                                <PDFViewerSkripsi
-                                  dokumenSkripsi={
-                                    dokumenSkripsi.file_path_skripsi
-                                  }
-                                />
-                              )}
+                              <PDFViewerSkripsi skripsiFile={dokumenSkripsi} />
                             </span>
                             <Div
                               style={{
@@ -623,18 +953,18 @@ const UploadSkipsi = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() => handleDeleteProposalFile}
+                              onClick={handleHapusDokumenSkripsi}
                             >
                               Hapus
                             </span>
                           </Div>
-                        </TableCell>
-                      </TableRow>
-                    )}
+                        )}
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* Table Upload Proposal End */}
+              {/* Table Upload Skripsi End */}
             </Div>
             {/* Table 1 End */}
             <Typography
@@ -688,7 +1018,7 @@ const UploadSkipsi = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    onChange={onPaymentFileChange}
+                    onChange={handleUnggahBuktiPembayaran}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
@@ -702,11 +1032,11 @@ const UploadSkipsi = () => {
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                      {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
                       >
@@ -735,19 +1065,21 @@ const UploadSkipsi = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {buktiPembayaran && (
-                      <TableRow key={buktiPembayaran.id}>
-                        <TableCell sx={{ fontSize: "12px" }}>1</TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {buktiPembayaran.file_name_payment}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {buktiPembayaran.upload_date_payment}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {buktiPembayaran.file_size_payment}
-                        </TableCell>
-                        <TableCell>
+                    <TableRow>
+                      {/* <TableCell sx={{ fontSize: "12px" }}>
+                          {index + 1}
+                        </TableCell> */}
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {buktiPembayaran?.file_name_payment}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {buktiPembayaran?.upload_date_payment}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {buktiPembayaran?.file_size_payment}
+                      </TableCell>
+                      <TableCell>
+                        {buktiPembayaran?.file_name_payment !== null && (
                           <Div sx={{ display: "flex" }}>
                             <span
                               style={{
@@ -757,11 +1089,7 @@ const UploadSkipsi = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {buktiPembayaran && (
-                                <PDFViewerPayment
-                                  buktiPembayaran={buktiPembayaran}
-                                />
-                              )}
+                              <PDFViewerPayment paymentFile={buktiPembayaran} />
                             </span>
                             <Div
                               style={{
@@ -778,14 +1106,14 @@ const UploadSkipsi = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() => handleDeletePaymentFile}
+                              onClick={handleHapusBuktiPembayaran}
                             >
                               Hapus
                             </span>
                           </Div>
-                        </TableCell>
-                      </TableRow>
-                    )}
+                        )}
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -843,7 +1171,7 @@ const UploadSkipsi = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    onChange={onPlagiarismFileChange}
+                    onChange={handleUnggahPlagiat}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
@@ -857,11 +1185,11 @@ const UploadSkipsi = () => {
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                      {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
                       >
@@ -890,19 +1218,22 @@ const UploadSkipsi = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {hasilCekPlagiat && (
-                      <TableRow key={hasilCekPlagiat.id}>
-                        <TableCell sx={{ fontSize: "12px" }}>1</TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {hasilCekPlagiat.file_name_plagiarismcheck}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {hasilCekPlagiat.upload_date_plagiarismcheck}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {hasilCekPlagiat.file_size_plagiarismcheck}
-                        </TableCell>
-                        <TableCell>
+                    <TableRow>
+                      {/* <TableCell sx={{ fontSize: "12px" }}>
+                          {index + 1}
+                        </TableCell> */}
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {hasilCekPlagiat?.file_name_plagiarismcheck}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {hasilCekPlagiat?.upload_date_plagiarismcheck}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {hasilCekPlagiat?.file_size_plagiarismcheck} bytes
+                      </TableCell>
+                      <TableCell>
+                        {hasilCekPlagiat?.file_name_plagiarismcheck !==
+                          null && (
                           <Div sx={{ display: "flex" }}>
                             <span
                               style={{
@@ -912,11 +1243,9 @@ const UploadSkipsi = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {hasilCekPlagiat && (
-                                <PDFViewerCekPlagiat
-                                  hasilCekPlagiat={hasilCekPlagiat}
-                                />
-                              )}
+                              <PDFViewerCekPlagiat
+                                plagiarismFile={hasilCekPlagiat}
+                              />
                             </span>
                             <Div
                               style={{
@@ -933,14 +1262,14 @@ const UploadSkipsi = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() => handleDeletePlagiarismFile}
+                              onClick={handleHapusPlagiat}
                             >
                               Hapus
                             </span>
                           </Div>
-                        </TableCell>
-                      </TableRow>
-                    )}
+                        )}
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>

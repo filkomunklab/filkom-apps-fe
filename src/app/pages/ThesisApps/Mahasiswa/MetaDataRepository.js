@@ -32,12 +32,53 @@ const keywords = [
 ];
 
 const MetaDataRepository = () => {
+  const [metadata, setMetadata] = useState();
+
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
 
-  const role = useParams().role;
-  console.log(role);
+  const userRole = useParams().role;
+  console.log("role user akses page: ", userRole);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  console.log("role user yang sign in: ", role);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1//group/metadata/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setMetadata(response.data.data);
+        console.log("Request Get metadata: ", response.data.data);
+
+        // Pisahkan string keywords menjadi array
+        const keywordsArray = response.data.data.keywords
+          ? response.data.data.keywords.includes(",")
+            ? response.data.data.keywords
+                .split(",")
+                .map((keyword) => keyword.trim())
+            : [response.data.data.keywords.trim()]
+          : [];
+        setSelectedKeywords(keywordsArray);
+        setAbstrak(response.data.data.abstrak || "");
+        setReferensi(response.data.data.reference || "");
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil metadata:", error);
+      }
+    };
+    fetchMetadata();
+  }, [token, groupId]);
 
   const [openDialog, setOpenDialog] = useState(false);
   const [penulisCount, setPenulisCount] = useState(1); // Awalnya satu input select
@@ -59,13 +100,7 @@ const MetaDataRepository = () => {
   });
 
   const [submitted, setSubmitted] = useState(false);
-  const [editMode, setEditMode] = useState(true);
-
-  const handleTambahPenulis = () => {
-    if (penulisCount < 5) {
-      setPenulisCount(penulisCount + 1);
-    }
-  };
+  const [editMode, setEditMode] = useState(false);
 
   const handleKeywordChange = (event, newValue) => {
     setSelectedKeywords(newValue);
@@ -114,17 +149,84 @@ const MetaDataRepository = () => {
   };
 
   const handleConfirmSubmit = () => {
-    setSubmittedData({
+    // setSubmittedData({
+    //   keywords: selectedKeywords.join(", "),
+    //   abstrak: abstrak,
+    //   referensi: referensi,
+    // });
+
+    const metadata = {
       keywords: selectedKeywords.join(", "),
       abstrak: abstrak,
-      referensi: referensi,
-    });
+      reference: referensi,
+    };
+    console.log("Metadata yang akan diunggah: ", metadata);
+    axios
+      .put(`http://localhost:2000/api/v1/group/metadata/${groupId}`, metadata, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setSubmitted(true);
+        setEditMode(false);
 
-    setSubmitted(true);
+        // Perform data submission logic here
+        setOpenDialog(false);
+
+        console.log("Berhasil unggah metadata: ", response.data.data);
+
+        // request data
+        const fetchMetadata = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1//group/metadata/${groupId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setMetadata(response.data.data);
+            console.log("Request Get metadata: ", response.data.data);
+
+            // Pisahkan string keywords menjadi array
+            const keywordsArray = response.data.data.keywords
+              ? response.data.data.keywords.includes(",")
+                ? response.data.data.keywords
+                    .split(",")
+                    .map((keyword) => keyword.trim())
+                : [response.data.data.keywords.trim()]
+              : [];
+            setSelectedKeywords(keywordsArray);
+            setAbstrak(response.data.data.abstrak || "");
+            setReferensi(response.data.data.reference || "");
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil metadata:", error);
+          }
+        };
+        fetchMetadata();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah metadata:",
+          error.response.data.message
+        );
+      });
+  };
+
+  const handleKembali = () => {
+    // Pisahkan string keywords menjadi array
+    const keywordsArray = metadata?.keywords
+      ? metadata?.keywords.includes(",")
+        ? metadata?.keywords.split(",").map((keyword) => keyword.trim())
+        : [metadata?.keywords.trim()]
+      : [];
+    setSelectedKeywords(keywordsArray);
+    setAbstrak(metadata?.abstrak || "");
+    setReferensi(metadata?.reference || "");
+    console.log("nilai keyword setelah di perbarui: ", keywordsArray);
     setEditMode(false);
-
-    // Perform data submission logic here
-    setOpenDialog(false);
   };
 
   return (
@@ -191,10 +293,14 @@ const MetaDataRepository = () => {
           {/* Menu Horizontal Start */}
           {/* MAHASISWA */}
           <Div
-            hidden={role.includes("MAHASISWA") ? false : true}
+            hidden={userRole === "MAHASISWA" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
+            <MenuMahasiswa
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Metadata Repositori"}
+            />
           </Div>
           {/* Menu horizontal End */}
           <Div
@@ -211,7 +317,7 @@ const MetaDataRepository = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
-            {(!submitted || editMode) && (
+            {(metadata?.keywords === null || editMode) && (
               // Render input fields when not submitted or in edit mode
               <>
                 {/* kata kunci */}
@@ -227,7 +333,7 @@ const MetaDataRepository = () => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label="kata kunci"
+                        label="Masukkan kata kunci"
                         variant="outlined"
                         placeholder="Contoh: informatika, repository, manajemen"
                         error={!!errorMessages.keywords}
@@ -323,6 +429,20 @@ const MetaDataRepository = () => {
                 >
                   <Button
                     size="small"
+                    onClick={handleKembali}
+                    style={{
+                      borderRadius: "6px",
+                      border: "##E0E0E0",
+                      background: "#FFFF",
+                      color: "black",
+                      textTransform: "none",
+                      marginRight: "20px",
+                    }}
+                  >
+                    Kembali
+                  </Button>
+                  <Button
+                    size="small"
                     variant="contained"
                     sx={{ textTransform: "none" }}
                     color="primary"
@@ -334,7 +454,7 @@ const MetaDataRepository = () => {
               </>
             )}
 
-            {!submitted && !editMode && (
+            {/* {metadata?.keywords === null && !editMode && (
               // Render the submit button only when not submitted and not in edit mode
               <Div
                 sx={{
@@ -356,49 +476,46 @@ const MetaDataRepository = () => {
                   Submit
                 </Button>
               </Div>
-            )}
+            )} */}
 
-            {submitted && !editMode && (
+            {metadata?.keywords !== null && !editMode && (
+              // Render the edit button only when submitted and not in edit mode
               <>
                 <Div sx={{ width: "100%" }}>
                   <Typography variant="subtitle2">Kata Kunci</Typography>
-                  <Typography>{submittedData.keywords}</Typography>
+                  <Typography>{metadata?.keywords}</Typography>
                 </Div>
 
                 <Div sx={{ width: "100%" }}>
                   <Typography variant="subtitle2">Abstrak</Typography>
-                  <Typography>{submittedData.abstrak}</Typography>
+                  <Typography>{metadata?.abstrak}</Typography>
                 </Div>
 
                 <Div sx={{ width: "100%" }}>
                   <Typography variant="subtitle2">Referensi</Typography>
-                  <Typography>{submittedData.referensi}</Typography>
+                  <Typography>{metadata?.reference}</Typography>
+                </Div>
+                <Div
+                  sx={{
+                    display: "flex",
+                    padding: "12px 24px 12px 0px",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    background: "#F5F5F5",
+                    width: "100%",
+                  }}
+                >
+                  <Button
+                    size="small"
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                    color="primary"
+                    onClick={() => setEditMode(true)}
+                  >
+                    Ubah
+                  </Button>
                 </Div>
               </>
-            )}
-
-            {submitted && !editMode && (
-              // Render the edit button only when submitted and not in edit mode
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "12px 24px 12px 0px",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  background: "#F5F5F5",
-                  width: "100%",
-                }}
-              >
-                <Button
-                  size="small"
-                  variant="contained"
-                  sx={{ textTransform: "none" }}
-                  color="primary"
-                  onClick={() => setEditMode(true)}
-                >
-                  Ubah
-                </Button>
-              </Div>
             )}
           </Div>
         </Div>

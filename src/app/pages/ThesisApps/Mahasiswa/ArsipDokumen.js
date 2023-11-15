@@ -30,7 +30,7 @@ const PDFViewerHKI = ({ HKIFile }) => {
   return (
     <div>
       <span sx={{ fontSize: "10px" }} onClick={viewPDFHKI}>
-        Detail
+        Lihat
       </span>
     </div>
   );
@@ -40,7 +40,7 @@ const PDFViewerHKI = ({ HKIFile }) => {
 const PDFViewerArtikelJurnal = ({ jurnal }) => {
   const viewPDFArtikelJurnal = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = jurnal.file_path_journal;
+    const pdfURL = jurnal?.file_path_journal;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -48,7 +48,7 @@ const PDFViewerArtikelJurnal = ({ jurnal }) => {
 
   return (
     <div>
-      <span onClick={viewPDFArtikelJurnal}>Detail</span>
+      <span onClick={viewPDFArtikelJurnal}>Lihat</span>
     </div>
   );
 };
@@ -57,7 +57,7 @@ const PDFViewerArtikelJurnal = ({ jurnal }) => {
 const PDFViewerSourceCode = ({ sourceCode }) => {
   const viewPDFSourceCode = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = sourceCode.file_path_sourcecode;
+    const pdfURL = sourceCode?.file_path_sourcecode;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -65,7 +65,7 @@ const PDFViewerSourceCode = ({ sourceCode }) => {
 
   return (
     <div>
-      <span onClick={viewPDFSourceCode}>Detail</span>
+      <span onClick={viewPDFSourceCode}>Lihat</span>
     </div>
   );
 };
@@ -80,7 +80,7 @@ const ArsipDocument = () => {
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
-  const [skrkipsiId, setSkripsiId] = useState(null);
+  const [skripsiId, setSkripsiId] = useState(null);
 
   const role = useParams().role;
   console.log(role);
@@ -93,7 +93,7 @@ const ArsipDocument = () => {
     const fetchHKIData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/hki/${skrkipsiId}`,
+          `http://localhost:2000/api/v1/skripsi/hki/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -109,7 +109,7 @@ const ArsipDocument = () => {
     const fetchJurnalData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/journal/${skrkipsiId}`,
+          `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -125,7 +125,7 @@ const ArsipDocument = () => {
     const fetchSourceCodeData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/source-code/${skrkipsiId}`,
+          `http://localhost:2000/api/v1/skripsi/source-code/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -141,7 +141,7 @@ const ArsipDocument = () => {
     const fetchLinkSourceCodeData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/link-source-code/${skrkipsiId}`,
+          `http://localhost:2000/api/v1/skripsi/link-source-code/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -161,152 +161,516 @@ const ArsipDocument = () => {
     fetchJurnalData();
     fetchSourceCodeData();
     fetchLinkSourceCodeData();
-  }, [token, skrkipsiId]);
+  }, [token, skripsiId]);
 
-  // state untuk Upload HKI
-  const [HKIUploadedFiles, setHKIUploadedFiles] = useState([]);
-  const [selectedHKIFileName, setSelectedHKIFileName] = useState("");
-  const [HKIFile, setHKIFile] = useState(null);
+  // HKI
+  const handleUnggahHKI = (event) => {
+    const file = event.target.files[0];
 
-  // State untuk Bukti Pembayaran
-  const [artikelJurnalFile, setArtikelJurnalFile] = useState(null);
-  const [selectedArtikelJurnalFileName, setSelectedArtikelJurnalFileName] =
-    useState("");
-  const [artikelJurnalUploadedFiles, setArtikelJurnalUploadedFiles] = useState(
-    []
-  );
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
 
-  // State untuk Hasil Source Code
-  const [sourceCodeFile, setSourceCodeFile] = useState(null);
-  const [selectedSourceCodeFileName, setSelectedSourceCodeFileName] =
-    useState("");
-  const [sourceCodeUploadedFiles, setSourceCodeUploadedFiles] = useState([]);
+    if (!file || !allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid atau file tidak ada");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
+
+    reader.onload = (e) => {
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1];
+
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
+
+      // Logika pengolahan file
+      const data = {
+        hki_file: {
+          file_name_hki: file.name,
+          file_size_hki: fileSizeString,
+          buffer: base64String,
+        },
+      };
+
+      // Panggil fungsi untuk mengirim file ke server
+      sendHKIToServer(data);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const sendHKIToServer = (data) => {
+    console.log("HKI yang akan diunggah: ", data);
+    axios
+      .put(`http://localhost:2000/api/v1/skripsi/hki/${skripsiId}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Berhasil unggah HKI: ", response.data.data);
+
+        // request data
+        const fetchHKIData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/hki/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setHKI(response.data.data);
+            console.log("Request Get HKI: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil HKI:", error);
+          }
+        };
+        fetchHKIData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah HKI:",
+          error.response.data.message
+        );
+      });
+  };
+
+  // Jurnal
+
+  const handleUnggahJurnal = (event) => {
+    const file = event.target.files[0];
+
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
+
+    if (!file || !allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid atau file tidak ada");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
+
+    reader.onload = (e) => {
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1];
+
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
+
+      // Logika pengolahan file
+      const data = {
+        journal_file: {
+          file_name_journal: file.name,
+          file_size_journal: fileSizeString,
+          buffer: base64String,
+        },
+      };
+
+      // Panggil fungsi untuk mengirim file ke server
+      sendJurnalToServer(data);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const sendJurnalToServer = (data) => {
+    console.log("Jurnal yang akan diunggah: ", data);
+    axios
+      .put(`http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Berhasil unggah Jurnal: ", response.data.data);
+
+        // request data
+        const fetchJurnalData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setJurnal(response.data.data);
+            console.log("Request Get jurnal: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil jurnal:", error);
+          }
+        };
+        fetchJurnalData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah Jurnal:",
+          error.response.data.message
+        );
+      });
+  };
+
+  // Source Code
+  const handleUnggahCode = (event) => {
+    const file = event.target.files[0];
+
+    // Validasi tipe file
+    const allowedFileTypes = ["application/zip"];
+
+    if (!file || !allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid atau file tidak ada");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
+
+    reader.onload = (e) => {
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1];
+
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
+
+      // Logika pengolahan file
+      const data = {
+        source_code_file: {
+          file_name_sourcecode: file.name,
+          file_size_sourcecode: fileSizeString,
+          buffer: base64String,
+        },
+      };
+
+      // Panggil fungsi untuk mengirim file ke server
+      sendCodeToServer(data);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const sendCodeToServer = (data) => {
+    console.log("Source Code yang akan diunggah: ", data);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/source-code/${skripsiId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil unggah Source Code: ", response.data.data);
+
+        // request data
+        const fetchSourceCodeData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/source-code/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setSourceCode(response.data.data);
+            console.log("Request Get source code: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil source code:",
+              error
+            );
+          }
+        };
+        fetchSourceCodeData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah Source Code:",
+          error.response.data.message
+        );
+      });
+  };
 
   // State untuk Link Source Code
-  const [links, setLinks] = useState([]);
   const [currentLink, setCurrentLink] = useState("");
-  const [linkUploaded, setLinkUploaded] = useState(false);
 
-  const onHKIFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (HKIUploadedFiles.length === 0) {
-        setHKIFile(file);
-        setSelectedHKIFileName(file.name);
+  const handleUngggahLink = () => {
+    if (currentLink !== null) {
+      const linkData = {
+        link_soucecode: currentLink,
+      };
+      axios
+        .put(
+          `http://localhost:2000/api/v1/skripsi/link-source-code/${skripsiId}`,
+          linkData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          // membersihkan kotak link
+          setCurrentLink("");
 
-        const newFileData = {
-          name: file.name,
-          date: new Date().toLocaleDateString(),
-          size: file.size,
-        };
+          console.log("Berhasil unggah link: ", response.data.data);
 
-        setHKIUploadedFiles([newFileData]);
-      }
-    }
-  };
-
-  const onArtikelJurnalFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (artikelJurnalUploadedFiles.length === 0) {
-        setArtikelJurnalFile(file);
-        setSelectedArtikelJurnalFileName(file.name);
-
-        // Tambahkan data file baru ke state artikel jurnal UploadedFiles
-        const newFileData = {
-          name: file.name,
-          date: new Date().toLocaleDateString(),
-          size: file.size,
-        };
-
-        setArtikelJurnalUploadedFiles([newFileData]);
-      } else {
-        // alert(
-        //   "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-        // );
-      }
-    }
-  };
-
-  const onSourceCodeFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (sourceCodeUploadedFiles.length === 0) {
-        setSourceCodeFile(file);
-        setSelectedSourceCodeFileName(file.name);
-
-        // Tambahkan data file baru ke state upload Source code
-        const newFileData = {
-          name: file.name,
-          date: new Date().toLocaleDateString(),
-          size: file.size,
-        };
-
-        setSourceCodeUploadedFiles([newFileData]);
-      } else {
-        // alert(
-        //   "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-        // );
-      }
-    }
-  };
-
-  const addLink = () => {
-    if (!linkUploaded) {
-      if (currentLink) {
-        setLinks([...links, currentLink]);
-        setCurrentLink(""); // Mengosongkan input setelah menambahkan link
-        setLinkUploaded(true); // Menandai bahwa link telah diunggah
-      }
+          // request data
+          const fetchLinkSourceCodeData = async () => {
+            try {
+              const response = await axios.get(
+                `http://localhost:2000/api/v1/skripsi/link-source-code/${skripsiId}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                  },
+                }
+              );
+              setLinkSourceCode(response.data.data);
+              console.log("Request Get link source code: ", response.data.data);
+            } catch (error) {
+              console.error(
+                "Terjadi kesalahan saat mengambil link source code:",
+                error
+              );
+            }
+          };
+          fetchLinkSourceCodeData();
+        })
+        .catch((error) => {
+          console.error(
+            "Terjadi kesalahan saat mengunggah link:",
+            error.response.data.message
+          );
+        });
     } else {
-      alert(
-        "Anda sudah mengunggah satu link. Hapus link sebelumnya untuk menambahkan yang baru."
-      );
+      // masukkan handle message error bahwa link harus di masukkan
     }
   };
 
-  const clearLink = () => {
-    setLinkUploaded(false);
-    setLinks([]);
+  const handleHapusHKI = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/hki/delete/${skripsiId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil menghapus HKI: ", response.data.data);
+
+        // request data
+        const fetchHKIData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/hki/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setHKI(response.data.data);
+            console.log("Request Get HKI: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil HKI:", error);
+          }
+        };
+        fetchHKIData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat menghapus HKI:",
+          error.response.data.message
+        );
+      });
+  };
+
+  const handleHapusJurnal = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/journal/delete/${skripsiId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil menghapus Jurnal: ", response.data.data);
+
+        // request data
+        const fetchJurnalData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setJurnal(response.data.data);
+            console.log("Request Get jurnal: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil jurnal:", error);
+          }
+        };
+        fetchJurnalData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat menghapus Jurnal:",
+          error.response.data.message
+        );
+      });
+  };
+
+  const handleHapusCode = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/source-code/delete/${skripsiId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil menghapus Source Code: ", response.data.data);
+
+        // request data
+        const fetchSourceCodeData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/source-code/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setSourceCode(response.data.data);
+            console.log("Request Get source code: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil source code:",
+              error
+            );
+          }
+        };
+        fetchSourceCodeData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat menghapus Source Code:",
+          error.response.data.message
+        );
+      });
+  };
+
+  const handleHapusLink = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/link-source-code/delete/${skripsiId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        // membersihkan kotak link
+        setCurrentLink("");
+
+        console.log("Berhasil menghapus Link: ", response.data.data);
+
+        // request data
+        const fetchLinkSourceCodeData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/link-source-code/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setLinkSourceCode(response.data.data);
+            console.log("Request Get link source code: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil link source code:",
+              error
+            );
+          }
+        };
+        fetchLinkSourceCodeData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat menghapus Link:",
+          error.response.data.message
+        );
+      });
   };
 
   // Fungsi untuk membatasi panjang tampilan link dengan pembagian baris
   const breakLongLink = (link) => {
     const maxLength = 25; // Panjang maksimum per baris
     const regex = new RegExp(`.{1,${maxLength}}`, "g");
-    return link.match(regex).join("\n");
+    if (link !== null) {
+      return link.match(regex).join("\n");
+    }
   };
 
   // fungsi untuk membuka situs web link
   const openLink = (url) => {
     window.open(url, "_blank"); // Membuka tautan dalam tab atau jendela baru
-  };
-
-  // fungsi untuk menghapus file HKI
-  const handleDeleteHKIFile = (index) => {
-    const updatedFiles = [...HKIUploadedFiles];
-    updatedFiles.splice(index, 1);
-    setHKIUploadedFiles(updatedFiles);
-    setHKIFile(null);
-    setSelectedHKIFileName("");
-  };
-
-  // Fungsi untuk menghapus file Artikel Jurnal
-  const handleDeleteArtikelJurnalFile = (index) => {
-    const updatedFiles = [...artikelJurnalUploadedFiles];
-    updatedFiles.splice(index, 1);
-    setArtikelJurnalUploadedFiles(updatedFiles);
-    setArtikelJurnalFile(null);
-    setSelectedArtikelJurnalFileName("");
-  };
-
-  // Fungsi untuk menghapus file hasil Source Code
-  const handleDeleteSourceCodeFile = (index) => {
-    const updatedFiles = [...sourceCodeUploadedFiles];
-    updatedFiles.splice(index, 1);
-    setSourceCodeUploadedFiles(updatedFiles);
-    setSourceCodeFile(null);
-    setSelectedSourceCodeFileName("");
   };
 
   return (
@@ -374,10 +738,14 @@ const ArsipDocument = () => {
           {/* Menu Horizontal Start */}
           {/* MAHASISWA */}
           <Div
-            hidden={role.includes("MAHASISWA") ? false : true}
+            hidden={role === "MAHASISWA" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
+            <MenuMahasiswa
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Arsip Dokumen"}
+            />
           </Div>
           {/* Menu horizontal End */}
           <Div
@@ -446,7 +814,7 @@ const ArsipDocument = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    onChange={onHKIFileChange}
+                    onChange={handleUnggahHKI}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
@@ -460,9 +828,9 @@ const ArsipDocument = () => {
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ fontSize: "12px", width: "3%" }}>
+                      {/* <TableCell sx={{ fontSize: "12px", width: "3%" }}>
                         Nomor
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{
                           fontSize: "12px",
@@ -503,7 +871,7 @@ const ArsipDocument = () => {
                   <TableBody>
                     {HKI && (
                       <TableRow>
-                        <TableCell>1</TableCell>
+                        {/* <TableCell>1</TableCell> */}
                         <TableCell sx={{ fontSize: "12px" }}>
                           {HKI?.file_name_hki}
                         </TableCell>
@@ -514,37 +882,39 @@ const ArsipDocument = () => {
                           {HKI?.file_size_hki}
                         </TableCell>
                         <TableCell>
-                          <Div sx={{ display: "flex" }}>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "blue",
-                                fontSize: "12px",
-                              }}
-                            >
-                              {HKI && <PDFViewerHKI HKI={HKI} />}
-                            </span>
-                            <Div
-                              style={{
-                                margin: "0 5px",
-                                color: "#E0E0E0",
-                              }}
-                            >
-                              |
+                          {HKI?.file_name_hki !== null && (
+                            <Div sx={{ display: "flex" }}>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                }}
+                              >
+                                {HKI && <PDFViewerHKI HKI={HKI} />}
+                              </span>
+                              <Div
+                                style={{
+                                  margin: "0 5px",
+                                  color: "#E0E0E0",
+                                }}
+                              >
+                                |
+                              </Div>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "red",
+                                  fontSize: "12px",
+                                }}
+                                onClick={handleHapusHKI}
+                              >
+                                Hapus
+                              </span>
                             </Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
-                                fontSize: "12px",
-                              }}
-                              onClick={() => handleDeleteHKIFile}
-                            >
-                              Hapus
-                            </span>
-                          </Div>
+                          )}
                         </TableCell>
                       </TableRow>
                     )}
@@ -607,7 +977,7 @@ const ArsipDocument = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    onChange={onArtikelJurnalFileChange}
+                    onChange={handleUnggahJurnal}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
@@ -621,11 +991,11 @@ const ArsipDocument = () => {
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                      {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
                       >
@@ -655,51 +1025,51 @@ const ArsipDocument = () => {
                   </TableHead>
                   <TableBody>
                     {jurnal && (
-                      <TableRow key={jurnal.id}>
-                        <TableCell sx={{ fontSize: "12px" }}>1</TableCell>
+                      <TableRow key={jurnal?.id}>
+                        {/* <TableCell sx={{ fontSize: "12px" }}>1</TableCell> */}
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {jurnal.file_name_journal}
+                          {jurnal?.file_name_journal}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {jurnal.upload_date_journal}
+                          {jurnal?.upload_date_journal}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {jurnal.file_size_journal}
+                          {jurnal?.file_size_journal}
                         </TableCell>
                         <TableCell>
-                          <Div sx={{ display: "flex" }}>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "blue",
-                                fontSize: "12px",
-                              }}
-                            >
-                              {jurnal && (
+                          {jurnal?.file_name_journal !== null && (
+                            <Div sx={{ display: "flex" }}>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                }}
+                              >
                                 <PDFViewerArtikelJurnal jurnal={jurnal} />
-                              )}
-                            </span>
-                            <Div
-                              style={{
-                                margin: "0 5px",
-                                color: "#E0E0E0",
-                              }}
-                            >
-                              |
+                              </span>
+                              <Div
+                                style={{
+                                  margin: "0 5px",
+                                  color: "#E0E0E0",
+                                }}
+                              >
+                                |
+                              </Div>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "red",
+                                  fontSize: "12px",
+                                }}
+                                onClick={handleHapusJurnal}
+                              >
+                                Hapus
+                              </span>
                             </Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
-                                fontSize: "12px",
-                              }}
-                              onClick={() => handleDeleteArtikelJurnalFile}
-                            >
-                              Hapus
-                            </span>
-                          </Div>
+                          )}
                         </TableCell>
                       </TableRow>
                     )}
@@ -761,7 +1131,7 @@ const ArsipDocument = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    onChange={onSourceCodeFileChange}
+                    onChange={handleUnggahCode}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
@@ -775,11 +1145,11 @@ const ArsipDocument = () => {
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                      {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
                       >
@@ -810,50 +1180,50 @@ const ArsipDocument = () => {
                   <TableBody>
                     {sourceCode && (
                       <TableRow>
-                        <TableCell sx={{ fontSize: "12px" }}>1</TableCell>
+                        {/* <TableCell sx={{ fontSize: "12px" }}>1</TableCell> */}
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {sourceCode.file_name_sourcecode}
+                          {sourceCode?.file_name_sourcecode}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {sourceCode.upload_date_sourcecode}
+                          {sourceCode?.upload_date_sourcecode}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {sourceCode.file_size_sourcecode}
+                          {sourceCode?.file_size_sourcecode}
                         </TableCell>
                         <TableCell>
-                          <Div sx={{ display: "flex" }}>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "blue",
-                                fontSize: "12px",
-                              }}
-                            >
-                              {sourceCode && (
+                          {sourceCode?.file_name_sourcecode !== null && (
+                            <Div sx={{ display: "flex" }}>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                }}
+                              >
                                 <PDFViewerSourceCode sourceCode={sourceCode} />
-                              )}
-                            </span>
-                            <Div
-                              style={{
-                                margin: "0 5px", // Margin di sekitar garis vertikal
-                                color: "#E0E0E0",
-                              }}
-                            >
-                              |
+                              </span>
+                              <Div
+                                style={{
+                                  margin: "0 5px", // Margin di sekitar garis vertikal
+                                  color: "#E0E0E0",
+                                }}
+                              >
+                                |
+                              </Div>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "red",
+                                  fontSize: "12px",
+                                }}
+                                onClick={handleHapusCode}
+                              >
+                                Hapus
+                              </span>
                             </Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
-                                fontSize: "12px",
-                              }}
-                              onClick={() => handleDeleteSourceCodeFile}
-                            >
-                              Hapus
-                            </span>
-                          </Div>
+                          )}
                         </TableCell>
                       </TableRow>
                     )}
@@ -896,7 +1266,7 @@ const ArsipDocument = () => {
                     width: "130px",
                     height: "30px",
                   }}
-                  onClick={addLink}
+                  onClick={handleUngggahLink}
                 >
                   <AttachmentIcon
                     sx={{ fontSize: "14px", marginRight: "5px" }}
@@ -910,11 +1280,11 @@ const ArsipDocument = () => {
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                      {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         No
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "65%" }}
                       >
@@ -940,7 +1310,7 @@ const ArsipDocument = () => {
                   <TableBody>
                     {linkSourceCode && (
                       <TableRow>
-                        <TableCell>1</TableCell>
+                        {/* <TableCell>1</TableCell> */}
                         <TableCell>
                           <span
                             style={{
@@ -950,30 +1320,30 @@ const ArsipDocument = () => {
                               fontSize: "12px",
                             }}
                             onClick={() =>
-                              openLink(linkSourceCode.link_soucecode)
+                              openLink(linkSourceCode?.link_soucecode)
                             }
                           >
-                            {breakLongLink(linkSourceCode.link_soucecode)}
+                            {breakLongLink(linkSourceCode?.link_soucecode)}
                           </span>
                         </TableCell>
                         <TableCell>
-                          {new Date(
-                            linkSourceCode.upload_date_link_soucecode
-                          ).toLocaleDateString()}
+                          {linkSourceCode?.upload_date_link_soucecode}
                         </TableCell>
                         <TableCell>
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "red",
-                              fontSize: "12px",
-                              textAlign: "center",
-                            }}
-                            onClick={() => clearLink}
-                          >
-                            Hapus
-                          </span>
+                          {linkSourceCode?.link_soucecode !== null && (
+                            <span
+                              style={{
+                                textDecoration: "none",
+                                cursor: "pointer",
+                                color: "red",
+                                fontSize: "12px",
+                                textAlign: "center",
+                              }}
+                              onClick={handleHapusLink}
+                            >
+                              Hapus
+                            </span>
+                          )}
                         </TableCell>
                       </TableRow>
                     )}
