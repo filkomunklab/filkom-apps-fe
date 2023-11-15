@@ -59,7 +59,7 @@ const FormTracerStudy = () => {
 
   const [identityData, setIdentityData] = useState({
     nim: "",
-    kodePT: "",
+    kodePT: "161002",
     tahunLulus: "",
     kodeProdi: "",
     fullName: "",
@@ -572,9 +572,10 @@ const FormTracerStudy = () => {
               />
             </Grid>
             <Grid item sm={12} md={6}>
-              <Typography variant="subtitle1">Kode PT</Typography>
+              <Typography variant="subtitle1">Kode Perguruan Tinggi</Typography>
               <TextField
                 fullWidth
+                disabled
                 variant="outlined"
                 name="kodePT"
                 placeholder="UNKLAB: 161002"
@@ -595,7 +596,7 @@ const FormTracerStudy = () => {
               />
             </Grid>
             <Grid item sm={12} md={6}>
-              <Typography variant="subtitle1">Kode Prodi</Typography>
+              <Typography variant="subtitle1">Kode Program Studi</Typography>
               <TextField
                 fullWidth
                 variant="outlined"

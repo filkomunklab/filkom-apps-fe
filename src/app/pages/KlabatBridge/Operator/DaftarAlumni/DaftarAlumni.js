@@ -237,7 +237,6 @@ const DaftarAlumni = () => {
       .then((res) => {
         if (isMounted) {
           setData(res.data.data);
-
           const uniqueYears = [
             ...new Set(res.data.data.map((item) => item.graduate_year)),
           ];
@@ -321,10 +320,10 @@ const DaftarAlumni = () => {
 
                 switch (item) {
                   case "IF":
-                    label = "Informatics";
+                    label = "Informatika";
                     break;
                   case "SI":
-                    label = "Sistem Information";
+                    label = "Sistem Informasi";
                     break;
                   case "DKV":
                     label = "DKV";
@@ -373,7 +372,7 @@ const DaftarAlumni = () => {
               <TableCell>Status</TableCell>
               <TableCell sx={{ textAlign: "center" }}>Action</TableCell>
             </TableRow>
-          </TableHead>
+          </TableHead> 
           <TableBody>
             {filterData().length > 0
               ? filterData()
