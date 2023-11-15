@@ -237,6 +237,7 @@ const DaftarAlumni = () => {
       .then((res) => {
         if (isMounted) {
           setData(res.data.data);
+          
           const uniqueYears = [
             ...new Set(res.data.data.map((item) => item.graduate_year)),
           ];
@@ -248,6 +249,7 @@ const DaftarAlumni = () => {
           setMajor(uniqueMajor);
         }
       });
+      
     return () => {
       isMounted = false;
     };
@@ -258,6 +260,7 @@ const DaftarAlumni = () => {
     console.log(selectedPhoneNums);
   }, [selectedEmails]);
 
+  console.log(data)
   return (
     <Box>
       <Div
