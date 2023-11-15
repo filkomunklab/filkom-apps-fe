@@ -10,6 +10,7 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
+  Paper,
   Select,
   Table,
   TableBody,
@@ -244,7 +245,7 @@ const ManajemenDosenSkripsi = () => {
         </Div>
         {/* Semester End */}
         {/* Table Mahasiswa Proposal Start */}
-        <TableContainer>
+        <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>

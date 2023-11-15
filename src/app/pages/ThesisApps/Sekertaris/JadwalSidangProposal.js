@@ -23,13 +23,27 @@ import {
   TableRow,
   TextField,
   Typography,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Paper,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const JadwalSidangProposal = () => {
+  // State untuk melacak panel accordion yang terbuka
+  const [expanded, setExpanded] = useState(false);
+
+  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
+  const handleChange = (panel) => (event, isExpanded) => {
+    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
+    setExpanded(isExpanded ? panel : false);
+  };
+
   // state - daftar jadwal
   const [daftarJadwal, setDaftarJadwal] = useState([]);
   // state - daftar dosen
@@ -274,7 +288,180 @@ const JadwalSidangProposal = () => {
         </Div>
         {/* Header End */}
         {/* Semester Start */}
-        {daftarJadwal &&
+        <Div
+          sx={{
+            display: "inline-flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: "25px",
+            width: "100%",
+            height: "460px",
+            overflowY: "auto",
+            background: "#FFF",
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+            padding: "8px",
+            borderRadius: "8px",
+          }}
+        >
+          {daftarJadwal &&
+            daftarJadwal.map((scheduleData, scheduleIndex) => (
+              <Accordion
+                key={scheduleIndex}
+                expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
+                onChange={handleChange(`panel${semesterIndex}`)} // Menangani perubahan state accordion
+                sx={{
+                  margin: "5px",
+                  width: "97%",
+                  padding: "1px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel${semesterIndex}bh-content`}
+                  id={`panel${semesterIndex}bh-header`}
+                >
+                  <Typography
+                    variant="h2"
+                    sx={{
+                      width: "33%",
+                      flexShrink: 0,
+                      fontSize: "16px",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {scheduleData.semester}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <TableHead>
+                        <TableRow sx={{ background: "#F5F5F5" }}>
+                          <TableCell sx={{ width: "25px", fontSize: "13px" }}>
+                            Nomor
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Advisor
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Ketua Panelis
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Anggota Panelis
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>Mulai</TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Selesai
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Tanggal
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Ruangan
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Action
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {scheduleData.schedules.map((jadwal, index) => (
+                          <TableRow key={index}>
+                            <TableCell sx={{ fontSize: "13px" }}>
+                              {index + 1}
+                            </TableCell>
+                            <TableCell sx={{ fontSize: "13px" }}>
+                              {jadwal.title}
+                            </TableCell>
+                            <TableCell>
+                              <Typography>{jadwal.advisor_name}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography>
+                                {jadwal.panelist_chairman_name}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography>
+                                {jadwal.panelist_member_name}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography>{jadwal.start_defence}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography>{jadwal.end_defence}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography>{jadwal.defence_date}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography>{jadwal.defence_room}</Typography>
+                            </TableCell>
+
+                            <TableCell>
+                              <Div sx={{ display: "flex" }}>
+                                <Typography
+                                  component={Link}
+                                  to="/halaman-berikutnya"
+                                  sx={{
+                                    textDecoration: "none",
+                                    color: "blue",
+                                  }}
+                                >
+                                  Detail
+                                </Typography>
+                                <Div sx={{ margin: "2px" }}>|</Div>
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor: "pointer",
+                                    color: "blue",
+                                  }}
+                                  onClick={() => {
+                                    handleUpdateClick(scheduleIndex, index);
+                                    setSelectedProposalId(jadwal.proposal_id);
+                                    setSelectedAdvisor(jadwal.advisor_name);
+                                    setSelectedKetuaPenelis(
+                                      jadwal.panelist_chairman_id
+                                    );
+                                    setSelectedAnggotaPenelis(
+                                      jadwal.panelist_member_id
+                                    );
+                                    setMulaiWaktu(jadwal.start_defence);
+                                    setSelesaiWaktu(jadwal.end_defence);
+                                    setMulaiTanggal(jadwal.defence_date);
+                                    setRuangan(jadwal.defence_room);
+                                    console.log(
+                                      `Selected proposal id: ${jadwal.proposal_id}\n
+                                  Selected Advisor: ${jadwal.advisor_name}\n
+                                  Selected Chairman: ${jadwal.panelist_chairman_id}\n
+                                  Selected Member: ${jadwal.panelist_member_id}\n
+                                  Selected Start: ${jadwal.start_defence}\n
+                                  Selected End: ${jadwal.end_defence}\n
+                                  Date: ${jadwal.defence_date}\n
+                                  Room: ${jadwal.defence_room}`
+                                    );
+                                  }}
+                                >
+                                  Perbarui
+                                </span>
+                              </Div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+        </Div>
+
+        {/* {daftarJadwal &&
           daftarJadwal.map((scheduleData, scheduleIndex) => (
             <div key={scheduleIndex} style={{ width: "100%" }}>
               <Div
@@ -301,7 +488,7 @@ const JadwalSidangProposal = () => {
                 </Typography>
               </Div>
               {/* Semester End */}
-              {/* Table Mahasiswa Proposal Start */}
+        {/* Table Mahasiswa Proposal Start *
               <TableContainer>
                 <Table>
                   <TableHead>
@@ -410,9 +597,9 @@ const JadwalSidangProposal = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* Table Mahasiswa Proposal End */}
+              {/* Table Mahasiswa Proposal End *
             </div>
-          ))}
+          ))} */}
       </Div>
       {/* Table Master End */}
       {/* popup pembuatan Jadwal start */}

@@ -3,7 +3,11 @@ import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import PeopleIcon from "@mui/icons-material/People";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Chip,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -16,8 +20,17 @@ import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const DaftarPengajuanProposalSekertaris = () => {
+  // State untuk melacak panel accordion yang terbuka
+  const [expanded, setExpanded] = useState(false);
+
+  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
+  const handleChange = (panel) => (event, isExpanded) => {
+    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
+    setExpanded(isExpanded ? panel : false);
+  };
   const [daftarPengajuanProposal, setDaftarPengajuanProposal] = useState({
     dashboard: {
       total_group: 0,
@@ -335,7 +348,163 @@ const DaftarPengajuanProposalSekertaris = () => {
         </Div>
         {/* Header End */}
         {/* Semester Start */}
-        {daftarPengajuanProposal.semesterData.map(
+        <Div
+          sx={{
+            display: "inline-flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: "25px",
+            width: "100%",
+            height: "460px",
+            overflowY: "auto",
+            background: "#FFF",
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+            padding: "8px",
+            borderRadius: "8px",
+          }}
+        >
+          {daftarPengajuanProposal.semesterData.map(
+            (semesterData, semesterIndex) => (
+              <Accordion
+                key={semesterIndex}
+                expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
+                onChange={handleChange(`panel${semesterIndex}`)} // Menangani perubahan state accordion
+                sx={{
+                  margin: "5px",
+                  width: "97%",
+                  padding: "1px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel${semesterIndex}bh-content`}
+                  id={`panel${semesterIndex}bh-header`}
+                >
+                  <Typography
+                    variant="h2"
+                    sx={{
+                      width: "33%",
+                      flexShrink: 0,
+                      fontSize: "16px",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {semesterData.semester}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <TableHead>
+                        <TableRow sx={{ background: "#F5F5F5" }}>
+                          <TableCell sx={{ width: "25px", fontSize: "13px" }}>
+                            Nomor
+                          </TableCell>
+                          <TableCell sx={{ width: "200px", fontSize: "13px" }}>
+                            Mahasiswa
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Dokumen Proposal
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Pembayaran
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Cek Plagiat
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Action
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {semesterData.proposals.map(
+                          (proposal, proposalIndex) => (
+                            <TableRow key={proposalIndex}>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposalIndex + 1}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.students.map((student) => (
+                                  <div key={student.id}>{student.fullName}</div>
+                                ))}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.title}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.proposal_status === false ? (
+                                  <Chip label={"Belum"} />
+                                ) : proposal.proposal_status === true ? (
+                                  <Chip
+                                    label={"Sudah"}
+                                    sx={{
+                                      background: "rgba(21, 131, 67, 0.10)",
+                                      color: "#0A7637",
+                                    }}
+                                  />
+                                ) : (
+                                  proposal.proposal_status
+                                )}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.paymant_status === false ? (
+                                  <Chip label={"Belum"} />
+                                ) : proposal.paymant_status === true ? (
+                                  <Chip
+                                    label={"Sudah"}
+                                    sx={{
+                                      background: "rgba(21, 131, 67, 0.10)",
+                                      color: "#0A7637",
+                                    }}
+                                  />
+                                ) : (
+                                  proposal.paymant_status
+                                )}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.plagiarism === false ? (
+                                  <Chip label={"Belum"} />
+                                ) : proposal.plagiarism === true ? (
+                                  <Chip
+                                    label={"Sudah"}
+                                    sx={{
+                                      background: "rgba(21, 131, 67, 0.10)",
+                                      color: "#0A7637",
+                                    }}
+                                  />
+                                ) : (
+                                  proposal.plagiarism
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                <Typography
+                                  component={Link}
+                                  to="/halaman-berikutnya"
+                                  sx={{
+                                    textDecoration: "none",
+                                    color: "blue",
+                                  }}
+                                >
+                                  Detail
+                                </Typography>
+                              </TableCell>
+                            </TableRow>
+                          )
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </AccordionDetails>
+              </Accordion>
+            )
+          )}
+        </Div>
+
+        {/* {daftarPengajuanProposal.semesterData.map(
           (semesterData, semesterIndex) => (
             <div key={semesterIndex} style={{ width: "100%" }}>
               <Div
@@ -362,7 +531,7 @@ const DaftarPengajuanProposalSekertaris = () => {
                 </Typography>
               </Div>
               {/* Semester End */}
-              {/* Table Mahasiswa Proposal Start */}
+        {/* Table Mahasiswa Proposal Start *
               <TableContainer>
                 <Table>
                   <TableHead>
@@ -462,10 +631,10 @@ const DaftarPengajuanProposalSekertaris = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* Table Mahasiswa Proposal End */}
+              {/* Table Mahasiswa Proposal End *
             </div>
           )
-        )}
+        )} */}
       </Div>
       {/* Table Master End */}
     </Div>
