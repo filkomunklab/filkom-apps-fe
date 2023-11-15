@@ -579,7 +579,7 @@ const UploadRevisiSkripsi = () => {
                           {dokumenRevisi.upload_date_revision}
                         </TableCell>
                         <TableCell sx={{ fontSize: "12px" }}>
-                          {dokumenRevisi.file_size_revision} bytes
+                          {dokumenRevisi.file_size_revision}
                         </TableCell>
                         <TableCell>
                           {dokumenRevisi.is_revision_approve_by_panelist_chairman ===
