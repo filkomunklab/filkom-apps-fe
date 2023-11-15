@@ -5,7 +5,7 @@ import {
   Select,
   Table,
   TableBody,
-  TableCell,
+  TableCell, 
   TableContainer,
   TableHead,
   TableRow,
@@ -97,26 +97,49 @@ const DaftarAlumniFakultas = () => {
     </TableRow>
   );
 
-  const getData = async () => {
-    await jwtAuthAxios
+  // const getData = async () => {
+  //   await jwtAuthAxios
+  //     .get(`/fakultas/alumni?search_query=${searchValue}`)
+  //     .then((res) => {
+  //       console.log(res.data.data);
+
+  //       setData(res.data.data);
+
+  //       const uniqueYears = [
+  //         ...new Set(res.data.data.map((item) => item.graduate_year)),
+  //       ];
+  //       const uniquMajor = [
+  //         ...new Set(res.data.data.map((item) => item.major)),
+  //       ];
+
+  //       console.log(uniqueYears);
+  //       setYear(uniqueYears);
+  //       setMajor(uniquMajor);
+  //     });
+  // };
+
+  React.useEffect(() => {
+    let isMounted = true;
+    jwtAuthAxios
       .get(`/fakultas/alumni?search_query=${searchValue}`)
       .then((res) => {
-        console.log(res.data.data);
+        if (isMounted) {
+          setData(res.data.data);
+          const uniqueYears = [
+            ...new Set(res.data.data.map((item) => item.graduate_year)),
+          ];
+          const uniqueMajor = [
+            ...new Set(res.data.data.map((item) => item.major)),
+          ];
 
-        setData(res.data.data);
-
-        const uniqueYears = [
-          ...new Set(res.data.data.map((item) => item.graduate_year)),
-        ];
-        const uniquMajor = [
-          ...new Set(res.data.data.map((item) => item.major)),
-        ];
-
-        console.log(uniqueYears);
-        setYear(uniqueYears);
-        setMajor(uniquMajor);
+          setYear(uniqueYears);
+          setMajor(uniqueMajor);
+        }
       });
-  };
+    return () => {
+      isMounted = false;
+    };
+  }, [searchBtn]);
 
   function filterData() {
     return data.filter(
@@ -125,9 +148,9 @@ const DaftarAlumniFakultas = () => {
     );
   }
 
-  React.useEffect(() => {
-    getData();
-  }, [searchBtn]);
+  // React.useEffect(() => {
+  //   getData();
+  // }, [searchBtn]);
 
   return (
     <Box>
@@ -188,14 +211,14 @@ const DaftarAlumniFakultas = () => {
                 let label;
                 switch (item) {
                   case "IF":
-                    label = "Informatics";
+                    label = "Informatika";
                     break;
                   case "SI":
-                    label = "Sistem Information";
+                    label = "Sistem Informasi";
                     break;
-                  // case 'DKV':
-                  //   label='DKV'
-                  //   break;
+                  case 'DKV':
+                    label='DKV'
+                    break;
                   default:
                     break;
                 }
@@ -228,7 +251,9 @@ const DaftarAlumniFakultas = () => {
               ? filterData()
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => <TableItem index={index} item={item} />)
-              : data.map((item, index) => (
+              : data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
                   <TableItem index={index} item={item} />
                 ))}
           </TableBody>

@@ -37,6 +37,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import MarkunreadIcon from "@mui/icons-material/Markunread";
 import axios from "axios";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {Document } from 'react-pdf'
 
 const style = {
   position: "absolute",
@@ -133,7 +134,7 @@ const DaftarCalonTamatan = () => {
 
   const handleCloseModal = () => {
     setSelectedData(null);
-    setModalOpen(false);
+    setModalOpen(false); 
   };
 
   const handleTolakButton = async (item) => {
@@ -163,14 +164,14 @@ const DaftarCalonTamatan = () => {
   // modal content to see student's SPT
   const viewDetailSPT = (item) => (
     <Div>
-      <Typography
-        id="modal-modal-title"
-        mb={2}
-        sx={{ fontSize: "24px", fontWeight: 500 }}
-      >
-        Surat Permohonan Tamat
-      </Typography>
       <Box sx={{ paddingX: 5 }}>
+        <Typography
+          id="modal-modal-title"
+          mb={2}
+          sx={{ fontSize: "24px", fontWeight: 500 }}
+        >
+          Surat Permohonan Tamat
+        </Typography>
         <Typography variant="body1" sx={{ lineHeight: 2.5 }}>
           Saya yang bertanda tangan di bawah ini, bermohon untuk dapat wisuda
           pada semester 1 2022/2023 dengan sisa SKS yang harus diambil
@@ -181,39 +182,75 @@ const DaftarCalonTamatan = () => {
           />
           sks.
         </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Nama Sesuai Ijazah: {item?.full_name}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          No. Regis: {item?.reg_num}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Tanggal Lahir: {item?.date_of_birth}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Jenis Kelamin: {item?.gender}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Nomor Induk Kependudukan (NIK): {item?.nik}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Nomor Induk Mahasiswa (NIM): {item?.nim}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Email: {item?.personalEmail}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Prodi: {item?.major}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Minor/Konsentrasi: {item?.minor}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          No. Telp: {item?.phone_num}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Nama Ibu Kandung: {item?.birth_mother}
-        </Typography>
+
+        <Grid container spacing={3} sx={{ paddingTop: 5 }}>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Nama Sesuai Ijazah</Typography>
+            <Typography variant="h6" sx={textSyle}>
+            {item?.full_name}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Nomor Registrasi</Typography>
+            <Typography variant="h6" sx={textSyle}>
+            {item?.reg_num}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Tanggal Lahir</Typography>
+            <Typography variant="h6" sx={textSyle}>
+            {item?.date_of_birth}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Jenis Kelamin</Typography>
+            <Typography variant="h6" sx={textSyle}>
+            {item?.gender}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Nomor Induk Kependudukan (NIK)</Typography>
+            <Typography variant="h6" sx={textSyle}>
+            {item?.nik}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Nomor Induk Mahasiswa (NIM)</Typography>
+            <Typography variant="h6" sx={textSyle}>
+            {item?.nim}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Email</Typography>
+            <Typography variant="h6" sx={textSyle}>
+            {item?.personal_email}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Program Studi</Typography>
+            <Typography variant="h6" sx={textSyle}>
+            {item?.major}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Minor/Konsentrasi</Typography>
+            <Typography variant="h6" sx={textSyle}>
+            {item?.minor}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Nomor Telepon</Typography>
+            <Typography variant="h6" sx={textSyle}>
+            {item?.phone_num}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Nama Ibu Kandung</Typography>
+            <Typography variant="h6" sx={textSyle}>
+            {item?.birth_mother}
+            </Typography>
+          </Grid>
+        </Grid>
 
         {/* table */}
         <Typography mt={5} sx={{ fontSize: "24px", fontWeight: 500 }}>
@@ -248,19 +285,61 @@ const DaftarCalonTamatan = () => {
           }}
         >
           {/* upload pdf sertifikat */}
-          <Div
-            sx={{
-              // display: 'flex',
-              // flexWrap: 'wrap',
-              "& > :not(style)": {
-                width: 245,
-                height: 130,
-                backgroundColor: "red",
-              },
-            }}
+          
+
+           {console.log("PDF URL:", item?.certificateURL)}
+
+           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Box>
+              <iframe
+                title="certificate"
+                src={item?.certificateURL}
+                // width="100%"
+                // height="500px"
+                //frameBorder="0"
+              ></iframe>
+            </Box>
+
+            <Button
+              size="small"
+              sx={{
+                textTransform: 'none',
+                mt: 1,
+                alignSelf: 'flex-start', // Align the button to the left
+              }}
+              onClick={() => {
+                const pdfURL = item?.certificateURL;
+
+                // Open the link in a new tab or window
+                window.open(pdfURL, '_blank');
+              }}
+            >
+              Open Certificate
+            </Button>
+          </div>
+
+          {/* <iframe src={`${item?.certificateURL}`}></iframe>
+
+          <Button onClick={ () => {
+            const pdfURL = item?.certificateURL; // Anda dapat memodifikasi ini sesuai dengan kebutuhan
+
+            // Buka tautan dalam tab atau jendela baru
+            window.open(pdfURL, "_blank");
+          }} 
           >
-            <Paper elevation={3} />
-          </Div>
+            open certificate
+          </Button> */}
+
+          {/* <Document file={{
+              url:
+              'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            }} onLoadError={console.error} >
+          </Document> */}
+
+          {/* <iframe src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"></iframe> */}
+
+          {/* <Document file={`${item?.certificateURL}`} /> */}
+          
 
           {/* total sks */}
           <Typography variant="body1" sx={{ lineHeight: 2.5 }}>
@@ -328,7 +407,7 @@ const DaftarCalonTamatan = () => {
   // tabel calon tamatan
   const TableItem = ({ index, item }) => (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
+      <TableCell>{index + 1 + rowsPerPage * page}</TableCell>
       <TableCell>
         <Button
           variant="text"
@@ -484,7 +563,9 @@ const DaftarCalonTamatan = () => {
               ? filterData()
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => <TableItem index={index} item={item} />)
-              : data.map((item, index) => (
+              : data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
                   <TableItem index={index} item={item} />
                 ))}
           </TableBody>
@@ -519,7 +600,7 @@ const DaftarCalonTamatan = () => {
           <TablePagination
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
-            count={data.length}
+            count={filterData().length > 0 ? filterData().length : data.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -563,6 +644,16 @@ const DaftarCalonTamatan = () => {
       </Box> */}
     </Box>
   );
+};
+
+const textSyle = {
+  borderWidth: 1,
+  borderColor: "#00000029",
+  borderStyle: "solid",
+  paddingX: "24px",
+  paddingY: "16px",
+  borderRadius: "8px",
+  minHeight: "50px", 
 };
 
 export default DaftarCalonTamatan;

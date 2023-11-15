@@ -41,6 +41,7 @@ import React, { useEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { format } from "date-fns";
 import { makeStyles } from "@mui/styles";
 import ClearIcon from "@mui/icons-material/Clear";
 import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
@@ -89,7 +90,7 @@ const majorsByFaculty = {
 const PengisianSPT = () => {
   // input SPT
   const [dataSPT, setDataSPT] = useState({
-    sisaSKS: "",
+    // sisaSKS: "",
     nama: "",
     noRegis: "",
     // tglLahir: "",
@@ -160,7 +161,7 @@ const PengisianSPT = () => {
     { subject: "", sks: "", keterangan: "" },
   ]);
 
-  const [totalSKS, setTotalSKS] = useState(0);
+  const [totalSKS, setTotalSKS] = useState("");
 
   const handleInputChange = (e, id, column) => {
     const updatedRows = rows.map((row, index) => {
@@ -176,13 +177,13 @@ const PengisianSPT = () => {
   useEffect(() => {
     // Calculate the sum of column 3 whenever rows change
     const sum = rows.reduce((acc, row) => acc + parseFloat(row.sks || 0), 0);
-    setTotalSKS(sum);
+    setTotalSKS(sum.toString());
   }, [rows]);
 
   // cek input data
-  useEffect(() => {
-    console.log(dataSPT);
-  }, [dataSPT]);
+  // useEffect(() => {
+  //   console.log(dataSPT);
+  // }, [dataSPT]);
 
   // const [data, setData] = useState(rows);
 
@@ -213,27 +214,52 @@ const PengisianSPT = () => {
   const [open, setOpen] = React.useState(false);
 
   // date picker
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState("");
 
   const handleDateChange = (date) => {
-    setSelectedDate(date);
+    // const formattedDate = date ? format(date, "yyyy-MM-dd") : "";
+    const formattedDate = date ? format(date, "dd-MM-yyyy") : "";
+    setSelectedDate(formattedDate);
   };
 
-  // pdf upload
-  const [pdfFile, setPdfFile] = useState(null);
+
+  // PDF FILE UPLOAD & CONVERT TO BASE64 STRING
+  const [pdfFile, setPdfFile] = useState("");
+  const [pdfBase64, setPdfBase64] = useState(null);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
+
     if (file && file.type === "application/pdf" && file.size <= 10485760) {
-      setPdfFile(file);
+      // Read the file content and convert it to base64
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setPdfFile(file);
+        setPdfBase64(reader.result.split(',')[1]); // Extract base64 string
+      };
+
+      reader.readAsDataURL(file);
     } else {
       alert("Please select a valid PDF file (max. 10MB).");
     }
   };
 
-  const handleLinkClick = () => {
-    // Handle link click event if needed
-  };
+  // pdf upload
+  // const [pdfFile, setPdfFile] = useState(null);
+
+  // const handleFileUpload = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file && file.type === "application/pdf" && file.size <= 10485760) {
+  //     setPdfFile(file);
+  //   } else {
+  //     alert("Please select a valid PDF file (max. 10MB).");
+  //   }
+  // };
+
+  // const handleLinkClick = () => {
+  //   // Handle link click event if needed
+  // };
 
   const handleDeletePdf = (event) => {
     event.preventDefault();
@@ -249,7 +275,7 @@ const PengisianSPT = () => {
       reg_num: dataSPT.noRegis,
       date_of_birth: selectedDate,
       faculty: dataSPT.fakultas,
-      gender: dataSPT.gender.toUpperCase(),
+      gender: dataSPT.gender,
       major: dataSPT.prodi,
       nim: dataSPT.nim,
       phone_num: dataSPT.noTelp,
@@ -257,16 +283,23 @@ const PengisianSPT = () => {
       birth_mother: dataSPT.ibuKandung,
       graduate_plan: dataSPT.rencanaTamat,
       minor: dataSPT.minor,
-      remaining_credits: dataSPT.sisaSKS,
+      personal_email: dataSPT.email,
+      remaining_credits: totalSKS,
       remaining_classes: JSON.stringify(rows),
+      certificateFile: {
+        filename: pdfFile.name,
+        buffer: pdfBase64,
+      },
       studentId: dataSPT.nim,
     };
     console.log(normalized);
     try {
-      const res = await jwtAuthAxios.post("/spt/", normalized);
-      console.log("success", res.data.data);
+      console.log("trigger")
+      const res = await jwtAuthAxios.post("/spt", normalized);
+      console.log("success");
     } catch (e) {
       console.log(e);
+      console.log('error')
     }
   };
 
@@ -311,7 +344,7 @@ const PengisianSPT = () => {
               placeholder="23"
               sx={{ width: "60px", ml: "10px", marginRight: "10px" }}
               name="sisaSKS"
-              value={dataSPT.sisaSKS}
+              value={totalSKS}
               onChange={handleDataSPT}
             />
           </span>
@@ -375,12 +408,12 @@ const PengisianSPT = () => {
                   onChange={handleDataSPT}
                 >
                   <FormControlLabel
-                    value="female"
+                    value="FEMALE"
                     control={<Radio />}
                     label="Female"
                   />
                   <FormControlLabel
-                    value="male"
+                    value="MALE"
                     control={<Radio />}
                     label="Male"
                   />
@@ -599,6 +632,8 @@ const PengisianSPT = () => {
           </span>
           sks.
         </Typography>
+
+        {/* UPLOAD PDF */}
         <Div
           sx={{
             // display: 'flex',
@@ -667,22 +702,23 @@ const PengisianSPT = () => {
                 position: "relative",
                 fontSize: "15px",
                 whiteSpace: "nowrap",
-                marginTop: "10px", // Remove top margin
-                marginBottom: "0", // Remove bottom margin
-                paddingBottom: "0", // Remove bottom padding
+                marginTop: "10px", 
+                marginBottom: "0", 
+                paddingBottom: "0", 
               }}
             >
               <a
                 href={URL.createObjectURL(pdfFile)}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={handleLinkClick}
+                // value={dataSPT.pdf}
+                // onClick={handleLinkClick}
                 sx={{
                   display: "flex",
                   alignItems: "center",
                   textDecoration: "none",
                   color: "blue",
-                  margin: "0", // Remove margin
+                  margin: "0", 
                   padding: "0", // Remove padding
                 }}
               >
@@ -703,8 +739,15 @@ const PengisianSPT = () => {
               </a>
             </Div>
           )}
-          {/* <Paper elevation={3}/> */}
         </Div>
+
+        {/* Display the base64 string */}
+        {/* <Div>
+          <p>Base64 String:</p>
+          <pre>{pdfBase64}</pre>
+        </Div> */}
+
+
         <Divider sx={{ marginY: 3 }} />
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
@@ -715,13 +758,13 @@ const PengisianSPT = () => {
           </Grid>
           <Grid item>
             <Box display="flex" justifyContent="flex-end">
-              <Button
+              {/* <Button
                 variant="outlined"
                 color="primary"
                 style={{ marginRight: "10px" }}
               >
                 Batal
-              </Button>
+              </Button> */}
               {/* alert dialog */}
               <Div>
                 <Button variant="contained" onClick={() => setOpen(true)}>

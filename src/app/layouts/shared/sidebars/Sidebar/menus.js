@@ -139,14 +139,20 @@ export const mahasiswaMenus = [
     type: "section",
     children: [
       // CALON TAMATAN ===============
+      // {
+      //   label: "Home",
+      //   type: "nav-item",
+      //   icon: <HomeIcon sx={{ fontSize: 20 }} />,
+      //   uri: "/klabat-bridge/home-calon-tamatan",
+      // },
       {
-        label: "Home (Calon Tamatan)",
+        label: "Dashboard",
         type: "nav-item",
-        icon: <HomeIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/home-calon-tamatan",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Pengisian SPT",
+        label: "SPT Form",
         type: "nav-item",
         icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/pengisian-spt",
@@ -745,13 +751,13 @@ export const kaprodiMenus = [
         uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Dafter Alumni",
+        label: "Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/daftar-alumni-fakultas",
       },
       {
-        label: "Daftar Calon Tamatan",
+        label: "Graduate Candidates",
         type: "nav-item",
         icon: <GroupsIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/daftar-calon-tamatan-fakultas",
@@ -1029,7 +1035,7 @@ export const operatorMenus = [
         uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Dafter Alumni",
+        label: "Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/daftar-alumni",
@@ -1050,7 +1056,7 @@ export const adminMenus = [
         uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Dafter Alumni",
+        label: "Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/daftar-alumni-fakultas",
@@ -1065,7 +1071,7 @@ export const registerMenus = [
     type: "section",
     children: [
       {
-        label: "Daftar Calon Tamatan",
+        label: "Graduate Candidates",
         type: "nav-item",
         icon: <GroupsIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/daftar-calon-tamatan-register",
@@ -1080,11 +1086,17 @@ export const mahasiswaMenusGraduate = [
     type: "section",
     children: [
       // ALUMNI ================
+      // {
+      //   label: "Home",
+      //   type: "nav-item",
+      //   icon: <HomeIcon sx={{ fontSize: 20 }} />,
+      //   uri: "/klabat-bridge/home-alumni",
+      // },
       {
-        label: "Home (Alumni)",
+        label: "Dashboard",
         type: "nav-item",
-        icon: <HomeIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/home-alumni",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/dashboard",
       },
       {
         label: "Form Tracer Study",
