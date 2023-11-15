@@ -85,7 +85,10 @@ const UnggahProposal = () => {
   const [proposalId, setProposalId] = useState(null);
 
   const userRole = useParams().role;
-  console.log(userRole);
+  console.log("role user akses page: ", userRole);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  console.log("role user yang sign in: ", role);
 
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
@@ -153,25 +156,6 @@ const UnggahProposal = () => {
     fetchBuktiPembayaranData();
     fetchHasilCekPlagiatData();
   }, [token, proposalId]);
-
-  // state untuk Upload Proposal
-  // const [proposalUploadedFiles, setProposalUploadedFiles] = useState([]);
-  // const [selectedProposalFileName, setSelectedProposalFileName] = useState("");
-  // const [proposalFile, setProposalFile] = useState(null);
-  const [fileDokumenProposal, setFileDokumenProposal] = useState();
-
-  // State untuk Bukti Pembayaran
-  // const [paymentFile, setPaymentFile] = useState(null);
-  // const [selectedPaymentFileName, setSelectedPaymentFileName] = useState("");
-  // const [paymentUploadedFiles, setPaymentUploadedFiles] = useState([]);
-  const [fileBuktiPembayaran, setFileBuktiPembayaran] = useState();
-
-  // State untuk Hasil Cek Plagiat
-  // const [plagiarismFile, setPlagiarismFile] = useState(null);
-  // const [selectedPlagiarismFileName, setSelectedPlagiarismFileName] =
-  //   useState("");
-  // const [plagiarismUploadedFiles, setPlagiarismUploadedFiles] = useState([]);
-  const [filePlagiat, setFilePlagiat] = useState([]);
 
   const handleUnggahDokumenProposal = (event) => {
     const file = event.target.files[0];
@@ -665,7 +649,7 @@ const UnggahProposal = () => {
             <MenuMahasiswa
               dataGroupId={groupId}
               dataProgress={progress}
-              page={"Dokumen Proposal"}
+              page={"Unggah Proposal"}
             />
           </Div>
           {/* Menu horizontal End */}
@@ -849,7 +833,7 @@ const UnggahProposal = () => {
                             "Approve" ? (
                             <Chip
                               size="small"
-                              label={"Diterima"}
+                              label={"Disetujui"}
                               sx={{
                                 background: "rgba(21, 131, 67, 0.10)",
                                 color: "#0A7637",
@@ -886,7 +870,7 @@ const UnggahProposal = () => {
                               "Approve" ? (
                               <Chip
                                 size="small"
-                                label={"Diterima"}
+                                label={"Disetujui"}
                                 sx={{
                                   background: "rgba(21, 131, 67, 0.10)",
                                   color: "#0A7637",
@@ -924,7 +908,7 @@ const UnggahProposal = () => {
                               "Approve" ? (
                               <Chip
                                 size="small"
-                                label={"Diterima"}
+                                label={"Disetujui"}
                                 sx={{
                                   background: "rgba(21, 131, 67, 0.10)",
                                   color: "#0A7637",

@@ -32,28 +32,115 @@ const keywords = [
 ];
 
 const MetaDataRepository = () => {
+  const [metadata, setMetadata] = useState();
+
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
 
-  const role = useParams().role;
-  console.log(role);
+  const userRole = useParams().role;
+  console.log("role user akses page: ", userRole);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  console.log("role user yang sign in: ", role);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1//group/metadata/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setMetadata(response.data.data);
+        console.log("Request Get metadata: ", response.data.data);
+
+        // Pisahkan string keywords menjadi array
+        const keywordsArray = response.data.data.keywords
+          ? response.data.data.keywords.includes(",")
+            ? response.data.data.keywords
+                .split(",")
+                .map((keyword) => keyword.trim())
+            : [response.data.data.keywords.trim()]
+          : [];
+        setSelectedKeywords(keywordsArray);
+        setAbstrak(response.data.data.abstrak || "");
+        setReferensi(response.data.data.reference || "");
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil metadata:", error);
+      }
+    };
+    fetchMetadata();
+  }, [token, groupId]);
 
   const [openDialog, setOpenDialog] = useState(false);
   const [penulisCount, setPenulisCount] = useState(1); // Awalnya satu input select
   const [selectedKeywords, setSelectedKeywords] = useState([]);
+  const [abstrak, setAbstrak] = useState("");
+  const [referensi, setReferensi] = useState("");
+  const [errorMessages, setErrorMessages] = useState({
+    keywords: "",
+    abstrak: "",
+    referensi: "",
+  });
 
-  const handleTambahPenulis = () => {
-    if (penulisCount < 5) {
-      setPenulisCount(penulisCount + 1);
-    }
-  };
+  const currentDate = new Date();
+
+  const [submittedData, setSubmittedData] = useState({
+    keywords: "",
+    abstrak: "",
+    referensi: "",
+  });
+
+  const [submitted, setSubmitted] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   const handleKeywordChange = (event, newValue) => {
     setSelectedKeywords(newValue);
+    setErrorMessages((prevErrors) => ({ ...prevErrors, keywords: "" }));
+  };
+
+  const handleAbstrakChange = (event) => {
+    setAbstrak(event.target.value);
+    setErrorMessages((prevErrors) => ({ ...prevErrors, abstrak: "" }));
+  };
+
+  const handleReferensiChange = (event) => {
+    setReferensi(event.target.value);
+    setErrorMessages((prevErrors) => ({ ...prevErrors, referensi: "" }));
   };
 
   const handleOpenDialog = () => {
+    let hasError = false;
+    const newErrorMessages = {};
+
+    if (selectedKeywords.length === 0) {
+      newErrorMessages.keywords = "Kata kunci harus diisi";
+      hasError = true;
+    }
+
+    if (!abstrak.trim()) {
+      newErrorMessages.abstrak = "Abstrak harus diisi";
+      hasError = true;
+    }
+
+    if (!referensi.trim()) {
+      newErrorMessages.referensi = "Referensi harus diisi";
+      hasError = true;
+    }
+
+    if (hasError) {
+      setErrorMessages(newErrorMessages);
+      return;
+    }
+
     setOpenDialog(true);
   };
 
@@ -62,9 +149,84 @@ const MetaDataRepository = () => {
   };
 
   const handleConfirmSubmit = () => {
-    // Lakukan pengiriman data di sini
-    // Kemudian tutup dialog konfirmasi
-    setOpenDialog(false);
+    // setSubmittedData({
+    //   keywords: selectedKeywords.join(", "),
+    //   abstrak: abstrak,
+    //   referensi: referensi,
+    // });
+
+    const metadata = {
+      keywords: selectedKeywords.join(", "),
+      abstrak: abstrak,
+      reference: referensi,
+    };
+    console.log("Metadata yang akan diunggah: ", metadata);
+    axios
+      .put(`http://localhost:2000/api/v1/group/metadata/${groupId}`, metadata, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setSubmitted(true);
+        setEditMode(false);
+
+        // Perform data submission logic here
+        setOpenDialog(false);
+
+        console.log("Berhasil unggah metadata: ", response.data.data);
+
+        // request data
+        const fetchMetadata = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1//group/metadata/${groupId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setMetadata(response.data.data);
+            console.log("Request Get metadata: ", response.data.data);
+
+            // Pisahkan string keywords menjadi array
+            const keywordsArray = response.data.data.keywords
+              ? response.data.data.keywords.includes(",")
+                ? response.data.data.keywords
+                    .split(",")
+                    .map((keyword) => keyword.trim())
+                : [response.data.data.keywords.trim()]
+              : [];
+            setSelectedKeywords(keywordsArray);
+            setAbstrak(response.data.data.abstrak || "");
+            setReferensi(response.data.data.reference || "");
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil metadata:", error);
+          }
+        };
+        fetchMetadata();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah metadata:",
+          error.response.data.message
+        );
+      });
+  };
+
+  const handleKembali = () => {
+    // Pisahkan string keywords menjadi array
+    const keywordsArray = metadata?.keywords
+      ? metadata?.keywords.includes(",")
+        ? metadata?.keywords.split(",").map((keyword) => keyword.trim())
+        : [metadata?.keywords.trim()]
+      : [];
+    setSelectedKeywords(keywordsArray);
+    setAbstrak(metadata?.abstrak || "");
+    setReferensi(metadata?.reference || "");
+    console.log("nilai keyword setelah di perbarui: ", keywordsArray);
+    setEditMode(false);
   };
   return (
     <Div>
@@ -130,10 +292,14 @@ const MetaDataRepository = () => {
           {/* Menu Horizontal Start */}
           {/* MAHASISWA */}
           <Div
-            hidden={role.includes("MAHASISWA") ? false : true}
+            hidden={userRole === "MAHASISWA" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
+            <MenuMahasiswa
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Metadata Repositori"}
+            />
           </Div>
           {/* Menu horizontal End */}
           <Div
@@ -150,136 +316,256 @@ const MetaDataRepository = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
-            {/* kata kunci */}
-            <Div sx={{ width: "100%" }}>
-              <Autocomplete
-                size="small"
-                multiple
-                id="keywords"
-                options={keywords}
-                freeSolo
-                value={selectedKeywords}
-                onChange={handleKeywordChange}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="kata kunci"
-                    variant="outlined"
-                    placeholder="Contoh: informatika, repository, manajemen"
+            {(metadata?.keywords === null || editMode) && (
+              // Render input fields when not submitted or in edit mode
+              <>
+                {/* kata kunci */}
+                <Div sx={{ width: "100%" }}>
+                  <Autocomplete
+                    size="small"
+                    multiple
+                    id="keywords"
+                    options={keywords}
+                    freeSolo
+                    value={selectedKeywords}
+                    onChange={handleKeywordChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Masukkan kata kunci"
+                        variant="outlined"
+                        placeholder="Contoh: informatika, repository, manajemen"
+                        error={!!errorMessages.keywords}
+                        helperText={errorMessages.keywords}
+                      />
+                    )}
+                    renderTags={(value, getTagProps) =>
+                      value.map((option, index) => (
+                        <Chip
+                          size="small"
+                          label={option.toLowerCase()}
+                          {...getTagProps({ index })}
+                        />
+                      ))
+                    }
                   />
-                )}
-                renderTags={(value, getTagProps) =>
-                  value.map((option, index) => (
-                    <Chip
-                      size="small"
-                      label={option.toLowerCase()}
-                      {...getTagProps({ index })}
-                    />
-                  ))
-                }
-              />
-            </Div>
+                </Div>
 
-            {/* Abstrak */}
-            <Div sx={{ width: "100%" }}>
-              <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-                Abstrak
-              </DialogContentText>
-              <TextareaAutosize
-                aria-label="minimum height"
-                minRows={3}
-                placeholder="Masukan Abstrak"
-                style={{
-                  width: "100%",
-                  display: "block",
-                  resize: "vertical",
-                }}
-              />
-            </Div>
-            <Div sx={{ width: "100%" }}>
-              <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-                Referensi
-              </DialogContentText>
-              <TextareaAutosize
-                aria-label="minimum height"
-                minRows={3}
-                placeholder="Masukan Refrensi"
-                style={{
-                  width: "100%",
-                  display: "block",
-                  resize: "vertical",
-                }}
-              />
-            </Div>
-            <Div
-              sx={{
-                display: "flex",
-                padding: "12px 24px 12px 0px",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                background: "#F5F5F5",
-                width: "100%",
-              }}
-            >
-              <Button
-                size="small"
-                variant="contained"
-                sx={{ textTransform: "none" }}
-                color="primary"
-                onClick={handleOpenDialog}
-              >
-                Submit
-              </Button>
-            </Div>
-          </Div>
-          {/* Element 2 End */}
-          {/* Dialog konfirmasi */}
-          <Dialog
-            open={openDialog}
-            onClose={handleCloseDialog}
-            maxWidth="xs"
-            fullWidth
-          >
-            <DialogTitle
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                alignSelf: "stretch",
-              }}
-            >
-              <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-                Submit Metadata
-              </Typography>
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Apakah Anda yakin semua data sudah benar?
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-              <Button
-                onClick={handleCloseDialog}
+                {/* Abstrak */}
+                <Div sx={{ width: "100%" }}>
+                  <DialogContentText sx={{ width: "100%", margin: "auto" }}>
+                    Abstrak
+                  </DialogContentText>
+                  <TextareaAutosize
+                    aria-label="minimum height"
+                    minRows={3}
+                    placeholder="Masukan Abstrak"
+                    style={{
+                      width: "100%",
+                      display: "block",
+                      resize: "vertical",
+                      borderColor: errorMessages.abstrak ? "red" : "",
+                    }}
+                    value={abstrak}
+                    onChange={handleAbstrakChange}
+                  />
+                </Div>
+                {errorMessages.abstrak && (
+                  <Typography
+                    style={{
+                      color: "red",
+                      marginTop: "-10px",
+                      marginLeft: "18px",
+                      fontSize: "12px",
+                    }}
+                  >
+                    {errorMessages.abstrak}
+                  </Typography>
+                )}
+
+                <Div sx={{ width: "100%" }}>
+                  <DialogContentText sx={{ width: "100%", margin: "auto" }}>
+                    Referensi
+                  </DialogContentText>
+                  <TextareaAutosize
+                    aria-label="minimum height"
+                    minRows={3}
+                    placeholder="Masukan Refrensi"
+                    style={{
+                      width: "100%",
+                      display: "block",
+                      resize: "vertical",
+                      borderColor: errorMessages.referensi ? "red" : "",
+                    }}
+                    value={referensi}
+                    onChange={handleReferensiChange}
+                    error={!!errorMessages.referensi}
+                    helperText={errorMessages.referensi}
+                  />
+                </Div>
+                {errorMessages.referensi && (
+                  <Typography
+                    style={{
+                      color: "red",
+                      marginTop: "-10px",
+                      marginLeft: "18px",
+                      fontSize: "12px",
+                    }}
+                  >
+                    {errorMessages.referensi}
+                  </Typography>
+                )}
+
+                <Div
+                  sx={{
+                    display: "flex",
+                    padding: "12px 24px 12px 0px",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    background: "#F5F5F5",
+                    width: "100%",
+                  }}
+                >
+                  <Button
+                    size="small"
+                    onClick={handleKembali}
+                    style={{
+                      borderRadius: "6px",
+                      border: "##E0E0E0",
+                      background: "#FFFF",
+                      color: "black",
+                      textTransform: "none",
+                      marginRight: "20px",
+                    }}
+                  >
+                    Kembali
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                    color="primary"
+                    onClick={handleOpenDialog}
+                  >
+                    Submit
+                  </Button>
+                </Div>
+              </>
+            )}
+
+            {/* {metadata?.keywords === null && !editMode && (
+              // Render the submit button only when not submitted and not in edit mode
+              <Div
                 sx={{
-                  background: "white",
-                  boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-                  textTransform: "none",
-                  color: "black",
+                  display: "flex",
+                  padding: "12px 24px 12px 0px",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  background: "#F5F5F5",
+                  width: "100%",
                 }}
               >
-                Batal
-              </Button>
-              <Button
-                onClick={handleConfirmSubmit}
-                variant="contained"
-                sx={{ textTransform: "none" }}
-                color="primary"
-              >
-                Ya
-              </Button>
-            </DialogActions>
-          </Dialog>
+                <Button
+                  size="small"
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                  color="primary"
+                  onClick={handleOpenDialog}
+                >
+                  Submit
+                </Button>
+              </Div>
+            )} */}
+
+            {metadata?.keywords !== null && !editMode && (
+              // Render the edit button only when submitted and not in edit mode
+              <>
+                <Div sx={{ width: "100%" }}>
+                  <Typography variant="subtitle2">Kata Kunci</Typography>
+                  <Typography>{metadata?.keywords}</Typography>
+                </Div>
+
+                <Div sx={{ width: "100%" }}>
+                  <Typography variant="subtitle2">Abstrak</Typography>
+                  <Typography>{metadata?.abstrak}</Typography>
+                </Div>
+
+                <Div sx={{ width: "100%" }}>
+                  <Typography variant="subtitle2">Referensi</Typography>
+                  <Typography>{metadata?.reference}</Typography>
+                </Div>
+                <Div
+                  sx={{
+                    display: "flex",
+                    padding: "12px 24px 12px 0px",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    background: "#F5F5F5",
+                    width: "100%",
+                  }}
+                >
+                  <Button
+                    size="small"
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                    color="primary"
+                    onClick={() => setEditMode(true)}
+                  >
+                    Ubah
+                  </Button>
+                </Div>
+              </>
+            )}
+          </Div>
         </Div>
+        {/* Element 2 End */}
+
+        {/* Dialog konfirmasi */}
+        <Dialog
+          open={openDialog}
+          onClose={handleCloseDialog}
+          maxWidth="xs"
+          fullWidth
+        >
+          <DialogTitle
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              alignSelf: "stretch",
+            }}
+          >
+            <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
+              Submit Metadata
+            </Typography>
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Apakah Anda yakin semua data sudah benar?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+            <Button
+              onClick={handleCloseDialog}
+              sx={{
+                background: "white",
+                boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                textTransform: "none",
+                color: "black",
+              }}
+            >
+              Batal
+            </Button>
+            <Button
+              onClick={handleConfirmSubmit}
+              variant="contained"
+              sx={{ textTransform: "none" }}
+              color="primary"
+            >
+              Ya
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Div>
     </Div>
   );

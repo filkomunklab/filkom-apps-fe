@@ -129,8 +129,8 @@ const MenuMahasiswa = ({
                 fontSize: "13px",
                 fontWeight: 500,
                 color:
-                  setPage === "Dokumen Proposal" ||
-                  setPage === "Dokumen Revisi Proposal"
+                  setPage === "Unggah Proposal" ||
+                  setPage === "Unggah Revisi Proposal"
                     ? "#006AF5"
                     : "#192434",
                 textTransform: "none",
@@ -223,15 +223,19 @@ const MenuMahasiswa = ({
                 fontSize: "13px",
                 fontWeight: 500,
                 color:
-                  setPage === "Dokumen Skripsi" ||
-                  setPage === "Dokumen Revisi Skripsi"
+                  setPage === "Unggah Skripsi" ||
+                  setPage === "Unggah Revisi Skripsi" ||
+                  setPage === "Arsip Dokumen" ||
+                  setPage === "Metadata Repositori"
                     ? "#006AF5"
                     : "#192434",
                 textTransform: "none",
                 "&:hover": {
                   color:
                     setPage === "Unggah Skripsi" ||
-                    setPage === "Unggah Revisi Skripsi"
+                    setPage === "Unggah Revisi Skripsi" ||
+                    setPage === "Arsip Dokumen" ||
+                    setPage === "Metadata Repositori"
                       ? "#006AF5"
                       : "#006AF5",
                 },
@@ -301,15 +305,15 @@ const MenuMahasiswa = ({
                 <MenuItem
                   onClick={() => setAnchorE2(null)}
                   style={{
-                    color: setPage === "Arsip Document" ? "#006AF5" : "#192434",
+                    color: setPage === "Arsip Dokumen" ? "#006AF5" : "#192434",
                     textTransform: "none",
                     "&:hover": {
                       color:
-                        setPage === "Arsip Document" ? "#006AF5" : "#006AF5",
+                        setPage === "Arsip Dokumen" ? "#006AF5" : "#006AF5",
                     },
                   }}
                 >
-                  Arsip Document
+                  Arsip Dokumen
                 </MenuItem>
               </Link>
               <Link
@@ -320,17 +324,17 @@ const MenuMahasiswa = ({
                   onClick={() => setAnchorE2(null)}
                   style={{
                     color:
-                      setPage === "Metadata Repository" ? "#006AF5" : "#192434",
+                      setPage === "Metadata Repositori" ? "#006AF5" : "#192434",
                     textTransform: "none",
                     "&:hover": {
                       color:
-                        setPage === "Metadata Repository"
+                        setPage === "Metadata Repositori"
                           ? "#006AF5"
                           : "#006AF5",
                     },
                   }}
                 >
-                  Metadata Repository
+                  Metadata Repositori
                 </MenuItem>
               </Link>
             </Menu>

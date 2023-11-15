@@ -39,6 +39,8 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
         );
         // Atur state 'setRiwayat' dengan data dari respons
         setRiwayat(response.data.data);
+        // set riwayat terakhir untuk aktif/buka
+        setActiveStep(response.data.data.length - 1);
         console.log("Request Get riwayat: ", response.data.data);
       } catch (error) {
         console.error("Terjadi kesalahan saat mengambil riwayat:", error);
@@ -95,7 +97,10 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
           <Stepper
             activeStep={activeStep}
             orientation="vertical"
-            sx={{ marginBottom: "20px" }}
+            sx={{
+              marginBottom: "20px",
+              flexDirection: "column-reverse", // Balik arah tata letak kolom
+            }}
           >
             {riwayat?.map((step, index) => (
               <Step key={index} completed={false}>

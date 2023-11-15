@@ -8,7 +8,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Paper,
   Table,
@@ -21,17 +20,17 @@ import {
 } from "@mui/material";
 import { pdfjs } from "react-pdf";
 import WarningIcon from "@mui/icons-material/Warning";
-import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
+import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 // View Document Skripsi
-const PDFViewerRevisiSkripsi = ({ RevisiSkripsiFile }) => {
+const PDFViewerRevisiSkripsi = ({ dokumenRevisi }) => {
   const viewPDFRevisiSkripsi = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(RevisiSkripsiFile);
+    const pdfURL = dokumenRevisi.file_path_revision;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -40,7 +39,7 @@ const PDFViewerRevisiSkripsi = ({ RevisiSkripsiFile }) => {
   return (
     <div>
       <span sx={{ fontSize: "10px" }} onClick={viewPDFRevisiSkripsi}>
-        View
+        Lihat
       </span>
     </div>
   );
@@ -51,20 +50,28 @@ const UploadRevisiSkripsi = () => {
   const [dokumenRevisi, setDokumenRevisi] = useState();
   const [perubahan, setPerubahan] = useState();
 
+  // popup delete konfirmasi
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+
+  const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
+
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
   const [skripsiId, setSkripsiId] = useState(null);
 
-  const role = useParams().role;
-  console.log(role);
+  const userRole = useParams().role;
+  console.log("role user akses page: ", userRole);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  console.log("role user yang sign in: ", role);
 
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
   console.log("token", token);
 
   useEffect(() => {
-    const fetchDokumenProposalData = async () => {
+    const fetchDokumenRevisiData = async () => {
       try {
         const response = await axios.get(
           `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/${skripsiId}`,
@@ -102,60 +109,161 @@ const UploadRevisiSkripsi = () => {
         );
       }
     };
-    fetchDokumenProposalData();
+    fetchDokumenRevisiData();
     fetchPerubahanData();
   }, [token, skripsiId]);
 
-  // state untuk Upload Revisi Skripsi
-  const [RevisiSkripsiUploadedFiles, setRevisiSkripsiUploadedFiles] = useState(
-    []
-  );
-  const [selectedRevisiSkripsiFileName, setSelectedRevisiSkripsiFileName] =
-    useState("");
-  const [RevisiSkripsiFile, setRevisiSkripsiFile] = useState(null);
-
-  // popup delete konfirmasi
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [deletingIndex, setDeletingIndex] = useState(null);
-
-  const onRevisiSkripsiFileChange = (event) => {
+  const handleUnggahRevisiSkripsi = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      if (RevisiSkripsiUploadedFiles.length === 0) {
-        setRevisiSkripsiFile(file);
-        setSelectedRevisiSkripsiFileName(file.name);
 
-        const newFileData = {
-          name: file.name,
-          date: new Date().toLocaleDateString(),
-          size: file.size,
-          advisor: "",
-          coAdvisor1: "",
-          coAdvisor2: "",
-        };
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
 
-        setRevisiSkripsiUploadedFiles([newFileData]);
-      }
+    if (!file || !allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid atau file tidak ada");
+      return;
     }
+
+    const reader = new FileReader();
+
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
+
+    reader.onload = (e) => {
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1];
+
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
+
+      // Logika pengolahan file
+      const data = {
+        revision_file: {
+          file_name_revision: file.name,
+          file_size_revision: fileSizeString,
+          buffer: base64String,
+        },
+      };
+
+      // Panggil fungsi untuk mengirim file ke server
+      sendDokumenSkripsiToServer(data);
+    };
+
+    reader.readAsDataURL(file);
   };
 
-  // fungsi untuk menghapus file Proposal
-  const handleDeleteRevisiSkripsiFile = (index) => {
-    const updatedFiles = [...RevisiSkripsiUploadedFiles];
-    updatedFiles.splice(index, 1);
-    setRevisiSkripsiUploadedFiles(updatedFiles);
-    setRevisiSkripsiFile(null);
-    setSelectedRevisiSkripsiFileName("");
+  const sendDokumenSkripsiToServer = (data) => {
+    console.log("Dokumen skripsi yang akan diunggah: ", data);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/${skripsiId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil unggah revisi skripsi: ", response.data.data);
+
+        // request data
+        const fetchDokumenRevisiData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDokumenRevisi(response.data.data);
+            console.log(
+              "Request Get dokumen revisi skripsi: ",
+              response.data.data
+            );
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil dokumen revisi skripsi:",
+              error
+            );
+          }
+        };
+        fetchDokumenRevisiData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah revisi skripsi:",
+          error.response.data.message
+        );
+      });
   };
 
-  const openConfirmDialog = (index) => {
-    setDeletingIndex(index);
-    setConfirmDialogOpen(true);
+  const handleHapusRevisiSkripsi = () => {
+    setDeleteConfirmationOpen(true);
   };
 
-  const closeConfirmDialog = () => {
-    setDeletingIndex(null);
-    setConfirmDialogOpen(false);
+  const handleCancelDelete = () => {
+    setDeleteConfirmationOpen(false);
+  };
+
+  const handleKonfirmasiHapusRevisiSkripsi = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/skripsi-document/delete/${skripsiId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        // tutup konfirmasi jika berhasil hapus
+        setDeleteConfirmationOpen(false);
+
+        console.log("Berhasil menghapus revisi skripsi: ", response.data.data);
+
+        // request data
+        const fetchDokumenRevisiData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDokumenRevisi(response.data.data);
+            console.log(
+              "Request Get dokumen revisi skripsi: ",
+              response.data.data
+            );
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil dokumen revisi skripsi:",
+              error
+            );
+          }
+        };
+        fetchDokumenRevisiData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat menghapus revisi skripsi:",
+          error.response.data.message
+        );
+      });
   };
 
   return (
@@ -201,6 +309,10 @@ const UploadRevisiSkripsi = () => {
               if (data) {
                 setProgress(data.progress);
                 setSkripsiId(data.skripsi_id);
+                setAdvisorAndCoAdvisor({
+                  coAdvisor1: data.co_advisor1,
+                  coAdvisor2: data.co_advisor2,
+                });
               }
             }}
           />
@@ -223,10 +335,14 @@ const UploadRevisiSkripsi = () => {
           {/* Menu Horizontal Start */}
           {/* MAHASISWA */}
           <Div
-            hidden={role.includes("MAHASISWA") ? false : true}
+            hidden={userRole === "MAHASISWA" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
+            <MenuMahasiswa
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Unggah Revisi Skripsi"}
+            />
           </Div>
           {/* Menu horizontal End */}
           <Div
@@ -260,7 +376,7 @@ const UploadRevisiSkripsi = () => {
               Perubahan
             </Typography>
 
-            {/* View Perubahan Start*/}
+            {/* View PerubahanStart*/}
             <Div
               sx={{
                 display: "flex",
@@ -373,7 +489,7 @@ const UploadRevisiSkripsi = () => {
                   <Typography>{perubahan?.changes_by_advisor}</Typography>
                 </Div>
               </Div>
-              {/* Perubahan Co-Advisor 1 */}
+              {/* Perubahan Co-Advisor 1*/}
               {perubahan?.changes_by_co_advisor1 !== null && (
                 <Div
                   sx={{
@@ -409,7 +525,7 @@ const UploadRevisiSkripsi = () => {
                   </Div>
                 </Div>
               )}
-              {/* Perubahan Co-Advisor 2 */}
+              {/* Perubahan Co-Advisor 2*/}
               {perubahan?.changes_by_co_advisor2 !== null && (
                 <Div
                   sx={{
@@ -461,7 +577,7 @@ const UploadRevisiSkripsi = () => {
                 fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
               }}
             >
-              Unggah Revisi Proposal
+              Unggah Revisi Skripsi
             </Typography>
 
             {/* Table 2 Start */}
@@ -474,7 +590,7 @@ const UploadRevisiSkripsi = () => {
                 gap: "25px",
               }}
             >
-              {/* file upload Revisi Skripsi */}
+              {/* Upload Revisi Skripsi*/}
               <Div
                 sx={{
                   display: "flex",
@@ -498,25 +614,25 @@ const UploadRevisiSkripsi = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    onChange={onRevisiSkripsiFileChange}
+                    onChange={handleUnggahRevisiSkripsi}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
                   Unggah file
                 </Button>
               </Div>
-              {/* file upload end for Revisi Pripsi */}
+              {/* Upload Revisi Skripsi End */}
 
               {/* Table Upload Revisi Skripsi Start*/}
               <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                      {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{
                           fontSize: "12px",
@@ -547,17 +663,17 @@ const UploadRevisiSkripsi = () => {
                       <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
                       >
+                        Ketua Panelis
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
+                      >
+                        Anggota Panelis
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
+                      >
                         Advisor
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
-                      >
-                        Co-Advisor 1
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
-                      >
-                        Co-Advisor 2
                       </TableCell>
                       <TableCell
                         sx={{
@@ -573,52 +689,127 @@ const UploadRevisiSkripsi = () => {
                   </TableHead>
 
                   <TableBody>
-                    {RevisiSkripsiUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.date}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
-                        </TableCell>
-                        <TableCell>
+                    <TableRow>
+                      {/* <TableCell>{index + 1}</TableCell> */}
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {dokumenRevisi?.file_name_revision}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {dokumenRevisi?.upload_date_revision}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {dokumenRevisi?.file_size_revision}
+                      </TableCell>
+                      {/* status Ketua */}
+                      <TableCell>
+                        {dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                        "Waiting" ? (
                           <Chip
                             size="small"
-                            label="Menunggu"
+                            label={"Menunggu"}
                             sx={{
                               background: "rgba(255, 204, 0, 0.10)",
                               color: "#985211",
-                              fontSize: "10px",
                             }}
                           />
-                        </TableCell>
-                        <TableCell>
+                        ) : dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                          "Approve" ? (
                           <Chip
                             size="small"
-                            label="Menunggu"
+                            label={"Diterima"}
+                            sx={{
+                              background: "rgba(21, 131, 67, 0.10)",
+                              color: "#0A7637",
+                            }}
+                          />
+                        ) : dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                          "Rejected" ? (
+                          <Chip
+                            size="small"
+                            label={"Ditolak"}
+                            sx={{
+                              background: "rgba(226, 29, 18, 0.10)",
+                              color: "#CA150C",
+                            }}
+                          />
+                        ) : (
+                          dokumenRevisi?.is_revision_approve_by_panelist_chairman
+                        )}
+                      </TableCell>
+                      {/* status Anggota */}
+                      <TableCell>
+                        {dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                        "Waiting" ? (
+                          <Chip
+                            size="small"
+                            label={"Menunggu"}
                             sx={{
                               background: "rgba(255, 204, 0, 0.10)",
                               color: "#985211",
-                              fontSize: "10px",
                             }}
                           />
-                        </TableCell>
-                        <TableCell>
+                        ) : dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                          "Approve" ? (
                           <Chip
                             size="small"
-                            label="Menunggu"
+                            label={"Diterima"}
+                            sx={{
+                              background: "rgba(21, 131, 67, 0.10)",
+                              color: "#0A7637",
+                            }}
+                          />
+                        ) : dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                          "Rejected" ? (
+                          <Chip
+                            size="small"
+                            label={"Ditolak"}
+                            sx={{
+                              background: "rgba(226, 29, 18, 0.10)",
+                              color: "#CA150C",
+                            }}
+                          />
+                        ) : (
+                          dokumenRevisi?.is_revision_approve_by_panelist_member
+                        )}
+                      </TableCell>
+                      {/* status Advisor */}
+                      <TableCell>
+                        {dokumenRevisi?.is_revision_approve_by_advisor ===
+                        "Waiting" ? (
+                          <Chip
+                            size="small"
+                            label={"Menunggu"}
                             sx={{
                               background: "rgba(255, 204, 0, 0.10)",
                               color: "#985211",
-                              fontSize: "10px",
                             }}
                           />
-                        </TableCell>
-                        <TableCell>
+                        ) : dokumenRevisi?.is_revision_approve_by_advisor ===
+                          "Approve" ? (
+                          <Chip
+                            size="small"
+                            label={"Diterima"}
+                            sx={{
+                              background: "rgba(21, 131, 67, 0.10)",
+                              color: "#0A7637",
+                            }}
+                          />
+                        ) : dokumenRevisi?.is_revision_approve_by_advisor ===
+                          "Rejected" ? (
+                          <Chip
+                            size="small"
+                            label={"Ditolak"}
+                            sx={{
+                              background: "rgba(226, 29, 18, 0.10)",
+                              color: "#CA150C",
+                            }}
+                          />
+                        ) : (
+                          dokumenRevisi?.is_revision_approve_by_advisor
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {dokumenRevisi?.file_name_revision !== null && (
                           <Div sx={{ display: "flex" }}>
                             <span
                               style={{
@@ -628,11 +819,9 @@ const UploadRevisiSkripsi = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {RevisiSkripsiFile && (
-                                <PDFViewerRevisiSkripsi
-                                  RevisiSkripsiFile={RevisiSkripsiFile}
-                                />
-                              )}
+                              <PDFViewerRevisiSkripsi
+                                dokumenRevisi={dokumenRevisi}
+                              />
                             </span>
                             <Div
                               style={{
@@ -649,77 +838,74 @@ const UploadRevisiSkripsi = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() => openConfirmDialog(index)}
+                              onClick={handleHapusRevisiSkripsi}
                             >
-                              Delete
+                              Hapus
                             </span>
                           </Div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                        )}
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* Table UplRevisi Skripsi End*/}
+              {/* Table Upload Revisi Skripsi End*/}
             </Div>
             {/* Table 2 End */}
+            <Dialog
+              open={deleteConfirmationOpen}
+              onClose={handleCancelDelete}
+              fullWidth
+              maxWidth="sm"
+            >
+              <DialogTitle
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  alignSelf: "stretch",
+                }}
+              >
+                <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
+                <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
+                  Menghapus Dokumen
+                </Typography>
+              </DialogTitle>
+              <DialogContent>
+                <Typography>
+                  Apakah Anda yakin ingin menghapus dokumen ini?
+                </Typography>
+              </DialogContent>
+              <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                <Button
+                  onClick={handleCancelDelete}
+                  sx={{
+                    background: "white",
+                    boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                    textTransform: "none",
+                    color: "black",
+                  }}
+                >
+                  Batal
+                </Button>
+                <Button
+                  onClick={handleKonfirmasiHapusRevisiSkripsi}
+                  sx={{
+                    textTransform: "none",
+                    background: "#FC0",
+                    color: "#263445",
+                    "&:hover": {
+                      color: "#FC0",
+                    },
+                  }}
+                >
+                  Hapus
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Div>
           {/* Element 2 End */}
         </Div>
-        <Dialog
-          open={confirmDialogOpen}
-          onClose={closeConfirmDialog}
-          maxWidth="sm"
-          fullWidth
-        >
-          <DialogTitle
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              alignSelf: "stretch",
-            }}
-          >
-            <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
-            <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-              Menghapus Dokumen
-            </Typography>
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Apakah Anda yakin ingin menghapus file ini?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-            <Button
-              onClick={closeConfirmDialog}
-              sx={{
-                background: "white",
-                boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-                textTransform: "none",
-                color: "black",
-              }}
-            >
-              Batal
-            </Button>
-            <Button
-              onClick={() => {
-                handleDeleteRevisiSkripsiFile(deletingIndex);
-                closeConfirmDialog();
-              }}
-              sx={{
-                textTransform: "none",
-                background: "#FC0",
-                color: "#263445",
-                "&:hover": {
-                  color: "#FC0",
-                },
-              }}
-            >
-              Hapus
-            </Button>
-          </DialogActions>
-        </Dialog>
       </Div>
     </Div>
   );
