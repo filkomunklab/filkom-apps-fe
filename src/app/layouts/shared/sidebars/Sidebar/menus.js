@@ -139,14 +139,20 @@ export const mahasiswaMenus = [
     type: "section",
     children: [
       // CALON TAMATAN ===============
+      // {
+      //   label: "Home",
+      //   type: "nav-item",
+      //   icon: <HomeIcon sx={{ fontSize: 20 }} />,
+      //   uri: "/klabat-bridge/home-calon-tamatan",
+      // },
       {
-        label: "Home (Calon Tamatan)",
+        label: "Dashboard",
         type: "nav-item",
-        icon: <HomeIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/home-calon-tamatan",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Pengisian SPT",
+        label: "SPT Form",
         type: "nav-item",
         icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/pengisian-spt",
@@ -249,25 +255,13 @@ export const dekanMenus = [
         label: "Graduate Candidates",
         type: "nav-item",
         icon: <GroupsIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-calon-tamatan",
+        uri: "/klabat-bridge/daftar-calon-tamatan-fakultas",
       },
       {
         label: "Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-alumni",
-      },
-      {
-        label: "Daftar Calon Tamatan",
-        type: "nav-item",
-        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-calon-tamatan",
-      },
-      {
-        label: "Daftar Calon Tamatan Fakultas",
-        type: "nav-item",
-        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-calon-tamatan-fakultas",
+        uri: "/klabat-bridge/daftar-alumni-fakultas",
       },
     ],
   },
@@ -757,19 +751,13 @@ export const kaprodiMenus = [
         uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Dafter Alumni",
+        label: "Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-alumni",
+        uri: "/klabat-bridge/daftar-alumni-fakultas",
       },
       {
-        label: "Daftar Calon Tamatan",
-        type: "nav-item",
-        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-calon-tamatan",
-      },
-      {
-        label: "Daftar Calon Tamatan Fakultas",
+        label: "Graduate Candidates",
         type: "nav-item",
         icon: <GroupsIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/daftar-calon-tamatan-fakultas",
@@ -1047,7 +1035,7 @@ export const operatorMenus = [
         uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Dafter Alumni",
+        label: "Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/daftar-alumni",
@@ -1068,16 +1056,10 @@ export const adminMenus = [
         uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Dafter Alumni",
+        label: "Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-alumni",
-      },
-      {
-        label: "Form Tracer Study",
-        type: "nav-item",
-        icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/form-tracer-study",
+        uri: "/klabat-bridge/daftar-alumni-fakultas",
       },
     ],
   },
@@ -1089,10 +1071,10 @@ export const registerMenus = [
     type: "section",
     children: [
       {
-        label: "Daftar Calon Tamatan",
+        label: "Graduate Candidates",
         type: "nav-item",
         icon: <GroupsIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-calon-tamatan",
+        uri: "/klabat-bridge/daftar-calon-tamatan-register",
       },
     ],
   },
@@ -1104,11 +1086,17 @@ export const mahasiswaMenusGraduate = [
     type: "section",
     children: [
       // ALUMNI ================
+      // {
+      //   label: "Home",
+      //   type: "nav-item",
+      //   icon: <HomeIcon sx={{ fontSize: 20 }} />,
+      //   uri: "/klabat-bridge/home-alumni",
+      // },
       {
-        label: "Home (Alumni)",
+        label: "Dashboard",
         type: "nav-item",
-        icon: <HomeIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/home-alumni",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/dashboard",
       },
       {
         label: "Form Tracer Study",
