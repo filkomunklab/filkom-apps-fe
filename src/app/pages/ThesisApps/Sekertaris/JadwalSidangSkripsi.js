@@ -4,13 +4,13 @@ import Div from "@jumbo/shared/Div";
 import PeopleIcon from "@mui/icons-material/People";
 import {
   Button,
-  Chip,
   Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   FormControl,
+  FormHelperText,
   Grid,
   InputAdornment,
   InputLabel,
@@ -24,13 +24,27 @@ import {
   TableRow,
   TextField,
   Typography,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Paper,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 
 const JadwalSidangSkripsi = () => {
+  // State untuk melacak panel accordion yang terbuka
+  const [expanded, setExpanded] = useState(false);
+
+  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
+  const handleChange = (panel) => (event, isExpanded) => {
+    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
+    setExpanded(isExpanded ? panel : false);
+  };
+
   // state - daftar jadwal
   const [daftarJadwal, setDaftarJadwal] = useState([]);
   // state - daftar dosen
@@ -114,7 +128,60 @@ const JadwalSidangSkripsi = () => {
     setRuangan("");
   };
 
+  const [errorMessages, setErrorMessages] = useState({
+    mulaiWaktu: "",
+    selesaiWaktu: "",
+    mulaiTanggal: "",
+    selectedKetuaPenelis: "",
+    selectedAnggotaPenelis: "",
+    ruangan: "",
+  });
+
   const handlePerbarui = (selectedSkripsiId) => {
+    let hasError = false;
+    const newErrorMessages = {};
+
+    // Validasi input waktu
+    if (!mulaiWaktu) {
+      newErrorMessages.mulaiWaktu = "Mulai Waktu harus diisi";
+      hasError = true;
+    }
+
+    if (!selesaiWaktu) {
+      newErrorMessages.selesaiWaktu = "Selesai Waktu harus diisi";
+      hasError = true;
+    }
+
+    // Validasi input tanggal
+    if (!mulaiTanggal) {
+      newErrorMessages.mulaiTanggal = "Mulai Tanggal harus diisi";
+      hasError = true;
+    }
+
+    // Validasi ketua panelis
+    if (!selectedKetuaPenelis) {
+      newErrorMessages.selectedKetuaPenelis = "Ketua panelis harus dipilih";
+      hasError = true;
+    }
+
+    // Validasi anggota panelis
+    if (!selectedAnggotaPenelis) {
+      newErrorMessages.selectedAnggotaPenelis = "Anggota panelis harus dipilih";
+      hasError = true;
+    }
+
+    // Validasi input ruangan
+    if (!ruangan) {
+      newErrorMessages.ruangan = "Ruangan harus diisi";
+      hasError = true;
+    }
+
+    if (hasError) {
+      setErrorMessages(newErrorMessages);
+      // Tampilkan pesan kesalahan
+    } else {
+    }
+
     // Buat objek jadwal baru
     const jadwalBaru = {
       panelist_chairman_id: selectedKetuaPenelis || null,
@@ -216,7 +283,178 @@ const JadwalSidangSkripsi = () => {
         </Div>
         {/* Header End */}
         {/* Semester Start */}
-        {daftarJadwal &&
+        <Div
+          sx={{
+            display: "inline-flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: "25px",
+            width: "100%",
+            height: "460px",
+            overflowY: "auto",
+            background: "#FFF",
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+            padding: "8px",
+            borderRadius: "8px",
+          }}
+        >
+          {daftarJadwal &&
+            daftarJadwal.map((scheduleData, scheduleIndex) => (
+              <Accordion
+                key={scheduleIndex}
+                expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
+                onChange={handleChange(`panel${semesterIndex}`)} // Menangani perubahan state accordion
+                sx={{
+                  width: "100%",
+                  padding: "1px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel${semesterIndex}bh-content`}
+                  id={`panel${semesterIndex}bh-header`}
+                >
+                  <Typography
+                    variant="h2"
+                    sx={{
+                      fontSize: "16px",
+                      fontWeight: 500,
+                      marginTop: "6px",
+                    }}
+                  >
+                    {scheduleData.semester}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <TableHead>
+                        <TableRow sx={{ background: "#F5F5F5" }}>
+                          <TableCell sx={{ width: "25px", fontSize: "13px" }}>
+                            Nomor
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Advisor
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Ketua Panelis
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Anggota Panelis
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>Mulai</TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Selesai
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Tanggal
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Ruangan
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Action
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {scheduleData.schedules.map((jadwal, index) => (
+                          <TableRow key={index}>
+                            <TableCell sx={{ fontSize: "13px" }}>
+                              {index + 1}
+                            </TableCell>
+                            <TableCell sx={{ fontSize: "13px" }}>
+                              {jadwal.title}
+                            </TableCell>
+                            <TableCell>
+                              <Typography>{jadwal.advisor_name}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography>
+                                {jadwal.panelist_chairman_name}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography>
+                                {jadwal.panelist_member_name}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography>{jadwal.start_defence}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography>{jadwal.end_defence}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography>{jadwal.defence_date}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography>{jadwal.defence_room}</Typography>
+                            </TableCell>
+
+                            <TableCell>
+                              <Div sx={{ display: "flex" }}>
+                                <Typography
+                                  component={Link}
+                                  to="/halaman-berikutnya"
+                                  sx={{
+                                    textDecoration: "none",
+                                    color: "blue",
+                                  }}
+                                >
+                                  Detail
+                                </Typography>
+                                <Div sx={{ margin: "2px" }}>|</Div>
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor: "pointer",
+                                    color: "blue",
+                                  }}
+                                  onClick={() => {
+                                    handleUpdateClick(scheduleIndex, index);
+                                    setSelectedSkripsiId(jadwal.skripsi_id);
+                                    setSelectedAdvisor(jadwal.advisor_name);
+                                    setSelectedKetuaPenelis(
+                                      jadwal.panelist_chairman_id
+                                    );
+                                    setSelectedAnggotaPenelis(
+                                      jadwal.panelist_member_id
+                                    );
+                                    setMulaiWaktu(jadwal.start_defence);
+                                    setSelesaiWaktu(jadwal.end_defence);
+                                    setMulaiTanggal(jadwal.defence_date);
+                                    setRuangan(jadwal.defence_room);
+                                    console.log(
+                                      `Selected Skripsi id: ${jadwal.skripsi_id}\n
+                                      Selected Advisor: ${jadwal.advisor_name}\n
+                                      Selected Chairman: ${jadwal.panelist_chairman_id}\n
+                                      Selected Member: ${jadwal.panelist_member_id}\n
+                                      Selected Start: ${jadwal.start_defence}\n
+                                      Selected End: ${jadwal.end_defence}\n
+                                      Date: ${jadwal.defence_date}\n
+                                      Room: ${jadwal.defence_room}`
+                                    );
+                                  }}
+                                >
+                                  Perbarui
+                                </span>
+                              </Div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+        </Div>
+
+        {/* {daftarJadwal &&
           daftarJadwal.map((scheduleData, scheduleIndex) => (
             <div key={scheduleIndex} style={{ width: "100%" }}>
               <Div
@@ -243,7 +481,7 @@ const JadwalSidangSkripsi = () => {
                 </Typography>
               </Div>
               {/* Semester End */}
-              {/* Table Mahasiswa Skripsi Start */}
+        {/* Table Mahasiswa Skripsi Start *
               <TableContainer>
                 <Table>
                   <TableHead>
@@ -352,9 +590,9 @@ const JadwalSidangSkripsi = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* Table Mahasiswa Skripsi End */}
+              {/* Table Mahasiswa Skripsi End *
             </div>
-          ))}
+          ))} */}
       </Div>
       {/* Table Master End */}
       {/* popup pembuatan Jadwal start */}
@@ -490,6 +728,21 @@ const JadwalSidangSkripsi = () => {
                   onChange={(event) =>
                     setSelectedKetuaPenelis(event.target.value)
                   }
+                  MenuProps={{
+                    anchorOrigin: {
+                      vertical: "bottom",
+                      horizontal: "left",
+                    },
+                    transformOrigin: {
+                      vertical: "top",
+                      horizontal: "left",
+                    },
+                    getContentAnchorEl: null,
+                    style: {
+                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                    },
+                  }}
+                  error={!!errorMessages.selectedKetuaPenelis}
                 >
                   {daftarDosen.map((dosen) => (
                     <MenuItem key={dosen.id} value={dosen.id}>
@@ -497,6 +750,9 @@ const JadwalSidangSkripsi = () => {
                     </MenuItem>
                   ))}
                 </Select>
+                <FormHelperText error={!!errorMessages.selectedKetuaPenelis}>
+                  {errorMessages.selectedKetuaPenelis}
+                </FormHelperText>
               </FormControl>
               {/* Anggota Penelis */}
               <FormControl fullWidth size="small">
@@ -511,6 +767,21 @@ const JadwalSidangSkripsi = () => {
                   onChange={(event) =>
                     setSelectedAnggotaPenelis(event.target.value)
                   }
+                  MenuProps={{
+                    anchorOrigin: {
+                      vertical: "bottom",
+                      horizontal: "left",
+                    },
+                    transformOrigin: {
+                      vertical: "top",
+                      horizontal: "left",
+                    },
+                    getContentAnchorEl: null,
+                    style: {
+                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                    },
+                  }}
+                  error={!!errorMessages.selectedAnggotaPenelis}
                 >
                   {daftarDosen.map((dosen) => (
                     <MenuItem key={dosen.id} value={dosen.id}>
@@ -518,6 +789,9 @@ const JadwalSidangSkripsi = () => {
                     </MenuItem>
                   ))}
                 </Select>
+                <FormHelperText error={!!errorMessages.selectedAnggotaPenelis}>
+                  {errorMessages.selectedAnggotaPenelis}
+                </FormHelperText>
               </FormControl>
               {/* Advisor */}
               <FormControl fullWidth size="small">
@@ -561,7 +835,7 @@ const JadwalSidangSkripsi = () => {
                 <TextField
                   id="start-time"
                   label="Mulai Waktu"
-                  type="text"
+                  type="time"
                   fullWidth
                   InputLabelProps={{
                     shrink: true,
@@ -578,13 +852,15 @@ const JadwalSidangSkripsi = () => {
                   value={mulaiWaktu}
                   onChange={(event) => setMulaiWaktu(event.target.value)}
                   placeholder="08.00"
+                  error={!!errorMessages.mulaiWaktu}
+                  helperText={errorMessages.mulaiWaktu}
                 />
               </Grid>
               <Grid item xs={6}>
                 <TextField
                   id="end-time"
                   label="Selesai Waktu"
-                  type="text"
+                  type="time"
                   fullWidth
                   InputLabelProps={{
                     shrink: true,
@@ -601,13 +877,15 @@ const JadwalSidangSkripsi = () => {
                   value={selesaiWaktu}
                   onChange={(event) => setSelesaiWaktu(event.target.value)}
                   placeholder="13.00"
+                  error={!!errorMessages.selesaiWaktu}
+                  helperText={errorMessages.selesaiWaktu}
                 />
               </Grid>
               <Grid item xs={6}>
                 <TextField
                   id="start-date"
                   label="Mulai Tanggal"
-                  type="text"
+                  type="date"
                   fullWidth
                   InputLabelProps={{
                     shrink: true,
@@ -621,6 +899,8 @@ const JadwalSidangSkripsi = () => {
                   value={mulaiTanggal}
                   onChange={(event) => setMulaiTanggal(event.target.value)}
                   placeholder="dd/mm/yyyy"
+                  error={!!errorMessages.mulaiTanggal}
+                  helperText={errorMessages.mulaiTanggal}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -631,6 +911,8 @@ const JadwalSidangSkripsi = () => {
                   size="small"
                   value={ruangan}
                   onChange={(event) => setRuangan(event.target.value)}
+                  error={!!errorMessages.ruangan}
+                  helperText={errorMessages.ruangan}
                 />
               </Grid>
             </Grid>
@@ -651,7 +933,7 @@ const JadwalSidangSkripsi = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => setKonfirmasiDialog(true)}
+            onClick={handlePerbarui}
             sx={{ textTransform: "none" }}
           >
             Perbarui

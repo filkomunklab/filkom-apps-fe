@@ -272,8 +272,7 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
           expanded={accordionExpanded}
           onChange={accordionToggle}
           sx={{
-            margin: "5px",
-            width: "97%",
+            width: "100%",
             padding: "1px",
             background: "rgba(26, 56, 96, 0.10)",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
@@ -287,8 +286,7 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
             <Typography
               variant="h2"
               sx={{
-                width: "33%",
-                flexShrink: 0,
+                marginTop: "6px",
                 fontSize: "16px",
                 fontWeight: 500,
               }}
@@ -328,8 +326,7 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
           expanded={accordionExpaned2}
           onChange={accordionToggle2}
           sx={{
-            margin: "5px",
-            width: "97%",
+            width: "100%",
             padding: "1px",
             background: "rgba(26, 56, 96, 0.10)",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
@@ -343,8 +340,7 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
             <Typography
               variant="h2"
               sx={{
-                width: "33%",
-                flexShrink: 0,
+                marginTop: "10px",
                 fontSize: "16px",
                 fontWeight: 500,
               }}
