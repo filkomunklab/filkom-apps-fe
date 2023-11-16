@@ -353,7 +353,7 @@ const DaftarBimbinganProposalAdvisor = () => {
             borderRadius: "8px",
           }}
         >
-          {daftarBimbinganProposal.semesterData.map(
+          {daftarBimbinganProposal?.semesterData?.map(
             (semesterData, semesterIndex) => (
               <Accordion
                 key={semesterIndex}

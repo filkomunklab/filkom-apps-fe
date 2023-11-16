@@ -52,13 +52,13 @@ const BeritaAcara = () => {
   const userRole = useParams().role;
   console.log("role user akses page: ", userRole);
 
-  // fungsi untuk mendapatkan token JWT
-  const token = localStorage.getItem("token");
-  console.log("token", token);
-
   const { role } = JSON.parse(localStorage.getItem("user"));
   // const role = ["ADVISOR", "DOSEN"];
   console.log("role user yang sign in: ", role);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
 
   useEffect(() => {
     const fetchIsOpenData = async () => {

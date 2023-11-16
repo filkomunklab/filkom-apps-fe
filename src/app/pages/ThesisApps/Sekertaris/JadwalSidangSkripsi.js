@@ -239,7 +239,7 @@ const JadwalSidangSkripsi = () => {
                     color: "#192434",
                   }}
                 >
-                  {scheduleData.semester}
+                  {scheduleData?.semester}
                 </Typography>
               </Div>
               {/* Semester End */}
@@ -267,7 +267,7 @@ const JadwalSidangSkripsi = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {scheduleData.schedules.map((jadwal, index) => (
+                    {scheduleData?.schedules?.map((jadwal, index) => (
                       <TableRow key={index}>
                         <TableCell sx={{ fontSize: "13px" }}>
                           {index + 1}
@@ -276,15 +276,13 @@ const JadwalSidangSkripsi = () => {
                           {jadwal.title}
                         </TableCell>
                         <TableCell>
-                          <Typography>{jadwal.advisor_name}</Typography>
+                          <Typography>{jadwal.advisor}</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography>
-                            {jadwal.panelist_chairman_name}
-                          </Typography>
+                          <Typography>{jadwal.panelist_chairman}</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography>{jadwal.panelist_member_name}</Typography>
+                          <Typography>{jadwal.panelist_member}</Typography>
                         </TableCell>
                         <TableCell>
                           <Typography>{jadwal.start_defence}</Typography>

@@ -405,12 +405,6 @@ export const dekanMenus = [
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
-        label: "Komite Judul",
-        type: "nav-item",
-        icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
-      },
-      {
         label: "Pengajuan",
         type: "collapsible",
         icon: <MailIcon sx={{ fontSize: 20 }} />,
@@ -436,10 +430,22 @@ export const dekanMenus = [
         ],
       },
       {
+        uri: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
+        label: "Riwayat Nilai",
+        type: "nav-item",
+        icon: <ChecklistIcon sx={{ fontSize: 20 }} />,
+      },
+      {
         uri: "/sistem-informasi-skripsi/manajemen-kelas-dosen-skripsi",
         label: "Manajemen Kelas",
         type: "nav-item",
         icon: <CollectionsBookmarkIcon sx={{ fontSize: 20 }} />,
+      },
+      {
+        uri: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
+        label: "Komite Judul",
+        type: "nav-item",
+        icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
       },
       {
         label: "Bimbingan",
@@ -526,12 +532,6 @@ export const dekanMenus = [
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
           },
         ],
-      },
-      {
-        uri: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
-        label: "Riwayat Nilai",
-        type: "nav-item",
-        icon: <ChecklistIcon sx={{ fontSize: 20 }} />,
       },
     ],
   },
@@ -761,6 +761,12 @@ export const dosenMKMenus = [
         label: "Manajemen Kelas",
         type: "nav-item",
         icon: <CollectionsBookmarkIcon sx={{ fontSize: 20 }} />,
+      },
+      {
+        uri: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
+        label: "Riwayat Nilai",
+        type: "nav-item",
+        icon: <ChecklistIcon sx={{ fontSize: 20 }} />,
       },
       {
         label: "Bimbingan",
@@ -1017,12 +1023,6 @@ export const kaprodiMenus = [
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
-        label: "Komite Judul",
-        type: "nav-item",
-        icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
-      },
-      {
         label: "Pengajuan",
         type: "collapsible",
         icon: <MailIcon sx={{ fontSize: 20 }} />,
@@ -1048,16 +1048,22 @@ export const kaprodiMenus = [
         ],
       },
       {
+        uri: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
+        label: "Riwayat Nilai",
+        type: "nav-item",
+        icon: <ChecklistIcon sx={{ fontSize: 20 }} />,
+      },
+      {
         uri: "/sistem-informasi-skripsi/manajemen-kelas-dosen-skripsi",
         label: "Manajemen Kelas",
         type: "nav-item",
         icon: <CollectionsBookmarkIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
-        label: "Riwayat Nilai",
+        uri: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
+        label: "Komite Judul",
         type: "nav-item",
-        icon: <ChecklistIcon sx={{ fontSize: 20 }} />,
+        icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
       },
       {
         label: "Bimbingan",
@@ -1144,12 +1150,6 @@ export const kaprodiMenus = [
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
           },
         ],
-      },
-      {
-        uri: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
-        label: "Riwayat Nilai",
-        type: "nav-item",
-        icon: <ChecklistIcon sx={{ fontSize: 20 }} />,
       },
     ],
   },

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
@@ -16,11 +17,49 @@ import {
   Accordion,
   AccordionSummary,
   Paper,
+  useStepContext,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const DaftarRiwayatNilaiDosenSkripsi = () => {
+  const [daftarNilai, setDaftarNilai] = useState();
+
+  const groupId = useParams().groupId;
+  console.log("group id: ", groupId);
+  const [progress, setProgress] = useState(null);
+
+  const userRole = useParams().role;
+  console.log("role user akses page: ", userRole);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log("role user yang sign in: ", role);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchDaftarNilaiData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/value-history`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDaftarNilai(response.data.data);
+        console.log("Request Get riwayat nilai: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil riwayat nilai:", error);
+      }
+    };
+    fetchDaftarNilaiData();
+  }, [token]);
+
   const [accordionExpanded, setAccordionExpanded] = useState(false);
 
   const [accordionExpaned2, setAccordionExpanded2] = useState(false);
@@ -83,37 +122,6 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
       Nilai: "8",
     },
   ];
-
-  // state - riwayat
-  const [daftarRiwayat, setDaftarRiwayat] = useState([]);
-
-  // fungsi untuk mendapatkan token JWT
-  const token = localStorage.getItem("token");
-  // console.log("token", token);
-
-  //   useEffect(() => {
-  //     const fetchDaftarRiwayat = async () => {
-  //       try {
-  //         const response = await axios.get(
-  //           "http://localhost:2000/api/v1/group/history-list-kaprodi",
-  //           {
-  //             headers: {
-  //               Authorization: `Bearer ${token}`,
-  //             },
-  //           }
-  //         );
-  //         // Atur state 'setDaftarRiwayat' dengan data dari respons
-  //         setDaftarRiwayat(response.data.data);
-  //         console.log("Request get daftar proposal: ", response.data.data);
-  //       } catch (error) {
-  //         console.error(
-  //           "Terjadi kesalahan saat mengambil daftar pengujian proposal:",
-  //           error
-  //         );
-  //       }
-  //     };
-  //     fetchDaftarRiwayat();
-  //   }, [token]);
 
   const [selectedValue, setSelectedValue] = useState("Kelas"); // Tentukan teks default di sini
 
@@ -268,117 +276,73 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
           borderRadius: "8px",
         }}
       >
-        <Accordion
-          expanded={accordionExpanded}
-          onChange={accordionToggle}
-          sx={{
-            margin: "5px",
-            width: "97%",
-            padding: "1px",
-            background: "rgba(26, 56, 96, 0.10)",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1bh-content"
-            id="panel1bh-header"
-          >
-            <Typography
-              variant="h2"
-              sx={{
-                width: "33%",
-                flexShrink: 0,
-                fontSize: "16px",
-                fontWeight: 500,
-              }}
-            >
-              Proposal Semester Ganjil 2023-2024
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow sx={{ background: "#F5F5F5" }}>
-                    <TableCell>Nomor</TableCell>
-                    <TableCell>Nama Mahasiswa</TableCell>
-                    <TableCell>NIM</TableCell>
-                    <TableCell>Program Studi</TableCell>
-                    <TableCell>Nilai</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {dataRiwayatNilai.map((dataMahasiswa, index) => (
-                    <TableRow>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{dataMahasiswa.namaLengkap}</TableCell>
-                      <TableCell>{dataMahasiswa.NIM}</TableCell>
-                      <TableCell>{dataMahasiswa.Prodi}</TableCell>
-                      <TableCell>{dataMahasiswa.Nilai}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </AccordionDetails>
-        </Accordion>
-
-        <Accordion
-          expanded={accordionExpaned2}
-          onChange={accordionToggle2}
-          sx={{
-            margin: "5px",
-            width: "97%",
-            padding: "1px",
-            background: "rgba(26, 56, 96, 0.10)",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1bh-content"
-            id="panel1bh-header"
-          >
-            <Typography
-              variant="h2"
-              sx={{
-                width: "33%",
-                flexShrink: 0,
-                fontSize: "16px",
-                fontWeight: 500,
-              }}
-            >
-              Proposal Semester Ganjil 2023-2024
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow sx={{ background: "#F5F5F5" }}>
-                    <TableCell>Nomor</TableCell>
-                    <TableCell>Nama Mahasiswa</TableCell>
-                    <TableCell>NIM</TableCell>
-                    <TableCell>Program Studi</TableCell>
-                    <TableCell>Nilai</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {dataRiwayatNilai.map((dataMahasiswa, index) => (
-                    <TableRow>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{dataMahasiswa.namaLengkap}</TableCell>
-                      <TableCell>{dataMahasiswa.NIM}</TableCell>
-                      <TableCell>{dataMahasiswa.Prodi}</TableCell>
-                      <TableCell>{dataMahasiswa.Nilai}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </AccordionDetails>
-        </Accordion>
+        {daftarNilai?.map(
+          (semesterData, index) =>
+            semesterData.students.length > 0 && (
+              <Accordion
+                key={index}
+                expanded={accordionExpanded}
+                onChange={accordionToggle}
+                sx={{
+                  margin: "5px",
+                  width: "97%",
+                  padding: "1px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1bh-content"
+                  id="panel1bh-header"
+                >
+                  <Typography
+                    variant="h2"
+                    sx={{
+                      width: "33%",
+                      flexShrink: 0,
+                      fontSize: "16px",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {semesterData?.semester}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <TableHead>
+                        <TableRow sx={{ background: "#F5F5F5" }}>
+                          <TableCell>Nomor</TableCell>
+                          <TableCell>NIM</TableCell>
+                          <TableCell>Nama Mahasiswa</TableCell>
+                          <TableCell>Program Studi</TableCell>
+                          <TableCell>Nilai</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {semesterData?.students?.map((dataMahasiswa, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{index + 1}</TableCell>
+                            <TableCell>{dataMahasiswa?.nim}</TableCell>
+                            <TableCell>{dataMahasiswa?.fullName}</TableCell>
+                            <TableCell>
+                              {dataMahasiswa?.major === "IF"
+                                ? "Informatika"
+                                : dataMahasiswa?.major === "SI"
+                                ? "Sistem Informasi"
+                                : ""}
+                            </TableCell>
+                            <TableCell>{dataMahasiswa?.value}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </AccordionDetails>
+              </Accordion>
+            )
+        )}
       </Div>
     </Div>
   );
