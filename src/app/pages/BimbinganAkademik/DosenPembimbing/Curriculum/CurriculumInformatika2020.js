@@ -1018,7 +1018,7 @@ const CurriculumInformatika = () => {
         }}
       ></Typography>
       <TableContainer
-        sx={{ overflow: "auto", maxHeight: 440 }}
+        sx={{ overflow: "auto", maxHeight: 640 }}
         component={Paper}
       >
         <Table stickyHeader>
