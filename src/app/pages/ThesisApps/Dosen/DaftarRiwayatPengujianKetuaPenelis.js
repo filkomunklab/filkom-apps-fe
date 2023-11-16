@@ -234,7 +234,7 @@ const RiwayatPengujianKetua = () => {
                         </TableCell>
                         <TableCell>
                           <Link
-                            to={`/sistem-informasi-skripsi/daftar-riwayat-pengujian-ketua/${skripsi.group_id}/KETUA_PANELIS`}
+                            to={`/sistem-informasi-skripsi/daftar-riwayat-pengujian-ketua/beranda/${skripsi.group_id}/KETUA_PANELIS`}
                             style={{ textDecoration: "none", color: "blue" }}
                           >
                             Detail

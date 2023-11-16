@@ -219,7 +219,7 @@ const UploadRevisiProposal = () => {
   const handleKonfirmasiHapusRevisiProposal = () => {
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-document/delete/${proposalId}`,
+        `http://localhost:2000/api/v1/proposal/proposal-revision-document/delete/${proposalId}`,
         {},
         {
           headers: {

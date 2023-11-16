@@ -216,7 +216,7 @@ const UploadRevisiSkripsi = () => {
   const handleKonfirmasiHapusRevisiSkripsi = () => {
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-document/delete/${skripsiId}`,
+        `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/delete/${skripsiId}`,
         {},
         {
           headers: {

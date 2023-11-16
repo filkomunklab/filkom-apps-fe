@@ -230,6 +230,128 @@ const DokumenRevisiSkripsi = () => {
     }
   };
 
+  // approve
+  const handleApprove = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/approve/${skripsiId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil approve revisi skripsi: ", response.data.data);
+
+        // ketua
+        setSetujuConfirmationDialogOpen(false);
+        handleActionClick(selectedActionIndex, "Setuju");
+        setIsSetujuDisabled(true);
+        // anggota
+        setSetujuConfirmationDialogOpenAnggotaPanalis(false);
+        handleActionClickAnggotaPanalis(selectedActionIndex, "Setuju");
+        setIsSetujuDisabledAnggotaPanalis(true);
+        // advisor
+        setSetujuConfirmationDialogOpenAdvisor(false);
+        handleActionClickAdvisor(selectedActionIndex, "Setuju");
+        setIsSetujuDisabledAdvisor(true);
+
+        // request data
+        const fetchDokumenSkripsiData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDokumenRevisi(response.data.data);
+            console.log(
+              "Request Get dokumen revisi skripsi: ",
+              response.data.data
+            );
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil dokumen revisi skripsi:",
+              error
+            );
+          }
+        };
+        fetchDokumenSkripsiData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat approve revisi skripsi:",
+          error.response.data.message
+        );
+      });
+  };
+
+  // reject
+  const handleReject = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/reject/${skripsiId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil reject skripsi: ", response.data.data);
+
+        // ketua
+        setTolakConfirmationDialogOpen(false);
+        handleActionClick(selectedActionIndex, "Tolak");
+        setIsTolakDisabled(true);
+        // anggota
+        setTolakConfirmationDialogOpenAnggotaPanalis(false);
+        handleActionClickAnggotaPanalis(selectedActionIndex, "Tolak");
+        setIsTolakDisabledAnggotaPanalis(true);
+        // advisor
+        setTolakConfirmationDialogOpenAdvisor(false);
+        handleActionClickAdvisor(selectedActionIndex, "Tolak");
+        setIsTolakDisabledAdvisor(true);
+
+        // request data
+        const fetchDokumenSkripsiData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDokumenRevisi(response.data.data);
+            console.log(
+              "Request Get dokumen revisi skripsi: ",
+              response.data.data
+            );
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil dokumen revisi skripsi:",
+              error
+            );
+          }
+        };
+        fetchDokumenSkripsiData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat reject skripsi:",
+          error.response.data.message
+        );
+      });
+  };
+
   let ActionRevision;
 
   if (userRole === "ADVISOR") {
@@ -1111,11 +1233,11 @@ const DokumenRevisiSkripsi = () => {
           }}
         >
           <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-            Menyetujui Revisi
+            Menyetujui Revisi Skripsi
           </Typography>
         </DialogTitle>
         <DialogContent>
-          Apakah Anda yakin ingin menyetujui dokumen ini?
+          Apakah Anda yakin ingin menyetujui revisi ini?
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -1130,16 +1252,12 @@ const DokumenRevisiSkripsi = () => {
             Batal
           </Button>
           <Button
-            onClick={() => {
-              setSetujuConfirmationDialogOpen(false);
-              handleActionClick(selectedActionIndex, "Setuju");
-              setIsSetujuDisabled(true);
-            }}
+            onClick={handleApprove}
             variant="contained"
             sx={{ textTransform: "none" }}
             color="primary"
           >
-            Disetuju
+            Setujui
           </Button>
         </DialogActions>
       </Dialog>
@@ -1161,11 +1279,11 @@ const DokumenRevisiSkripsi = () => {
         >
           <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
           <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-            Menolak Revisi
+            Menolak Revisi Skripsi
           </Typography>
         </DialogTitle>
         <DialogContent>
-          Apakah Anda yakin ingin menolak dokumen ini?
+          Apakah Anda yakin ingin menolak revisi ini?
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -1180,11 +1298,7 @@ const DokumenRevisiSkripsi = () => {
             Batal
           </Button>
           <Button
-            onClick={() => {
-              setTolakConfirmationDialogOpen(false);
-              handleActionClick(selectedActionIndex, "Tolak");
-              setIsTolakDisabled(true);
-            }}
+            onClick={handleReject}
             sx={{
               textTransform: "none",
               background: "#FC0",
@@ -1215,11 +1329,11 @@ const DokumenRevisiSkripsi = () => {
           }}
         >
           <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-            Menyetujui Revisi
+            Menyetujui Revisi Skripsi
           </Typography>
         </DialogTitle>
         <DialogContent>
-          Apakah Anda yakin ingin menyetujui tindakan ini?
+          Apakah Anda yakin ingin menyetujui revisi ini?
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -1234,16 +1348,12 @@ const DokumenRevisiSkripsi = () => {
             Batal
           </Button>
           <Button
-            onClick={() => {
-              setSetujuConfirmationDialogOpenAnggotaPanalis(false);
-              handleActionClickAnggotaPanalis(selectedActionIndex, "Setuju");
-              setIsSetujuDisabledAnggotaPanalis(true);
-            }}
+            onClick={handleApprove}
             variant="contained"
             sx={{ textTransform: "none" }}
             color="primary"
           >
-            Disetuju
+            Setujui
           </Button>
         </DialogActions>
       </Dialog>
@@ -1265,11 +1375,11 @@ const DokumenRevisiSkripsi = () => {
         >
           <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
           <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-            Menolak Revisi
+            Menolak Revisi Skripsi
           </Typography>
         </DialogTitle>
         <DialogContent>
-          Apakah Anda yakin ingin menolak dokumen ini?
+          Apakah Anda yakin ingin menolak revisi ini?
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -1284,11 +1394,7 @@ const DokumenRevisiSkripsi = () => {
             Batal
           </Button>
           <Button
-            onClick={() => {
-              setTolakConfirmationDialogOpenAnggotaPanalis(false);
-              handleActionClickAnggotaPanalis(selectedActionIndex, "Tolak");
-              setIsTolakDisabledAnggotaPanalis(true);
-            }}
+            onClick={handleReject}
             sx={{
               textTransform: "none",
               background: "#FC0",
@@ -1319,11 +1425,11 @@ const DokumenRevisiSkripsi = () => {
           }}
         >
           <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-            Menyetujui Revisi
+            Menyetujui Revisi Skripsi
           </Typography>
         </DialogTitle>
         <DialogContent>
-          Apakah Anda yakin ingin menyetujui dokumen ini?
+          Apakah Anda yakin ingin menyetujui revisi ini?
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -1338,16 +1444,12 @@ const DokumenRevisiSkripsi = () => {
             Batal
           </Button>
           <Button
-            onClick={() => {
-              setSetujuConfirmationDialogOpenAdvisor(false);
-              handleActionClickAdvisor(selectedActionIndex, "Setuju");
-              setIsSetujuDisabledAdvisor(true);
-            }}
+            onClick={handleApprove}
             variant="contained"
             sx={{ textTransform: "none" }}
             color="primary"
           >
-            Disetuju
+            Setujui
           </Button>
         </DialogActions>
       </Dialog>
@@ -1369,11 +1471,11 @@ const DokumenRevisiSkripsi = () => {
         >
           <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
           <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-            Menolak Revisi
+            Menolak Revisi Skripsi
           </Typography>
         </DialogTitle>
         <DialogContent>
-          Apakah Anda yakin ingin menolak dokumen ini?
+          Apakah Anda yakin ingin menolak revisi ini?
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -1388,11 +1490,7 @@ const DokumenRevisiSkripsi = () => {
             Batal
           </Button>
           <Button
-            onClick={() => {
-              setTolakConfirmationDialogOpenAdvisor(false);
-              handleActionClickAdvisor(selectedActionIndex, "Tolak");
-              setIsTolakDisabledAdvisor(true);
-            }}
+            onClick={handleReject}
             sx={{
               textTransform: "none",
               background: "#FC0",

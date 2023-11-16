@@ -19,7 +19,7 @@ import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 
 // View Document Skripsi
-const PDFViewerSkripsi = ({ skripsiFile }) => {
+const PDFViewerSkripsi = ({ dokumenSkripsi }) => {
   const viewPDFSkripsi = () => {
     // Buat URL objek untuk file PDF
     const pdfURL = dokumenSkripsi.file_path_skripsi;

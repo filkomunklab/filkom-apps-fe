@@ -13,7 +13,10 @@ import {
   Typography,
 } from "@mui/material";
 
-const BerandaSkripsiMahasiswa = ({ value: groupId }) => {
+const BerandaSkripsiMahasiswa = ({
+  value: groupId,
+  status: advisorAndCoAdvisor,
+}) => {
   const [details, setDetails] = useState([]);
 
   // fungsi untuk mendapatkan token JWT
@@ -135,10 +138,10 @@ const BerandaSkripsiMahasiswa = ({ value: groupId }) => {
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
                 <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
                 <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
-                {details?.skripsi_status?.co_advisor1_status !== null && (
+                {advisorAndCoAdvisor?.coAdvisor1 && (
                   <TableCell sx={{ width: "25%" }}>Co-Advisor 1</TableCell>
                 )}
-                {details?.skripsi_status?.co_advisor2_status !== null && (
+                {advisorAndCoAdvisor?.coAdvisor2 && (
                   <TableCell sx={{ width: "25%" }}>Co-Advisor 2</TableCell>
                 )}
               </TableRow>
@@ -177,7 +180,7 @@ const BerandaSkripsiMahasiswa = ({ value: groupId }) => {
                     details?.skripsi_status?.advisor_status
                   )}
                 </TableCell>
-                {details?.skripsi_status?.co_advisor1_status !== null && (
+                {advisorAndCoAdvisor?.coAdvisor1 && (
                   <TableCell>
                     {details?.skripsi_status?.co_advisor1_status === null ? (
                       <Chip label={"Belum"} />
@@ -213,7 +216,7 @@ const BerandaSkripsiMahasiswa = ({ value: groupId }) => {
                     )}
                   </TableCell>
                 )}
-                {details?.skripsi_status?.co_advisor2_status !== null && (
+                {advisorAndCoAdvisor?.coAdvisor2 && (
                   <TableCell>
                     {details?.skripsi_status?.co_advisor2_status === null ? (
                       <Chip label={"Belum"} />

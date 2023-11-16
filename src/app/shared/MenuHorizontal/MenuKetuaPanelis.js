@@ -256,6 +256,7 @@ const MenuKetuaPanelisProposal = ({
                         : "#006AF5",
                   },
                 }}
+                disabled={progress !== "Skripsi" && progress !== "Finished"}
               >
                 Pengajuan Skripsi
               </Button>

@@ -205,6 +205,29 @@ const JadwalSidangProposal = () => {
         setSelesaiWaktu("");
         setMulaiTanggal("");
         setRuangan("");
+
+        // request data
+        const fetchDaftarJadwalProposal = async () => {
+          try {
+            const response = await axios.get(
+              "http://localhost:2000/api/v1/proposal/schedule",
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            // Atur state 'setDaftarJadwal' dengan data dari respons
+            setDaftarJadwal(response.data.data);
+            console.log("Request Daftar Jadwal Proposal", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil daftar jadwal:",
+              error
+            );
+          }
+        };
+        fetchDaftarJadwalProposal();
       })
       .catch((error) => {
         console.error("Terjadi kesalahan:", error);

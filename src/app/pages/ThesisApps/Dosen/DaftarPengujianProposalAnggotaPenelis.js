@@ -39,7 +39,7 @@ const DaftarPengujianProposalAnggotaPenelis = () => {
     const fetchDaftarPengujianProposalData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/proposal-list-chairman",
+          "http://localhost:2000/api/v1/group/proposal-list-member",
           {
             headers: {
               Authorization: `Bearer ${token}`,
