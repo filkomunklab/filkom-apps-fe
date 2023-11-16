@@ -2,6 +2,7 @@ import Div from "@jumbo/shared/Div";
 import {
   Button,
   Chip,
+  Paper,
   FormControl,
   Grid,
   InputLabel,
@@ -13,6 +14,7 @@ import {
   TableCell,
   TableHead,
   TablePagination,
+  TableContainer,
   TableRow,
   Typography,
 } from "@mui/material";
@@ -133,12 +135,21 @@ const ReviewCertificate = () => {
   };
 
   return (
-    <Div sx={{ padding: 2 }}>
+    <Div>
       <Div>
         <Typography variant="h1" sx={{ mb: 3 }}>
           Review Certificate
         </Typography>
-        <Typography variant="h6" sx={{ mb: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            paddingBottom: "25px",
+            fontSize: "15px",
+            fontWeight: 400,
+            color: "rgba(27, 43, 65, 0.69)",
+            textAlign: "justify",
+          }}
+        >
           This page contains information related to the entry of certificates
           from your students. You can use filters to sort through the list of
           students to get the information you are looking for.
@@ -146,26 +157,54 @@ const ReviewCertificate = () => {
       </Div>
       <Grid container spacing={2}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h3">
+          <Typography
+            variant="h3"
+            sx={{
+              textAlign: "justify",
+              "@media (max-width: 390px)": {
+                fontSize: "16px",
+                fontWeight: 500,
+              },
+            }}
+          >
             Student Guidance Certificate List
           </Typography>
         </Grid>
-        <Grid item md={3}>
-          <SearchGlobal sx={{ height: "100%" }} />
+        <Grid item xs={12} sm={8} md={3}>
+          <SearchGlobal
+            sx={{
+              height: "100%",
+              "@media (max-width: 390px)": {
+                height: "40px",
+              },
+            }}
+          />
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={4} md={3}>
           <FormControl
             sx={{
               width: "100%",
             }}
           >
-            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
+            <InputLabel>Filter</InputLabel>
             <Select
-              sx={{ borderRadius: 50 }}
+              sx={{
+                borderRadius: 50,
+                "@media (max-width: 390px)": {
+                  height: "45px",
+                },
+              }}
               multiple
               value={filter}
               label="Grouping"
               renderValue={(selected) => selected.join(", ")}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: "37%",
+                  },
+                },
+              }}
             >
               <MenuItem value="">
                 <em>None</em>
@@ -173,8 +212,24 @@ const ReviewCertificate = () => {
               <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
                 Status
               </ListSubheader>
-              <MenuItem value={"activeStudent"}>Active</MenuItem>
-              <MenuItem value={"nonactiveStudent"}>Nonactive</MenuItem>
+              <MenuItem
+                sx={{
+                  backgroundColor: "#FAFAFA",
+                  borderRadius: "5px",
+                }}
+                value={"activeStudent"}
+              >
+                Active
+              </MenuItem>
+              <MenuItem
+                sx={{
+                  backgroundColor: "#FAFAFA",
+                  borderRadius: "5px",
+                }}
+                value={"nonactiveStudent"}
+              >
+                Nonactive
+              </MenuItem>
               <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
                 Tahun Masuk
               </ListSubheader>
@@ -185,7 +240,6 @@ const ReviewCertificate = () => {
                   sx={{
                     backgroundColor: "#FAFAFA",
                     borderRadius: "5px",
-                    margin: "5px",
                   }}
                 >
                   {item.label}
@@ -203,7 +257,6 @@ const ReviewCertificate = () => {
                     sx={{
                       backgroundColor: "#FAFAFA",
                       borderRadius: "5px",
-                      justifyContent: "center",
                     }}
                   >
                     {item.label}
@@ -214,21 +267,35 @@ const ReviewCertificate = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
+          <TableContainer
+            sx={{
+              maxHeight: 440,
+            }}
+            component={Paper}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
             rowsPerPageOptions={[10, 25, 50, 100]}
-            component={"div"}
+            component="div"
             count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
