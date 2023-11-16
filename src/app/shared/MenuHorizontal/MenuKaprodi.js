@@ -3,7 +3,7 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const MenuKaprodiProposal = () => {
+const MenuKaprodi = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open1 = Boolean(anchorEl);
   const [anchorE2, setAnchorE2] = React.useState(null);
@@ -224,4 +224,4 @@ const MenuKaprodiProposal = () => {
   );
 };
 
-export default MenuKaprodiProposal;
+export default MenuKaprodi;

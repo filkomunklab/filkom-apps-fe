@@ -26,6 +26,9 @@ import {
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
+import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
+import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
+import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 
 const PengajuanJudulDosenSkripsi = () => {
   // state - simpan request pengajuan judul
@@ -417,6 +420,30 @@ const PengajuanJudulDosenSkripsi = () => {
           >
             <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
           </Div>
+
+          {/* DEKAN */}
+          <Div
+            hidden={userRole.includes("DEKAN") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDekan dataGroupId={groupId} dataProgress={progress} />
+          </Div>
+
+          {/* KAPRODI */}
+          <Div
+            hidden={userRole.includes("KARPODI") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKaprodi dataGroupId={groupId} dataProgress={progress} />
+          </Div>
+
+          {/* MAHASISWA */}
+          {/* <Div
+            hidden={userRole.includes("MAHASISWA") ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
+          </Div> */}
           <Div
             sx={{
               display: "flex",

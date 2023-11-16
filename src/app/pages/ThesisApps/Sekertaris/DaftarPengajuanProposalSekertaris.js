@@ -69,6 +69,9 @@ const DaftarPengajuanProposalSekertaris = () => {
     fetchDaftarPengajuanProposalData();
   }, [token]);
 
+  const { id } = JSON.parse(localStorage.getItem("user"));
+  console.log(id);
+
   return (
     <Div>
       {/* Dashboard Start 1 */}
@@ -483,7 +486,7 @@ const DaftarPengajuanProposalSekertaris = () => {
                               <TableCell>
                                 <Typography
                                   component={Link}
-                                  to="/halaman-berikutnya"
+                                  to={`/sistem-informasi-skripsi/daftar-pengajuan-proposal/beranda/${proposal.group_id}/OPERATOR_FILKOM`}
                                   sx={{
                                     textDecoration: "none",
                                     color: "blue",
