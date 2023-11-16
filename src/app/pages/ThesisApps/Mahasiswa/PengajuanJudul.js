@@ -685,7 +685,7 @@ const PengajuanJudul = () => {
                   <Typography sx={{ whiteSpace: "pre-line" }}>
                     {
                       (
-                        daftarDosen.find(
+                        daftarDosen?.find(
                           (dosen) =>
                             dosen.id === pengajuanJudul?.proposed_advisor_id
                         ) || {}
