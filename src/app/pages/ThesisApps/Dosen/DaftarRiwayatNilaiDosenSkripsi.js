@@ -12,11 +12,27 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  AccordionDetails,
+  Accordion,
+  AccordionSummary,
+  Paper,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const DaftarRiwayatNilaiDosenSkripsi = () => {
+  const [accordionExpanded, setAccordionExpanded] = useState(false);
+
+  const [accordionExpaned2, setAccordionExpanded2] = useState(false);
+
+  const accordionToggle = () => {
+    setAccordionExpanded(!accordionExpanded);
+  };
+
+  const accordionToggle2 = () => {
+    setAccordionExpanded2(!accordionExpaned2);
+  };
+
   const dataRiwayatNilai = [
     {
       namaLengkap: "Geovalga Fransiscus Lim",
@@ -29,6 +45,36 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
       NIM: "103042342142",
       Prodi: "Informatika",
       Nilai: "9",
+    },
+    {
+      namaLengkap: "Brian sompie",
+      NIM: "1030423422",
+      Prodi: "Sistem Informasi",
+      Nilai: "8",
+    },
+    {
+      namaLengkap: "Brian sompie",
+      NIM: "1030423422",
+      Prodi: "Sistem Informasi",
+      Nilai: "8",
+    },
+    {
+      namaLengkap: "Brian sompie",
+      NIM: "1030423422",
+      Prodi: "Sistem Informasi",
+      Nilai: "8",
+    },
+    {
+      namaLengkap: "Brian sompie",
+      NIM: "1030423422",
+      Prodi: "Sistem Informasi",
+      Nilai: "8",
+    },
+    {
+      namaLengkap: "Brian sompie",
+      NIM: "1030423422",
+      Prodi: "Sistem Informasi",
+      Nilai: "8",
     },
     {
       namaLengkap: "Brian sompie",
@@ -117,6 +163,7 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
         alignItems: "flex-start",
         width: "100%",
         gap: "25px",
+        height: "100%",
       }}
     >
       {/* Riwayat Penelitian */}
@@ -167,6 +214,20 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
                 width: "250px",
                 boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
               }}
+              MenuProps={{
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "left",
+                },
+                transformOrigin: {
+                  vertical: "top",
+                  horizontal: "left",
+                },
+                getContentAnchorEl: null,
+                style: {
+                  maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                },
+              }}
             >
               <MenuItem value="Kelas">Kelas</MenuItem>{" "}
               {/* Tambahkan nilai default di sini */}
@@ -199,77 +260,125 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
           alignItems: "flex-start",
           gap: "25px",
           width: "100%",
+          height: "460px",
+          overflowY: "auto",
+          background: "#FFF",
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+          padding: "8px",
+          borderRadius: "8px",
         }}
       >
-        <Div
+        <Accordion
+          expanded={accordionExpanded}
+          onChange={accordionToggle}
           sx={{
-            display: "flex",
-            width: "100%",
-            padding: "24px",
-            alignItems: "center",
-            gap: "10px",
+            margin: "5px",
+            width: "97%",
+            padding: "1px",
             background: "rgba(26, 56, 96, 0.10)",
-            borderRadius: "6px",
-            cursor: "pointer",
+            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
           }}
-          onClick={handleSemesterClick}
         >
-          <Typography variant="subtitle2" sx={{ width: "100%" }}>
-            Proposal Semester Ganjil 2023/2024
-          </Typography>
-          <ExpandMoreIcon />
-        </Div>
-
-        {showTable || isTransitioning ? (
-          <TableContainer
-            style={{
-              ...tableVisibleStyle,
-              display: isTransitioning ? "block" : "table",
-            }}
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1bh-content"
+            id="panel1bh-header"
           >
-            <Table>
-              <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                <TableRow>
-                  <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                  <TableCell sx={{ width: "25%" }}>
-                    Nama Lengkap Mahasiswa
-                  </TableCell>
-                  <TableCell sx={{ width: "25%" }}>NIM</TableCell>
-                  <TableCell sx={{ width: "20%" }}>Program Studi</TableCell>
-                  <TableCell sx={{ width: "10%" }}>NIlai</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {dataRiwayatNilai.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{row.namaLengkap}</TableCell>
-                    <TableCell>{row.NIM}</TableCell>
-                    <TableCell>{row.Prodi}</TableCell>
-                    <TableCell>{row.Nilai}</TableCell>
+            <Typography
+              variant="h2"
+              sx={{
+                width: "33%",
+                flexShrink: 0,
+                fontSize: "16px",
+                fontWeight: 500,
+              }}
+            >
+              Proposal Semester Ganjil 2023-2024
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow sx={{ background: "#F5F5F5" }}>
+                    <TableCell>Nomor</TableCell>
+                    <TableCell>Nama Mahasiswa</TableCell>
+                    <TableCell>NIM</TableCell>
+                    <TableCell>Program Studi</TableCell>
+                    <TableCell>Nilai</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        ) : (
-          <TableContainer style={tableHiddenStyle}>
-            <Table>
-              <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                <TableRow>
-                  <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                  <TableCell sx={{ width: "25%" }}>
-                    Nama Lengkap Mahasiswa
-                  </TableCell>
-                  <TableCell sx={{ width: "25%" }}>NIM</TableCell>
-                  <TableCell sx={{ width: "20%" }}>Program Studi</TableCell>
-                  <TableCell sx={{ width: "10%" }}>Nilai</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody></TableBody>
-            </Table>
-          </TableContainer>
-        )}
+                </TableHead>
+                <TableBody>
+                  {dataRiwayatNilai.map((dataMahasiswa, index) => (
+                    <TableRow>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{dataMahasiswa.namaLengkap}</TableCell>
+                      <TableCell>{dataMahasiswa.NIM}</TableCell>
+                      <TableCell>{dataMahasiswa.Prodi}</TableCell>
+                      <TableCell>{dataMahasiswa.Nilai}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion
+          expanded={accordionExpaned2}
+          onChange={accordionToggle2}
+          sx={{
+            margin: "5px",
+            width: "97%",
+            padding: "1px",
+            background: "rgba(26, 56, 96, 0.10)",
+            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1bh-content"
+            id="panel1bh-header"
+          >
+            <Typography
+              variant="h2"
+              sx={{
+                width: "33%",
+                flexShrink: 0,
+                fontSize: "16px",
+                fontWeight: 500,
+              }}
+            >
+              Proposal Semester Ganjil 2023-2024
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow sx={{ background: "#F5F5F5" }}>
+                    <TableCell>Nomor</TableCell>
+                    <TableCell>Nama Mahasiswa</TableCell>
+                    <TableCell>NIM</TableCell>
+                    <TableCell>Program Studi</TableCell>
+                    <TableCell>Nilai</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {dataRiwayatNilai.map((dataMahasiswa, index) => (
+                    <TableRow>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{dataMahasiswa.namaLengkap}</TableCell>
+                      <TableCell>{dataMahasiswa.NIM}</TableCell>
+                      <TableCell>{dataMahasiswa.Prodi}</TableCell>
+                      <TableCell>{dataMahasiswa.Nilai}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </AccordionDetails>
+        </Accordion>
       </Div>
     </Div>
   );

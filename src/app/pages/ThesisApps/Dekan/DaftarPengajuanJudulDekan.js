@@ -462,7 +462,7 @@ const DaftarPengajuanJudulDekan = () => {
                           <TableCell>
                             <Typography
                               component={Link}
-                              to="/halaman-berikutnya"
+                              to={`/sistem-informasi-skripsi/daftar-pengajuan-judul-dekan/beranda/${submission.group_id}/DEKAN`}
                               sx={{
                                 textDecoration: "none",
                                 color: "blue",

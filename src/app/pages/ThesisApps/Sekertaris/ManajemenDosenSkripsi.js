@@ -12,6 +12,7 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
+  Paper,
   Select,
   Table,
   TableBody,
@@ -400,7 +401,7 @@ const ManajemenDosenSkripsi = () => {
         </Div>
         {/* Header End */}
         {/* Table Mahasiswa Proposal Start */}
-        <TableContainer>
+        <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
@@ -482,6 +483,20 @@ const ManajemenDosenSkripsi = () => {
                 label="Dosen"
                 value={selectedDosen}
                 onChange={(event) => setSelectedDosen(event.target.value)}
+                MenuProps={{
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "left",
+                  },
+                  transformOrigin: {
+                    vertical: "top",
+                    horizontal: "left",
+                  },
+                  getContentAnchorEl: null,
+                  style: {
+                    maxHeight: "230px", // Sesuaikan dengan tinggi yang diinginkan
+                  },
+                }}
               >
                 {daftarDosen?.map((dosen) => (
                   <MenuItem key={dosen.id} value={dosen.id}>

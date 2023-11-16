@@ -893,6 +893,21 @@ const ManajemenKelasDosenSkripsi = () => {
                 value={academic_id}
                 onChange={(e) => setAcademicId(e.target.value)}
                 label="Semester"
+                sx={{ maxHeight: "600px" }}
+                MenuProps={{
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "left",
+                  },
+                  transformOrigin: {
+                    vertical: "top",
+                    horizontal: "left",
+                  },
+                  getContentAnchorEl: null,
+                  style: {
+                    maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                  },
+                }}
               >
                 {daftarAkademik.map((semesterData) => (
                   <MenuItem
