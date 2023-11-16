@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   Card,
@@ -125,225 +126,113 @@ const statusColor = (status) => {
 const Dashboard = () => {
   return (
     <Div>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={12} md={6}>
-          <Card style={{ width: "100%" }}>
-            <CardHeader title="Distribution of students" />
-            <CardContent style={{ width: "100%" }}>
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="pv" fill="#8884d8" />
-                  <Bar dataKey="uv" fill="#82ca9d" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Stack gap={2}>
+      <Container>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={12} md={7}>
             <Card>
-              <CardHeader title="Number of Guidance Students" />
-              <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                <Typography
-                  variant="h3"
-                  color="#006AF5"
-                >{`85 people`}</Typography>
-                <Typography variant="caption">{`last updated: 11 September 2023`}</Typography>
-                <PeopleOutlinedIcon
-                  sx={{
-                    position: "absolute",
-                    right: 0,
-                    fontSize: 50,
-                    bottom: 0,
-                    color: "#006AF5",
-                  }}
-                />
+              <CardHeader title="Distribution of students" />
+              <CardContent style={{ width: "100%" }}>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={data}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="pv" fill="#8884d8" />
+                    <Bar dataKey="uv" fill="#82ca9d" />
+                  </BarChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={5}>
             <Card>
-              <CardHeader title="Student Status" />
-              <CardContent
-                sx={{ position: "relative", paddingRight: 6.5, paddingY: 0 }}
-              >
-                <Typography variant="body1">{`Active`}</Typography>
-                <LinearProgressWithLabel value={80} />
-                <Typography variant="body1">{`Non-active`}</Typography>
-                <LinearProgressWithLabel value={20} color="warning" />
-                <BubbleChartIcon
-                  sx={{
-                    position: "absolute",
-                    right: 0,
-                    fontSize: 50,
-                    bottom: 0,
-                    color: "#006AF5",
-                  }}
-                />
-              </CardContent>
-            </Card>
-          </Stack>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader title="Certificate" />
-            <CardContent>
-              <ResponsiveContainer width={"100%"} height={250}>
-                <PieChart>
-                  <Pie
-                    data={data02}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    fill="#82ca9d"
-                    label
-                  >
-                    {data.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </Grid>
-        {/* <Grid item sm={12} md={12} lg={6}>
-          <Card>
-            <CardHeader
-              title="Review Certificates"
-              action={
-                <Link type="">
-                  <Typography>View All</Typography>{" "}
-                </Link>
-              }
-            />
-            <CardContent sx={{ paddingY: 0 }}>
-              <Stack gap={2}>
-                {data03.map((item, index) => (
-                  <Div
-                    sx={{
-                      display: "flex",
-                      direction: "row",
-                      justifyContent: "space-between",
-                    }}
-                    key={index}
-                  >
-                    <Div
-                      sx={{
-                        display: "flex",
-                        direction: "row",
-                        alignItems: "center",
-                        gap: 2,
-                      }}
+              <CardHeader title="Certificate" />
+              <CardContent>
+                <ResponsiveContainer width={"100%"} height={250}>
+                  <PieChart>
+                    <Pie
+                      data={data02}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      fill="#82ca9d"
+                      label
                     >
-                      <img
-                        src={item.profileImage}
-                        alt="profile"
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          objectFit: "contain",
-                          borderRadius: "50%",
-                        }}
-                      />
-                      <Box>
-                        <Typography>{item.title}</Typography>
-                        <Typography variant="caption" color={"#6200EE"}>
-                          {item.name}{" "}
-                          <span style={{ color: "#00000061" }}>
-                            {moment(item.submiteDate, "DD MMMM YYYY").fromNow()}
-                          </span>
-                        </Typography>
-                      </Box>
-                    </Div>
-                    <Typography color={statusColor(item.status)}>
-                      {item.status}
-                    </Typography>
-                  </Div>
-                ))}
-              </Stack>
-            </CardContent>
-          </Card>
+                      {data.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item container spacing={2} xs={12} sm={6} md={12} xl={12}>
+            <Grid item xs={12} sm={6} md={6}>
+              <Card>
+                <CardHeader title="Number of Guidance Students" />
+                <CardContent sx={{ position: "relative", paddingY: 0 }}>
+                  <Typography
+                    sx={{
+                      fontSize: {
+                        xs: 32,
+                        md: 42,
+                        xl: 42,
+                      },
+                      color: "#006AF5",
+                    }}
+                  >{`85 people`}</Typography>
+                  <Typography
+                    sx={{ fontSize: 12 }}
+                  >{`last updated: 11 September 2023`}</Typography>
+                  <PeopleOutlinedIcon
+                    sx={{
+                      position: "absolute",
+                      right: 0,
+                      fontSize: 50,
+                      bottom: 0,
+                      color: "#006AF5",
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+              <Card>
+                <CardHeader title="Student Status" />
+                <CardContent
+                  sx={{ position: "relative", paddingRight: 6.5, paddingY: 0 }}
+                >
+                  <Typography variant="body1">{`Active`}</Typography>
+                  <LinearProgressWithLabel value={80} />
+                  <Typography variant="body1">{`Non-active`}</Typography>
+                  <LinearProgressWithLabel value={20} color="warning" />
+                  <BubbleChartIcon
+                    sx={{
+                      position: "absolute",
+                      right: 0,
+                      fontSize: 50,
+                      bottom: 0,
+                      color: "#006AF5",
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item sm={12} md={12} lg={6}>
-          <Card>
-            <CardHeader
-              title="Review Pre-registrations"
-              action={
-                <Link type="">
-                  <Typography>View All</Typography>{" "}
-                </Link>
-              }
-            />
-            <CardContent sx={{ padding: 0, overflowX: "auto" }}>
-              <Table>
-                <TableHead children={<TableHeading />} />
-                <TableBody>
-                  {data04.map((item, index) => (
-                    <TableItem key={index} item={item} index={index} />
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </Grid> */}
-      </Grid>
+      </Container>
     </Div>
   );
 };
-
-// const TableHeading = () => {
-//   const style = { fontWeight: 400, whiteSpace: "nowrap" };
-//   return (
-//     <TableRow>
-//       <TableCell sx={[style]}>NIM</TableCell>
-//       <TableCell sx={[style]}>Student</TableCell>
-//       <TableCell sx={[style]}>Semester</TableCell>
-//       <TableCell sx={[style]}>Program Studi</TableCell>
-//       <TableCell sx={[style]}>Status</TableCell>
-//     </TableRow>
-//   );
-// };
-
-// const TableItem = ({ item, index }) => {
-//   const style = { whiteSpace: "nowrap" };
-//   return (
-//     <TableRow>
-//       <TableCell sx={[style]}>{item.nim}</TableCell>
-//       <TableCell sx={[style]}>
-//         <Stack direction="row" alignItems="center" gap={2}>
-//           <img
-//             src={item.profileImage}
-//             alt="profile"
-//             style={{
-//               width: "40px",
-//               height: "40px",
-//               borderRadius: "50%",
-//               objectFit: "cover",
-//             }}
-//           />
-//           <Typography>{item.name}</Typography>
-//         </Stack>
-//       </TableCell>
-//       <TableCell sx={[style, { textAlign: "center" }]}>
-//         {item.semester}
-//       </TableCell>
-//       <TableCell sx={[style]}>{item.prodi}</TableCell>
-//       <TableCell sx={[style, { color: statusColor(item.status) }]}>
-//         {item.status}
-//       </TableCell>
-//     </TableRow>
-//   );
-// };
 
 export default Dashboard;

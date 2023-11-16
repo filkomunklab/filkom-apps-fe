@@ -266,20 +266,22 @@ const AddActivity = () => {
       </Grid>
 
       <Grid container paddingTop={3}>
-        <Grid item xs={6} md={3}>
-          <FormGroup sx={{ paddingLeft: "9px" }}>
+        <Grid item xs={12} md={4}>
+          <FormGroup sx={{ paddingLeft: { xs: 1, md: 3 } }}>
             <FormControlLabel
               control={<Switch size="small" color="primary" />}
               label="Add Grade Submission Page"
+              sx={{ whiteSpace: "nowrap", gap: 2 }}
             />
           </FormGroup>
         </Grid>
 
-        <Grid item xs={6} md={3}>
-          <FormGroup sx={{ paddingLeft: "12px" }}>
+        <Grid item xs={12} md={6}>
+          <FormGroup sx={{ paddingLeft: { xs: 1, md: 3 } }}>
             <FormControlLabel
               control={<Switch size="small" color="primary" />}
               label="Add Pre-Registration Page"
+              sx={{ whiteSpace: "nowrap", gap: 2 }}
             />
           </FormGroup>
         </Grid>
