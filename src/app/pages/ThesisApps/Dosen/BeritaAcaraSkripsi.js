@@ -260,7 +260,27 @@ const BeritaAcara = () => {
             );
           }
         };
+        const fetchIsOpenData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-report/open-access/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setIsOpen(response.data.data);
+            console.log("Request Get skripsi dibuka?: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil skripsi dibuka?:",
+              error
+            );
+          }
+        };
         fetchKesimpulanData();
+        fetchIsOpenData();
       })
       .catch((error) => {
         console.error("Terjadi kesalahan saat mengisi kesimpulan:", error);
@@ -394,7 +414,7 @@ const BeritaAcara = () => {
 
     const nilai = {
       student_id: selectedStudentId,
-      value: total,
+      value: total.toString(),
     };
     axios
       .put(
@@ -588,6 +608,139 @@ const BeritaAcara = () => {
       });
   };
 
+  // buka berita acara
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+
+  const handleBukaButtonClick = () => {
+    // Menampilkan dialog konfirmasi saat tombol "Buka" diklik
+    setIsConfirmDialogOpen(true);
+  };
+
+  const handleConfirmDialogClose = () => {
+    // Menutup dialog konfirmasi
+    setIsConfirmDialogOpen(false);
+  };
+
+  const handleBukaKonfirmasi = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/skripsi-report/open-access/${skripsiId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        setIsConfirmDialogOpen(false);
+
+        console.log("Berhasil membuka berita acara: ", response.data.data);
+
+        // request data
+        const fetchIsOpenData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-report/open-access/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setIsOpen(response.data.data);
+            console.log("Request Get skripsi dibuka?: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil skripsi dibuka?:",
+              error
+            );
+          }
+        };
+        const fetchPenilaianData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDataPenilaian(response.data.data);
+            console.log("Request Get penilaian: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil penilaian:", error);
+          }
+        };
+        const fetchPerubahanData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDataPerubahan(response.data.data);
+            console.log("Request Get perubahan: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil perubahan:", error);
+          }
+        };
+        const fetchBeritaAcaraData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-report/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDataBeritaAcara(response.data.data);
+            console.log("Request Get berita acara: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil berita acara:",
+              error
+            );
+          }
+        };
+        const fetchKesimpulanData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDataKesimpulan(response.data.data);
+            console.log("Request Get kesimpulan: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil kesimpulan:",
+              error
+            );
+          }
+        };
+        fetchIsOpenData();
+        fetchPenilaianData();
+        fetchPerubahanData();
+        fetchBeritaAcaraData();
+        fetchKesimpulanData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat membuka berita acara:",
+          error.response.data.message
+        );
+      });
+  };
+
   return (
     <Div>
       <Div
@@ -768,14 +921,79 @@ const BeritaAcara = () => {
                   alignItems: "center",
                   gap: "10px",
                   color: "#192434",
-                  background: "rgba(26, 56, 96, 0.10)",
                   borderRadius: "6px",
-                  fontSize: "12px",
-                  fontWeight: 600,
                 }}
               >
-                Berita acara belum dibuka.
+                Membuka Pengisian Berita Acara
               </Typography>
+              <Div
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  gap: "12px",
+                  alignSelf: "stretch",
+                  padding: "14px 16px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  border: "1px",
+                  borderRadius: "6px",
+                  marginTop: "25px",
+                }}
+              >
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="primary"
+                  sx={{ textTransform: "none" }}
+                  onClick={handleBukaButtonClick}
+                >
+                  Buka
+                </Button>
+              </Div>
+              {/* Dialog Konfirmasi */}
+              <Dialog
+                open={isConfirmDialogOpen}
+                onClose={handleConfirmDialogClose}
+                fullWidth
+                maxWidth="xs"
+              >
+                <DialogTitle
+                  sx={{
+                    color: "#0A0A0A",
+                    fontSize: "20px",
+                    fontWeight: "500px",
+                  }}
+                >
+                  Membuka Berita Acara
+                </DialogTitle>
+                <DialogContent>
+                  <Typography sx={{ color: "#616161" }}>
+                    Apakah Anda ingin membuka pengisian berita acara?
+                  </Typography>
+                </DialogContent>
+                <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                  <Button
+                    onClick={handleConfirmDialogClose}
+                    color="primary"
+                    sx={{
+                      background: "white",
+                      boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                      textTransform: "none",
+                      color: "black",
+                    }}
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    onClick={handleBukaKonfirmasi}
+                    color="primary"
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                  >
+                    Buka
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </Div>
           )}
           {/* Berita acara dibuka/ditutup */}
@@ -848,7 +1066,7 @@ const BeritaAcara = () => {
                         <TableCell>{student.fullName}</TableCell>
                         <TableCell>{student.value_by_chairman}</TableCell>
                         <TableCell>{student.value_by_member}</TableCell>
-                        <TableCell>{student.value_by_advisor}-</TableCell>
+                        <TableCell>{student.value_by_advisor}</TableCell>
                         {userRole === "KETUA_PANELIS" && (
                           <TableCell>
                             <span
@@ -1449,13 +1667,13 @@ const BeritaAcara = () => {
                           onChange={handleStatusChange}
                         >
                           <FormControlLabel
-                            value="Diterima"
+                            value="Approve"
                             control={<Radio />}
                             label="Diterima"
                             onChange={(e) => setStatus(e.target.value)}
                           />
                           <FormControlLabel
-                            value="Ditolak"
+                            value="Rejected"
                             control={<Radio />}
                             label="Ditolak"
                             onChange={(e) => setStatus(e.target.value)}
@@ -1597,17 +1815,17 @@ const BeritaAcara = () => {
                               onChange={(e) => setDeskripsi(e.target.value)}
                             >
                               <FormControlLabel
-                                value="Lulus"
+                                value="Pass"
                                 control={<Radio />}
                                 label="Lulus"
                               />
                               <FormControlLabel
-                                value="Tidak Lulus"
+                                value="Fail"
                                 control={<Radio />}
                                 label="Tidak Lulus"
                               />
                               <FormControlLabel
-                                value="Mengulang"
+                                value="Repeat"
                                 control={<Radio />}
                                 label="Mengulang"
                               />

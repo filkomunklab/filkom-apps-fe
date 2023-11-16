@@ -13,7 +13,10 @@ import {
   Typography,
 } from "@mui/material";
 
-const BerandaProposalMahasiswa = ({ value: groupId }) => {
+const BerandaProposalMahasiswa = ({
+  value: groupId,
+  status: advisorAndCoAdvisor,
+}) => {
   const [details, setDetails] = useState([]);
 
   // fungsi untuk mendapatkan token JWT
@@ -135,10 +138,10 @@ const BerandaProposalMahasiswa = ({ value: groupId }) => {
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
                 <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
                 <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
-                {details?.proposal_status?.co_advisor1_status !== null && (
+                {advisorAndCoAdvisor?.coAdvisor1 && (
                   <TableCell sx={{ width: "25%" }}>Co-Advisor 1</TableCell>
                 )}
-                {details?.proposal_status?.co_advisor2_status !== null && (
+                {advisorAndCoAdvisor?.coAdvisor2 && (
                   <TableCell sx={{ width: "25%" }}>Co-Advisor 2</TableCell>
                 )}
               </TableRow>
@@ -178,7 +181,7 @@ const BerandaProposalMahasiswa = ({ value: groupId }) => {
                     details?.proposal_status?.advisor_status
                   )}
                 </TableCell>
-                {details?.proposal_status?.co_advisor1_status !== null && (
+                {advisorAndCoAdvisor?.coAdvisor1 && (
                   <TableCell>
                     {details?.proposal_status?.co_advisor1_status === null ? (
                       <Chip label={"Belum"} />
@@ -214,7 +217,7 @@ const BerandaProposalMahasiswa = ({ value: groupId }) => {
                     )}
                   </TableCell>
                 )}
-                {details?.proposal_status?.co_advisor2_status !== null && (
+                {advisorAndCoAdvisor?.coAdvisor2 && (
                   <TableCell>
                     {details?.proposal_status?.co_advisor2_status === null ? (
                       <Chip label={"Belum"} />
@@ -357,8 +360,8 @@ const BerandaProposalMahasiswa = ({ value: groupId }) => {
             <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
                 <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                <TableCell sx={{ width: "25%" }}>Ketua Penelis</TableCell>
-                <TableCell sx={{ width: "25%" }}>Anggota Penelis</TableCell>
+                <TableCell sx={{ width: "25%" }}>Ketua Panelis</TableCell>
+                <TableCell sx={{ width: "25%" }}>Anggota Panelis</TableCell>
                 <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
               </TableRow>
             </TableHead>
@@ -486,8 +489,8 @@ const BerandaProposalMahasiswa = ({ value: groupId }) => {
             <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
                 <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                <TableCell sx={{ width: "25%" }}>Ketua Penelis</TableCell>
-                <TableCell sx={{ width: "25%" }}>Anggota Penelis</TableCell>
+                <TableCell sx={{ width: "25%" }}>Ketua Panelis</TableCell>
+                <TableCell sx={{ width: "25%" }}>Anggota Panelis</TableCell>
                 <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
               </TableRow>
             </TableHead>

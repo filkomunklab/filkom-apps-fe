@@ -20,6 +20,8 @@ import BerandaProposalMahasiswa from "./BerandaProposalMahasiswa";
 import BerandaSkripsiMahasiswa from "./BerandaSkripsiMahasiswa";
 
 const BerandaGlobal = () => {
+  const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
+
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
@@ -81,7 +83,15 @@ const BerandaGlobal = () => {
           {/* jika progress tidak null maka menyimpannya di setProgress */}
           <Riwayatlog
             value={groupId}
-            riwayatData={(data) => data && setProgress(data.progress)}
+            riwayatData={(data) => {
+              if (data) {
+                setProgress(data.progress);
+                setAdvisorAndCoAdvisor({
+                  coAdvisor1: data.co_advisor1,
+                  coAdvisor2: data.co_advisor2,
+                });
+              }
+            }}
           />
         </Div>
         {/* Element 1 End */}
@@ -229,13 +239,22 @@ const BerandaGlobal = () => {
               <BerandaPengajuanJudul value={groupId} />
             )}
             {progress === "Proposal" && (
-              <BerandaProposalMahasiswa value={groupId} />
+              <BerandaProposalMahasiswa
+                value={groupId}
+                status={advisorAndCoAdvisor}
+              />
             )}
             {progress === "Skripsi" && (
-              <BerandaSkripsiMahasiswa value={groupId} />
+              <BerandaSkripsiMahasiswa
+                value={groupId}
+                status={advisorAndCoAdvisor}
+              />
             )}
             {progress === "Finished" && (
-              <BerandaSkripsiMahasiswa value={groupId} />
+              <BerandaSkripsiMahasiswa
+                value={groupId}
+                status={advisorAndCoAdvisor}
+              />
             )}
           </Div>
         </Div>

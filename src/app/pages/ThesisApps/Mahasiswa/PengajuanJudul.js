@@ -645,11 +645,9 @@ const PengajuanJudul = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {pengajuanJudulFile && (
-                                <PDFViewerPengajuanJudul
-                                  pengajuanJudulFile={pengajuanJudulFile}
-                                />
-                              )}
+                              <PDFViewerPengajuanJudul
+                                pengajuanJudulFile={pengajuanJudulFile}
+                              />
                             </span>
                             <Div
                               style={{
@@ -689,7 +687,7 @@ const PengajuanJudul = () => {
                       (
                         daftarDosen.find(
                           (dosen) =>
-                            dosen.id === pengajuanJudul.proposed_advisor_id
+                            dosen.id === pengajuanJudul?.proposed_advisor_id
                         ) || {}
                       ).name
                     }

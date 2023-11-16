@@ -233,6 +233,128 @@ const DokumenRevisiProposal = () => {
     }
   };
 
+  // approve
+  const handleApprove = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/proposal/proposal-revision-document/approve/${proposalId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil approve revisi proposal: ", response.data.data);
+
+        // ketua
+        setSetujuConfirmationDialogOpen(false);
+        handleActionClick(selectedActionIndex, "Setuju");
+        setIsSetujuDisabled(true);
+        // anggota
+        setSetujuConfirmationDialogOpenAnggotaPanalis(false);
+        handleActionClickAnggotaPanalis(selectedActionIndex, "Setuju");
+        setIsSetujuDisabledAnggotaPanalis(true);
+        // advisor
+        setSetujuConfirmationDialogOpenAdvisor(false);
+        handleActionClickAdvisor(selectedActionIndex, "Setuju");
+        setIsSetujuDisabledAdvisor(true);
+
+        // request data
+        const fetchDokumenProposalData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDokumenRevisi(response.data.data);
+            console.log(
+              "Request Get dokumen revisi proposal: ",
+              response.data.data
+            );
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil dokumen revisi proposal:",
+              error
+            );
+          }
+        };
+        fetchDokumenProposalData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat approve revisi proposal:",
+          error.response.data.message
+        );
+      });
+  };
+
+  // reject
+  const handleReject = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/proposal/proposal-revision-document/reject/${proposalId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil reject proposal: ", response.data.data);
+
+        // ketua
+        setTolakConfirmationDialogOpen(false);
+        handleActionClick(selectedActionIndex, "Tolak");
+        setIsTolakDisabled(true);
+        // anggota
+        setTolakConfirmationDialogOpenAnggotaPanalis(false);
+        handleActionClickAnggotaPanalis(selectedActionIndex, "Tolak");
+        setIsTolakDisabledAnggotaPanalis(true);
+        // advisor
+        setTolakConfirmationDialogOpenAdvisor(false);
+        handleActionClickAdvisor(selectedActionIndex, "Tolak");
+        setIsTolakDisabledAdvisor(true);
+
+        // request data
+        const fetchDokumenProposalData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDokumenRevisi(response.data.data);
+            console.log(
+              "Request Get dokumen revisi proposal: ",
+              response.data.data
+            );
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil dokumen revisi proposal:",
+              error
+            );
+          }
+        };
+        fetchDokumenProposalData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat reject proposal:",
+          error.response.data.message
+        );
+      });
+  };
+
   let ActionRevision;
 
   if (userRole === "ADVISOR") {
@@ -1114,11 +1236,11 @@ const DokumenRevisiProposal = () => {
           }}
         >
           <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-            Menyetujui Revisi
+            Menyetujui Revisi Proposal
           </Typography>
         </DialogTitle>
         <DialogContent>
-          Apakah Anda yakin ingin menyetujui dokumen ini?
+          Apakah Anda yakin ingin menyetujui revisi ini?
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -1133,16 +1255,12 @@ const DokumenRevisiProposal = () => {
             Batal
           </Button>
           <Button
-            onClick={() => {
-              setSetujuConfirmationDialogOpen(false);
-              handleActionClick(selectedActionIndex, "Setuju");
-              setIsSetujuDisabled(true);
-            }}
+            onClick={handleApprove}
             variant="contained"
             sx={{ textTransform: "none" }}
             color="primary"
           >
-            Disetuju
+            Setujui
           </Button>
         </DialogActions>
       </Dialog>
@@ -1164,11 +1282,11 @@ const DokumenRevisiProposal = () => {
         >
           <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
           <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-            Menolak Revisi
+            Menolak Revisi Proposal
           </Typography>
         </DialogTitle>
         <DialogContent>
-          Apakah Anda yakin ingin menolak dokumen ini?
+          Apakah Anda yakin ingin menolak revisi ini?
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -1183,11 +1301,7 @@ const DokumenRevisiProposal = () => {
             Batal
           </Button>
           <Button
-            onClick={() => {
-              setTolakConfirmationDialogOpen(false);
-              handleActionClick(selectedActionIndex, "Tolak");
-              setIsTolakDisabled(true);
-            }}
+            onClick={handleReject}
             sx={{
               textTransform: "none",
               background: "#FC0",
@@ -1218,11 +1332,11 @@ const DokumenRevisiProposal = () => {
           }}
         >
           <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-            Menyetujui Revisi
+            Menyetujui Revisi Proposal
           </Typography>
         </DialogTitle>
         <DialogContent>
-          Apakah Anda yakin ingin menyetujui tindakan ini?
+          Apakah Anda yakin ingin menyetujui revisi ini?
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -1237,16 +1351,12 @@ const DokumenRevisiProposal = () => {
             Batal
           </Button>
           <Button
-            onClick={() => {
-              setSetujuConfirmationDialogOpenAnggotaPanalis(false);
-              handleActionClickAnggotaPanalis(selectedActionIndex, "Setuju");
-              setIsSetujuDisabledAnggotaPanalis(true);
-            }}
+            onClick={handleApprove}
             variant="contained"
             sx={{ textTransform: "none" }}
             color="primary"
           >
-            Disetuju
+            Setujui
           </Button>
         </DialogActions>
       </Dialog>
@@ -1268,11 +1378,11 @@ const DokumenRevisiProposal = () => {
         >
           <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
           <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-            Menolak Revisi
+            Menolak Revisi Proposal
           </Typography>
         </DialogTitle>
         <DialogContent>
-          Apakah Anda yakin ingin menolak dokumen ini?
+          Apakah Anda yakin ingin menolak revisi ini?
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -1287,11 +1397,7 @@ const DokumenRevisiProposal = () => {
             Batal
           </Button>
           <Button
-            onClick={() => {
-              setTolakConfirmationDialogOpenAnggotaPanalis(false);
-              handleActionClickAnggotaPanalis(selectedActionIndex, "Tolak");
-              setIsTolakDisabledAnggotaPanalis(true);
-            }}
+            onClick={handleReject}
             sx={{
               textTransform: "none",
               background: "#FC0",
@@ -1322,11 +1428,11 @@ const DokumenRevisiProposal = () => {
           }}
         >
           <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-            Menyetujui Revisi
+            Menyetujui Revisi Proposal
           </Typography>
         </DialogTitle>
         <DialogContent>
-          Apakah Anda yakin ingin menyetujui dokumen ini?
+          Apakah Anda yakin ingin menyetujui revisi ini?
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -1341,16 +1447,12 @@ const DokumenRevisiProposal = () => {
             Batal
           </Button>
           <Button
-            onClick={() => {
-              setSetujuConfirmationDialogOpenAdvisor(false);
-              handleActionClickAdvisor(selectedActionIndex, "Setuju");
-              setIsSetujuDisabledAdvisor(true);
-            }}
+            onClick={handleApprove}
             variant="contained"
             sx={{ textTransform: "none" }}
             color="primary"
           >
-            Disetuju
+            Setujui
           </Button>
         </DialogActions>
       </Dialog>
@@ -1372,11 +1474,11 @@ const DokumenRevisiProposal = () => {
         >
           <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
           <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-            Menolak Revisi
+            Menolak Revisi Proposal
           </Typography>
         </DialogTitle>
         <DialogContent>
-          Apakah Anda yakin ingin menolak dokumen ini?
+          Apakah Anda yakin ingin menolak revisi ini?
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -1391,11 +1493,7 @@ const DokumenRevisiProposal = () => {
             Batal
           </Button>
           <Button
-            onClick={() => {
-              setTolakConfirmationDialogOpenAdvisor(false);
-              handleActionClickAdvisor(selectedActionIndex, "Tolak");
-              setIsTolakDisabledAdvisor(true);
-            }}
+            onClick={handleReject}
             sx={{
               textTransform: "none",
               background: "#FC0",

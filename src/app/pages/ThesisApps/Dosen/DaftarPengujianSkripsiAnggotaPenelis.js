@@ -39,7 +39,7 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
     const fetchDaftarPengujianSkripsiData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/skripsi-list-chairman",
+          "http://localhost:2000/api/v1/group/skripsi-list-member",
           {
             headers: {
               Authorization: `Bearer ${token}`,

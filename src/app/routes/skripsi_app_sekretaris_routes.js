@@ -28,12 +28,12 @@ const sekretarisRoutes = [
   // MANAJEMEN JADWAL
   {
     // JADWAL PROPOSAL
-    path: "/sistem-informasi-skripsi/jadwal-proposal",
+    path: "//sistem-informasi-skripsi/daftar-jadwal-sidang-proposal",
     element: <Page component={JadwalSidangProposal} />,
   },
   {
     // JADWAL SKRIPSI
-    path: "/sistem-informasi-skripsi/jadwal-skripsi",
+    path: "//sistem-informasi-skripsi/daftar-jadwal-sidang-skripsi",
     element: <Page component={JadwalSidangSkripsi} />,
   },
 
