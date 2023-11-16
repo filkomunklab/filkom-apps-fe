@@ -172,8 +172,13 @@ const DaftarCalonTamatan = () => {
       </Typography>
       <Box sx={{ paddingX: 5 }}>
         <Typography variant="body1" sx={{ lineHeight: 2.5 }}>
-          Saya yang bertanda tangan di bawah ini, bermohon untuk dapat wisuda
-          pada semester 1 2022/2023 dengan sisa SKS yang harus diambil
+          Saya yang bertanda tangan di bawah ini, bermohon untuk dapat wisuda pada 
+          <Chip
+            label={`${item?.graduate_plan}`}
+            variant={"outlined"}
+            sx={{ marginX: "5px", borderRadius: "5px" }}
+          />
+          dengan sisa SKS yang harus diambil
           <Chip
             label={`${item?.remaining_credits}`}
             variant={"outlined"}
