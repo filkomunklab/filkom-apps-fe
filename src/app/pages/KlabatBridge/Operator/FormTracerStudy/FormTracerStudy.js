@@ -42,8 +42,10 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import axios from "axios";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { Link, useNavigate} from "react-router-dom";
 
 const FormTracerStudy = () => {
+  const navigate = useNavigate();
   //checkbox
   const [isChecked, setIsChecked] = useState(false);
   // const handleCheckboxChange = () => {
@@ -435,6 +437,15 @@ const FormTracerStudy = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    navigate("/klabat-bridge/home-alumni", { 
+      state: { 
+        buttonColor: '#B1FFA5', 
+        formSubmitted: true,
+        buttonText: 'Anda telah mengisi form Tracer Study',
+      } 
+    });
+
     const normalized = {
       kdptimsmh: identityData.kodePT,
       kdpstmsmh: identityData.kodeProdi,
@@ -612,7 +623,7 @@ const FormTracerStudy = () => {
                 fullWidth
                 variant="outlined"
                 name="fullName"
-                placeholder="Stenly Adam"
+                placeholder="Angel Triany Pangkey"
                 value={identityData.fullName}
                 onChange={handleIdentityChange}
               />
@@ -636,7 +647,7 @@ const FormTracerStudy = () => {
                 variant="outlined"
                 type="email"
                 name="email"
-                placeholder="stenlyadam@gmail.com"
+                placeholder="angelpangkey@gmail.com"
                 value={identityData.email}
                 onChange={handleIdentityChange}
               />
@@ -3051,20 +3062,20 @@ const FormTracerStudy = () => {
 
           {/* Submit and Cancel Buttons */}
           <Box mt={8} display="flex" justifyContent="flex-end">
-            <Button
+            {/* <Button
               variant="outlined"
               color="primary"
               style={{ marginRight: "10px" }}
             >
               Batal
-            </Button>
+            </Button> */}
             <Button
               type="submit"
               variant="contained"
               color="primary"
               onClick={() => setOpen(true)}
             >
-              Kirim
+              Submit
             </Button>
 
             {/* dialog box to send to send the tracer study form */}

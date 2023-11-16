@@ -47,6 +47,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
 import axios from "axios";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { Link, useNavigate} from "react-router-dom";
 
 // const rows = [
 //     { id: 1, name: 'Row 1', mk: 'Robotics', sks: '3', keterangan: 'Summer 2023' },
@@ -88,6 +89,8 @@ const majorsByFaculty = {
 };
 
 const PengisianSPT = () => {
+  const navigate = useNavigate();
+
   // input SPT
   const [dataSPT, setDataSPT] = useState({
     // sisaSKS: "",
@@ -270,6 +273,15 @@ const PengisianSPT = () => {
   // submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    navigate("/klabat-bridge/home-calon-tamatan", { 
+      state: { 
+        buttonColor: '#B1FFA5', 
+        formSubmitted: true,
+        buttonText: 'Anda telah mengisi form SPT',
+      } 
+    });
+    
     const normalized = {
       full_name: dataSPT.nama,
       reg_num: dataSPT.noRegis,
@@ -749,14 +761,14 @@ const PengisianSPT = () => {
 
 
         <Divider sx={{ marginY: 3 }} />
-        <Grid container justifyContent="space-between" alignItems="center">
-          <Grid item>
-            <FormControlLabel
+        <Grid container justifyContent="space-between" alignItems="end">
+          <Grid item xs={9}>
+            {/* <FormControlLabel
               control={<Checkbox />}
               label="Saya telah mengisi data ini dengan benar dan tepat"
-            />
+            /> */}
           </Grid>
-          <Grid item>
+          <Grid item xs={3}>
             <Box display="flex" justifyContent="flex-end">
               {/* <Button
                 variant="outlined"

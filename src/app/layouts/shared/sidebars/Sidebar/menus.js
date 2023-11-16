@@ -139,12 +139,6 @@ export const mahasiswaMenus = [
     type: "section",
     children: [
       // CALON TAMATAN ===============
-      // {
-      //   label: "Home",
-      //   type: "nav-item",
-      //   icon: <HomeIcon sx={{ fontSize: 20 }} />,
-      //   uri: "/klabat-bridge/home-calon-tamatan",
-      // },
       {
         label: "Dashboard",
         type: "nav-item",
@@ -155,8 +149,15 @@ export const mahasiswaMenus = [
         label: "SPT Form",
         type: "nav-item",
         icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/pengisian-spt",
+        uri: "/klabat-bridge/home-calon-tamatan",
       },
+      
+      // {
+      //   label: "SPT Form",
+      //   type: "nav-item",
+      //   icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
+      //   uri: "/klabat-bridge/pengisian-spt",
+      // },
     ],
   },
   {
@@ -1086,12 +1087,6 @@ export const mahasiswaMenusGraduate = [
     type: "section",
     children: [
       // ALUMNI ================
-      // {
-      //   label: "Home",
-      //   type: "nav-item",
-      //   icon: <HomeIcon sx={{ fontSize: 20 }} />,
-      //   uri: "/klabat-bridge/home-alumni",
-      // },
       {
         label: "Dashboard",
         type: "nav-item",
@@ -1099,11 +1094,17 @@ export const mahasiswaMenusGraduate = [
         uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Form Tracer Study",
+        label: "Tracer Study Form",
         type: "nav-item",
         icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/form-tracer-study",
+        uri: "/klabat-bridge/home-alumni",
       },
+      // {
+      //   label: "Form Tracer Study",
+      //   type: "nav-item",
+      //   icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
+      //   uri: "/klabat-bridge/form-tracer-study",
+      // },
     ],
   },
 ];

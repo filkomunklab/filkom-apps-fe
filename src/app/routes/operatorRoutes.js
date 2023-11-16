@@ -8,10 +8,15 @@ import PengisianSPT from "app/pages/KlabatBridge/Operator/PengisianSPT";
 import DaftarCalonTamatanRegister from "app/pages/KlabatBridge/Operator/DaftarCalonTamatanRegister";
 import DaftarCalonTamatanFakultas from "app/pages/KlabatBridge/Operator/DaftarCalonTamatanFakultas";
 import HomeAlumni from "app/pages/KlabatBridge/Operator/HomeAlumni";
-import HomeCalonTamatan from "app/pages/KlabatBridge/Operator/HomeCalonTamatan";
+import HomeCalonTamatan from "app/pages/KlabatBridge/Operator/HomeCalonTamatan"; 
 import DaftarAlumniFakultas from "app/pages/KlabatBridge/Operator/DaftarAlumniFakultas";
+import IsiForm from "app/pages/KlabatBridge/Operator/HomeCalonTamatan/IsiForm"
+import React, { useState } from 'react';
+
+
 
 const operatorRoutes = [
+  
   {
     path: "klabat-bridge/dashboard",
     element: <Page component={Dashboard} />,
@@ -51,6 +56,10 @@ const operatorRoutes = [
   {
     path: "klabat-bridge/home-calon-tamatan",
     element: <Page component={HomeCalonTamatan} />,
+  },
+  {
+    path: "klabat-bridge/isi-form",
+    element: <Page component={IsiForm} />,
   },
   
   

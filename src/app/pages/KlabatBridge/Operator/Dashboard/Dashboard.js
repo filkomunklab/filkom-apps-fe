@@ -349,7 +349,7 @@ const Dashboard = () => {
                 <XAxis dataKey={"year"} />
                 <YAxis
                   label={{
-                    value: "Total Students",
+                    value: "Total Alumni",
                     angle: -90,
                     position: "insideLeft",
                     dy: 50,
