@@ -410,8 +410,7 @@ const DaftarPengajuanProposalKaprodi = () => {
                 expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
                 onChange={handleChange(`panel${semesterIndex}`)} // Menangani perubahan state accordion
                 sx={{
-                  margin: "5px",
-                  width: "97%",
+                  width: "100%",
                   padding: "1px",
                   background: "rgba(26, 56, 96, 0.10)",
                   boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
@@ -425,8 +424,7 @@ const DaftarPengajuanProposalKaprodi = () => {
                   <Typography
                     variant="h2"
                     sx={{
-                      width: "33%",
-                      flexShrink: 0,
+                      marginTop: "6px",
                       fontSize: "16px",
                       fontWeight: 500,
                     }}
