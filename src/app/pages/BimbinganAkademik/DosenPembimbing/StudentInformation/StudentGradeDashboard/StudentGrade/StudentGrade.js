@@ -6,9 +6,12 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TableContainer,
+  Paper,
   Typography,
   Breadcrumbs,
   experimentalStyled as styled,
+  Grid,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -43,22 +46,44 @@ const StudentGrade = () => {
           </Typography>
         </Stack>
         <Typography variant="h5">Semester 1</Typography>
-        <Table>
-          <TableHead>
-            <TableHeading />
-          </TableHead>
-          <TableBody>
-            {[...Array(10)].map((item, index) => (
-              <TableItem index={index} key={index} />
-            ))}
-          </TableBody>
-        </Table>
+        <Grid item xs={12}>
+          <TableContainer
+            sx={{
+              maxHeight: 640,
+            }}
+            component={Paper}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {[...Array(10)].map((item, index) => (
+                  <TableItem index={index} key={index} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
         <Stack>
-          <Typography variant="h2">
+          <Typography
+            variant="h4"
+            sx={{ fontSize: { xs: 14, md: 16, xl: 18 } }}
+          >
             Semester 1, Tahun Akademik 2022/2023
           </Typography>
-          <Typography variant="h2">Total Grade: 3.92</Typography>
-          <Typography variant="h2">Total Major Grade: 3.95</Typography>
+          <Typography
+            variant="h4"
+            sx={{ fontSize: { xs: 14, md: 16, xl: 18 } }}
+          >
+            Total Grade: 3.92
+          </Typography>
+          <Typography
+            variant="h4"
+            sx={{ fontSize: { xs: 14, md: 16, xl: 18 } }}
+          >
+            Total Major Grade: 3.95
+          </Typography>
         </Stack>
       </Stack>
     </Div>
