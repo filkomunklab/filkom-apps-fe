@@ -12,13 +12,17 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TableContainer,
   Typography,
   Breadcrumbs,
+  Paper,
   experimentalStyled as styled,
+  ListSubheader,
 } from "@mui/material";
-import SearchLocal from "app/shared/SearchLocal";
+import SearchGlobal from "app/shared/SearchGlobal";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -27,6 +31,53 @@ const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: "underline",
   },
 }));
+
+const yearList = [
+  {
+    value: "2017",
+    label: "2017",
+  },
+  {
+    value: "2018",
+    label: "2018",
+  },
+  {
+    value: "2019",
+    label: "2019",
+  },
+  {
+    value: "2020",
+    label: "2020",
+  },
+  {
+    value: "2021",
+    label: "2021",
+  },
+  {
+    value: "2022",
+    label: "2022",
+  },
+  {
+    value: "2023",
+    label: "2023",
+  },
+];
+
+const prodiList = [
+  {
+    value: "informatika",
+    label: "Informatika",
+  },
+  {
+    value: "dkv",
+    label: "DKV",
+  },
+  {
+    value: "si",
+    label: "SI",
+  },
+];
+
 const data = [...Array(15)].map(() => ({
   submissionDate: "10 May 2000",
   title: "Menang Lomba Desain Prototype",
@@ -39,14 +90,13 @@ const data = [...Array(15)].map(() => ({
 
 const StudentCertificate = () => {
   const navigate = useNavigate();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [filter, setFilter] = useState([]);
 
   const handleClick = (event) => {
     event.preventDefault();
   };
-
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [sortBy, setSortBy] = useState("");
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -78,49 +128,142 @@ const StudentCertificate = () => {
               student.
             </Typography>
           </Grid>
-          <Grid item md={3}>
-            <SearchLocal />
+          <Grid item xs={12} sm={8} md={3}>
+            <SearchGlobal
+              sx={{
+                height: "100%",
+                "@media (max-width: 390px)": {
+                  height: "40px",
+                },
+              }}
+            />
           </Grid>
-          <Grid item md={3}>
-            <FormControl sx={{ width: "100%" }}>
-              <InputLabel id="sort-label">Sort By</InputLabel>
+          <Grid item xs={12} sm={4} md={3}>
+            <FormControl
+              sx={{
+                width: "100%",
+              }}
+            >
+              <InputLabel>Filter</InputLabel>
               <Select
-                sx={{ borderRadius: "24px" }}
-                labelId="sort-component"
-                id="demo-simple-select-helper"
-                value={sortBy}
-                label="Sort By"
-                onChange={(event) => setSortBy(event.target.value)}
+                sx={{
+                  borderRadius: 50,
+                  "@media (max-width: 390px)": {
+                    height: "45px",
+                  },
+                }}
+                multiple
+                value={filter}
+                label="Grouping"
+                renderValue={(selected) => selected.join(", ")}
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxHeight: "37%",
+                    },
+                  },
+                }}
               >
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={"Empty"}>Empty</MenuItem>
+                <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
+                  Status
+                </ListSubheader>
+                <MenuItem
+                  sx={{
+                    backgroundColor: "#FAFAFA",
+                    borderRadius: "5px",
+                  }}
+                  value={"activeStudent"}
+                >
+                  Active
+                </MenuItem>
+                <MenuItem
+                  sx={{
+                    backgroundColor: "#FAFAFA",
+                    borderRadius: "5px",
+                  }}
+                  value={"nonactiveStudent"}
+                >
+                  Nonactive
+                </MenuItem>
+                <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
+                  Tahun Masuk
+                </ListSubheader>
+                {yearList.map((item) => (
+                  <MenuItem
+                    key={item.value}
+                    value={item.value}
+                    sx={{
+                      backgroundColor: "#FAFAFA",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    {item.label}
+                  </MenuItem>
+                ))}
+                <Div>
+                  <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
+                    Prodi
+                  </ListSubheader>
+                  {prodiList.map((item) => (
+                    <MenuItem
+                      key={item.value}
+                      onChange={(event) =>
+                        console.log(event.currentTarget.value)
+                      }
+                      value={item.value}
+                      sx={{
+                        backgroundColor: "#FAFAFA",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </Div>
               </Select>
             </FormControl>
           </Grid>
         </Grid>
-        <Table sx={{ overflowX: "auto" }}>
-          <TableHead>
-            <TableHeading />
-          </TableHead>
-          <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((item, index) => (
-                <TableItem index={index} key={index} item={item} />
-              ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[10, 25]}
-          component={"div"}
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <Grid item xs={12}>
+          <TableContainer
+            sx={{
+              maxHeight: 640,
+            }}
+            component={Paper}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
+            rowsPerPageOptions={[10, 25, 50, 100]}
+            component="div"
+            count={data.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Grid>
       </Stack>
     </Div>
   );
