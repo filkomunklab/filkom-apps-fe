@@ -9,6 +9,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import Div from "@jumbo/shared/Div";
 
 const tableData1 = [
   {
@@ -177,10 +178,10 @@ const tableData4 = [
     credits: 3,
     type: "General",
     prerequisite: (
-      <div>
+      <Div>
         - [GEN002] Bahasa Inggris Dasar II/ Elementary English II - 3 credit(s)
         <br />- [LMTR999] Mata Kuliah Pembatas/ Limiter Subject - 1 credit(s)
-      </div>
+      </Div>
     ),
   },
   {
@@ -207,11 +208,11 @@ const tableData4 = [
     credits: 3,
     type: "Major",
     prerequisite: (
-      <div>
+      <Div>
         - [IF1223] Logika Informatika/ Informatics Logic - 3 credit(s)
         <br />- [IF1111] Pengantar Komputer/ Introduction to Computing - 3
         credit(s)
-      </div>
+      </Div>
     ),
   },
   {
@@ -268,11 +269,11 @@ const tableData5 = [
     credits: 3,
     type: "General",
     prerequisite: (
-      <div>
+      <Div>
         - [GEN101] Bahasa Inggris Pra Menengah I / Pre-Inter English I - 3
         credit(s)
         <br />- [LMTR999] Mata Kuliah Pembatas/ Limiter Subject - 1 credit(s)
-      </div>
+      </Div>
     ),
   },
   {
@@ -300,10 +301,10 @@ const tableData5 = [
     credits: 3,
     type: "Major",
     prerequisite: (
-      <div>
+      <Div>
         - [MATH000] Matematika/ Mathematics - 2 credit(s)
         <br />- [IS1221] Matematika Diskrit/ Discrete Mathematics - 3 credit(s)
-      </div>
+      </Div>
     ),
   },
   {
@@ -454,11 +455,11 @@ const tableData7 = [
     credits: 3,
     type: "Major",
     prerequisite: (
-      <div>
+      <Div>
         - [IF2244] Sistem Cerdas/ Expert System - 3 credit(s)
         <br />- [IS1224] Struktur Data dan Algoritma/ Data Structure and
         Algorithms - 3 credit(s)
-      </div>
+      </Div>
     ),
   },
   {
@@ -468,12 +469,12 @@ const tableData7 = [
     credits: 3,
     type: "Major",
     prerequisite: (
-      <div>
+      <Div>
         - [IS3152] Analisis dan Perancangan Sistem/ System Analysis and Design -
         3 credit(s)
         <br />- [IS3262] Interaksi Manusia dan Komputer/ Human and Computer
         Interaction - 3 credit(s)
-      </div>
+      </Div>
     ),
   },
   {
@@ -492,12 +493,12 @@ const tableData7 = [
     credits: 3,
     type: "Major",
     prerequisite: (
-      <div>
+      <Div>
         - [IS3152] Analisis dan Perancangan Sistem/ System Analysis and Design -
         3 credit(s)
         <br />- [IS2134] Statistik dan Probabilitas/ Statistics and Probability
         - 3 credit(s)
-      </div>
+      </Div>
     ),
   },
 ];
@@ -510,11 +511,11 @@ const tableData8 = [
     credits: 3,
     type: "Major",
     prerequisite: (
-      <div>
+      <Div>
         - [IS3265] Metodologi Penelitian/ Research Method - 3 credit(s)
         <br />- [IF3264] Rekayasa Perangkat Lunak/ Software Engineering - 3
         credit(s)
-      </div>
+      </Div>
     ),
   },
   {
@@ -542,11 +543,11 @@ const tableData8 = [
     credits: 3,
     type: "Major",
     prerequisite: (
-      <div>
+      <Div>
         - [IF1223] Logika Informatika/ Informatics Logic - 3 credit(s)
         <br />- [IF2131] Organisasi dan Arsitektur Komputer/ Computer
         Organization and Architecture - 3 credit(s)
-      </div>
+      </Div>
     ),
   },
 ];
@@ -567,11 +568,11 @@ const tableData9 = [
     credits: 3,
     type: "Major",
     prerequisite: (
-      <div>
+      <Div>
         - [IF2131] Organisasi dan Arsitektur Komputer/ Computer Organization and
         Architecture - 3 credit(s)
         <br />- [IF1223] Logika Informatika/ Informatics Logic - 3 credit(s)
-      </div>
+      </Div>
     ),
   },
   {
@@ -590,10 +591,10 @@ const tableData9 = [
     credits: 2,
     type: "Major",
     prerequisite: (
-      <div>
+      <Div>
         - [IF1111] Pengantar Komputer/ Introduction to Computing - 3 credit(s)
         <br />- [IF2244] Sistem Cerdas/ Expert System - 3 credit(s)
-      </div>
+      </Div>
     ),
   },
 ];
@@ -785,11 +786,11 @@ const tableData10 = [
     credits: 3,
     type: "Elective",
     prerequisite: (
-      <div>
+      <Div>
         - [GEN102] Bahasa Inggris Pra Menengah II/ Pre-Inter English II - 3
         credit(s)
         <br />- [LMTR999] Mata Kuliah Pembatas/ Limiter Subject - 1 credit(s)
-      </div>
+      </Div>
     ),
   },
   {
@@ -1008,7 +1009,7 @@ const TableItem = ({ data }) => (
 
 const CurriculumInformatika = () => {
   return (
-    <div>
+    <Div>
       <Typography
         sx={{
           fontSize: "24px",
@@ -1018,7 +1019,7 @@ const CurriculumInformatika = () => {
         }}
       ></Typography>
       <TableContainer
-        sx={{ overflow: "auto", maxHeight: 440 }}
+        sx={{ overflow: "auto", maxHeight: 640 }}
         component={Paper}
       >
         <Table stickyHeader>
@@ -1222,7 +1223,7 @@ const CurriculumInformatika = () => {
           {tableData10.map((data, index) => (
             <TableItem key={index} data={data} />
           ))}
-          <div>
+          <Div>
             <Typography
               sx={{
                 fontSize: "14px",
@@ -1233,10 +1234,10 @@ const CurriculumInformatika = () => {
             >
               END
             </Typography>
-          </div>
+          </Div>
         </Table>
       </TableContainer>
-    </div>
+    </Div>
   );
 };
 
