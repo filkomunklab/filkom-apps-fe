@@ -765,7 +765,7 @@ const FormTracerStudy = () => {
               hidden={
                 questionnaireData.f8 === "4" ||
                 questionnaireData.f8 === "2" ||
-                questionnaireData.f8 === "5"
+                questionnaireData.f8 === "5" 
                   ? true
                   : false
               }
@@ -788,7 +788,7 @@ const FormTracerStudy = () => {
               hidden={
                 questionnaireData.f8 === "4" ||
                 questionnaireData.f8 === "2" ||
-                questionnaireData.f8 === "5"
+                questionnaireData.f8 === "5" 
                   ? true
                   : false
               }

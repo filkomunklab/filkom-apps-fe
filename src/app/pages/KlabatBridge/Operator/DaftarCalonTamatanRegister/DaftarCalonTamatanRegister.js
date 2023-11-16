@@ -29,6 +29,7 @@ import {
   Checkbox,
   ListSubheader,
   TablePagination,
+  IconButton,
 } from "@mui/material";
 import ActionButton from "app/shared/ActionButton";
 import SearchGlobal from "app/shared/SearchGlobal";
@@ -37,6 +38,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import MarkunreadIcon from "@mui/icons-material/Markunread";
 import axios from "axios";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import SearchIcon from "@mui/icons-material/Search";
 
 const style = {
   position: "absolute",
@@ -408,13 +410,16 @@ const DaftarCalonTamatan = () => {
         {item?.major}
       </TableCell>
       <TableCell>{item?.graduate_plan}</TableCell>
+      <TableCell>{item?.status}</TableCell>
       <TableCell>{item?.approval_fac}</TableCell>
       <TableCell>{item?.approval_reg}</TableCell>
     </TableRow>
   );
 
-  const getData = async () => {
-    await jwtAuthAxios.get(`/spt?search_query=${searchValue}`).then((res) => {
+  React.useEffect(() => {
+    jwtAuthAxios
+      .get(`/spt?search_query=${searchValue}`)
+      .then((res) => {
       // await axios.get("http://localhost:2000/api/v1/spt/").then((res) => {
       console.log(res.data.data);
       const formattedData = res.data.data.map((item) => {
@@ -443,7 +448,7 @@ const DaftarCalonTamatan = () => {
 
       // console.log(uniqueGraduatePlan);
     });
-  };
+  }, [searchBtn]);
 
   function filterData() {
     // return data.filter(item => item["graduate_year"] === filterValue || item["major"] === filterValue);
@@ -454,18 +459,6 @@ const DaftarCalonTamatan = () => {
         item["graduate_plan"] === filterValue
     );
   }
-
-  // const dummy = [
-  //   {
-  //     name: 'yuhu',
-  //     approvalStatus: 'WAITING',
-  //     otherStatus: 'ACCEPTED',
-  //   }
-  // ]
-
-  React.useEffect(() => {
-    getData();
-  }, []);
 
   console.log(selectedData);
   return (
@@ -483,41 +476,67 @@ const DaftarCalonTamatan = () => {
         <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
           Graduate Candidates
         </Typography>
-        <FormControl sx={{ minWidth: 200 }} size="small">
-          <InputLabel htmlFor="grouped-select">Filter</InputLabel>
-          <Select
-            defaultValue=""
-            id="grouped-select"
-            label="Filter"
-            sx={{ borderRadius: 10, maxHeight: "50px" }}
-            value={filterValue}
-            onChange={(event) => setFilterValue(event.target.value)}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <ListSubheader sx={{ color: "#192739F0" }}>
-              Status by Faculty
-            </ListSubheader>
-            {statusByFac.map((item) => {
-              return <MenuItem value={item + "FACULTY"}>{item}</MenuItem>;
-            })}
+        <Div
+          sx={{
+            display: "flex",
+            direction: "row",
+            gap: 3,
+            alignItems: "center",
+          }}
+        >
+          {/* searchbar */}
+          <TextField
+            // label="Search"
+            placeholder="Search by Name or NIM"
+            variant="outlined"
+            size="small"
+            // value={searchTerm}
+            onChange={(e) => setSearchValue(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <IconButton onClick={() => setSearchBtn(!searchBtn)} edge="end">
+                  <SearchIcon />
+                </IconButton>
+              ),
+              style: { borderRadius: "25px", width: "250px", height: "35px" }, // Apply border radius here
+            }}
+          />
+          <FormControl sx={{ minWidth: 200 }} size="small">
+            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
+            <Select
+              defaultValue=""
+              id="grouped-select"
+              label="Filter"
+              sx={{ borderRadius: 10, maxHeight: "50px" }}
+              value={filterValue}
+              onChange={(event) => setFilterValue(event.target.value)}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <ListSubheader sx={{ color: "#192739F0" }}>
+                Status by Faculty
+              </ListSubheader>
+              {statusByFac.map((item) => {
+                return <MenuItem value={item + "FACULTY"}>{item}</MenuItem>;
+              })}
 
-            <ListSubheader sx={{ color: "#192739F0" }}>
-              Status by Register
-            </ListSubheader>
-            {statusByRegister.map((item) => {
-              return <MenuItem value={item + "REGISTER"}>{item}</MenuItem>;
-            })}
+              <ListSubheader sx={{ color: "#192739F0" }}>
+                Status by Register
+              </ListSubheader>
+              {statusByRegister.map((item) => {
+                return <MenuItem value={item + "REGISTER"}>{item}</MenuItem>;
+              })}
 
-            <ListSubheader sx={{ color: "#192739F0" }}>
-              Rencana Tamat
-            </ListSubheader>
-            {graduatePlan.map((item) => {
-              return <MenuItem value={item}>{item}</MenuItem>;
-            })}
-          </Select>
-        </FormControl>
+              <ListSubheader sx={{ color: "#192739F0" }}>
+                Rencana Tamat
+              </ListSubheader>
+              {graduatePlan.map((item) => {
+                return <MenuItem value={item}>{item}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+        </Div>
       </Div>
 
       <TableContainer component={Paper} sx={{ overflow: "auto" }}>
@@ -530,6 +549,7 @@ const DaftarCalonTamatan = () => {
               <TableCell>Fakultas</TableCell>
               <TableCell>Program Studi</TableCell>
               <TableCell>Rencana Tamat</TableCell>
+              <TableCell>Status</TableCell>
               <TableCell>Approved by Faculty</TableCell>
               <TableCell>Approved by Registar</TableCell>
             </TableRow>
