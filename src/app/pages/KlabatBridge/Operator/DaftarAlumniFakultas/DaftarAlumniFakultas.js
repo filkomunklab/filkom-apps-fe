@@ -125,6 +125,7 @@ const DaftarAlumniFakultas = () => {
       .then((res) => {
         if (isMounted) {
           setData(res.data.data);
+          console.log(res.data.data)
           const uniqueYears = [
             ...new Set(res.data.data.map((item) => item.graduate_year)),
           ];

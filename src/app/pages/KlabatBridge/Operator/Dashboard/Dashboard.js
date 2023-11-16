@@ -124,14 +124,14 @@ const jenisPerusahaan = [
 ];
 
 // bar chart - alumni yang mendapat pekerjaan <12 bulan
-const dapatKerja = [
-  { month: "2 months", value: 40 },
-  { month: "4 months", value: 65 },
-  { month: "6 months", value: 80 },
-  { month: "8 months", value: 70 },
-  { month: "10 months", value: 30 },
-  { month: "12 months", value: 50 },
-];
+// const dapatKerja = [
+//   { month: "2 months", value: 40 },
+//   { month: "4 months", value: 65 },
+//   { month: "6 months", value: 80 },
+//   { month: "8 months", value: 70 },
+//   { month: "10 months", value: 30 },
+//   { month: "12 months", value: 50 },
+// ];
 
 const processedData = jenisPerusahaan.map((item) => ({
   ...item,
@@ -142,6 +142,9 @@ const Dashboard = () => {
   const [data, setData] = useState([]);
   const [distribusiAlumni, setDistribusiAlumni] = useState([]);
   const [totalITS, setTotalITS] = useState([]);
+  const [alumni12Month, setAlumni12Month] = useState([]);
+  const [totalAlumni12month, setTotalAlumni12month] = useState([]);
+  const [companyCategory, setCompanyCategory] = useState([]);
 
   const getData = async () => {
     await jwtAuthAxios.get("/dashboard/statistic").then((response) => {
@@ -172,15 +175,52 @@ const Dashboard = () => {
         value: item.count,
       }));
 
+      // formatted data for bar chart  -- alumni emplyed within 12 months
+      const alumniEmployedIn12Months = response.data.data.dataByMonth.map(item => ({
+        month: `${item.f502} month`, // assuming f502 is the month
+        sum: item._count,
+      }));
+      
+      // sort month
+      alumniEmployedIn12Months.sort((a, b) => parseInt(a.month) - parseInt(b.month));
+
+      // Filter the data to include only the first 12 months
+      const filteredAlumniEmployedIn12Months = alumniEmployedIn12Months.slice(0, 12);
+
+      const totalAlumniEmployedIn12Months = alumniEmployedIn12Months.reduce((total, item) => total + item.sum, 0);
+
+      console.log('Total Item Count:', totalAlumniEmployedIn12Months);
+
+      // bar chart --- company category
+      const categoryMapping = {
+        "1": "Instansi Pemerintahan",
+        "2": "BUMN/BUMD",
+        "3": "Institusi/Organisasi Multilateral",
+        "4": "Organisasi non-profit/Lembaga Swadaya Masyarakat",
+        "5": "Perusahaan Swasta",
+        "6": "Wiraswasta/Perusahaan sendiri",
+        "7": "Lainnya",
+      };
+      
+      // const formattedCategories = countCategories.map(item => ({
+      //   organization: categoryMapping[item.f1101],
+      //   value: item._count,
+      //   color: getColorBasedOnValue(item._count),
+      // }));
+
       setData(response.data.data);
       setDistribusiAlumni(formattedData);
       setTotalITS(formattedData1);
+      setAlumni12Month(filteredAlumniEmployedIn12Months);
+      setTotalAlumni12month(totalAlumniEmployedIn12Months);
     });
   };
 
   React.useEffect(() => {
     getData();
   }, []);
+
+  
 
   // React.useEffect(() => {
   //   const data1 = [
@@ -392,7 +432,7 @@ const Dashboard = () => {
         </Grid>
 
         {/* Bar Chart - alumni yang mendapatkan pekerjaan selama <12 bulan */}
-        <Grid item md={12}>
+        {/* <Grid item md={12}>
           <Card sx={{ p: 5 }}>
             <Typography
               variant="h1"
@@ -409,12 +449,40 @@ const Dashboard = () => {
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip />
-                {/* <Legend/> */}
+                <Legend/> 
                 <Bar dataKey="value" fill="#006AF5" />
               </BarChart>
             </ResponsiveContainer>
             <Typography ml={5}>
               <span style={{ fontSize: "1.2em" }}>300 students </span>
+              obtained jobs within 12 months
+            </Typography>
+          </Card>
+        </Grid> */}
+
+        <Grid item md={12}>
+          <Card sx={{ p: 5 }}>
+            <Typography
+              variant="h1"
+              sx={{ fontSize: "18px", fontWeight: 500, marginLeft: "20px" }}
+            >
+              ALUMNI EMPLOYED IN &lt;12 MONTHS
+            </Typography>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart
+                data={alumni12Month}
+                margin={{ top: 20, right: 30, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Legend/> 
+                <Bar dataKey="sum" fill="#006AF5" />
+              </BarChart>
+            </ResponsiveContainer>
+            <Typography ml={5}>
+              <span style={{ fontSize: "1.2em" }}>{totalAlumni12month} students </span>
               obtained jobs within 12 months
             </Typography>
           </Card>
