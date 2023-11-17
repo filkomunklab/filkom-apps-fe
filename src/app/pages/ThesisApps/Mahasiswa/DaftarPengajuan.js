@@ -509,142 +509,176 @@ function DaftarPengajuan() {
         </Div>
       </Div>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead style={{ background: "rgba(26, 56, 96, 0.10)" }}>
-            <TableRow>
-              <TableCell style={{ width: "60px", margin: "0 100px" }}>
-                No
-              </TableCell>
-              <TableCell style={{ width: "800px", margin: "0 100px" }}>
-                Judul
-              </TableCell>
-              <TableCell style={{ width: "200px", margin: "0 100px" }}>
-                Status Judul
-              </TableCell>
-              <TableCell style={{ width: "200px", margin: "0 100px" }}>
-                Status Proposal
-              </TableCell>
-              <TableCell style={{ width: "200px", margin: "0 100px" }}>
-                Status Skripsi
-              </TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {daftarPengajuan.map((pengajuan, index) => (
-              <TableRow key={index}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{pengajuan.title}</TableCell>
-                <TableCell>
-                  {pengajuan.is_approve === "Waiting" ? (
-                    <Chip
-                      label={"Menunggu"}
-                      sx={{
-                        background: "rgba(255, 204, 0, 0.10)",
-                        color: "#985211",
-                      }}
-                    />
-                  ) : pengajuan.is_approve === "Approve" ? (
-                    <Chip
-                      label={"Diterima"}
-                      sx={{
-                        background: "rgba(21, 131, 67, 0.10)",
-                        color: "#0A7637",
-                      }}
-                    />
-                  ) : pengajuan.is_approve === "Rejected" ? (
-                    <Chip
-                      label={"Ditolak"}
-                      sx={{
-                        background: "rgba(226, 29, 18, 0.10)",
-                        color: "#CA150C",
-                      }}
-                    />
-                  ) : (
-                    pengajuan.is_approve
-                  )}
+      {daftarPengajuan.length > 0 ? (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead style={{ background: "rgba(26, 56, 96, 0.10)" }}>
+              <TableRow>
+                <TableCell style={{ width: "60px", margin: "0 100px" }}>
+                  No
                 </TableCell>
-                <TableCell>
-                  {pengajuan.is_pass_proposal === null ? (
-                    <Chip label={"Belum"} />
-                  ) : pengajuan.is_pass_proposal === "Repeat" ? (
-                    <Chip
-                      label={"Mengulang"}
-                      sx={{
-                        background: "rgba(255, 204, 0, 0.10)",
-                        color: "#985211",
-                      }}
-                    />
-                  ) : pengajuan.is_pass_proposal === "Pass" ? (
-                    <Chip
-                      label={"Lulus"}
-                      sx={{
-                        background: "rgba(21, 131, 67, 0.10)",
-                        color: "#0A7637",
-                      }}
-                    />
-                  ) : pengajuan.is_pass_proposal === "Fail" ? (
-                    <Chip
-                      label={"Tidak Lulus"}
-                      sx={{
-                        background: "rgba(226, 29, 18, 0.10)",
-                        color: "#CA150C",
-                      }}
-                    />
-                  ) : (
-                    pengajuan.is_pass_proposal
-                  )}
+                <TableCell style={{ width: "800px", margin: "0 100px" }}>
+                  Judul
                 </TableCell>
-                <TableCell>
-                  {pengajuan.is_pass_skripsi === null ? (
-                    <Chip label={"Belum"} />
-                  ) : pengajuan.is_pass_skripsi === "Repeat" ? (
-                    <Chip
-                      label={"Mengulang"}
-                      sx={{
-                        background: "rgba(255, 204, 0, 0.10)",
-                        color: "#985211",
-                      }}
-                    />
-                  ) : pengajuan.is_pass_skripsi === "Pass" ? (
-                    <Chip
-                      label={"Lulus"}
-                      sx={{
-                        background: "rgba(21, 131, 67, 0.10)",
-                        color: "#0A7637",
-                      }}
-                    />
-                  ) : pengajuan.is_pass_skripsi === "Fail" ? (
-                    <Chip
-                      label={"Tidak Lulus"}
-                      sx={{
-                        background: "rgba(226, 29, 18, 0.10)",
-                        color: "#CA150C",
-                      }}
-                    />
-                  ) : (
-                    pengajuan.is_pass_skripsi
-                  )}
+                <TableCell style={{ width: "200px", margin: "0 100px" }}>
+                  Status Judul
                 </TableCell>
-                <TableCell>
-                  <Link
-                    href="#"
-                    to={`/sistem-informasi-skripsi/daftar-pengajuan/beranda/${pengajuan.group_id}/MAHASISWA`}
-                    style={{
-                      textDecoration: "none",
-                      color: "blue",
-                      fontSize: "12px",
-                    }}
-                  >
-                    Detail
-                  </Link>
+                <TableCell style={{ width: "200px", margin: "0 100px" }}>
+                  Status Proposal
                 </TableCell>
+                <TableCell style={{ width: "200px", margin: "0 100px" }}>
+                  Status Skripsi
+                </TableCell>
+                <TableCell>Action</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {daftarPengajuan?.map((pengajuan, index) => (
+                <TableRow key={index}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{pengajuan.title}</TableCell>
+                  <TableCell>
+                    {pengajuan.is_approve === "Waiting" ? (
+                      <Chip
+                        label={"Menunggu"}
+                        sx={{
+                          background: "rgba(255, 204, 0, 0.10)",
+                          color: "#985211",
+                        }}
+                      />
+                    ) : pengajuan.is_approve === "Approve" ? (
+                      <Chip
+                        label={"Diterima"}
+                        sx={{
+                          background: "rgba(21, 131, 67, 0.10)",
+                          color: "#0A7637",
+                        }}
+                      />
+                    ) : pengajuan.is_approve === "Rejected" ? (
+                      <Chip
+                        label={"Ditolak"}
+                        sx={{
+                          background: "rgba(226, 29, 18, 0.10)",
+                          color: "#CA150C",
+                        }}
+                      />
+                    ) : (
+                      pengajuan.is_approve
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {pengajuan.is_pass_proposal === null ? (
+                      <Chip label={"Belum"} />
+                    ) : pengajuan.is_pass_proposal === "Repeat" ? (
+                      <Chip
+                        label={"Mengulang"}
+                        sx={{
+                          background: "rgba(255, 204, 0, 0.10)",
+                          color: "#985211",
+                        }}
+                      />
+                    ) : pengajuan.is_pass_proposal === "Pass" ? (
+                      <Chip
+                        label={"Lulus"}
+                        sx={{
+                          background: "rgba(21, 131, 67, 0.10)",
+                          color: "#0A7637",
+                        }}
+                      />
+                    ) : pengajuan.is_pass_proposal === "Fail" ? (
+                      <Chip
+                        label={"Tidak Lulus"}
+                        sx={{
+                          background: "rgba(226, 29, 18, 0.10)",
+                          color: "#CA150C",
+                        }}
+                      />
+                    ) : (
+                      pengajuan.is_pass_proposal
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {pengajuan.is_pass_skripsi === null ? (
+                      <Chip label={"Belum"} />
+                    ) : pengajuan.is_pass_skripsi === "Repeat" ? (
+                      <Chip
+                        label={"Mengulang"}
+                        sx={{
+                          background: "rgba(255, 204, 0, 0.10)",
+                          color: "#985211",
+                        }}
+                      />
+                    ) : pengajuan.is_pass_skripsi === "Pass" ? (
+                      <Chip
+                        label={"Lulus"}
+                        sx={{
+                          background: "rgba(21, 131, 67, 0.10)",
+                          color: "#0A7637",
+                        }}
+                      />
+                    ) : pengajuan.is_pass_skripsi === "Fail" ? (
+                      <Chip
+                        label={"Tidak Lulus"}
+                        sx={{
+                          background: "rgba(226, 29, 18, 0.10)",
+                          color: "#CA150C",
+                        }}
+                      />
+                    ) : (
+                      pengajuan.is_pass_skripsi
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      href="#"
+                      to={`/sistem-informasi-skripsi/daftar-pengajuan/beranda/${pengajuan.group_id}/MAHASISWA`}
+                      style={{
+                        textDecoration: "none",
+                        color: "blue",
+                        fontSize: "12px",
+                      }}
+                    >
+                      Detail
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <Div
+          sx={{
+            display: "flex",
+            padding: "29px 42px",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: 2,
+            alignSelf: "stretch",
+            borderRadius: "8px",
+            border: "1px solid #E0E0E0",
+            background: "#FFF",
+            boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+          }}
+        >
+          <Typography
+            sx={{
+              width: "100%",
+              display: "flex",
+              padding: "24px",
+              alignItems: "center",
+              gap: "10px",
+              color: "#CA150C",
+              background: "rgba(226, 29, 18, 0.50)",
+              borderRadius: "6px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Anda belum melakukan pengajuan.
+          </Typography>
+        </Div>
+      )}
 
       <Dialog open={open} onClose={handleClose} maxWidth="xl" fullWidth>
         <DialogTitle
@@ -702,8 +736,7 @@ function DaftarPengajuan() {
                   },
                 }}
               >
-                <MenuItem value>-</MenuItem>
-                {daftarKelas.map((kelasItem, index) => (
+                {daftarKelas?.map((kelasItem, index) => (
                   <MenuItem key={index} value={kelasItem.value}>
                     {kelasItem.label}
                   </MenuItem>
@@ -765,7 +798,7 @@ function DaftarPengajuan() {
                       style={{ marginBottom: "25px", width: "400px" }}
                     >
                       {daftarPartner
-                        ? daftarPartner.map((partner, partnerIndex) => (
+                        ? daftarPartner?.map((partner, partnerIndex) => (
                             <MenuItem key={partnerIndex} value={partner}>
                               {partner.fullName}
                             </MenuItem>
@@ -917,7 +950,7 @@ function DaftarPengajuan() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {UploadedFiles.map((file, index) => (
+                  {UploadedFiles?.map((file, index) => (
                     <TableRow key={index}>
                       <TableCell sx={{ fontSize: "12px" }}>
                         {index + 1}
@@ -1007,8 +1040,7 @@ function DaftarPengajuan() {
                     },
                   }}
                 >
-                  <MenuItem value="">-</MenuItem>
-                  {daftarDosen.map((dosen) => (
+                  {daftarDosen?.map((dosen) => (
                     <MenuItem key={dosen.id} value={dosen.id}>
                       {dosen.name}
                     </MenuItem>
@@ -1048,7 +1080,7 @@ function DaftarPengajuan() {
                   }}
                 >
                   <MenuItem value="">-</MenuItem>
-                  {daftarDosen.map((dosen) => (
+                  {daftarDosen?.map((dosen) => (
                     <MenuItem key={dosen.id} value={dosen.id}>
                       {dosen.name}
                     </MenuItem>
@@ -1081,7 +1113,7 @@ function DaftarPengajuan() {
                   }}
                 >
                   <MenuItem value="">-</MenuItem>
-                  {daftarDosen.map((dosen) => (
+                  {daftarDosen?.map((dosen) => (
                     <MenuItem key={dosen.id} value={dosen.id}>
                       {dosen.name}
                     </MenuItem>

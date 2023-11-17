@@ -3,7 +3,11 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const MenuSekertaris = () => {
+const MenuSekertaris = ({
+  dataGroupId: groupId,
+  dataProgress: progress,
+  page: setPage,
+}) => {
   return (
     <Div>
       {/* Menu Horizontal Start */}
@@ -22,16 +26,22 @@ const MenuSekertaris = () => {
       >
         <Div sx={{ width: "100%", display: "flex" }}>
           <Div sx={{ margin: "auto" }}>
-            <Link to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi/beranda">
+            <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan-${
+                (progress === "Proposal" && "proposal") ||
+                (progress === "Skripsi" && "skripsi") ||
+                (progress === "Finished" && "skripsi")
+              }/beranda/${groupId}/OPERATOR_FILKOM`}
+            >
               <Button
                 sx={{
                   fontSize: "13px",
                   padding: "6px 16px",
                   fontWeight: 500,
-                  color: "#192434",
+                  color: setPage === "Beranda" ? "#006AF5" : "#192434",
                   textTransform: "none",
                   "&:hover": {
-                    color: "#006AF5",
+                    color: setPage === "Beranda" ? "#006AF5" : "#006AF5",
                   },
                 }}
               >
@@ -40,16 +50,22 @@ const MenuSekertaris = () => {
             </Link>
           </Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi/jadwal-sidang">
+            <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan-${
+                (progress === "Proposal" && "proposal") ||
+                (progress === "Skripsi" && "skripsi") ||
+                (progress === "Finished" && "skripsi")
+              }/jadwal-sidang/${groupId}/OPERATOR_FILKOM`}
+            >
               <Button
                 sx={{
                   // width: "150px",
                   fontSize: "13px",
                   fontWeight: 500,
-                  color: "#192434",
+                  color: setPage === "Jadwal Sidang" ? "#006AF5" : "#192434",
                   textTransform: "none",
                   "&:hover": {
-                    color: "#006AF5",
+                    color: setPage === "Jadwal Sidang" ? "#006AF5" : "#006AF5",
                   },
                 }}
               >
@@ -58,16 +74,22 @@ const MenuSekertaris = () => {
             </Link>
           </Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi/konsultasi">
+            <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan-${
+                (progress === "Proposal" && "proposal") ||
+                (progress === "Skripsi" && "skripsi") ||
+                (progress === "Finished" && "skripsi")
+              }/konsultasi/${groupId}/OPERATOR_FILKOM`}
+            >
               <Button
                 sx={{
                   // width: "130px",
                   fontSize: "13px",
                   fontWeight: 500,
-                  color: "#192434",
+                  color: setPage === "Konsultasi" ? "#006AF5" : "#192434",
                   textTransform: "none",
                   "&:hover": {
-                    color: "#006AF5",
+                    color: setPage === "Konsultasi" ? "#006AF5" : "#006AF5",
                   },
                 }}
               >
@@ -76,16 +98,23 @@ const MenuSekertaris = () => {
             </Link>
           </Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi/dokumen-proposal">
+            <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan-${
+                (progress === "Proposal" && "proposal") ||
+                (progress === "Skripsi" && "skripsi") ||
+                (progress === "Finished" && "skripsi")
+              }/dokumen-proposal/${groupId}/OPERATOR_FILKOM`}
+            >
               <Button
                 sx={{
                   // width: "130px",
                   fontSize: "13px",
                   fontWeight: 500,
-                  color: "#192434",
+                  color: setPage === "Dokumen Proposal" ? "#006AF5" : "#192434",
                   textTransform: "none",
                   "&:hover": {
-                    color: "#006AF5",
+                    color:
+                      setPage === "Dokumen Proposal" ? "#006AF5" : "#006AF5",
                   },
                 }}
               >
@@ -94,16 +123,23 @@ const MenuSekertaris = () => {
             </Link>
           </Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="/sistem-informasi-skripsi/daftar-pengajuan-skripsi/dokumen-skripsi">
+            <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan-${
+                (progress === "Proposal" && "proposal") ||
+                (progress === "Skripsi" && "skripsi") ||
+                (progress === "Finished" && "skripsi")
+              }/dokumen-skripsi/${groupId}/OPERATOR_FILKOM`}
+            >
               <Button
                 sx={{
                   // width: "130px",
                   fontSize: "13px",
                   fontWeight: 500,
-                  color: "#192434",
+                  color: setPage === "Dokumen Skripsi" ? "#006AF5" : "#192434",
                   textTransform: "none",
                   "&:hover": {
-                    color: "#006AF5",
+                    color:
+                      setPage === "Dokumen Skripsi" ? "#006AF5" : "#006AF5",
                   },
                 }}
               >

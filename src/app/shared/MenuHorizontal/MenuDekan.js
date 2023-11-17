@@ -34,8 +34,10 @@ const MenuDekan = ({
               {/* BERANDA */}
               <Button
                 component={Link}
-                to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                  (progress === "Submissioni" && "judul-") ||
+                to={`/sistem-informasi-skripsi/daftar-${
+                  progress === "Finished" ? "riwayat-" : "pengajuan-"
+                }${
+                  (progress === "Submission" && "judul-") ||
                   (progress === "Proposal" && "proposal-") ||
                   (progress === "Skripsi" && "skripsi-") ||
                   (progress === "Finished" && "skripsi-")
@@ -65,8 +67,10 @@ const MenuDekan = ({
             <Div sx={{ margin: "auto" }}>
               <Button
                 component={Link}
-                to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                  (progress === "Submissioni" && "judul-") ||
+                to={`/sistem-informasi-skripsi/daftar-${
+                  progress === "Finished" ? "riwayat-" : "pengajuan-"
+                }${
+                  (progress === "Submission" && "judul-") ||
                   (progress === "Proposal" && "proposal-") ||
                   (progress === "Skripsi" && "skripsi-") ||
                   (progress === "Finished" && "skripsi-")
@@ -99,8 +103,10 @@ const MenuDekan = ({
 
               <Button
                 component={Link}
-                to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                  (progress === "Submissioni" && "judul-") ||
+                to={`/sistem-informasi-skripsi/daftar-${
+                  progress === "Finished" ? "riwayat-" : "pengajuan-"
+                }${
+                  (progress === "Submission" && "judul-") ||
                   (progress === "Proposal" && "proposal-") ||
                   (progress === "Skripsi" && "skripsi-") ||
                   (progress === "Finished" && "skripsi-")
@@ -176,8 +182,10 @@ const MenuDekan = ({
               >
                 {/* DOKUMEN PROPOSAL */}
                 <Link
-                  to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                    (progress === "Submissioni" && "judul-") ||
+                  to={`/sistem-informasi-skripsi/daftar-${
+                    progress === "Finished" ? "riwayat-" : "pengajuan-"
+                  }${
+                    (progress === "Submission" && "judul-") ||
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "skripsi-")
@@ -204,11 +212,12 @@ const MenuDekan = ({
                 {/* BERITA ACARA PROPOSAL */}
                 <Link
                   to={`/sistem-informasi-skripsi/daftar-${
-                    progress === "Finished" ? "riwayat-" : ""
-                  }pengujian-${
+                    progress === "Finished" ? "riwayat-" : "pengajuan-"
+                  }${
+                    (progress === "Submission" && "judul-") ||
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
-                    (progress === "Finished" && "")
+                    (progress === "Finished" && "skripsi-")
                   }dekan/berita-acara-proposal/${groupId}/DEKAN`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
@@ -233,8 +242,10 @@ const MenuDekan = ({
                 </Link>
                 {/* DOKUMEN REVISI PROPOSAL */}
                 <Link
-                  to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                    (progress === "Submissioni" && "judul-") ||
+                  to={`/sistem-informasi-skripsi/daftar-${
+                    progress === "Finished" ? "riwayat-" : "pengajuan-"
+                  }${
+                    (progress === "Submission" && "judul-") ||
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "skripsi-")
@@ -311,8 +322,10 @@ const MenuDekan = ({
               >
                 {/* DOKUMEN SKRIPSI */}
                 <Link
-                  to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                    (progress === "Submissioni" && "judul-") ||
+                  to={`/sistem-informasi-skripsi/daftar-${
+                    progress === "Finished" ? "riwayat-" : "pengajuan-"
+                  }${
+                    (progress === "Submission" && "judul-") ||
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "skripsi-")
@@ -337,11 +350,12 @@ const MenuDekan = ({
                 {/* BERITA ACARA SKRIPSI */}
                 <Link
                   to={`/sistem-informasi-skripsi/daftar-${
-                    progress === "Finished" ? "riwayat-" : ""
-                  }pengujian-${
+                    progress === "Finished" ? "riwayat-" : "pengajuan-"
+                  }${
+                    (progress === "Submission" && "judul-") ||
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
-                    (progress === "Finished" && "")
+                    (progress === "Finished" && "skripsi-")
                   }dekan/berita-acara-skripsi/${groupId}/DEKAN`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
@@ -366,8 +380,10 @@ const MenuDekan = ({
                 </Link>
                 {/* DOKUMEN REVISI SKRIPSI */}
                 <Link
-                  to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                    (progress === "Submissioni" && "judul-") ||
+                  to={`/sistem-informasi-skripsi/daftar-${
+                    progress === "Finished" ? "riwayat-" : "pengajuan-"
+                  }${
+                    (progress === "Submission" && "judul-") ||
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "skripsi-")

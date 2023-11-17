@@ -29,6 +29,7 @@ import PerubahanProposalCoAdvisor from "app/pages/ThesisApps/Dosen/PerubahanProp
 import PerubahanSkripsiCoAvisor from "app/pages/ThesisApps/Dosen/PerubahanSkripsiCoAdvisor";
 import ManajemenKelasDosenSkripsi from "app/pages/ThesisApps/Dosen/ManajemenKelasDosenSkripsi";
 import DaftarRiwayatNilaiDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarRiwayatNilaiDosenSkripsi";
+import PengajuanJudulDosen from "app/pages/ThesisApps/Dosen/PengajuanJudulDosen";
 
 const dosenRoutes = [
   // KOMITE
@@ -36,6 +37,10 @@ const dosenRoutes = [
   {
     path: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
     element: <Page component={DaftarKomiteJudulDosen} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-komite-judul-dosen/pengajuan-judul/:groupId/:role",
+    element: <Page component={PengajuanJudulDosen} />,
   },
   // PENGJAJUAN
   // ----------Dosen Skripsi

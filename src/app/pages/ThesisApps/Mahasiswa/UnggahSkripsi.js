@@ -31,7 +31,7 @@ const PDFViewerSkripsi = ({ dokumenSkripsi }) => {
   return (
     <div>
       <span sx={{ fontSize: "10px" }} onClick={viewPDFSkripsi}>
-        Detail
+        Lihat
       </span>
     </div>
   );
@@ -49,7 +49,7 @@ const PDFViewerPayment = ({ paymentFile }) => {
 
   return (
     <div>
-      <span onClick={viewPDFPayment}>Detail</span>
+      <span onClick={viewPDFPayment}>Lihat</span>
     </div>
   );
 };
@@ -66,7 +66,7 @@ const PDFViewerCekPlagiat = ({ plagiarismFile }) => {
 
   return (
     <div>
-      <span onClick={viewPDFCekPlagiat}>Detail</span>
+      <span onClick={viewPDFCekPlagiat}>Lihat</span>
     </div>
   );
 };
@@ -936,7 +936,9 @@ const UploadSkipsi = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              <PDFViewerSkripsi skripsiFile={dokumenSkripsi} />
+                              <PDFViewerSkripsi
+                                dokumenSkripsi={dokumenSkripsi}
+                              />
                             </span>
                             <Div
                               style={{

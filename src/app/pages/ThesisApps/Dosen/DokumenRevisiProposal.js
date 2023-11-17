@@ -27,6 +27,25 @@ import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
 import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
 import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 
+// View Document Revisi
+const PDFViewerProposal = ({ dokumenRevisi }) => {
+  const viewPDFProposal = () => {
+    // Buat URL objek untuk file PDF
+    const pdfURL = dokumenRevisi?.file_path_revision;
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span sx={{ fontSize: "10px" }} onClick={viewPDFProposal}>
+        Detail
+      </span>
+    </div>
+  );
+};
+
 const DokumenRevisiProposal = () => {
   // state - menyimpan request data
   const [dokumenRevisi, setDokumenRevisi] = useState();
@@ -1201,7 +1220,9 @@ const DokumenRevisiProposal = () => {
                                 padding: "5px 0",
                               }}
                             >
-                              Lihat
+                              <PDFViewerProposal
+                                dokumenRevisi={dokumenRevisi}
+                              />
                             </span>
                           )}
                           {/* Menampilkan pengisian ADVISOR, KETUA PANALIS, DAN ANGGOTA PANALIS */}

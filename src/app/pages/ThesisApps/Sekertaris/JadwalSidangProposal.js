@@ -142,7 +142,7 @@ const JadwalSidangProposal = () => {
     ruangan: "",
   });
 
-  const handlePerbarui = (selectedProposalId) => {
+  const handlePerbarui = () => {
     let hasError = false;
     const newErrorMessages = {};
 
@@ -187,7 +187,9 @@ const JadwalSidangProposal = () => {
     } else {
       setKonfirmasiDialog(true);
     }
+  };
 
+  const handlePerbaruiJadwal = () => {
     // Buat objek jadwal baru
     const jadwalBaru = {
       panelist_chairman_id: selectedKetuaPenelis || null,
@@ -246,7 +248,28 @@ const JadwalSidangProposal = () => {
             );
           }
         };
-        fetchDaftarJadwalProposal();
+        const fetchDaftarDosen = async () => {
+          try {
+            const response = await axios.get(
+              "http://localhost:2000/api/v1/group/dosen-list",
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            // Atur state 'setDaftarDosen' dengan data dari respons
+            setDaftarDosen(response.data.data);
+            console.log("Request Daftar Dosen", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil daftar jadwal:",
+              error
+            );
+          }
+        };
+        fetchDaftarJadwalProposal(); // Panggil fungsi fetchData saat komponen dimuat
+        fetchDaftarDosen();
       })
       .catch((error) => {
         console.error("Terjadi kesalahan:", error);
@@ -428,7 +451,7 @@ const JadwalSidangProposal = () => {
                               <Div sx={{ display: "flex" }}>
                                 <Typography
                                   component={Link}
-                                  to="/halaman-berikutnya"
+                                  to={`/sistem-informasi-skripsi/daftar-jadwal-sidang-proposal/beranda/${jadwal.group_id}/OPERATOR_FILKOM`}
                                   sx={{
                                     textDecoration: "none",
                                     color: "blue",
@@ -773,11 +796,18 @@ const JadwalSidangProposal = () => {
                   }}
                   error={!!errorMessages.selectedKetuaPenelis}
                 >
-                  {daftarDosen.map((dosen) => (
-                    <MenuItem key={dosen.id} value={dosen.id}>
-                      {dosen.name}
-                    </MenuItem>
-                  ))}
+                  {daftarDosen
+                    ?.filter(
+                      (dosen) =>
+                        dosen.id !== selectedKetuaPenelis &&
+                        dosen.id !== selectedAnggotaPenelis &&
+                        dosen.name !== selectedAdvisor
+                    )
+                    ?.map((dosen) => (
+                      <MenuItem key={dosen.id} value={dosen.id}>
+                        {dosen.name}
+                      </MenuItem>
+                    ))}
                 </Select>
                 <FormHelperText error={!!errorMessages.selectedKetuaPenelis}>
                   {errorMessages.selectedKetuaPenelis}
@@ -813,11 +843,18 @@ const JadwalSidangProposal = () => {
                   }}
                   error={!!errorMessages.selectedAnggotaPenelis}
                 >
-                  {daftarDosen.map((dosen) => (
-                    <MenuItem key={dosen.id} value={dosen.id}>
-                      {dosen.name}
-                    </MenuItem>
-                  ))}
+                  {daftarDosen
+                    ?.filter(
+                      (dosen) =>
+                        dosen.id !== selectedKetuaPenelis &&
+                        dosen.id !== selectedAnggotaPenelis &&
+                        dosen.name !== selectedAdvisor
+                    )
+                    ?.map((dosen) => (
+                      <MenuItem key={dosen.id} value={dosen.id}>
+                        {dosen.name}
+                      </MenuItem>
+                    ))}
                 </Select>
                 <FormHelperText error={!!errorMessages.selectedAnggotaPenelis}>
                   {errorMessages.selectedAnggotaPenelis}
@@ -841,7 +878,6 @@ const JadwalSidangProposal = () => {
                     ),
                   }}
                   value={selectedAdvisor}
-                  onChange={(event) => setSelectedAdvisor(event.target.value)}
                 />
               </FormControl>
             </Div>
@@ -1020,7 +1056,7 @@ const JadwalSidangProposal = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => handlePerbarui(selectedProposalId)}
+            onClick={handlePerbaruiJadwal}
             sx={{ textTransform: "none" }}
           >
             Perbarui

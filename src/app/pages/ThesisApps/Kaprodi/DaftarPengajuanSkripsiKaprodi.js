@@ -500,7 +500,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
                             <TableCell>
                               <Typography
                                 component={Link}
-                                to="/halaman-berikutnya"
+                                to={`/sistem-informasi-skripsi/daftar-pengajuan-skripsi-kaprodi/beranda/${skripsi.group_id}/KAPRODI`}
                                 sx={{
                                   textDecoration: "none",
                                   color: "blue",
