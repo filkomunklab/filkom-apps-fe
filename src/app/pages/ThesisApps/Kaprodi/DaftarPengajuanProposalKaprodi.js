@@ -502,7 +502,7 @@ const DaftarPengajuanProposalKaprodi = () => {
                               <TableCell>
                                 <Typography
                                   component={Link}
-                                  to="/sistem-informasi-skripsi/daftar-pengajuan-proposal-kaprodi/beranda/23542432/kaprodi"
+                                  to={`/sistem-informasi-skripsi/daftar-pengajuan-proposal-kaprodi/beranda/${proposal.group_id}/KAPRODI`}
                                   sx={{
                                     textDecoration: "none",
                                     color: "blue",

@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
 import {
-  Button,
   Chip,
-  Dialog,
-  DialogContent,
-  Menu,
-  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -15,147 +12,79 @@ import {
   TableHead,
   TableRow,
   Typography,
-  TextareaAutosize,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
-  InputLabel,
-  Select,
-  DialogTitle,
-  DialogContentText,
-  DialogActions,
+  Paper,
 } from "@mui/material";
+import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
+
+// View Document pengajuan judul
+const PDFViewerPengajuanJudul = ({ pengajuanJudulFile }) => {
+  const viewPDFPengajuanJudul = () => {
+    // Buat URL objek untuk file PDF
+    const pdfURL = URL.createObjectURL(pengajuanJudulFile);
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span onClick={viewPDFPengajuanJudul}>Lihat</span>
+    </div>
+  );
+};
 
 const PengajuanJudul = () => {
-  // State untuk input select
-  const [selectedOption, setSelectedOption] = useState("");
+  // state - simpan request pengajuan judul
+  const [pengajuanJudul, setPengajuanJudul] = useState();
+  const [daftarDosen, setDaftarDosen] = useState();
 
-  // menyembunyikan status
-  const [isStatusVisible, setStatusVisible] = useState(true);
+  const [submissionId, setSubmissionId] = useState(null);
 
-  const [initialSelectedOption, setInitialSelectedOption] = useState("");
+  const groupId = useParams().groupId;
+  console.log("group id: ", groupId);
 
-  const [advisor, setAdvisor] = useState(""); // State untuk advisor
-  const [coAdvisor1, setCoAdvisor1] = useState(""); // State untuk co-advisor 1
-  const [coAdvisor2, setCoAdvisor2] = useState(""); // State untuk co-advisor 2
+  const token = localStorage.getItem("token");
+  console.log("token", token);
 
-  // State untuk option yang dipilih pada dialog
-
-  // State untuk mengelola berbagai data termasuk judul, latar belakang, dll.
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [judul, setJudul] = useState(
-    "Pengembangan Sistem Informasi Skripsi di Fakultas Ilmu Komputer Universitas Klabat"
-  );
-  const [latarBelakang, setLatarBelakang] = useState("tuliskan kalimat disini");
-  const [rumusanMasalah, setRumusanMasalah] = useState(
-    "tuliskan kalimat disini"
-  );
-  const [tujuan, setTujuan] = useState("tuliskan kalimat disini");
-  const [manfaat, setManfaat] = useState("tuliskan kalimat disini ");
-  const [cakupan, setCakupan] = useState("tuliskan kalimat disini");
-  const [batasan, setBatasan] = useState("tuliskan kalimat disini");
-
-  // State untuk manajemen dialog konfirmasi perubahan judul
-  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const [initialJudul, setInitialJudul] = useState(judul);
-  const [initialLatarBelakang, setInitialLatarBelakang] =
-    useState(latarBelakang);
-  const [initialRumusanMasalah, setInitialRumusanMasalah] =
-    useState(rumusanMasalah);
-  const [initialTujuan, setInitialTujuan] = useState(tujuan);
-  const [initialManfaat, setInitialManfaat] = useState(manfaat);
-  const [initialCakupan, setInitialCakupan] = useState(cakupan);
-  const [initialBatasan, setInitialBatasan] = useState(batasan);
-
-  const handleCancelAllEdits = () => {
-    setJudul(initialJudul);
-    setLatarBelakang(initialLatarBelakang);
-    setRumusanMasalah(initialRumusanMasalah);
-    setTujuan(initialTujuan);
-    setManfaat(initialManfaat);
-    setCakupan(initialCakupan);
-    setBatasan(initialBatasan);
-    setIsEditing(false);
-    setSelectedOption(initialSelectedOption);
-    setStatusVisible(true);
-  };
-
-  const open = Boolean(anchorEl);
-
-  // Fungsi yang dipanggil ketika tombol "Ubah" ditekan
-  const handleEditClick = () => {
-    setIsEditing(true);
-    setInitialSelectedOption(selectedOption);
-    setStatusVisible(false); // Menyembunyikan status dan chip
-    setInitialJudul(judul); // Simpan nilai awal judul
-    setInitialLatarBelakang(latarBelakang); // Simpan nilai awal latar belakang
-    setInitialTujuan(tujuan); // Simpan nilai awal tujuan
-    setInitialManfaat(manfaat); // Simpan nilai awal manfaat
-    setInitialCakupan(cakupan); // Simpan nilai awal cakupan
-    setInitialBatasan(batasan); // Simpan nilai awal batasan
-  };
-
-  // Fungsi yang dipanggil ketika tombol "Batal" ditekan dalam mode edit
-  const handleCancelEdit = () => {
-    setJudul(initialJudul);
-    setLatarBelakang(initialLatarBelakang); // Kembalikan nilai awal latar belakang
-    setIsEditing(false);
-    setSelectedOption(initialSelectedOption);
-    setStatusVisible(true); // Menampilkan kembali status dan chip
-  };
-
-  // Fungsi yang dipanggil ketika tombol "Simpan" ditekan
-  const handleSaveClick = () => {
-    openConfirmationDialog();
-    setStatusVisible(true); // Menampilkan kembali status dan chip
-  };
-
-  // Fungsi yang dipanggil ketika isi judul berubah
-  const handleJudulChange = (event) => {
-    setJudul(event.target.value);
-  };
-
-  // Fungsi untuk membuka dialog konfirmasi
-  const openConfirmationDialog = () => {
-    setIsConfirmationOpen(true);
-  };
-
-  // Fungsi untuk menutup dialog konfirmasi
-  const closeConfirmationDialog = () => {
-    setIsConfirmationOpen(false);
-  };
-
-  // Fungsi yang dipanggil ketika isi latar belakang berubah
-  const handleLatarBelakangChange = (event) => {
-    setLatarBelakang(event.target.value);
-  };
-
-  // Fungsi yang dipanggil ketika isi rumusan masalah berubah
-  const handleRumusanMasalahChange = (event) => {
-    setRumusanMasalah(event.target.value);
-  };
-
-  // Fungsi yang dipanggil ketika isi tujuan berubah
-  const handleTujuanChange = (event) => {
-    setTujuan(event.target.value);
-  };
-
-  // Fungsi yang dipanggil ketika isi manfaat berubah
-  const handleManfaatChange = (event) => {
-    setManfaat(event.target.value);
-  };
-
-  // Fungsi yang dipanggil ketika isi cakupan berubah
-  const handleCakupanChange = (event) => {
-    setCakupan(event.target.value);
-  };
-
-  // Fungsi yang dipanggil ketika isi batasan berubah
-  const handleBatasanChange = (event) => {
-    setBatasan(event.target.value);
-  };
+  useEffect(() => {
+    const fetchPengajuanJudulData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/submission/${submissionId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setPengajuanJudul(response.data.data);
+        console.log("Request Get pengajuan judul: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil pengajuan judul:",
+          error
+        );
+      }
+    };
+    const fetchDaftarDosenData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/dosen-list`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDaftarDosen(response.data.data);
+        console.log("Request Get daftar dosen: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil daftar dosen:", error);
+      }
+    };
+    fetchPengajuanJudulData();
+    fetchDaftarDosenData();
+  }, [token, submissionId]);
   return (
     <Div>
       <Div
@@ -169,7 +98,7 @@ const PengajuanJudul = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Beranda
+          Pengajuan Judul
         </Typography>
       </Div>
 
@@ -183,7 +112,7 @@ const PengajuanJudul = () => {
         {/* Element 1 Start */}
         <Div
           sx={{
-            display: "flex",
+            display: "none",
             width: "350px",
             padding: "5px",
             flexDirection: "column",
@@ -193,139 +122,14 @@ const PengajuanJudul = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          {/* Riwayat Log Start */}
-          <Div
-            sx={{
-              width: "320px",
-              height: "500px",
-              borderRadius: "6px",
-              border: "1px solid rgba(26, 56, 96, 0.10)",
-              background: "#FFF",
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(data) => {
+              if (data) {
+                setSubmissionId(data.submission_id);
+              }
             }}
-          >
-            Riwayat Log
-          </Div>
-          {/* Riwayat Log End */}
-
-          {/* Dosen Pembimbing Start */}
-          <Div
-            sx={{
-              display: "flex",
-              width: "320px",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              borderRadius: "6px",
-              border: "1px solid rgba(26, 56, 96, 0.10)",
-              background: "#FFF",
-            }}
-          >
-            {/* Advisor */}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Advisor
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-            {/* Co-Advisor 1*/}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Co-Advisor 1
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-            {/* Co-Advisor 2*/}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Co-Advisor 2
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-          </Div>
-          {/* Dosen Pembimbing End */}
+          />
         </Div>
         {/* Element 1 End */}
         {/* Element 2 Start */}
@@ -341,42 +145,6 @@ const PengajuanJudul = () => {
             borderRadius: "8px",
           }}
         >
-          {/* Menu Horizontal Start */}
-          <Div
-            sx={{
-              display: "flex",
-              // padding: "5px 16px",
-              width: "100%",
-              alignSelf: "stretch",
-              borderRadius: "8px",
-              border: "1px solid #E0E0E0",
-              background: "#FFF",
-              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
-              flexDirection: "column",
-            }}
-          >
-            <Div sx={{ width: "100%", display: "flex" }}>
-              <Link to="#">
-                <Button
-                  sx={{
-                    // width: "150px",
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: "#006AF5",
-                    },
-                    marginLeft: "35px", // Tambahkan margin kiri sesuai kebutuhan Anda
-                  }}
-                >
-                  Pengajuan Judul
-                </Button>
-              </Link>
-            </Div>
-          </Div>
-          {/* Menu horizontal End */}
-
           <Div
             sx={{
               display: "flex",
@@ -392,18 +160,34 @@ const PengajuanJudul = () => {
             }}
           >
             <Div sx={{ marginBottom: "25px" }}>
-              {isStatusVisible && (
-                <>
-                  <Typography>Status</Typography>
-                  <Chip
-                    label="Menunggu"
-                    sx={{
-                      background: "rgba(255, 204, 0, 0.10)",
-                      color: "#985211",
-                      height: "25px",
-                    }}
-                  />
-                </>
+              <Typography>Status</Typography>
+              {pengajuanJudul?.is_approve === "Waiting" ? (
+                <Chip
+                  label="Menunggu"
+                  sx={{
+                    background: "rgba(255, 204, 0, 0.10)",
+                    color: "#985211",
+                    height: "25px",
+                  }}
+                />
+              ) : pengajuanJudul?.is_approve === "Approve" ? (
+                <Chip
+                  label={"Diterima"}
+                  sx={{
+                    background: "rgba(21, 131, 67, 0.10)",
+                    color: "#0A7637",
+                  }}
+                />
+              ) : pengajuanJudul?.is_approve === "Rejected" ? (
+                <Chip
+                  label={"Ditolak"}
+                  sx={{
+                    background: "rgba(226, 29, 18, 0.10)",
+                    color: "#CA150C",
+                  }}
+                />
+              ) : (
+                pengajuanJudul?.is_approve
               )}
             </Div>
             {/* Table Start*/}
@@ -438,170 +222,95 @@ const PengajuanJudul = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>Geovalga Fransiscus Lim</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>2</TableCell>
-                      <TableCell>Frances Rully Yong</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
+                    {pengajuanJudul?.students?.map((student, studentIndex) => (
+                      <TableRow>
+                        <TableCell>{studentIndex + 1}</TableCell>
+                        <TableCell>{student.fullName}</TableCell>
+                        <TableCell>{student.nim}</TableCell>
+                        <TableCell>
+                          {student.major === "IF"
+                            ? "Informatika"
+                            : student.major === "SI"
+                            ? "Sistem Informasi"
+                            : student.major}
+                        </TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
               {/* Table Kelompok mahasiswa End */}
               {/* Judul Start */}
               <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Judul</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={judul}
-                    onChange={handleJudulChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {judul}
-                  </Typography>
-                )}
+                <Typography sx={{ whiteSpace: "pre-line" }}>
+                  {pengajuanJudul?.title}
+                </Typography>
               </Div>
               {/* Judul End */}
-              {/* Latar Belakang Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Latar Belakang Masalah</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={latarBelakang}
-                    onChange={handleLatarBelakangChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {latarBelakang}
-                  </Typography>
-                )}
-              </Div>
-              {/* Latar Belakang End */}
-              {/* Rumusan Masalah Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Rumusan Masalah</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={rumusanMasalah}
-                    onChange={handleRumusanMasalahChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {rumusanMasalah}
-                  </Typography>
-                )}
-              </Div>
-              {/* Rumusan Masalah End */}
-              {/* Tujuan Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Tujuan</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={tujuan}
-                    onChange={handleTujuanChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {tujuan}
-                  </Typography>
-                )}
-              </Div>
-              {/* Tujuan End */}
-              {/* Manfaat Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Manfaat</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={manfaat}
-                    onChange={handleManfaatChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {manfaat}
-                  </Typography>
-                )}
-              </Div>
-              {/* Manfaat End*/}
-              {/* Cakupan Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Cakupan</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={cakupan}
-                    onChange={handleCakupanChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {cakupan}
-                  </Typography>
-                )}
-              </Div>
-              {/* Cakupan End */}
-              {/* Batasan Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Batasan</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={batasan}
-                    onChange={handleBatasanChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {batasan}
-                  </Typography>
-                )}
-              </Div>
-              {/* Batasan End */}
-
+              {/* Table Upload Pengajuan Judul Start*/}
+              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
+                <Table>
+                  <TableHead sx={{ background: "#F5F5F5" }}>
+                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
+                      >
+                        Nama File
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
+                      >
+                        Tanggal Unggah
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                      >
+                        Ukuran
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          textAlign: "center",
+                          width: "12%",
+                        }}
+                      >
+                        Action
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {pengajuanJudul?.file_name}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {pengajuanJudul?.upload_date}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {pengajuanJudul?.file_size} bytes
+                      </TableCell>
+                      <TableCell>
+                        <Div sx={{ display: "flex" }}>
+                          <span
+                            style={{
+                              textDecoration: "none",
+                              cursor: "pointer",
+                              color: "blue",
+                              fontSize: "12px",
+                            }}
+                          >
+                            <PDFViewerPengajuanJudul
+                              pengajuanJudulFile={pengajuanJudul}
+                            />
+                          </span>
+                        </Div>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* Table Upload Pengajuan Judul End*/}
               {/* Select Dosen Pembimbing Start */}
               <Div
                 sx={{
@@ -630,30 +339,63 @@ const PengajuanJudul = () => {
                     }}
                   >
                     <Typography>Calon Advisor</Typography>
-                    <Typography>Andrew T. Liem, MT, PhD</Typography>
+                    <Typography>
+                      {
+                        (
+                          daftarDosen?.find(
+                            (dosen) =>
+                              dosen.id === pengajuanJudul?.proposed_advisor_id
+                          ) || {}
+                        ).name
+                      }
+                    </Typography>
                   </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      gap: "15px",
-                    }}
-                  >
-                    <Typography>Calon Co-Advisor 1</Typography>
-                    <Typography>Senly I. Adam, SKom, MSc</Typography>
-                  </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      gap: "15px",
-                    }}
-                  >
-                    <Typography>Calon Co-Advisor 2</Typography>
-                    <Typography>Stenly R. Pungus, MT, PhD</Typography>
-                  </Div>
+                  {pengajuanJudul?.proposed_co_advisor1_id !== null && (
+                    <Div
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        gap: "15px",
+                      }}
+                    >
+                      <Typography>Calon Co-Advisor 1</Typography>
+                      <Typography>
+                        {
+                          (
+                            daftarDosen?.find(
+                              (dosen) =>
+                                dosen.id ===
+                                pengajuanJudul?.proposed_co_advisor1_id
+                            ) || {}
+                          ).name
+                        }
+                      </Typography>
+                    </Div>
+                  )}
+                  {pengajuanJudul?.proposed_co_advisor2_id !== null && (
+                    <Div
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        gap: "15px",
+                      }}
+                    >
+                      <Typography>Calon Co-Advisor 2</Typography>
+                      <Typography>
+                        {
+                          (
+                            daftarDosen?.find(
+                              (dosen) =>
+                                dosen.id ===
+                                pengajuanJudul?.proposed_co_advisor2_id
+                            ) || {}
+                          ).name
+                        }
+                      </Typography>
+                    </Div>
+                  )}
                 </Div>
               </Div>
               {/* Select Dosen Pembimbing End */}
@@ -677,63 +419,6 @@ const PengajuanJudul = () => {
         </Div>
         {/* Element 2 End */}
       </Div>
-
-      {/* Konfirmasi Dialog */}
-      <Dialog
-        open={isConfirmationOpen}
-        onClose={closeConfirmationDialog}
-        maxWidth="xs"
-        fullWidth
-      >
-        <DialogTitle sx={{ fontSize: "20px", fontWeight: "500" }}>
-          Perbarui Pengajuan Judul
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Apakah Anda yakin ingin memperbarui pengajuan judul?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions sx={{ background: "#F5F5F5" }}>
-          <Button
-            onClick={() => {
-              closeConfirmationDialog();
-              handleCancelEdit();
-              handleCancelAllEdits();
-            }}
-            sx={{
-              textTransform: "none",
-              borderRadius: "6px",
-              border: "#E0E0E0",
-              background: "#FFFF",
-              boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
-              color: "black",
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              closeConfirmationDialog();
-              setIsEditing(false);
-              setInitialJudul(judul);
-              // Simpan perubahan ke server jika diperlukan
-            }}
-            color="primary"
-            sx={{
-              textTransform: "none",
-              borderRadius: "6px",
-              background: "#006AF5",
-              color: "#ffff",
-              "&:hover": {
-                color: "#006AF5",
-              },
-            }}
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* End Konfirmasi Dialog */}
     </Div>
   );
 };

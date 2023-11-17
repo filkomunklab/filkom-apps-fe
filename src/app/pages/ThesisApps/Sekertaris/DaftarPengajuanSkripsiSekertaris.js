@@ -519,7 +519,7 @@ const DaftarPengajuanSkripsiSekertaris = () => {
                             <TableCell>
                               <Typography
                                 component={Link}
-                                to="/halaman-berikutnya"
+                                to={`/sistem-informasi-skripsi/daftar-pengajuan-skripsi/beranda/${skripsi.group_id}/OPERATOR_FILKOM`}
                                 sx={{
                                   textDecoration: "none",
                                   color: "blue",

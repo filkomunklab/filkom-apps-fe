@@ -25,10 +25,10 @@ import {
 } from "@mui/material";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
+import MenuDosen from "app/shared/MenuHorizontal/MenuDosen";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
 import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
 import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
-import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 
 const PengajuanJudulDosenSkripsi = () => {
   // state - simpan request pengajuan judul
@@ -405,45 +405,52 @@ const PengajuanJudulDosenSkripsi = () => {
             borderRadius: "8px",
           }}
         >
-          {/* Menu Horizontal DOSEN Start */}
-          {/* <Div
-            hidden={role.includes("DOSEN", "KAPRODI", "DEKAN") ? false : true}
+          {/* Menu Horizontal Start */}
+          {/* DOSEN */}
+          <Div
+            hidden={userRole === "DOSEN" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuPengajuanJudulDosen />
-          </Div> */}
-          {/* Menu horizontal MAHASISWA End */}
+            <MenuDosen
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Pengajuan Judul"}
+            />
+          </Div>
           {/* DOSEN SKRIPSI */}
           <Div
-            hidden={userRole.includes("DOSEN_MK") ? false : true}
+            hidden={userRole === "DOSEN_MK" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
+            <MenuDosenSkripsi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Pengajuan Judul"}
+            />
           </Div>
-
           {/* DEKAN */}
           <Div
-            hidden={userRole.includes("DEKAN") ? false : true}
+            hidden={userRole === "DEKAN" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuDekan dataGroupId={groupId} dataProgress={progress} />
+            <MenuDekan
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Pengajuan Judul"}
+            />
           </Div>
-
           {/* KAPRODI */}
           <Div
-            hidden={userRole.includes("KARPODI") ? false : true}
+            hidden={userRole === "KAPRODI" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuKaprodi dataGroupId={groupId} dataProgress={progress} />
+            <MenuKaprodi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Pengajuan Judul"}
+            />
           </Div>
-
-          {/* MAHASISWA */}
-          {/* <Div
-            hidden={userRole.includes("MAHASISWA") ? false : true}
-            sx={{ width: "100%" }}
-          >
-            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
-          </Div> */}
+          {/* Menu Horizontal End */}
           <Div
             sx={{
               display: "flex",
@@ -706,7 +713,7 @@ const PengajuanJudulDosenSkripsi = () => {
               {/* Select Dosen Pembimbing End */}
 
               {/* Button Ganti Dosen Pembimbing Start */}
-              <Div hidden={role.includes("DOSEN_MK") ? false : true}>
+              <Div hidden={userRole === "DOSEN_MK" ? false : true}>
                 {gantiAdvisorCoAdvisorButtonVisible && (
                   <Button
                     size="small"
@@ -743,7 +750,7 @@ const PengajuanJudulDosenSkripsi = () => {
               </Div>
             </Div>
             <Div
-              hidden={role.includes("DOSEN_MK") ? false : true}
+              hidden={userRole === "DOSEN_MK" ? false : true}
               sx={{ width: "100%" }}
             >
               {tolakTerimaButtonsVisible && (

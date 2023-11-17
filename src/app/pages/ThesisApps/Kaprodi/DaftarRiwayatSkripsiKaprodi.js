@@ -267,7 +267,7 @@ const RiwayatSkripsiKaprodi = () => {
                         <TableCell>
                           <Typography
                             component={Link}
-                            to="/halaman-berikutnya"
+                            to={`/sistem-informasi-skripsi/daftar-riwayat-skripsi-kaprodi/beranda/${skripsi.group_id}/KAPRODI`}
                             sx={{
                               textDecoration: "none",
                               color: "blue",

@@ -370,17 +370,15 @@ const JadwalSidangSkripsi = () => {
                               {jadwal.title}
                             </TableCell>
                             <TableCell>
-                              <Typography>{jadwal.advisor_name}</Typography>
+                              <Typography>{jadwal.advisor}</Typography>
                             </TableCell>
                             <TableCell>
                               <Typography>
-                                {jadwal.panelist_chairman_name}
+                                {jadwal.panelist_chairman}
                               </Typography>
                             </TableCell>
                             <TableCell>
-                              <Typography>
-                                {jadwal.panelist_member_name}
-                              </Typography>
+                              <Typography>{jadwal.panelist_member}</Typography>
                             </TableCell>
                             <TableCell>
                               <Typography>{jadwal.start_defence}</Typography>
