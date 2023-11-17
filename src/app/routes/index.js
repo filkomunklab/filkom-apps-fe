@@ -6,13 +6,6 @@ import mahasiswaRoutes from "./BA-mahasiswaRoutes";
 import NotFound from "../pages/404";
 import Unauthorized from "app/pages/unauthorized";
 import operatorRoutes from "./operatorRoutes";
-// import dosenRoutes from "./dosenRoutes";
-// import sekertarisRoutes from "./sekertarisRoutes";
-// import advisorRoutes from "./advisorRoutes";
-// import coAdvisorRoutes from "./coAdvisorRoutes";
-// import dosenSkripsiRoutes from "./dosenSkripsiRoutes";
-// import ketuaPenelisRoutes from "./ketuaPenelisRoutes";
-// import anggotaPenelisRoutes from "./anggotaPenelisRoutes";
 import dosenPembimbingRoutes from "./BA-dosenPembimbingRoutes";
 import dekanRoutes from "./BA-dekanRoutes";
 import kepalaProgramStudiRoutes from "./BA-kepalaProgramStudiRoutes";
@@ -39,14 +32,6 @@ const routesForAuthenticatedOnly = [
   },
   ...mahasiswaRoutes,
   ...operatorRoutes,
-  // ...dosenRoutes,
-  // ...sekertarisRoutes,
-  // ...advisorRoutes,
-  // ...coAdvisorRoutes,
-  // ...dosenSkripsiRoutes,
-  // ...ketuaPenelisRoutes,
-  // ...anggotaPenelisRoutes,
-  // ...calonTamatanRoutes,
   ...dosenPembimbingRoutes,
   ...dekanRoutes,
   ...kepalaProgramStudiRoutes,

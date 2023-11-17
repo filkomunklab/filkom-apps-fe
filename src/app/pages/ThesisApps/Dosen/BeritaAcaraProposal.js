@@ -1248,13 +1248,9 @@ const BeritaAcara = () => {
                           Co-Advisor 2
                         </TableCell>
                       )}
-                      {(userRole === "ADVISOR" ||
-                        userRole === "KETUA_PANELIS" ||
-                        userRole === "ANGGOTA_PANELIS") && (
-                        <TableCell sx={{ width: "25%", textAlign: "center" }}>
-                          Action
-                        </TableCell>
-                      )}
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Action
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -1491,9 +1487,14 @@ const BeritaAcara = () => {
                       <TableCell sx={{ width: "12%", textAlign: "center" }}>
                         Advisor
                       </TableCell>
-                      <TableCell sx={{ width: "5%", textAlign: "center" }}>
-                        Action
-                      </TableCell>
+                      {(userRole === "DEKAN" ||
+                        userRole === "ADVISOR" ||
+                        userRole === "KETUA_PANELIS" ||
+                        userRole === "ANGGOTA_PANELIS") && (
+                        <TableCell sx={{ width: "5%", textAlign: "center" }}>
+                          Action
+                        </TableCell>
+                      )}
                     </TableRow>
                   </TableHead>
                   <TableBody>
