@@ -145,6 +145,7 @@ const Dashboard = () => {
   const [alumni12Month, setAlumni12Month] = useState([]);
   const [totalAlumni12month, setTotalAlumni12month] = useState([]);
   const [companyCategory, setCompanyCategory] = useState([]);
+  const [indoDistribution, setIndoDistribution] = useState([]);
 
   const getData = async () => {
     await jwtAuthAxios.get("/dashboard/statistic").then((response) => {
@@ -195,24 +196,31 @@ const Dashboard = () => {
       const categoryMapping = {
         "1": "Instansi Pemerintahan",
         "2": "BUMN/BUMD",
-        "3": "Institusi/Organisasi Multilateral",
-        "4": "Organisasi non-profit/Lembaga Swadaya Masyarakat",
+        "3": "Organisasi Multilateral",
+        "4": "LSM",
         "5": "Perusahaan Swasta",
-        "6": "Wiraswasta/Perusahaan sendiri",
+        "6": "Wiraswasta",
         "7": "Lainnya",
       };
       
-      // const formattedCategories = countCategories.map(item => ({
-      //   organization: categoryMapping[item.f1101],
-      //   value: item._count,
-      //   color: getColorBasedOnValue(item._count),
-      // }));
+      const formattedCompanyCategories = response.data.data.countCategories.map((item, index) => ({
+        organization: categoryMapping[item.f1101],
+        value: item._count,
+        fill: getColorBasedOnValue(index),
+      }));
+
+      function getColorBasedOnValue(index) {
+        const colors = ["#6200EE", "#FFF735", "#6BFAD7", "#128DFF", "#001AFF", "#C317FF", "#FC76DE"];
+        return colors[index % colors.length];
+      }
 
       setData(response.data.data);
       setDistribusiAlumni(formattedData);
       setTotalITS(formattedData1);
       setAlumni12Month(filteredAlumniEmployedIn12Months);
       setTotalAlumni12month(totalAlumniEmployedIn12Months);
+      setCompanyCategory(formattedCompanyCategories);
+      setIndoDistribution(response.data.data.countDataForPeta);
     });
   };
 
@@ -344,15 +352,15 @@ const Dashboard = () => {
                   <TableHead>
                     <TableRow>
                       <TableCell>Region</TableCell>
-                      <TableCell align="center">Alumni</TableCell>
+                      <TableCell align="center">Total Alumni</TableCell>
                       <TableCell align="center">Percentage</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {alumniDistribution.map((row, index) => (
+                    {indoDistribution.map((row, index) => (
                       <TableRow key={index}>
-                        <TableCell>{row.region}</TableCell>
-                        <TableCell align="center">{row.alumni}</TableCell>
+                        <TableCell>{row.category}</TableCell>
+                        <TableCell align="center">{row.count}</TableCell>
                         <TableCell align="center">{row.percentage}%</TableCell>
                       </TableRow>
                     ))}
@@ -416,7 +424,7 @@ const Dashboard = () => {
             </Typography>
             <ResponsiveContainer width="100%" height={400}>
               <BarChart
-                data={processedData}
+                data={companyCategory}
                 margin={{ top: 20, right: 30, bottom: 5 }}
                 //barCategoryGap="10%" // Adjust the space between bars
                 //barGap="5%" // Adjust the space between groups of bars (if applicable)
@@ -432,34 +440,6 @@ const Dashboard = () => {
         </Grid>
 
         {/* Bar Chart - alumni yang mendapatkan pekerjaan selama <12 bulan */}
-        {/* <Grid item md={12}>
-          <Card sx={{ p: 5 }}>
-            <Typography
-              variant="h1"
-              sx={{ fontSize: "18px", fontWeight: 500, marginLeft: "20px" }}
-            >
-              ALUMNI EMPLOYED IN &lt;12 MONTHS
-            </Typography>
-            <ResponsiveContainer width="100%" height={400}>
-              <BarChart
-                data={dapatKerja}
-                margin={{ top: 20, right: 30, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Legend/> 
-                <Bar dataKey="value" fill="#006AF5" />
-              </BarChart>
-            </ResponsiveContainer>
-            <Typography ml={5}>
-              <span style={{ fontSize: "1.2em" }}>300 students </span>
-              obtained jobs within 12 months
-            </Typography>
-          </Card>
-        </Grid> */}
-
         <Grid item md={12}>
           <Card sx={{ p: 5 }}>
             <Typography
