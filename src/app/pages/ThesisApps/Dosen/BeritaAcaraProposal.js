@@ -22,6 +22,7 @@ import {
   FormControlLabel,
   DialogContentText,
   TextareaAutosize,
+  Paper,
 } from "@mui/material";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
@@ -1032,7 +1033,7 @@ const BeritaAcara = () => {
               </Typography>
               {/* Table Penilaian Start */}
 
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Typography
                   variant="subtitle2"
                   sx={{
@@ -1045,32 +1046,55 @@ const BeritaAcara = () => {
                   Penilaian
                 </Typography>
                 <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                  <TableHead
+                    sx={{
+                      background: "rgba(26, 56, 96, 0.10)",
+                      borderTop: "1px solid #ccc",
+                    }}
+                  >
                     <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Mahasiswa</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Ketua Penelis</TableCell>
-                      <TableCell sx={{ width: "25%" }}>
-                        Anggota Penelis
+                      <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Mahasiswa
                       </TableCell>
-                      <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Ketua Panelis
+                      </TableCell>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Anggota Panelis
+                      </TableCell>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Advisor
+                      </TableCell>
                       {(userRole === "KETUA_PANELIS" ||
                         userRole === "ANGGOTA_PANELIS" ||
                         userRole === "ADVISOR") && (
-                        <TableCell sx={{ width: "25%" }}>Action</TableCell>
+                        <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                          Action
+                        </TableCell>
                       )}
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {dataPenilaian?.map((student, studentIndex) => (
                       <TableRow key={studentIndex}>
-                        <TableCell>{studentIndex + 1}</TableCell>
-                        <TableCell>{student.fullName}</TableCell>
-                        <TableCell>{student.value_by_chairman}</TableCell>
-                        <TableCell>{student.value_by_member}</TableCell>
-                        <TableCell>{student.value_by_advisor}-</TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
+                          {studentIndex + 1}
+                        </TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
+                          {student.fullName}
+                        </TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
+                          {student.value_by_chairman}
+                        </TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
+                          {student.value_by_member}
+                        </TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
+                          {student.value_by_advisor}
+                        </TableCell>
                         {userRole === "KETUA_PANELIS" && (
-                          <TableCell>
+                          <TableCell sx={{ textAlign: "center" }}>
                             <span
                               style={{
                                 textDecoration: "none",
@@ -1179,7 +1203,7 @@ const BeritaAcara = () => {
               {/* Table Penilaian End */}
 
               {/* Table Perubahan Start */}
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Typography
                   variant="subtitle2"
                   sx={{
@@ -1192,35 +1216,51 @@ const BeritaAcara = () => {
                   Perubahan
                 </Typography>
                 <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                  <TableHead
+                    sx={{
+                      background: "rgba(26, 56, 96, 0.10)",
+                      borderTop: "1px solid #ccc",
+                    }}
+                  >
                     <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
                       <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Ketua Penelis</TableCell>
-                      <TableCell sx={{ width: "25%" }}>
-                        Anggota Penelis
+                      <TableCell
+                        sx={{
+                          width: "20%",
+                          textAlign: "center",
+                        }}
+                      >
+                        Ketua Panelis
                       </TableCell>
-                      <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
+                      <TableCell sx={{ width: "20%", textAlign: "center" }}>
+                        Anggota Panelis
+                      </TableCell>
+                      <TableCell sx={{ width: "15%", textAlign: "center" }}>
+                        Advisor
+                      </TableCell>
                       {advisorAndCoAdvisor?.coAdvisor1 && (
-                        <TableCell sx={{ width: "25%" }}>
+                        <TableCell sx={{ width: "20%", textAlign: "center" }}>
                           Co-Advisor 1
                         </TableCell>
                       )}
                       {advisorAndCoAdvisor?.coAdvisor2 && (
-                        <TableCell sx={{ width: "25%" }}>
+                        <TableCell sx={{ width: "20%", textAlign: "center" }}>
                           Co-Advisor 2
                         </TableCell>
                       )}
                       {(userRole === "ADVISOR" ||
                         userRole === "KETUA_PANELIS" ||
                         userRole === "ANGGOTA_PANELIS") && (
-                        <TableCell sx={{ width: "25%" }}>Action</TableCell>
+                        <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                          Action
+                        </TableCell>
                       )}
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     <TableRow>
                       <TableCell>1</TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataPerubahan?.changes_by_chairman !== null ? (
                           <Chip
                             size="small"
@@ -1235,7 +1275,7 @@ const BeritaAcara = () => {
                           <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataPerubahan?.changes_by_member !== null ? (
                           <Chip
                             size="small"
@@ -1250,7 +1290,7 @@ const BeritaAcara = () => {
                           <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataPerubahan?.changes_by_advisor !== null ? (
                           <Chip
                             size="small"
@@ -1259,14 +1299,19 @@ const BeritaAcara = () => {
                               background: "rgba(0, 255, 0, 0.10)",
                               color: "#008000",
                               fontSize: "10px",
+                              textAlign: "center",
                             }}
                           />
                         ) : (
-                          <Chip size="small" label="Belum" />
+                          <Chip
+                            size="small"
+                            label="Belum"
+                            sx={{ textAlign: "center" }}
+                          />
                         )}
                       </TableCell>
                       {advisorAndCoAdvisor?.coAdvisor1 && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           {dataPerubahan?.changes_by_co_advisor1 !== null ? (
                             <Chip
                               size="small"
@@ -1275,15 +1320,20 @@ const BeritaAcara = () => {
                                 background: "rgba(0, 255, 0, 0.10)",
                                 color: "#008000",
                                 fontSize: "10px",
+                                textAlign: "center",
                               }}
                             />
                           ) : (
-                            <Chip size="small" label="Belum" />
+                            <Chip
+                              size="small"
+                              label="Belum"
+                              sx={{ textAlign: "center" }}
+                            />
                           )}
                         </TableCell>
                       )}
                       {advisorAndCoAdvisor?.coAdvisor2 && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           {dataPerubahan?.changes_by_co_advisor2 !== null ? (
                             <Chip
                               size="small"
@@ -1292,14 +1342,19 @@ const BeritaAcara = () => {
                                 background: "rgba(0, 255, 0, 0.10)",
                                 color: "#008000",
                                 fontSize: "10px",
+                                textAlign: "center",
                               }}
                             />
                           ) : (
-                            <Chip size="small" label="Belum" />
+                            <Chip
+                              size="small"
+                              label="Belum"
+                              sx={{ textAlign: "center" }}
+                            />
                           )}
                         </TableCell>
                       )}
-                      <TableCell sx={{ display: "flex" }}>
+                      <TableCell sx={{ display: "flex", textAlign: "center" }}>
                         <span
                           style={{
                             textDecoration: "none",
@@ -1403,7 +1458,7 @@ const BeritaAcara = () => {
               {/* Table Perubahan End */}
 
               {/* Table Berita Acara Start */}
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Typography
                   variant="subtitle2"
                   sx={{
@@ -1416,24 +1471,35 @@ const BeritaAcara = () => {
                   Berita Acara
                 </Typography>
                 <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                  <TableHead
+                    sx={{
+                      background: "rgba(26, 56, 96, 0.10)",
+                      borderTop: "1px solid #ccc",
+                    }}
+                  >
                     <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
                       <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "12%" }}>
+                      <TableCell sx={{ width: "12%", textAlign: "center" }}>
                         Dekan Fakultas
                       </TableCell>
-                      <TableCell sx={{ width: "12%" }}>Ketua Penelis</TableCell>
-                      <TableCell sx={{ width: "12%" }}>
-                        Anggota Penelis
+                      <TableCell sx={{ width: "12%", textAlign: "center" }}>
+                        Ketua Panelis
                       </TableCell>
-                      <TableCell sx={{ width: "12%" }}>Advisor</TableCell>
-                      <TableCell sx={{ width: "5%" }}>Action</TableCell>
+                      <TableCell sx={{ width: "12%", textAlign: "center" }}>
+                        Anggota Panelis
+                      </TableCell>
+                      <TableCell sx={{ width: "12%", textAlign: "center" }}>
+                        Advisor
+                      </TableCell>
+                      <TableCell sx={{ width: "5%", textAlign: "center" }}>
+                        Action
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     <TableRow>
                       <TableCell>1</TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataBeritaAcara?.is_report_approve_by_dekan !==
                         null ? (
                           <>
@@ -1454,7 +1520,7 @@ const BeritaAcara = () => {
                           <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataBeritaAcara?.is_report_approve_by_panelist_chairman !==
                         null ? (
                           <>
@@ -1477,7 +1543,7 @@ const BeritaAcara = () => {
                           <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataBeritaAcara?.is_report_approve_by_panelist_member !==
                         null ? (
                           <>
@@ -1500,7 +1566,7 @@ const BeritaAcara = () => {
                           <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataBeritaAcara?.is_report_approve_by_advisor !==
                         null ? (
                           <>
@@ -1522,7 +1588,7 @@ const BeritaAcara = () => {
                         )}
                       </TableCell>
                       {userRole === "DEKAN" && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           <span
                             style={{
                               textDecoration: "none",
@@ -1551,7 +1617,7 @@ const BeritaAcara = () => {
                         </TableCell>
                       )}
                       {userRole === "KETUA_PANELIS" && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           <span
                             style={{
                               textDecoration: "none",
@@ -1580,7 +1646,7 @@ const BeritaAcara = () => {
                         </TableCell>
                       )}
                       {userRole === "ANGGOTA_PANELIS" && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           <span
                             style={{
                               textDecoration: "none",
@@ -1609,7 +1675,7 @@ const BeritaAcara = () => {
                         </TableCell>
                       )}
                       {userRole === "ADVISOR" && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           <span
                             style={{
                               textDecoration: "none",
@@ -1644,7 +1710,7 @@ const BeritaAcara = () => {
               {/* Table Berita Acara End */}
               {/* Radio Button Penilaian Akhir Start */}
 
-              {/* Kesimpulan dari Pengujian Ketua penelis start */}
+              {/* Kesimpulan dari Pengujian Ketua panelis start */}
               {userRole === "KETUA_PANELIS" && isOpen?.is_open === true && (
                 <Div
                   sx={{
@@ -1871,7 +1937,7 @@ const BeritaAcara = () => {
                   </Div>
                 </Div>
               )}
-              {/* Kesimpulan dari Pengujian Ketua penelis start */}
+              {/* Kesimpulan dari Pengujian Ketua panelis start */}
               {isOpen?.is_open === false && (
                 <Div>
                   <Div
@@ -2045,14 +2111,17 @@ const BeritaAcara = () => {
             </Typography>
           </Div>
           {/* nilai */}
-          <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
+          <TableHead
+            sx={{ background: "#F5F5F5", width: "100%" }}
+            component={Paper}
+          >
             <TableRow>
               <TableCell sx={{ width: "5%" }}>No</TableCell>
               <TableCell sx={{ width: "35%" }}>Kriteria</TableCell>
               <TableCell sx={{ width: "60%" }}>Range Nilai</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody sx={{ width: "100%" }}>
+          <TableBody sx={{ width: "100%" }} component={Paper}>
             {/* Table Row Start*/}
             <TableRow>
               <TableCell sx={{ width: "5%" }}>1</TableCell>
@@ -2517,7 +2586,7 @@ const BeritaAcara = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
-            gap: "15px",
+            gap: "20px",
             alignSelf: "stretch",
           }}
         >
@@ -2525,55 +2594,64 @@ const BeritaAcara = () => {
             sx={{
               display: "flex",
               alignItems: "flex-start",
-              gap: "10px",
+              gap: "15px",
               alignSelf: "stretch",
             }}
           >
-            <Typography sx={{ width: "100px" }}>Judul Proposal</Typography>
+            <Typography sx={{ width: "150px" }}>Judul Proposal</Typography>
             <Typography>:</Typography>
             <Typography>
               {isOpen && isOpen.title ? isOpen.title.toUpperCase() : ""}
             </Typography>
           </Div>
-          <TableContainer>
-            <Table>
-              <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
-                <TableRow>
-                  <TableCell>No</TableCell>
-                  <TableCell>Nama Lengkap</TableCell>
-                  <TableCell>Nim</TableCell>
-                  <TableCell>Program Studi</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {dataPenilaian?.map((student, studentIndex) => (
-                  <TableRow>
-                    <TableCell>{studentIndex + 1}</TableCell>
-                    <TableCell>{student.fullName}</TableCell>
-                    <TableCell>{student.nim}</TableCell>
-                    <TableCell>{student.major}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-            Perubahan
-          </DialogContentText>
-          <TextareaAutosize
-            aria-label="minimum height"
-            minRows={3}
-            placeholder="Masukkan Perubahan"
-            style={{
-              width: "100%",
-              height: 108,
-              marginBottom: "25px",
-              display: "block",
-              resize: "vertical",
+          <Div
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "20px",
+              alignSelf: "stretch",
             }}
-            value={revisionText} // Set the value of the textarea to revisionText
-            onChange={(e) => setRevisionText(e.target.value)} // Update revisionText when input changes
-          />
+          >
+            <TableContainer>
+              <Table>
+                <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
+                  <TableRow>
+                    <TableCell>No</TableCell>
+                    <TableCell>Nama Lengkap</TableCell>
+                    <TableCell>Nim</TableCell>
+                    <TableCell>Program Studi</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {dataPenilaian?.map((student, studentIndex) => (
+                    <TableRow>
+                      <TableCell>{studentIndex + 1}</TableCell>
+                      <TableCell>{student.fullName}</TableCell>
+                      <TableCell>{student.nim}</TableCell>
+                      <TableCell>{student.major}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <DialogContentText sx={{ width: "100%", margin: "auto" }}>
+              Perubahan
+            </DialogContentText>
+            <TextareaAutosize
+              aria-label="minimum height"
+              minRows={3}
+              placeholder="Masukkan Perubahan"
+              style={{
+                width: "100%",
+                marginBottom: "25px",
+
+                resize: "vertical",
+              }}
+              value={revisionText} // Set the value of the textarea to revisionText
+              onChange={(e) => setRevisionText(e.target.value)} // Update revisionText when input changes
+            />
+          </Div>
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -2710,7 +2788,7 @@ const BeritaAcara = () => {
                   background: "#F5F5F5",
                 }}
               >
-                Ketua Penelis
+                Ketua Panelis
               </Div>
               <Div
                 sx={{
@@ -2748,7 +2826,7 @@ const BeritaAcara = () => {
                   background: "#F5F5F5",
                 }}
               >
-                Anggota Penelis
+                Anggota Panelis
               </Div>
               <Div
                 sx={{
