@@ -76,8 +76,11 @@ const PengajuanJudul = () => {
     console.log("submission_id:", submissionId);
   }
 
-  const role = useParams().role;
-  console.log(role);
+  const userRole = useParams().role;
+  console.log("role user akses page: ", userRole);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  console.log("role user yang sign in: ", role);
 
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
@@ -432,7 +435,7 @@ const PengajuanJudul = () => {
           {/* Menu Horizontal Start */}
           {/* MAHASISWA */}
           <Div
-            hidden={role.includes("MAHASISWA") ? false : true}
+            hidden={userRole.includes("MAHASISWA") ? false : true}
             sx={{ width: "100%" }}
           >
             <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
@@ -642,11 +645,9 @@ const PengajuanJudul = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {pengajuanJudulFile && (
-                                <PDFViewerPengajuanJudul
-                                  pengajuanJudulFile={pengajuanJudulFile}
-                                />
-                              )}
+                              <PDFViewerPengajuanJudul
+                                pengajuanJudulFile={pengajuanJudulFile}
+                              />
                             </span>
                             <Div
                               style={{
@@ -678,34 +679,49 @@ const PengajuanJudul = () => {
               </TableContainer>
               {/* Table Upload Pengajuan Judul End*/}
               {/* Select Dosen Pembimbing Start */}
-              <Div sx={{ display: "flex", marginBottom: "25px" }}>
-                <FormControl fullWidth size="small">
-                  <InputLabel id="demo-simple-select-label">
-                    Mengusulkan Advisor
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={advisor}
-                    label="Mengusulkan Advisor"
-                    onChange={(e) => setAdvisor(e.target.value)}
-                    disabled={!isEditing}
-                    sx={{
-                      width: "230px",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis", // Opsi ini akan memotong teks yang terlalu panjang
-                    }}
-                  >
-                    <MenuItem value="">-</MenuItem>
-                    {daftarDosen.map((dosen) => (
-                      <MenuItem key={dosen.id} value={dosen.id}>
-                        {dosen.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                {isEditing && (
+              {!isEditing && (
+                <>
+                  <Typography variant="subtitle2">Judul</Typography>
+                  <Typography sx={{ whiteSpace: "pre-line" }}>
+                    {
+                      (
+                        daftarDosen?.find(
+                          (dosen) =>
+                            dosen.id === pengajuanJudul?.proposed_advisor_id
+                        ) || {}
+                      ).name
+                    }
+                  </Typography>
+                </>
+              )}
+              {isEditing && (
+                <Div sx={{ display: "flex", marginBottom: "25px" }}>
                   <>
+                    <FormControl fullWidth size="small">
+                      <InputLabel id="demo-simple-select-label">
+                        Mengusulkan Advisor
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={advisor}
+                        label="Mengusulkan Advisor"
+                        onChange={(e) => setAdvisor(e.target.value)}
+                        disabled={!isEditing}
+                        sx={{
+                          width: "230px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis", // Opsi ini akan memotong teks yang terlalu panjang
+                        }}
+                      >
+                        <MenuItem value="">-</MenuItem>
+                        {daftarDosen.map((dosen) => (
+                          <MenuItem key={dosen.id} value={dosen.id}>
+                            {dosen.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                     {coAdvisor1 !== null && (
                       <FormControl
                         fullWidth
@@ -722,6 +738,20 @@ const PengajuanJudul = () => {
                           label="Mengusulkan Co-Advisor 1"
                           onChange={(e) => setCoAdvisor1(e.target.value)}
                           disabled={!isEditing}
+                          MenuProps={{
+                            anchorOrigin: {
+                              vertical: "bottom",
+                              horizontal: "left",
+                            },
+                            transformOrigin: {
+                              vertical: "top",
+                              horizontal: "left",
+                            },
+                            getContentAnchorEl: null,
+                            style: {
+                              maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                            },
+                          }}
                           sx={{
                             width: "230px",
                             overflow: "hidden",
@@ -750,6 +780,20 @@ const PengajuanJudul = () => {
                           label="Mengusulkan Co-Advisor 2"
                           onChange={(e) => setCoAdvisor2(e.target.value)}
                           disabled={!isEditing}
+                          MenuProps={{
+                            anchorOrigin: {
+                              vertical: "bottom",
+                              horizontal: "left",
+                            },
+                            transformOrigin: {
+                              vertical: "top",
+                              horizontal: "left",
+                            },
+                            getContentAnchorEl: null,
+                            style: {
+                              maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                            },
+                          }}
                           sx={{
                             width: "230px",
                             overflow: "hidden",
@@ -766,8 +810,8 @@ const PengajuanJudul = () => {
                       </FormControl>
                     )}
                   </>
-                )}
-              </Div>
+                </Div>
+              )}
               {/* Select Dosen Pembimbing End */}
 
               {/* Radio Button Start */}
@@ -818,15 +862,20 @@ const PengajuanJudul = () => {
                 {isEditing ? (
                   <Div>
                     <Button
+                      size="small"
                       onClick={() => {
                         handleClose();
                         handleCancelEdit();
                       }}
-                      style={{
+                      sx={{
+                        textTransform: "none",
                         borderRadius: "6px",
-                        border: "##E0E0E0",
+                        border: "#E0E0E0",
                         background: "#FFFF",
+                        boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
                         color: "black",
+                        textTransform: "none",
+                        marginRight: "20px",
                       }}
                     >
                       Kembali

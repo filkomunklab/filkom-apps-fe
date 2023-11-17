@@ -18,19 +18,16 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { pdfjs } from "react-pdf";
 import WarningIcon from "@mui/icons-material/Warning";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-
 // View Document Proposal
-const PDFViewerRevisiProposal = ({ RevisiProposalFile }) => {
+const PDFViewerRevisiProposal = ({ dokumenRevisi }) => {
   const viewPDFRevisiProposal = () => {
     // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(RevisiProposalFile);
+    const pdfURL = dokumenRevisi.file_path_revision;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -50,20 +47,28 @@ const UploadRevisiProposal = () => {
   const [dokumenRevisi, setDokumenRevisi] = useState();
   const [perubahan, setPerubahan] = useState();
 
+  // popup delete konfirmasi
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+
+  const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
+
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
   const [proposalId, setProposalId] = useState(null);
 
-  const role = useParams().role;
-  console.log(role);
+  const userRole = useParams().role;
+  console.log("role user akses page: ", userRole);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  console.log("role user yang sign in: ", role);
 
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
   console.log("token", token);
 
   useEffect(() => {
-    const fetchDokumenProposalData = async () => {
+    const fetchDokumenRevisiData = async () => {
       try {
         const response = await axios.get(
           `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
@@ -104,61 +109,161 @@ const UploadRevisiProposal = () => {
         );
       }
     };
-    fetchDokumenProposalData();
+    fetchDokumenRevisiData();
     fetchPerubahanData();
   }, [token, proposalId]);
 
-  // state untuk Upload RevisiProposal
-  const [RevisiProposalUploadedFiles, setRevisiProposalUploadedFiles] =
-    useState([]);
-  const [selectedRevisiProposalFileName, setSelectedRevisiProposalFileName] =
-    useState("");
-  const [RevisiProposalFile, setRevisiProposalFile] = useState(null);
-
-  // popup delete konfirmasi
-  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
-  const [deletingIndex, setDeletingIndex] = useState(-1);
-
-  const onRevisiProposalFileChange = (event) => {
+  const handleUnggahRevisiProposal = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      if (RevisiProposalUploadedFiles.length === 0) {
-        setRevisiProposalFile(file);
-        setSelectedRevisiProposalFileName(file.name);
 
-        const newFileData = {
-          name: file.name,
-          date: new Date().toLocaleDateString(),
-          size: file.size,
-          advisor: "",
-          coAdvisor1: "",
-          coAdvisor2: "",
-        };
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
 
-        setRevisiProposalUploadedFiles([newFileData]);
-      }
+    if (!file || !allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid atau file tidak ada");
+      return;
     }
+
+    const reader = new FileReader();
+
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
+
+    reader.onload = (e) => {
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1];
+
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
+
+      // Logika pengolahan file
+      const data = {
+        revision_file: {
+          file_name_revision: file.name,
+          file_size_revision: fileSizeString,
+          buffer: base64String,
+        },
+      };
+
+      // Panggil fungsi untuk mengirim file ke server
+      sendDokumenProposalToServer(data);
+    };
+
+    reader.readAsDataURL(file);
   };
 
-  // fungsi untuk menghapus file Proposal
-  const handleDeleteRevisiProposalFile = (index) => {
-    setDeletingIndex(index);
+  const sendDokumenProposalToServer = (data) => {
+    console.log("Dokumen proposal yang akan diunggah: ", data);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil unggah revisi proposal: ", response.data.data);
+
+        // request data
+        const fetchDokumenRevisiData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDokumenRevisi(response.data.data);
+            console.log(
+              "Request Get dokumen revisi proposal: ",
+              response.data.data
+            );
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil dokumen revisi proposal:",
+              error
+            );
+          }
+        };
+        fetchDokumenRevisiData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah revisi proposal:",
+          error.response.data.message
+        );
+      });
+  };
+
+  const handleHapusRevisiProposal = () => {
     setDeleteConfirmationOpen(true);
-  };
-
-  const handleConfirmDelete = () => {
-    const updatedFiles = [...RevisiProposalUploadedFiles];
-    updatedFiles.splice(deletingIndex, 1);
-    setRevisiProposalUploadedFiles(updatedFiles);
-    setRevisiProposalFile(null);
-    setSelectedRevisiProposalFileName("");
-    setDeleteConfirmationOpen(false);
-    setDeletingIndex(-1);
   };
 
   const handleCancelDelete = () => {
     setDeleteConfirmationOpen(false);
-    setDeletingIndex(-1);
+  };
+
+  const handleKonfirmasiHapusRevisiProposal = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/proposal/proposal-revision-document/delete/${proposalId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        // tutup konfirmasi jika berhasil hapus
+        setDeleteConfirmationOpen(false);
+
+        console.log("Berhasil menghapus revisi proposal: ", response.data.data);
+
+        // request data
+        const fetchDokumenRevisiData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDokumenRevisi(response.data.data);
+            console.log(
+              "Request Get dokumen revisi proposal: ",
+              response.data.data
+            );
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil dokumen revisi proposal:",
+              error
+            );
+          }
+        };
+        fetchDokumenRevisiData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat menghapus revisi proposal:",
+          error.response.data.message
+        );
+      });
   };
 
   return (
@@ -204,6 +309,10 @@ const UploadRevisiProposal = () => {
               if (data) {
                 setProgress(data.progress);
                 setProposalId(data.proposal_id);
+                setAdvisorAndCoAdvisor({
+                  coAdvisor1: data.co_advisor1,
+                  coAdvisor2: data.co_advisor2,
+                });
               }
             }}
           />
@@ -226,10 +335,14 @@ const UploadRevisiProposal = () => {
           {/* Menu Horizontal Start */}
           {/* MAHASISWA */}
           <Div
-            hidden={role.includes("MAHASISWA") ? false : true}
+            hidden={userRole === "MAHASISWA" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
+            <MenuMahasiswa
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Unggah Revisi Proposal"}
+            />
           </Div>
           {/* Menu horizontal End */}
           <Div
@@ -501,7 +614,7 @@ const UploadRevisiProposal = () => {
                   <input
                     type="file"
                     accept=".pdf"
-                    onChange={onRevisiProposalFileChange}
+                    onChange={handleUnggahRevisiProposal}
                     style={{ display: "none" }}
                   />
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
@@ -515,11 +628,11 @@ const UploadRevisiProposal = () => {
                 <Table>
                   <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
+                      {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{
                           fontSize: "12px",
@@ -550,17 +663,17 @@ const UploadRevisiProposal = () => {
                       <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
                       >
+                        Ketua Panelis
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
+                      >
+                        Anggota Panelis
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
+                      >
                         Advisor
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
-                      >
-                        Co-Advisor 1
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
-                      >
-                        Co-Advisor 2
                       </TableCell>
                       <TableCell
                         sx={{
@@ -576,52 +689,127 @@ const UploadRevisiProposal = () => {
                   </TableHead>
 
                   <TableBody>
-                    {RevisiProposalUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.date}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
-                        </TableCell>
-                        <TableCell>
+                    <TableRow>
+                      {/* <TableCell>{index + 1}</TableCell> */}
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {dokumenRevisi?.file_name_revision}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {dokumenRevisi?.upload_date_revision}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {dokumenRevisi?.file_size_revision}
+                      </TableCell>
+                      {/* status Ketua */}
+                      <TableCell>
+                        {dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                        "Waiting" ? (
                           <Chip
                             size="small"
-                            label="Menunggu"
+                            label={"Menunggu"}
                             sx={{
                               background: "rgba(255, 204, 0, 0.10)",
                               color: "#985211",
-                              fontSize: "10px",
                             }}
                           />
-                        </TableCell>
-                        <TableCell>
+                        ) : dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                          "Approve" ? (
                           <Chip
                             size="small"
-                            label="Menunggu"
+                            label={"Diterima"}
+                            sx={{
+                              background: "rgba(21, 131, 67, 0.10)",
+                              color: "#0A7637",
+                            }}
+                          />
+                        ) : dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                          "Rejected" ? (
+                          <Chip
+                            size="small"
+                            label={"Ditolak"}
+                            sx={{
+                              background: "rgba(226, 29, 18, 0.10)",
+                              color: "#CA150C",
+                            }}
+                          />
+                        ) : (
+                          dokumenRevisi?.is_revision_approve_by_panelist_chairman
+                        )}
+                      </TableCell>
+                      {/* status Anggota */}
+                      <TableCell>
+                        {dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                        "Waiting" ? (
+                          <Chip
+                            size="small"
+                            label={"Menunggu"}
                             sx={{
                               background: "rgba(255, 204, 0, 0.10)",
                               color: "#985211",
-                              fontSize: "10px",
                             }}
                           />
-                        </TableCell>
-                        <TableCell>
+                        ) : dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                          "Approve" ? (
                           <Chip
                             size="small"
-                            label="Menunggu"
+                            label={"Diterima"}
+                            sx={{
+                              background: "rgba(21, 131, 67, 0.10)",
+                              color: "#0A7637",
+                            }}
+                          />
+                        ) : dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                          "Rejected" ? (
+                          <Chip
+                            size="small"
+                            label={"Ditolak"}
+                            sx={{
+                              background: "rgba(226, 29, 18, 0.10)",
+                              color: "#CA150C",
+                            }}
+                          />
+                        ) : (
+                          dokumenRevisi?.is_revision_approve_by_panelist_member
+                        )}
+                      </TableCell>
+                      {/* status Advisor */}
+                      <TableCell>
+                        {dokumenRevisi?.is_revision_approve_by_advisor ===
+                        "Waiting" ? (
+                          <Chip
+                            size="small"
+                            label={"Menunggu"}
                             sx={{
                               background: "rgba(255, 204, 0, 0.10)",
                               color: "#985211",
-                              fontSize: "10px",
                             }}
                           />
-                        </TableCell>
-                        <TableCell>
+                        ) : dokumenRevisi?.is_revision_approve_by_advisor ===
+                          "Approve" ? (
+                          <Chip
+                            size="small"
+                            label={"Diterima"}
+                            sx={{
+                              background: "rgba(21, 131, 67, 0.10)",
+                              color: "#0A7637",
+                            }}
+                          />
+                        ) : dokumenRevisi?.is_revision_approve_by_advisor ===
+                          "Rejected" ? (
+                          <Chip
+                            size="small"
+                            label={"Ditolak"}
+                            sx={{
+                              background: "rgba(226, 29, 18, 0.10)",
+                              color: "#CA150C",
+                            }}
+                          />
+                        ) : (
+                          dokumenRevisi?.is_revision_approve_by_advisor
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {dokumenRevisi?.file_name_revision !== null && (
                           <Div sx={{ display: "flex" }}>
                             <span
                               style={{
@@ -631,11 +819,9 @@ const UploadRevisiProposal = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              {RevisiProposalFile && (
-                                <PDFViewerRevisiProposal
-                                  RevisiProposalFile={RevisiProposalFile}
-                                />
-                              )}
+                              <PDFViewerRevisiProposal
+                                dokumenRevisi={dokumenRevisi}
+                              />
                             </span>
                             <Div
                               style={{
@@ -652,16 +838,14 @@ const UploadRevisiProposal = () => {
                                 color: "red",
                                 fontSize: "12px",
                               }}
-                              onClick={() =>
-                                handleDeleteRevisiProposalFile(index)
-                              }
+                              onClick={handleHapusRevisiProposal}
                             >
-                              Delete
+                              Hapus
                             </span>
                           </Div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                        )}
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -705,7 +889,7 @@ const UploadRevisiProposal = () => {
                   Batal
                 </Button>
                 <Button
-                  onClick={handleConfirmDelete}
+                  onClick={handleKonfirmasiHapusRevisiProposal}
                   sx={{
                     textTransform: "none",
                     background: "#FC0",

@@ -3,7 +3,11 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
+const MenuMahasiswa = ({
+  dataGroupId: groupId,
+  dataProgress: progress,
+  page: setPage,
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open1 = Boolean(anchorEl);
   const [anchorE2, setAnchorE2] = useState(null);
@@ -35,10 +39,10 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
                   fontSize: "13px",
                   padding: "6px 16px",
                   fontWeight: 500,
-                  color: "#192434",
+                  color: setPage === "Beranda" ? "#006AF5" : "#192434",
                   textTransform: "none",
                   "&:hover": {
-                    color: "#006AF5",
+                    color: setPage === "Beranda" ? "#006AF5" : "#006AF5",
                   },
                 }}
               >
@@ -63,10 +67,11 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
                   // width: "150px",
                   fontSize: "13px",
                   fontWeight: 500,
-                  color: "#192434",
+                  color: setPage === "Pengajuan Judul" ? "#006AF5" : "#192434",
                   textTransform: "none",
                   "&:hover": {
-                    color: "#006AF5",
+                    color:
+                      setPage === "Pengajuan Judul" ? "#006AF5" : "#006AF5",
                   },
                 }}
               >
@@ -93,10 +98,10 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
                 // width: "130px",
                 fontSize: "13px",
                 fontWeight: 500,
-                color: "#192434",
+                color: setPage === "Konsultasi" ? "#006AF5" : "#192434",
                 textTransform: "none",
                 "&:hover": {
-                  color: "#006AF5",
+                  color: setPage === "Konsultasi" ? "#006AF5" : "#006AF5",
                 },
               }}
               disabled={
@@ -123,10 +128,18 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
               sx={{
                 fontSize: "13px",
                 fontWeight: 500,
-                color: "#192434",
+                color:
+                  setPage === "Unggah Proposal" ||
+                  setPage === "Unggah Revisi Proposal"
+                    ? "#006AF5"
+                    : "#192434",
                 textTransform: "none",
                 "&:hover": {
-                  color: "#006AF5",
+                  color:
+                    setPage === "Unggah Proposal" ||
+                    setPage === "Unggah Revisi Proposal"
+                      ? "#006AF5"
+                      : "#006AF5",
                 },
               }}
               disabled={
@@ -156,7 +169,15 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
               >
                 <MenuItem
                   onClick={() => setAnchorEl(null)}
-                  style={{ textDecoration: "none", color: "black" }}
+                  style={{
+                    color:
+                      setPage === "Unggah Proposal" ? "#006AF5" : "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color:
+                        setPage === "Unggah Proposal" ? "#006AF5" : "#006AF5",
+                    },
+                  }}
                 >
                   Unggah Proposal
                 </MenuItem>
@@ -165,7 +186,22 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
                 to={`/sistem-informasi-skripsi/daftar-pengajuan/unggah-revisi-proposal/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
-                <MenuItem onClick={() => setAnchorEl(null)}>
+                <MenuItem
+                  onClick={() => setAnchorEl(null)}
+                  style={{
+                    color:
+                      setPage === "Unggah Revisi Proposal"
+                        ? "#006AF5"
+                        : "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color:
+                        setPage === "Unggah Revisi Proposal"
+                          ? "#006AF5"
+                          : "#006AF5",
+                    },
+                  }}
+                >
                   Unggah Revisi Proposal
                 </MenuItem>
               </Link>
@@ -186,10 +222,22 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
               sx={{
                 fontSize: "13px",
                 fontWeight: 500,
-                color: "#192434",
+                color:
+                  setPage === "Unggah Skripsi" ||
+                  setPage === "Unggah Revisi Skripsi" ||
+                  setPage === "Arsip Dokumen" ||
+                  setPage === "Metadata Repositori"
+                    ? "#006AF5"
+                    : "#192434",
                 textTransform: "none",
                 "&:hover": {
-                  color: "#006AF5",
+                  color:
+                    setPage === "Unggah Skripsi" ||
+                    setPage === "Unggah Revisi Skripsi" ||
+                    setPage === "Arsip Dokumen" ||
+                    setPage === "Metadata Repositori"
+                      ? "#006AF5"
+                      : "#006AF5",
                 },
               }}
               disabled={progress !== "Skripsi" && progress !== "Finished"}
@@ -213,7 +261,17 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
                 to={`/sistem-informasi-skripsi/daftar-pengajuan/unggah-skripsi/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
-                <MenuItem onClick={() => setAnchorE2(null)}>
+                <MenuItem
+                  onClick={() => setAnchorE2(null)}
+                  style={{
+                    color: setPage === "Unggah Skripsi" ? "#006AF5" : "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color:
+                        setPage === "Unggah Skripsi" ? "#006AF5" : "#006AF5",
+                    },
+                  }}
+                >
                   Unggah Skripsi
                 </MenuItem>
               </Link>
@@ -221,7 +279,22 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
                 to={`/sistem-informasi-skripsi/daftar-pengajuan/unggah-revisi-skripsi/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
-                <MenuItem onClick={() => setAnchorE2(null)}>
+                <MenuItem
+                  onClick={() => setAnchorE2(null)}
+                  style={{
+                    color:
+                      setPage === "Unggah Revisi Skripsi"
+                        ? "#006AF5"
+                        : "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color:
+                        setPage === "Unggah Revisi Skripsi"
+                          ? "#006AF5"
+                          : "#006AF5",
+                    },
+                  }}
+                >
                   Unggah Revisi Skripsi
                 </MenuItem>
               </Link>
@@ -229,16 +302,39 @@ const MenuMahasiswa = ({ dataGroupId: groupId, dataProgress: progress }) => {
                 to={`/sistem-informasi-skripsi/daftar-pengajuan/arsip-document/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
-                <MenuItem onClick={() => setAnchorE2(null)}>
-                  Arsip Document
+                <MenuItem
+                  onClick={() => setAnchorE2(null)}
+                  style={{
+                    color: setPage === "Arsip Dokumen" ? "#006AF5" : "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color:
+                        setPage === "Arsip Dokumen" ? "#006AF5" : "#006AF5",
+                    },
+                  }}
+                >
+                  Arsip Dokumen
                 </MenuItem>
               </Link>
               <Link
                 to={`/sistem-informasi-skripsi/daftar-pengajuan/metadata-repository/${groupId}/MAHASISWA`}
                 style={{ textDecoration: "none", color: "black" }}
               >
-                <MenuItem onClick={() => setAnchorE2(null)}>
-                  Metadata Repository
+                <MenuItem
+                  onClick={() => setAnchorE2(null)}
+                  style={{
+                    color:
+                      setPage === "Metadata Repositori" ? "#006AF5" : "#192434",
+                    textTransform: "none",
+                    "&:hover": {
+                      color:
+                        setPage === "Metadata Repositori"
+                          ? "#006AF5"
+                          : "#006AF5",
+                    },
+                  }}
+                >
+                  Metadata Repositori
                 </MenuItem>
               </Link>
             </Menu>

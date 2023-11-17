@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
 import {
   FormControl,
@@ -232,15 +233,12 @@ const RiwayatPengujianKetua = () => {
                           {/* Tambahkan tanggal diterima di sini */}
                         </TableCell>
                         <TableCell>
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
-                            }}
+                          <Link
+                            to={`/sistem-informasi-skripsi/daftar-riwayat-pengujian-ketua/beranda/${skripsi.group_id}/KETUA_PANELIS`}
+                            style={{ textDecoration: "none", color: "blue" }}
                           >
                             Detail
-                          </span>
+                          </Link>
                         </TableCell>
                       </TableRow>
                     ))

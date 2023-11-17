@@ -22,9 +22,65 @@ import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import WarningIcon from "@mui/icons-material/Warning";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
 import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
+import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
+import MenuKetuaPanelis from "app/shared/MenuHorizontal/MenuKetuaPanelis";
+import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
+import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
+import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
-import MenuPenguji from "app/shared/MenuHorizontal/MenuPenguji";
-import MenuPengajuanSkripsiDosen from "app/shared/MenuHorizontal/MenuPengajuanSkripsiDosen";
+
+// View Document Proposal
+const PDFViewerProposal = ({ dokumenProposal }) => {
+  const viewPDFProposal = () => {
+    // Buat URL objek untuk file PDF
+    const pdfURL = dokumenProposal?.file_path_proposal;
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span sx={{ fontSize: "10px" }} onClick={viewPDFProposal}>
+        Detail
+      </span>
+    </div>
+  );
+};
+
+// View Document Payment
+const PDFViewerPayment = ({ buktiPembayaran }) => {
+  const viewPDFPayment = () => {
+    // Buat URL objek untuk file PDF
+    const pdfURL = buktiPembayaran.file_path_payment;
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span onClick={viewPDFPayment}>Detail</span>
+    </div>
+  );
+};
+
+// View Document Cek Plagiat
+const PDFViewerCekPlagiat = ({ hasilCekPlagiat }) => {
+  const viewPDFCekPlagiat = () => {
+    // Buat URL objek untuk file PDF
+    const pdfURL = hasilCekPlagiat.file_path_plagiarismcheck;
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span onClick={viewPDFCekPlagiat}>Detail</span>
+    </div>
+  );
+};
 
 const DokumenProposal = () => {
   // state - menyimpan request data
@@ -276,226 +332,360 @@ const DokumenProposal = () => {
 
   const cekPlagiatData = generateCekPlagiatData();
 
+  // approve
+  const handleApprove = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/proposal/proposal-document/approve/${proposalId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        // advisor
+        setSetujuConfirmationDialogOpen(false);
+        handleActionClick(selectedActionIndex, "Setuju");
+        setIsSetujuDisabled(true);
+        // co-advisor 1
+        setSetujuConfirmationDialogOpenCoAdvisor1(false);
+        handleActionClickCoAdvisor1(selectedActionIndex, "Setuju");
+        setIsSetujuDisabledCoAdvisor1(true);
+        // co-advisor 2
+        setSetujuConfirmationDialogOpenCoAdvisor2(false);
+        handleActionClickCoAdvisor2(selectedActionIndex, "Setuju");
+        setIsSetujuDisabledCoAdvisor2(true);
+
+        console.log("Berhasil approve proposal: ", response.data.data);
+
+        // request data
+        const fetchDokumenProposalData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/proposal/proposal-document/${proposalId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDokumenProposal(response.data.data);
+            console.log("Request Get dokumen proposal: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil dokumen proposal:",
+              error
+            );
+          }
+        };
+        fetchDokumenProposalData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat approve proposal:",
+          error.response.data.message
+        );
+      });
+  };
+
+  // reject
+  const handleReject = () => {
+    axios
+      .put(
+        `http://localhost:2000/api/v1/proposal/proposal-document/reject/${proposalId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        // advisor 1
+        setTolakConfirmationDialogOpen(false);
+        handleActionClick(selectedActionIndex, "Tolak");
+        setIsTolakDisabled(true);
+        // co-advisor 1
+        setTolakConfirmationDialogOpenCoAdvisor1(false);
+        handleActionClickCoAdvisor1(selectedActionIndex, "Tolak");
+        setIsTolakDisabledCoAdvisor1(true);
+        // co-advisor 2
+        setTolakConfirmationDialogOpenCoAdvisor2(false);
+        handleActionClickCoAdvisor2(selectedActionIndex, "Tolak");
+        setIsTolakDisabledCoAdvisor2(true);
+
+        console.log("Berhasil approve proposal: ", response.data.data);
+
+        // request data
+        const fetchDokumenProposalData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/proposal/proposal-document/${proposalId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDokumenProposal(response.data.data);
+            console.log("Request Get dokumen proposal: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil dokumen proposal:",
+              error
+            );
+          }
+        };
+        fetchDokumenProposalData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat approve proposal:",
+          error.response.data.message
+        );
+      });
+  };
+
   let Actions;
 
-  if (userRole.includes("ADVISOR")) {
+  if (userRole === "ADVISOR") {
     Actions = () => (
       <Div
-        hidden={role.includes("ADVISOR") ? false : true}
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {dokumenProposal?.is_proposal_approve_by_advisor === "Approve" ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndex(1);
-              setSetujuConfirmationDialogOpen(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {dokumenProposal?.is_proposal_approve_by_advisor === "Approve" ||
-        dokumenProposal?.is_proposal_approve_by_advisor === "Rejected" ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-            }}
-            onClick={() => {
-              setSelectedActionIndex(2);
-              setTolakConfirmationDialogOpen(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenProposal?.file_name_proposal !== null && (
+          <>
+            {dokumenProposal?.is_proposal_approve_by_advisor === "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndex(1);
+                  setSetujuConfirmationDialogOpen(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+
+            {dokumenProposal?.is_proposal_approve_by_advisor === "Approve" ||
+            dokumenProposal?.is_proposal_approve_by_advisor === "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndex(2);
+                  setTolakConfirmationDialogOpen(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
-  } else if (userRole.includes("CO_ADVISOR1")) {
+  } else if (userRole === "CO_ADVISOR1") {
     Actions = () => (
       <Div
-        hidden={role.includes("CO_ADVISOR1") ? false : true}
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {isSetujuClickedCoAdvisor1 || isTolakClickedCoAdvisor1 ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndexCoAdvisor1(1);
-              setSetujuConfirmationDialogOpenCoAdvisor1(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {isSetujuClickedCoAdvisor1 || isTolakClickedCoAdvisor1 ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-            onClick={() => {
-              setSelectedActionIndexCoAdvisor1(2);
-              setTolakConfirmationDialogOpenCoAdvisor1(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenProposal?.file_name_proposal !== null && (
+          <>
+            {dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+            "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexCoAdvisor1(1);
+                  setSetujuConfirmationDialogOpenCoAdvisor1(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+            {dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+              "Approve" ||
+            dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+              "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexCoAdvisor1(2);
+                  setTolakConfirmationDialogOpenCoAdvisor1(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
-  } else if (userRole.includes("CO_ADVISOR2")) {
+  } else if (userRole === "CO_ADVISOR2") {
     Actions = () => (
       <Div
-        hidden={role.includes("CO_ADVISOR2") ? false : true}
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {isSetujuClickedCoAdvisor2 || isTolakClickedCoAdvisor2 ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-          >
-            Setuju
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "green",
-              fontSize: "12px",
-              borderTop: "1px solid #000",
-              borderBottom: "1px solid #000",
-              padding: "5px 0",
-            }}
-            onClick={() => {
-              setSelectedActionIndexCoAdvisor2(1);
-              setSetujuConfirmationDialogOpenCoAdvisor2(true);
-            }}
-          >
-            Setuju
-          </span>
-        )}
-        {isSetujuClickedCoAdvisor2 || isTolakClickedCoAdvisor2 ? (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "not-allowed",
-              color: "gray",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-          >
-            Tolak
-          </span>
-        ) : (
-          <span
-            style={{
-              textDecoration: "none",
-              cursor: "pointer",
-              color: "red",
-              fontSize: "12px",
-              marginTop: "5px",
-            }}
-            onClick={() => {
-              setSelectedActionIndexCoAdvisor2(2);
-              setTolakConfirmationDialogOpenCoAdvisor2(true);
-            }}
-          >
-            Tolak
-          </span>
+        {dokumenProposal?.file_name_proposal !== null && (
+          <>
+            {dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+            "Approve" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+              >
+                Setuju
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "green",
+                  fontSize: "12px",
+                  borderTop: "1px solid #000",
+                  borderBottom: "1px solid #000",
+                  padding: "5px 0",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexCoAdvisor2(1);
+                  setSetujuConfirmationDialogOpenCoAdvisor1(true);
+                }}
+              >
+                Setuju
+              </span>
+            )}
+            {dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+              "Approve" ||
+            dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+              "Rejected" ? (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "not-allowed",
+                  color: "gray",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+              >
+                Tolak
+              </span>
+            ) : (
+              <span
+                style={{
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  color: "red",
+                  fontSize: "12px",
+                  marginTop: "5px",
+                }}
+                onClick={() => {
+                  setSelectedActionIndexCoAdvisor2(2);
+                  setTolakConfirmationDialogOpenCoAdvisor1(true);
+                }}
+              >
+                Tolak
+              </span>
+            )}
+          </>
         )}
       </Div>
     );
@@ -569,17 +759,95 @@ const DokumenProposal = () => {
           {/* Menu Horizontal Start */}
           {/* DOSEN SKRIPSI */}
           <Div
-            hidden={userRole.includes("DOSEN_MK") ? false : true}
+            hidden={userRole === "DOSEN_MK" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuDosenSkripsi dataGroupId={groupId} dataProgress={progress} />
+            <MenuDosenSkripsi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Proposal"}
+            />
           </Div>
           {/* ADVISOR */}
           <Div
-            hidden={userRole.includes("ADVISOR") ? false : true}
+            hidden={userRole === "ADVISOR" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuAdvisor dataGroupId={groupId} dataProgress={progress} />
+            <MenuAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Proposal"}
+            />
+          </Div>
+          {/* CO_ADVISOR */}
+          <Div
+            hidden={
+              userRole === "CO_ADVISOR1" || userRole === "CO_ADVISOR2"
+                ? false
+                : true
+            }
+            sx={{ width: "100%" }}
+          >
+            <MenuCoAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Proposal"}
+            />
+          </Div>
+          {/* KETUA_PANELIS */}
+          <Div
+            hidden={userRole === "KETUA_PANELIS" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKetuaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Proposal"}
+            />
+          </Div>
+          {/* ANGGOTA_PANELIS */}
+          <Div
+            hidden={userRole === "ANGGOTA_PANELIS" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAnggotaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Proposal"}
+            />
+          </Div>
+          {/* DEKAN */}
+          <Div
+            hidden={userRole === "DEKAN" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDekan
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Proposal"}
+            />
+          </Div>
+          {/* KAPRODI */}
+          <Div
+            hidden={userRole === "KAPRODI" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKaprodi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Proposal"}
+            />
+          </Div>
+          {/* SEKRETARIS */}
+          <Div
+            hidden={userRole === "OPERATOR_FILKOM" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuSekertaris
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Dokumen Proposal"}
+            />
           </Div>
           {/* Menu horizontal End */}
           <Div
@@ -795,7 +1063,7 @@ const DokumenProposal = () => {
                         </TableCell>
                       )}
                       {/* Status CoAdvisor2 */}
-                      {advisorAndCoAdvisor?.coAdvisor1 && (
+                      {advisorAndCoAdvisor?.coAdvisor2 && (
                         <TableCell>
                           {dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
                           null ? (
@@ -844,244 +1112,22 @@ const DokumenProposal = () => {
                             alignItems: "center",
                           }}
                         >
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
-                              fontSize: "12px",
-                              padding: "5px 0",
-                            }}
-                          >
-                            Lihat
-                          </span>
-                          {/* Button untuk Advisor */}
-                          {/* <Div
-                            hidden={role.includes("DOSEN") ? false : true}
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                            }}
-                          >
-                            {isSetujuClicked || isTolakClicked ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "green",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndex(1);
-                                  setSetujuConfirmationDialogOpen(true);
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            )}
-                            {isSetujuClicked || isTolakClicked ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
-                                  fontSize: "12px",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndex(2);
-                                  setTolakConfirmationDialogOpen(true);
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            )}
-                          </Div> */}
+                          {dokumenProposal?.file_name_proposal !== null && (
+                            <span
+                              style={{
+                                textDecoration: "none",
+                                cursor: "pointer",
+                                color: "blue",
+                                fontSize: "12px",
+                                padding: "5px 0",
+                              }}
+                            >
+                              <PDFViewerProposal
+                                dokumenProposal={dokumenProposal}
+                              />
+                            </span>
+                          )}
                           <Actions />
-                          {/* button untuk CoAdvisor1 */}
-                          {/* <Div
-                            hidden={role.includes("CO_ADVISOR1") ? false : true}
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                            }}
-                          >
-                            {isSetujuClickedCoAdvisor1 ||
-                            isTolakClickedCoAdvisor1 ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "green",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndexCoAdvisor1(1);
-                                  setSetujuConfirmationDialogOpenCoAdvisor1(
-                                    true
-                                  );
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            )}
-                            {isSetujuClickedCoAdvisor1 ||
-                            isTolakClickedCoAdvisor1 ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  marginTop: "5px",
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
-                                  fontSize: "12px",
-                                  marginTop: "5px",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndexCoAdvisor1(2);
-                                  setTolakConfirmationDialogOpenCoAdvisor1(
-                                    true
-                                  );
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            )}
-                          </Div> */}
-                          {/* button untuk CoAdvisor2 */}
-                          {/* <Div
-                            hidden={role.includes("CO_ADVISOR2") ? false : true}
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                            }}
-                          >
-                            {isSetujuClickedCoAdvisor2 ||
-                            isTolakClickedCoAdvisor2 ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "green",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndexCoAdvisor2(1);
-                                  setSetujuConfirmationDialogOpenCoAdvisor2(
-                                    true
-                                  );
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            )}
-                            {isSetujuClickedCoAdvisor2 ||
-                            isTolakClickedCoAdvisor2 ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  marginTop: "5px",
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
-                                  fontSize: "12px",
-                                  marginTop: "5px",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndexCoAdvisor2(2);
-                                  setTolakConfirmationDialogOpenCoAdvisor2(
-                                    true
-                                  );
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            )}
-                          </Div> */}
                         </Div>
                       </TableCell>
                     </TableRow>
@@ -1106,11 +1152,11 @@ const DokumenProposal = () => {
                   }}
                 >
                   <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-                    Menyetujui Revisi
+                    Menyetujui Proposal
                   </Typography>
                 </DialogTitle>
                 <DialogContent>
-                  Apakah Anda yakin ingin menyetujui tindakan ini?
+                  Apakah Anda yakin ingin menyetujui proposal ini?
                 </DialogContent>
                 <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                   <Button
@@ -1125,16 +1171,12 @@ const DokumenProposal = () => {
                     Batal
                   </Button>
                   <Button
-                    onClick={() => {
-                      setSetujuConfirmationDialogOpen(false);
-                      handleActionClick(selectedActionIndex, "Setuju");
-                      setIsSetujuDisabled(true);
-                    }}
+                    onClick={handleApprove}
                     variant="contained"
                     sx={{ textTransform: "none" }}
                     color="primary"
                   >
-                    Disetuju
+                    Setujui
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -1155,11 +1197,11 @@ const DokumenProposal = () => {
                 >
                   <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
                   <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-                    Menolak Revisi
+                    Menolak Proposal
                   </Typography>
                 </DialogTitle>
                 <DialogContent>
-                  Apakah Anda yakin ingin menolak dokumen ini?
+                  Apakah Anda yakin ingin menolak proposal ini?
                 </DialogContent>
                 <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                   <Button
@@ -1174,11 +1216,7 @@ const DokumenProposal = () => {
                     Batal
                   </Button>
                   <Button
-                    onClick={() => {
-                      setTolakConfirmationDialogOpen(false);
-                      handleActionClick(selectedActionIndex, "Tolak");
-                      setIsTolakDisabled(true);
-                    }}
+                    onClick={handleReject}
                     sx={{
                       textTransform: "none",
                       background: "#FC0",
@@ -1188,7 +1226,7 @@ const DokumenProposal = () => {
                       },
                     }}
                   >
-                    Ditolak
+                    Tolak
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -1209,11 +1247,11 @@ const DokumenProposal = () => {
                   }}
                 >
                   <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-                    Menyetujui Revisi
+                    Menyetujui Proposal
                   </Typography>
                 </DialogTitle>
                 <DialogContent>
-                  Apakah Anda yakin ingin menyetujui tindakan ini?
+                  Apakah Anda yakin ingin menyetujui proposal ini?
                 </DialogContent>
                 <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                   <Button
@@ -1230,19 +1268,12 @@ const DokumenProposal = () => {
                     Batal
                   </Button>
                   <Button
-                    onClick={() => {
-                      setSetujuConfirmationDialogOpenCoAdvisor1(false);
-                      handleActionClickCoAdvisor1(
-                        selectedActionIndex,
-                        "Setuju"
-                      );
-                      setIsSetujuDisabledCoAdvisor1(true);
-                    }}
+                    onClick={handleApprove}
                     variant="contained"
                     sx={{ textTransform: "none" }}
                     color="primary"
                   >
-                    Disetuju
+                    Setujui
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -1263,11 +1294,11 @@ const DokumenProposal = () => {
                 >
                   <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
                   <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-                    Menolak Revisi
+                    Menolak Proposal
                   </Typography>
                 </DialogTitle>
                 <DialogContent>
-                  Apakah Anda yakin ingin menolak dokumen ini?
+                  Apakah Anda yakin ingin menolak proposal ini?
                 </DialogContent>
                 <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                   <Button
@@ -1284,11 +1315,7 @@ const DokumenProposal = () => {
                     Batal
                   </Button>
                   <Button
-                    onClick={() => {
-                      setTolakConfirmationDialogOpenCoAdvisor1(false);
-                      handleActionClickCoAdvisor1(selectedActionIndex, "Tolak");
-                      setIsTolakDisabledCoAdvisor1(true);
-                    }}
+                    onClick={handleReject}
                     sx={{
                       textTransform: "none",
                       background: "#FC0",
@@ -1298,7 +1325,7 @@ const DokumenProposal = () => {
                       },
                     }}
                   >
-                    Ditolak
+                    Tolak
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -1319,11 +1346,11 @@ const DokumenProposal = () => {
                   }}
                 >
                   <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-                    Menyetujui Revisi
+                    Menyetujui Proposal
                   </Typography>
                 </DialogTitle>
                 <DialogContent>
-                  Apakah Anda yakin ingin menyetujui tindakan ini?
+                  Apakah Anda yakin ingin menyetujui proposal ini?
                 </DialogContent>
                 <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                   <Button
@@ -1340,19 +1367,12 @@ const DokumenProposal = () => {
                     Batal
                   </Button>
                   <Button
-                    onClick={() => {
-                      setSetujuConfirmationDialogOpenCoAdvisor2(false);
-                      handleActionClickCoAdvisor2(
-                        selectedActionIndex,
-                        "Setuju"
-                      );
-                      setIsSetujuDisabledCoAdvisor2(true);
-                    }}
+                    onClick={handleApprove}
                     variant="contained"
                     sx={{ textTransform: "none" }}
                     color="primary"
                   >
-                    Disetuju
+                    Setujui
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -1373,11 +1393,11 @@ const DokumenProposal = () => {
                 >
                   <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
                   <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
-                    Menolak Revisi
+                    Menolak Proposal
                   </Typography>
                 </DialogTitle>
                 <DialogContent>
-                  Apakah Anda yakin ingin menolak dokumen ini?
+                  Apakah Anda yakin ingin menolak proposal ini?
                 </DialogContent>
                 <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                   <Button
@@ -1394,11 +1414,7 @@ const DokumenProposal = () => {
                     Batal
                   </Button>
                   <Button
-                    onClick={() => {
-                      setTolakConfirmationDialogOpenCoAdvisor2(false);
-                      handleActionClickCoAdvisor2(selectedActionIndex, "Tolak");
-                      setIsTolakDisabledCoAdvisor2(true);
-                    }}
+                    onClick={handleReject}
                     sx={{
                       textTransform: "none",
                       background: "#FC0",
@@ -1408,194 +1424,245 @@ const DokumenProposal = () => {
                       },
                     }}
                   >
-                    Ditolak
+                    Tolak
                   </Button>
                 </DialogActions>
               </Dialog>
             </Div>
-            {/* Table 1 End */}
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
-              }}
-            >
-              Bukti Pembayaran
-            </Typography>
+            {userRole !== "KETUA_PANELIS" && userRole !== "ANGGOTA_PANELIS" && (
+              <>
+                {/* Table 1 End */}
+                <Typography
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    padding: "24px",
+                    alignItems: "center",
+                    gap: "10px",
+                    color: "#192434",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+                  }}
+                >
+                  Bukti Pembayaran
+                </Typography>
 
-            {/* Table 2 Start */}
-            <Div
-              sx={{
-                width: "100%",
-                padding: "0 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "25px",
-              }}
-            >
-              {/* Table Upload Payment Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
-                <Table>
-                  <TableHead sx={{ background: "#F5F5F5" }}>
-                    <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
-                      {/* <TableCell
+                {/* Table 2 Start */}
+                <Div
+                  sx={{
+                    width: "100%",
+                    padding: "0 25px",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    gap: "25px",
+                  }}
+                >
+                  {/* Table Upload Payment Start*/}
+                  <TableContainer
+                    sx={{ marginBottom: "25px" }}
+                    component={Paper}
+                  >
+                    <Table>
+                      <TableHead sx={{ background: "#F5F5F5" }}>
+                        <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
+                          {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
                       </TableCell> */}
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
-                      >
-                        Nama File
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Tanggal
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Ukuran
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "5%" }}
-                      >
-                        Action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      {/* <TableCell>1</TableCell> */}
-                      <TableCell>
-                        {buktiPembayaran?.file_name_payment}
-                      </TableCell>
-                      <TableCell>
-                        {buktiPembayaran?.upload_date_payment}
-                      </TableCell>
-                      <TableCell>
-                        {buktiPembayaran?.file_size_payment}
-                      </TableCell>
-                      <TableCell>
-                        <span
-                          style={{
-                            textDecoration: "none",
-                            cursor: "pointer",
-                            color: "blue",
-                            fontSize: "12px",
-                            alignItems: "center",
-                          }}
-                        >
-                          Lihat
-                        </span>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Upload Payment End*/}
-            </Div>
-            {/* Table 2 End */}
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "45%",
+                            }}
+                          >
+                            Nama File
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "20%",
+                            }}
+                          >
+                            Tanggal
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "20%",
+                            }}
+                          >
+                            Ukuran
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "5%",
+                            }}
+                          >
+                            Action
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          {/* <TableCell>1</TableCell> */}
+                          <TableCell>
+                            {buktiPembayaran?.file_name_payment}
+                          </TableCell>
+                          <TableCell>
+                            {buktiPembayaran?.upload_date_payment}
+                          </TableCell>
+                          <TableCell>
+                            {buktiPembayaran?.file_size_payment}
+                          </TableCell>
+                          <TableCell>
+                            {buktiPembayaran?.file_name_payment !== null && (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <PDFViewerPayment
+                                  buktiPembayaran={buktiPembayaran}
+                                />
+                              </span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  {/* Table Upload Payment End*/}
+                </Div>
+                {/* Table 2 End */}
 
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
-              }}
-            >
-              Hasil Cek plagiat
-            </Typography>
-            {/* Table 3 Start */}
-            <Div
-              sx={{
-                width: "100%",
-                padding: "0 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "25px",
-              }}
-            >
-              {/* Table Upload Payment Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
-                <Table>
-                  <TableHead sx={{ background: "#F5F5F5" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      {/* <TableCell
+                <Typography
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    padding: "24px",
+                    alignItems: "center",
+                    gap: "10px",
+                    color: "#192434",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+                  }}
+                >
+                  Hasil Cek plagiat
+                </Typography>
+                {/* Table 3 Start */}
+                <Div
+                  sx={{
+                    width: "100%",
+                    padding: "0 25px",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    gap: "25px",
+                  }}
+                >
+                  {/* Table Upload Payment Start*/}
+                  <TableContainer
+                    sx={{ marginBottom: "25px" }}
+                    component={Paper}
+                  >
+                    <Table>
+                      <TableHead sx={{ background: "#F5F5F5" }}>
+                        <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                          {/* <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
                       >
                         Nomor
                       </TableCell> */}
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
-                      >
-                        Nama File
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Tanggal
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Ukuran
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "5%" }}
-                      >
-                        Action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      {/* <TableCell>1</TableCell> */}
-                      <TableCell>
-                        {hasilCekPlagiat?.file_name_plagiarismcheck}
-                      </TableCell>
-                      <TableCell>
-                        {hasilCekPlagiat?.upload_date_plagiarismcheck}
-                      </TableCell>
-                      <TableCell>
-                        {hasilCekPlagiat?.file_size_plagiarismcheck}
-                      </TableCell>
-                      <TableCell>
-                        <span
-                          style={{
-                            textDecoration: "none",
-                            cursor: "pointer",
-                            color: "blue",
-                            fontSize: "12px",
-                            alignItems: "center",
-                          }}
-                        >
-                          Lihat
-                        </span>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Upload Payment End*/}
-            </Div>
-            {/* Table 3 End */}
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "45%",
+                            }}
+                          >
+                            Nama File
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "20%",
+                            }}
+                          >
+                            Tanggal
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "20%",
+                            }}
+                          >
+                            Ukuran
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "5%",
+                            }}
+                          >
+                            Action
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          {/* <TableCell>1</TableCell> */}
+                          <TableCell>
+                            {hasilCekPlagiat?.file_name_plagiarismcheck}
+                          </TableCell>
+                          <TableCell>
+                            {hasilCekPlagiat?.upload_date_plagiarismcheck}
+                          </TableCell>
+                          <TableCell>
+                            {hasilCekPlagiat?.file_size_plagiarismcheck}
+                          </TableCell>
+                          <TableCell>
+                            {hasilCekPlagiat?.file_name_plagiarismcheck !==
+                              null && (
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <PDFViewerCekPlagiat
+                                  hasilCekPlagiat={hasilCekPlagiat}
+                                />
+                              </span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  {/* Table Upload Payment End*/}
+                </Div>
+                {/* Table 3 End */}
+              </>
+            )}
           </Div>
           {/* Element 2 End */}
         </Div>

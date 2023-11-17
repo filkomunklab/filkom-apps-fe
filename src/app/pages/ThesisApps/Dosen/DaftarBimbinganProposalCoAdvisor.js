@@ -3,7 +3,11 @@ import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import PeopleIcon from "@mui/icons-material/People";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Chip,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -18,8 +22,18 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const DaftarBimbinganProposalCoAdvisor = () => {
+  // State untuk melacak panel accordion yang terbuka
+  const [expanded, setExpanded] = useState(false);
+
+  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
+  const handleChange = (panel) => (event, isExpanded) => {
+    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
+    setExpanded(isExpanded ? panel : false);
+  };
+
   const [daftarBimbinganProposal, setDaftarBimbinganProposal] = useState({
     dashboard: {
       total_group: 0,
@@ -324,7 +338,221 @@ const DaftarBimbinganProposalCoAdvisor = () => {
         </Div>
         {/* Header End */}
         {/* Semester Start */}
-        {daftarBimbinganProposal.semesterData.map(
+        <Div
+          sx={{
+            display: "inline-flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: "25px",
+            width: "100%",
+            height: "460px",
+            overflowY: "auto",
+            background: "#FFF",
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+            padding: "8px",
+            borderRadius: "8px",
+          }}
+        >
+          {daftarBimbinganProposal.semesterData.map(
+            (semesterData, semesterIndex) => (
+              <Accordion
+                key={semesterIndex}
+                expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
+                onChange={handleChange(`panel${semesterIndex}`)} // Menangani perubahan state accordion
+                sx={{
+                  margin: "5px",
+                  width: "97%",
+                  padding: "1px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel${semesterIndex}bh-content`}
+                  id={`panel${semesterIndex}bh-header`}
+                >
+                  <Typography
+                    variant="h2"
+                    sx={{
+                      width: "33%",
+                      flexShrink: 0,
+                      fontSize: "16px",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {semesterData.semester}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <TableHead>
+                        <TableRow sx={{ background: "#F5F5F5" }}>
+                          <TableCell sx={{ width: "25px", fontSize: "13px" }}>
+                            Nomor
+                          </TableCell>
+                          <TableCell sx={{ width: "200px", fontSize: "13px" }}>
+                            Mahasiswa
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Disetujui Advisor
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Disetujui Co-Advisor 1
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Disetujui Co-Advisor 2
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Action
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {semesterData.proposals.map(
+                          (proposal, proposalIndex) => (
+                            <TableRow key={proposalIndex}>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposalIndex + 1}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.students.map((student) => (
+                                  <div key={student.id}>{student.fullName}</div>
+                                ))}
+                              </TableCell>
+
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.title}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.approve_by_advisor === null ? (
+                                  <Chip label={"Belum"} />
+                                ) : proposal.approve_by_advisor ===
+                                  "Waiting" ? (
+                                  <Chip
+                                    label={"Mengunggu"}
+                                    sx={{
+                                      background: "rgba(255, 204, 0, 0.10)",
+                                      color: "#985211",
+                                    }}
+                                  />
+                                ) : proposal.approve_by_advisor ===
+                                  "Approve" ? (
+                                  <Chip
+                                    label={"Diterima"}
+                                    sx={{
+                                      background: "rgba(21, 131, 67, 0.10)",
+                                      color: "#0A7637",
+                                    }}
+                                  />
+                                ) : proposal.approve_by_advisor ===
+                                  "Rejected" ? (
+                                  <Chip
+                                    label={"Ditolak"}
+                                    sx={{
+                                      background: "rgba(226, 29, 18, 0.10)",
+                                      color: "#CA150C",
+                                    }}
+                                  />
+                                ) : (
+                                  proposal.approve_by_advisor
+                                )}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.approve_by_co_advisor1 === null ? (
+                                  <Chip label={"Belum"} />
+                                ) : proposal.approve_by_co_advisor1 ===
+                                  "Waiting" ? (
+                                  <Chip
+                                    label={"Mengunggu"}
+                                    sx={{
+                                      background: "rgba(255, 204, 0, 0.10)",
+                                      color: "#985211",
+                                    }}
+                                  />
+                                ) : proposal.approve_by_co_advisor1 ===
+                                  "Approve" ? (
+                                  <Chip
+                                    label={"Diterima"}
+                                    sx={{
+                                      background: "rgba(21, 131, 67, 0.10)",
+                                      color: "#0A7637",
+                                    }}
+                                  />
+                                ) : proposal.approve_by_co_advisor1 ===
+                                  "Rejected" ? (
+                                  <Chip
+                                    label={"Ditolak"}
+                                    sx={{
+                                      background: "rgba(226, 29, 18, 0.10)",
+                                      color: "#CA150C",
+                                    }}
+                                  />
+                                ) : (
+                                  proposal.approve_by_co_advisor1
+                                )}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.approve_by_co_advisor2 === null ? (
+                                  <Chip label={"Belum"} />
+                                ) : proposal.approve_by_co_advisor2 ===
+                                  "Waiting" ? (
+                                  <Chip
+                                    label={"Mengunggu"}
+                                    sx={{
+                                      background: "rgba(255, 204, 0, 0.10)",
+                                      color: "#985211",
+                                    }}
+                                  />
+                                ) : proposal.approve_by_co_advisor2 ===
+                                  "Approve" ? (
+                                  <Chip
+                                    label={"Diterima"}
+                                    sx={{
+                                      background: "rgba(21, 131, 67, 0.10)",
+                                      color: "#0A7637",
+                                    }}
+                                  />
+                                ) : proposal.approve_by_co_advisor2 ===
+                                  "Rejected" ? (
+                                  <Chip
+                                    label={"Ditolak"}
+                                    sx={{
+                                      background: "rgba(226, 29, 18, 0.10)",
+                                      color: "#CA150C",
+                                    }}
+                                  />
+                                ) : (
+                                  proposal.approve_by_co_advisor2
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                <Typography
+                                  component={Link}
+                                  to={`/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor/beranda/${proposal.group_id}/${proposal.status_co_advisor}`}
+                                  sx={{
+                                    textDecoration: "none",
+                                    color: "blue",
+                                  }}
+                                >
+                                  Detail
+                                </Typography>
+                              </TableCell>
+                            </TableRow>
+                          )
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </AccordionDetails>
+              </Accordion>
+            )
+          )}
+        </Div>
+
+        {/* {daftarBimbinganProposal.semesterData.map(
           (semesterData, semesterIndex) => (
             <div key={semesterIndex} style={{ width: "100%" }}>
               <Div
@@ -351,7 +579,7 @@ const DaftarBimbinganProposalCoAdvisor = () => {
                 </Typography>
               </Div>
               {/* Semester End */}
-              {/* Table Mahasiswa Proposal Start */}
+        {/* Table Mahasiswa Proposal Start *
               <TableContainer>
                 <Table>
                   <TableHead>
@@ -486,7 +714,7 @@ const DaftarBimbinganProposalCoAdvisor = () => {
                         <TableCell>
                           <Typography
                             component={Link}
-                            to="/halaman-berikutnya"
+                            to={`/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor/beranda/${proposal.group_id}/${proposal.status_co_advisor}`}
                             sx={{
                               textDecoration: "none",
                               color: "blue",
@@ -502,7 +730,7 @@ const DaftarBimbinganProposalCoAdvisor = () => {
               </TableContainer>
             </div>
           )
-        )}
+        )} */}
         {/* Table Mahasiswa Proposal End */}
       </Div>
       {/* Table Master End */}

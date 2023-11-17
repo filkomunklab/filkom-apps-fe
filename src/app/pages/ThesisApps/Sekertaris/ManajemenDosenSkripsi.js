@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import {
   Button,
   Chip,
@@ -10,6 +12,7 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
+  Paper,
   Select,
   Table,
   TableBody,
@@ -25,6 +28,67 @@ import Div from "@jumbo/shared/Div";
 import WarningIcon from "@mui/icons-material/Warning";
 
 const ManajemenDosenSkripsi = () => {
+  // state - menyimpan hasil request data
+  const [dosenSkripsi, setDosenSkripsi] = useState();
+  const [daftarDosen, setDaftarDosen] = useState();
+
+  const [selectedUserId, setSelectedUserId] = useState();
+
+  const groupId = useParams().groupId;
+  console.log("group id: ", groupId);
+  const [progress, setProgress] = useState(null);
+
+  const userRole = useParams().role;
+  console.log("role user akses page: ", userRole);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log("role user yang sign in: ", role);
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchDosenSkripsiData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/employee/dosen-skripsi`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDosenSkripsi(response.data.data);
+        console.log("Request Get daftar dosen skripsi: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil daftar dosen skripsi:",
+          error
+        );
+      }
+    };
+    // daftar dosen yang bukan dosen skripsi
+    const fetchDaftarDosenData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/employee/dosen`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDaftarDosen(response.data.data);
+        console.log("Request Get daftar dosen: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil daftar dosen:", error);
+      }
+    };
+    fetchDosenSkripsiData();
+    fetchDaftarDosenData();
+  }, [token]);
+
   const [open, setOpen] = useState(false);
   const [selectedDosen, setSelectedDosen] = useState("");
   const [dosenList, setDosenList] = useState([]);
@@ -68,20 +132,74 @@ const ManajemenDosenSkripsi = () => {
 
   const handleTambahDosenSkripsi = () => {
     if (selectedDosen) {
-      const selectedDosenOption = dosenOptions.find(
-        (option) => option.value === selectedDosen
-      );
-      const newDosen = {
-        id: nextDosenId,
-        nama: selectedDosenOption ? selectedDosenOption.label : "",
-        nidn: generateRandomNIDN(),
-        status: "Aktif",
+      const dosen = {
+        employee_id: selectedDosen,
       };
+      console.log("dosen yang akan dikirim: ", dosen);
+      axios
+        .post(`http://localhost:2000/api/v1/employee/dosen-skripsi`, dosen, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setSelectedDosen("");
+          setOpen(false);
 
-      setDosenList([...dosenList, newDosen]);
-      setNextDosenId(nextDosenId + 1);
-      setSelectedDosen("");
-      setOpen(false);
+          console.log("Berhasil menambah dosen skripsi:", response.data);
+
+          // request data
+          const fetchDosenSkripsiData = async () => {
+            try {
+              const response = await axios.get(
+                `http://localhost:2000/api/v1/employee/dosen-skripsi`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                  },
+                }
+              );
+              setDosenSkripsi(response.data.data);
+              console.log(
+                "Request Get daftar dosen skripsi: ",
+                response.data.data
+              );
+            } catch (error) {
+              console.error(
+                "Terjadi kesalahan saat mengambil daftar dosen skripsi:",
+                error
+              );
+            }
+          };
+          // daftar dosen yang bukan dosen skripsi
+          const fetchDaftarDosenData = async () => {
+            try {
+              const response = await axios.get(
+                `http://localhost:2000/api/v1/employee/dosen`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                  },
+                }
+              );
+              setDaftarDosen(response.data.data);
+              console.log("Request Get daftar dosen: ", response.data.data);
+            } catch (error) {
+              console.error(
+                "Terjadi kesalahan saat mengambil daftar dosen:",
+                error
+              );
+            }
+          };
+          fetchDosenSkripsiData();
+          fetchDaftarDosenData();
+        })
+        .catch((error) => {
+          console.error(
+            "Terjadi kesalahan saat menambah dosen skripsi:",
+            error
+          );
+        });
     }
   };
 
@@ -122,9 +240,73 @@ const ManajemenDosenSkripsi = () => {
     setDosenList(updatedDosenList);
   };
 
-  const handleDeleteDosen = (dosenId) => {
-    const updatedDosenList = dosenList.filter((dosen) => dosen.id !== dosenId);
-    setDosenList(updatedDosenList);
+  const handleDeleteDosen = () => {
+    axios
+      .delete(
+        `http://localhost:2000/api/v1/employee/dosen-skripsi/${selectedUserId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        // bersihkan user id yang dipilih
+        setSelectedUserId("");
+        // tutup konfirmasi
+        handleCloseDeleteConfirmationDialog();
+
+        console.log("Berhasil menghapus dosen skripsi:", response.data);
+
+        // request data
+        const fetchDosenSkripsiData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/employee/dosen-skripsi`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDosenSkripsi(response.data.data);
+            console.log(
+              "Request Get daftar dosen skripsi: ",
+              response.data.data
+            );
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil daftar dosen skripsi:",
+              error
+            );
+          }
+        };
+        // daftar dosen yang bukan dosen skripsi
+        const fetchDaftarDosenData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/employee/dosen`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDaftarDosen(response.data.data);
+            console.log("Request Get daftar dosen: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil daftar dosen:",
+              error
+            );
+          }
+        };
+        fetchDosenSkripsiData();
+        fetchDaftarDosenData();
+      })
+      .catch((error) => {
+        console.error("Terjadi kesalahan saat menghapus dosen skripsi:", error);
+      });
   };
 
   const handleConfirmStatusChange = (newStatus) => {
@@ -218,33 +400,8 @@ const ManajemenDosenSkripsi = () => {
           </Div>
         </Div>
         {/* Header End */}
-        {/* Semester Start */}
-        <Div
-          sx={{
-            display: "flex",
-            width: "100%",
-            padding: "24px",
-            alignItems: "center",
-            gap: "10px",
-            borderRadius: "6px",
-            background: "rgba(26, 56, 96, 0.10)",
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: "16px",
-              fontStyle: "normal",
-              fontWeight: 500,
-              lineHeight: "24px",
-              color: "#192434",
-            }}
-          >
-            2023/2024-Genap (Proposal)
-          </Typography>
-        </Div>
-        {/* Semester End */}
         {/* Table Mahasiswa Proposal Start */}
-        <TableContainer>
+        <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
@@ -258,10 +415,10 @@ const ManajemenDosenSkripsi = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dosenList.map((dosen, index) => (
+              {dosenSkripsi?.map((dosen, index) => (
                 <TableRow key={dosen.id}>
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>{dosen.nama}</TableCell>
+                  <TableCell>{dosen.fullName}</TableCell>
                   <TableCell>{dosen.nidn}</TableCell>
                   <TableCell sx={{ width: "20%" }}>
                     <Div sx={{ display: "flex" }}>
@@ -271,9 +428,10 @@ const ManajemenDosenSkripsi = () => {
                           cursor: "pointer",
                           color: "red",
                         }}
-                        onClick={() =>
-                          handleOpenDeleteConfirmationDialog(dosen.id)
-                        }
+                        onClick={() => {
+                          handleOpenDeleteConfirmationDialog(dosen.id);
+                          setSelectedUserId(dosen.role_id);
+                        }}
                       >
                         Hapus
                       </span>
@@ -316,7 +474,7 @@ const ManajemenDosenSkripsi = () => {
               alignSelf: "stretch",
             }}
           >
-            {/* ketua Panelis */}
+            {/* Daftar Dosen */}
             <FormControl fullWidth size="small" sx={{ marginTop: "25px" }}>
               <InputLabel id="dosen-label">Dosen</InputLabel>
               <Select
@@ -325,10 +483,24 @@ const ManajemenDosenSkripsi = () => {
                 label="Dosen"
                 value={selectedDosen}
                 onChange={(event) => setSelectedDosen(event.target.value)}
+                MenuProps={{
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "left",
+                  },
+                  transformOrigin: {
+                    vertical: "top",
+                    horizontal: "left",
+                  },
+                  getContentAnchorEl: null,
+                  style: {
+                    maxHeight: "230px", // Sesuaikan dengan tinggi yang diinginkan
+                  },
+                }}
               >
-                {dosenOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                {daftarDosen?.map((dosen) => (
+                  <MenuItem key={dosen.id} value={dosen.id}>
+                    {dosen.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -354,64 +526,6 @@ const ManajemenDosenSkripsi = () => {
             sx={{ textTransform: "none" }}
           >
             Tambah
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Dialog Konfirmasi Non-Active */}
-      <Dialog
-        open={confirmationDialogOpenNonActive}
-        onClose={handleCloseConfirmationDialogNonActive}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            alignSelf: "stretch",
-          }}
-        >
-          <WarningIcon fontSize="large" sx={{ marginRight: "6px" }} />
-          <Typography variant="h1" sx={{ margin: "10px 0" }}>
-            Menonaktifkan Dosen Skripsi
-          </Typography>
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Apakah Anda yakin ingin menonaktifkan dosen ini?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-          <Button
-            onClick={handleCloseConfirmationDialogNonActive}
-            sx={{
-              background: "white",
-              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-              textTransform: "none",
-              color: "black",
-              textTransform: "none",
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              handleConfirmStatusChange("Non-Aktif");
-              handleCloseConfirmationDialogNonActive();
-            }}
-            sx={{
-              background: "#FC0",
-              boxShadow: "rgba(0, 0, 0, 0.12)",
-              textTransform: "none",
-              color: "#263445",
-              "&:hover": {
-                color: "#FC0",
-              },
-            }}
-          >
-            Confirm
           </Button>
         </DialogActions>
       </Dialog>
@@ -452,12 +566,11 @@ const ManajemenDosenSkripsi = () => {
               textTransform: "none",
             }}
           >
-            Cancel
+            Batal
           </Button>
           <Button
             onClick={() => {
-              handleDeleteDosen(selectedDosenToDelete);
-              handleCloseDeleteConfirmationDialog();
+              handleDeleteDosen();
             }}
             sx={{
               background: "#FC0",
@@ -469,7 +582,7 @@ const ManajemenDosenSkripsi = () => {
               },
             }}
           >
-            Confirm
+            Hapus
           </Button>
         </DialogActions>
       </Dialog>

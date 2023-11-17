@@ -3,7 +3,7 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const MenuAdvisorProposal = ({
+const MenuAnggotaPanelisProposal = ({
   dataGroupId: groupId,
   dataProgress: progress,
   page: setPage,
@@ -19,7 +19,6 @@ const MenuAdvisorProposal = ({
         <Div
           sx={{
             display: "flex",
-            // padding: "5px 16px",
             width: "100%",
             alignSelf: "stretch",
             borderRadius: "8px",
@@ -32,30 +31,28 @@ const MenuAdvisorProposal = ({
           <Div sx={{ width: "100%", display: "flex" }}>
             <Div sx={{ margin: "auto" }}>
               {/* BERANDA */}
-              <Link
+              <Button
+                component={Link}
                 to={`/sistem-informasi-skripsi/daftar-${
                   progress === "Finished" ? "riwayat-" : ""
-                }bimbingan-${
+                }pengujian-${
                   (progress === "Proposal" && "proposal-") ||
                   (progress === "Skripsi" && "skripsi-") ||
                   (progress === "Finished" && "")
-                }advisor/beranda/${groupId}/ADVISOR`}
+                }anggota/beranda/${groupId}/ANGGOTA_PANELIS`}
+                sx={{
+                  fontSize: "13px",
+                  padding: "6px 16px",
+                  fontWeight: 500,
+                  color: setPage === "Beranda" ? "#006AF5" : "#192434",
+                  textTransform: "none",
+                  "&:hover": {
+                    color: setPage === "Beranda" ? "#006AF5" : "#006AF5",
+                  },
+                }}
               >
-                <Button
-                  sx={{
-                    fontSize: "13px",
-                    padding: "6px 16px",
-                    fontWeight: 500,
-                    color: setPage === "Beranda" ? "#006AF5" : "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: setPage === "Beranda" ? "#006AF5" : "#006AF5",
-                    },
-                  }}
-                >
-                  Beranda
-                </Button>
-              </Link>
+                Beranda
+              </Button>
             </Div>
             <Div
               sx={{
@@ -67,30 +64,28 @@ const MenuAdvisorProposal = ({
             ></Div>
             <Div sx={{ margin: "auto" }}>
               {/* KONSULTASI */}
-              <Link
+              <Button
+                component={Link}
                 to={`/sistem-informasi-skripsi/daftar-${
                   progress === "Finished" ? "riwayat-" : ""
-                }bimbingan-${
+                }pengujian-${
                   (progress === "Proposal" && "proposal-") ||
                   (progress === "Skripsi" && "skripsi-") ||
                   (progress === "Finished" && "")
-                }advisor/konsultasi/${groupId}/ADVISOR`}
+                }anggota/konsultasi/${groupId}/ANGGOTA_PANELIS`}
+                sx={{
+                  // width: "130px",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  color: setPage === "Konsultasi" ? "#006AF5" : "#192434",
+                  textTransform: "none",
+                  "&:hover": {
+                    color: setPage === "Konsultasi" ? "#006AF5" : "#006AF5",
+                  },
+                }}
               >
-                <Button
-                  sx={{
-                    // width: "130px",
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: setPage === "Konsultasi" ? "#006AF5" : "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: setPage === "Konsultasi" ? "#006AF5" : "#006AF5",
-                    },
-                  }}
-                >
-                  Konsultasi
-                </Button>
-              </Link>
+                Konsultasi
+              </Button>
             </Div>
             <Div
               sx={{
@@ -143,11 +138,11 @@ const MenuAdvisorProposal = ({
                 <Link
                   to={`/sistem-informasi-skripsi/daftar-${
                     progress === "Finished" ? "riwayat-" : ""
-                  }bimbingan-${
+                  }pengujian-${
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "")
-                  }advisor/dokumen-proposal/${groupId}/ADVISOR`}
+                  }anggota/dokumen-proposal/${groupId}/ANGGOTA_PANELIS`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -171,11 +166,11 @@ const MenuAdvisorProposal = ({
                 <Link
                   to={`/sistem-informasi-skripsi/daftar-${
                     progress === "Finished" ? "riwayat-" : ""
-                  }bimbingan-${
+                  }pengujian-${
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "")
-                  }advisor/berita-acara-proposal/${groupId}/ADVISOR`}
+                  }anggota/berita-acara-proposal/${groupId}/ANGGOTA_PANELIS`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -201,11 +196,11 @@ const MenuAdvisorProposal = ({
                 <Link
                   to={`/sistem-informasi-skripsi/daftar-${
                     progress === "Finished" ? "riwayat-" : ""
-                  }bimbingan-${
+                  }pengujian-${
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "")
-                  }advisor/dokumen-revisi-proposal/${groupId}/ADVISOR`}
+                  }anggota/dokumen-revisi-proposal/${groupId}/ANGGOTA_PANELIS`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -282,11 +277,11 @@ const MenuAdvisorProposal = ({
                 <Link
                   to={`/sistem-informasi-skripsi/daftar-${
                     progress === "Finished" ? "riwayat-" : ""
-                  }bimbingan-${
+                  }pengujian-${
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "")
-                  }advisor/dokumen-skripsi/${groupId}/ADVISOR`}
+                  }anggota/dokumen-skripsi/${groupId}/ANGGOTA_PANELIS`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -308,11 +303,11 @@ const MenuAdvisorProposal = ({
                 <Link
                   to={`/sistem-informasi-skripsi/daftar-${
                     progress === "Finished" ? "riwayat-" : ""
-                  }bimbingan-${
+                  }pengujian-${
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "")
-                  }advisor/berita-acara-skripsi/${groupId}/ADVISOR`}
+                  }anggota/berita-acara-skripsi/${groupId}/ANGGOTA_PANELIS`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -338,11 +333,11 @@ const MenuAdvisorProposal = ({
                 <Link
                   to={`/sistem-informasi-skripsi/daftar-${
                     progress === "Finished" ? "riwayat-" : ""
-                  }bimbingan-${
+                  }pengujian-${
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "")
-                  }advisor/dokumen-revisi-skripsi/${groupId}/ADVISOR`}
+                  }anggota/dokumen-revisi-skripsi/${groupId}/ANGGOTA_PANELIS`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -374,4 +369,4 @@ const MenuAdvisorProposal = ({
   );
 };
 
-export default MenuAdvisorProposal;
+export default MenuAnggotaPanelisProposal;

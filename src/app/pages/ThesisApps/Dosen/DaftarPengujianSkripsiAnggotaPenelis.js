@@ -39,7 +39,7 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
     const fetchDaftarPengujianSkripsiData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/skripsi-list-chairman",
+          "http://localhost:2000/api/v1/group/skripsi-list-member",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -58,43 +58,6 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
     };
     fetchDaftarPengujianSkripsiData();
   }, [token]);
-
-  const TableItem = ({ index }) => {
-    return (
-      <TableRow key={index}>
-        <TableCell sx={{ fontSize: "13px" }}>{index + 1}</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>Geovalga Fransiscus Lim</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>
-          SISTEM INFORMASI MANAJEMEN SKRIPSI DI FAKULTAS ILMU KOMPUTER
-          UNIVERSITAS KLABAT
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Typography
-            component={Link}
-            to="/sistem-informasi-skripsi/uji-skripsi-anggota/beranda"
-            sx={{
-              textDecoration: "none",
-              color: "blue",
-            }}
-          >
-            Detail
-          </Typography>
-        </TableCell>
-      </TableRow>
-    );
-  };
 
   return (
     <Div>
@@ -554,7 +517,7 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
                         <TableCell>
                           <Typography
                             component={Link}
-                            to="/halaman-berikutnya"
+                            to={`/sistem-informasi-skripsi/daftar-pengujian-skripsi-anggota/beranda/${skripsi.group_id}/ANGGOTA_PANELIS`}
                             sx={{
                               textDecoration: "none",
                               color: "blue",

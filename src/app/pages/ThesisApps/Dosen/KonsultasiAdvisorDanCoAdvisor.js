@@ -24,6 +24,7 @@ import {
 import CreateIcon from "@mui/icons-material/Create";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
+import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
 
 const BuatKonsultasi = () => {
   // state - simpan request konsultasi
@@ -203,10 +204,29 @@ const BuatKonsultasi = () => {
           {/* Menu Horizontal Start */}
           {/* ADVISOR */}
           <Div
-            hidden={userRole.includes("ADVISOR") ? false : true}
+            hidden={userRole === "ADVISOR" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuAdvisor dataGroupId={groupId} dataProgress={progress} />
+            <MenuAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
+
+          <Div
+            hidden={
+              userRole === "CO_ADVISOR1" || userRole === "CO_ADVISOR2"
+                ? false
+                : true
+            }
+            sx={{ width: "100%" }}
+          >
+            <MenuCoAdvisor
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
           </Div>
           {/* Menu horizontal End */}
 
@@ -295,7 +315,7 @@ const BuatKonsultasi = () => {
                     <TextField
                       id="date"
                       label="Tanggal"
-                      type="text"
+                      type="date"
                       fullWidth
                       placeholder="dd/mm/yyyy"
                       value={selectedDate}
@@ -354,28 +374,47 @@ const BuatKonsultasi = () => {
                   </DialogActions>
                 </Dialog>
               </Container>
-              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
-                <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Deskripsi</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Tanggal</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Tertera</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {konsultasi?.constultation?.map((consultation, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{consultation.description}</TableCell>
-                        <TableCell>{consultation.date}</TableCell>
-                        <TableCell>{consultation.dosen}</TableCell>
+              {konsultasi?.constultation > 0 ? (
+                <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
+                  <Table>
+                    <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                      <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                        <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
+                        <TableCell sx={{ width: "25%" }}>Deskripsi</TableCell>
+                        <TableCell sx={{ width: "25%" }}>Tanggal</TableCell>
+                        <TableCell sx={{ width: "25%" }}>Tertera</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                      {konsultasi?.constultation?.map((consultation, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>{consultation.description}</TableCell>
+                          <TableCell>{consultation.date}</TableCell>
+                          <TableCell>{consultation.dosen}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              ) : (
+                <Typography
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    padding: "24px",
+                    alignItems: "center",
+                    gap: "10px",
+                    color: "#CA150C",
+                    background: "rgba(226, 29, 18, 0.50)",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                  }}
+                >
+                  Anda belum melakukan mencatat konsultasi.
+                </Typography>
+              )}
               {/* Table Kelompok mahasiswa End */}
             </Div>
           </Div>

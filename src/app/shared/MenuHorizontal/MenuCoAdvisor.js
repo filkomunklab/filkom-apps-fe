@@ -2,8 +2,9 @@ import Div from "@jumbo/shared/Div";
 import { Button, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-const MenuAdvisorProposal = ({
+const MenuCoAdvisorProposal = ({
   dataGroupId: groupId,
   dataProgress: progress,
   page: setPage,
@@ -12,6 +13,10 @@ const MenuAdvisorProposal = ({
   const open1 = Boolean(anchorEl);
   const [anchorE2, setAnchorE2] = React.useState(null);
   const open2 = Boolean(anchorE2);
+
+  const role = useParams().role;
+  console.log(role);
+
   return (
     <Div>
       <Div>
@@ -39,7 +44,7 @@ const MenuAdvisorProposal = ({
                   (progress === "Proposal" && "proposal-") ||
                   (progress === "Skripsi" && "skripsi-") ||
                   (progress === "Finished" && "")
-                }advisor/beranda/${groupId}/ADVISOR`}
+                }co-advisor/beranda/${groupId}/${role}`}
               >
                 <Button
                   sx={{
@@ -74,7 +79,7 @@ const MenuAdvisorProposal = ({
                   (progress === "Proposal" && "proposal-") ||
                   (progress === "Skripsi" && "skripsi-") ||
                   (progress === "Finished" && "")
-                }advisor/konsultasi/${groupId}/ADVISOR`}
+                }co-advisor/konsultasi/${groupId}/${role}`}
               >
                 <Button
                   sx={{
@@ -109,7 +114,7 @@ const MenuAdvisorProposal = ({
                   fontWeight: 500,
                   color:
                     setPage === "Dokumen Proposal" ||
-                    setPage === "Berita Acara Proposal" ||
+                    setPage === "Perubahan Proposal" ||
                     setPage === "Dokumen Revisi Proposal"
                       ? "#006AF5"
                       : "#192434",
@@ -117,7 +122,7 @@ const MenuAdvisorProposal = ({
                   "&:hover": {
                     color:
                       setPage === "Dokumen Proposal" ||
-                      setPage === "Berita Acara Proposal" ||
+                      setPage === "Perubahan Proposal" ||
                       setPage === "Dokumen Revisi Proposal"
                         ? "#006AF5"
                         : "#006AF5",
@@ -147,7 +152,7 @@ const MenuAdvisorProposal = ({
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "")
-                  }advisor/dokumen-proposal/${groupId}/ADVISOR`}
+                  }co-advisor/dokumen-proposal/${groupId}/${role}`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -167,7 +172,7 @@ const MenuAdvisorProposal = ({
                     Dokumen Proposal
                   </MenuItem>
                 </Link>
-                {/* BERITA ACARA PROPOSAL */}
+                {/* PERUBAHAN PROPOSAL */}
                 <Link
                   to={`/sistem-informasi-skripsi/daftar-${
                     progress === "Finished" ? "riwayat-" : ""
@@ -175,26 +180,26 @@ const MenuAdvisorProposal = ({
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "")
-                  }advisor/berita-acara-proposal/${groupId}/ADVISOR`}
+                  }co-advisor/perubahan-proposal/${groupId}/${role}`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
                     onClick={() => setAnchorEl(null)}
                     style={{
                       color:
-                        setPage === "Berita Acara Proposal"
+                        setPage === "Perubahan Proposal"
                           ? "#006AF5"
                           : "#192434",
                       textTransform: "none",
                       "&:hover": {
                         color:
-                          setPage === "Berita Acara Proposal"
+                          setPage === "Perubahan Proposal"
                             ? "#006AF5"
                             : "#006AF5",
                       },
                     }}
                   >
-                    Berita Acara Proposal
+                    Perubahan Proposal
                   </MenuItem>
                 </Link>
                 {/* DOKUMEN REVISI PROPOSAL */}
@@ -205,7 +210,7 @@ const MenuAdvisorProposal = ({
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "")
-                  }advisor/dokumen-revisi-proposal/${groupId}/ADVISOR`}
+                  }co-advisor/dokumen-revisi-proposal/${groupId}/${role}`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -247,7 +252,7 @@ const MenuAdvisorProposal = ({
                   fontWeight: 500,
                   color:
                     setPage === "Dokumen Skripsi" ||
-                    setPage === "Berita Acara Skripsi" ||
+                    setPage === "Perubahan Skripsi" ||
                     setPage === "Dokumen Revisi Skripsi"
                       ? "#006AF5"
                       : "#192434",
@@ -255,7 +260,7 @@ const MenuAdvisorProposal = ({
                   "&:hover": {
                     color:
                       setPage === "Dokumen Skripsi" ||
-                      setPage === "Berita Acara Skripsi" ||
+                      setPage === "Perubahan Skripsi" ||
                       setPage === "Dokumen Revisi Skripsi"
                         ? "#006AF5"
                         : "#006AF5",
@@ -286,7 +291,7 @@ const MenuAdvisorProposal = ({
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "")
-                  }advisor/dokumen-skripsi/${groupId}/ADVISOR`}
+                  }co-advisor/dokumen-skripsi/${groupId}/${role}`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -312,26 +317,24 @@ const MenuAdvisorProposal = ({
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "")
-                  }advisor/berita-acara-skripsi/${groupId}/ADVISOR`}
+                  }co-advisor/perubahan-skripsi/${groupId}/${role}`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
                     onClick={() => setAnchorE2(null)}
                     style={{
                       color:
-                        setPage === "Berita Acara Skripsi"
-                          ? "#006AF5"
-                          : "#192434",
+                        setPage === "Perubahan Skripsi" ? "#006AF5" : "#192434",
                       textTransform: "none",
                       "&:hover": {
                         color:
-                          setPage === "Berita Acara Skripsi"
+                          setPage === "Perubahan Skripsi"
                             ? "#006AF5"
                             : "#006AF5",
                       },
                     }}
                   >
-                    Berita Acara Skripsi
+                    Perubahan Skripsi
                   </MenuItem>
                 </Link>
                 {/* DOKUMEN REVISI SKRIPSI */}
@@ -342,7 +345,7 @@ const MenuAdvisorProposal = ({
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "")
-                  }advisor/dokumen-revisi-skripsi/${groupId}/ADVISOR`}
+                  }co-advisor/dokumen-revisi-skripsi/${groupId}/${role}`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
@@ -374,4 +377,4 @@ const MenuAdvisorProposal = ({
   );
 };
 
-export default MenuAdvisorProposal;
+export default MenuCoAdvisorProposal;

@@ -14,6 +14,7 @@ import { ROLES } from "app/utils/constants/roles";
 import {
   adminMenus,
   dekanMenus,
+  dosenMKMenus,
   dosenMenus,
   kaprodiMenus,
   mahasiswaMenus,
@@ -44,6 +45,8 @@ const roleCheck = () => {
         return dekanMenus;
       } else if (roles.includes(ROLES.KAPRODI)) {
         return kaprodiMenus;
+      } else if (roles.includes(ROLES.DOSEN_MK)) {
+        return dosenMKMenus;
       }
       return dosenMenus;
     case ROLES.DEKAN:
@@ -51,8 +54,6 @@ const roleCheck = () => {
     case ROLES.KAPRODI:
       return kaprodiMenus;
     case ROLES.SEKRETARIS:
-    case ROLES.OPERATOR_FAKULTAS:
-      return sekretarisMenus;
     case ROLES.OPERATOR_FAKULTAS:
       return sekretarisMenus;
     case ROLES.REGISTER:

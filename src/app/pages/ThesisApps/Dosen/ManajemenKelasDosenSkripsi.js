@@ -27,6 +27,7 @@ import SearchGlobal from "app/shared/SearchGlobal";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import WarningIcon from "@mui/icons-material/Warning";
 import axios from "axios";
 
 const ManajemenKelasDosenSkripsi = () => {
@@ -54,6 +55,42 @@ const ManajemenKelasDosenSkripsi = () => {
   const [name, setName] = useState(""); // menyimpan kelas - name
   const [tahunAjaran, setTahunAjaran] = useState(""); // meyimpan kelas - tahun ajaran
   const [academic_id, setAcademicId] = useState(""); // meyimpan kelas - akademik
+  const [hapusConfirmationDialogOpen, setHapusConfirmationDialogOpen] =
+    useState(false);
+
+  const [showDeleteStudentConfirmation, setShowDeleteStudentConfirmation] =
+    useState(false);
+  const [selectedStudentToDelete, setSelectedStudentToDelete] = useState(null);
+
+  const [selectedAkademikToDelete, setSelectedAkademikToDelete] =
+    useState(null);
+
+  // Fungsi untuk membuka popup konfirmasi hapus mahasiswa
+  const handleOpenDeleteStudentConfirmation = (studentId) => {
+    setSelectedStudentToDelete(studentId);
+    setShowDeleteStudentConfirmation(true);
+  };
+
+  // Fungsi untuk menutup popup konfirmasi hapus mahasiswa
+  const handleCloseDeleteStudentConfirmation = () => {
+    setShowDeleteStudentConfirmation(false);
+  };
+
+  // Fungsi untuk mengonfirmasi penghapusan mahasiswa
+  const handleConfirmDeleteStudent = () => {
+    if (selectedStudentToDelete) {
+      handleDeleteStudent(selectedStudentToDelete); // Memanggil fungsi penghapusan mahasiswa
+      setSelectedStudentToDelete(null);
+      setShowDeleteStudentConfirmation(false);
+    }
+  };
+
+  const confirmDeleteAkademik = () => {
+    if (selectedAkademikToDelete) {
+      handleDeleteAkademikAction(selectedAkademikToDelete);
+      setSelectedAkademikToDelete(null);
+    }
+  };
 
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
@@ -283,7 +320,8 @@ const ManajemenKelasDosenSkripsi = () => {
   };
 
   // fungsi - menghapus akademik
-  const handleDeleteAkademik = (akademik) => {
+  const handleDeleteAkademikAction = (akademik) => {
+    setSelectedAkademikToDelete(akademik);
     // Melakukan DELETE request ke API
     axios
       .delete(`http://localhost:2000/api/v1/academic-calendar/${akademik.id}`, {
@@ -295,6 +333,7 @@ const ManajemenKelasDosenSkripsi = () => {
         if (response.status === 200) {
           console.log("Akademik berhasil dihapus:", akademik.id);
           // request data
+          setHapusConfirmationDialogOpen();
           fetchDaftarAkademikData();
         } else {
           console.log("Akademik gagal dihapus:", akademik.id);
@@ -567,7 +606,9 @@ const ManajemenKelasDosenSkripsi = () => {
                                 color: "red",
                                 fontSize: "14px",
                               }}
-                              onClick={() => handleDeleteAkademik(akademik)}
+                              onClick={() => {
+                                setSelectedAkademikToDelete(akademik);
+                              }}
                             >
                               Hapus
                             </span>
@@ -575,6 +616,66 @@ const ManajemenKelasDosenSkripsi = () => {
                         </TableCell>
                       </TableRow>
                     ))}
+                    {/* popup hapus akademik */}
+                    <Dialog
+                      open={Boolean(selectedAkademikToDelete)}
+                      onClose={() => setSelectedAkademikToDelete(null)}
+                      maxWidth="xs"
+                      fullWidth
+                    >
+                      <DialogTitle
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <WarningIcon
+                          fontSize="small"
+                          sx={{ marginRight: "6px" }}
+                        />
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ fontSize: "20px" }}
+                        >
+                          Hapus Akademik Kalender
+                        </Typography>
+                      </DialogTitle>
+                      <DialogContent>
+                        Apakah Anda yakin ingin menghapus akademik Kalender ini?
+                      </DialogContent>
+                      <DialogActions
+                        sx={{ background: "rgba(26, 56, 96, 0.10)" }}
+                      >
+                        <Button
+                          onClick={() => setSelectedAkademikToDelete(null)}
+                          sx={{
+                            background: "white",
+                            boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                            textTransform: "none",
+                            color: "black",
+                          }}
+                        >
+                          Batal
+                        </Button>
+                        <Button
+                          onClick={confirmDeleteAkademik}
+                          sx={{
+                            textTransform: "none",
+                            background: "#FC0",
+                            color: "#263445",
+                            "&:hover": {
+                              color: "#FC0",
+                            },
+                          }}
+                        >
+                          Dihapus
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+
+                    {/* popup update akademik */}
                     <Dialog
                       open={openUpdateAkademik}
                       onClose={handleCloseUpdateAkademik}
@@ -792,6 +893,21 @@ const ManajemenKelasDosenSkripsi = () => {
                 value={academic_id}
                 onChange={(e) => setAcademicId(e.target.value)}
                 label="Semester"
+                sx={{ maxHeight: "600px" }}
+                MenuProps={{
+                  anchorOrigin: {
+                    vertical: "bottom",
+                    horizontal: "left",
+                  },
+                  transformOrigin: {
+                    vertical: "top",
+                    horizontal: "left",
+                  },
+                  getContentAnchorEl: null,
+                  style: {
+                    maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                  },
+                }}
               >
                 {daftarAkademik.map((semesterData) => (
                   <MenuItem
@@ -831,139 +947,243 @@ const ManajemenKelasDosenSkripsi = () => {
         </Dialog>
         {/* popup membuat kelas end */}
       </Div>
-      {daftarSemuaKelas.map((classroomData, index) => (
-        <Accordion
-          key={index}
-          expanded={selectedClass === index}
-          onChange={() => handleAccordionClick(index)}
-          sx={{ marginBottom: "25px" }}
-        >
-          <AccordionSummary>
-            <div>
-              <Typography variant="h2">{classroomData.classroom}</Typography>
-            </div>
-          </AccordionSummary>
+      <Div
+        sx={{
+          display: "inline-flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          gap: "25px",
+          width: "100%",
+          height: "460px",
+          overflowY: "auto",
+          background: "#FFF",
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+          padding: "8px",
+          borderRadius: "8px",
+        }}
+      >
+        {daftarSemuaKelas.map((classroomData, index) => (
+          <Accordion
+            key={index}
+            expanded={selectedClass === index}
+            onChange={() => handleAccordionClick(index)}
+            sx={{
+              marginBottom: "25px",
+              width: "100%",
+              padding: "1px",
+              background: "rgba(26, 56, 96, 0.10)",
+              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <AccordionSummary>
+              <div>
+                <Typography variant="h2">{classroomData.classroom}</Typography>
+              </div>
+            </AccordionSummary>
 
-          <AccordionDetails>
-            <Div sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Button
-                size="small"
-                color="error"
-                variant="contained"
-                onClick={handleDeleteClass}
-              >
-                <DeleteIcon fontSize="small" />
-                Hapus Kelas
-              </Button>
-              {/* Konfirmasi popup untuk menghapus kelas */}
-              <Dialog
-                open={openDeleteConfirmation}
-                onClose={handleCloseDeleteConfirmation}
-                fullWidth
-                maxWidth="sm"
-              >
-                <DialogTitle variant="subtitle2">
-                  Konfirmasi Penghapusan Kelas
-                </DialogTitle>
-                <DialogContent>
-                  <Typography>
-                    Anda tidak dapat menghapus kelas ini karena masih ada
-                    mahasiswa di dalamnya. Harap hapus semua mahasiswa terlebih
-                    dahulu sebelum menghapus kelas ini.
-                  </Typography>
-                </DialogContent>
-                <DialogActions>
-                  <Button
-                    size="small"
-                    onClick={handleCloseDeleteConfirmation}
-                    color="primary"
-                  >
-                    Batal
-                  </Button>
-                  <Button
-                    size="small"
-                    color="error"
-                    variant="contained"
-                    onClick={handleConfirmDeleteClass}
-                  >
-                    Hapus Kelas
-                  </Button>
-                </DialogActions>
-              </Dialog>
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                onClick={() => setAddStudentOpen(true)}
-                sx={{ textTransform: "none" }}
-              >
-                <AddCircleOutlineIcon fontSize="small" />
-                Tambahkan Mahasiswa
-              </Button>
-            </Div>
-            <TableContainer sx={{ marginTop: "25px" }}>
-              <Table>
-                <TableHead>
-                  <TableRow sx={{ background: "#F5F5F5" }}>
-                    <TableCell>No</TableCell>
-                    <TableCell>Nama Mahasiswa</TableCell>
-                    <TableCell>NIM</TableCell>
-                    <TableCell>Program Studi</TableCell>
-                    <TableCell>Action</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {classroomData.students.map((student, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{student.fullName}</TableCell>
-                      <TableCell>{student.nim}</TableCell>
-                      <TableCell>
-                        {student.major === "IF"
-                          ? "Informatika"
-                          : student.major === "SI"
-                          ? "Sistem Informasi"
-                          : student.major}
-                      </TableCell>
-                      <TableCell>
-                        <span
-                          style={{
-                            textDecoration: "none",
-                            cursor: "pointer",
-                            color: "red",
-                            fontSize: "14px",
-                          }}
-                          onClick={() => handleDeleteStudent(student.id)}
-                        >
-                          Hapus
-                        </span>
-                      </TableCell>
+            <AccordionDetails>
+              <Div sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Button
+                  size="small"
+                  color="error"
+                  variant="contained"
+                  onClick={handleDeleteClass}
+                >
+                  <DeleteIcon fontSize="small" />
+                  Hapus Kelas
+                </Button>
+                {/* Konfirmasi popup untuk menghapus kelas */}
+                <Dialog
+                  open={openDeleteConfirmation}
+                  onClose={handleCloseDeleteConfirmation}
+                  fullWidth
+                  maxWidth="sm"
+                >
+                  <DialogTitle variant="subtitle2">
+                    Konfirmasi Penghapusan Kelas
+                  </DialogTitle>
+                  <DialogContent>
+                    <Typography>
+                      Anda tidak dapat menghapus kelas ini karena masih ada
+                      mahasiswa di dalamnya. Harap hapus semua mahasiswa
+                      terlebih dahulu sebelum menghapus kelas ini.
+                    </Typography>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      size="small"
+                      onClick={handleCloseDeleteConfirmation}
+                      color="primary"
+                    >
+                      Batal
+                    </Button>
+                    <Button
+                      size="small"
+                      color="error"
+                      variant="contained"
+                      onClick={handleConfirmDeleteClass}
+                    >
+                      Hapus Kelas
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setAddStudentOpen(true)}
+                  sx={{ textTransform: "none" }}
+                >
+                  <AddCircleOutlineIcon fontSize="small" />
+                  Tambahkan Mahasiswa
+                </Button>
+              </Div>
+              <TableContainer sx={{ marginTop: "25px" }} component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ background: "#F5F5F5" }}>
+                      <TableCell>No</TableCell>
+                      <TableCell>Nama Mahasiswa</TableCell>
+                      <TableCell>NIM</TableCell>
+                      <TableCell>Program Studi</TableCell>
+                      <TableCell>Action</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </AccordionDetails>
-        </Accordion>
-      ))}
+                  </TableHead>
+                  <TableBody>
+                    {classroomData.students.map((student, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{student.fullName}</TableCell>
+                        <TableCell>{student.nim}</TableCell>
+                        <TableCell>
+                          {student.major === "IF"
+                            ? "Informatika"
+                            : student.major === "SI"
+                            ? "Sistem Informasi"
+                            : student.major}
+                        </TableCell>
+                        <TableCell>
+                          <span
+                            style={{
+                              textDecoration: "none",
+                              cursor: "pointer",
+                              color: "red",
+                              fontSize: "14px",
+                            }}
+                            onClick={() =>
+                              handleOpenDeleteStudentConfirmation(student.id)
+                            }
+                          >
+                            Hapus
+                          </span>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </Div>
+      {/* Dialog Konfirmasi Hapus Mahasiswa */}
+      <Dialog
+        open={showDeleteStudentConfirmation}
+        onClose={handleCloseDeleteStudentConfirmation}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            alignSelf: "stretch",
+          }}
+        >
+          <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
+          <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
+            Hapus Mahasiswa
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          Apakah Anda yakin ingin menghapus mahasiswa ini?
+        </DialogContent>
+        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+          <Button
+            onClick={handleCloseDeleteStudentConfirmation}
+            sx={{
+              background: "white",
+              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+              textTransform: "none",
+              color: "black",
+            }}
+          >
+            Batal
+          </Button>
+          <Button
+            onClick={handleConfirmDeleteStudent}
+            sx={{
+              textTransform: "none",
+              background: "#FC0",
+              color: "#263445",
+              "&:hover": {
+                color: "#FC0",
+              },
+            }}
+          >
+            Hapus
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {showDeleteConfirmation && (
-        <Dialog open={showDeleteConfirmation} fullWidth maxWidth="sm">
-          <DialogTitle variant="subtitle2">Konfirmasi Hapus Kelas</DialogTitle>
+        <Dialog
+          open={showDeleteConfirmation}
+          onClose={() => setSelectedAkademikToDelete(null)}
+          maxWidth="xs"
+          fullWidth
+        >
+          <DialogTitle
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              alignSelf: "stretch",
+            }}
+          >
+            <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
+            <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
+              Hapus Kelas
+            </Typography>
+          </DialogTitle>
           <DialogContent>
             Kelas tidak dapat dihapus karena masih ada mahasiswa didalam kelas
           </DialogContent>
-          <DialogActions>
-            <Button size="small" onClick={handleCancelDelete} color="primary">
-              Kembali
+          <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+            <Button
+              onClick={handleCancelDelete}
+              sx={{
+                background: "white",
+                boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                textTransform: "none",
+                color: "black",
+              }}
+            >
+              Batal
             </Button>
             {/* <Button
-              size="small"
-              color="error"
-              variant="contained"
               onClick={() => deleteClass(selectedClass)}
+              sx={{
+                textTransform: "none",
+                background: "#FC0",
+                color: "#263445",
+                "&:hover": {
+                  color: "#FC0",
+                },
+              }}
             >
-              Hapus Kelas
+              Hapus
             </Button> */}
           </DialogActions>
         </Dialog>
