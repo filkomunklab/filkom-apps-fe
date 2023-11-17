@@ -225,55 +225,89 @@ const Konsultasi = () => {
           </Div>
           {/* Menu horizontal End */}
 
-          <Div
-            sx={{
-              display: "flex",
-              padding: "29px 42px",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: 2,
-              alignSelf: "stretch",
-              borderRadius: "8px",
-              border: "1px solid #E0E0E0",
-              background: "#FFF",
-              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
-            }}
-          >
+          {konsultasi?.constultation > 0 ? (
             <Div
               sx={{
-                width: "100%",
-                padding: "0 25px",
+                display: "flex",
+                padding: "29px 42px",
                 flexDirection: "column",
                 alignItems: "flex-start",
-                gap: "50px",
+                gap: 2,
+                alignSelf: "stretch",
+                borderRadius: "8px",
+                border: "1px solid #E0E0E0",
+                background: "#FFF",
+                boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
               }}
             >
-              {/* Table Konsultasi Start*/}
-              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
-                <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Deskripsi</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Tanggal</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Tertera</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {konsultasi?.constultation?.map((item, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{item.description}</TableCell>
-                        <TableCell>{item.date}</TableCell>
-                        <TableCell>{item.dosen}</TableCell>
+              <Div
+                sx={{
+                  width: "100%",
+                  padding: "0 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "50px",
+                }}
+              >
+                {/* Table Konsultasi Start*/}
+                <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
+                  <Table>
+                    <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                      <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                        <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
+                        <TableCell sx={{ width: "25%" }}>Deskripsi</TableCell>
+                        <TableCell sx={{ width: "25%" }}>Tanggal</TableCell>
+                        <TableCell sx={{ width: "25%" }}>Tertera</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Kelompok mahasiswa End */}
+                    </TableHead>
+                    <TableBody>
+                      {konsultasi?.constultation?.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>{item.description}</TableCell>
+                          <TableCell>{item.date}</TableCell>
+                          <TableCell>{item.dosen}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                {/* Table Kelompok mahasiswa End */}
+              </Div>
             </Div>
-          </Div>
+          ) : (
+            <Div
+              sx={{
+                display: "flex",
+                padding: "29px 42px",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: 2,
+                alignSelf: "stretch",
+                borderRadius: "8px",
+                border: "1px solid #E0E0E0",
+                background: "#FFF",
+                boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+              }}
+            >
+              <Typography
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  padding: "24px",
+                  alignItems: "center",
+                  gap: "10px",
+                  color: "#CA150C",
+                  background: "rgba(226, 29, 18, 0.50)",
+                  borderRadius: "6px",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                }}
+              >
+                Belum ada konsultasi.
+              </Typography>
+            </Div>
+          )}
         </Div>
         {/* Element 2 End */}
       </Div>

@@ -714,19 +714,23 @@ const PengajuanJudulDosenSkripsi = () => {
 
               {/* Button Ganti Dosen Pembimbing Start */}
               <Div hidden={userRole === "DOSEN_MK" ? false : true}>
-                {gantiAdvisorCoAdvisorButtonVisible && (
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color="primary"
-                    sx={{ textTransform: "none", marginBottom: "25px" }}
-                    onClick={handleClickOpen}
-                  >
-                    <BorderColorIcon fontSize="small" />
-                    Ganti Advisor dan Co-Advisor
-                  </Button>
+                {pengajuanJudul?.is_approve !== "Approve" && (
+                  <>
+                    {gantiAdvisorCoAdvisorButtonVisible && (
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="primary"
+                        sx={{ textTransform: "none", marginBottom: "25px" }}
+                        onClick={handleClickOpen}
+                      >
+                        <BorderColorIcon fontSize="small" />
+                        Ganti Advisor dan Co-Advisor
+                      </Button>
+                    )}
+                    {/* Button GAnti Dosen Pembimbing End */}
+                  </>
                 )}
-                {/* Button GAnti Dosen Pembimbing End */}
 
                 {/* Radio Button Start */}
                 <Div
@@ -749,43 +753,45 @@ const PengajuanJudulDosenSkripsi = () => {
                 </Div>
               </Div>
             </Div>
-            <Div
-              hidden={userRole === "DOSEN_MK" ? false : true}
-              sx={{ width: "100%" }}
-            >
-              {tolakTerimaButtonsVisible && (
-                <Div
-                  sx={{
-                    display: "flex",
-                    padding: "12px 24px 12px 0px",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    gap: "12px",
-                    alignSelf: "stretch",
-                    background: "#F5F5F5",
-                  }}
-                >
-                  <Button
-                    size="small"
-                    variant="contained"
-                    sx={{ textTransform: "none" }}
-                    color="error"
-                    onClick={handleTolakClick} // Menggunakan fungsi handleTolakClick saat tombol Tolak diklik
+            {pengajuanJudul?.is_approve !== "Approve" && (
+              <Div
+                hidden={userRole === "DOSEN_MK" ? false : true}
+                sx={{ width: "100%" }}
+              >
+                {tolakTerimaButtonsVisible && (
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "12px 24px 12px 0px",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                      gap: "12px",
+                      alignSelf: "stretch",
+                      background: "#F5F5F5",
+                    }}
                   >
-                    Tolak
-                  </Button>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    sx={{ textTransform: "none" }}
-                    color="primary"
-                    onClick={handleTerimaClick} // Menggunakan fungsi handleTerimaClick saat tombol Terima diklik
-                  >
-                    Terima
-                  </Button>
-                </Div>
-              )}
-            </Div>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      sx={{ textTransform: "none" }}
+                      color="error"
+                      onClick={handleTolakClick} // Menggunakan fungsi handleTolakClick saat tombol Tolak diklik
+                    >
+                      Tolak
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      sx={{ textTransform: "none" }}
+                      color="primary"
+                      onClick={handleTerimaClick} // Menggunakan fungsi handleTerimaClick saat tombol Terima diklik
+                    >
+                      Terima
+                    </Button>
+                  </Div>
+                )}
+              </Div>
+            )}
           </Div>
         </Div>
         {/* Element 2 End */}

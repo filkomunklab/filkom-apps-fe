@@ -20,7 +20,6 @@ import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
 
 const PerubahanProposalCoAvisor = () => {
   // state - menyimpan request data
-  const [dokumenRevisi, setDokumenRevisi] = useState();
   const [perubahan, setPerubahan] = useState();
 
   const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
@@ -239,11 +238,11 @@ const PerubahanProposalCoAvisor = () => {
                   padding: "24px",
                   alignItems: "center",
                   gap: "10px",
-                  color: "#192434",
-                  background: "rgba(26, 56, 96, 0.10)",
+                  color: "#CA150C",
+                  background: "rgba(226, 29, 18, 0.50)",
                   borderRadius: "6px",
                   fontSize: "12px",
-                  fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+                  fontWeight: 600,
                 }}
               >
                 Belum saatnya mengisi perubahan.
@@ -484,6 +483,57 @@ const PerubahanProposalCoAvisor = () => {
                         )}
                       </>
                     )}
+                  {advisorAndCoAdvisor?.coAdvisor1 &&
+                    perubahan?.is_report_open === true &&
+                    perubahan?.changes_by_co_advisor1 !== null &&
+                    userRole === "CO_ADVISOR1" && (
+                      <Div
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Div
+                          sx={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                            background: "rgba(26, 56, 96, 0.10)",
+                            padding: "14px 16px",
+                            borderRadius: "6px",
+                          }}
+                        >
+                          <Typography variant="subtitle2">
+                            Co-Advisor 1
+                          </Typography>
+                        </Div>
+                        <Div
+                          sx={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                            padding: "14px 16px",
+                            border: "2px solid rgba(26, 56, 96, 0.10)",
+                            borderRadius: "0 0 6px 6px",
+                          }}
+                        >
+                          <Typography>
+                            {typeof perubahan?.changes_by_co_advisor1 ===
+                            "string" ? (
+                              perubahan?.changes_by_co_advisor1
+                                .split("\n")
+                                .map((point, index) => (
+                                  <div key={index}>{point}</div>
+                                ))
+                            ) : (
+                              <div>{perubahan?.changes_by_co_advisor1}</div>
+                            )}
+                          </Typography>
+                        </Div>
+                      </Div>
+                    )}
                   {/* jika ada co-advisor 1 dan berita acara ditutup (view)*/}
                   {advisorAndCoAdvisor?.coAdvisor1 &&
                     perubahan?.is_report_open === false && (
@@ -619,6 +669,57 @@ const PerubahanProposalCoAvisor = () => {
                           </Div>
                         )}
                       </>
+                    )}
+                  {advisorAndCoAdvisor?.coAdvisor2 &&
+                    perubahan?.is_report_open === true &&
+                    perubahan?.changes_by_co_advisor2 !== null &&
+                    userRole === "CO_ADVISOR2" && (
+                      <Div
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Div
+                          sx={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                            background: "rgba(26, 56, 96, 0.10)",
+                            padding: "14px 16px",
+                            borderRadius: "6px",
+                          }}
+                        >
+                          <Typography variant="subtitle2">
+                            Co-Advisor 1
+                          </Typography>
+                        </Div>
+                        <Div
+                          sx={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                            padding: "14px 16px",
+                            border: "2px solid rgba(26, 56, 96, 0.10)",
+                            borderRadius: "0 0 6px 6px",
+                          }}
+                        >
+                          <Typography>
+                            {typeof perubahan?.changes_by_co_advisor2 ===
+                            "string" ? (
+                              perubahan?.changes_by_co_advisor2
+                                .split("\n")
+                                .map((point, index) => (
+                                  <div key={index}>{point}</div>
+                                ))
+                            ) : (
+                              <div>{perubahan?.changes_by_co_advisor2}</div>
+                            )}
+                          </Typography>
+                        </Div>
+                      </Div>
                     )}
                   {/* jika ada co-advisor 2 dan berita acara ditutup (view)*/}
                   {advisorAndCoAdvisor?.coAdvisor2 &&

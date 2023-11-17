@@ -886,8 +886,8 @@ const BeritaAcara = () => {
                   padding: "24px",
                   alignItems: "center",
                   gap: "10px",
-                  color: "#192434",
-                  background: "rgba(26, 56, 96, 0.10)",
+                  color: "#CA150C",
+                  background: "rgba(226, 29, 18, 0.50)",
                   borderRadius: "6px",
                   fontSize: "12px",
                   fontWeight: 600,
@@ -2827,7 +2827,7 @@ const BeritaAcara = () => {
                   }}
                 >
                   <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {perubahan?.changes_by_co_advisor1}
+                    {dataPerubahan?.changes_by_co_advisor1}
                   </Typography>
                 </Div>
               </Div>
@@ -2866,7 +2866,7 @@ const BeritaAcara = () => {
                   }}
                 >
                   <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {perubahan?.changes_by_co_advisor2}
+                    {dataPerubahan?.changes_by_co_advisor2}
                   </Typography>
                 </Div>
               </Div>

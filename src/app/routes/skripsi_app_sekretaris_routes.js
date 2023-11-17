@@ -69,8 +69,16 @@ const sekretarisRoutes = [
     element: <Page component={JadwalSidangProposal} />,
   },
   {
+    path: "/sistem-informasi-skripsi/daftar-jadwal-sidang-proposal/beranda/:groupId/:role",
+    element: <Page component={BerandaGlobal} />,
+  },
+  {
     path: "/sistem-informasi-skripsi/daftar-jadwal-sidang-skripsi",
     element: <Page component={JadwalSidangSkripsi} />,
+  },
+  {
+    path: "/sistem-informasi-skripsi/daftar-jadwal-sidang-skripsi/beranda/:groupId/:role",
+    element: <Page component={BerandaGlobal} />,
   },
   // MANAJEMEN DOSEN SKRIPSI
   {

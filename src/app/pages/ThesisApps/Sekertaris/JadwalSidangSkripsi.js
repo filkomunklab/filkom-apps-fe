@@ -137,7 +137,7 @@ const JadwalSidangSkripsi = () => {
     ruangan: "",
   });
 
-  const handlePerbarui = (selectedSkripsiId) => {
+  const handlePerbarui = () => {
     let hasError = false;
     const newErrorMessages = {};
 
@@ -180,8 +180,11 @@ const JadwalSidangSkripsi = () => {
       setErrorMessages(newErrorMessages);
       // Tampilkan pesan kesalahan
     } else {
+      setKonfirmasiDialog(true);
     }
+  };
 
+  const handlePerbaruiJadwal = () => {
     // Buat objek jadwal baru
     const jadwalBaru = {
       panelist_chairman_id: selectedKetuaPenelis || null,
@@ -218,6 +221,29 @@ const JadwalSidangSkripsi = () => {
         setSelesaiWaktu("");
         setMulaiTanggal("");
         setRuangan("");
+
+        // request data
+        const fetchDaftarJadwalSkripsi = async () => {
+          try {
+            const response = await axios.get(
+              "http://localhost:2000/api/v1/skripsi/schedule",
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            // Atur state 'setDaftarJadwal' dengan data dari respons
+            setDaftarJadwal(response.data.data);
+            console.log("Request Daftar Jadwal Skripsi", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil daftar jadwal:",
+              error
+            );
+          }
+        };
+        fetchDaftarJadwalSkripsi();
       })
       .catch((error) => {
         console.error("Terjadi kesalahan:", error);
@@ -397,7 +423,7 @@ const JadwalSidangSkripsi = () => {
                               <Div sx={{ display: "flex" }}>
                                 <Typography
                                   component={Link}
-                                  to="/halaman-berikutnya"
+                                  to={`/sistem-informasi-skripsi/daftar-jadwal-sidang-skripsi/beranda/${jadwal.group_id}/OPERATOR_FILKOM`}
                                   sx={{
                                     textDecoration: "none",
                                     color: "blue",
@@ -415,12 +441,12 @@ const JadwalSidangSkripsi = () => {
                                   onClick={() => {
                                     handleUpdateClick(scheduleIndex, index);
                                     setSelectedSkripsiId(jadwal.skripsi_id);
-                                    setSelectedAdvisor(jadwal.advisor_name);
+                                    setSelectedAdvisor(jadwal.advisor);
                                     setSelectedKetuaPenelis(
-                                      jadwal.panelist_chairman_id
+                                      jadwal.panelist_chairman
                                     );
                                     setSelectedAnggotaPenelis(
-                                      jadwal.panelist_member_id
+                                      jadwal.panelist_member
                                     );
                                     setMulaiWaktu(jadwal.start_defence);
                                     setSelesaiWaktu(jadwal.end_defence);
@@ -428,10 +454,10 @@ const JadwalSidangSkripsi = () => {
                                     setRuangan(jadwal.defence_room);
                                     console.log(
                                       `Selected Skripsi id: ${jadwal.skripsi_id}\n
-                                      Selected Advisor: ${jadwal.advisor_name}\n
-                                      Selected Chairman: ${jadwal.panelist_chairman_id}\n
+                                      Selected Advisor: ${jadwal.advisor}\n
+                                      Selected Chairman: ${jadwal.panelist_chairman}\n
                                       Selected Member: ${jadwal.panelist_member_id}\n
-                                      Selected Start: ${jadwal.start_defence}\n
+                                      Selected Start: ${jadwal.panelist_member}\n
                                       Selected End: ${jadwal.end_defence}\n
                                       Date: ${jadwal.defence_date}\n
                                       Room: ${jadwal.defence_room}`
@@ -451,144 +477,6 @@ const JadwalSidangSkripsi = () => {
               </Accordion>
             ))}
         </Div>
-
-        {/* {daftarJadwal &&
-          daftarJadwal.map((scheduleData, scheduleIndex) => (
-            <div key={scheduleIndex} style={{ width: "100%" }}>
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "100%",
-                  padding: "24px",
-                  alignItems: "center",
-                  gap: "10px",
-                  borderRadius: "6px",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "16px",
-                    fontStyle: "normal",
-                    fontWeight: 500,
-                    lineHeight: "24px",
-                    color: "#192434",
-                  }}
-                >
-                  {scheduleData?.semester}
-                </Typography>
-              </Div>
-              {/* Semester End */}
-        {/* Table Mahasiswa Skripsi Start *
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell sx={{ width: "25px", fontSize: "13px" }}>
-                        Nomor
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Advisor</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Ketua Penelis
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Anggota Penelis
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Mulai</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Selesai</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Tanggal</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Ruangan</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {scheduleData?.schedules?.map((jadwal, index) => (
-                      <TableRow key={index}>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {index + 1}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {jadwal.title}
-                        </TableCell>
-                        <TableCell>
-                          <Typography>{jadwal.advisor}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography>{jadwal.panelist_chairman}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography>{jadwal.panelist_member}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography>{jadwal.start_defence}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography>{jadwal.end_defence}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography>{jadwal.defence_date}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography>{jadwal.defence_room}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Div sx={{ display: "flex" }}>
-                            <Typography
-                              component={Link}
-                              to="/halaman-berikutnya"
-                              sx={{
-                                textDecoration: "none",
-                                color: "blue",
-                              }}
-                            >
-                              Detail
-                            </Typography>
-                            <Div sx={{ margin: "2px" }}>|</Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "blue",
-                              }}
-                              onClick={() => {
-                                handleUpdateClick(scheduleIndex, index);
-                                setSelectedSkripsiId(jadwal.skripsi_id);
-                                setSelectedAdvisor(jadwal.advisor_name);
-                                setSelectedKetuaPenelis(
-                                  jadwal.panelist_chairman_id
-                                );
-                                setSelectedAnggotaPenelis(
-                                  jadwal.panelist_member_id
-                                );
-                                setMulaiWaktu(jadwal.start_defence);
-                                setSelesaiWaktu(jadwal.end_defence);
-                                setMulaiTanggal(jadwal.defence_date);
-                                setRuangan(jadwal.defence_room);
-                                console.log(
-                                  `Selected Skripsi id: ${jadwal.skripsi_id}\n
-                                  Selected Advisor: ${jadwal.advisor_name}\n
-                                  Selected Chairman: ${jadwal.panelist_chairman_id}\n
-                                  Selected Member: ${jadwal.panelist_member_id}\n
-                                  Selected Start: ${jadwal.start_defence}\n
-                                  Selected End: ${jadwal.end_defence}\n
-                                  Date: ${jadwal.defence_date}\n
-                                  Room: ${jadwal.defence_room}`
-                                );
-                              }}
-                            >
-                              Perbarui
-                            </span>
-                          </Div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Mahasiswa Skripsi End *
-            </div>
-          ))} */}
       </Div>
       {/* Table Master End */}
       {/* popup pembuatan Jadwal start */}
@@ -715,79 +603,41 @@ const JadwalSidangSkripsi = () => {
             >
               {/* ketua Penelis */}
               <FormControl fullWidth size="small">
-                <InputLabel id="ketua-penelis-label">Ketua Penelis</InputLabel>
-                <Select
-                  labelId="ketua-penelis-label"
-                  id="ketua-penelis"
-                  label="Ketua Penelis"
-                  value={selectedKetuaPenelis}
-                  onChange={(event) =>
-                    setSelectedKetuaPenelis(event.target.value)
-                  }
-                  MenuProps={{
-                    anchorOrigin: {
-                      vertical: "bottom",
-                      horizontal: "left",
-                    },
-                    transformOrigin: {
-                      vertical: "top",
-                      horizontal: "left",
-                    },
-                    getContentAnchorEl: null,
-                    style: {
-                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
-                    },
+                <TextField
+                  id="ketua"
+                  label="Ketua Panelis"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
                   }}
-                  error={!!errorMessages.selectedKetuaPenelis}
-                >
-                  {daftarDosen.map((dosen) => (
-                    <MenuItem key={dosen.id} value={dosen.id}>
-                      {dosen.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <FormHelperText error={!!errorMessages.selectedKetuaPenelis}>
-                  {errorMessages.selectedKetuaPenelis}
-                </FormHelperText>
+                  size="small"
+                  InputProps={{
+                    readOnly: true,
+                    startAdornment: (
+                      <InputAdornment position="start"></InputAdornment>
+                    ),
+                  }}
+                  value={selectedKetuaPenelis}
+                />
               </FormControl>
               {/* Anggota Penelis */}
               <FormControl fullWidth size="small">
-                <InputLabel id="anggota-penelis-label">
-                  Anggota Penelis
-                </InputLabel>
-                <Select
-                  labelId="anggota-penelis-label"
-                  id="anggota-penelis"
-                  label="Anggota Penelis"
-                  value={selectedAnggotaPenelis}
-                  onChange={(event) =>
-                    setSelectedAnggotaPenelis(event.target.value)
-                  }
-                  MenuProps={{
-                    anchorOrigin: {
-                      vertical: "bottom",
-                      horizontal: "left",
-                    },
-                    transformOrigin: {
-                      vertical: "top",
-                      horizontal: "left",
-                    },
-                    getContentAnchorEl: null,
-                    style: {
-                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
-                    },
+                <TextField
+                  id="anggota"
+                  label="Anggota Panelis"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
                   }}
-                  error={!!errorMessages.selectedAnggotaPenelis}
-                >
-                  {daftarDosen.map((dosen) => (
-                    <MenuItem key={dosen.id} value={dosen.id}>
-                      {dosen.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <FormHelperText error={!!errorMessages.selectedAnggotaPenelis}>
-                  {errorMessages.selectedAnggotaPenelis}
-                </FormHelperText>
+                  size="small"
+                  InputProps={{
+                    readOnly: true,
+                    startAdornment: (
+                      <InputAdornment position="start"></InputAdornment>
+                    ),
+                  }}
+                  value={selectedAnggotaPenelis}
+                />
               </FormControl>
               {/* Advisor */}
               <FormControl fullWidth size="small">
@@ -806,7 +656,6 @@ const JadwalSidangSkripsi = () => {
                     ),
                   }}
                   value={selectedAdvisor}
-                  onChange={(event) => setSelectedAdvisor(event.target.value)}
                 />
               </FormControl>
             </Div>
@@ -980,7 +829,7 @@ const JadwalSidangSkripsi = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => handlePerbarui(selectedSkripsiId)}
+            onClick={handlePerbaruiJadwal}
             sx={{ textTransform: "none" }}
           >
             Perbarui

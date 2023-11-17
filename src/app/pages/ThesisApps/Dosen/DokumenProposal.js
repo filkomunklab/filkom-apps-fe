@@ -29,6 +29,59 @@ import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
 import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 
+// View Document Proposal
+const PDFViewerProposal = ({ dokumenProposal }) => {
+  const viewPDFProposal = () => {
+    // Buat URL objek untuk file PDF
+    const pdfURL = dokumenProposal?.file_path_proposal;
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span sx={{ fontSize: "10px" }} onClick={viewPDFProposal}>
+        Detail
+      </span>
+    </div>
+  );
+};
+
+// View Document Payment
+const PDFViewerPayment = ({ buktiPembayaran }) => {
+  const viewPDFPayment = () => {
+    // Buat URL objek untuk file PDF
+    const pdfURL = buktiPembayaran.file_path_payment;
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span onClick={viewPDFPayment}>Detail</span>
+    </div>
+  );
+};
+
+// View Document Cek Plagiat
+const PDFViewerCekPlagiat = ({ hasilCekPlagiat }) => {
+  const viewPDFCekPlagiat = () => {
+    // Buat URL objek untuk file PDF
+    const pdfURL = hasilCekPlagiat.file_path_plagiarismcheck;
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span onClick={viewPDFCekPlagiat}>Detail</span>
+    </div>
+  );
+};
+
 const DokumenProposal = () => {
   // state - menyimpan request data
   const [dokumenProposal, setDokumenProposal] = useState();
@@ -1069,236 +1122,12 @@ const DokumenProposal = () => {
                                 padding: "5px 0",
                               }}
                             >
-                              Lihat
+                              <PDFViewerProposal
+                                dokumenProposal={dokumenProposal}
+                              />
                             </span>
                           )}
-                          {/* Button untuk Advisor */}
-                          {/* <Div
-                            hidden={role.includes("DOSEN") ? false : true}
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                            }}
-                          >
-                            {isSetujuClicked || isTolakClicked ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "green",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndex(1);
-                                  setSetujuConfirmationDialogOpen(true);
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            )}
-                            {isSetujuClicked || isTolakClicked ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
-                                  fontSize: "12px",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndex(2);
-                                  setTolakConfirmationDialogOpen(true);
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            )}
-                          </Div> */}
                           <Actions />
-                          {/* button untuk CoAdvisor1 */}
-                          {/* <Div
-                            hidden={role.includes("CO_ADVISOR1") ? false : true}
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                            }}
-                          >
-                            {isSetujuClickedCoAdvisor1 ||
-                            isTolakClickedCoAdvisor1 ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "green",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndexCoAdvisor1(1);
-                                  setSetujuConfirmationDialogOpenCoAdvisor1(
-                                    true
-                                  );
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            )}
-                            {isSetujuClickedCoAdvisor1 ||
-                            isTolakClickedCoAdvisor1 ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  marginTop: "5px",
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
-                                  fontSize: "12px",
-                                  marginTop: "5px",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndexCoAdvisor1(2);
-                                  setTolakConfirmationDialogOpenCoAdvisor1(
-                                    true
-                                  );
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            )}
-                          </Div> */}
-                          {/* button untuk CoAdvisor2 */}
-                          {/* <Div
-                            hidden={role.includes("CO_ADVISOR2") ? false : true}
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                            }}
-                          >
-                            {isSetujuClickedCoAdvisor2 ||
-                            isTolakClickedCoAdvisor2 ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "green",
-                                  fontSize: "12px",
-                                  borderTop: "1px solid #000",
-                                  borderBottom: "1px solid #000",
-                                  padding: "5px 0",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndexCoAdvisor2(1);
-                                  setSetujuConfirmationDialogOpenCoAdvisor2(
-                                    true
-                                  );
-                                }}
-                              >
-                                Setuju
-                              </span>
-                            )}
-                            {isSetujuClickedCoAdvisor2 ||
-                            isTolakClickedCoAdvisor2 ? (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "not-allowed",
-                                  color: "gray",
-                                  fontSize: "12px",
-                                  marginTop: "5px",
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            ) : (
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
-                                  fontSize: "12px",
-                                  marginTop: "5px",
-                                }}
-                                onClick={() => {
-                                  setSelectedActionIndexCoAdvisor2(2);
-                                  setTolakConfirmationDialogOpenCoAdvisor2(
-                                    true
-                                  );
-                                }}
-                              >
-                                Tolak
-                              </span>
-                            )}
-                          </Div> */}
                         </Div>
                       </TableCell>
                     </TableRow>
@@ -1444,7 +1273,7 @@ const DokumenProposal = () => {
                     sx={{ textTransform: "none" }}
                     color="primary"
                   >
-                    Disetuju
+                    Setujui
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -1543,7 +1372,7 @@ const DokumenProposal = () => {
                     sx={{ textTransform: "none" }}
                     color="primary"
                   >
-                    Disetuju
+                    Setujui
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -1704,7 +1533,9 @@ const DokumenProposal = () => {
                                   alignItems: "center",
                                 }}
                               >
-                                Lihat
+                                <PDFViewerPayment
+                                  buktiPembayaran={buktiPembayaran}
+                                />
                               </span>
                             )}
                           </TableCell>
@@ -1817,7 +1648,9 @@ const DokumenProposal = () => {
                                   alignItems: "center",
                                 }}
                               >
-                                Lihat
+                                <PDFViewerCekPlagiat
+                                  hasilCekPlagiat={hasilCekPlagiat}
+                                />
                               </span>
                             )}
                           </TableCell>
