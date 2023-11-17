@@ -1646,7 +1646,14 @@ const BeritaAcara = () => {
 
               {/* Kesimpulan dari Pengujian Ketua penelis start */}
               {userRole === "KETUA_PANELIS" && isOpen?.is_open === true && (
-                <Div>
+                <Div
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                  }}
+                >
                   <Div
                     sx={{
                       display: "flex",

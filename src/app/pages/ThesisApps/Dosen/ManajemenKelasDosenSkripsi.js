@@ -947,124 +947,145 @@ const ManajemenKelasDosenSkripsi = () => {
         </Dialog>
         {/* popup membuat kelas end */}
       </Div>
-      {daftarSemuaKelas.map((classroomData, index) => (
-        <Accordion
-          key={index}
-          expanded={selectedClass === index}
-          onChange={() => handleAccordionClick(index)}
-          sx={{ marginBottom: "25px" }}
-        >
-          <AccordionSummary>
-            <div>
-              <Typography variant="h2">{classroomData.classroom}</Typography>
-            </div>
-          </AccordionSummary>
+      <Div
+        sx={{
+          display: "inline-flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          gap: "25px",
+          width: "100%",
+          height: "460px",
+          overflowY: "auto",
+          background: "#FFF",
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+          padding: "8px",
+          borderRadius: "8px",
+        }}
+      >
+        {daftarSemuaKelas.map((classroomData, index) => (
+          <Accordion
+            key={index}
+            expanded={selectedClass === index}
+            onChange={() => handleAccordionClick(index)}
+            sx={{
+              marginBottom: "25px",
+              width: "100%",
+              padding: "1px",
+              background: "rgba(26, 56, 96, 0.10)",
+              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <AccordionSummary>
+              <div>
+                <Typography variant="h2">{classroomData.classroom}</Typography>
+              </div>
+            </AccordionSummary>
 
-          <AccordionDetails>
-            <Div sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Button
-                size="small"
-                color="error"
-                variant="contained"
-                onClick={handleDeleteClass}
-              >
-                <DeleteIcon fontSize="small" />
-                Hapus Kelas
-              </Button>
-              {/* Konfirmasi popup untuk menghapus kelas */}
-              <Dialog
-                open={openDeleteConfirmation}
-                onClose={handleCloseDeleteConfirmation}
-                fullWidth
-                maxWidth="sm"
-              >
-                <DialogTitle variant="subtitle2">
-                  Konfirmasi Penghapusan Kelas
-                </DialogTitle>
-                <DialogContent>
-                  <Typography>
-                    Anda tidak dapat menghapus kelas ini karena masih ada
-                    mahasiswa di dalamnya. Harap hapus semua mahasiswa terlebih
-                    dahulu sebelum menghapus kelas ini.
-                  </Typography>
-                </DialogContent>
-                <DialogActions>
-                  <Button
-                    size="small"
-                    onClick={handleCloseDeleteConfirmation}
-                    color="primary"
-                  >
-                    Batal
-                  </Button>
-                  <Button
-                    size="small"
-                    color="error"
-                    variant="contained"
-                    onClick={handleConfirmDeleteClass}
-                  >
-                    Hapus Kelas
-                  </Button>
-                </DialogActions>
-              </Dialog>
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                onClick={() => setAddStudentOpen(true)}
-                sx={{ textTransform: "none" }}
-              >
-                <AddCircleOutlineIcon fontSize="small" />
-                Tambahkan Mahasiswa
-              </Button>
-            </Div>
-            <TableContainer sx={{ marginTop: "25px" }} component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow sx={{ background: "#F5F5F5" }}>
-                    <TableCell>No</TableCell>
-                    <TableCell>Nama Mahasiswa</TableCell>
-                    <TableCell>NIM</TableCell>
-                    <TableCell>Program Studi</TableCell>
-                    <TableCell>Action</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {classroomData.students.map((student, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{student.fullName}</TableCell>
-                      <TableCell>{student.nim}</TableCell>
-                      <TableCell>
-                        {student.major === "IF"
-                          ? "Informatika"
-                          : student.major === "SI"
-                          ? "Sistem Informasi"
-                          : student.major}
-                      </TableCell>
-                      <TableCell>
-                        <span
-                          style={{
-                            textDecoration: "none",
-                            cursor: "pointer",
-                            color: "red",
-                            fontSize: "14px",
-                          }}
-                          onClick={() =>
-                            handleOpenDeleteStudentConfirmation(student.id)
-                          }
-                        >
-                          Hapus
-                        </span>
-                      </TableCell>
+            <AccordionDetails>
+              <Div sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Button
+                  size="small"
+                  color="error"
+                  variant="contained"
+                  onClick={handleDeleteClass}
+                >
+                  <DeleteIcon fontSize="small" />
+                  Hapus Kelas
+                </Button>
+                {/* Konfirmasi popup untuk menghapus kelas */}
+                <Dialog
+                  open={openDeleteConfirmation}
+                  onClose={handleCloseDeleteConfirmation}
+                  fullWidth
+                  maxWidth="sm"
+                >
+                  <DialogTitle variant="subtitle2">
+                    Konfirmasi Penghapusan Kelas
+                  </DialogTitle>
+                  <DialogContent>
+                    <Typography>
+                      Anda tidak dapat menghapus kelas ini karena masih ada
+                      mahasiswa di dalamnya. Harap hapus semua mahasiswa
+                      terlebih dahulu sebelum menghapus kelas ini.
+                    </Typography>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      size="small"
+                      onClick={handleCloseDeleteConfirmation}
+                      color="primary"
+                    >
+                      Batal
+                    </Button>
+                    <Button
+                      size="small"
+                      color="error"
+                      variant="contained"
+                      onClick={handleConfirmDeleteClass}
+                    >
+                      Hapus Kelas
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setAddStudentOpen(true)}
+                  sx={{ textTransform: "none" }}
+                >
+                  <AddCircleOutlineIcon fontSize="small" />
+                  Tambahkan Mahasiswa
+                </Button>
+              </Div>
+              <TableContainer sx={{ marginTop: "25px" }} component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ background: "#F5F5F5" }}>
+                      <TableCell>No</TableCell>
+                      <TableCell>Nama Mahasiswa</TableCell>
+                      <TableCell>NIM</TableCell>
+                      <TableCell>Program Studi</TableCell>
+                      <TableCell>Action</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </AccordionDetails>
-        </Accordion>
-      ))}
-
+                  </TableHead>
+                  <TableBody>
+                    {classroomData.students.map((student, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{student.fullName}</TableCell>
+                        <TableCell>{student.nim}</TableCell>
+                        <TableCell>
+                          {student.major === "IF"
+                            ? "Informatika"
+                            : student.major === "SI"
+                            ? "Sistem Informasi"
+                            : student.major}
+                        </TableCell>
+                        <TableCell>
+                          <span
+                            style={{
+                              textDecoration: "none",
+                              cursor: "pointer",
+                              color: "red",
+                              fontSize: "14px",
+                            }}
+                            onClick={() =>
+                              handleOpenDeleteStudentConfirmation(student.id)
+                            }
+                          >
+                            Hapus
+                          </span>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </Div>
       {/* Dialog Konfirmasi Hapus Mahasiswa */}
       <Dialog
         open={showDeleteStudentConfirmation}

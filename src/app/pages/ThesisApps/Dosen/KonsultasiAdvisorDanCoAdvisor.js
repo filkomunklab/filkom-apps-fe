@@ -315,7 +315,7 @@ const BuatKonsultasi = () => {
                     <TextField
                       id="date"
                       label="Tanggal"
-                      type="text"
+                      type="date"
                       fullWidth
                       placeholder="dd/mm/yyyy"
                       value={selectedDate}

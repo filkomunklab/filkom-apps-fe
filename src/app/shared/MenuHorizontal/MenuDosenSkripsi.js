@@ -35,7 +35,7 @@ const MenuDosenSkripsiProposal = ({
               <Button
                 component={Link}
                 to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                  (progress === "Submissioni" && "judul-") ||
+                  (progress === "Submission" && "judul-") ||
                   (progress === "Proposal" && "proposal-") ||
                   (progress === "Skripsi" && "skripsi-") ||
                   (progress === "Finished" && "skripsi-")
@@ -66,7 +66,7 @@ const MenuDosenSkripsiProposal = ({
               <Button
                 component={Link}
                 to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                  (progress === "Submissioni" && "judul-") ||
+                  (progress === "Submission" && "judul-") ||
                   (progress === "Proposal" && "proposal-") ||
                   (progress === "Skripsi" && "skripsi-") ||
                   (progress === "Finished" && "skripsi-")
@@ -99,7 +99,7 @@ const MenuDosenSkripsiProposal = ({
               <Button
                 component={Link}
                 to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                  (progress === "Submissioni" && "judul-") ||
+                  (progress === "Submission" && "judul-") ||
                   (progress === "Proposal" && "proposal-") ||
                   (progress === "Skripsi" && "skripsi-") ||
                   (progress === "Finished" && "skripsi-")
@@ -176,7 +176,7 @@ const MenuDosenSkripsiProposal = ({
                 {/* DOKUMEN PROPOSAL */}
                 <Link
                   to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                    (progress === "Submissioni" && "judul-") ||
+                    (progress === "Submission" && "judul-") ||
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "skripsi-")
@@ -203,7 +203,7 @@ const MenuDosenSkripsiProposal = ({
                 {/* DOKUMEN REVISI PROPOSAL */}
                 <Link
                   to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                    (progress === "Submissioni" && "judul-") ||
+                    (progress === "Submission" && "judul-") ||
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "skripsi-")
@@ -281,7 +281,7 @@ const MenuDosenSkripsiProposal = ({
                 {/* DOKUMEN SKRIPSI */}
                 <Link
                   to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                    (progress === "Submissioni" && "judul-") ||
+                    (progress === "Submission" && "judul-") ||
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "skripsi-")
@@ -306,7 +306,7 @@ const MenuDosenSkripsiProposal = ({
                 {/* DOKUMEN REVISI SKRIPSI */}
                 <Link
                   to={`/sistem-informasi-skripsi/daftar-pengajuan-${
-                    (progress === "Submissioni" && "judul-") ||
+                    (progress === "Submission" && "judul-") ||
                     (progress === "Proposal" && "proposal-") ||
                     (progress === "Skripsi" && "skripsi-") ||
                     (progress === "Finished" && "skripsi-")
