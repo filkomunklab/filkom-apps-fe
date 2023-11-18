@@ -230,7 +230,7 @@ const TableItem = ({ item, index }) => {
 
     switch (name) {
       case "profile":
-        navigate(`/bimbingan-akademik/student-information/${item.nim}`);
+        navigate(`/bimbingan-akademik/student-information/${item.nim}/profile`);
         break;
       case "grade":
         navigate(`/bimbingan-akademik/student-information/${item.nim}/grade`);

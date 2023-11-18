@@ -97,7 +97,16 @@ const StudentInformationMentored = () => {
         <Typography variant="h1" sx={{ mb: 3 }}>
           Student Information
         </Typography>
-        <Typography variant="h6" sx={{ mb: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            paddingBottom: "25px",
+            fontSize: "15px",
+            fontWeight: 400,
+            color: "rgba(27, 43, 65, 0.69)",
+            textAlign: "justify",
+          }}
+        >
           Currently, you are on the Student Information page, where you can
           easily view all information about your mentored students, including
           the number, status, and other detailed and comprehensive information.
@@ -105,7 +114,18 @@ const StudentInformationMentored = () => {
       </Div>
       <Grid container spacing={2}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">List of mentored students</Typography>
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: "justify",
+              "@media (max-width: 390px)": {
+                fontSize: "16px",
+                fontWeight: 500,
+              },
+            }}
+          >
+            List of mentored students
+          </Typography>
         </Grid>
         <Grid item xs={12} sm={8} md={3}>
           <SearchGlobal sx={{ height: "100%" }} />
