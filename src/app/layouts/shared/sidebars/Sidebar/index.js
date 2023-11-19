@@ -119,9 +119,23 @@ const SidebarHeader = () => {
   const name = JSON.parse(localStorage.getItem("user"))?.name;
   const role = JSON.parse(localStorage.getItem("user"))?.role;
 
+  console.log(role);
+
   const checkArrayRole = () =>
-    role?.find((role) => role === ROLES.DEKAN || role === ROLES.KAPRODI)
-      ? role?.find((role) => role === ROLES.DEKAN || role === ROLES.KAPRODI)
+    role?.find(
+      (role) =>
+        role === ROLES.DEKAN ||
+        role === ROLES.KAPRODI ||
+        role === ROLES.OPERATOR_LPMI ||
+        role === ROLES.OPERATOR_FAKULTAS
+    )
+      ? role?.find(
+          (role) =>
+            role === ROLES.DEKAN ||
+            role === ROLES.KAPRODI ||
+            role === ROLES.OPERATOR_LPMI ||
+            role === ROLES.OPERATOR_FAKULTAS
+        )
       : "DOSEN";
 
   const accessRole = typeof role === "string" ? role : checkArrayRole();
