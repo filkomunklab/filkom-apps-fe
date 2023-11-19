@@ -16,7 +16,6 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
 import RestoreIcon from "@mui/icons-material/Restore";
 import DoneIcon from "@mui/icons-material/Done";
@@ -388,140 +387,180 @@ const DaftarPengajuanProposalKaprodi = () => {
         </Div>
         {/* Header End */}
         {/* Semester Start */}
-        <Div
-          sx={{
-            display: "inline-flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: "25px",
-            width: "100%",
-            height: "460px",
-            overflowY: "auto",
-            background: "#FFF",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-            padding: "8px",
-            borderRadius: "8px",
-          }}
-        >
-          {daftarPengajuanProposal.semesterData.map(
-            (semesterData, semesterIndex) => (
-              <Accordion
-                key={semesterIndex}
-                expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
-                onChange={handleChange(`panel${semesterIndex}`)} // Menangani perubahan state accordion
-                sx={{
-                  width: "100%",
-                  padding: "1px",
-                  background: "rgba(26, 56, 96, 0.10)",
-                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls={`panel${semesterIndex}bh-content`}
-                  id={`panel${semesterIndex}bh-header`}
+        {daftarPengajuanProposal?.semesterData?.length > 0 ? (
+          <Div
+            sx={{
+              display: "inline-flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "25px",
+              width: "100%",
+              height: "460px",
+              overflowY: "auto",
+              background: "#FFF",
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+              padding: "8px",
+              borderRadius: "8px",
+            }}
+          >
+            {daftarPengajuanProposal.semesterData.map(
+              (semesterData, semesterIndex) => (
+                <Accordion
+                  key={semesterIndex}
+                  expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
+                  onChange={handleChange(`panel${semesterIndex}`)} // Menangani perubahan state accordion
+                  sx={{
+                    width: "100%",
+                    padding: "1px",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                  }}
                 >
-                  <Typography
-                    variant="h2"
-                    sx={{
-                      marginTop: "6px",
-                      fontSize: "16px",
-                      fontWeight: 500,
-                    }}
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls={`panel${semesterIndex}bh-content`}
+                    id={`panel${semesterIndex}bh-header`}
                   >
-                    {semesterData.semester}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <TableContainer component={Paper}>
-                    <Table>
-                      <TableHead>
-                        <TableRow sx={{ background: "#F5F5F5" }}>
-                          <TableCell sx={{ width: "25px", fontSize: "13px" }}>
-                            Nomor
-                          </TableCell>
-                          <TableCell sx={{ width: "200px", fontSize: "13px" }}>
-                            Mahasiswa
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            Status
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            Action
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {semesterData.proposals.map(
-                          (proposal, proposalIndex) => (
-                            <TableRow key={proposalIndex}>
-                              <TableCell sx={{ fontSize: "13px" }}>
-                                {proposalIndex + 1}
-                              </TableCell>
-                              <TableCell sx={{ fontSize: "13px" }}>
-                                {proposal.students.map((student) => (
-                                  <div key={student.id}>{student.fullName}</div>
-                                ))}
-                              </TableCell>
+                    <Typography
+                      variant="h2"
+                      sx={{
+                        marginTop: "6px",
+                        fontSize: "16px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {semesterData.semester}
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <TableContainer component={Paper}>
+                      <Table>
+                        <TableHead>
+                          <TableRow sx={{ background: "#F5F5F5" }}>
+                            <TableCell sx={{ width: "25px", fontSize: "13px" }}>
+                              Nomor
+                            </TableCell>
+                            <TableCell
+                              sx={{ width: "200px", fontSize: "13px" }}
+                            >
+                              Mahasiswa
+                            </TableCell>
+                            <TableCell sx={{ fontSize: "13px" }}>
+                              Judul
+                            </TableCell>
+                            <TableCell sx={{ fontSize: "13px" }}>
+                              Status
+                            </TableCell>
+                            <TableCell sx={{ fontSize: "13px" }}>
+                              Action
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {semesterData.proposals.map(
+                            (proposal, proposalIndex) => (
+                              <TableRow key={proposalIndex}>
+                                <TableCell sx={{ fontSize: "13px" }}>
+                                  {proposalIndex + 1}
+                                </TableCell>
+                                <TableCell sx={{ fontSize: "13px" }}>
+                                  {proposal.students.map((student) => (
+                                    <div key={student.id}>
+                                      {student.fullName}
+                                    </div>
+                                  ))}
+                                </TableCell>
 
-                              <TableCell sx={{ fontSize: "13px" }}>
-                                {proposal.title}
-                              </TableCell>
-                              <TableCell sx={{ fontSize: "13px" }}>
-                                {proposal.is_pass === null ? (
-                                  <Chip label={"Belum"} />
-                                ) : proposal.is_pass === "Repeat" ? (
-                                  <Chip
-                                    label={"Mengulang"}
+                                <TableCell sx={{ fontSize: "13px" }}>
+                                  {proposal.title}
+                                </TableCell>
+                                <TableCell sx={{ fontSize: "13px" }}>
+                                  {proposal.is_pass === null ? (
+                                    <Chip label={"Belum"} />
+                                  ) : proposal.is_pass === "Repeat" ? (
+                                    <Chip
+                                      label={"Mengulang"}
+                                      sx={{
+                                        background: "rgba(255, 204, 0, 0.10)",
+                                        color: "#985211",
+                                      }}
+                                    />
+                                  ) : proposal.is_pass === "Pass" ? (
+                                    <Chip
+                                      label={"Lulus"}
+                                      sx={{
+                                        background: "rgba(21, 131, 67, 0.10)",
+                                        color: "#0A7637",
+                                      }}
+                                    />
+                                  ) : proposal.is_pass === "Fail" ? (
+                                    <Chip
+                                      label={"Ditolak"}
+                                      sx={{
+                                        background: "rgba(226, 29, 18, 0.10)",
+                                        color: "#CA150C",
+                                      }}
+                                    />
+                                  ) : (
+                                    proposal.is_pass
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  <Typography
+                                    component={Link}
+                                    to={`/sistem-informasi-skripsi/daftar-pengajuan-proposal-kaprodi/beranda/${proposal.group_id}/KAPRODI`}
                                     sx={{
-                                      background: "rgba(255, 204, 0, 0.10)",
-                                      color: "#985211",
+                                      textDecoration: "none",
+                                      color: "blue",
                                     }}
-                                  />
-                                ) : proposal.is_pass === "Pass" ? (
-                                  <Chip
-                                    label={"Lulus"}
-                                    sx={{
-                                      background: "rgba(21, 131, 67, 0.10)",
-                                      color: "#0A7637",
-                                    }}
-                                  />
-                                ) : proposal.is_pass === "Fail" ? (
-                                  <Chip
-                                    label={"Ditolak"}
-                                    sx={{
-                                      background: "rgba(226, 29, 18, 0.10)",
-                                      color: "#CA150C",
-                                    }}
-                                  />
-                                ) : (
-                                  proposal.is_pass
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                <Typography
-                                  component={Link}
-                                  to={`/sistem-informasi-skripsi/daftar-pengajuan-proposal-kaprodi/beranda/${proposal.group_id}/KAPRODI`}
-                                  sx={{
-                                    textDecoration: "none",
-                                    color: "blue",
-                                  }}
-                                >
-                                  Detail
-                                </Typography>
-                              </TableCell>
-                            </TableRow>
-                          )
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </AccordionDetails>
-              </Accordion>
-            )
-          )}
-        </Div>
+                                  >
+                                    Detail
+                                  </Typography>
+                                </TableCell>
+                              </TableRow>
+                            )
+                          )}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </AccordionDetails>
+                </Accordion>
+              )
+            )}
+          </Div>
+        ) : (
+          <Div
+            sx={{
+              display: "flex",
+              padding: "29px 42px",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: 2,
+              alignSelf: "stretch",
+              borderRadius: "8px",
+              border: "1px solid #E0E0E0",
+              background: "#FFF",
+              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+            }}
+          >
+            <Typography
+              sx={{
+                width: "100%",
+                display: "flex",
+                padding: "24px",
+                alignItems: "center",
+                gap: "10px",
+                color: "#CA150C",
+                background: "rgba(226, 29, 18, 0.50)",
+                borderRadius: "6px",
+                fontSize: "12px",
+                fontWeight: 600,
+              }}
+            >
+              Belum ada mahasiswa yang mengajukan Proposal.
+            </Typography>
+          </Div>
+        )}
 
         {/* {daftarPengajuanProposal.semesterData.map(
           (semesterData, semesterIndex) => (

@@ -279,6 +279,7 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
       </Div>
 
       {/* Riwayat Mahasiswa Nilai */}
+      {/* {daftarNilai?.semesterData?.length > 0 ? ( */}
       <Div
         sx={{
           display: "inline-flex",
@@ -360,6 +361,39 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
             )
         )}
       </Div>
+      {/* ) : (
+        <Div
+          sx={{
+            display: "flex",
+            padding: "29px 42px",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: 2,
+            alignSelf: "stretch",
+            borderRadius: "8px",
+            border: "1px solid #E0E0E0",
+            background: "#FFF",
+            boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+          }}
+        >
+          <Typography
+            sx={{
+              width: "100%",
+              display: "flex",
+              padding: "24px",
+              alignItems: "center",
+              gap: "10px",
+              color: "#CA150C",
+              background: "rgba(226, 29, 18, 0.50)",
+              borderRadius: "6px",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+          >
+            Belum ada daftar nilai mahasiswa
+          </Typography>
+        </Div>
+      )} */}
     </Div>
   );
 };
