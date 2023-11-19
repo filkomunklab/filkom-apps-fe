@@ -454,10 +454,14 @@ const DaftarPengajuanJudulDekan = () => {
                                   {submission.proposed_advisor}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {submission.proposed_co_advisor1}
+                                  {submission.proposed_co_advisor1
+                                    ? submission.proposed_co_advisor1
+                                    : "-"}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {submission.proposed_co_advisor2}
+                                  {submission.proposed_co_advisor2
+                                    ? submission.proposed_co_advisor2
+                                    : "-"}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: "13px" }}>
                                   {submission.is_consultation ? (

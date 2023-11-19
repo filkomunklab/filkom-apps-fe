@@ -374,7 +374,7 @@ const BuatKonsultasi = () => {
                   </DialogActions>
                 </Dialog>
               </Container>
-              {konsultasi?.constultation > 0 ? (
+              {konsultasi?.constultation?.length > 0 ? (
                 <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                   <Table>
                     <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
