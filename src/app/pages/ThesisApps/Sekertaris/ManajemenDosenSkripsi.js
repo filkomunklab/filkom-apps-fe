@@ -455,7 +455,7 @@ const ManajemenDosenSkripsi = () => {
             marginBottom: "25px",
           }}
         >
-          Tambahkan Dosen Skripsi
+          Tambah Dosen Skripsi
         </DialogTitle>
         <DialogContent
           sx={{
