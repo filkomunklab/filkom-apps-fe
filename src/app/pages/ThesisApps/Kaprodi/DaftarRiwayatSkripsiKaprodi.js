@@ -136,7 +136,7 @@ const RiwayatSkripsiKaprodi = () => {
             lineHeight: "32px",
           }}
         >
-          Daftar Riwayat Bimbingan Kaprodi
+          Daftar Riwayat Skripsi
         </Typography>
         <Div
           sx={{
@@ -148,7 +148,7 @@ const RiwayatSkripsiKaprodi = () => {
             flexShrink: 0,
           }}
         >
-          <FormControl>
+          {/* <FormControl>
             <Select
               size="small"
               labelId="dropdown-label"
@@ -162,12 +162,11 @@ const RiwayatSkripsiKaprodi = () => {
               }}
             >
               <MenuItem value="Kelas">Kelas</MenuItem>{" "}
-              {/* Tambahkan nilai default di sini */}
               <MenuItem value="option1">Opsi 1</MenuItem>
               <MenuItem value="option2">Opsi 2</MenuItem>
               <MenuItem value="option3">Opsi 3</MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
         </Div>
         <Div
           sx={{
@@ -180,7 +179,7 @@ const RiwayatSkripsiKaprodi = () => {
             flexShrink: 0,
           }}
         >
-          <SearchGlobal />
+          {/* <SearchGlobal /> */}
         </Div>
       </Div>
       {/* Riwayat Mahasiswa */}

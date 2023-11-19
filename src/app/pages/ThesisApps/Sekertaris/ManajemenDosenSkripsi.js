@@ -371,7 +371,7 @@ const ManajemenDosenSkripsi = () => {
               width: "30%",
             }}
           >
-            <SearchGlobal />
+            {/* <SearchGlobal /> */}
           </Div>
           <Div
             sx={{

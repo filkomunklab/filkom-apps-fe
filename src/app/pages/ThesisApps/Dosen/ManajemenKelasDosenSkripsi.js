@@ -470,7 +470,8 @@ const ManajemenKelasDosenSkripsi = () => {
           gap: "12px",
         }}
       >
-        <Div
+        {/* Select Kelas */}
+        {/* <Div
           sx={{
             width: "60%",
             display: "flex",
@@ -495,6 +496,47 @@ const ManajemenKelasDosenSkripsi = () => {
           </FormControl>
 
           <SearchGlobal />
+        </Div> */}
+        {/* Header Start */}
+        <Div
+          sx={{
+            width: "60%",
+            display: "flex",
+            padding: "24px",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            gap: "12px",
+          }}
+        >
+          <Typography
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              flex: "1 0 0",
+              alignSelf: "stretch",
+              width: "100%",
+              fontSize: "20px",
+              fontStyle: "normal",
+              fontWeight: 600,
+              lineHeight: "32px",
+            }}
+          >
+            Manajemen Kelas
+          </Typography>
+          <Div
+            sx={{
+              flexDirection: "row",
+              display: "flex",
+              width: "441px",
+              padding: "12px 16px",
+              alignItems: "center",
+              gap: "16px",
+              flexShrink: 0,
+            }}
+          >
+            {/* <SearchGlobal /> */}
+          </Div>
         </Div>
         <Div
           sx={{

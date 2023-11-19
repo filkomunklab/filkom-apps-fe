@@ -22,282 +22,15 @@ import {
   TableRow,
   TextField,
   Typography,
+  FormControl,
 } from "@mui/material";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import { Link } from "react-router-dom";
 
-const TimAnggotaPenelis = ({
-  anggotaPenelis,
-  setAnggotaPenelis,
-  isEditing,
-}) => {
-  const daftarPengguna = [
-    { id: "-", nama: "-" },
-    { id: 10, nama: "Andrew T. Liem, MT, PhD" },
-    { id: 20, nama: "Green Mandias, SKom, MCs" },
-    { id: 30, nama: "Stenly R. Pungus, MT, PhD" },
-    { id: 40, nama: "Debby E. Sondakh, MT, PhD" },
-    { id: 50, nama: "Ir. Edson Y. Putra, MKom" },
-    { id: 60, nama: "Green A. Sandag, SKom, MS" },
-    { id: 70, nama: "Jacquline M. S. Waworundeng, ST, MT" },
-    { id: 80, nama: "Jimmy H. Moedjahedy, SKom, MKom, MM" },
-    { id: 90, nama: "Joe Y. Mambu, BSIT, MCIS" },
-    { id: 100, nama: "Lidya C. Laoh, SKom, MMSi" },
-    { id: 110, nama: "Marshal Tombeng," },
-    { id: 120, nama: "Oktoverano H. Lengkong, SKom, MDs, MM" },
-    { id: 130, nama: "Reymon Rotikan, SKom, MS, MM" },
-    { id: 140, nama: "Reynoldus A. Sahulata, SKom, MM" },
-    { id: 150, nama: "Rolly Lontaan, MKom" },
-    { id: 160, nama: "Semmy W. Taju, SKom" },
-    { id: 170, nama: "Senly I. Adam, SKom, MSc" },
-  ];
-  return (
-    <Container>
-      <Typography variant="subtitle2">Anggota Penelis</Typography>
-      {isEditing ? (
-        <Select
-          labelId="anggota-penelis-label"
-          id="anggota-penelis-select"
-          fullWidth
-          value={anggotaPenelis}
-          onChange={(e) => setAnggotaPenelis(e.target.value)}
-          size="small"
-          sx={{ maxWidth: "250px" }} // Menambahkan batas lebar maksimum
-        >
-          {daftarPengguna.map((pengguna) => (
-            <MenuItem key={pengguna.id} value={pengguna.id}>
-              {pengguna.nama}
-            </MenuItem>
-          ))}
-        </Select>
-      ) : (
-        <Typography>
-          {daftarPengguna.find((pengguna) => pengguna.id === anggotaPenelis)
-            ?.nama || "-"}
-        </Typography>
-      )}
-    </Container>
-  );
-};
-
-const TimKetuaPenelis = ({ ketuaPenelis, setKetuaPenelis, isEditing }) => {
-  const daftarPengguna = [
-    { id: "-", nama: "-" },
-    { id: 10, nama: "Andrew T. Liem, MT, PhD" },
-    { id: 20, nama: "Green Mandias, SKom, MCs" },
-    { id: 30, nama: "Stenly R. Pungus, MT, PhD" },
-    { id: 40, nama: "Debby E. Sondakh, MT, PhD" },
-    { id: 50, nama: "Ir. Edson Y. Putra, MKom" },
-    { id: 60, nama: "Green A. Sandag, SKom, MS" },
-    { id: 70, nama: "Jacquline M. S. Waworundeng, ST, MT" },
-    { id: 80, nama: "Jimmy H. Moedjahedy, SKom, MKom, MM" },
-    { id: 90, nama: "Joe Y. Mambu, BSIT, MCIS" },
-    { id: 100, nama: "Lidya C. Laoh, SKom, MMSi" },
-    { id: 110, nama: "Marshal Tombeng," },
-    { id: 120, nama: "Oktoverano H. Lengkong, SKom, MDs, MM" },
-    { id: 130, nama: "Reymon Rotikan, SKom, MS, MM" },
-    { id: 140, nama: "Reynoldus A. Sahulata, SKom, MM" },
-    { id: 150, nama: "Rolly Lontaan, MKom" },
-    { id: 160, nama: "Semmy W. Taju, SKom" },
-    { id: 170, nama: "Senly I. Adam, SKom, MSc" },
-  ];
-  return (
-    <Container>
-      <Typography variant="subtitle2">Ketua Penelis</Typography>
-      {isEditing ? (
-        <Select
-          labelId="ketua-penelis-label"
-          id="ketua-penelis-select"
-          fullWidth
-          value={ketuaPenelis}
-          onChange={(e) => setKetuaPenelis(e.target.value)}
-          size="small"
-          sx={{ maxWidth: "250px" }} // Menambahkan batas lebar maksimum
-        >
-          {daftarPengguna.map((pengguna) => (
-            <MenuItem key={pengguna.id} value={pengguna.id}>
-              {pengguna.nama}
-            </MenuItem>
-          ))}
-        </Select>
-      ) : (
-        <Typography>
-          {daftarPengguna.find((pengguna) => pengguna.id === ketuaPenelis)
-            ?.nama || "-"}
-        </Typography>
-      )}
-    </Container>
-  );
-};
-
-const JadwalSidang = ({
-  startTime,
-  endTime,
-  tanggal,
-  ruangan,
-  setStartTime,
-  setEndTime,
-  setTanggal,
-  setRuangan,
-  isEditing,
-  handleConfirm,
-  handleCancelConfirmation,
-  isConfirmationOpen,
-}) => {
-  return (
-    <Container>
-      <Typography variant="subtitle2" sx={{ marginTop: "20px" }}>
-        Jadwal Sidang
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <Typography variant="subtitle2">Mulai</Typography>
-          {isEditing ? (
-            <TextField
-              id="start-time"
-              type="time"
-              fullWidth
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              size="small"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start"></InputAdornment>
-                ),
-              }}
-              inputProps={{
-                step: 300, // 5 minute intervals
-              }}
-            />
-          ) : (
-            <Typography>{startTime}</Typography>
-          )}
-        </Grid>
-        <Grid item xs={6}>
-          <Typography variant="subtitle2">Selesai</Typography>
-          {isEditing ? (
-            <TextField
-              id="end-time"
-              type="time"
-              fullWidth
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              size="small"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start"></InputAdornment>
-                ),
-              }}
-              inputProps={{
-                step: 300, // 5 minute intervals
-              }}
-            />
-          ) : (
-            <Typography>{endTime}</Typography>
-          )}
-        </Grid>
-        <Grid item xs={6}>
-          <Typography variant="subtitle2">Tanggal</Typography>
-          {isEditing ? (
-            <TextField
-              id="start-date"
-              type="date"
-              fullWidth
-              value={tanggal}
-              onChange={(e) => setTanggal(e.target.value)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              size="small"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start"></InputAdornment>
-                ),
-              }}
-            />
-          ) : (
-            <Typography>{tanggal}</Typography>
-          )}
-        </Grid>
-        <Grid item xs={6}>
-          <Typography variant="subtitle2">Ruangan</Typography>
-          {isEditing ? (
-            <TextField
-              id="room-name"
-              fullWidth
-              value={ruangan}
-              onChange={(e) => setRuangan(e.target.value)}
-              size="small"
-            />
-          ) : (
-            <Typography>{ruangan}</Typography>
-          )}
-        </Grid>
-      </Grid>
-      <Dialog
-        open={isConfirmationOpen}
-        onClose={handleCancelConfirmation}
-        fullWidth
-        maxWidth="sm"
-      >
-        <DialogTitle
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            padding: "24px",
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: "20px",
-              fontWeight: 500,
-              lineHeight: "24px",
-            }}
-          >
-            Perbarui Jadwal
-          </Typography>
-        </DialogTitle>
-        <DialogContent>
-          <Typography gutterBottom>
-            Apakah Anda yakin ingin perbarui jadwal?
-          </Typography>
-        </DialogContent>
-        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-          <Button
-            onClick={handleCancelConfirmation}
-            sx={{
-              background: "white",
-              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-              textTransform: "none",
-              color: "black",
-            }}
-          >
-            Batal
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleConfirm}
-            sx={{ textTransform: "none" }}
-          >
-            Perbarui
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
-  );
-};
-
 const PerbaruiJadwalSidangProposal = () => {
   // state - daftar jadwal
-  const [jadwalProposal, setDaftarJadwalProposal] = useState([]);
+  const [jadwalProposal, setJadwalProposal] = useState([]);
   const [jadwalSkripsi, setJadwalSkripsi] = useState([]);
   // state - daftar dosen
   const [daftarDosen, setDaftarDosen] = useState([]);
@@ -331,11 +64,23 @@ const PerbaruiJadwalSidangProposal = () => {
               },
             }
           );
-          setDaftarJadwalProposal(response.data.data);
+          setJadwalProposal(response.data.data);
           console.log("Request Get jadwal proposal?: ", response.data.data);
 
-          setKetuaPenelis(response.data.data.panelistChairman || "");
-          setAnggotaPenelis(response.data.data.panelist_member || "");
+          setKetuaPenelis(
+            response.data.data.panelist_chairman
+              ? daftarDosen.find(
+                  (dosen) => dosen.name === response.data.data.panelist_chairman
+                )?.id || ""
+              : ""
+          );
+          setAnggotaPenelis(
+            response.data.data.panelist_member
+              ? daftarDosen.find(
+                  (dosen) => dosen.name === response.data.data.panelist_member
+                )?.id || ""
+              : ""
+          );
           setStartTime(response.data.data.start_defence || "");
           setEndTime(response.data.data.end_defence || "");
           setTanggal(response.data.data.defence_date || "");
@@ -364,8 +109,20 @@ const PerbaruiJadwalSidangProposal = () => {
           setJadwalSkripsi(response.data.data);
           console.log("Request Get jadwal skripsi?: ", response.data.data);
 
-          setKetuaPenelis(response.data.data.panelistChairman || "");
-          setAnggotaPenelis(response.data.data.panelist_member || "");
+          setKetuaPenelis(
+            response.data.data.panelist_chairman
+              ? daftarDosen.find(
+                  (dosen) => dosen.name === response.data.data.panelist_chairman
+                )?.id || ""
+              : ""
+          );
+          setAnggotaPenelis(
+            response.data.data.panelist_member
+              ? daftarDosen.find(
+                  (dosen) => dosen.name === response.data.data.panelist_member
+                )?.id || ""
+              : ""
+          );
           setStartTime(response.data.data.start_defence || "");
           setEndTime(response.data.data.end_defence || "");
           setTanggal(response.data.data.defence_date || "");
@@ -413,13 +170,247 @@ const PerbaruiJadwalSidangProposal = () => {
     setIsEditing(true);
   };
 
+  const handleBatalEdit = () => {
+    // bersihkan jika batal perbarui
+
+    if (progress === "Proposal") {
+      setKetuaPenelis(
+        jadwalProposal.panelist_chairman
+          ? daftarDosen.find(
+              (dosen) => dosen.name === jadwalProposal.panelist_chairman
+            )?.id || ""
+          : ""
+      );
+      setAnggotaPenelis(
+        jadwalProposal.panelist_member
+          ? daftarDosen.find(
+              (dosen) => dosen.name === jadwalProposal.panelist_member
+            )?.id || ""
+          : ""
+      );
+      setStartTime(jadwalProposal.start_defence);
+      setEndTime(jadwalProposal.end_defence);
+      setTanggal(jadwalProposal.defence_date);
+      setRuangan(jadwalProposal.defence_room);
+    }
+    if (progress === "Skripsi") {
+      setStartTime(jadwalSkripsi.start_defence);
+      setEndTime(jadwalSkripsi.end_defence);
+      setTanggal(jadwalSkripsi.defence_date);
+      setRuangan(jadwalSkripsi.defence_room);
+    }
+    // tutup edit
+    setIsEditing(false);
+  };
+
   const handleConfirmClick = () => {
     setIsConfirmationOpen(true);
   };
 
   const handleConfirm = () => {
-    setIsEditing(false);
-    setIsConfirmationOpen(false);
+    if (progress === "Proposal") {
+      // Buat objek jadwal baru
+      const jadwalBaru = {
+        panelist_chairman_id: ketuaPenelis || null,
+        panelist_member_id: anggotaPenelis || null,
+        start_defence: startTime || null,
+        end_defence: endTime || null,
+        defence_room: ruangan || null,
+        defence_date: tanggal || null,
+      };
+      console.log("jadwal yang akan dikirim: ", jadwalBaru);
+      axios
+        .put(
+          `http://localhost:2000/api/v1/proposal/schedule/${proposalId}`,
+          jadwalBaru,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Berhasil memperbarui jadwal:", response.data);
+
+          // tutup konfirmasi
+          setIsEditing(false);
+          setIsConfirmationOpen(false);
+          // bersihkan
+          setKetuaPenelis("");
+          setAnggotaPenelis("");
+          setStartTime("");
+          setEndTime("");
+          setTanggal("");
+          setRuangan("");
+
+          //  request data
+          const fetchJadwalProposalData = async () => {
+            try {
+              const response = await axios.get(
+                `http://localhost:2000/api/v1/proposal/schedule/${proposalId}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                  },
+                }
+              );
+              setJadwalProposal(response.data.data);
+              console.log("Request Get jadwal proposal?: ", response.data.data);
+
+              setKetuaPenelis(
+                response.data.data.panelist_chairman
+                  ? daftarDosen.find(
+                      (dosen) =>
+                        dosen.name === response.data.data.panelist_chairman
+                    )?.id || ""
+                  : ""
+              );
+              setAnggotaPenelis(
+                response.data.data.panelist_member
+                  ? daftarDosen.find(
+                      (dosen) =>
+                        dosen.name === response.data.data.panelist_member
+                    )?.id || ""
+                  : ""
+              );
+              setStartTime(response.data.data.start_defence || "");
+              setEndTime(response.data.data.end_defence || "");
+              setTanggal(response.data.data.defence_date || "");
+              setRuangan(response.data.data.defence_room || "");
+            } catch (error) {
+              console.error(
+                "Terjadi kesalahan saat mengambil jadwal proposal",
+                error
+              );
+            }
+          };
+          const fetchDaftarDosen = async () => {
+            try {
+              const response = await axios.get(
+                "http://localhost:2000/api/v1/group/dosen-list",
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+              // Atur state 'setDaftarDosen' dengan data dari respons
+              setDaftarDosen(response.data.data);
+              console.log("Request Daftar Dosen", response.data.data);
+            } catch (error) {
+              console.error(
+                "Terjadi kesalahan saat mengambil daftar jadwal:",
+                error
+              );
+            }
+          };
+          fetchJadwalProposalData();
+          fetchDaftarDosen();
+        })
+        .catch((error) => {
+          console.error("Terjadi kesalahan:", error);
+        });
+    }
+    if (progress === "Skripsi") {
+      // Buat objek jadwal baru
+      const jadwalBaru = {
+        panelist_chairman_id: ketuaPenelis || null,
+        panelist_member_id: anggotaPenelis || null,
+        start_defence: startTime || null,
+        end_defence: endTime || null,
+        defence_room: ruangan || null,
+        defence_date: tanggal || null,
+      };
+      console.log("jadwal yang akan dikirim: ", jadwalBaru);
+      axios
+        .put(
+          `http://localhost:2000/api/v1/skripsi/schedule/${skripsiId}`,
+          jadwalBaru,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Berhasil memperbarui jadwal:", response.data);
+
+          // tutup konfirmasi
+          setIsEditing(false);
+          setIsConfirmationOpen(false);
+          setStartTime("");
+          setEndTime("");
+          setTanggal("");
+          setRuangan("");
+
+          //  request data
+          const fetchJadwalSkripsiData = async () => {
+            try {
+              const response = await axios.get(
+                `http://localhost:2000/api/v1/skripsi/schedule/${skripsiId}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                  },
+                }
+              );
+              setJadwalSkripsi(response.data.data);
+              console.log("Request Get jadwal skripsi?: ", response.data.data);
+
+              setKetuaPenelis(
+                response.data.data.panelist_chairman
+                  ? daftarDosen.find(
+                      (dosen) =>
+                        dosen.name === response.data.data.panelist_chairman
+                    )?.id || ""
+                  : ""
+              );
+              setAnggotaPenelis(
+                response.data.data.panelist_member
+                  ? daftarDosen.find(
+                      (dosen) =>
+                        dosen.name === response.data.data.panelist_member
+                    )?.id || ""
+                  : ""
+              );
+              setStartTime(response.data.data.start_defence || "");
+              setEndTime(response.data.data.end_defence || "");
+              setTanggal(response.data.data.defence_date || "");
+              setRuangan(response.data.data.defence_room || "");
+            } catch (error) {
+              console.error(
+                "Terjadi kesalahan saat mengambil jadwal skripsi",
+                error
+              );
+            }
+          };
+          const fetchDaftarDosen = async () => {
+            try {
+              const response = await axios.get(
+                "http://localhost:2000/api/v1/group/dosen-list",
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+              // Atur state 'setDaftarDosen' dengan data dari respons
+              setDaftarDosen(response.data.data);
+              console.log("Request Daftar Dosen", response.data.data);
+            } catch (error) {
+              console.error(
+                "Terjadi kesalahan saat mengambil daftar jadwal:",
+                error
+              );
+            }
+          };
+          fetchJadwalSkripsiData();
+          fetchDaftarDosen();
+        })
+        .catch((error) => {
+          console.error("Terjadi kesalahan:", error);
+        });
+    }
   };
 
   const handleCancelConfirmation = () => {
@@ -515,7 +506,7 @@ const PerbaruiJadwalSidangProposal = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
-            {progress !== null && progress === "Finished" && (
+            {progress !== null && progress === "Proposal" && (
               <>
                 <Typography
                   sx={{
@@ -531,7 +522,7 @@ const PerbaruiJadwalSidangProposal = () => {
                     fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
                   }}
                 >
-                  {jadwalSkripsi?.title}
+                  {jadwalProposal?.title}
                 </Typography>
 
                 {/* Table Start*/}
@@ -571,7 +562,7 @@ const PerbaruiJadwalSidangProposal = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {jadwalSkripsi?.students?.map((student, index) => (
+                        {jadwalProposal?.students?.map((student, index) => (
                           <TableRow key={index}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell>{student.fullName}</TableCell>
@@ -590,301 +581,396 @@ const PerbaruiJadwalSidangProposal = () => {
                   </TableContainer>
                   {/* Table Kelompok mahasiswa End */}
 
-                  {(jadwalSkripsi?.is_report_open === null ||
-                    (progress !== null && progress !== "Finished") ||
-                    (jadwalSkripsi?.is_report_open === false &&
-                      jadwalSkripsi?.is_pass === "Repeat")) && (
-                    <>
-                      {/* Table Pengajuan Proposal Start */}
-                      <Typography
-                        sx={{
-                          padding: "14px 16px",
-                          background: "rgba(26, 56, 96, 0.10)",
-                          borderRadius: "6px",
-                          border: "1px",
-                          marginBottom: "25px",
-                        }}
-                      >
-                        Menentukan Tim Penelis
-                      </Typography>
-                      {/* input select Tim Penelis Start */}
-                      <Container
+                  {/* Menampilkan Penyusunan Jadwal Proposal jika porgress di Proposal */}
+                  <>
+                    {/* Table Pengajuan Proposal Start */}
+                    <Typography
+                      sx={{
+                        padding: "14px 16px",
+                        background: "rgba(26, 56, 96, 0.10)",
+                        borderRadius: "6px",
+                        border: "1px",
+                        marginBottom: "25px",
+                      }}
+                    >
+                      Menentukan Tim Penelis
+                    </Typography>
+                    {/* input select Tim Penelis Start */}
+                    <Container
+                      sx={{
+                        display: "flex",
+                        padding: "0px 25px",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        alignSelf: "stretch",
+                        marginBottom: "25px",
+                      }}
+                    >
+                      <Div
                         sx={{
                           display: "flex",
-                          padding: "0px 25px",
-                          flexDirection: "column",
                           alignItems: "flex-start",
+                          gap: "25px",
                           alignSelf: "stretch",
-                          marginBottom: "25px",
                         }}
                       >
                         <Div
                           sx={{
                             display: "flex",
+                            flexDirection: "column",
                             alignItems: "flex-start",
-                            gap: "25px",
-                            alignSelf: "stretch",
+                            flex: "1 0 0",
                           }}
                         >
-                          <Div
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "flex-start",
-                              flex: "1 0 0",
-                            }}
-                          >
-                            <Container>
-                              <Typography variant="subtitle2">
-                                Ketua Penelis
-                              </Typography>
-                              {isEditing ? (
-                                <Select
-                                  labelId="ketua-penelis-label"
-                                  id="ketua-penelis-select"
+                          <Container>
+                            <Typography variant="subtitle2">
+                              Ketua Penelis
+                            </Typography>
+                            {isEditing ? (
+                              <Select
+                                labelId="ketua-penelis-label"
+                                id="ketua-penelis-select"
+                                fullWidth
+                                value={ketuaPenelis}
+                                onChange={(e) =>
+                                  setKetuaPenelis(e.target.value)
+                                }
+                                size="small"
+                                sx={{ maxWidth: "250px" }} // Menambahkan batas lebar maksimum
+                              >
+                                {daftarDosen.map((dosen) => (
+                                  <MenuItem key={dosen.id} value={dosen.id}>
+                                    {dosen.name}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            ) : (
+                              <FormControl fullWidth size="small">
+                                <TextField
+                                  id="Ketua"
                                   fullWidth
-                                  value={ketuaPenelis}
-                                  onChange={(e) =>
-                                    setKetuaPenelis(e.target.value)
-                                  }
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
                                   size="small"
-                                  sx={{ maxWidth: "250px" }} // Menambahkan batas lebar maksimum
-                                >
-                                  {daftarDosen.map((dosen) => (
-                                    <MenuItem key={dosen.id} value={dosen.id}>
-                                      {dosen.name}
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                              ) : (
-                                <Typography>
-                                  {jadwalSkripsi?.panelist_chairman}
-                                </Typography>
-                              )}
-                            </Container>
-                          </Div>
-                          <Div
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "flex-start",
-
-                              flex: "1 0 0",
-                            }}
-                          >
-                            <Container>
-                              <Typography variant="subtitle2">
-                                Anggota Penelis
-                              </Typography>
-                              {isEditing ? (
-                                <Select
-                                  labelId="anggota-penelis-label"
-                                  id="anggota-penelis-select"
-                                  fullWidth
-                                  value={anggotaPenelis}
-                                  onChange={(e) =>
-                                    setAnggotaPenelis(e.target.value)
-                                  }
-                                  size="small"
-                                  sx={{ maxWidth: "250px" }} // Menambahkan batas lebar maksimum
-                                >
-                                  {daftarDosen.map((dosen) => (
-                                    <MenuItem key={dosen.id} value={dosen.id}>
-                                      {dosen.name}
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                              ) : (
-                                <Typography>
-                                  {jadwalSkripsi?.panelist_member}
-                                </Typography>
-                              )}
-                            </Container>
-                          </Div>
+                                  InputProps={{
+                                    readOnly: true,
+                                    startAdornment: (
+                                      <InputAdornment position="start"></InputAdornment>
+                                    ),
+                                  }}
+                                  value={jadwalProposal?.panelist_chairman}
+                                />
+                              </FormControl>
+                            )}
+                          </Container>
                         </Div>
-                      </Container>
-                      {/* input select Tim Penelis End */}
+                        <Div
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
 
-                      {/* Table Status Siap Maju Sidang Start*/}
-                      <Typography
-                        sx={{
-                          padding: "14px 16px",
-                          background: "rgba(26, 56, 96, 0.10)",
-                          borderRadius: "6px",
-                          border: "1px",
-                          marginBottom: "25px",
-                        }}
-                      >
-                        Menyusun Jadwal Sidang
-                      </Typography>
+                            flex: "1 0 0",
+                          }}
+                        >
+                          <Container>
+                            <Typography variant="subtitle2">
+                              Anggota Penelis
+                            </Typography>
+                            {isEditing ? (
+                              <Select
+                                labelId="anggota-penelis-label"
+                                id="anggota-penelis-select"
+                                fullWidth
+                                value={anggotaPenelis}
+                                onChange={(e) =>
+                                  setAnggotaPenelis(e.target.value)
+                                }
+                                size="small"
+                                sx={{ maxWidth: "250px" }} // Menambahkan batas lebar maksimum
+                              >
+                                {daftarDosen.map((dosen) => (
+                                  <MenuItem key={dosen.id} value={dosen.id}>
+                                    {dosen.name}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            ) : (
+                              <FormControl fullWidth size="small">
+                                <TextField
+                                  id="Anggota"
+                                  fullWidth
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  size="small"
+                                  InputProps={{
+                                    readOnly: true,
+                                    startAdornment: (
+                                      <InputAdornment position="start"></InputAdornment>
+                                    ),
+                                  }}
+                                  value={jadwalProposal?.panelist_member}
+                                />
+                              </FormControl>
+                            )}
+                          </Container>
+                        </Div>
+                      </Div>
+                    </Container>
+                    {/* input select Tim Penelis End */}
 
+                    {/* Table Status Siap Maju Sidang Start*/}
+                    <Typography
+                      sx={{
+                        padding: "14px 16px",
+                        background: "rgba(26, 56, 96, 0.10)",
+                        borderRadius: "6px",
+                        border: "1px",
+                        marginBottom: "25px",
+                      }}
+                    >
+                      Menyusun Jadwal Sidang Proposal
+                    </Typography>
+
+                    <Container>
                       <Container>
-                        <Container>
-                          <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle2">Mulai</Typography>
-                              {isEditing ? (
+                        <Grid container spacing={2}>
+                          <Grid item xs={6}>
+                            <Typography variant="subtitle2">Mulai</Typography>
+                            {isEditing ? (
+                              <TextField
+                                id="start-time"
+                                type="time"
+                                fullWidth
+                                value={startTime}
+                                onChange={(e) => setStartTime(e.target.value)}
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                size="small"
+                                InputProps={{
+                                  startAdornment: (
+                                    <InputAdornment position="start"></InputAdornment>
+                                  ),
+                                }}
+                                inputProps={{
+                                  step: 300, // 5 minute intervals
+                                }}
+                              />
+                            ) : (
+                              <FormControl fullWidth size="small">
                                 <TextField
-                                  id="start-time"
-                                  type="time"
+                                  id="start"
                                   fullWidth
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  size="small"
+                                  InputProps={{
+                                    readOnly: true,
+                                    startAdornment: (
+                                      <InputAdornment position="start"></InputAdornment>
+                                    ),
+                                  }}
                                   value={startTime}
-                                  onChange={(e) => setStartTime(e.target.value)}
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  size="small"
-                                  InputProps={{
-                                    startAdornment: (
-                                      <InputAdornment position="start"></InputAdornment>
-                                    ),
-                                  }}
-                                  inputProps={{
-                                    step: 300, // 5 minute intervals
-                                  }}
                                 />
-                              ) : (
-                                <Typography>{startTime}</Typography>
-                              )}
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle2">
-                                Selesai
-                              </Typography>
-                              {isEditing ? (
-                                <TextField
-                                  id="end-time"
-                                  type="time"
-                                  fullWidth
-                                  value={endTime}
-                                  onChange={(e) => setEndTime(e.target.value)}
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  size="small"
-                                  InputProps={{
-                                    startAdornment: (
-                                      <InputAdornment position="start"></InputAdornment>
-                                    ),
-                                  }}
-                                  inputProps={{
-                                    step: 300, // 5 minute intervals
-                                  }}
-                                />
-                              ) : (
-                                <Typography>{endTime}</Typography>
-                              )}
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle2">
-                                Tanggal
-                              </Typography>
-                              {isEditing ? (
-                                <TextField
-                                  id="start-date"
-                                  type="date"
-                                  fullWidth
-                                  value={tanggal}
-                                  onChange={(e) => setTanggal(e.target.value)}
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  size="small"
-                                  InputProps={{
-                                    startAdornment: (
-                                      <InputAdornment position="start"></InputAdornment>
-                                    ),
-                                  }}
-                                />
-                              ) : (
-                                <Typography>{tanggal}</Typography>
-                              )}
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle2">
-                                Ruangan
-                              </Typography>
-                              {isEditing ? (
-                                <TextField
-                                  id="room-name"
-                                  fullWidth
-                                  value={ruangan}
-                                  onChange={(e) => setRuangan(e.target.value)}
-                                  size="small"
-                                />
-                              ) : (
-                                <Typography>{ruangan}</Typography>
-                              )}
-                            </Grid>
+                              </FormControl>
+                            )}
                           </Grid>
+                          <Grid item xs={6}>
+                            <Typography variant="subtitle2">Selesai</Typography>
+                            {isEditing ? (
+                              <TextField
+                                id="end-time"
+                                type="time"
+                                fullWidth
+                                value={endTime}
+                                onChange={(e) => setEndTime(e.target.value)}
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                size="small"
+                                InputProps={{
+                                  startAdornment: (
+                                    <InputAdornment position="start"></InputAdornment>
+                                  ),
+                                }}
+                                inputProps={{
+                                  step: 300, // 5 minute intervals
+                                }}
+                              />
+                            ) : (
+                              <FormControl fullWidth size="small">
+                                <TextField
+                                  id="end"
+                                  fullWidth
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  size="small"
+                                  InputProps={{
+                                    readOnly: true,
+                                    startAdornment: (
+                                      <InputAdornment position="start"></InputAdornment>
+                                    ),
+                                  }}
+                                  value={endTime}
+                                />
+                              </FormControl>
+                            )}
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Typography variant="subtitle2">Tanggal</Typography>
+                            {isEditing ? (
+                              <TextField
+                                id="start-date"
+                                type="date"
+                                fullWidth
+                                value={tanggal}
+                                onChange={(e) => setTanggal(e.target.value)}
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                size="small"
+                                InputProps={{
+                                  startAdornment: (
+                                    <InputAdornment position="start"></InputAdornment>
+                                  ),
+                                }}
+                              />
+                            ) : (
+                              <FormControl fullWidth size="small">
+                                <TextField
+                                  id="date"
+                                  fullWidth
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  size="small"
+                                  InputProps={{
+                                    readOnly: true,
+                                    startAdornment: (
+                                      <InputAdornment position="start"></InputAdornment>
+                                    ),
+                                  }}
+                                  value={tanggal}
+                                />
+                              </FormControl>
+                            )}
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Typography variant="subtitle2">Ruangan</Typography>
+                            {isEditing ? (
+                              <TextField
+                                id="room-name"
+                                fullWidth
+                                value={ruangan}
+                                onChange={(e) => setRuangan(e.target.value)}
+                                size="small"
+                              />
+                            ) : (
+                              <FormControl fullWidth size="small">
+                                <TextField
+                                  id="room"
+                                  fullWidth
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  size="small"
+                                  InputProps={{
+                                    readOnly: true,
+                                    startAdornment: (
+                                      <InputAdornment position="start"></InputAdornment>
+                                    ),
+                                  }}
+                                  value={ruangan}
+                                />
+                              </FormControl>
+                            )}
+                          </Grid>
+                        </Grid>
 
-                          <Dialog
-                            open={isConfirmationOpen}
-                            onClose={handleCancelConfirmation}
-                            fullWidth
-                            maxWidth="sm"
+                        <Dialog
+                          open={isConfirmationOpen}
+                          onClose={handleCancelConfirmation}
+                          fullWidth
+                          maxWidth="sm"
+                        >
+                          <DialogTitle
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              padding: "24px",
+                            }}
                           >
-                            <DialogTitle
+                            <Typography
                               sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                padding: "24px",
+                                fontSize: "20px",
+                                fontWeight: 500,
+                                lineHeight: "24px",
                               }}
                             >
-                              <Typography
-                                sx={{
-                                  fontSize: "20px",
-                                  fontWeight: 500,
-                                  lineHeight: "24px",
-                                }}
-                              >
-                                Perbarui Jadwal
-                              </Typography>
-                            </DialogTitle>
-                            <DialogContent>
-                              <Typography gutterBottom>
-                                Apakah Anda yakin ingin perbarui jadwal?
-                              </Typography>
-                            </DialogContent>
-                            <DialogActions
-                              sx={{ background: "rgba(26, 56, 96, 0.10)" }}
+                              Perbarui Jadwal
+                            </Typography>
+                          </DialogTitle>
+                          <DialogContent>
+                            <Typography gutterBottom>
+                              Apakah Anda yakin ingin perbarui jadwal?
+                            </Typography>
+                          </DialogContent>
+                          <DialogActions
+                            sx={{ background: "rgba(26, 56, 96, 0.10)" }}
+                          >
+                            <Button
+                              onClick={handleCancelConfirmation}
+                              sx={{
+                                background: "white",
+                                boxShadow:
+                                  "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                                textTransform: "none",
+                                color: "black",
+                              }}
                             >
-                              <Button
-                                onClick={handleCancelConfirmation}
-                                sx={{
-                                  background: "white",
-                                  boxShadow:
-                                    "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-                                  textTransform: "none",
-                                  color: "black",
-                                }}
-                              >
-                                Batal
-                              </Button>
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleConfirm}
-                                sx={{ textTransform: "none" }}
-                              >
-                                Perbarui
-                              </Button>
-                            </DialogActions>
-                          </Dialog>
-                        </Container>
+                              Batal
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={handleConfirm}
+                              sx={{ textTransform: "none" }}
+                            >
+                              Perbarui
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
                       </Container>
+                    </Container>
 
-                      <Div
-                        sx={{
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          padding: "5px",
-                          background: "rgba(26, 56, 96, 0.10)",
-                          borderRadius: "6px",
-                          marginTop: "25px",
-                        }}
-                      >
-                        {isEditing ? (
+                    <Div
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        padding: "5px",
+                        background: "rgba(26, 56, 96, 0.10)",
+                        borderRadius: "6px",
+                        marginTop: "25px",
+                      }}
+                    >
+                      {isEditing ? (
+                        <>
+                          <Button
+                            onClick={handleBatalEdit}
+                            sx={{
+                              background: "white",
+                              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                              textTransform: "none",
+                              color: "black",
+                            }}
+                          >
+                            Batal
+                          </Button>
                           <Button
                             size="small"
                             onClick={handleConfirmClick}
@@ -892,350 +978,489 @@ const PerbaruiJadwalSidangProposal = () => {
                             variant="contained"
                             sx={{ textTransform: "none" }}
                           >
-                            Simpan Perubahan
+                            Simpan
                           </Button>
-                        ) : (
-                          <Button
-                            size="small"
-                            onClick={handleEditClick}
-                            color="primary"
-                            variant="contained"
-                            sx={{ textTransform: "none" }}
-                          >
-                            Perbarui Jadwal
-                          </Button>
-                        )}
-                      </Div>
-                    </>
-                  )}
-
-                  {(jadwalProposal?.is_report_open === true ||
-                    progress === "Finished" ||
-                    (jadwalProposal?.is_report_open === false &&
-                      jadwalProposal?.is_pass !== "Repeat")) && (
-                    <>
-                      {/* Table Pengajuan Proposal Start */}
-                      <Typography
-                        sx={{
-                          padding: "14px 16px",
-                          background: "rgba(26, 56, 96, 0.10)",
-                          borderRadius: "6px",
-                          border: "1px",
-                          marginBottom: "25px",
-                        }}
-                      >
-                        Menentukan Tim Penelis
-                      </Typography>
-                      {/* input select Tim Penelis Start */}
-                      <Container
-                        sx={{
-                          display: "flex",
-                          padding: "0px 25px",
-                          flexDirection: "column",
-                          alignItems: "flex-start",
-                          alignSelf: "stretch",
-                          marginBottom: "25px",
-                        }}
-                      >
-                        <Div
-                          sx={{
-                            display: "flex",
-                            alignItems: "flex-start",
-                            gap: "25px",
-                            alignSelf: "stretch",
-                          }}
+                        </>
+                      ) : (
+                        <Button
+                          size="small"
+                          onClick={handleEditClick}
+                          color="primary"
+                          variant="contained"
+                          sx={{ textTransform: "none" }}
+                          disabled={jadwalProposal?.is_report_open !== null}
                         >
-                          <Div
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "flex-start",
-                              flex: "1 0 0",
-                            }}
-                          >
-                            <Container>
-                              <Typography variant="subtitle2">
-                                Ketua Penelis
-                              </Typography>
-                              {isEditing ? (
-                                <Select
-                                  labelId="ketua-penelis-label"
-                                  id="ketua-penelis-select"
-                                  fullWidth
-                                  value={ketuaPenelis}
-                                  onChange={(e) =>
-                                    setKetuaPenelis(e.target.value)
-                                  }
-                                  size="small"
-                                  sx={{ maxWidth: "250px" }} // Menambahkan batas lebar maksimum
-                                >
-                                  {daftarDosen.map((dosen) => (
-                                    <MenuItem key={dosen.id} value={dosen.id}>
-                                      {dosen.name}
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                              ) : (
-                                <Typography>
-                                  {jadwalProposal?.panelist_chairman}
-                                </Typography>
-                              )}
-                            </Container>
-                          </Div>
-                          <Div
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "flex-start",
-
-                              flex: "1 0 0",
-                            }}
-                          >
-                            <Container>
-                              <Typography variant="subtitle2">
-                                Anggota Penelis
-                              </Typography>
-                              {isEditing ? (
-                                <Select
-                                  labelId="anggota-penelis-label"
-                                  id="anggota-penelis-select"
-                                  fullWidth
-                                  value={anggotaPenelis}
-                                  onChange={(e) =>
-                                    setAnggotaPenelis(e.target.value)
-                                  }
-                                  size="small"
-                                  sx={{ maxWidth: "250px" }} // Menambahkan batas lebar maksimum
-                                >
-                                  {daftarDosen.map((dosen) => (
-                                    <MenuItem key={dosen.id} value={dosen.id}>
-                                      {dosen.name}
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                              ) : (
-                                <Typography>
-                                  {jadwalProposal?.panelist_member}
-                                </Typography>
-                              )}
-                            </Container>
-                          </Div>
-                        </Div>
-                      </Container>
-                      {/* input select Tim Penelis End */}
-
-                      {/* Table Status Siap Maju Sidang Start*/}
-                      <Typography
-                        sx={{
-                          padding: "14px 16px",
-                          background: "rgba(26, 56, 96, 0.10)",
-                          borderRadius: "6px",
-                          border: "1px",
-                          marginBottom: "25px",
-                        }}
-                      >
-                        Menyusun Jadwal Sidang
-                      </Typography>
-
-                      <Container>
-                        <Container>
-                          <Typography
-                            variant="subtitle2"
-                            sx={{ marginTop: "20px" }}
-                          >
-                            Jadwal Sidang
-                          </Typography>
-                          <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle2">Mulai</Typography>
-                              {isEditing ? (
-                                <TextField
-                                  id="start-time"
-                                  type="time"
-                                  fullWidth
-                                  value={startTime}
-                                  onChange={(e) => setStartTime(e.target.value)}
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  size="small"
-                                  InputProps={{
-                                    startAdornment: (
-                                      <InputAdornment position="start"></InputAdornment>
-                                    ),
-                                  }}
-                                  inputProps={{
-                                    step: 300, // 5 minute intervals
-                                  }}
-                                />
-                              ) : (
-                                <Typography>{startTime}</Typography>
-                              )}
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle2">
-                                Selesai
-                              </Typography>
-                              {isEditing ? (
-                                <TextField
-                                  id="end-time"
-                                  type="time"
-                                  fullWidth
-                                  value={endTime}
-                                  onChange={(e) => setEndTime(e.target.value)}
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  size="small"
-                                  InputProps={{
-                                    startAdornment: (
-                                      <InputAdornment position="start"></InputAdornment>
-                                    ),
-                                  }}
-                                  inputProps={{
-                                    step: 300, // 5 minute intervals
-                                  }}
-                                />
-                              ) : (
-                                <Typography>{endTime}</Typography>
-                              )}
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle2">
-                                Tanggal
-                              </Typography>
-                              {isEditing ? (
-                                <TextField
-                                  id="start-date"
-                                  type="date"
-                                  fullWidth
-                                  value={tanggal}
-                                  onChange={(e) => setTanggal(e.target.value)}
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  size="small"
-                                  InputProps={{
-                                    startAdornment: (
-                                      <InputAdornment position="start"></InputAdornment>
-                                    ),
-                                  }}
-                                />
-                              ) : (
-                                <Typography>{tanggal}</Typography>
-                              )}
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle2">
-                                Ruangan
-                              </Typography>
-                              {isEditing ? (
-                                <TextField
-                                  id="room-name"
-                                  fullWidth
-                                  value={ruangan}
-                                  onChange={(e) => setRuangan(e.target.value)}
-                                  size="small"
-                                />
-                              ) : (
-                                <Typography>{ruangan}</Typography>
-                              )}
-                            </Grid>
-                          </Grid>
-
-                          <Dialog
-                            open={isConfirmationOpen}
-                            onClose={handleCancelConfirmation}
-                            fullWidth
-                            maxWidth="sm"
-                          >
-                            <DialogTitle
-                              sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                padding: "24px",
-                              }}
-                            >
-                              <Typography
-                                sx={{
-                                  fontSize: "20px",
-                                  fontWeight: 500,
-                                  lineHeight: "24px",
-                                }}
-                              >
-                                Perbarui Jadwal
-                              </Typography>
-                            </DialogTitle>
-                            <DialogContent>
-                              <Typography gutterBottom>
-                                Apakah Anda yakin ingin perbarui jadwal?
-                              </Typography>
-                            </DialogContent>
-                            <DialogActions
-                              sx={{ background: "rgba(26, 56, 96, 0.10)" }}
-                            >
-                              <Button
-                                onClick={handleCancelConfirmation}
-                                sx={{
-                                  background: "white",
-                                  boxShadow:
-                                    "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-                                  textTransform: "none",
-                                  color: "black",
-                                }}
-                              >
-                                Batal
-                              </Button>
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleConfirm}
-                                sx={{ textTransform: "none" }}
-                              >
-                                Perbarui
-                              </Button>
-                            </DialogActions>
-                          </Dialog>
-                        </Container>
-                      </Container>
-
-                      <Div
-                        sx={{
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          padding: "5px",
-                          background: "rgba(26, 56, 96, 0.10)",
-                          borderRadius: "6px",
-                          marginTop: "25px",
-                        }}
-                      >
-                        {isEditing ? (
-                          <Button
-                            size="small"
-                            onClick={handleConfirmClick}
-                            color="primary"
-                            variant="contained"
-                            sx={{ textTransform: "none" }}
-                          >
-                            Simpan Perubahan
-                          </Button>
-                        ) : (
-                          <Button
-                            size="small"
-                            onClick={handleEditClick}
-                            color="primary"
-                            variant="contained"
-                            sx={{ textTransform: "none" }}
-                          >
-                            Perbarui Jadwal
-                          </Button>
-                        )}
-                      </Div>
-                    </>
-                  )}
+                          Perbarui Jadwal
+                        </Button>
+                      )}
+                    </Div>
+                  </>
                 </Div>
               </>
             )}
+
+            {progress !== null &&
+              (progress === "Skripsi" || progress === "Finished") && (
+                <>
+                  <Typography
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      padding: "24px",
+                      alignItems: "center",
+                      gap: "10px",
+                      color: "#192434",
+                      background: "rgba(26, 56, 96, 0.10)",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+                    }}
+                  >
+                    {jadwalSkripsi?.title}
+                  </Typography>
+
+                  {/* Table Start*/}
+
+                  <Div
+                    sx={{
+                      width: "100%",
+                      padding: "0 25px",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      gap: "50px",
+                    }}
+                  >
+                    {/* Table Kelompok Mahasiswa Start*/}
+                    <Typography
+                      sx={{
+                        padding: "14px 16px",
+                        background: "rgba(26, 56, 96, 0.10)",
+                        borderRadius: "6px 6px 0 0",
+                        border: "1px",
+                      }}
+                    >
+                      Kelompok Mahasiswa
+                    </Typography>
+                    <TableContainer sx={{ marginBottom: "50px" }}>
+                      <Table>
+                        <TableHead
+                          sx={{ background: "rgba(26, 56, 96, 0.10)" }}
+                        >
+                          <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                            <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
+                            <TableCell sx={{ width: "25%" }}>
+                              Nama Lengkap
+                            </TableCell>
+                            <TableCell sx={{ width: "25%" }}>NIM</TableCell>
+                            <TableCell sx={{ width: "25%" }}>
+                              Program Studi
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {jadwalSkripsi?.students?.map((student, index) => (
+                            <TableRow key={index}>
+                              <TableCell>{index + 1}</TableCell>
+                              <TableCell>{student.fullName}</TableCell>
+                              <TableCell>{student.nim}</TableCell>
+                              <TableCell>
+                                {student.major === "IF"
+                                  ? "Informatika"
+                                  : student.major === "SI"
+                                  ? "Sistem Informasi"
+                                  : student.major}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                    {/* Table Kelompok mahasiswa End */}
+
+                    {/* Menampilkan Penyusunan Jadwal Proposal jika porgress di Proposal */}
+                    <>
+                      {/* Table Pengajuan Proposal Start */}
+                      <Typography
+                        sx={{
+                          padding: "14px 16px",
+                          background: "rgba(26, 56, 96, 0.10)",
+                          borderRadius: "6px",
+                          border: "1px",
+                          marginBottom: "25px",
+                        }}
+                      >
+                        Menentukan Tim Penelis
+                      </Typography>
+                      {/* input select Tim Penelis Start */}
+                      <Container
+                        sx={{
+                          display: "flex",
+                          padding: "0px 25px",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          alignSelf: "stretch",
+                          marginBottom: "25px",
+                        }}
+                      >
+                        <Div
+                          sx={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            gap: "25px",
+                            alignSelf: "stretch",
+                          }}
+                        >
+                          <Div
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "flex-start",
+                              flex: "1 0 0",
+                            }}
+                          >
+                            <Container>
+                              <Typography variant="subtitle2">
+                                Ketua Penelis
+                              </Typography>
+                              <FormControl fullWidth size="small">
+                                <TextField
+                                  id="Ketua"
+                                  fullWidth
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  size="small"
+                                  InputProps={{
+                                    readOnly: true,
+                                    startAdornment: (
+                                      <InputAdornment position="start"></InputAdornment>
+                                    ),
+                                  }}
+                                  value={jadwalSkripsi?.panelist_chairman}
+                                />
+                              </FormControl>
+                            </Container>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "flex-start",
+
+                              flex: "1 0 0",
+                            }}
+                          >
+                            <Container>
+                              <Typography variant="subtitle2">
+                                Anggota Penelis
+                              </Typography>
+                              <FormControl fullWidth size="small">
+                                <TextField
+                                  id="Anggota"
+                                  fullWidth
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  size="small"
+                                  InputProps={{
+                                    readOnly: true,
+                                    startAdornment: (
+                                      <InputAdornment position="start"></InputAdornment>
+                                    ),
+                                  }}
+                                  value={jadwalSkripsi?.panelist_member}
+                                />
+                              </FormControl>
+                            </Container>
+                          </Div>
+                        </Div>
+                      </Container>
+                      {/* input select Tim Penelis End */}
+
+                      {/* Table Status Siap Maju Sidang Start*/}
+                      <Typography
+                        sx={{
+                          padding: "14px 16px",
+                          background: "rgba(26, 56, 96, 0.10)",
+                          borderRadius: "6px",
+                          border: "1px",
+                          marginBottom: "25px",
+                        }}
+                      >
+                        Menyusun Jadwal Sidang Skripsi
+                      </Typography>
+
+                      <Container>
+                        <Container>
+                          <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                              <Typography variant="subtitle2">Mulai</Typography>
+                              {isEditing ? (
+                                <TextField
+                                  id="start-time"
+                                  type="time"
+                                  fullWidth
+                                  value={startTime}
+                                  onChange={(e) => setStartTime(e.target.value)}
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  size="small"
+                                  InputProps={{
+                                    startAdornment: (
+                                      <InputAdornment position="start"></InputAdornment>
+                                    ),
+                                  }}
+                                  inputProps={{
+                                    step: 300, // 5 minute intervals
+                                  }}
+                                />
+                              ) : (
+                                <FormControl fullWidth size="small">
+                                  <TextField
+                                    id="start"
+                                    fullWidth
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    size="small"
+                                    InputProps={{
+                                      readOnly: true,
+                                      startAdornment: (
+                                        <InputAdornment position="start"></InputAdornment>
+                                      ),
+                                    }}
+                                    value={startTime}
+                                  />
+                                </FormControl>
+                              )}
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography variant="subtitle2">
+                                Selesai
+                              </Typography>
+                              {isEditing ? (
+                                <TextField
+                                  id="end-time"
+                                  type="time"
+                                  fullWidth
+                                  value={endTime}
+                                  onChange={(e) => setEndTime(e.target.value)}
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  size="small"
+                                  InputProps={{
+                                    startAdornment: (
+                                      <InputAdornment position="start"></InputAdornment>
+                                    ),
+                                  }}
+                                  inputProps={{
+                                    step: 300, // 5 minute intervals
+                                  }}
+                                />
+                              ) : (
+                                <FormControl fullWidth size="small">
+                                  <TextField
+                                    id="end"
+                                    fullWidth
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    size="small"
+                                    InputProps={{
+                                      readOnly: true,
+                                      startAdornment: (
+                                        <InputAdornment position="start"></InputAdornment>
+                                      ),
+                                    }}
+                                    value={endTime}
+                                  />
+                                </FormControl>
+                              )}
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography variant="subtitle2">
+                                Tanggal
+                              </Typography>
+                              {isEditing ? (
+                                <TextField
+                                  id="start-date"
+                                  type="date"
+                                  fullWidth
+                                  value={tanggal}
+                                  onChange={(e) => setTanggal(e.target.value)}
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  size="small"
+                                  InputProps={{
+                                    startAdornment: (
+                                      <InputAdornment position="start"></InputAdornment>
+                                    ),
+                                  }}
+                                />
+                              ) : (
+                                <FormControl fullWidth size="small">
+                                  <TextField
+                                    id="date"
+                                    fullWidth
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    size="small"
+                                    InputProps={{
+                                      readOnly: true,
+                                      startAdornment: (
+                                        <InputAdornment position="start"></InputAdornment>
+                                      ),
+                                    }}
+                                    value={tanggal}
+                                  />
+                                </FormControl>
+                              )}
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography variant="subtitle2">
+                                Ruangan
+                              </Typography>
+                              {isEditing ? (
+                                <TextField
+                                  id="room-name"
+                                  fullWidth
+                                  value={ruangan}
+                                  onChange={(e) => setRuangan(e.target.value)}
+                                  size="small"
+                                />
+                              ) : (
+                                <FormControl fullWidth size="small">
+                                  <TextField
+                                    id="room"
+                                    fullWidth
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    size="small"
+                                    InputProps={{
+                                      readOnly: true,
+                                      startAdornment: (
+                                        <InputAdornment position="start"></InputAdornment>
+                                      ),
+                                    }}
+                                    value={ruangan}
+                                  />
+                                </FormControl>
+                              )}
+                            </Grid>
+                          </Grid>
+
+                          <Dialog
+                            open={isConfirmationOpen}
+                            onClose={handleCancelConfirmation}
+                            fullWidth
+                            maxWidth="sm"
+                          >
+                            <DialogTitle
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                padding: "24px",
+                              }}
+                            >
+                              <Typography
+                                sx={{
+                                  fontSize: "20px",
+                                  fontWeight: 500,
+                                  lineHeight: "24px",
+                                }}
+                              >
+                                Perbarui Jadwal
+                              </Typography>
+                            </DialogTitle>
+                            <DialogContent>
+                              <Typography gutterBottom>
+                                Apakah Anda yakin ingin perbarui jadwal?
+                              </Typography>
+                            </DialogContent>
+                            <DialogActions
+                              sx={{ background: "rgba(26, 56, 96, 0.10)" }}
+                            >
+                              <Button
+                                onClick={handleCancelConfirmation}
+                                sx={{
+                                  background: "white",
+                                  boxShadow:
+                                    "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                                  textTransform: "none",
+                                  color: "black",
+                                }}
+                              >
+                                Batal
+                              </Button>
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleConfirm}
+                                sx={{ textTransform: "none" }}
+                              >
+                                Perbarui
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
+                        </Container>
+                      </Container>
+
+                      <Div
+                        sx={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          padding: "5px",
+                          background: "rgba(26, 56, 96, 0.10)",
+                          borderRadius: "6px",
+                          marginTop: "25px",
+                        }}
+                      >
+                        {isEditing ? (
+                          <>
+                            <Button
+                              onClick={handleBatalEdit}
+                              sx={{
+                                background: "white",
+                                boxShadow:
+                                  "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                                textTransform: "none",
+                                color: "black",
+                              }}
+                            >
+                              Batal
+                            </Button>
+                            <Button
+                              size="small"
+                              onClick={handleConfirmClick}
+                              color="primary"
+                              variant="contained"
+                              sx={{ textTransform: "none" }}
+                            >
+                              Simpan
+                            </Button>
+                          </>
+                        ) : (
+                          <Button
+                            size="small"
+                            onClick={handleEditClick}
+                            color="primary"
+                            variant="contained"
+                            sx={{ textTransform: "none" }}
+                            disabled={jadwalSkripsi?.is_report_open !== null}
+                          >
+                            Perbarui Jadwal
+                          </Button>
+                        )}
+                      </Div>
+                    </>
+                  </Div>
+                </>
+              )}
           </Div>
         </Div>
         {/* Element 2 End */}
