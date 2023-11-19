@@ -135,7 +135,7 @@ const RiwayatPengujianAnggota = () => {
             flexShrink: 0,
           }}
         >
-          <FormControl>
+          {/* <FormControl>
             <Select
               size="small"
               labelId="dropdown-label"
@@ -148,13 +148,12 @@ const RiwayatPengujianAnggota = () => {
                 boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
               }}
             >
-              <MenuItem value="Kelas">Kelas</MenuItem>{" "}
-              {/* Tambahkan nilai default di sini */}
-              <MenuItem value="option1">Opsi 1</MenuItem>
+              <MenuItem value="Kelas">Kelas</MenuItem>{" "} */}
+          {/* <MenuItem value="option1">Opsi 1</MenuItem>
               <MenuItem value="option2">Opsi 2</MenuItem>
               <MenuItem value="option3">Opsi 3</MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
         </Div>
         <Div
           sx={{
@@ -167,7 +166,7 @@ const RiwayatPengujianAnggota = () => {
             flexShrink: 0,
           }}
         >
-          <SearchGlobal />
+          {/* <SearchGlobal /> */}
         </Div>
       </Div>
       {/* Riwayat Mahasiswa */}

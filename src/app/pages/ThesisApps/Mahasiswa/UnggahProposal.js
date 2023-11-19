@@ -19,8 +19,13 @@ import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 
 // View Document Proposal
-const PDFViewerProposal = ({ dokumenProposal }) => {
+const PDFViewerProposal = ({ dokumenProposal, isUploading }) => {
   const viewPDFProposal = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
     const pdfURL = dokumenProposal?.file_path_proposal;
 
@@ -30,7 +35,13 @@ const PDFViewerProposal = ({ dokumenProposal }) => {
 
   return (
     <div>
-      <span sx={{ fontSize: "10px" }} onClick={viewPDFProposal}>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFProposal}
+      >
         Detail
       </span>
     </div>
@@ -38,8 +49,13 @@ const PDFViewerProposal = ({ dokumenProposal }) => {
 };
 
 // View Document Payment
-const PDFViewerPayment = ({ buktiPembayaran }) => {
+const PDFViewerPayment = ({ buktiPembayaran, isUploading }) => {
   const viewPDFPayment = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
     const pdfURL = buktiPembayaran.file_path_payment;
 
@@ -49,14 +65,27 @@ const PDFViewerPayment = ({ buktiPembayaran }) => {
 
   return (
     <div>
-      <span onClick={viewPDFPayment}>Detail</span>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFPayment}
+      >
+        Detail
+      </span>
     </div>
   );
 };
 
 // View Document Cek Plagiat
-const PDFViewerCekPlagiat = ({ hasilCekPlagiat }) => {
+const PDFViewerCekPlagiat = ({ hasilCekPlagiat, isUploading }) => {
   const viewPDFCekPlagiat = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
     const pdfURL = hasilCekPlagiat.file_path_plagiarismcheck;
 
@@ -66,7 +95,15 @@ const PDFViewerCekPlagiat = ({ hasilCekPlagiat }) => {
 
   return (
     <div>
-      <span onClick={viewPDFCekPlagiat}>Detail</span>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFCekPlagiat}
+      >
+        Detail
+      </span>
     </div>
   );
 };
@@ -76,6 +113,11 @@ const UnggahProposal = () => {
   const [dokumenProposal, setDokumenProposal] = useState();
   const [buktiPembayaran, setBuktiPembayaran] = useState();
   const [hasilCekPlagiat, setHasilCekPlagiat] = useState();
+
+  // state - disabled button
+  const [isSubmittingProposal, setSubmittionProposal] = useState(false);
+  const [isSubmittingPayment, setSubmittionPayment] = useState(false);
+  const [isSubmittingPlagiat, setSubmittionPlagiat] = useState(false);
 
   const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
 
@@ -160,11 +202,21 @@ const UnggahProposal = () => {
   const handleUnggahDokumenProposal = (event) => {
     const file = event.target.files[0];
 
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionProposal(true);
+
     // Validasi tipe file
     const allowedFileTypes = ["application/pdf"];
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionProposal(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -246,17 +298,30 @@ const UnggahProposal = () => {
           "Terjadi kesalahan saat mengunggah dokumen proposal:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        setSubmittionProposal(false);
       });
   };
 
   const handleUnggahBuktiPembayaran = (event) => {
     const file = event.target.files[0];
 
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionPayment(true);
+
     // Validasi tipe file
     const allowedFileTypes = ["application/pdf"];
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionPayment(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -338,17 +403,30 @@ const UnggahProposal = () => {
           "Terjadi kesalahan saat mengunggah bukti pembayaran:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        setSubmittionPayment(false);
       });
   };
 
   const handleUnggahPlagiat = (event) => {
     const file = event.target.files[0];
 
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionPlagiat(true);
+
     // Validasi tipe file
     const allowedFileTypes = ["application/pdf"];
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionPlagiat(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -430,10 +508,16 @@ const UnggahProposal = () => {
           "Terjadi kesalahan saat mengunggah hasil cek plagiat:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        setSubmittionPlagiat(false);
       });
   };
 
   const handleHapusDokumenProposal = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionProposal(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/proposal/proposal-document/delete/${proposalId}`,
@@ -477,10 +561,17 @@ const UnggahProposal = () => {
           "Terjadi kesalahan saat menghapus dokumen proposal:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionProposal(false);
       });
   };
 
   const handleHapusBuktiPembayaran = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionPayment(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/proposal/proposal-payment/delete/${proposalId}`,
@@ -524,10 +615,17 @@ const UnggahProposal = () => {
           "Terjadi kesalahan saat menghapus bukti pembayaran:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionPayment(false);
       });
   };
 
   const handleHapusPlagiat = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionPlagiat(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/proposal/proposal-plagiarism-check/delete/${proposalId}`,
@@ -571,6 +669,10 @@ const UnggahProposal = () => {
           "Terjadi kesalahan saat menghapus hasil cek plagiat:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionPlagiat(false);
       });
   };
 
@@ -707,13 +809,18 @@ const UnggahProposal = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingProposal ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
                     width: "150px",
                     height: "30px",
+                    cursor: isSubmittingProposal ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingProposal ? "#A0A0A0" : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingProposal}
                 >
                   <input
                     type="file"
@@ -966,6 +1073,7 @@ const UnggahProposal = () => {
                                 {dokumenProposal && (
                                   <PDFViewerProposal
                                     dokumenProposal={dokumenProposal}
+                                    isUploading={isSubmittingProposal}
                                   />
                                 )}
                               </span>
@@ -980,11 +1088,16 @@ const UnggahProposal = () => {
                               <span
                                 style={{
                                   textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
+                                  cursor: isSubmittingProposal
+                                    ? "not-allowed"
+                                    : "pointer",
+                                  color: isSubmittingProposal
+                                    ? "#A0A0A0"
+                                    : "red",
                                   fontSize: "12px",
                                 }}
                                 onClick={handleHapusDokumenProposal}
+                                disabled={isSubmittingProposal}
                               >
                                 Hapus
                               </span>
@@ -1039,13 +1152,18 @@ const UnggahProposal = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingPayment ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
                     width: "150px",
                     height: "30px",
+                    cursor: isSubmittingPayment ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingPayment ? "#A0A0A0" : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingPayment}
                 >
                   <input
                     type="file"
@@ -1137,6 +1255,7 @@ const UnggahProposal = () => {
                                 {buktiPembayaran && (
                                   <PDFViewerPayment
                                     buktiPembayaran={buktiPembayaran}
+                                    isUploading={isSubmittingPayment}
                                   />
                                 )}
                               </span>
@@ -1151,11 +1270,16 @@ const UnggahProposal = () => {
                               <span
                                 style={{
                                   textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
+                                  cursor: isSubmittingPayment
+                                    ? "not-allowed"
+                                    : "pointer",
+                                  color: isSubmittingPayment
+                                    ? "#A0A0A0"
+                                    : "red",
                                   fontSize: "12px",
                                 }}
                                 onClick={handleHapusBuktiPembayaran}
+                                disabled={isSubmittingPayment}
                               >
                                 Hapus
                               </span>
@@ -1210,13 +1334,18 @@ const UnggahProposal = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingPlagiat ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
                     width: "150px",
                     height: "30px",
+                    cursor: isSubmittingPlagiat ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingPlagiat ? "#A0A0A0" : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingPlagiat}
                 >
                   <input
                     type="file"
@@ -1313,6 +1442,7 @@ const UnggahProposal = () => {
                                 {hasilCekPlagiat && (
                                   <PDFViewerCekPlagiat
                                     hasilCekPlagiat={hasilCekPlagiat}
+                                    isUploading={isSubmittingPlagiat}
                                   />
                                 )}
                               </span>
@@ -1327,11 +1457,16 @@ const UnggahProposal = () => {
                               <span
                                 style={{
                                   textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
+                                  cursor: isSubmittingPlagiat
+                                    ? "not-allowed"
+                                    : "pointer",
+                                  color: isSubmittingPlagiat
+                                    ? "#A0A0A0"
+                                    : "red",
                                   fontSize: "12px",
                                 }}
                                 onClick={handleHapusPlagiat}
+                                disabled={isSubmittingPlagiat}
                               >
                                 Hapus
                               </span>

@@ -340,7 +340,7 @@ const DaftarPengajuanJudulDosenSkripsi = () => {
               flexShrink: 0,
             }}
           >
-            <SearchGlobal></SearchGlobal>
+            {/* <SearchGlobal></SearchGlobal> */}
           </Div>
         </Div>
         {/* Header End */}

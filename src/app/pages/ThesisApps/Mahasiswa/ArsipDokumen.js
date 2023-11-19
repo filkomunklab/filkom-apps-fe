@@ -18,10 +18,15 @@ import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 
 // View Document HKI
-const PDFViewerHKI = ({ HKIFile }) => {
+const PDFViewerHKI = ({ HKI, isUploading }) => {
   const viewPDFHKI = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
-    const pdfURL = HKIFile.file_path_hki;
+    const pdfURL = HKI.file_path_hki;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -29,7 +34,13 @@ const PDFViewerHKI = ({ HKIFile }) => {
 
   return (
     <div>
-      <span sx={{ fontSize: "10px" }} onClick={viewPDFHKI}>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFHKI}
+      >
         Lihat
       </span>
     </div>
@@ -37,8 +48,13 @@ const PDFViewerHKI = ({ HKIFile }) => {
 };
 
 // View Document Artikel Jurnal
-const PDFViewerArtikelJurnal = ({ jurnal }) => {
+const PDFViewerArtikelJurnal = ({ jurnal, isUploading }) => {
   const viewPDFArtikelJurnal = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
     const pdfURL = jurnal?.file_path_journal;
 
@@ -48,14 +64,27 @@ const PDFViewerArtikelJurnal = ({ jurnal }) => {
 
   return (
     <div>
-      <span onClick={viewPDFArtikelJurnal}>Lihat</span>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFArtikelJurnal}
+      >
+        Lihat
+      </span>
     </div>
   );
 };
 
 // View Document Source Code
-const PDFViewerSourceCode = ({ sourceCode }) => {
+const PDFViewerSourceCode = ({ sourceCode, isUploading }) => {
   const viewPDFSourceCode = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
     const pdfURL = sourceCode?.file_path_sourcecode;
 
@@ -65,7 +94,15 @@ const PDFViewerSourceCode = ({ sourceCode }) => {
 
   return (
     <div>
-      <span onClick={viewPDFSourceCode}>Lihat</span>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFSourceCode}
+      >
+        Lihat
+      </span>
     </div>
   );
 };
@@ -76,6 +113,12 @@ const ArsipDocument = () => {
   const [jurnal, setJurnal] = useState();
   const [sourceCode, setSourceCode] = useState();
   const [linkSourceCode, setLinkSourceCode] = useState();
+
+  // state - disabled button
+  const [isSubmittingHKI, setSubmittionHKI] = useState(false);
+  const [isSubmittingJurnal, setSubmittionJurnal] = useState(false);
+  const [isSubmittingSourceCode, setSubmittionSourceCode] = useState(false);
+  const [isSubmittingLink, setSubmittionLink] = useState(false);
 
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
@@ -167,11 +210,21 @@ const ArsipDocument = () => {
   const handleUnggahHKI = (event) => {
     const file = event.target.files[0];
 
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionHKI(true);
+
     // Validasi tipe file
     const allowedFileTypes = ["application/pdf"];
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionHKI(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -246,6 +299,9 @@ const ArsipDocument = () => {
           "Terjadi kesalahan saat mengunggah HKI:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        setSubmittionHKI(false);
       });
   };
 
@@ -254,11 +310,21 @@ const ArsipDocument = () => {
   const handleUnggahJurnal = (event) => {
     const file = event.target.files[0];
 
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionJurnal(true);
+
     // Validasi tipe file
     const allowedFileTypes = ["application/pdf"];
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionJurnal(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -333,6 +399,9 @@ const ArsipDocument = () => {
           "Terjadi kesalahan saat mengunggah Jurnal:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        setSubmittionJurnal(false);
       });
   };
 
@@ -340,11 +409,22 @@ const ArsipDocument = () => {
   const handleUnggahCode = (event) => {
     const file = event.target.files[0];
 
-    // Validasi tipe file
-    const allowedFileTypes = ["application/zip"];
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionSourceCode(true);
+
+    // Validasi ekstensi file
+    const allowedFileExtensions = ["zip"];
+
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+    if (!allowedFileExtensions.includes(fileExtension)) {
+      console.error("Ekstensi file tidak valid:", fileExtension);
+      setSubmittionSourceCode(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -426,6 +506,9 @@ const ArsipDocument = () => {
           "Terjadi kesalahan saat mengunggah Source Code:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        setSubmittionSourceCode(false);
       });
   };
 
@@ -434,6 +517,9 @@ const ArsipDocument = () => {
 
   const handleUngggahLink = () => {
     if (currentLink !== null) {
+      // Nonaktifkan tombol unggah
+      setSubmittionLink(true);
+
       const linkData = {
         link_soucecode: currentLink,
       };
@@ -480,6 +566,9 @@ const ArsipDocument = () => {
             "Terjadi kesalahan saat mengunggah link:",
             error.response.data.message
           );
+        })
+        .finally(() => {
+          setSubmittionLink(false);
         });
     } else {
       // masukkan handle message error bahwa link harus di masukkan
@@ -487,6 +576,9 @@ const ArsipDocument = () => {
   };
 
   const handleHapusHKI = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionHKI(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/skripsi/hki/delete/${skripsiId}`,
@@ -524,10 +616,17 @@ const ArsipDocument = () => {
           "Terjadi kesalahan saat menghapus HKI:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionHKI(false);
       });
   };
 
   const handleHapusJurnal = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionJurnal(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/skripsi/journal/delete/${skripsiId}`,
@@ -565,10 +664,17 @@ const ArsipDocument = () => {
           "Terjadi kesalahan saat menghapus Jurnal:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionSourceCode(false);
       });
   };
 
   const handleHapusCode = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionSourceCode(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/skripsi/source-code/delete/${skripsiId}`,
@@ -609,10 +715,17 @@ const ArsipDocument = () => {
           "Terjadi kesalahan saat menghapus Source Code:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionSourceCode(false);
       });
   };
 
   const handleHapusLink = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionLink(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/skripsi/link-source-code/delete/${skripsiId}`,
@@ -656,6 +769,10 @@ const ArsipDocument = () => {
           "Terjadi kesalahan saat menghapus Link:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionLink(false);
       });
   };
 
@@ -802,14 +919,18 @@ const ArsipDocument = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingHKI ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
-                    padding: "6px 12px",
-                    width: "130px",
+                    width: "150px",
                     height: "30px",
+                    cursor: isSubmittingHKI ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingHKI ? "#A0A0A0" : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingHKI}
                 >
                   <input
                     type="file"
@@ -892,7 +1013,10 @@ const ArsipDocument = () => {
                                   fontSize: "12px",
                                 }}
                               >
-                                {HKI && <PDFViewerHKI HKI={HKI} />}
+                                <PDFViewerHKI
+                                  HKI={HKI}
+                                  isUploading={isSubmittingHKI}
+                                />
                               </span>
                               <Div
                                 style={{
@@ -905,11 +1029,14 @@ const ArsipDocument = () => {
                               <span
                                 style={{
                                   textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
+                                  cursor: isSubmittingHKI
+                                    ? "not-allowed"
+                                    : "pointer",
+                                  color: isSubmittingHKI ? "#A0A0A0" : "red",
                                   fontSize: "12px",
                                 }}
                                 onClick={handleHapusHKI}
+                                disabled={isSubmittingHKI}
                               >
                                 Hapus
                               </span>
@@ -965,14 +1092,18 @@ const ArsipDocument = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingJurnal ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
-                    padding: "6px 12px",
-                    width: "130px",
+                    width: "150px",
                     height: "30px",
+                    cursor: isSubmittingJurnal ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingJurnal ? "#A0A0A0" : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingJurnal}
                 >
                   <input
                     type="file"
@@ -1047,7 +1178,10 @@ const ArsipDocument = () => {
                                   fontSize: "12px",
                                 }}
                               >
-                                <PDFViewerArtikelJurnal jurnal={jurnal} />
+                                <PDFViewerArtikelJurnal
+                                  jurnal={jurnal}
+                                  isUploading={isSubmittingJurnal}
+                                />
                               </span>
                               <Div
                                 style={{
@@ -1060,11 +1194,14 @@ const ArsipDocument = () => {
                               <span
                                 style={{
                                   textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
+                                  cursor: isSubmittingJurnal
+                                    ? "not-allowed"
+                                    : "pointer",
+                                  color: isSubmittingJurnal ? "#A0A0A0" : "red",
                                   fontSize: "12px",
                                 }}
                                 onClick={handleHapusJurnal}
+                                disabled={isSubmittingJurnal}
                               >
                                 Hapus
                               </span>
@@ -1119,18 +1256,24 @@ const ArsipDocument = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingSourceCode ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
-                    padding: "6px 12px",
-                    width: "130px",
+                    width: "150px",
                     height: "30px",
+                    cursor: isSubmittingSourceCode ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingSourceCode
+                        ? "#A0A0A0"
+                        : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingSourceCode}
                 >
                   <input
                     type="file"
-                    accept=".pdf"
+                    accept=".zip"
                     onChange={handleUnggahCode}
                     style={{ display: "none" }}
                   />
@@ -1201,7 +1344,10 @@ const ArsipDocument = () => {
                                   fontSize: "12px",
                                 }}
                               >
-                                <PDFViewerSourceCode sourceCode={sourceCode} />
+                                <PDFViewerSourceCode
+                                  sourceCode={sourceCode}
+                                  isUploading={isSubmittingSourceCode}
+                                />
                               </span>
                               <Div
                                 style={{
@@ -1214,11 +1360,16 @@ const ArsipDocument = () => {
                               <span
                                 style={{
                                   textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
+                                  cursor: isSubmittingSourceCode
+                                    ? "not-allowed"
+                                    : "pointer",
+                                  color: isSubmittingSourceCode
+                                    ? "#A0A0A0"
+                                    : "red",
                                   fontSize: "12px",
                                 }}
                                 onClick={handleHapusCode}
+                                disabled={isSubmittingSourceCode}
                               >
                                 Hapus
                               </span>
@@ -1258,14 +1409,18 @@ const ArsipDocument = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingLink ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
-                    padding: "6px 12px",
-                    width: "130px",
+                    width: "150px",
                     height: "30px",
+                    cursor: isSubmittingLink ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingLink ? "#A0A0A0" : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingLink}
                   onClick={handleUngggahLink}
                 >
                   <AttachmentIcon
@@ -1315,13 +1470,16 @@ const ArsipDocument = () => {
                           <span
                             style={{
                               textDecoration: "underline",
-                              cursor: "pointer",
-                              color: "blue",
+                              cursor: isSubmittingLink
+                                ? "not-allowed"
+                                : "pointer",
+                              color: isSubmittingLink ? "#A0A0A0" : "blue",
                               fontSize: "12px",
                             }}
                             onClick={() =>
                               openLink(linkSourceCode?.link_soucecode)
                             }
+                            disabled={isSubmittingLink}
                           >
                             {breakLongLink(linkSourceCode?.link_soucecode)}
                           </span>
@@ -1334,12 +1492,14 @@ const ArsipDocument = () => {
                             <span
                               style={{
                                 textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
+                                cursor: isSubmittingLink
+                                  ? "not-allowed"
+                                  : "pointer",
+                                color: isSubmittingLink ? "#A0A0A0" : "red",
                                 fontSize: "12px",
-                                textAlign: "center",
                               }}
                               onClick={handleHapusLink}
+                              disabled={isSubmittingLink}
                             >
                               Hapus
                             </span>
