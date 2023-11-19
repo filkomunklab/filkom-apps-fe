@@ -579,7 +579,6 @@ const PerubahanProposalCoAvisor = () => {
                                 rowsMin={4}
                                 style={{
                                   width: "100%",
-                                  height: 108,
                                   marginBottom: "25px",
                                   display: "block",
                                   resize: "vertical",

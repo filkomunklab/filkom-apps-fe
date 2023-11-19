@@ -60,6 +60,16 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
             },
           }
         );
+
+        // // Memperoleh data dari respons
+        // const data = response.data.data;
+
+        // // Membalik urutan data
+        // const reversedData = {
+        //   dashboard: data.dashboard,
+        //   semesterData: data.semesterData.reverse(),
+        // };
+
         setDaftarNilai(response.data.data);
         console.log("Request Get riwayat nilai: ", response.data.data);
       } catch (error) {

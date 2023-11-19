@@ -59,6 +59,16 @@ const DaftarPengajuanSkripsiSekertaris = () => {
             },
           }
         );
+
+        // Memperoleh data dari respons
+        const data = response.data.data;
+
+        // Membalik urutan data
+        const reversedData = {
+          dashboard: data.dashboard,
+          semesterData: data.semesterData.reverse(),
+        };
+
         // Atur state 'setDaftarPengajuanSekertaris' dengan data dari respons
         setDaftarPengajuanSkripsi(response.data.data);
       } catch (error) {

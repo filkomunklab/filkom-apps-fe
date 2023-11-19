@@ -57,6 +57,16 @@ const DaftarPengajuanProposalSekertaris = () => {
             },
           }
         );
+
+        // Memperoleh data dari respons
+        const data = response.data.data;
+
+        // Membalik urutan data
+        const reversedData = {
+          dashboard: data.dashboard,
+          semesterData: data.semesterData.reverse(),
+        };
+
         // Atur state 'setDaftarPengajuanProposal' dengan data dari respons
         setDaftarPengajuanProposal(response.data.data);
       } catch (error) {

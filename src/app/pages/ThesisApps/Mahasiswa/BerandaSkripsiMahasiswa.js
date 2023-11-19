@@ -95,10 +95,10 @@ const BerandaSkripsiMahasiswa = ({
           <Table>
             <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                <TableCell sx={{ width: "25%" }}>Nama Lengkap</TableCell>
-                <TableCell sx={{ width: "25%" }}>NIM</TableCell>
-                <TableCell sx={{ width: "25%" }}>Program Studi</TableCell>
+                <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
+                <TableCell sx={{ width: "55%" }}>Nama Lengkap</TableCell>
+                <TableCell sx={{ width: "20%" }}>NIM</TableCell>
+                <TableCell sx={{ width: "20%" }}>Program Studi</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -136,20 +136,26 @@ const BerandaSkripsiMahasiswa = ({
           <Table>
             <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
+                <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
+                <TableCell sx={{ width: "31%", textAlign: "center" }}>
+                  Advisor
+                </TableCell>
                 {advisorAndCoAdvisor?.coAdvisor1 && (
-                  <TableCell sx={{ width: "25%" }}>Co-Advisor 1</TableCell>
+                  <TableCell sx={{ width: "31%", textAlign: "center" }}>
+                    Co-Advisor 1
+                  </TableCell>
                 )}
                 {advisorAndCoAdvisor?.coAdvisor2 && (
-                  <TableCell sx={{ width: "25%" }}>Co-Advisor 2</TableCell>
+                  <TableCell sx={{ width: "31%", textAlign: "center" }}>
+                    Co-Advisor 2
+                  </TableCell>
                 )}
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow>
                 <TableCell>1</TableCell>
-                <TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
                   {details?.skripsi_status?.advisor_status === null ? (
                     <Chip label={"Belum"} />
                   ) : details?.skripsi_status?.advisor_status === "Waiting" ? (
@@ -181,7 +187,7 @@ const BerandaSkripsiMahasiswa = ({
                   )}
                 </TableCell>
                 {advisorAndCoAdvisor?.coAdvisor1 && (
-                  <TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
                     {details?.skripsi_status?.co_advisor1_status === null ? (
                       <Chip label={"Belum"} />
                     ) : details?.skripsi_status?.co_advisor1_status ===
@@ -217,7 +223,7 @@ const BerandaSkripsiMahasiswa = ({
                   </TableCell>
                 )}
                 {advisorAndCoAdvisor?.coAdvisor2 && (
-                  <TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
                     {details?.skripsi_status?.co_advisor2_status === null ? (
                       <Chip label={"Belum"} />
                     ) : details?.skripsi_status?.co_advisor2_status ===
@@ -274,16 +280,24 @@ const BerandaSkripsiMahasiswa = ({
           <Table>
             <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                <TableCell sx={{ width: "25%" }}>Dokumen Skripsi</TableCell>
-                <TableCell sx={{ width: "25%" }}>Bukti Pembayaran</TableCell>
-                <TableCell sx={{ width: "25%" }}>Hasil Cek Plagiat</TableCell>
+                <TableCell sx={{ width: "5%", textAlign: "center" }}>
+                  Nomor
+                </TableCell>
+                <TableCell sx={{ width: "31", textAlign: "center" }}>
+                  Dokumen Skripsi
+                </TableCell>
+                <TableCell sx={{ width: "31%", textAlign: "center" }}>
+                  Bukti Pembayaran
+                </TableCell>
+                <TableCell sx={{ width: "31%", textAlign: "center" }}>
+                  Hasil Cek Plagiat
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow>
                 <TableCell>1</TableCell>
-                <TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
                   {details?.ready_status?.skripsiDocumentStatus === null ? (
                     <Chip label={"Belum"} />
                   ) : details?.ready_status?.skripsiDocumentStatus === false ? (
@@ -300,7 +314,7 @@ const BerandaSkripsiMahasiswa = ({
                     details?.ready_status?.skripsiDocumentStatus
                   )}
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
                   {details?.ready_status?.skripsiPaymentStatus === null ? (
                     <Chip label={"Belum"} />
                   ) : details?.ready_status?.skripsiPaymentStatus === false ? (
@@ -317,7 +331,7 @@ const BerandaSkripsiMahasiswa = ({
                     details?.ready_status?.skripsiPaymentStatus
                   )}
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
                   {details?.ready_status?.skripsiPlagiarismStatus === null ? (
                     <Chip label={"Belum"} />
                   ) : details?.ready_status?.skripsiPlagiarismStatus ===
@@ -357,20 +371,32 @@ const BerandaSkripsiMahasiswa = ({
           <Table>
             <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                <TableCell sx={{ width: "25%" }}>Ketua Penelis</TableCell>
-                <TableCell sx={{ width: "25%" }}>Anggota Penelis</TableCell>
-                <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
+                <TableCell sx={{ width: "5%", textAlign: "center" }}>
+                  Nomor
+                </TableCell>
+                <TableCell sx={{ width: "31%", textAlign: "center" }}>
+                  Ketua Penelis
+                </TableCell>
+                <TableCell sx={{ width: "31%", textAlign: "center" }}>
+                  Anggota Penelis
+                </TableCell>
+                <TableCell sx={{ width: "31%", textAlign: "center" }}>
+                  Advisor
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow>
                 <TableCell>1</TableCell>
-                <TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
                   {details?.panelist_team?.panelist_chairman}
                 </TableCell>
-                <TableCell>{details?.panelist_team?.panelist_member}</TableCell>
-                <TableCell>{details?.panelist_team?.advisor}</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
+                  {details?.panelist_team?.panelist_member}
+                </TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
+                  {details?.panelist_team?.advisor}
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -486,16 +512,24 @@ const BerandaSkripsiMahasiswa = ({
           <Table>
             <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                <TableCell sx={{ width: "25%" }}>Ketua Penelis</TableCell>
-                <TableCell sx={{ width: "25%" }}>Anggota Penelis</TableCell>
-                <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
+                <TableCell sx={{ width: "5%", textAlign: "center" }}>
+                  Nomor
+                </TableCell>
+                <TableCell sx={{ width: "31%", textAlign: "center" }}>
+                  Ketua Penelis
+                </TableCell>
+                <TableCell sx={{ width: "31%", textAlign: "center" }}>
+                  Anggota Penelis
+                </TableCell>
+                <TableCell sx={{ width: "31%", textAlign: "center" }}>
+                  Advisor
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow>
                 <TableCell>1</TableCell>
-                <TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
                   {details?.revisi_status?.chairman_status === "Belum" ? (
                     <Chip label={"Belum"} />
                   ) : details?.revisi_status?.chairman_status === "Waiting" ? (
@@ -526,7 +560,7 @@ const BerandaSkripsiMahasiswa = ({
                     details?.revisi_status?.chairman_status
                   )}
                 </TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>
+                <TableCell sx={{ textAlign: "center" }}>
                   {details?.revisi_status?.member_status === "Belum" ? (
                     <Chip label={"Belum"} />
                   ) : details?.revisi_status?.member_status === "Waiting" ? (
@@ -557,7 +591,7 @@ const BerandaSkripsiMahasiswa = ({
                     details?.revisi_status?.member_status
                   )}
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
                   {details?.revisi_status?.advisor_status === "Belum" ? (
                     <Chip label={"Belum"} />
                   ) : details?.revisi_status?.advisor_status === "Waiting" ? (

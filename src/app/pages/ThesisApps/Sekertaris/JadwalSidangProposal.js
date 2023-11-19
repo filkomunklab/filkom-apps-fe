@@ -140,6 +140,7 @@ const JadwalSidangProposal = () => {
     selectedKetuaPenelis: "",
     selectedAnggotaPenelis: "",
     ruangan: "",
+    selectedAdvisor: "",
   });
 
   const handlePerbarui = (selectedProposalId) => {
@@ -178,6 +179,33 @@ const JadwalSidangProposal = () => {
     // Validasi input ruangan
     if (!ruangan) {
       newErrorMessages.ruangan = "Ruangan harus diisi";
+      hasError = true;
+    }
+
+    // Validasi jika Ketua Panelis dan Anggota Panelis sama
+    if (selectedKetuaPenelis === selectedAnggotaPenelis) {
+      newErrorMessages.selectedKetuaPenelis =
+        "Ketua Panelis dan Anggota Panelis tidak boleh sama";
+      newErrorMessages.selectedAnggotaPenelis =
+        "Ketua Panelis dan Anggota Panelis tidak boleh sama";
+      hasError = true;
+    }
+
+    // Validasi jika Ketua Panelis dan Advisor sama
+    if (selectedKetuaPenelis === selectedAdvisor) {
+      newErrorMessages.selectedKetuaPenelis =
+        "Ketua Panelis tidak boleh sama dengan Advisor";
+      newErrorMessages.selectedAdvisor =
+        "Ketua Panelis tidak boleh sama dengan Advisor";
+      hasError = true;
+    }
+
+    // Validasi jika Anggota Panelis dan Advisor sama
+    if (selectedAnggotaPenelis === selectedAdvisor) {
+      newErrorMessages.selectedAnggotaPenelis =
+        "Anggota Panelis tidak boleh sama dengan Advisor";
+      newErrorMessages.selectedAdvisor =
+        "Anggota Panelis tidak boleh sama dengan Advisor";
       hasError = true;
     }
 
@@ -842,7 +870,11 @@ const JadwalSidangProposal = () => {
                   }}
                   value={selectedAdvisor}
                   onChange={(event) => setSelectedAdvisor(event.target.value)}
+                  error={!!errorMessages.selectedAdvisor}
                 />
+                <FormHelperText error={!!errorMessages.selectedAdvisor}>
+                  {errorMessages.selectedAdvisor}
+                </FormHelperText>
               </FormControl>
             </Div>
           </Div>

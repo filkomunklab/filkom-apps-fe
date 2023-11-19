@@ -60,6 +60,16 @@ const DaftarPengajuanSkripsiDosenSkripsi = () => {
             },
           }
         );
+
+        // Memperoleh data dari respons
+        const data = response.data.data;
+
+        // Membalik urutan data
+        const reversedData = {
+          dashboard: data.dashboard,
+          semesterData: data.semesterData.reverse(),
+        };
+
         // Atur state 'setDaftarPengajuanSkripsi' dengan data dari respons
         setDaftarPengajuanSkripsi(response.data.data);
         console.log("Request get daftar skripsi: ", response.data.data);
