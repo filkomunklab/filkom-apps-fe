@@ -152,6 +152,11 @@ const ManajemenKelasDosenSkripsi = () => {
           },
         }
       );
+      const sortedAkademikData = response.data.data.sort((a, b) => {
+        const semesterA = a.semester + a.year;
+        const semesterB = b.semester + b.year;
+        return semesterB.localeCompare(semesterA);
+      });
       // Atur state 'setDaftarAkademik' dengan data dari respons
       setDaftarAkademik(response.data.data);
       console.log("Berhasil mengambil daftar akadmik: ", response.data.data);
@@ -905,7 +910,7 @@ const ManajemenKelasDosenSkripsi = () => {
                   },
                   getContentAnchorEl: null,
                   style: {
-                    maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                    maxHeight: "600px", // Sesuaikan dengan tinggi yang diinginkan
                   },
                 }}
               >

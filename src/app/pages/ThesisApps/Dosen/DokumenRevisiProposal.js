@@ -1042,27 +1042,48 @@ const DokumenRevisiProposal = () => {
                           maxWidth: "10%",
                           whiteSpace: "nowrap",
                           overflow: "hidden",
+                          textAlign: "center",
                         }}
                       >
                         Tanggal
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "10%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "10%",
+                          textAlign: "center",
+                        }}
                       >
                         Ukuran
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "15%",
+                          textAlign: "center",
+                        }}
                       >
                         Ketua Panalis
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "15%",
+                          textAlign: "center",
+                        }}
                       >
                         Anggota Panalis
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "15%",
+                          textAlign: "center",
+                        }}
                       >
                         Advisor
                       </TableCell>
@@ -1072,6 +1093,7 @@ const DokumenRevisiProposal = () => {
                           padding: "11px",
                           textAlign: "center",
                           width: "12%",
+                          textAlign: "center",
                         }}
                       >
                         Action
@@ -1085,14 +1107,14 @@ const DokumenRevisiProposal = () => {
                       <TableCell sx={{ fontSize: "12px" }}>
                         {dokumenRevisi?.file_name_revision}
                       </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }}>
+                      <TableCell sx={{ fontSize: "12px", textAlign: "center" }}>
                         {dokumenRevisi?.upload_date_revision}
                       </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }}>
+                      <TableCell sx={{ fontSize: "12px", textAlign: "center" }}>
                         {dokumenRevisi?.file_size_revision}
                       </TableCell>
                       {/* status ketua panalis */}
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
                         "Approve" ? (
                           <Chip
@@ -1129,7 +1151,7 @@ const DokumenRevisiProposal = () => {
                         ) : null}
                       </TableCell>
                       {/* status Anggota panalis */}
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dokumenRevisi?.is_revision_approve_by_panelist_member ===
                         "Approve" ? (
                           <Chip
@@ -1166,7 +1188,7 @@ const DokumenRevisiProposal = () => {
                         ) : null}
                       </TableCell>
                       {/* status advisor */}
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dokumenRevisi?.is_revision_approve_by_advisor ===
                         "Approve" ? (
                           <Chip

@@ -379,10 +379,10 @@ const BuatKonsultasi = () => {
                   <Table>
                     <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                       <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                        <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                        <TableCell sx={{ width: "25%" }}>Deskripsi</TableCell>
-                        <TableCell sx={{ width: "25%" }}>Tanggal</TableCell>
-                        <TableCell sx={{ width: "25%" }}>Tertera</TableCell>
+                        <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
+                        <TableCell sx={{ width: "65%" }}>Deskripsi</TableCell>
+                        <TableCell sx={{ width: "10%" }}>Tanggal</TableCell>
+                        <TableCell sx={{ width: "20%" }}>Tertera</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>

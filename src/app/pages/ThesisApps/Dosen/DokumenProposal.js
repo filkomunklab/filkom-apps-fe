@@ -919,17 +919,29 @@ const DokumenProposal = () => {
                           maxWidth: "10%",
                           whiteSpace: "nowrap",
                           overflow: "hidden",
+
+                          textAlign: "center",
                         }}
                       >
                         Tanggal
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "10%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "10%",
+                          textAlign: "center",
+                        }}
                       >
                         Ukuran
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "15%",
+                          textAlign: "center",
+                        }}
                       >
                         Advisor
                       </TableCell>
@@ -939,6 +951,7 @@ const DokumenProposal = () => {
                             fontSize: "12px",
                             padding: "11px",
                             width: "15%",
+                            textAlign: "center",
                           }}
                         >
                           Co-Advisor 1
@@ -950,6 +963,7 @@ const DokumenProposal = () => {
                             fontSize: "12px",
                             padding: "11px",
                             width: "15%",
+                            textAlign: "center",
                           }}
                         >
                           Co-Advisor 2
@@ -961,6 +975,7 @@ const DokumenProposal = () => {
                           padding: "11px",
                           textAlign: "center",
                           width: "12%",
+                          textAlign: "center",
                         }}
                       >
                         Action
@@ -974,14 +989,14 @@ const DokumenProposal = () => {
                       <TableCell sx={{ fontSize: "12px" }}>
                         {dokumenProposal?.file_name_proposal}
                       </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }}>
+                      <TableCell sx={{ fontSize: "12px", textAlign: "center" }}>
                         {dokumenProposal?.upload_date_proposal}
                       </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }}>
+                      <TableCell sx={{ fontSize: "12px", textAlign: "center" }}>
                         {dokumenProposal?.file_size_proposal}
                       </TableCell>
                       {/* status Advisor */}
-                      <TableCell>
+                      <TableCell sx={{ fontSize: "12px", textAlign: "center" }}>
                         {dokumenProposal?.is_proposal_approve_by_advisor ===
                         null ? (
                           ""
@@ -994,6 +1009,7 @@ const DokumenProposal = () => {
                               background: "rgba(0, 255, 0, 0.10)",
                               color: "#008000",
                               fontSize: "10px",
+                              textAlign: "center",
                             }}
                           />
                         ) : dokumenProposal?.is_proposal_approve_by_advisor ===
@@ -1005,6 +1021,7 @@ const DokumenProposal = () => {
                               background: "rgba(255, 0, 0, 0.10)",
                               color: "#FF0000",
                               fontSize: "10px",
+                              textAlign: "center",
                             }}
                           />
                         ) : dokumenProposal?.is_proposal_approve_by_advisor ===
@@ -1016,13 +1033,16 @@ const DokumenProposal = () => {
                               background: "rgba(255, 204, 0, 0.10)",
                               color: "#985211",
                               fontSize: "10px",
+                              textAlign: "center",
                             }}
                           />
                         ) : null}
                       </TableCell>
                       {/* status CoAdvisor1 */}
                       {advisorAndCoAdvisor?.coAdvisor1 && (
-                        <TableCell>
+                        <TableCell
+                          sx={{ fontSize: "12px", textAlign: "center" }}
+                        >
                           {dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
                           null ? (
                             ""
@@ -1035,6 +1055,7 @@ const DokumenProposal = () => {
                                 background: "rgba(0, 255, 0, 0.10)",
                                 color: "#008000",
                                 fontSize: "10px",
+                                textAlign: "center",
                               }}
                             />
                           ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
@@ -1046,6 +1067,7 @@ const DokumenProposal = () => {
                                 background: "rgba(255, 0, 0, 0.10)",
                                 color: "#FF0000",
                                 fontSize: "10px",
+                                textAlign: "center",
                               }}
                             />
                           ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
@@ -1057,6 +1079,7 @@ const DokumenProposal = () => {
                                 background: "rgba(255, 204, 0, 0.10)",
                                 color: "#985211",
                                 fontSize: "10px",
+                                textAlign: "center",
                               }}
                             />
                           ) : null}
@@ -1064,7 +1087,9 @@ const DokumenProposal = () => {
                       )}
                       {/* Status CoAdvisor2 */}
                       {advisorAndCoAdvisor?.coAdvisor2 && (
-                        <TableCell>
+                        <TableCell
+                          sx={{ fontSize: "12px", textAlign: "center" }}
+                        >
                           {dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
                           null ? (
                             ""
@@ -1077,6 +1102,7 @@ const DokumenProposal = () => {
                                 background: "rgba(0, 255, 0, 0.10)",
                                 color: "#008000",
                                 fontSize: "10px",
+                                textAlign: "center",
                               }}
                             />
                           ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
@@ -1088,6 +1114,7 @@ const DokumenProposal = () => {
                                 background: "rgba(255, 0, 0, 0.10)",
                                 color: "#FF0000",
                                 fontSize: "10px",
+                                textAlign: "center",
                               }}
                             />
                           ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
@@ -1099,6 +1126,7 @@ const DokumenProposal = () => {
                                 background: "rgba(255, 204, 0, 0.10)",
                                 color: "#985211",
                                 fontSize: "10px",
+                                textAlign: "center",
                               }}
                             />
                           ) : null}
@@ -1110,6 +1138,7 @@ const DokumenProposal = () => {
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
+                            textAlign: "center",
                           }}
                         >
                           {dokumenProposal?.file_name_proposal !== null && (
@@ -1476,7 +1505,7 @@ const DokumenProposal = () => {
                             sx={{
                               fontSize: "12px",
                               padding: "11px",
-                              width: "45%",
+                              width: "80%",
                             }}
                           >
                             Nama File
@@ -1485,7 +1514,7 @@ const DokumenProposal = () => {
                             sx={{
                               fontSize: "12px",
                               padding: "11px",
-                              width: "20%",
+                              width: "10%",
                             }}
                           >
                             Tanggal
@@ -1494,7 +1523,7 @@ const DokumenProposal = () => {
                             sx={{
                               fontSize: "12px",
                               padding: "11px",
-                              width: "20%",
+                              width: "5%",
                             }}
                           >
                             Ukuran

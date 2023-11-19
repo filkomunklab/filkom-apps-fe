@@ -101,10 +101,10 @@ const BerandaPengajuanJudul = ({ value: groupId }) => {
             <Table>
               <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                 <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                  <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                  <TableCell sx={{ width: "25%" }}>Nama Lengkap</TableCell>
-                  <TableCell sx={{ width: "25%" }}>NIM</TableCell>
-                  <TableCell sx={{ width: "25%" }}>Program Studi</TableCell>
+                  <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
+                  <TableCell sx={{ width: "55%" }}>Nama Lengkap</TableCell>
+                  <TableCell sx={{ width: "20%" }}>NIM</TableCell>
+                  <TableCell sx={{ width: "20%" }}>Program Studi</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

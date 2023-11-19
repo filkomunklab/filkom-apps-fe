@@ -1184,6 +1184,18 @@ export const adminMenus = [
       },
     ],
   },
+  {
+    label: "Sistem Informasi Skripsi",
+    type: "section",
+    children: [
+      {
+        label: "Daftar Pegawai",
+        type: "nav-item",
+        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+        uri: "/sistem-informasi-skripsi/daftar-pegawai",
+      },
+    ],
+  },
 ];
 
 export const registerMenus = [

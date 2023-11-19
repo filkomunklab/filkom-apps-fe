@@ -741,7 +741,7 @@ const UnggahProposal = () => {
                         sx={{
                           fontSize: "12px",
                           padding: "11px",
-                          width: "15%",
+                          width: "40%",
                           whiteSpace: "nowrap",
                           overflow: "hidden",
                         }}
@@ -752,20 +752,31 @@ const UnggahProposal = () => {
                         sx={{
                           fontSize: "12px",
                           padding: "11px",
-                          maxWidth: "10%",
+                          width: "10%",
                           whiteSpace: "nowrap",
                           overflow: "hidden",
+                          textAlign: "center",
                         }}
                       >
                         Tanggal
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "10%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "5%",
+                          textAlign: "center",
+                        }}
                       >
                         Ukuran
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "15%",
+                          textAlign: "center",
+                        }}
                       >
                         Advisor
                       </TableCell>
@@ -775,6 +786,7 @@ const UnggahProposal = () => {
                             fontSize: "12px",
                             padding: "11px",
                             width: "15%",
+                            textAlign: "center",
                           }}
                         >
                           Co-Advisor 1
@@ -786,6 +798,7 @@ const UnggahProposal = () => {
                             fontSize: "12px",
                             padding: "11px",
                             width: "15%",
+                            textAlign: "center",
                           }}
                         >
                           Co-Advisor 2
@@ -811,14 +824,18 @@ const UnggahProposal = () => {
                         <TableCell sx={{ fontSize: "12px" }}>
                           {dokumenProposal?.file_name_proposal}
                         </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
+                        <TableCell
+                          sx={{ fontSize: "12px", textAlign: "center" }}
+                        >
                           {dokumenProposal?.upload_date_proposal}
                         </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
+                        <TableCell
+                          sx={{ fontSize: "12px", textAlign: "center" }}
+                        >
                           {dokumenProposal?.file_size_proposal}
                         </TableCell>
                         {/* status Advisor */}
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           {dokumenProposal?.is_proposal_approve_by_advisor ===
                           "Waiting" ? (
                             <Chip
@@ -827,6 +844,7 @@ const UnggahProposal = () => {
                               sx={{
                                 background: "rgba(255, 204, 0, 0.10)",
                                 color: "#985211",
+                                textAlign: "center",
                               }}
                             />
                           ) : dokumenProposal?.is_proposal_approve_by_advisor ===
@@ -837,6 +855,7 @@ const UnggahProposal = () => {
                               sx={{
                                 background: "rgba(21, 131, 67, 0.10)",
                                 color: "#0A7637",
+                                textAlign: "center",
                               }}
                             />
                           ) : dokumenProposal?.is_proposal_approve_by_advisor ===
@@ -847,6 +866,7 @@ const UnggahProposal = () => {
                               sx={{
                                 background: "rgba(226, 29, 18, 0.10)",
                                 color: "#CA150C",
+                                textAlign: "center",
                               }}
                             />
                           ) : (
@@ -855,7 +875,7 @@ const UnggahProposal = () => {
                         </TableCell>
                         {/* status CoAdvisor 1 */}
                         {advisorAndCoAdvisor?.coAdvisor1 && (
-                          <TableCell>
+                          <TableCell sx={{ textAlign: "center" }}>
                             {dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
                             "Waiting" ? (
                               <Chip
@@ -864,6 +884,7 @@ const UnggahProposal = () => {
                                 sx={{
                                   background: "rgba(255, 204, 0, 0.10)",
                                   color: "#985211",
+                                  textAlign: "center",
                                 }}
                               />
                             ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
@@ -874,6 +895,7 @@ const UnggahProposal = () => {
                                 sx={{
                                   background: "rgba(21, 131, 67, 0.10)",
                                   color: "#0A7637",
+                                  textAlign: "center",
                                 }}
                               />
                             ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
@@ -884,6 +906,7 @@ const UnggahProposal = () => {
                                 sx={{
                                   background: "rgba(226, 29, 18, 0.10)",
                                   color: "#CA150C",
+                                  textAlign: "center",
                                 }}
                               />
                             ) : (
@@ -893,7 +916,7 @@ const UnggahProposal = () => {
                         )}
                         {/* status CoAdvisor 2 */}
                         {advisorAndCoAdvisor?.coAdvisor2 && (
-                          <TableCell>
+                          <TableCell sx={{ textAlign: "center" }}>
                             {dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
                             "Waiting" ? (
                               <Chip
@@ -929,7 +952,7 @@ const UnggahProposal = () => {
                             )}
                           </TableCell>
                         )}
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           {dokumenProposal?.file_name_proposal !== null && (
                             <Div sx={{ display: "flex" }}>
                               <span
@@ -1047,17 +1070,27 @@ const UnggahProposal = () => {
                         Nomor
                       </TableCell> */}
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
+                        sx={{ fontSize: "12px", padding: "11px", width: "70%" }}
                       >
                         Nama File
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "15%",
+                          textAlign: "center",
+                        }}
                       >
                         Tanggal
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "10%",
+                          textAlign: "center",
+                        }}
                       >
                         Ukuran
                       </TableCell>
@@ -1066,7 +1099,7 @@ const UnggahProposal = () => {
                           fontSize: "12px",
                           padding: "11px",
                           textAlign: "center",
-                          width: "12%",
+                          width: "10%",
                         }}
                       >
                         Action
@@ -1080,13 +1113,17 @@ const UnggahProposal = () => {
                         <TableCell sx={{ fontSize: "12px" }}>
                           {buktiPembayaran.file_name_payment}
                         </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
+                        <TableCell
+                          sx={{ fontSize: "12px", textAlign: "center" }}
+                        >
                           {buktiPembayaran.upload_date_payment}
                         </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
+                        <TableCell
+                          sx={{ fontSize: "12px", textAlign: "center" }}
+                        >
                           {buktiPembayaran.file_size_payment}
                         </TableCell>
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           {buktiPembayaran.file_name_payment !== null && (
                             <Div sx={{ display: "flex" }}>
                               <span
@@ -1204,17 +1241,31 @@ const UnggahProposal = () => {
                         Nomor
                       </TableCell> */}
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "70%",
+                        }}
                       >
                         Nama File
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "15%",
+                          textAlign: "center",
+                        }}
                       >
                         Tanggal
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "10%",
+                          textAlign: "center",
+                        }}
                       >
                         Ukuran
                       </TableCell>
@@ -1223,7 +1274,7 @@ const UnggahProposal = () => {
                           fontSize: "12px",
                           padding: "11px",
                           textAlign: "center",
-                          width: "12%",
+                          width: "10%",
                         }}
                       >
                         Action
@@ -1237,13 +1288,17 @@ const UnggahProposal = () => {
                         <TableCell sx={{ fontSize: "12px" }}>
                           {hasilCekPlagiat.file_name_plagiarismcheck}
                         </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
+                        <TableCell
+                          sx={{ fontSize: "12px", textAlign: "center" }}
+                        >
                           {hasilCekPlagiat.upload_date_plagiarismcheck}
                         </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
+                        <TableCell
+                          sx={{ fontSize: "12px", textAlign: "center" }}
+                        >
                           {hasilCekPlagiat.file_size_plagiarismcheck}
                         </TableCell>
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           {hasilCekPlagiat.file_name_plagiarismcheck !==
                             null && (
                             <Div sx={{ display: "flex" }}>
