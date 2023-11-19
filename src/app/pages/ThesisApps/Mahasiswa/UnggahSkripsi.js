@@ -1056,20 +1056,144 @@ const UploadSkipsi = () => {
                             >
                               |
                             </Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: isSubmittingSkripsi
-                                  ? "not-allowed"
-                                  : "pointer",
-                                color: isSubmittingSkripsi ? "#A0A0A0" : "red",
-                                fontSize: "12px",
-                              }}
-                              onClick={handleHapusDokumenSkripsi}
-                              disabled={isSubmittingSkripsi}
-                            >
-                              Hapus
-                            </span>
+                            {/* tombol unggah proposal jika tidak ada co-advisor */}
+                            {advisorAndCoAdvisor?.coAdvisor1 === null &&
+                              advisorAndCoAdvisor?.coAdvisor2 === null && (
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor:
+                                      isSubmittingSkripsi ||
+                                      dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                        "Approve"
+                                        ? "not-allowed"
+                                        : "pointer",
+                                    color:
+                                      isSubmittingSkripsi ||
+                                      dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                        "Approve"
+                                        ? "#A0A0A0"
+                                        : "red",
+                                    fontSize: "12px",
+                                  }}
+                                  onClick={() => {
+                                    if (
+                                      !isSubmittingSkripsi &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_advisor !==
+                                        "Approve"
+                                    ) {
+                                      handleHapusDokumenSkripsi();
+                                    }
+                                  }}
+                                  disabled={
+                                    isSubmittingSkripsi ||
+                                    dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                      "Approve"
+                                  }
+                                >
+                                  Hapus
+                                </span>
+                              )}
+                            {/* tombol unggah proposal jika ada co-advisor 1 saja */}
+                            {advisorAndCoAdvisor?.coAdvisor1 &&
+                              advisorAndCoAdvisor?.coAdvisor2 === null && (
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor:
+                                      isSubmittingSkripsi ||
+                                      (dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                        "Approve" &&
+                                        dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                          "Approve")
+                                        ? "not-allowed"
+                                        : "pointer",
+                                    color:
+                                      isSubmittingSkripsi ||
+                                      (dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                        "Approve" &&
+                                        dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                          "Approve")
+                                        ? "#A0A0A0"
+                                        : "red",
+                                    fontSize: "12px",
+                                  }}
+                                  onClick={() => {
+                                    if (
+                                      !isSubmittingSkripsi &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_advisor !==
+                                        "Approve" &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 !==
+                                        "Approve"
+                                    ) {
+                                      handleHapusDokumenSkripsi();
+                                    }
+                                  }}
+                                  disabled={
+                                    isSubmittingSkripsi ||
+                                    (dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                      "Approve" &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                        "Approve")
+                                  }
+                                >
+                                  Hapus
+                                </span>
+                              )}
+                            {/* tombol unggah proposal jika ada co-advisor 1 dan 2 */}
+                            {advisorAndCoAdvisor?.coAdvisor1 &&
+                              advisorAndCoAdvisor?.coAdvisor2 && (
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor:
+                                      isSubmittingSkripsi ||
+                                      (dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                        "Approve" &&
+                                        dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                          "Approve" &&
+                                        dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                                          "Approve")
+                                        ? "not-allowed"
+                                        : "pointer",
+                                    color:
+                                      isSubmittingSkripsi ||
+                                      (dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                        "Approve" &&
+                                        dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                          "Approve" &&
+                                        dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                                          "Approve")
+                                        ? "#A0A0A0"
+                                        : "red",
+                                    fontSize: "12px",
+                                  }}
+                                  onClick={() => {
+                                    if (
+                                      !isSubmittingSkripsi &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_advisor !==
+                                        "Approve" &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 !==
+                                        "Approve" &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 !==
+                                        "Approve"
+                                    ) {
+                                      handleHapusDokumenSkripsi();
+                                    }
+                                  }}
+                                  disabled={
+                                    isSubmittingSkripsi ||
+                                    (dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                      "Approve" &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                        "Approve" &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                                        "Approve")
+                                  }
+                                >
+                                  Hapus
+                                </span>
+                              )}
                           </Div>
                         )}
                       </TableCell>

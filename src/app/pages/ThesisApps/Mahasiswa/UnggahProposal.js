@@ -899,7 +899,7 @@ const UnggahProposal = () => {
                           Co-Advisor 1
                         </TableCell>
                       )}
-                      {advisorAndCoAdvisor?.is_proposal_approve_by_co_advisor2 && (
+                      {advisorAndCoAdvisor?.coAdvisor2 && (
                         <TableCell
                           sx={{
                             fontSize: "12px",
@@ -1085,22 +1085,144 @@ const UnggahProposal = () => {
                               >
                                 |
                               </Div>
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: isSubmittingProposal
-                                    ? "not-allowed"
-                                    : "pointer",
-                                  color: isSubmittingProposal
-                                    ? "#A0A0A0"
-                                    : "red",
-                                  fontSize: "12px",
-                                }}
-                                onClick={handleHapusDokumenProposal}
-                                disabled={isSubmittingProposal}
-                              >
-                                Hapus
-                              </span>
+                              {/* tombol unggah proposal jika tidak ada co-advisor */}
+                              {advisorAndCoAdvisor?.coAdvisor1 === null &&
+                                advisorAndCoAdvisor?.coAdvisor2 === null && (
+                                  <span
+                                    style={{
+                                      textDecoration: "none",
+                                      cursor:
+                                        isSubmittingProposal ||
+                                        dokumenProposal?.is_proposal_approve_by_advisor ===
+                                          "Approve"
+                                          ? "not-allowed"
+                                          : "pointer",
+                                      color:
+                                        isSubmittingProposal ||
+                                        dokumenProposal?.is_proposal_approve_by_advisor ===
+                                          "Approve"
+                                          ? "#A0A0A0"
+                                          : "red",
+                                      fontSize: "12px",
+                                    }}
+                                    onClick={() => {
+                                      if (
+                                        !isSubmittingProposal &&
+                                        dokumenProposal?.is_proposal_approve_by_advisor !==
+                                          "Approve"
+                                      ) {
+                                        handleHapusDokumenProposal();
+                                      }
+                                    }}
+                                    disabled={
+                                      isSubmittingProposal ||
+                                      dokumenProposal?.is_proposal_approve_by_advisor ===
+                                        "Approve"
+                                    }
+                                  >
+                                    Hapus
+                                  </span>
+                                )}
+                              {/* tombol unggah proposal jika ada co-advisor 1 saja */}
+                              {advisorAndCoAdvisor?.coAdvisor1 &&
+                                advisorAndCoAdvisor?.coAdvisor2 === null && (
+                                  <span
+                                    style={{
+                                      textDecoration: "none",
+                                      cursor:
+                                        isSubmittingProposal ||
+                                        (dokumenProposal?.is_proposal_approve_by_advisor ===
+                                          "Approve" &&
+                                          dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                            "Approve")
+                                          ? "not-allowed"
+                                          : "pointer",
+                                      color:
+                                        isSubmittingProposal ||
+                                        (dokumenProposal?.is_proposal_approve_by_advisor ===
+                                          "Approve" &&
+                                          dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                            "Approve")
+                                          ? "#A0A0A0"
+                                          : "red",
+                                      fontSize: "12px",
+                                    }}
+                                    onClick={() => {
+                                      if (
+                                        !isSubmittingProposal &&
+                                        dokumenProposal?.is_proposal_approve_by_advisor !==
+                                          "Approve" &&
+                                        dokumenProposal?.is_proposal_approve_by_co_advisor1 !==
+                                          "Approve"
+                                      ) {
+                                        handleHapusDokumenProposal();
+                                      }
+                                    }}
+                                    disabled={
+                                      isSubmittingProposal ||
+                                      (dokumenProposal?.is_proposal_approve_by_advisor ===
+                                        "Approve" &&
+                                        dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                          "Approve")
+                                    }
+                                  >
+                                    Hapus
+                                  </span>
+                                )}
+                              {/* tombol unggah proposal jika ada co-advisor 1 dan 2 */}
+                              {advisorAndCoAdvisor?.coAdvisor1 &&
+                                advisorAndCoAdvisor?.coAdvisor2 && (
+                                  <span
+                                    style={{
+                                      textDecoration: "none",
+                                      cursor:
+                                        isSubmittingProposal ||
+                                        (dokumenProposal?.is_proposal_approve_by_advisor ===
+                                          "Approve" &&
+                                          dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                            "Approve" &&
+                                          dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                                            "Approve")
+                                          ? "not-allowed"
+                                          : "pointer",
+                                      color:
+                                        isSubmittingProposal ||
+                                        (dokumenProposal?.is_proposal_approve_by_advisor ===
+                                          "Approve" &&
+                                          dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                            "Approve" &&
+                                          dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                                            "Approve")
+                                          ? "#A0A0A0"
+                                          : "red",
+                                      fontSize: "12px",
+                                    }}
+                                    onClick={() => {
+                                      if (
+                                        !isSubmittingProposal &&
+                                        dokumenProposal?.is_proposal_approve_by_advisor !==
+                                          "Approve" &&
+                                        dokumenProposal?.is_proposal_approve_by_co_advisor1 !==
+                                          "Approve" &&
+                                        dokumenProposal?.is_proposal_approve_by_co_advisor2 !==
+                                          "Approve"
+                                      ) {
+                                        handleHapusDokumenProposal();
+                                      }
+                                    }}
+                                    disabled={
+                                      isSubmittingProposal ||
+                                      (dokumenProposal?.is_proposal_approve_by_advisor ===
+                                        "Approve" &&
+                                        dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                          "Approve" &&
+                                        dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                                          "Approve")
+                                    }
+                                  >
+                                    Hapus
+                                  </span>
+                                )}
                             </Div>
                           )}
                         </TableCell>

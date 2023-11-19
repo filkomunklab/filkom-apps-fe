@@ -755,7 +755,7 @@ const UploadRevisiProposal = () => {
                           "Approve" ? (
                           <Chip
                             size="small"
-                            label={"Diterima"}
+                            label={"Disetujui"}
                             sx={{
                               background: "rgba(21, 131, 67, 0.10)",
                               color: "#0A7637",
@@ -791,7 +791,7 @@ const UploadRevisiProposal = () => {
                           "Approve" ? (
                           <Chip
                             size="small"
-                            label={"Diterima"}
+                            label={"Disetujui"}
                             sx={{
                               background: "rgba(21, 131, 67, 0.10)",
                               color: "#0A7637",
@@ -827,7 +827,7 @@ const UploadRevisiProposal = () => {
                           "Approve" ? (
                           <Chip
                             size="small"
-                            label={"Diterima"}
+                            label={"Disetujui"}
                             sx={{
                               background: "rgba(21, 131, 67, 0.10)",
                               color: "#0A7637",
@@ -874,14 +874,50 @@ const UploadRevisiProposal = () => {
                             <span
                               style={{
                                 textDecoration: "none",
-                                cursor: isSubmittingRevisi
-                                  ? "not-allowed"
-                                  : "pointer",
-                                color: isSubmittingRevisi ? "#A0A0A0" : "red",
+                                cursor:
+                                  isSubmittingRevisi ||
+                                  (dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                                    "Approve" &&
+                                    dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                                      "Approve" &&
+                                    dokumenRevisi?.is_revision_approve_by_advisor ===
+                                      "Approve")
+                                    ? "not-allowed"
+                                    : "pointer",
+                                color:
+                                  isSubmittingRevisi ||
+                                  (dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                                    "Approve" &&
+                                    dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                                      "Approve" &&
+                                    dokumenRevisi?.is_revision_approve_by_advisor ===
+                                      "Approve")
+                                    ? "#A0A0A0"
+                                    : "red",
                                 fontSize: "12px",
                               }}
-                              onClick={handleHapusRevisiProposal}
-                              disabled={isSubmittingRevisi}
+                              onClick={() => {
+                                if (
+                                  !isSubmittingRevisi &&
+                                  dokumenRevisi?.is_revision_approve_by_panelist_chairman !==
+                                    "Approve" &&
+                                  dokumenRevisi?.is_revision_approve_by_panelist_member !==
+                                    "Approve" &&
+                                  dokumenRevisi?.is_revision_approve_by_advisor !==
+                                    "Approve"
+                                ) {
+                                  handleHapusRevisiProposal();
+                                }
+                              }}
+                              disabled={
+                                isSubmittingRevisi ||
+                                (dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                                  "Approve" &&
+                                  dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                                    "Approve" &&
+                                  dokumenRevisi?.is_revision_approve_by_advisor ===
+                                    "Approve")
+                              }
                             >
                               Hapus
                             </span>
