@@ -24,8 +24,13 @@ import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 
 // View Document Skripsi
-const PDFViewerRevisiSkripsi = ({ dokumenRevisi }) => {
+const PDFViewerRevisiSkripsi = ({ dokumenRevisi, isUploading }) => {
   const viewPDFRevisiSkripsi = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
     const pdfURL = dokumenRevisi.file_path_revision;
 
@@ -35,7 +40,13 @@ const PDFViewerRevisiSkripsi = ({ dokumenRevisi }) => {
 
   return (
     <div>
-      <span sx={{ fontSize: "10px" }} onClick={viewPDFRevisiSkripsi}>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFRevisiSkripsi}
+      >
         Lihat
       </span>
     </div>
@@ -46,6 +57,9 @@ const UploadRevisiSkripsi = () => {
   // state - menyimpan request data
   const [dokumenRevisi, setDokumenRevisi] = useState();
   const [perubahan, setPerubahan] = useState();
+
+  // state - disabled button
+  const [isSubmittingRevisi, setSubmittionRevisi] = useState(false);
 
   // popup delete konfirmasi
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
@@ -113,11 +127,21 @@ const UploadRevisiSkripsi = () => {
   const handleUnggahRevisiSkripsi = (event) => {
     const file = event.target.files[0];
 
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionRevisi(true);
+
     // Validasi tipe file
     const allowedFileTypes = ["application/pdf"];
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionRevisi(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -202,6 +226,9 @@ const UploadRevisiSkripsi = () => {
           "Terjadi kesalahan saat mengunggah revisi skripsi:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        setSubmittionRevisi(false);
       });
   };
 
@@ -214,6 +241,9 @@ const UploadRevisiSkripsi = () => {
   };
 
   const handleKonfirmasiHapusRevisiSkripsi = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionRevisi(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/delete/${skripsiId}`,
@@ -260,6 +290,10 @@ const UploadRevisiSkripsi = () => {
           "Terjadi kesalahan saat menghapus revisi skripsi:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionRevisi(false);
       });
   };
 
@@ -600,13 +634,18 @@ const UploadRevisiSkripsi = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingRevisi ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
                     width: "150px",
                     height: "30px",
+                    cursor: isSubmittingRevisi ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingRevisi ? "#A0A0A0" : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingRevisi}
                 >
                   <input
                     type="file"
@@ -818,6 +857,7 @@ const UploadRevisiSkripsi = () => {
                             >
                               <PDFViewerRevisiSkripsi
                                 dokumenRevisi={dokumenRevisi}
+                                isUploading={isSubmittingRevisi}
                               />
                             </span>
                             <Div
@@ -831,11 +871,14 @@ const UploadRevisiSkripsi = () => {
                             <span
                               style={{
                                 textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
+                                cursor: isSubmittingRevisi
+                                  ? "not-allowed"
+                                  : "pointer",
+                                color: isSubmittingRevisi ? "#A0A0A0" : "red",
                                 fontSize: "12px",
                               }}
                               onClick={handleHapusRevisiSkripsi}
+                              disabled={isSubmittingRevisi}
                             >
                               Hapus
                             </span>

@@ -6,8 +6,8 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Chip,
   Paper,
+  Chip,
   Table,
   TableBody,
   TableCell,
@@ -16,7 +16,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
+// import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
@@ -109,7 +109,7 @@ const DaftarKomiteJudulDosen = () => {
               flexShrink: 0,
             }}
           >
-            <SearchGlobal></SearchGlobal>
+            {/* <SearchGlobal></SearchGlobal> */}
           </Div>
         </Div>
         {/* Header End */}

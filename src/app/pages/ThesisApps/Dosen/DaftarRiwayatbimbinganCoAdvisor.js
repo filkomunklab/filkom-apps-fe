@@ -135,7 +135,7 @@ const RiwayatBimbinganCoAdvisor = () => {
             flexShrink: 0,
           }}
         >
-          <FormControl>
+          {/* <FormControl>
             <Select
               size="small"
               labelId="dropdown-label"
@@ -149,12 +149,11 @@ const RiwayatBimbinganCoAdvisor = () => {
               }}
             >
               <MenuItem value="Kelas">Kelas</MenuItem>{" "}
-              {/* Tambahkan nilai default di sini */}
               <MenuItem value="option1">Opsi 1</MenuItem>
               <MenuItem value="option2">Opsi 2</MenuItem>
               <MenuItem value="option3">Opsi 3</MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
         </Div>
         <Div
           sx={{
@@ -167,7 +166,7 @@ const RiwayatBimbinganCoAdvisor = () => {
             flexShrink: 0,
           }}
         >
-          <SearchGlobal />
+          {/* <SearchGlobal /> */}
         </Div>
       </Div>
       {/* Riwayat Mahasiswa */}

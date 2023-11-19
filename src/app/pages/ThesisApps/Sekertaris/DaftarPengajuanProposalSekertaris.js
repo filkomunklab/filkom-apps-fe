@@ -15,6 +15,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
@@ -23,6 +24,9 @@ import EventBusyIcon from "@mui/icons-material/EventBusy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const DaftarPengajuanProposalSekertaris = () => {
+  // state - loading page
+  const [loading, setLoading] = useState(true);
+
   // State untuk melacak panel accordion yang terbuka
   const [expanded, setExpanded] = useState(false);
 
@@ -69,15 +73,26 @@ const DaftarPengajuanProposalSekertaris = () => {
 
         // Atur state 'setDaftarPengajuanProposal' dengan data dari respons
         setDaftarPengajuanProposal(response.data.data);
+        console.log(
+          "Hasil request daftar pengajuan proposal: ",
+          response.data.data
+        );
+        setLoading(false);
       } catch (error) {
         console.error(
           "Terjadi kesalahan saat mengambil daftar bimbingan proposal:",
           error
         );
+        setLoading(false);
       }
     };
     fetchDaftarPengajuanProposalData();
   }, [token]);
+
+  // Jika masih loading, tampilkan elemen loading
+  if (loading) {
+    return <CircularProgress />;
+  }
 
   const { id } = JSON.parse(localStorage.getItem("user"));
   console.log(id);
@@ -130,7 +145,7 @@ const DaftarPengajuanProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.total_group} Kelompok
+              {daftarPengajuanProposal?.dashboard.total_group} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -170,7 +185,7 @@ const DaftarPengajuanProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.ready} Kelompok
+              {daftarPengajuanProposal?.dashboard.ready} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -210,7 +225,7 @@ const DaftarPengajuanProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.not_ready} Kelompok
+              {daftarPengajuanProposal?.dashboard.not_ready} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -262,7 +277,7 @@ const DaftarPengajuanProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.have_schedule} Kelompok
+              {daftarPengajuanProposal?.dashboard.have_schedule} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -302,7 +317,7 @@ const DaftarPengajuanProposalSekertaris = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.not_schedule} Kelompok
+              {daftarPengajuanProposal?.dashboard.not_schedule} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -356,296 +371,208 @@ const DaftarPengajuanProposalSekertaris = () => {
               flexShrink: 0,
             }}
           >
-            <SearchGlobal></SearchGlobal>
+            {/* <SearchGlobal></SearchGlobal> */}
           </Div>
         </Div>
         {/* Header End */}
-        {/* Semester Start */}
-        <Div
-          sx={{
-            display: "inline-flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: "25px",
-            width: "100%",
-            height: "460px",
-            overflowY: "auto",
-            background: "#FFF",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-            padding: "8px",
-            borderRadius: "8px",
-          }}
-        >
-          {daftarPengajuanProposal.semesterData.map(
-            (semesterData, semesterIndex) => (
-              <Accordion
-                key={semesterIndex}
-                expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
-                onChange={handleChange(`panel${semesterIndex}`)} // Menangani perubahan state accordion
-                sx={{
-                  width: "100%",
-                  padding: "1px",
-                  background: "rgba(26, 56, 96, 0.10)",
-                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls={`panel${semesterIndex}bh-content`}
-                  id={`panel${semesterIndex}bh-header`}
-                >
-                  <Typography
-                    variant="h2"
+        {daftarPengajuanProposal?.semesterData?.length > 0 ? (
+          <>
+            {/* Semester Start */}
+            <Div
+              sx={{
+                display: "inline-flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "25px",
+                width: "100%",
+                height: "460px",
+                overflowY: "auto",
+                background: "#FFF",
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                padding: "8px",
+                borderRadius: "8px",
+              }}
+            >
+              {daftarPengajuanProposal?.semesterData.map(
+                (semesterData, semesterIndex) => (
+                  <Accordion
+                    key={semesterIndex}
+                    expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
+                    onChange={handleChange(`panel${semesterIndex}`)} // Menangani perubahan state accordion
                     sx={{
-                      marginTop: "6px",
-                      fontSize: "16px",
-                      fontWeight: 500,
+                      width: "100%",
+                      padding: "1px",
+                      background: "rgba(26, 56, 96, 0.10)",
+                      boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
                     }}
                   >
-                    {semesterData.semester}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <TableContainer component={Paper}>
-                    <Table>
-                      <TableHead>
-                        <TableRow sx={{ background: "#F5F5F5" }}>
-                          <TableCell sx={{ width: "25px", fontSize: "13px" }}>
-                            Nomor
-                          </TableCell>
-                          <TableCell sx={{ width: "200px", fontSize: "13px" }}>
-                            Mahasiswa
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            Dokumen Proposal
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            Pembayaran
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            Cek Plagiat
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            Action
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {semesterData.proposals.map(
-                          (proposal, proposalIndex) => (
-                            <TableRow key={proposalIndex}>
-                              <TableCell sx={{ fontSize: "13px" }}>
-                                {proposalIndex + 1}
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls={`panel${semesterIndex}bh-content`}
+                      id={`panel${semesterIndex}bh-header`}
+                    >
+                      <Typography
+                        variant="h2"
+                        sx={{
+                          marginTop: "6px",
+                          fontSize: "16px",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {semesterData.semester}
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <TableContainer component={Paper}>
+                        <Table>
+                          <TableHead>
+                            <TableRow sx={{ background: "#F5F5F5" }}>
+                              <TableCell
+                                sx={{ width: "25px", fontSize: "13px" }}
+                              >
+                                Nomor
+                              </TableCell>
+                              <TableCell
+                                sx={{ width: "200px", fontSize: "13px" }}
+                              >
+                                Mahasiswa
                               </TableCell>
                               <TableCell sx={{ fontSize: "13px" }}>
-                                {proposal.students.map((student) => (
-                                  <div key={student.id}>{student.fullName}</div>
-                                ))}
+                                Judul
                               </TableCell>
                               <TableCell sx={{ fontSize: "13px" }}>
-                                {proposal.title}
+                                Dokumen Proposal
                               </TableCell>
                               <TableCell sx={{ fontSize: "13px" }}>
-                                {proposal.proposal_status === false ? (
-                                  <Chip label={"Belum"} />
-                                ) : proposal.proposal_status === true ? (
-                                  <Chip
-                                    label={"Sudah"}
-                                    sx={{
-                                      background: "rgba(21, 131, 67, 0.10)",
-                                      color: "#0A7637",
-                                    }}
-                                  />
-                                ) : (
-                                  proposal.proposal_status
-                                )}
+                                Pembayaran
                               </TableCell>
                               <TableCell sx={{ fontSize: "13px" }}>
-                                {proposal.paymant_status === false ? (
-                                  <Chip label={"Belum"} />
-                                ) : proposal.paymant_status === true ? (
-                                  <Chip
-                                    label={"Sudah"}
-                                    sx={{
-                                      background: "rgba(21, 131, 67, 0.10)",
-                                      color: "#0A7637",
-                                    }}
-                                  />
-                                ) : (
-                                  proposal.paymant_status
-                                )}
+                                Cek Plagiat
                               </TableCell>
                               <TableCell sx={{ fontSize: "13px" }}>
-                                {proposal.plagiarism === false ? (
-                                  <Chip label={"Belum"} />
-                                ) : proposal.plagiarism === true ? (
-                                  <Chip
-                                    label={"Sudah"}
-                                    sx={{
-                                      background: "rgba(21, 131, 67, 0.10)",
-                                      color: "#0A7637",
-                                    }}
-                                  />
-                                ) : (
-                                  proposal.plagiarism
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                <Typography
-                                  component={Link}
-                                  to={`/sistem-informasi-skripsi/daftar-pengajuan-proposal/beranda/${proposal.group_id}/OPERATOR_FILKOM`}
-                                  sx={{
-                                    textDecoration: "none",
-                                    color: "blue",
-                                  }}
-                                >
-                                  Detail
-                                </Typography>
+                                Action
                               </TableCell>
                             </TableRow>
-                          )
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </AccordionDetails>
-              </Accordion>
-            )
-          )}
-        </Div>
-
-        {/* {daftarPengajuanProposal.semesterData.map(
-          (semesterData, semesterIndex) => (
-            <div key={semesterIndex} style={{ width: "100%" }}>
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "100%",
-                  padding: "24px",
-                  alignItems: "center",
-                  gap: "10px",
-                  borderRadius: "6px",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "16px",
-                    fontStyle: "normal",
-                    fontWeight: 500,
-                    lineHeight: "24px",
-                    color: "#192434",
-                  }}
-                >
-                  {semesterData.semester}
-                </Typography>
-              </Div>
-              {/* Semester End */}
-        {/* Table Mahasiswa Proposal Start *
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell sx={{ width: "25px", fontSize: "13px" }}>
-                        Nomor
-                      </TableCell>
-                      <TableCell sx={{ width: "200px", fontSize: "13px" }}>
-                        Mahasiswa
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Dokumen Proposal
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Pembayaran
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Cek Plagiat
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {semesterData.proposals.map((proposal, proposalIndex) => (
-                      <TableRow key={proposalIndex}>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {proposalIndex + 1}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {proposal.students.map((student) => (
-                            <div key={student.id}>{student.fullName}</div>
-                          ))}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {proposal.title}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {proposal.proposal_status === false ? (
-                            <Chip label={"Belum"} />
-                          ) : proposal.proposal_status === true ? (
-                            <Chip
-                              label={"Sudah"}
-                              sx={{
-                                background: "rgba(21, 131, 67, 0.10)",
-                                color: "#0A7637",
-                              }}
-                            />
-                          ) : (
-                            proposal.proposal_status
-                          )}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {proposal.paymant_status === false ? (
-                            <Chip label={"Belum"} />
-                          ) : proposal.paymant_status === true ? (
-                            <Chip
-                              label={"Sudah"}
-                              sx={{
-                                background: "rgba(21, 131, 67, 0.10)",
-                                color: "#0A7637",
-                              }}
-                            />
-                          ) : (
-                            proposal.paymant_status
-                          )}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {proposal.plagiarism === false ? (
-                            <Chip label={"Belum"} />
-                          ) : proposal.plagiarism === true ? (
-                            <Chip
-                              label={"Sudah"}
-                              sx={{
-                                background: "rgba(21, 131, 67, 0.10)",
-                                color: "#0A7637",
-                              }}
-                            />
-                          ) : (
-                            proposal.plagiarism
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <Typography
-                            component={Link}
-                            to="/halaman-berikutnya"
-                            sx={{
-                              textDecoration: "none",
-                              color: "blue",
-                            }}
-                          >
-                            Detail
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Mahasiswa Proposal End *
-            </div>
-          )
-        )} */}
+                          </TableHead>
+                          <TableBody>
+                            {semesterData.proposals.map(
+                              (proposal, proposalIndex) => (
+                                <TableRow key={proposalIndex}>
+                                  <TableCell sx={{ fontSize: "13px" }}>
+                                    {proposalIndex + 1}
+                                  </TableCell>
+                                  <TableCell sx={{ fontSize: "13px" }}>
+                                    {proposal.students.map((student) => (
+                                      <div key={student.id}>
+                                        {student.fullName}
+                                      </div>
+                                    ))}
+                                  </TableCell>
+                                  <TableCell sx={{ fontSize: "13px" }}>
+                                    {proposal.title}
+                                  </TableCell>
+                                  <TableCell sx={{ fontSize: "13px" }}>
+                                    {proposal.proposal_status === false ? (
+                                      <Chip label={"Belum"} />
+                                    ) : proposal.proposal_status === true ? (
+                                      <Chip
+                                        label={"Sudah"}
+                                        sx={{
+                                          background: "rgba(21, 131, 67, 0.10)",
+                                          color: "#0A7637",
+                                        }}
+                                      />
+                                    ) : (
+                                      proposal.proposal_status
+                                    )}
+                                  </TableCell>
+                                  <TableCell sx={{ fontSize: "13px" }}>
+                                    {proposal.paymant_status === false ? (
+                                      <Chip label={"Belum"} />
+                                    ) : proposal.paymant_status === true ? (
+                                      <Chip
+                                        label={"Sudah"}
+                                        sx={{
+                                          background: "rgba(21, 131, 67, 0.10)",
+                                          color: "#0A7637",
+                                        }}
+                                      />
+                                    ) : (
+                                      proposal.paymant_status
+                                    )}
+                                  </TableCell>
+                                  <TableCell sx={{ fontSize: "13px" }}>
+                                    {proposal.plagiarism === false ? (
+                                      <Chip label={"Belum"} />
+                                    ) : proposal.plagiarism === true ? (
+                                      <Chip
+                                        label={"Sudah"}
+                                        sx={{
+                                          background: "rgba(21, 131, 67, 0.10)",
+                                          color: "#0A7637",
+                                        }}
+                                      />
+                                    ) : (
+                                      proposal.plagiarism
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Typography
+                                      component={Link}
+                                      to={`/sistem-informasi-skripsi/daftar-pengajuan-proposal/beranda/${proposal.group_id}/OPERATOR_FILKOM`}
+                                      sx={{
+                                        textDecoration: "none",
+                                        color: "blue",
+                                      }}
+                                    >
+                                      Detail
+                                    </Typography>
+                                  </TableCell>
+                                </TableRow>
+                              )
+                            )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </AccordionDetails>
+                  </Accordion>
+                )
+              )}
+            </Div>
+          </>
+        ) : (
+          <Div
+            sx={{
+              display: "flex",
+              padding: "29px 42px",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: 2,
+              alignSelf: "stretch",
+              borderRadius: "8px",
+              border: "1px solid #E0E0E0",
+              background: "#FFF",
+              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+            }}
+          >
+            <Typography
+              sx={{
+                width: "100%",
+                display: "flex",
+                padding: "24px",
+                alignItems: "center",
+                gap: "10px",
+                color: "#CA150C",
+                background: "rgba(226, 29, 18, 0.50)",
+                borderRadius: "6px",
+                fontSize: "12px",
+                fontWeight: 600,
+              }}
+            >
+              Belum ada mahasiswa yang mengajukan
+            </Typography>
+          </Div>
+        )}
       </Div>
       {/* Table Master End */}
     </Div>
