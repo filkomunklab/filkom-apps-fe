@@ -1,5 +1,5 @@
 import DaftarPegawai from "app/pages/ThesisApps/Admin/DaftarPegawai";
-import { Page } from "react-pdf";
+import Page from "@jumbo/shared/Page";
 
 const adminSkripsiRoutes = [
   {

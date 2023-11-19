@@ -225,7 +225,7 @@ const Konsultasi = () => {
           </Div>
           {/* Menu horizontal End */}
 
-          {konsultasi?.constultation > 0 ? (
+          {konsultasi?.constultation?.length > 0 ? (
             <Div
               sx={{
                 display: "flex",
