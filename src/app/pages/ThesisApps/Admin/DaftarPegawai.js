@@ -30,19 +30,22 @@ import Div from "@jumbo/shared/Div";
 const DaftarPegawai = () => {
   const [namaPegawai, setNamaPegawai] = useState("");
   const [nidnNik, setNidnNik] = useState("");
-  const [selectedJabatan, setSelectedJabatan] = useState([]);
   const [jurusan, setJurusan] = useState("");
+  const [jabatan1, setJabatan1] = useState("");
+  const [jabatan2, setJabatan2] = useState("");
   const [pegawaiList, setPegawaiList] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [errorMessages, setErrorMessages] = useState({
     namaPegawai: "",
     nidnNik: "",
-    selectedJabatan: "",
+    jabatan1: "",
+    jabatan2: "",
     jurusan: "",
   });
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedEditPegawai, setSelectedEditPegawai] = useState(null);
+  const [editingPegawai, setEditingPegawai] = useState(null);
 
   const handleTambahPegawai = () => {
     let hasError = false;
@@ -58,14 +61,19 @@ const DaftarPegawai = () => {
       hasError = true;
     }
 
-    if (selectedJabatan.length === 0) {
-      newErrorMessages.selectedJabatan = "Jabatan harus diisi";
+    if (!jabatan1) {
+      newErrorMessages.jabatan1 = "Jabatan 1 harus dipilih";
       hasError = true;
     }
 
-    if (selectedJabatan.length > 2) {
-      newErrorMessages.selectedJabatan =
-        "Hanya dapat memilih maksimal 2 jabatan.";
+    if (!jabatan2) {
+      newErrorMessages.jabatan2 = "Jabatan 2 harus dipilih";
+      hasError = true;
+    }
+
+    if (jabatan1 === jabatan2) {
+      newErrorMessages.jabatan1 = "Jabatan tidak boleh sama";
+      newErrorMessages.jabatan2 = "Jabatan tidak boleh sama";
       hasError = true;
     }
 
@@ -83,10 +91,9 @@ const DaftarPegawai = () => {
     const newPegawai = {
       nama: namaPegawai,
       nidnNik: nidnNik,
-      jabatan: selectedJabatan.join(", "),
+      jabatan: `${jabatan1}, ${jabatan2}`,
       jurusan: jurusan,
     };
-
     setPegawaiList([...pegawaiList, newPegawai]);
     handleCloseDialog();
   };
@@ -94,13 +101,15 @@ const DaftarPegawai = () => {
   const handleCloseDialog = () => {
     setNamaPegawai("");
     setNidnNik("");
-    setSelectedJabatan([]);
+    setJabatan1("");
+    setJabatan2("");
     setJurusan("");
     setOpenDialog(false);
     setErrorMessages({
       namaPegawai: "",
       nidnNik: "",
-      selectedJabatan: "",
+      jabatan1: "",
+      jabatan2: "",
       jurusan: "",
     });
   };
@@ -143,7 +152,9 @@ const DaftarPegawai = () => {
     setSelectedEditPegawai(pegawai);
     setNamaPegawai(pegawai.nama);
     setNidnNik(pegawai.nidnNik);
-    setSelectedJabatan(pegawai.jabatan.split(", "));
+    const [jabatan1, jabatan2] = pegawai.jabatan.split(", ");
+    setJabatan1(jabatan1);
+    setJabatan2(jabatan2);
     setJurusan(pegawai.jurusan);
     setOpenEditDialog(true);
   };
@@ -152,13 +163,15 @@ const DaftarPegawai = () => {
     setSelectedEditPegawai(null);
     setNamaPegawai("");
     setNidnNik("");
-    setSelectedJabatan([]);
+    setJabatan1("");
+    setJabatan2("");
     setJurusan("");
     setOpenEditDialog(false);
     setErrorMessages({
       namaPegawai: "",
       nidnNik: "",
-      selectedJabatan: "",
+      jabatan1: "",
+      jabatan2: "",
       jurusan: "",
     });
   };
@@ -186,14 +199,19 @@ const DaftarPegawai = () => {
       hasError = true;
     }
 
-    if (selectedJabatan.length === 0) {
-      newErrorMessages.selectedJabatan = "Jabatan harus diisi";
+    if (!jabatan1) {
+      newErrorMessages.jabatan1 = "Jabatan 1 harus dipilih";
       hasError = true;
     }
 
-    if (selectedJabatan.length > 2) {
-      newErrorMessages.selectedJabatan =
-        "Hanya dapat memilih maksimal 2 jabatan.";
+    if (jabatan1 === jabatan2) {
+      newErrorMessages.jabatan1 = "Jabatan tidak boleh sama";
+      newErrorMessages.jabatan2 = "Jabatan tidak boleh sama";
+      hasError = true;
+    }
+
+    if (!jabatan2) {
+      newErrorMessages.jabatan2 = "Jabatan 2 harus dipilih";
       hasError = true;
     }
 
@@ -204,16 +222,13 @@ const DaftarPegawai = () => {
 
     if (hasError) {
       setErrorMessages(newErrorMessages);
-      // Display error message to the user
       return;
     }
 
-    if (!namaPegawai || !nidnNik || selectedJabatan.length === 0 || !jurusan) {
+    if (!namaPegawai || !nidnNik || !jurusan) {
       setErrorMessages({
         namaPegawai: !namaPegawai ? "Nama harus diisi" : "",
         nidnNik: !nidnNik ? "NIDN/NIK harus diisi" : "",
-        selectedJabatan:
-          selectedJabatan.length === 0 ? "Jabatan harus diisi" : "",
         jurusan: !jurusan ? "Jurusan harus dipilih" : "",
       });
       return;
@@ -227,7 +242,7 @@ const DaftarPegawai = () => {
               ...pegawai,
               nama: namaPegawai,
               nidnNik: nidnNik,
-              jabatan: selectedJabatan.join(", "),
+              jabatan: `${jabatan1}, ${jabatan2}`,
               jurusan: jurusan,
             }
           : pegawai
@@ -345,26 +360,40 @@ const DaftarPegawai = () => {
             <FormHelperText error={!!errorMessages.nidnNik}>
               {errorMessages.nidnNik}
             </FormHelperText>
-            {/* Input Jabatan */}
-            <Div>
-              <FormControl fullWidth>
-                <InputLabel>Jabatan</InputLabel>
-                <Select
-                  multiple
-                  label="Jabatan"
-                  value={selectedJabatan}
-                  onChange={(e) => setSelectedJabatan(e.target.value)}
-                  error={!!errorMessages.selectedJabatan}
-                >
-                  <MenuItem value="Dosen">Dosen</MenuItem>
-                  <MenuItem value="Kaprodi">Kaprodi</MenuItem>
-                  <MenuItem value="Dekan">Dekan</MenuItem>
-                </Select>
-              </FormControl>
-              <FormHelperText error={!!errorMessages.selectedJabatan}>
-                {errorMessages.selectedJabatan}
+            {/* Input Jabatan 1 */}
+            <FormControl fullWidth margin="normal">
+              <InputLabel>Jabatan 1</InputLabel>
+              <Select
+                label="Jabatan 1"
+                value={jabatan1}
+                onChange={(e) => setJabatan1(e.target.value)}
+                error={!!errorMessages.jabatan1}
+              >
+                <MenuItem value={"Dosen"}>Dosen</MenuItem>
+                <MenuItem value={"Kaprodi"}>Kaprodi</MenuItem>
+                <MenuItem value={"Dekan"}>Dekan</MenuItem>
+              </Select>
+              <FormHelperText error={!!errorMessages.jabatan1}>
+                {errorMessages.jabatan1}
               </FormHelperText>
-            </Div>
+            </FormControl>
+            {/* Input Jabatan 2 */}
+            <FormControl fullWidth margin="normal">
+              <InputLabel>Jabatan 2</InputLabel>
+              <Select
+                label="Jabatan 2"
+                value={jabatan2}
+                onChange={(e) => setJabatan2(e.target.value)}
+                error={!!errorMessages.jabatan2}
+              >
+                <MenuItem value={"Dosen"}>Dosen</MenuItem>
+                <MenuItem value={"Kaprodi"}>Kaprodi</MenuItem>
+                <MenuItem value={"Dekan"}>Dekan</MenuItem>
+              </Select>
+              <FormHelperText error={!!errorMessages.jabatan2}>
+                {errorMessages.jabatan2}
+              </FormHelperText>
+            </FormControl>
             {/* Input Jurusan */}
             <FormControl fullWidth margin="normal">
               <InputLabel>Jurusan</InputLabel>
@@ -457,25 +486,40 @@ const DaftarPegawai = () => {
             {errorMessages.nidnNik}
           </FormHelperText>
           {/* Input Jabatan */}
-          <div>
-            <FormControl fullWidth>
-              <InputLabel>Jabatan</InputLabel>
-              <Select
-                multiple
-                label="Jabatan"
-                value={selectedJabatan}
-                onChange={(e) => setSelectedJabatan(e.target.value)}
-                error={!!errorMessages.selectedJabatan}
-              >
-                <MenuItem value="Dosen">Dosen</MenuItem>
-                <MenuItem value="Kaprodi">Kaprodi</MenuItem>
-                <MenuItem value="Dekan">Dekan</MenuItem>
-              </Select>
-            </FormControl>
-            <FormHelperText error={!!errorMessages.selectedJabatan}>
-              {errorMessages.selectedJabatan}
+          {/* Input Jabatan 1 */}
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Jabatan 1</InputLabel>
+            <Select
+              label="Jabatan 1"
+              value={jabatan1}
+              onChange={(e) => setJabatan1(e.target.value)}
+              error={!!errorMessages.jabatan1}
+            >
+              <MenuItem value={"Dosen"}>Dosen</MenuItem>
+              <MenuItem value={"Kaprodi"}>Kaprodi</MenuItem>
+              <MenuItem value={"Dekan"}>Dekan</MenuItem>
+            </Select>
+            <FormHelperText error={!!errorMessages.jabatan1}>
+              {errorMessages.jabatan1}
             </FormHelperText>
-          </div>
+          </FormControl>
+          {/* Input Jabatan 2 */}
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Jabatan 2</InputLabel>
+            <Select
+              label="Jabatan 2"
+              value={jabatan2}
+              onChange={(e) => setJabatan2(e.target.value)}
+              error={!!errorMessages.jabatan2}
+            >
+              <MenuItem value={"Dosen"}>Dosen</MenuItem>
+              <MenuItem value={"Kaprodi"}>Kaprodi</MenuItem>
+              <MenuItem value={"Dekan"}>Dekan</MenuItem>
+            </Select>
+            <FormHelperText error={!!errorMessages.jabatan2}>
+              {errorMessages.jabatan2}
+            </FormHelperText>
+          </FormControl>
           {/* Input Jurusan */}
           <FormControl fullWidth margin="normal">
             <InputLabel>Jurusan</InputLabel>
@@ -530,7 +574,7 @@ const DaftarPegawai = () => {
             Apakah Anda yakin ingin menghapus pegawai ini?
           </Typography>
         </DialogContent>
-        <DialogActions>
+        <DialogActions style={{ background: "#F5F5F5" }}>
           <Button
             onClick={handleDeleteDialogClose}
             sx={{
@@ -542,7 +586,11 @@ const DaftarPegawai = () => {
           >
             Batal
           </Button>
-          <Button onClick={handleDeletePegawai} color="secondary">
+          <Button
+            onClick={handleDeletePegawai}
+            variant="contained"
+            color="error"
+          >
             Hapus
           </Button>
         </DialogActions>
