@@ -259,10 +259,7 @@ const RiwayatSkripsiKaprodi = () => {
                         <TableCell sx={{ fontSize: "13px" }}>
                           {skripsi.title}
                         </TableCell>
-                        {/* Tambahkan tanggal diterima jika tersedia */}
-                        <TableCell>
-                          {/* Tambahkan tanggal diterima di sini */}
-                        </TableCell>
+                        <TableCell>{skripsi.approve_date}</TableCell>
                         <TableCell>
                           <Typography
                             component={Link}
