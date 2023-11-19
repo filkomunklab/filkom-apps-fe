@@ -13,11 +13,24 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  AccordionDetails,
+  Paper,
+  AccordionSummary,
+  Accordion,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const RiwayatSkripsiDekan = () => {
+  // State untuk melacak panel accordion yang terbuka
+  const [expanded, setExpanded] = useState(false);
+
+  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
+  const handleChangee = (panel) => (event, isExpanded) => {
+    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
+    setExpanded(isExpanded ? panel : false);
+  };
+
   // state - riwayat
   const [daftarRiwayat, setDaftarRiwayat] = useState([]);
 
@@ -171,7 +184,96 @@ const RiwayatSkripsiDekan = () => {
         </Div>
       </Div>
       {/* Riwayat Mahasiswa */}
-      {daftarRiwayat.map((riwayat) => (
+      <Div
+        sx={{
+          display: "inline-flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          gap: "25px",
+          width: "100%",
+          height: "460px",
+          overflowY: "auto",
+          background: "#FFF",
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+          padding: "8px",
+          borderRadius: "8px",
+        }}
+      >
+        {daftarRiwayat.map((riwayat, semesterIndex) => (
+          <Accordion
+            key={semesterIndex}
+            expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
+            onChange={handleChangee(`panel${semesterIndex}`)} // Menangani perubahan state accordion
+            sx={{
+              width: "100%",
+              padding: "1px",
+              background: "rgba(26, 56, 96, 0.10)",
+              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`panel${semesterIndex}bh-content`}
+              id={`panel${semesterIndex}bh-header`}
+            >
+              <Typography
+                variant="h2"
+                sx={{
+                  marginTop: "6px",
+                  fontSize: "16px",
+                  fontWeight: 500,
+                }}
+              >
+                {riwayat.semester}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ background: "#F5F5F5" }}>
+                      <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
+                      <TableCell sx={{ width: "30%" }}>
+                        Nama Lengkap Mahasiswa
+                      </TableCell>
+                      <TableCell sx={{ width: "45%" }}>Judul</TableCell>
+                      <TableCell sx={{ width: "10%" }}>
+                        Tanggal Diterima
+                      </TableCell>
+                      <TableCell sx={{ width: "10%" }}>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {riwayat.skripsis.map((skripsi) =>
+                      skripsi.students.map((student, index) => (
+                        <TableRow key={skripsi.group_id + index}>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>{student.fullName}</TableCell>
+                          <TableCell>{skripsi.title}</TableCell>
+                          {/* Tambahkan tanggal diterima jika tersedia */}
+                          <TableCell>
+                            {/* Tambahkan tanggal diterima di sini */}
+                          </TableCell>
+                          <TableCell>
+                            <Link
+                              to={`/sistem-informasi-skripsi/daftar-riwayat-skripsi-dekan/beranda/${skripsi.group_id}/DEKAN`}
+                              style={{ textDecoration: "none", color: "blue" }}
+                            >
+                              Detail
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </Div>
+
+      {/* {daftarRiwayat.map((riwayat) => (
         <Div
           key={riwayat.semester}
           sx={{
@@ -228,9 +330,9 @@ const RiwayatSkripsiDekan = () => {
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{student.fullName}</TableCell>
                         <TableCell>{skripsi.title}</TableCell>
-                        {/* Tambahkan tanggal diterima jika tersedia */}
+                        {/* Tambahkan tanggal diterima jika tersedia *
                         <TableCell>
-                          {/* Tambahkan tanggal diterima di sini */}
+                          {/* Tambahkan tanggal diterima di sini *
                         </TableCell>
                         <TableCell>
                           <Link
@@ -267,7 +369,7 @@ const RiwayatSkripsiDekan = () => {
             </TableContainer>
           )}
         </Div>
-      ))}
+      ))} */}
     </Div>
   );
 };

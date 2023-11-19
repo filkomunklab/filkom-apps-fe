@@ -143,9 +143,71 @@ const JadwalSidangProposal = () => {
     selectedAdvisor: "",
   });
 
+  // Tambahkan state untuk menyimpan informasi jadwal yang bertabrakan
+  const [conflictingSchedule, setConflictingSchedule] = useState(null);
+
+  // Fungsi untuk memeriksa konflik jadwal
+  const checkScheduleConflict = () => {
+    const newSchedule = {
+      start_defence: mulaiWaktu || null,
+      end_defence: selesaiWaktu || null,
+      defence_date: mulaiTanggal || null,
+      defence_room: ruangan || null,
+    };
+
+    // Loop melalui jadwal yang sudah ada untuk memeriksa konflik
+    for (const scheduleData of daftarJadwal) {
+      for (const jadwal of scheduleData.schedules) {
+        const existingSchedule = {
+          start_defence: jadwal.start_defence || null,
+          end_defence: jadwal.end_defence || null,
+          defence_date: jadwal.defence_date || null,
+          defence_room: jadwal.defence_room || null,
+        };
+
+        // Lakukan pembandingan untuk menentukan apakah terdapat konflik
+        if (
+          newSchedule.start_defence &&
+          newSchedule.end_defence &&
+          newSchedule.defence_date &&
+          newSchedule.defence_room &&
+          existingSchedule.start_defence &&
+          existingSchedule.end_defence &&
+          existingSchedule.defence_date &&
+          existingSchedule.defence_room &&
+          newSchedule.defence_date === existingSchedule.defence_date &&
+          newSchedule.defence_room === existingSchedule.defence_room &&
+          ((newSchedule.start_defence >= existingSchedule.start_defence &&
+            newSchedule.start_defence < existingSchedule.end_defence) ||
+            (newSchedule.end_defence > existingSchedule.start_defence &&
+              newSchedule.end_defence <= existingSchedule.end_defence) ||
+            (newSchedule.start_defence <= existingSchedule.start_defence &&
+              newSchedule.end_defence >= existingSchedule.end_defence))
+        ) {
+          // Jika terdapat konflik, set state conflictingSchedule
+          setConflictingSchedule({
+            existingSchedule,
+            conflictingProposal: jadwal.title,
+            conflictingAdvisor: jadwal.advisor_name,
+          });
+          return true;
+        }
+      }
+    }
+
+    // Jika tidak ada konflik
+    return false;
+  };
+
   const handlePerbarui = () => {
     let hasError = false;
     const newErrorMessages = {};
+
+    // Periksa konflik jadwal
+    if (!hasError && checkScheduleConflict()) {
+      setKonfirmasiDialog(true);
+      return;
+    }
 
     // Validasi input waktu
     if (!mulaiWaktu) {
@@ -906,6 +968,7 @@ const JadwalSidangProposal = () => {
                     ),
                   }}
                   value={selectedAdvisor}
+                  onChange={(event) => setSelectedAdvisor(event.target.value)}
                   error={!!errorMessages.selectedAdvisor}
                 />
                 <FormHelperText error={!!errorMessages.selectedAdvisor}>
@@ -1096,6 +1159,33 @@ const JadwalSidangProposal = () => {
         </DialogActions>
       </Dialog>
       {/* Dialog Konfirmasi End */}
+
+      <Dialog
+        open={konfirmasiDialog && conflictingSchedule}
+        onClose={handleKonfirmasiDialogClose}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Konfirmasi Jadwal Bertabrakan</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Jadwal yang Anda buat akan bertabrakan dengan jadwal berikut:
+          </Typography>
+          <Typography>
+            Judul: {conflictingSchedule?.conflictingProposal}
+          </Typography>
+          <Typography>
+            Advisor: {conflictingSchedule?.conflictingAdvisor}
+          </Typography>
+          {/* Tambahkan informasi jadwal bertabrakan lainnya sesuai kebutuhan */}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleKonfirmasiDialogClose}>Batal</Button>
+          <Button onClick={handlePerbaruiJadwal} color="primary">
+            Lanjutkan
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Div>
   );
 };
