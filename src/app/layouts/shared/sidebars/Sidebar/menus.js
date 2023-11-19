@@ -152,7 +152,7 @@ export const mahasiswaMenus = [
         icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/home-calon-tamatan",
       },
-      
+
       // {
       //   label: "SPT Form",
       //   type: "nav-item",
@@ -1167,6 +1167,18 @@ export const operatorMenus = [
 
 export const adminMenus = [
   {
+    label: "Global",
+    type: "section",
+    children: [
+      {
+        label: "Daftar Pegawai",
+        type: "nav-item",
+        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+        uri: "/global/employee",
+      },
+    ],
+  },
+  {
     label: "Klabat Bridge",
     type: "section",
     children: [
@@ -1189,10 +1201,10 @@ export const adminMenus = [
     type: "section",
     children: [
       {
-        label: "Daftar Pegawai",
+        label: "Dosen Skripsi",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
-        uri: "/sistem-informasi-skripsi/daftar-pegawai",
+        uri: "/sistem-informasi-skripsi/dosen-skripsi",
       },
     ],
   },
