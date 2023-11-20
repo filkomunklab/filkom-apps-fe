@@ -1454,7 +1454,7 @@ const BeritaAcara = () => {
                                 }
                               }}
                             >
-                              Revisi
+                              Komen
                             </span>
                           </>
                         )}
@@ -1483,7 +1483,7 @@ const BeritaAcara = () => {
                                 }
                               }}
                             >
-                              Revisi
+                              Komen
                             </span>
                           </>
                         )}
