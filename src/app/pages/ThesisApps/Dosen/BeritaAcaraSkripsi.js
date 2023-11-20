@@ -1371,7 +1371,13 @@ const BeritaAcara = () => {
                           )}
                         </TableCell>
                       )}
-                      <TableCell sx={{ display: "flex", textAlign: "center" }}>
+                      <TableCell
+                        sx={{
+                          display: "flex",
+                          textAlign: "center",
+                          justifyContent: "center",
+                        }}
+                      >
                         <span
                           style={{
                             textDecoration: "none",

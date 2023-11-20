@@ -147,49 +147,6 @@ const JadwalSidangProposal = () => {
     let hasError = false;
     const newErrorMessages = {};
 
-    // Cek tabrakan jadwal
-    const existingJadwal = daftarJadwal[semesterIndex]?.schedules[jadwalIndex];
-    if (existingJadwal) {
-      const existingStartTime = new Date(existingJadwal.start_defence);
-      const existingEndTime = new Date(existingJadwal.end_defence);
-      const newStartTime = new Date(`${mulaiTanggal}T${mulaiWaktu}`);
-      const newEndTime = new Date(`${mulaiTanggal}T${selesaiWaktu}`);
-
-      // Cek tabrakan waktu
-      if (
-        (newStartTime >= existingStartTime && newStartTime < existingEndTime) ||
-        (newEndTime > existingStartTime && newEndTime <= existingEndTime) ||
-        (newStartTime <= existingStartTime && newEndTime >= existingEndTime)
-      ) {
-        hasError = true;
-        newErrorMessages.mulaiWaktu =
-          "Jadwal bertabrakan dengan jadwal sebelumnya";
-        newErrorMessages.selesaiWaktu =
-          "Jadwal bertabrakan dengan jadwal sebelumnya";
-      }
-
-      // Cek tabrakan tanggal dan ruangan
-      if (
-        mulaiTanggal === existingJadwal.defence_date &&
-        ruangan === existingJadwal.defence_room
-      ) {
-        hasError = true;
-        newErrorMessages.mulaiTanggal =
-          "Jadwal bertabrakan dengan jadwal sebelumnya";
-        newErrorMessages.ruangan =
-          "Jadwal bertabrakan dengan jadwal sebelumnya";
-      }
-
-      if (hasError) {
-        // Menampilkan popup konfirmasi
-        const confirmationMessage = `Jadwal bertabrakan dengan jadwal sebelumnya.\n\nJadwal Sebelumnya:\nWaktu: ${existingJadwal.start_defence} - ${existingJadwal.end_defence}\nTanggal: ${existingJadwal.defence_date}\nRuangan: ${existingJadwal.defence_room}`;
-        if (window.confirm(confirmationMessage)) {
-          // Lanjutkan perbarui jika pengguna menyetujui
-          setKonfirmasiDialog(true);
-        }
-      }
-    }
-
     // Validasi input waktu
     if (!mulaiWaktu) {
       newErrorMessages.mulaiWaktu = "Mulai Waktu harus diisi";
@@ -225,30 +182,16 @@ const JadwalSidangProposal = () => {
       hasError = true;
     }
 
-    // Validasi jika Ketua Panelis dan Anggota Panelis sama
-    if (selectedKetuaPenelis === selectedAnggotaPenelis) {
+    // Validasi jika Ketua Panelis dan Anggota Panelis sama (jika keduanya sudah dipilih)
+    if (
+      selectedKetuaPenelis &&
+      selectedAnggotaPenelis &&
+      selectedKetuaPenelis === selectedAnggotaPenelis
+    ) {
       newErrorMessages.selectedKetuaPenelis =
         "Ketua Panelis dan Anggota Panelis tidak boleh sama";
       newErrorMessages.selectedAnggotaPenelis =
         "Ketua Panelis dan Anggota Panelis tidak boleh sama";
-      hasError = true;
-    }
-
-    // Validasi jika Ketua Panelis dan Advisor sama
-    if (selectedKetuaPenelis === selectedAdvisor) {
-      newErrorMessages.selectedKetuaPenelis =
-        "Ketua Panelis tidak boleh sama dengan Advisor";
-      newErrorMessages.selectedAdvisor =
-        "Ketua Panelis tidak boleh sama dengan Advisor";
-      hasError = true;
-    }
-
-    // Validasi jika Anggota Panelis dan Advisor sama
-    if (selectedAnggotaPenelis === selectedAdvisor) {
-      newErrorMessages.selectedAnggotaPenelis =
-        "Anggota Panelis tidak boleh sama dengan Advisor";
-      newErrorMessages.selectedAdvisor =
-        "Anggota Panelis tidak boleh sama dengan Advisor";
       hasError = true;
     }
 
