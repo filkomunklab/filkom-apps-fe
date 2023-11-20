@@ -184,7 +184,7 @@ const RiwayatPengujianAnggota = () => {
         </Div>
       </Div>
       {/* Riwayat Mahasiswa */}
-      {daftarRiwayat?.semesterData?.length > 0 ? (
+      {daftarRiwayat?.length > 0 ? (
         <Div
           sx={{
             display: "inline-flex",
