@@ -5,8 +5,18 @@ import {
   Typography,
   experimentalStyled as styled,
   Paper,
+  Breadcrumbs,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -39,8 +49,21 @@ const StudentGradeDashboard = () => {
     { label: "Semester 5", value: 5 },
   ];
   const id = "105022010000";
+
+  const navigate = useNavigate();
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigate("/bimbingan-akademik/dekan/student-information/");
+  };
+
   return (
     <Div>
+      <Div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink>Student Information</StyledLink>
+          <Typography color="text.primary">Student Grades</Typography>
+        </Breadcrumbs>
+      </Div>
       <Stack gap={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography variant="h1">Nilai Mahasiswa</Typography>

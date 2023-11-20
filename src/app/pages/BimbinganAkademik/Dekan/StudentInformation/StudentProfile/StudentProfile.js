@@ -10,17 +10,29 @@ import {
   Typography,
   Radio,
   RadioGroup,
-  FormLabel,
   FormControl,
   FormControlLabel,
   Popover,
-  Button,
-  Modal,
+  Breadcrumbs,
+  Link,
+  experimentalStyled as styled,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import { useNavigate } from "react-router-dom";
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+    cursor: "pointer",
+  },
+}));
 
 const StudentProfile = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [status, setStatus] = useState("active");
@@ -39,10 +51,26 @@ const StudentProfile = () => {
     setStatus(event.target.value);
   };
 
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigate(-1);
+  };
+
   return (
     <Div>
+      <Div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink>Student Information</StyledLink>
+          <Typography color="text.primary">Student Profile</Typography>
+        </Breadcrumbs>
+      </Div>
       <Typography
-        sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "24px" }}
+        sx={{
+          fontSize: "24px",
+          fontWeight: 500,
+          paddingBottom: "24px",
+          paddingTop: "20px",
+        }}
       >
         Student Profile
       </Typography>

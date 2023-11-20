@@ -100,14 +100,23 @@ const StudentInformationFaculty = () => {
         <Typography variant="h1" sx={{ mb: 3 }}>
           Student Information
         </Typography>
-        <Typography variant="h6" sx={{ mb: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            paddingBottom: "25px",
+            fontSize: "15px",
+            fontWeight: 400,
+            color: "rgba(27, 43, 65, 0.69)",
+            textAlign: "justify",
+          }}
+        >
           Currently, you are on the Student Information page, where you can
           easily view all information about your mentored students, including
           the number, status, and other detailed and comprehensive information.
         </Typography>
       </Div>
       <Grid container spacing={2} sx={{ paddingBottom: 4, paddingTop: 2 }}>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
+        <Grid item sm={12} md={4} lg={4} xs={12}>
           <Card
             sx={{
               height: "100%",
@@ -140,7 +149,7 @@ const StudentInformationFaculty = () => {
             </Grid>
           </Card>
         </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
+        <Grid item sm={12} md={4} lg={4} xs={12}>
           <Card
             sx={{
               height: "100%",
@@ -173,7 +182,7 @@ const StudentInformationFaculty = () => {
             </Grid>
           </Card>
         </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
+        <Grid item sm={12} md={4} lg={4} xs={12}>
           <Card
             sx={{
               height: "100%",
@@ -209,14 +218,23 @@ const StudentInformationFaculty = () => {
       </Grid>
       <Grid container spacing={2}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: "justify",
+              "@media (max-width: 390px)": {
+                fontSize: "16px",
+                fontWeight: 500,
+              },
+            }}
+          >
             Computer Sciences Faculty Students List
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={8} md={3}>
+        <Grid item xs={12} sm={8} md={8} xl={3}>
           <SearchGlobal sx={{ height: "100%", maxHeight: "53px" }} />
         </Grid>
-        <Grid item xs={12} sm={4} md={3}>
+        <Grid item xs={12} sm={4} md={4} xl={3}>
           <FormControl
             sx={{
               width: "100%",
