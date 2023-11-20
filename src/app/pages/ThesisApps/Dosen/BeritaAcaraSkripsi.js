@@ -1064,11 +1064,64 @@ const BeritaAcara = () => {
                       <TableRow key={studentIndex}>
                         <TableCell>{studentIndex + 1}</TableCell>
                         <TableCell>{student.fullName}</TableCell>
-                        <TableCell>{student.value_by_chairman}</TableCell>
-                        <TableCell>{student.value_by_member}</TableCell>
-                        <TableCell>{student.value_by_advisor}</TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
+                          {userRole === "KETUA_PANELIS" ||
+                          userRole === "KAPRODI" ||
+                          userRole === "DEKAN" ? (
+                            student.value_by_chairman
+                          ) : userRole !== "KETUA_PANELIS" &&
+                            student.value_by_chairman === null ? (
+                            <Chip label={"Belum"} />
+                          ) : (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
+                          {userRole === "KETUA_PANELIS" ||
+                          userRole === "ANGGOTA_PANELIS" ||
+                          userRole === "KAPRODI" ||
+                          userRole === "DEKAN" ? (
+                            student.value_by_member
+                          ) : userRole !== "KETUA_PANELIS" &&
+                            student.value_by_member === null ? (
+                            <Chip label={"Belum"} />
+                          ) : (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
+                          {userRole === "KETUA_PANELIS" ||
+                          userRole === "ADVISOR" ||
+                          userRole === "KAPRODI" ||
+                          userRole === "DEKAN" ? (
+                            student.value_by_advisor
+                          ) : userRole !== "KETUA_PANELIS" &&
+                            student.value_by_advisor === null ? (
+                            <Chip label={"Belum"} />
+                          ) : (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          )}
+                        </TableCell>
                         {userRole === "KETUA_PANELIS" && (
-                          <TableCell>
+                          <TableCell sx={{ textAlign: "center" }}>
                             <span
                               style={{
                                 textDecoration: "none",
@@ -1193,28 +1246,34 @@ const BeritaAcara = () => {
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
                       <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Ketua Penelis</TableCell>
-                      <TableCell sx={{ width: "25%" }}>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Ketua Penelis
+                      </TableCell>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
                         Anggota Penelis
                       </TableCell>
-                      <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Advisor
+                      </TableCell>
                       {advisorAndCoAdvisor?.coAdvisor1 && (
                         <TableCell sx={{ width: "25%" }}>
                           Co-Advisor 1
                         </TableCell>
                       )}
                       {advisorAndCoAdvisor?.coAdvisor2 && (
-                        <TableCell sx={{ width: "25%" }}>
+                        <TableCell sx={{ width: "25%", textAlign: "center" }}>
                           Co-Advisor 2
                         </TableCell>
                       )}
-                      <TableCell sx={{ width: "25%" }}>Action</TableCell>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Action
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     <TableRow>
                       <TableCell>1</TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataPerubahan?.changes_by_chairman !== null ? (
                           <Chip
                             size="small"
@@ -1229,7 +1288,7 @@ const BeritaAcara = () => {
                           <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataPerubahan?.changes_by_member !== null ? (
                           <Chip
                             size="small"
@@ -1238,13 +1297,18 @@ const BeritaAcara = () => {
                               background: "rgba(0, 255, 0, 0.10)",
                               color: "#008000",
                               fontSize: "10px",
+                              textAlign: "center",
                             }}
                           />
                         ) : (
-                          <Chip size="small" label="Belum" />
+                          <Chip
+                            size="small"
+                            label="Belum"
+                            sx={{ textAlign: "center" }}
+                          />
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataPerubahan?.changes_by_advisor !== null ? (
                           <Chip
                             size="small"
@@ -1253,14 +1317,19 @@ const BeritaAcara = () => {
                               background: "rgba(0, 255, 0, 0.10)",
                               color: "#008000",
                               fontSize: "10px",
+                              textAlign: "center",
                             }}
                           />
                         ) : (
-                          <Chip size="small" label="Belum" />
+                          <Chip
+                            size="small"
+                            label="Belum"
+                            sx={{ textAlign: "center" }}
+                          />
                         )}
                       </TableCell>
                       {advisorAndCoAdvisor?.coAdvisor1 && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           {dataPerubahan?.changes_by_co_advisor1 !== null ? (
                             <Chip
                               size="small"
@@ -1269,15 +1338,20 @@ const BeritaAcara = () => {
                                 background: "rgba(0, 255, 0, 0.10)",
                                 color: "#008000",
                                 fontSize: "10px",
+                                textAlign: "center",
                               }}
                             />
                           ) : (
-                            <Chip size="small" label="Belum" />
+                            <Chip
+                              size="small"
+                              label="Belum"
+                              sx={{ textAlign: "center" }}
+                            />
                           )}
                         </TableCell>
                       )}
                       {advisorAndCoAdvisor?.coAdvisor2 && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           {dataPerubahan?.changes_by_co_advisor2 !== null ? (
                             <Chip
                               size="small"
@@ -1289,11 +1363,15 @@ const BeritaAcara = () => {
                               }}
                             />
                           ) : (
-                            <Chip size="small" label="Belum" />
+                            <Chip
+                              size="small"
+                              label="Belum"
+                              sx={{ textAlign: "center" }}
+                            />
                           )}
                         </TableCell>
                       )}
-                      <TableCell sx={{ display: "flex" }}>
+                      <TableCell sx={{ display: "flex", textAlign: "center" }}>
                         <span
                           style={{
                             textDecoration: "none",
@@ -1329,7 +1407,7 @@ const BeritaAcara = () => {
                                 }
                               }}
                             >
-                              Revisi
+                              Komen
                             </span>
                           </>
                         )}
@@ -1356,7 +1434,7 @@ const BeritaAcara = () => {
                                 }
                               }}
                             >
-                              Revisi
+                              Komen
                             </span>
                           </>
                         )}
@@ -1385,7 +1463,7 @@ const BeritaAcara = () => {
                                 }
                               }}
                             >
-                              Revisi
+                              Komen
                             </span>
                           </>
                         )}
@@ -1413,14 +1491,18 @@ const BeritaAcara = () => {
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
                       <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "12%" }}>
+                      <TableCell sx={{ width: "12%", textAlign: "center" }}>
                         Dekan Fakultas
                       </TableCell>
-                      <TableCell sx={{ width: "12%" }}>Ketua Penelis</TableCell>
-                      <TableCell sx={{ width: "12%" }}>
+                      <TableCell sx={{ width: "12%", textAlign: "center" }}>
+                        Ketua Penelis
+                      </TableCell>
+                      <TableCell sx={{ width: "12%", textAlign: "center" }}>
                         Anggota Penelis
                       </TableCell>
-                      <TableCell sx={{ width: "12%" }}>Advisor</TableCell>
+                      <TableCell sx={{ width: "12%", textAlign: "center" }}>
+                        Advisor
+                      </TableCell>
                       {(userRole === "DEKAN" ||
                         userRole === "ADVISOR" ||
                         userRole === "KETUA_PANELIS" ||
@@ -1434,7 +1516,7 @@ const BeritaAcara = () => {
                   <TableBody>
                     <TableRow>
                       <TableCell>1</TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataBeritaAcara?.is_report_approve_by_dekan !==
                         null ? (
                           <>
@@ -1455,7 +1537,7 @@ const BeritaAcara = () => {
                           <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataBeritaAcara?.is_report_approve_by_panelist_chairman !==
                         null ? (
                           <>
@@ -1478,7 +1560,7 @@ const BeritaAcara = () => {
                           <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataBeritaAcara?.is_report_approve_by_panelist_member !==
                         null ? (
                           <>
@@ -1501,7 +1583,7 @@ const BeritaAcara = () => {
                           <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataBeritaAcara?.is_report_approve_by_advisor !==
                         null ? (
                           <>
@@ -1523,7 +1605,7 @@ const BeritaAcara = () => {
                         )}
                       </TableCell>
                       {userRole === "DEKAN" && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           <span
                             style={{
                               textDecoration: "none",
@@ -1552,7 +1634,7 @@ const BeritaAcara = () => {
                         </TableCell>
                       )}
                       {userRole === "KETUA_PANELIS" && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           <span
                             style={{
                               textDecoration: "none",
@@ -1581,7 +1663,7 @@ const BeritaAcara = () => {
                         </TableCell>
                       )}
                       {userRole === "ANGGOTA_PANELIS" && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           <span
                             style={{
                               textDecoration: "none",
@@ -1610,7 +1692,7 @@ const BeritaAcara = () => {
                         </TableCell>
                       )}
                       {userRole === "ADVISOR" && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           <span
                             style={{
                               textDecoration: "none",

@@ -8,8 +8,6 @@ import DaftarPengajuanSkripsiSekertaris from "app/pages/ThesisApps/Sekertaris/Da
 import JadwalSidangProposal from "app/pages/ThesisApps/Sekertaris/JadwalSidangProposal";
 import JadwalSidangSkripsi from "app/pages/ThesisApps/Sekertaris/JadwalSidangSkripsi";
 import ManajemenDosenSkripsi from "app/pages/ThesisApps/Sekertaris/ManajemenDosenSkripsi";
-import PerbaruiJadwalSidang from "app/pages/ThesisApps/Sekertaris/PerbaruiJadwalSidangProposal";
-import PerbaruiJadwalSidangSkripsi from "app/pages/ThesisApps/Sekertaris/PerbaruiJadwalSidangSkripsi";
 import JadwalSidang from "app/pages/ThesisApps/Sekertaris/JadwalSidang";
 
 const sekretarisRoutes = [

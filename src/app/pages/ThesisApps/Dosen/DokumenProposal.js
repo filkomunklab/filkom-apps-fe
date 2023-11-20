@@ -647,7 +647,7 @@ const DokumenProposal = () => {
                 }}
                 onClick={() => {
                   setSelectedActionIndexCoAdvisor2(1);
-                  setSetujuConfirmationDialogOpenCoAdvisor1(true);
+                  setSetujuConfirmationDialogOpenCoAdvisor2(true);
                 }}
               >
                 Setuju
@@ -679,7 +679,7 @@ const DokumenProposal = () => {
                 }}
                 onClick={() => {
                   setSelectedActionIndexCoAdvisor2(2);
-                  setTolakConfirmationDialogOpenCoAdvisor1(true);
+                  setTolakConfirmationDialogOpenCoAdvisor2(true);
                 }}
               >
                 Tolak
@@ -997,92 +997,100 @@ const DokumenProposal = () => {
                       </TableCell>
                       {/* status Advisor */}
                       <TableCell sx={{ fontSize: "12px", textAlign: "center" }}>
-                        {dokumenProposal?.is_proposal_approve_by_advisor ===
-                        null ? (
-                          ""
-                        ) : dokumenProposal?.is_proposal_approve_by_advisor ===
-                          "Approve" ? (
-                          <Chip
-                            size="small"
-                            label="Disetujui"
-                            sx={{
-                              background: "rgba(0, 255, 0, 0.10)",
-                              color: "#008000",
-                              fontSize: "10px",
-                              textAlign: "center",
-                            }}
-                          />
-                        ) : dokumenProposal?.is_proposal_approve_by_advisor ===
-                          "Rejected" ? (
-                          <Chip
-                            size="small"
-                            label="Ditolak"
-                            sx={{
-                              background: "rgba(255, 0, 0, 0.10)",
-                              color: "#FF0000",
-                              fontSize: "10px",
-                              textAlign: "center",
-                            }}
-                          />
-                        ) : dokumenProposal?.is_proposal_approve_by_advisor ===
-                          "Waiting" ? (
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                              textAlign: "center",
-                            }}
-                          />
-                        ) : null}
+                        {dokumenProposal?.file_name_proposal !== null && (
+                          <>
+                            {dokumenProposal?.is_proposal_approve_by_advisor ===
+                            null ? (
+                              ""
+                            ) : dokumenProposal?.is_proposal_approve_by_advisor ===
+                              "Approve" ? (
+                              <Chip
+                                size="small"
+                                label="Disetujui"
+                                sx={{
+                                  background: "rgba(0, 255, 0, 0.10)",
+                                  color: "#008000",
+                                  fontSize: "10px",
+                                  textAlign: "center",
+                                }}
+                              />
+                            ) : dokumenProposal?.is_proposal_approve_by_advisor ===
+                              "Rejected" ? (
+                              <Chip
+                                size="small"
+                                label="Ditolak"
+                                sx={{
+                                  background: "rgba(255, 0, 0, 0.10)",
+                                  color: "#FF0000",
+                                  fontSize: "10px",
+                                  textAlign: "center",
+                                }}
+                              />
+                            ) : dokumenProposal?.is_proposal_approve_by_advisor ===
+                              "Waiting" ? (
+                              <Chip
+                                size="small"
+                                label="Menunggu"
+                                sx={{
+                                  background: "rgba(255, 204, 0, 0.10)",
+                                  color: "#985211",
+                                  fontSize: "10px",
+                                  textAlign: "center",
+                                }}
+                              />
+                            ) : null}
+                          </>
+                        )}
                       </TableCell>
                       {/* status CoAdvisor1 */}
                       {advisorAndCoAdvisor?.coAdvisor1 && (
                         <TableCell
                           sx={{ fontSize: "12px", textAlign: "center" }}
                         >
-                          {dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
-                          null ? (
-                            ""
-                          ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
-                            "Approve" ? (
-                            <Chip
-                              size="small"
-                              label="Disetujui"
-                              sx={{
-                                background: "rgba(0, 255, 0, 0.10)",
-                                color: "#008000",
-                                fontSize: "10px",
-                                textAlign: "center",
-                              }}
-                            />
-                          ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
-                            "Rejected" ? (
-                            <Chip
-                              size="small"
-                              label="Ditolak"
-                              sx={{
-                                background: "rgba(255, 0, 0, 0.10)",
-                                color: "#FF0000",
-                                fontSize: "10px",
-                                textAlign: "center",
-                              }}
-                            />
-                          ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
-                            "Waiting" ? (
-                            <Chip
-                              size="small"
-                              label="Menunggu"
-                              sx={{
-                                background: "rgba(255, 204, 0, 0.10)",
-                                color: "#985211",
-                                fontSize: "10px",
-                                textAlign: "center",
-                              }}
-                            />
-                          ) : null}
+                          {dokumenProposal?.file_name_proposal !== null && (
+                            <>
+                              {dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                              null ? (
+                                ""
+                              ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                "Approve" ? (
+                                <Chip
+                                  size="small"
+                                  label="Disetujui"
+                                  sx={{
+                                    background: "rgba(0, 255, 0, 0.10)",
+                                    color: "#008000",
+                                    fontSize: "10px",
+                                    textAlign: "center",
+                                  }}
+                                />
+                              ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                "Rejected" ? (
+                                <Chip
+                                  size="small"
+                                  label="Ditolak"
+                                  sx={{
+                                    background: "rgba(255, 0, 0, 0.10)",
+                                    color: "#FF0000",
+                                    fontSize: "10px",
+                                    textAlign: "center",
+                                  }}
+                                />
+                              ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                "Waiting" ? (
+                                <Chip
+                                  size="small"
+                                  label="Menunggu"
+                                  sx={{
+                                    background: "rgba(255, 204, 0, 0.10)",
+                                    color: "#985211",
+                                    fontSize: "10px",
+                                    textAlign: "center",
+                                  }}
+                                />
+                              ) : null}
+                            </>
+                          )}
                         </TableCell>
                       )}
                       {/* Status CoAdvisor2 */}
@@ -1090,46 +1098,50 @@ const DokumenProposal = () => {
                         <TableCell
                           sx={{ fontSize: "12px", textAlign: "center" }}
                         >
-                          {dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
-                          null ? (
-                            ""
-                          ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
-                            "Approve" ? (
-                            <Chip
-                              size="small"
-                              label="Disetujui"
-                              sx={{
-                                background: "rgba(0, 255, 0, 0.10)",
-                                color: "#008000",
-                                fontSize: "10px",
-                                textAlign: "center",
-                              }}
-                            />
-                          ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
-                            "Rejected" ? (
-                            <Chip
-                              size="small"
-                              label="Ditolak"
-                              sx={{
-                                background: "rgba(255, 0, 0, 0.10)",
-                                color: "#FF0000",
-                                fontSize: "10px",
-                                textAlign: "center",
-                              }}
-                            />
-                          ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
-                            "Waiting" ? (
-                            <Chip
-                              size="small"
-                              label="Menunggu"
-                              sx={{
-                                background: "rgba(255, 204, 0, 0.10)",
-                                color: "#985211",
-                                fontSize: "10px",
-                                textAlign: "center",
-                              }}
-                            />
-                          ) : null}
+                          {dokumenProposal?.file_name_proposal !== null && (
+                            <>
+                              {dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                              null ? (
+                                ""
+                              ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                                "Approve" ? (
+                                <Chip
+                                  size="small"
+                                  label="Disetujui"
+                                  sx={{
+                                    background: "rgba(0, 255, 0, 0.10)",
+                                    color: "#008000",
+                                    fontSize: "10px",
+                                    textAlign: "center",
+                                  }}
+                                />
+                              ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                                "Rejected" ? (
+                                <Chip
+                                  size="small"
+                                  label="Ditolak"
+                                  sx={{
+                                    background: "rgba(255, 0, 0, 0.10)",
+                                    color: "#FF0000",
+                                    fontSize: "10px",
+                                    textAlign: "center",
+                                  }}
+                                />
+                              ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                                "Waiting" ? (
+                                <Chip
+                                  size="small"
+                                  label="Menunggu"
+                                  sx={{
+                                    background: "rgba(255, 204, 0, 0.10)",
+                                    color: "#985211",
+                                    fontSize: "10px",
+                                    textAlign: "center",
+                                  }}
+                                />
+                              ) : null}
+                            </>
+                          )}
                         </TableCell>
                       )}
                       <TableCell>
