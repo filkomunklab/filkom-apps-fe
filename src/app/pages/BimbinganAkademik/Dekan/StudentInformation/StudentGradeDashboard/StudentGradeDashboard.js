@@ -58,12 +58,12 @@ const StudentGradeDashboard = () => {
 
   return (
     <Div>
-      <div role="presentation" onClick={handleClick}>
+      <Div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
           <StyledLink>Student Information</StyledLink>
           <Typography color="text.primary">Student Grades</Typography>
         </Breadcrumbs>
-      </div>
+      </Div>
       <Stack gap={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography variant="h1">Nilai Mahasiswa</Typography>

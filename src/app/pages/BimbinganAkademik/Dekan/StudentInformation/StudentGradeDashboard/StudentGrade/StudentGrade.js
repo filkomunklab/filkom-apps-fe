@@ -32,12 +32,12 @@ const StudentGrade = () => {
   };
   return (
     <Div>
-      <div role="presentation" onClick={handleClick}>
+      <Div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
           <StyledLink>Back</StyledLink>
           <Typography color="text.primary">Student Profile</Typography>
         </Breadcrumbs>
-      </div>
+      </Div>
       <Stack gap={3} paddingTop={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography variant="h1">Nilai Mahasiswa</Typography>
