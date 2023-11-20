@@ -254,7 +254,7 @@ const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+    // navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
 
     switch (name) {
       case "profile":

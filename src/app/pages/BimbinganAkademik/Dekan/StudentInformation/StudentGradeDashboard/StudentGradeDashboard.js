@@ -53,7 +53,7 @@ const StudentGradeDashboard = () => {
   const navigate = useNavigate();
   const handleClick = (event) => {
     event.preventDefault();
-    navigate("/bimbingan-akademik/dekan/student-information/");
+    navigate(-1);
   };
 
   return (
