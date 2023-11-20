@@ -975,126 +975,138 @@ const DokumenSkripsi = () => {
                       </TableCell>
                       {/* status Advisor */}
                       <TableCell>
-                        {dokumenSkripsi?.is_skripsi_approve_by_advisor ===
-                        null ? (
-                          ""
-                        ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
-                          "Approve" ? (
-                          <Chip
-                            size="small"
-                            label="Disetujui"
-                            sx={{
-                              background: "rgba(0, 255, 0, 0.10)",
-                              color: "#008000",
-                              fontSize: "10px",
-                            }}
-                          />
-                        ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
-                          "Rejected" ? (
-                          <Chip
-                            size="small"
-                            label="Ditolak"
-                            sx={{
-                              background: "rgba(255, 0, 0, 0.10)",
-                              color: "#FF0000",
-                              fontSize: "10px",
-                            }}
-                          />
-                        ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
-                          "Waiting" ? (
-                          <Chip
-                            size="small"
-                            label="Menunggu"
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                              fontSize: "10px",
-                            }}
-                          />
-                        ) : null}
+                        {dokumenSkripsi?.file_name_skripsi !== null && (
+                          <>
+                            {dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                            null ? (
+                              ""
+                            ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                              "Approve" ? (
+                              <Chip
+                                size="small"
+                                label="Disetujui"
+                                sx={{
+                                  background: "rgba(0, 255, 0, 0.10)",
+                                  color: "#008000",
+                                  fontSize: "10px",
+                                }}
+                              />
+                            ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                              "Rejected" ? (
+                              <Chip
+                                size="small"
+                                label="Ditolak"
+                                sx={{
+                                  background: "rgba(255, 0, 0, 0.10)",
+                                  color: "#FF0000",
+                                  fontSize: "10px",
+                                }}
+                              />
+                            ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                              "Waiting" ? (
+                              <Chip
+                                size="small"
+                                label="Menunggu"
+                                sx={{
+                                  background: "rgba(255, 204, 0, 0.10)",
+                                  color: "#985211",
+                                  fontSize: "10px",
+                                }}
+                              />
+                            ) : null}
+                          </>
+                        )}
                       </TableCell>
                       {/* status CoAdvisor1 */}
                       {advisorAndCoAdvisor?.coAdvisor1 && (
                         <TableCell>
-                          {dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
-                          null ? (
-                            ""
-                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
-                            "Approve" ? (
-                            <Chip
-                              size="small"
-                              label="Disetujui"
-                              sx={{
-                                background: "rgba(0, 255, 0, 0.10)",
-                                color: "#008000",
-                                fontSize: "10px",
-                              }}
-                            />
-                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
-                            "Rejected" ? (
-                            <Chip
-                              size="small"
-                              label="Ditolak"
-                              sx={{
-                                background: "rgba(255, 0, 0, 0.10)",
-                                color: "#FF0000",
-                                fontSize: "10px",
-                              }}
-                            />
-                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
-                            "Waiting" ? (
-                            <Chip
-                              size="small"
-                              label="Menunggu"
-                              sx={{
-                                background: "rgba(255, 204, 0, 0.10)",
-                                color: "#985211",
-                                fontSize: "10px",
-                              }}
-                            />
-                          ) : null}
+                          {dokumenSkripsi?.file_name_skripsi !== null && (
+                            <>
+                              {dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                              null ? (
+                                ""
+                              ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                "Approve" ? (
+                                <Chip
+                                  size="small"
+                                  label="Disetujui"
+                                  sx={{
+                                    background: "rgba(0, 255, 0, 0.10)",
+                                    color: "#008000",
+                                    fontSize: "10px",
+                                  }}
+                                />
+                              ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                "Rejected" ? (
+                                <Chip
+                                  size="small"
+                                  label="Ditolak"
+                                  sx={{
+                                    background: "rgba(255, 0, 0, 0.10)",
+                                    color: "#FF0000",
+                                    fontSize: "10px",
+                                  }}
+                                />
+                              ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                "Waiting" ? (
+                                <Chip
+                                  size="small"
+                                  label="Menunggu"
+                                  sx={{
+                                    background: "rgba(255, 204, 0, 0.10)",
+                                    color: "#985211",
+                                    fontSize: "10px",
+                                  }}
+                                />
+                              ) : null}
+                            </>
+                          )}
                         </TableCell>
                       )}
                       {/* Status CoAdvisor2 */}
                       {advisorAndCoAdvisor?.coAdvisor2 && (
                         <TableCell>
-                          {dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
-                          null ? (
-                            ""
-                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
-                            "Approve" ? (
-                            <Chip
-                              size="small"
-                              label="Disetujui"
-                              sx={{
-                                background: "rgba(0, 255, 0, 0.10)",
-                                color: "#008000",
-                                fontSize: "10px",
-                              }}
-                            />
-                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
-                            "Rejected" ? (
-                            <Chip
-                              size="small"
-                              label="Ditolak"
-                              sx={{
-                                background: "rgba(255, 0, 0, 0.10)",
-                                color: "#FF0000",
-                                fontSize: "10px",
-                              }}
-                            />
-                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
-                            "Waiting" ? (
-                            <Chip
-                              size="small"
-                              label="Menunggu"
-                              sx={{
-                                background: "rgba(255, 204, 0, 0.10)",
-                                color: "#985211",
-                                fontSize: "10px",
-                              }}
-                            />
-                          ) : null}
+                          {advisorAndCoAdvisor?.coAdvisor1 && (
+                            <>
+                              {dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                              null ? (
+                                ""
+                              ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                                "Approve" ? (
+                                <Chip
+                                  size="small"
+                                  label="Disetujui"
+                                  sx={{
+                                    background: "rgba(0, 255, 0, 0.10)",
+                                    color: "#008000",
+                                    fontSize: "10px",
+                                  }}
+                                />
+                              ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                                "Rejected" ? (
+                                <Chip
+                                  size="small"
+                                  label="Ditolak"
+                                  sx={{
+                                    background: "rgba(255, 0, 0, 0.10)",
+                                    color: "#FF0000",
+                                    fontSize: "10px",
+                                  }}
+                                />
+                              ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                                "Waiting" ? (
+                                <Chip
+                                  size="small"
+                                  label="Menunggu"
+                                  sx={{
+                                    background: "rgba(255, 204, 0, 0.10)",
+                                    color: "#985211",
+                                    fontSize: "10px",
+                                  }}
+                                />
+                              ) : null}
+                            </>
+                          )}
                         </TableCell>
                       )}
                       <TableCell>

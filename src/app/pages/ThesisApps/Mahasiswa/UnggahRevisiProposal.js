@@ -741,110 +741,122 @@ const UploadRevisiProposal = () => {
                       </TableCell>
                       {/* status Ketua */}
                       <TableCell>
-                        {dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
-                        "Waiting" ? (
-                          <Chip
-                            size="small"
-                            label={"Menunggu"}
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                            }}
-                          />
-                        ) : dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
-                          "Approve" ? (
-                          <Chip
-                            size="small"
-                            label={"Disetujui"}
-                            sx={{
-                              background: "rgba(21, 131, 67, 0.10)",
-                              color: "#0A7637",
-                            }}
-                          />
-                        ) : dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
-                          "Rejected" ? (
-                          <Chip
-                            size="small"
-                            label={"Ditolak"}
-                            sx={{
-                              background: "rgba(226, 29, 18, 0.10)",
-                              color: "#CA150C",
-                            }}
-                          />
-                        ) : (
-                          dokumenRevisi?.is_revision_approve_by_panelist_chairman
+                        {dokumenRevisi?.file_name_revision !== null && (
+                          <>
+                            {dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                            "Waiting" ? (
+                              <Chip
+                                size="small"
+                                label={"Menunggu"}
+                                sx={{
+                                  background: "rgba(255, 204, 0, 0.10)",
+                                  color: "#985211",
+                                }}
+                              />
+                            ) : dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                              "Approve" ? (
+                              <Chip
+                                size="small"
+                                label={"Disetujui"}
+                                sx={{
+                                  background: "rgba(21, 131, 67, 0.10)",
+                                  color: "#0A7637",
+                                }}
+                              />
+                            ) : dokumenRevisi?.is_revision_approve_by_panelist_chairman ===
+                              "Rejected" ? (
+                              <Chip
+                                size="small"
+                                label={"Ditolak"}
+                                sx={{
+                                  background: "rgba(226, 29, 18, 0.10)",
+                                  color: "#CA150C",
+                                }}
+                              />
+                            ) : (
+                              dokumenRevisi?.is_revision_approve_by_panelist_chairman
+                            )}
+                          </>
                         )}
                       </TableCell>
                       {/* status Anggota */}
                       <TableCell>
-                        {dokumenRevisi?.is_revision_approve_by_panelist_member ===
-                        "Waiting" ? (
-                          <Chip
-                            size="small"
-                            label={"Menunggu"}
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                            }}
-                          />
-                        ) : dokumenRevisi?.is_revision_approve_by_panelist_member ===
-                          "Approve" ? (
-                          <Chip
-                            size="small"
-                            label={"Disetujui"}
-                            sx={{
-                              background: "rgba(21, 131, 67, 0.10)",
-                              color: "#0A7637",
-                            }}
-                          />
-                        ) : dokumenRevisi?.is_revision_approve_by_panelist_member ===
-                          "Rejected" ? (
-                          <Chip
-                            size="small"
-                            label={"Ditolak"}
-                            sx={{
-                              background: "rgba(226, 29, 18, 0.10)",
-                              color: "#CA150C",
-                            }}
-                          />
-                        ) : (
-                          dokumenRevisi?.is_revision_approve_by_panelist_member
+                        {dokumenRevisi?.file_name_revision !== null && (
+                          <>
+                            {dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                            "Waiting" ? (
+                              <Chip
+                                size="small"
+                                label={"Menunggu"}
+                                sx={{
+                                  background: "rgba(255, 204, 0, 0.10)",
+                                  color: "#985211",
+                                }}
+                              />
+                            ) : dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                              "Approve" ? (
+                              <Chip
+                                size="small"
+                                label={"Disetujui"}
+                                sx={{
+                                  background: "rgba(21, 131, 67, 0.10)",
+                                  color: "#0A7637",
+                                }}
+                              />
+                            ) : dokumenRevisi?.is_revision_approve_by_panelist_member ===
+                              "Rejected" ? (
+                              <Chip
+                                size="small"
+                                label={"Ditolak"}
+                                sx={{
+                                  background: "rgba(226, 29, 18, 0.10)",
+                                  color: "#CA150C",
+                                }}
+                              />
+                            ) : (
+                              dokumenRevisi?.is_revision_approve_by_panelist_member
+                            )}
+                          </>
                         )}
                       </TableCell>
                       {/* status Advisor */}
                       <TableCell>
-                        {dokumenRevisi?.is_revision_approve_by_advisor ===
-                        "Waiting" ? (
-                          <Chip
-                            size="small"
-                            label={"Menunggu"}
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                            }}
-                          />
-                        ) : dokumenRevisi?.is_revision_approve_by_advisor ===
-                          "Approve" ? (
-                          <Chip
-                            size="small"
-                            label={"Disetujui"}
-                            sx={{
-                              background: "rgba(21, 131, 67, 0.10)",
-                              color: "#0A7637",
-                            }}
-                          />
-                        ) : dokumenRevisi?.is_revision_approve_by_advisor ===
-                          "Rejected" ? (
-                          <Chip
-                            size="small"
-                            label={"Ditolak"}
-                            sx={{
-                              background: "rgba(226, 29, 18, 0.10)",
-                              color: "#CA150C",
-                            }}
-                          />
-                        ) : (
-                          dokumenRevisi?.is_revision_approve_by_advisor
+                        {dokumenRevisi?.file_name_revision !== null && (
+                          <>
+                            {dokumenRevisi?.is_revision_approve_by_advisor ===
+                            "Waiting" ? (
+                              <Chip
+                                size="small"
+                                label={"Menunggu"}
+                                sx={{
+                                  background: "rgba(255, 204, 0, 0.10)",
+                                  color: "#985211",
+                                }}
+                              />
+                            ) : dokumenRevisi?.is_revision_approve_by_advisor ===
+                              "Approve" ? (
+                              <Chip
+                                size="small"
+                                label={"Disetujui"}
+                                sx={{
+                                  background: "rgba(21, 131, 67, 0.10)",
+                                  color: "#0A7637",
+                                }}
+                              />
+                            ) : dokumenRevisi?.is_revision_approve_by_advisor ===
+                              "Rejected" ? (
+                              <Chip
+                                size="small"
+                                label={"Ditolak"}
+                                sx={{
+                                  background: "rgba(226, 29, 18, 0.10)",
+                                  color: "#CA150C",
+                                }}
+                              />
+                            ) : (
+                              dokumenRevisi?.is_revision_approve_by_advisor
+                            )}
+                          </>
                         )}
                       </TableCell>
                       <TableCell>

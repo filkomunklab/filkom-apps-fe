@@ -886,18 +886,11 @@ const JadwalSidangProposal = () => {
                   }}
                   error={!!errorMessages.selectedKetuaPenelis}
                 >
-                  {daftarDosen
-                    ?.filter(
-                      (dosen) =>
-                        dosen.id !== selectedKetuaPenelis &&
-                        dosen.id !== selectedAnggotaPenelis &&
-                        dosen.name !== selectedAdvisor
-                    )
-                    ?.map((dosen) => (
-                      <MenuItem key={dosen.id} value={dosen.id}>
-                        {dosen.name}
-                      </MenuItem>
-                    ))}
+                  {daftarDosen.map((dosen) => (
+                    <MenuItem key={dosen.id} value={dosen.id}>
+                      {dosen.name}
+                    </MenuItem>
+                  ))}
                 </Select>
                 <FormHelperText error={!!errorMessages.selectedKetuaPenelis}>
                   {errorMessages.selectedKetuaPenelis}
@@ -933,18 +926,11 @@ const JadwalSidangProposal = () => {
                   }}
                   error={!!errorMessages.selectedAnggotaPenelis}
                 >
-                  {daftarDosen
-                    ?.filter(
-                      (dosen) =>
-                        dosen.id !== selectedKetuaPenelis &&
-                        dosen.id !== selectedAnggotaPenelis &&
-                        dosen.name !== selectedAdvisor
-                    )
-                    ?.map((dosen) => (
-                      <MenuItem key={dosen.id} value={dosen.id}>
-                        {dosen.name}
-                      </MenuItem>
-                    ))}
+                  {daftarDosen.map((dosen) => (
+                    <MenuItem key={dosen.id} value={dosen.id}>
+                      {dosen.name}
+                    </MenuItem>
+                  ))}
                 </Select>
                 <FormHelperText error={!!errorMessages.selectedAnggotaPenelis}>
                   {errorMessages.selectedAnggotaPenelis}
