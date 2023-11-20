@@ -42,7 +42,7 @@ const PDFViewerProposal = ({ dokumenProposal }) => {
   return (
     <div>
       <span sx={{ fontSize: "10px" }} onClick={viewPDFProposal}>
-        Detail
+        Lihat
       </span>
     </div>
   );
@@ -60,7 +60,7 @@ const PDFViewerPayment = ({ buktiPembayaran }) => {
 
   return (
     <div>
-      <span onClick={viewPDFPayment}>Detail</span>
+      <span onClick={viewPDFPayment}>Lihat</span>
     </div>
   );
 };
@@ -77,7 +77,7 @@ const PDFViewerCekPlagiat = ({ hasilCekPlagiat }) => {
 
   return (
     <div>
-      <span onClick={viewPDFCekPlagiat}>Detail</span>
+      <span onClick={viewPDFCekPlagiat}>Lihat</span>
     </div>
   );
 };

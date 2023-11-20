@@ -23,6 +23,7 @@ import {
   TextField,
   Typography,
   FormControl,
+  FormHelperText,
 } from "@mui/material";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
@@ -203,8 +204,68 @@ const PerbaruiJadwalSidangProposal = () => {
     setIsEditing(false);
   };
 
+  const [errorMessages, setErrorMessages] = useState({
+    startTime: "",
+    endTime: "",
+    tanggal: "",
+    ketuaPenelis: "",
+    anggotaPenelis: "",
+    ruangan: "",
+  });
+
   const handleConfirmClick = () => {
-    setIsConfirmationOpen(true);
+    let hasError = false;
+    const newErrorMessages = {};
+
+    // Validasi input waktu
+    if (!startTime) {
+      newErrorMessages.startTime = "Mulai Waktu harus diisi";
+      hasError = true;
+    }
+
+    if (!endTime) {
+      newErrorMessages.endTime = "Selesai Waktu harus diisi";
+      hasError = true;
+    }
+
+    // Validasi input tanggal
+    if (!tanggal) {
+      newErrorMessages.tanggal = "Mulai Tanggal harus diisi";
+      hasError = true;
+    }
+
+    // Validasi ketua panelis
+    if (!ketuaPenelis) {
+      newErrorMessages.ketuaPenelis = "Ketua panelis harus dipilih";
+      hasError = true;
+    }
+
+    // Validasi anggota panelis
+    if (!anggotaPenelis) {
+      newErrorMessages.anggotaPenelis = "Anggota panelis harus dipilih";
+      hasError = true;
+    }
+
+    // Validasi input ruangan
+    if (!ruangan) {
+      newErrorMessages.ruangan = "Ruangan harus diisi";
+      hasError = true;
+    }
+
+    if (ketuaPenelis && anggotaPenelis && ketuaPenelis === anggotaPenelis) {
+      newErrorMessages.ketuaPenelis =
+        "Ketua Panelis dan Anggota Panelis tidak boleh sama";
+      newErrorMessages.anggotaPenelis =
+        "Ketua Panelis dan Anggota Panelis tidak boleh sama";
+      hasError = true;
+    }
+
+    if (hasError) {
+      setErrorMessages(newErrorMessages);
+      // Tampilkan pesan kesalahan
+    } else {
+      setIsConfirmationOpen(true);
+    }
   };
 
   const handleConfirm = () => {
@@ -624,7 +685,7 @@ const PerbaruiJadwalSidangProposal = () => {
                         >
                           <Container>
                             <Typography variant="subtitle2">
-                              Ketua Penelis
+                              Ketua Panelis
                             </Typography>
                             {isEditing ? (
                               <Select
@@ -636,7 +697,21 @@ const PerbaruiJadwalSidangProposal = () => {
                                   setKetuaPenelis(e.target.value)
                                 }
                                 size="small"
-                                sx={{ maxWidth: "250px" }} // Menambahkan batas lebar maksimum
+                                MenuProps={{
+                                  anchorOrigin: {
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                  },
+                                  transformOrigin: {
+                                    vertical: "top",
+                                    horizontal: "left",
+                                  },
+                                  getContentAnchorEl: null,
+                                  style: {
+                                    maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                                  },
+                                }}
+                                error={!!errorMessages.ketuaPenelis}
                               >
                                 {daftarDosen.map((dosen) => (
                                   <MenuItem key={dosen.id} value={dosen.id}>
@@ -663,6 +738,11 @@ const PerbaruiJadwalSidangProposal = () => {
                                 />
                               </FormControl>
                             )}
+                            <FormHelperText
+                              error={!!errorMessages.ketuaPenelis}
+                            >
+                              {errorMessages.ketuaPenelis}
+                            </FormHelperText>
                           </Container>
                         </Div>
                         <Div
@@ -688,7 +768,21 @@ const PerbaruiJadwalSidangProposal = () => {
                                   setAnggotaPenelis(e.target.value)
                                 }
                                 size="small"
-                                sx={{ maxWidth: "250px" }} // Menambahkan batas lebar maksimum
+                                MenuProps={{
+                                  anchorOrigin: {
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                  },
+                                  transformOrigin: {
+                                    vertical: "top",
+                                    horizontal: "left",
+                                  },
+                                  getContentAnchorEl: null,
+                                  style: {
+                                    maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                                  },
+                                }}
+                                error={!!errorMessages.anggotaPenelis}
                               >
                                 {daftarDosen.map((dosen) => (
                                   <MenuItem key={dosen.id} value={dosen.id}>
@@ -715,6 +809,11 @@ const PerbaruiJadwalSidangProposal = () => {
                                 />
                               </FormControl>
                             )}
+                            <FormHelperText
+                              error={!!errorMessages.anggotaPenelis}
+                            >
+                              {errorMessages.anggotaPenelis}
+                            </FormHelperText>
                           </Container>
                         </Div>
                       </Div>
@@ -750,6 +849,21 @@ const PerbaruiJadwalSidangProposal = () => {
                                   shrink: true,
                                 }}
                                 size="small"
+                                MenuProps={{
+                                  anchorOrigin: {
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                  },
+                                  transformOrigin: {
+                                    vertical: "top",
+                                    horizontal: "left",
+                                  },
+                                  getContentAnchorEl: null,
+                                  style: {
+                                    maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                                  },
+                                }}
+                                error={!!errorMessages.startTime}
                                 InputProps={{
                                   startAdornment: (
                                     <InputAdornment position="start"></InputAdornment>
@@ -778,6 +892,9 @@ const PerbaruiJadwalSidangProposal = () => {
                                 />
                               </FormControl>
                             )}
+                            <FormHelperText error={!!errorMessages.startTime}>
+                              {errorMessages.startTime}
+                            </FormHelperText>
                           </Grid>
                           <Grid item xs={6}>
                             <Typography variant="subtitle2">Selesai</Typography>
@@ -792,6 +909,21 @@ const PerbaruiJadwalSidangProposal = () => {
                                   shrink: true,
                                 }}
                                 size="small"
+                                MenuProps={{
+                                  anchorOrigin: {
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                  },
+                                  transformOrigin: {
+                                    vertical: "top",
+                                    horizontal: "left",
+                                  },
+                                  getContentAnchorEl: null,
+                                  style: {
+                                    maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                                  },
+                                }}
+                                error={!!errorMessages.endTime}
                                 InputProps={{
                                   startAdornment: (
                                     <InputAdornment position="start"></InputAdornment>
@@ -820,6 +952,9 @@ const PerbaruiJadwalSidangProposal = () => {
                                 />
                               </FormControl>
                             )}
+                            <FormHelperText error={!!errorMessages.endTime}>
+                              {errorMessages.endTime}
+                            </FormHelperText>
                           </Grid>
                           <Grid item xs={6}>
                             <Typography variant="subtitle2">Tanggal</Typography>
@@ -834,6 +969,21 @@ const PerbaruiJadwalSidangProposal = () => {
                                   shrink: true,
                                 }}
                                 size="small"
+                                MenuProps={{
+                                  anchorOrigin: {
+                                    vertical: "bottom",
+                                    horizontal: "left",
+                                  },
+                                  transformOrigin: {
+                                    vertical: "top",
+                                    horizontal: "left",
+                                  },
+                                  getContentAnchorEl: null,
+                                  style: {
+                                    maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                                  },
+                                }}
+                                error={!!errorMessages.tanggal}
                                 InputProps={{
                                   startAdornment: (
                                     <InputAdornment position="start"></InputAdornment>
@@ -859,6 +1009,9 @@ const PerbaruiJadwalSidangProposal = () => {
                                 />
                               </FormControl>
                             )}
+                            <FormHelperText error={!!errorMessages.tanggal}>
+                              {errorMessages.tanggal}
+                            </FormHelperText>
                           </Grid>
                           <Grid item xs={6}>
                             <Typography variant="subtitle2">Ruangan</Typography>
@@ -869,6 +1022,7 @@ const PerbaruiJadwalSidangProposal = () => {
                                 value={ruangan}
                                 onChange={(e) => setRuangan(e.target.value)}
                                 size="small"
+                                error={!!errorMessages.ruangan}
                               />
                             ) : (
                               <FormControl fullWidth size="small">
@@ -889,6 +1043,9 @@ const PerbaruiJadwalSidangProposal = () => {
                                 />
                               </FormControl>
                             )}
+                            <FormHelperText error={!!errorMessages.ruangan}>
+                              {errorMessages.ruangan}
+                            </FormHelperText>
                           </Grid>
                         </Grid>
 
@@ -961,12 +1118,14 @@ const PerbaruiJadwalSidangProposal = () => {
                       {isEditing ? (
                         <>
                           <Button
+                            size="small"
                             onClick={handleBatalEdit}
                             sx={{
                               background: "white",
                               boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
                               textTransform: "none",
                               color: "black",
+                              marginRight: "25px",
                             }}
                           >
                             Batal
