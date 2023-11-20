@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import RestoreIcon from "@mui/icons-material/Restore";
 import { Link } from "react-router-dom";
+import DoneIcon from "@mui/icons-material/Done";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import GavelIcon from "@mui/icons-material/Gavel";
 import CloseIcon from "@mui/icons-material/Close";
@@ -228,9 +229,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
             textItem: "center",
           }}
         >
-          <PeopleIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <DoneIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
