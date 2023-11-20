@@ -38,6 +38,7 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import ChecklistIcon from "@mui/icons-material/Checklist";
+import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 
 export const sekretarisMenus = [
   {
@@ -1261,6 +1262,12 @@ export const adminMenus = [
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
         uri: "/sistem-informasi-skripsi/dosen-skripsi",
+      },
+      {
+        label: "Kalender Akademik",
+        type: "nav-item",
+        icon: <EditCalendarIcon sx={{ fontSize: 20 }} />,
+        uri: "/sistem-informasi-skripsi/kalender-akademik",
       },
     ],
   },
