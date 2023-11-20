@@ -114,7 +114,7 @@ const BuatKonsultasi = () => {
           },
         })
         .then((response) => {
-          console.log("Berhasil mencatat konsultasi ");
+          console.log("Berhasil mencatat konsultasi: ", response);
           setSelectedDate(""); // Mengatur ulang nilai tanggal menjadi kosong
           setDescription(""); // Mengatur ulang nilai deskripsi menjadi kosong
           handleDialogClose(); // Menutup dialog setelah mencatat konsultasi
@@ -141,7 +141,7 @@ const BuatKonsultasi = () => {
           fetchKonsultasiData();
         })
         .catch((error) => {
-          console.error("Terjadi kesalahan saat mengganti pembimbing:", error);
+          console.error("Terjadi kesalahan saat mengisi konsultasi:", error);
         });
     }
   };

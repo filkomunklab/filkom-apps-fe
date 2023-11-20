@@ -231,36 +231,61 @@ const ManajemenKelasDosenSkripsi = () => {
   };
 
   // fungsi - menambah mahasiswa
-  const handleSearch = () => {
+  const handleInputMahasiswa = () => {
+    const selectedClassroom = daftarSemuaKelas[selectedClass];
+
+    // Cek apakah kelas yang dipilih valid
+    if (!selectedClassroom) {
+      console.error("Kelas tidak valid.");
+      return;
+    }
+
+    const existingStudents = selectedClassroom.students;
+
+    // Ambil semua NIM mahasiswa yang sudah ada dalam kelas
+    const existingNIMs = existingStudents.map((student) => student.nim);
+
     // Split `searchNIMs` berdasarkan spasi atau tab
     const nims = searchNIMs.split(/\s+/);
-    const newStudents = {
-      classroom_id: daftarSemuaKelas[selectedClass].id,
-      students: nims.map((nim) => ({ nim })),
-    };
-    console.log("create new students:", newStudents);
-    console.log("class id:", setSelectedClass);
-    axios
-      .post(
-        `http://localhost:2000/api/v1/classroom/insert-student`,
-        newStudents,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        // request data
-        fetchDaftarSemuaKelasData();
-        setAddStudentOpen(false);
-        // Mengosongkan input setelah menambahkan mahasiswa
-        setSearchNIMs("");
-        console.log("Mahasiswa berhasil ditambahkan:", response.data);
-      })
-      .catch((error) => {
-        console.error("Mahasiswa gagal ditambahkan", error);
-      });
+
+    // Filter mahasiswa yang sudah ada dalam kelas
+    const newNIMs = nims.filter((nim) => existingNIMs.includes(nim));
+
+    if (newNIMs.length > 0) {
+      console.log(
+        "Mahasiswa dengan NIM berikut sudah ada dalam kelas:",
+        newNIMs
+      );
+      // Tampilkan pesan atau lakukan tindakan lain jika diperlukan
+    } else {
+      const newStudents = {
+        classroom_id: selectedClassroom.id,
+        students: nims.map((nim) => ({ nim })),
+      };
+      console.log("create new students:", newStudents);
+
+      axios
+        .post(
+          `http://localhost:2000/api/v1/classroom/insert-student`,
+          newStudents,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          // request data
+          fetchDaftarSemuaKelasData();
+          setAddStudentOpen(false);
+          // Mengosongkan input setelah menambahkan mahasiswa
+          setSearchNIMs("");
+          console.log("Mahasiswa berhasil ditambahkan:", response.data);
+        })
+        .catch((error) => {
+          console.error("Mahasiswa gagal ditambahkan", error);
+        });
+    }
   };
 
   // fungsi - menghapus mahasiswa yang dipilih
@@ -352,77 +377,138 @@ const ManajemenKelasDosenSkripsi = () => {
   // fungsi - memperbarui akademik
   const handleUpdateAkademik = () => {
     if (selectedAkademikData) {
-      const updatedData = {
-        semester: semesterAkademik,
-        year: tahunAjaranAkademik,
-      };
+      const isKalenderExist = daftarAkademik.some((akademik) => {
+        const existingAcadmicId = akademik.id; // Gunakan titik koma di sini
+        const existingSemester = akademik.semester;
+        const existingYear = akademik.year;
+        const selectedAcademicId = selectedAkademikData.id; // Perbaiki nama variabel di sini
+        const newSemester = semesterAkademik;
+        const newYear = tahunAjaranAkademik;
 
-      axios
-        .put(
-          `http://localhost:2000/api/v1/academic-calendar/${selectedAkademikData.id}`,
-          updatedData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((response) => {
-          if (response.status === 200) {
-            console.log(
-              "Akademik berhasil diperbarui:",
-              selectedAkademikData.id
+        return (
+          existingSemester.includes(newSemester) &&
+          existingYear === newYear &&
+          existingAcadmicId !== selectedAcademicId // Tambahkan kondisi untuk memeriksa ID
+        );
+      });
+
+      if (isKalenderExist) {
+        console.log("Kalender akademik ada dalam daftarAkademik.");
+        // alert("Akademik dengan nama ini sudah ada. Silakan gunakan nama lain.");
+        setOpenErrorUpdateKalender(true);
+      } else {
+        const updatedData = {
+          semester: semesterAkademik,
+          year: tahunAjaranAkademik,
+        };
+
+        axios
+          .put(
+            `http://localhost:2000/api/v1/academic-calendar/${selectedAkademikData.id}`,
+            updatedData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((response) => {
+            if (response.status === 200) {
+              console.log(
+                "Akademik berhasil diperbarui:",
+                selectedAkademikData.id
+              );
+              // request data
+              fetchDaftarAkademikData();
+              handleCloseUpdateAkademik();
+            } else {
+              console.log(
+                "Akademik Gagal diperbarui:",
+                selectedAkademikData.id
+              );
+            }
+          })
+          .catch((error) => {
+            console.error(
+              "Terjadi kesalahan saat memperbarui akademik:",
+              error
             );
-            // request data
-            fetchDaftarAkademikData();
-            handleCloseUpdateAkademik();
-          } else {
-            console.log("Akademik Gagal diperbarui:", selectedAkademikData.id);
-          }
-        })
-        .catch((error) => {
-          console.error("Terjadi kesalahan saat memperbarui akademik:", error);
-        });
+          });
+      }
     }
+  };
+
+  const [openErrorUpdateKalender, setOpenErrorUpdateKalender] = useState(false);
+
+  // tidak ada open hanya close error
+  const handleCloseErrorUpdateKalender = () => {
+    setOpenErrorUpdateKalender(false);
   };
 
   // fungsi - menambahkan akademik
   const handleCreateAkademik = () => {
     if (semesterAkademik && tahunAjaranAkademik) {
-      const newAkademikData = {
-        semester: semesterAkademik,
-        year: tahunAjaranAkademik,
-      };
+      const isKalenderExist = daftarAkademik.some((akademik) => {
+        const existingSemester = akademik.semester;
+        const existingYear = akademik.year;
+        const newSemester = semesterAkademik;
+        const newYear = tahunAjaranAkademik;
 
-      axios
-        .post(
-          "http://localhost:2000/api/v1/academic-calendar",
-          newAkademikData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((response) => {
-          if (response.status === 201) {
-            console.log("Akademik Berhasil ditambahkan:", response.data);
-            // request data
-            fetchDaftarAkademikData();
-            // Reset nilai input
-            setSemesterAkademik("");
-            setTahunAjaranAkademik("");
+        return (
+          existingSemester.includes(newSemester) && existingYear === newYear
+        );
+      });
 
-            // Tutup dialog tambah akademik
-            handleCloseAddAkademik();
-          } else {
-            console.error("Akademik gagal ditambahkan:", response.data);
-          }
-        })
-        .catch((error) => {
-          console.error("Terjadi kesalahan saat menambahkan akademik:", error);
-        });
+      if (isKalenderExist) {
+        console.log("Kalender akademik ada dalam daftarAkademik.");
+        // alert("Akademik dengan nama ini sudah ada. Silakan gunakan nama lain.");
+        setOpenErrorCreateKalender(true);
+      } else {
+        const newAkademikData = {
+          semester: semesterAkademik,
+          year: tahunAjaranAkademik,
+        };
+
+        axios
+          .post(
+            "http://localhost:2000/api/v1/academic-calendar",
+            newAkademikData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((response) => {
+            if (response.status === 201) {
+              console.log("Akademik Berhasil ditambahkan:", response.data);
+              // request data
+              fetchDaftarAkademikData();
+              // Reset nilai input
+              setSemesterAkademik("");
+              setTahunAjaranAkademik("");
+
+              // Tutup dialog tambah akademik
+              handleCloseAddAkademik();
+            } else {
+              console.error("Akademik gagal ditambahkan:", response.data);
+            }
+          })
+          .catch((error) => {
+            console.error(
+              "Terjadi kesalahan saat menambahkan akademik:",
+              error
+            );
+          });
+      }
     }
+  };
+
+  const [openErrorCreateKalender, setOpenErrorCreateKalender] = useState(false);
+
+  // tidak ada open hanya close error
+  const handleCloseErrorCreateKalender = () => {
+    setOpenErrorCreateKalender(false);
   };
 
   // fungsi - membuka tambah kelas
@@ -441,27 +527,54 @@ const ManajemenKelasDosenSkripsi = () => {
 
   // fungsi - membuat kelas
   const handleCreateClass = () => {
-    const newClass = {
-      academic_id,
-      name,
-    };
-    console.log(newClass);
+    const isClassExist = daftarSemuaKelas.some((kelas) => {
+      const existingClassroomName = kelas.classroom; // Ambil classroom name dari daftarSemuaKelas
+      const existingAcademicId = kelas.academic.id; // Ambil academic id dari daftarSemuaKelas
+      const newClassroomName = name; // Ambil classroom name dari kelas baru
+      const newAcademicId = academic_id; // Ambil academic id dari kelas baru
 
-    axios
-      .post(`http://localhost:2000/api/v1/classroom`, newClass, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log("Kelas berhasil dibuat:", response.data);
-        fetchDaftarSemuaKelasData();
-        fetchDaftarPilihanKelasData();
-        handleClose();
-      })
-      .catch((error) => {
-        console.error("Kelas Gagal dibuat:", error);
-      });
+      // Gunakan includes untuk memeriksa apakah newClassroomName ada di existingClassroomName
+      return (
+        existingClassroomName.includes(newClassroomName) &&
+        existingAcademicId === newAcademicId
+      );
+    });
+
+    if (isClassExist) {
+      console.log("Kelas sudah ada dalam daftarSemuaKelas.");
+      // alert("Kelas dengan nama ini sudah ada. Silakan gunakan nama lain.");
+      setOpenErrorCreateClass(true);
+    } else {
+      const newClass = {
+        academic_id,
+        name,
+      };
+
+      console.log(newClass);
+
+      axios
+        .post(`http://localhost:2000/api/v1/classroom`, newClass, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Kelas berhasil dibuat:", response.data);
+          fetchDaftarSemuaKelasData();
+          fetchDaftarPilihanKelasData();
+          handleClose();
+        })
+        .catch((error) => {
+          console.error("Kelas Gagal dibuat:", error);
+        });
+    }
+  };
+
+  const [openErrorCreateClass, setOpenErrorCreateClass] = useState(false);
+
+  // tidak ada open hanya close error
+  const handleCloseErrorCreateClass = () => {
+    setOpenErrorCreateClass(false);
   };
 
   return (
@@ -1287,10 +1400,125 @@ const ManajemenKelasDosenSkripsi = () => {
             size="small"
             variant="contained"
             color="primary"
-            onClick={handleSearch}
+            onClick={handleInputMahasiswa}
             sx={{ textTransform: "none" }}
           >
             Tambah
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* popup error create kelas */}
+      <Dialog
+        open={openErrorCreateClass}
+        onClose={handleCloseErrorCreateClass}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            alignSelf: "stretch",
+          }}
+        >
+          <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
+          <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
+            Pembuatan Kelas Gagal!
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          Kelas ini sudah ada. Silahkan buat kelas lain.
+        </DialogContent>
+        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+          <Button
+            onClick={handleCloseErrorCreateClass}
+            sx={{
+              background: "white",
+              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+              textTransform: "none",
+              color: "black",
+            }}
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* popup error create kalender */}
+      <Dialog
+        open={openErrorCreateKalender}
+        onClose={handleCloseErrorCreateKalender}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            alignSelf: "stretch",
+          }}
+        >
+          <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
+          <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
+            Pembuatan Kalender Akademik Gagal!
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          Kalender akademik ini sudah ada. Silahkan buat kalender akademik lain.
+        </DialogContent>
+        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+          <Button
+            onClick={handleCloseErrorCreateKalender}
+            sx={{
+              background: "white",
+              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+              textTransform: "none",
+              color: "black",
+            }}
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* popup error update kalender */}
+      <Dialog
+        open={openErrorUpdateKalender}
+        onClose={handleCloseErrorUpdateKalender}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            alignSelf: "stretch",
+          }}
+        >
+          <WarningIcon fontSize="small" sx={{ marginRight: "6px" }} />
+          <Typography variant="subtitle2" sx={{ fontSize: "20px" }}>
+            Pembarui Kalender Akademik Gagal!
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          Kalender akademik ini sudah ada. Silahkan gunakan semester dan tahun
+          ajaran lain.
+        </DialogContent>
+        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+          <Button
+            onClick={handleCloseErrorUpdateKalender}
+            sx={{
+              background: "white",
+              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+              textTransform: "none",
+              color: "black",
+            }}
+          >
+            OK
           </Button>
         </DialogActions>
       </Dialog>
