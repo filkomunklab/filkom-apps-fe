@@ -42,7 +42,7 @@ const PDFViewerProposal = ({ dokumenProposal, isUploading }) => {
         }}
         onClick={viewPDFProposal}
       >
-        Detail
+        Lihat
       </span>
     </div>
   );
@@ -72,7 +72,7 @@ const PDFViewerPayment = ({ buktiPembayaran, isUploading }) => {
         }}
         onClick={viewPDFPayment}
       >
-        Detail
+        Lihat
       </span>
     </div>
   );
@@ -102,7 +102,7 @@ const PDFViewerCekPlagiat = ({ hasilCekPlagiat, isUploading }) => {
         }}
         onClick={viewPDFCekPlagiat}
       >
-        Detail
+        Lihat
       </span>
     </div>
   );
