@@ -1941,6 +1941,22 @@ const BeritaAcara = () => {
                       sx={{ textTransform: "none" }}
                       color="primary"
                       onClick={handleOpenConfirmationBeritaAcaraDialog}
+                      disabled={
+                        dataPenilaian?.some(
+                          (value) =>
+                            value.value_by_chairman === null ||
+                            value.value_by_member === null ||
+                            value.value_by_advisor === null
+                        ) ||
+                        dataPerubahan?.changes_by_chairman === null ||
+                        dataPerubahan?.changes_by_member === null ||
+                        dataPerubahan?.changes_by_advisor === null ||
+                        dataBeritaAcara?.is_report_approve_by_panelist_chairman ===
+                          null ||
+                        dataBeritaAcara?.is_report_approve_by_panelist_member ===
+                          null ||
+                        dataBeritaAcara?.is_report_approve_by_advisor === null
+                      }
                     >
                       Submit
                     </Button>
