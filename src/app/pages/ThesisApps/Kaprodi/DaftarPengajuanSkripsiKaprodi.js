@@ -16,9 +16,11 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import RestoreIcon from "@mui/icons-material/Restore";
 import { Link } from "react-router-dom";
+import DateRangeIcon from "@mui/icons-material/DateRange";
+import GavelIcon from "@mui/icons-material/Gavel";
+import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const DaftarPengajuanSkripsiKaprodi = () => {
@@ -136,7 +138,9 @@ const DaftarPengajuanSkripsiKaprodi = () => {
             textItem: "center",
           }}
         >
-          <EditIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
+          <DateRangeIcon
+            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
+          />
           <Div>
             <Typography
               sx={{
@@ -174,9 +178,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
             textItem: "center",
           }}
         >
-          <ArrowUpwardIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <GavelIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -266,7 +268,9 @@ const DaftarPengajuanSkripsiKaprodi = () => {
             textItem: "center",
           }}
         >
-          <EditIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
+          <RestoreIcon
+            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
+          />
           <Div>
             <Typography
               sx={{
@@ -304,9 +308,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
             textItem: "center",
           }}
         >
-          <ArrowUpwardIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <CloseIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
