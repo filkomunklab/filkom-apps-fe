@@ -143,70 +143,51 @@ const JadwalSidangProposal = () => {
     selectedAdvisor: "",
   });
 
-  // Tambahkan state untuk menyimpan informasi jadwal yang bertabrakan
-  const [conflictingSchedule, setConflictingSchedule] = useState(null);
-
-  // Fungsi untuk memeriksa konflik jadwal
-  const checkScheduleConflict = () => {
-    const newSchedule = {
-      start_defence: mulaiWaktu || null,
-      end_defence: selesaiWaktu || null,
-      defence_date: mulaiTanggal || null,
-      defence_room: ruangan || null,
-    };
-
-    // Loop melalui jadwal yang sudah ada untuk memeriksa konflik
-    for (const scheduleData of daftarJadwal) {
-      for (const jadwal of scheduleData.schedules) {
-        const existingSchedule = {
-          start_defence: jadwal.start_defence || null,
-          end_defence: jadwal.end_defence || null,
-          defence_date: jadwal.defence_date || null,
-          defence_room: jadwal.defence_room || null,
-        };
-
-        // Lakukan pembandingan untuk menentukan apakah terdapat konflik
-        if (
-          newSchedule.start_defence &&
-          newSchedule.end_defence &&
-          newSchedule.defence_date &&
-          newSchedule.defence_room &&
-          existingSchedule.start_defence &&
-          existingSchedule.end_defence &&
-          existingSchedule.defence_date &&
-          existingSchedule.defence_room &&
-          newSchedule.defence_date === existingSchedule.defence_date &&
-          newSchedule.defence_room === existingSchedule.defence_room &&
-          ((newSchedule.start_defence >= existingSchedule.start_defence &&
-            newSchedule.start_defence < existingSchedule.end_defence) ||
-            (newSchedule.end_defence > existingSchedule.start_defence &&
-              newSchedule.end_defence <= existingSchedule.end_defence) ||
-            (newSchedule.start_defence <= existingSchedule.start_defence &&
-              newSchedule.end_defence >= existingSchedule.end_defence))
-        ) {
-          // Jika terdapat konflik, set state conflictingSchedule
-          setConflictingSchedule({
-            existingSchedule,
-            conflictingProposal: jadwal.title,
-            conflictingAdvisor: jadwal.advisor_name,
-          });
-          return true;
-        }
-      }
-    }
-
-    // Jika tidak ada konflik
-    return false;
-  };
-
   const handlePerbarui = () => {
     let hasError = false;
     const newErrorMessages = {};
 
-    // Periksa konflik jadwal
-    if (!hasError && checkScheduleConflict()) {
-      setKonfirmasiDialog(true);
-      return;
+    // Cek tabrakan jadwal
+    const existingJadwal = daftarJadwal[semesterIndex]?.schedules[jadwalIndex];
+    if (existingJadwal) {
+      const existingStartTime = new Date(existingJadwal.start_defence);
+      const existingEndTime = new Date(existingJadwal.end_defence);
+      const newStartTime = new Date(`${mulaiTanggal}T${mulaiWaktu}`);
+      const newEndTime = new Date(`${mulaiTanggal}T${selesaiWaktu}`);
+
+      // Cek tabrakan waktu
+      if (
+        (newStartTime >= existingStartTime && newStartTime < existingEndTime) ||
+        (newEndTime > existingStartTime && newEndTime <= existingEndTime) ||
+        (newStartTime <= existingStartTime && newEndTime >= existingEndTime)
+      ) {
+        hasError = true;
+        newErrorMessages.mulaiWaktu =
+          "Jadwal bertabrakan dengan jadwal sebelumnya";
+        newErrorMessages.selesaiWaktu =
+          "Jadwal bertabrakan dengan jadwal sebelumnya";
+      }
+
+      // Cek tabrakan tanggal dan ruangan
+      if (
+        mulaiTanggal === existingJadwal.defence_date &&
+        ruangan === existingJadwal.defence_room
+      ) {
+        hasError = true;
+        newErrorMessages.mulaiTanggal =
+          "Jadwal bertabrakan dengan jadwal sebelumnya";
+        newErrorMessages.ruangan =
+          "Jadwal bertabrakan dengan jadwal sebelumnya";
+      }
+
+      if (hasError) {
+        // Menampilkan popup konfirmasi
+        const confirmationMessage = `Jadwal bertabrakan dengan jadwal sebelumnya.\n\nJadwal Sebelumnya:\nWaktu: ${existingJadwal.start_defence} - ${existingJadwal.end_defence}\nTanggal: ${existingJadwal.defence_date}\nRuangan: ${existingJadwal.defence_room}`;
+        if (window.confirm(confirmationMessage)) {
+          // Lanjutkan perbarui jika pengguna menyetujui
+          setKonfirmasiDialog(true);
+        }
+      }
     }
 
     // Validasi input waktu
@@ -420,7 +401,7 @@ const JadwalSidangProposal = () => {
               flexShrink: 0,
             }}
           >
-            {/* <SearchGlobal></SearchGlobal> */}
+            <SearchGlobal></SearchGlobal>
           </Div>
         </Div>
         {/* Header End */}
@@ -1159,33 +1140,6 @@ const JadwalSidangProposal = () => {
         </DialogActions>
       </Dialog>
       {/* Dialog Konfirmasi End */}
-
-      <Dialog
-        open={konfirmasiDialog && conflictingSchedule}
-        onClose={handleKonfirmasiDialogClose}
-        fullWidth
-        maxWidth="sm"
-      >
-        <DialogTitle>Konfirmasi Jadwal Bertabrakan</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Jadwal yang Anda buat akan bertabrakan dengan jadwal berikut:
-          </Typography>
-          <Typography>
-            Judul: {conflictingSchedule?.conflictingProposal}
-          </Typography>
-          <Typography>
-            Advisor: {conflictingSchedule?.conflictingAdvisor}
-          </Typography>
-          {/* Tambahkan informasi jadwal bertabrakan lainnya sesuai kebutuhan */}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleKonfirmasiDialogClose}>Batal</Button>
-          <Button onClick={handlePerbaruiJadwal} color="primary">
-            Lanjutkan
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Div>
   );
 };
