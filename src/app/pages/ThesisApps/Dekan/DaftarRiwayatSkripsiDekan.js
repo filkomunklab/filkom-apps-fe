@@ -136,7 +136,7 @@ const RiwayatSkripsiDekan = () => {
             lineHeight: "32px",
           }}
         >
-          Daftar Riwayat Bimbingan Dekan
+          Daftar Riwayat Skripsi
         </Typography>
         <Div
           sx={{
@@ -148,7 +148,7 @@ const RiwayatSkripsiDekan = () => {
             flexShrink: 0,
           }}
         >
-          <FormControl>
+          {/* <FormControl>
             <Select
               size="small"
               labelId="dropdown-label"
@@ -162,12 +162,11 @@ const RiwayatSkripsiDekan = () => {
               }}
             >
               <MenuItem value="Kelas">Kelas</MenuItem>{" "}
-              {/* Tambahkan nilai default di sini */}
               <MenuItem value="option1">Opsi 1</MenuItem>
               <MenuItem value="option2">Opsi 2</MenuItem>
               <MenuItem value="option3">Opsi 3</MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
         </Div>
         <Div
           sx={{
@@ -180,7 +179,7 @@ const RiwayatSkripsiDekan = () => {
             flexShrink: 0,
           }}
         >
-          <SearchGlobal />
+          {/* <SearchGlobal /> */}
         </Div>
       </Div>
       {/* Riwayat Mahasiswa */}
@@ -244,27 +243,26 @@ const RiwayatSkripsiDekan = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {riwayat.skripsis.map((skripsi) =>
-                      skripsi.students.map((student, index) => (
-                        <TableRow key={skripsi.group_id + index}>
-                          <TableCell>{index + 1}</TableCell>
-                          <TableCell>{student.fullName}</TableCell>
-                          <TableCell>{skripsi.title}</TableCell>
-                          {/* Tambahkan tanggal diterima jika tersedia */}
-                          <TableCell>
-                            {/* Tambahkan tanggal diterima di sini */}
-                          </TableCell>
-                          <TableCell>
-                            <Link
-                              to={`/sistem-informasi-skripsi/daftar-riwayat-skripsi-dekan/beranda/${skripsi.group_id}/DEKAN`}
-                              style={{ textDecoration: "none", color: "blue" }}
-                            >
-                              Detail
-                            </Link>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )}
+                    {riwayat.skripsis.map((skripsi, index) => (
+                      <TableRow key={skripsi.group_id + index}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>
+                          {skripsi.students.map((student) => (
+                            <div key={student.id}>{student.fullName}</div>
+                          ))}
+                        </TableCell>
+                        <TableCell>{skripsi.title}</TableCell>
+                        <TableCell>{skripsi.approve_date}</TableCell>
+                        <TableCell>
+                          <Link
+                            to={`/sistem-informasi-skripsi/daftar-riwayat-skripsi-dekan/beranda/${skripsi.group_id}/DEKAN`}
+                            style={{ textDecoration: "none", color: "blue" }}
+                          >
+                            Detail
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>

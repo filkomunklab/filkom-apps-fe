@@ -441,6 +441,7 @@ const DaftarPengajuanSkripsiDosenSkripsi = () => {
                                 <TableCell sx={{ fontSize: "13px" }}>
                                   {skripsi.title}
                                 </TableCell>
+                                {/* Approve by Advisor */}
                                 <TableCell sx={{ fontSize: "13px" }}>
                                   {skripsi.approve_by_advisor === null ? (
                                     <Chip label={"Belum"} />
@@ -475,8 +476,12 @@ const DaftarPengajuanSkripsiDosenSkripsi = () => {
                                     skripsi.approve_by_advisor
                                   )}
                                 </TableCell>
+                                {/* Approve by Co-Advisor 1 */}
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {skripsi.approve_by_co_advisor1 === null ? (
+                                  {!skripsi.is_co_advisor1 ? (
+                                    "-"
+                                  ) : skripsi.approve_by_co_advisor1 ===
+                                    null ? (
                                     <Chip label={"Belum"} />
                                   ) : skripsi.approve_by_co_advisor1 ===
                                     "Waiting" ? (
@@ -509,8 +514,12 @@ const DaftarPengajuanSkripsiDosenSkripsi = () => {
                                     skripsi.approve_by_co_advisor1
                                   )}
                                 </TableCell>
+                                {/* Approve by Co-Advisor 2 */}
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {skripsi.approve_by_co_advisor2 === null ? (
+                                  {!skripsi.is_co_advisor2 ? (
+                                    "-"
+                                  ) : skripsi.approve_by_co_advisor2 ===
+                                    null ? (
                                     <Chip label={"Belum"} />
                                   ) : skripsi.approve_by_co_advisor2 ===
                                     "Waiting" ? (

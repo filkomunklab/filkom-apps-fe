@@ -433,6 +433,7 @@ const DaftarBimbinganProposalCoAdvisor = () => {
                                 <TableCell sx={{ fontSize: "13px" }}>
                                   {proposal.title}
                                 </TableCell>
+                                {/* Approve by Advisor */}
                                 <TableCell sx={{ fontSize: "13px" }}>
                                   {proposal.approve_by_advisor === null ? (
                                     <Chip label={"Belum"} />
@@ -467,8 +468,12 @@ const DaftarBimbinganProposalCoAdvisor = () => {
                                     proposal.approve_by_advisor
                                   )}
                                 </TableCell>
+                                {/* Approve by Co-Advisor 1 */}
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {proposal.approve_by_co_advisor1 === null ? (
+                                  {!proposal.is_co_advisor1 ? (
+                                    "-"
+                                  ) : proposal.approve_by_co_advisor1 ===
+                                    null ? (
                                     <Chip label={"Belum"} />
                                   ) : proposal.approve_by_co_advisor1 ===
                                     "Waiting" ? (
@@ -501,8 +506,12 @@ const DaftarBimbinganProposalCoAdvisor = () => {
                                     proposal.approve_by_co_advisor1
                                   )}
                                 </TableCell>
+                                {/* Approve by Co-Advisor 2 */}
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {proposal.approve_by_co_advisor2 === null ? (
+                                  {!proposal.is_co_advisor2 ? (
+                                    "-"
+                                  ) : proposal.approve_by_co_advisor2 ===
+                                    null ? (
                                     <Chip label={"Belum"} />
                                   ) : proposal.approve_by_co_advisor2 ===
                                     "Waiting" ? (

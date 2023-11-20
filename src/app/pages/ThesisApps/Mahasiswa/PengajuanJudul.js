@@ -438,7 +438,11 @@ const PengajuanJudul = () => {
             hidden={userRole.includes("MAHASISWA") ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
+            <MenuMahasiswa
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Pengajuan Judul"}
+            />
           </Div>
           {/* Menu horizontal End */}
 
