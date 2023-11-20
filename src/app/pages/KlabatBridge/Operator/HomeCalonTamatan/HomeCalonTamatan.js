@@ -3,10 +3,18 @@ import {
     Typography,
     Box,
     Button,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
+import axios from "axios";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
-const HomeCalonTamatan = () => {
+const HomeCalonTamatan = ({ nim, currentStatus }) => {
+  console.log('nim:', nim); // Log the value of nim
+
   // Use useLocation to get the state passed through the route
   const { state } = useLocation();
   const [buttonColor, setButtonColor] = useState(state ? state.buttonColor : '#E8EBE8');

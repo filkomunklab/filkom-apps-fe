@@ -103,12 +103,13 @@ const DaftarCalonTamatan = () => {
   const [searchBtn, setSearchBtn] = useState(false);
   // const [filterBy, setFilterBy] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
-  const [dataRemainingClasses, setDataRemainingClasses] = useState([]);
 
   // pagination
-  const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const [selectedStatus, setSelectedStatus] = useState({});
+  // const [data1, setData1] = useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -152,7 +153,7 @@ const DaftarCalonTamatan = () => {
       console.log(error);
     }
   };
-
+  
   const TableSPT = ({ index, item }) => (
     <TableRow>
       <TableCell>{index + 1}</TableCell>
@@ -382,8 +383,41 @@ const DaftarCalonTamatan = () => {
     </Div>
   );
 
+  React.useEffect(() => {
+    // Fetch initial status values from the backend
+    jwtAuthAxios.get('/spt')
+      .then(response => {
+        const initialStatus = {};
+
+        console.log("get status mhs", response.data.data)
+
+        response.data.data.forEach(item => {
+          initialStatus[item.nim] = item.student.status;
+        });
+        setSelectedStatus(initialStatus);
+      })
+      .catch(error => {
+        console.error('Error fetching initial status:', error);
+      });
+  }, []); // Empty dependency array ensures that the effect runs once when the component mounts
+
+  const handleSelectChange = (event, nim) => {
+    const newSelectedStatus = { ...selectedStatus, [nim]: event.target.value };
+    setSelectedStatus(newSelectedStatus);
+
+    // Send a PATCH request to update the backend
+    // jwtAuthAxios.patch(`/spt/reg-changeStatus/${nim}`, { status: event.target.value })
+    jwtAuthAxios.patch(`/spt/reg-changeStatus/${nim}?status=${event.target.value}`)
+      .then(response => {
+        console.log(response.data); // Handle successful response if needed
+      })
+      .catch(error => {
+        console.error('Error updating status:', error);
+      });
+  };
+
   // tabel calon tamatan
-  const TableItem = ({ index, item }) => (
+  const TableItem = ({ index, item  }) => (
     <TableRow>
       <TableCell>{index + 1 + rowsPerPage * page}</TableCell>
       <TableCell>
@@ -410,7 +444,20 @@ const DaftarCalonTamatan = () => {
         {item?.major}
       </TableCell>
       <TableCell>{item?.graduate_plan}</TableCell>
-      <TableCell>{item?.status}</TableCell>
+      <TableCell>
+        {/* {item?.student.status} */}
+        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <Select
+            labelId={`status-select-${index}`}
+            id={`status-select-${index}`}
+            value={selectedStatus[item?.nim] || 'ACTIVE'} // Set default value based on backend data
+            onChange={(event) => handleSelectChange(event, item?.nim)}
+          >
+            <MenuItem value="ACTIVE">Active</MenuItem>
+            <MenuItem value="GRADUATE">Graduate</MenuItem>
+          </Select>
+        </FormControl>
+      </TableCell>
       <TableCell>{item?.approval_fac}</TableCell>
       <TableCell>{item?.approval_reg}</TableCell>
     </TableRow>
@@ -420,14 +467,13 @@ const DaftarCalonTamatan = () => {
     jwtAuthAxios
       .get(`/spt?search_query=${searchValue}`)
       .then((res) => {
-      // await axios.get("http://localhost:2000/api/v1/spt/").then((res) => {
       console.log(res.data.data);
       const formattedData = res.data.data.map((item) => {
         const remaining_classes = JSON.parse(item.remaining_classes);
         return { ...item, remaining_classes };
       });
 
-      console.log(formattedData);
+      console.log("formatted data", formattedData);
       // console.log(res.data.data);
 
       setData(formattedData);
@@ -445,7 +491,6 @@ const DaftarCalonTamatan = () => {
       setStatusByFac(uniqueStatusByFac);
       setStatusByRegister(uniqueStatusByReg);
       setGraduatePlan(uniqueGraduatePlan);
-
       // console.log(uniqueGraduatePlan);
     });
   }, [searchBtn]);
@@ -461,6 +506,7 @@ const DaftarCalonTamatan = () => {
   }
 
   console.log(selectedData);
+
   return (
     <Box>
       <Div
@@ -558,11 +604,21 @@ const DaftarCalonTamatan = () => {
             {filterData().length > 0
               ? filterData()
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((item, index) => <TableItem index={index} item={item} />)
+                  .map((item, index) => (
+                    <TableItem 
+                      index={index} 
+                      item={item} 
+                      key={item.nim} // Use a unique identifier from your data
+                    />
+                  ))
               : data
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => (
-                  <TableItem index={index} item={item} />
+                    <TableItem 
+                      index={index} 
+                      item={item} 
+                      key={item.nim} // Use a unique identifier from your data
+                    />
                 ))}
           </TableBody>
         </Table>
