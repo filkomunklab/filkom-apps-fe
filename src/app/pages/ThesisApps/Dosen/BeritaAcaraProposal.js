@@ -1054,9 +1054,7 @@ const BeritaAcara = () => {
                   >
                     <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
                       <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
-                        Mahasiswa
-                      </TableCell>
+                      <TableCell sx={{ width: "25%" }}>Mahasiswa</TableCell>
                       <TableCell sx={{ width: "25%", textAlign: "center" }}>
                         Ketua Panelis
                       </TableCell>
@@ -1078,20 +1076,63 @@ const BeritaAcara = () => {
                   <TableBody>
                     {dataPenilaian?.map((student, studentIndex) => (
                       <TableRow key={studentIndex}>
+                        <TableCell>{studentIndex + 1}</TableCell>
+                        <TableCell>{student.fullName}</TableCell>
                         <TableCell sx={{ textAlign: "center" }}>
-                          {studentIndex + 1}
+                          {userRole === "KETUA_PANELIS" ||
+                          userRole === "KAPRODI" ||
+                          userRole === "DEKAN" ? (
+                            student.value_by_chairman
+                          ) : userRole !== "KETUA_PANELIS" &&
+                            student.value_by_chairman === null ? (
+                            <Chip label={"Belum"} />
+                          ) : (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          )}
                         </TableCell>
                         <TableCell sx={{ textAlign: "center" }}>
-                          {student.fullName}
+                          {userRole === "KETUA_PANELIS" ||
+                          userRole === "ANGGOTA_PANELIS" ||
+                          userRole === "KAPRODI" ||
+                          userRole === "DEKAN" ? (
+                            student.value_by_member
+                          ) : userRole !== "KETUA_PANELIS" &&
+                            student.value_by_member === null ? (
+                            <Chip label={"Belum"} />
+                          ) : (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          )}
                         </TableCell>
                         <TableCell sx={{ textAlign: "center" }}>
-                          {student.value_by_chairman}
-                        </TableCell>
-                        <TableCell sx={{ textAlign: "center" }}>
-                          {student.value_by_member}
-                        </TableCell>
-                        <TableCell sx={{ textAlign: "center" }}>
-                          {student.value_by_advisor}
+                          {userRole === "KETUA_PANELIS" ||
+                          userRole === "ADVISOR" ||
+                          userRole === "KAPRODI" ||
+                          userRole === "DEKAN" ? (
+                            student.value_by_advisor
+                          ) : userRole !== "KETUA_PANELIS" &&
+                            student.value_by_advisor === null ? (
+                            <Chip label={"Belum"} />
+                          ) : (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          )}
                         </TableCell>
                         {userRole === "KETUA_PANELIS" && (
                           <TableCell sx={{ textAlign: "center" }}>
@@ -1386,7 +1427,7 @@ const BeritaAcara = () => {
                                 }
                               }}
                             >
-                              Revisi
+                              Komen
                             </span>
                           </>
                         )}
