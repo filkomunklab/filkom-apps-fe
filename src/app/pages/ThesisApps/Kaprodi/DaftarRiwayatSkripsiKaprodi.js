@@ -183,106 +183,106 @@ const RiwayatSkripsiKaprodi = () => {
         </Div>
       </Div>
       {/* Riwayat Mahasiswa */}
-      {/* {daftarRiwayat?.semesterData?.length > 0 ? ( */}
-      <Div
-        sx={{
-          display: "inline-flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          gap: "25px",
-          width: "100%",
-          height: "460px",
-          overflowY: "auto",
-          background: "#FFF",
-          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-          padding: "8px",
-          borderRadius: "8px",
-        }}
-      >
-        {daftarRiwayat.map((riwayat, riwayatIndex) => (
-          <Accordion
-            key={riwayat.semester}
-            expanded={expanded === `panel${riwayatIndex}`} // Memeriksa apakah accordion ini terbuka
-            onChange={handleChangee(`panel${riwayatIndex}`)} // Menangani perubahan state accordion
-            sx={{
-              width: "100%",
-              padding: "1px",
-              background: "rgba(26, 56, 96, 0.10)",
-              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls={`panel${riwayatIndex}bh-content`}
-              id={`panel${riwayatIndex}bh-header`}
+      {daftarRiwayat?.length > 0 ? (
+        <Div
+          sx={{
+            display: "inline-flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: "25px",
+            width: "100%",
+            height: "460px",
+            overflowY: "auto",
+            background: "#FFF",
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+            padding: "8px",
+            borderRadius: "8px",
+          }}
+        >
+          {daftarRiwayat.map((riwayat, riwayatIndex) => (
+            <Accordion
+              key={riwayat.semester}
+              expanded={expanded === `panel${riwayatIndex}`} // Memeriksa apakah accordion ini terbuka
+              onChange={handleChangee(`panel${riwayatIndex}`)} // Menangani perubahan state accordion
+              sx={{
+                width: "100%",
+                padding: "1px",
+                background: "rgba(26, 56, 96, 0.10)",
+                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+              }}
             >
-              <Typography
-                variant="h2"
-                sx={{
-                  marginTop: "6px",
-                  fontSize: "16px",
-                  fontWeight: 500,
-                }}
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`panel${riwayatIndex}bh-content`}
+                id={`panel${riwayatIndex}bh-header`}
               >
-                {riwayat.semester}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow sx={{ background: "#F5F5F5" }}>
-                      <TableCell sx={{ width: "25px", fontSize: "13px" }}>
-                        Nomor
-                      </TableCell>
-                      <TableCell sx={{ width: "200px", fontSize: "13px" }}>
-                        Mahasiswa
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Tanggal Diterima
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {riwayat.skripsis.map((skripsi, index) => (
-                      <TableRow key={skripsi.group_id + index}>
+                <Typography
+                  variant="h2"
+                  sx={{
+                    marginTop: "6px",
+                    fontSize: "16px",
+                    fontWeight: 500,
+                  }}
+                >
+                  {riwayat.semester}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow sx={{ background: "#F5F5F5" }}>
+                        <TableCell sx={{ width: "25px", fontSize: "13px" }}>
+                          Nomor
+                        </TableCell>
+                        <TableCell sx={{ width: "200px", fontSize: "13px" }}>
+                          Mahasiswa
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
                         <TableCell sx={{ fontSize: "13px" }}>
-                          {index + 1}
+                          Tanggal Diterima
                         </TableCell>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {skripsi.students.map((student) => (
-                            <div key={student.id}>{student.fullName}</div>
-                          ))}
-                        </TableCell>
-
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {skripsi.title}
-                        </TableCell>
-                        <TableCell>{skripsi.approve_date}</TableCell>
-                        <TableCell>
-                          <Typography
-                            component={Link}
-                            to={`/sistem-informasi-skripsi/daftar-riwayat-skripsi-kaprodi/beranda/${skripsi.group_id}/KAPRODI`}
-                            sx={{
-                              textDecoration: "none",
-                              color: "blue",
-                            }}
-                          >
-                            Detail
-                          </Typography>
-                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </AccordionDetails>
-          </Accordion>
-        ))}
-      </Div>
-      {/* ) : (
+                    </TableHead>
+                    <TableBody>
+                      {riwayat.skripsis.map((skripsi, index) => (
+                        <TableRow key={skripsi.group_id + index}>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            {index + 1}
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            {skripsi.students.map((student) => (
+                              <div key={student.id}>{student.fullName}</div>
+                            ))}
+                          </TableCell>
+
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            {skripsi.title}
+                          </TableCell>
+                          <TableCell>{skripsi.approve_date}</TableCell>
+                          <TableCell>
+                            <Typography
+                              component={Link}
+                              to={`/sistem-informasi-skripsi/daftar-riwayat-skripsi-kaprodi/beranda/${skripsi.group_id}/KAPRODI`}
+                              sx={{
+                                textDecoration: "none",
+                                color: "blue",
+                              }}
+                            >
+                              Detail
+                            </Typography>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </Div>
+      ) : (
         <Div
           sx={{
             display: "flex",
@@ -311,10 +311,10 @@ const RiwayatSkripsiKaprodi = () => {
               fontWeight: 600,
             }}
           >
-            Belum ada riwayat mahasiswa.
+            Belum ada riwayat.
           </Typography>
         </Div>
-      )} */}
+      )}
 
       {/* {daftarRiwayat.map((riwayat) => (
         <Div

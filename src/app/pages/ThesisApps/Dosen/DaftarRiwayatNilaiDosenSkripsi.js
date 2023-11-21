@@ -279,89 +279,91 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
       </Div>
 
       {/* Riwayat Mahasiswa Nilai */}
-      {/* {daftarNilai?.semesterData?.length > 0 ? ( */}
-      <Div
-        sx={{
-          display: "inline-flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          gap: "25px",
-          width: "100%",
-          height: "460px",
-          overflowY: "auto",
-          background: "#FFF",
-          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-          padding: "8px",
-          borderRadius: "8px",
-        }}
-      >
-        {daftarNilai?.map(
-          (semesterData, index) =>
-            semesterData.students.length > 0 && (
-              <Accordion
-                key={index}
-                expanded={expanded === `panel${index}`} // Memeriksa apakah accordion ini terbuka
-                onChange={handleChangee(`panel${index}`)} // Menangani perubahan state accordion
-                sx={{
-                  width: "100%",
-                  padding: "1px",
-                  background: "rgba(26, 56, 96, 0.10)",
-                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls={`panel${index}bh-content`}
-                  id={`panel${index}bh-header`}
+      {daftarNilai?.length > 0 ? (
+        <Div
+          sx={{
+            display: "inline-flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: "25px",
+            width: "100%",
+            height: "460px",
+            overflowY: "auto",
+            background: "#FFF",
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+            padding: "8px",
+            borderRadius: "8px",
+          }}
+        >
+          {daftarNilai?.map(
+            (semesterData, index) =>
+              semesterData.students.length > 0 && (
+                <Accordion
+                  key={index}
+                  expanded={expanded === `panel${index}`} // Memeriksa apakah accordion ini terbuka
+                  onChange={handleChangee(`panel${index}`)} // Menangani perubahan state accordion
+                  sx={{
+                    width: "100%",
+                    padding: "1px",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                  }}
                 >
-                  <Typography
-                    variant="h2"
-                    sx={{
-                      marginTop: "6px",
-                      fontSize: "16px",
-                      fontWeight: 500,
-                    }}
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls={`panel${index}bh-content`}
+                    id={`panel${index}bh-header`}
                   >
-                    {semesterData.semester}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <TableContainer component={Paper}>
-                    <Table>
-                      <TableHead>
-                        <TableRow sx={{ background: "#F5F5F5" }}>
-                          <TableCell>Nomor</TableCell>
-                          <TableCell>NIM</TableCell>
-                          <TableCell>Nama Mahasiswa</TableCell>
-                          <TableCell>Program Studi</TableCell>
-                          <TableCell>Nilai</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {semesterData?.students?.map((dataMahasiswa, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{index + 1}</TableCell>
-                            <TableCell>{dataMahasiswa?.nim}</TableCell>
-                            <TableCell>{dataMahasiswa?.fullName}</TableCell>
-                            <TableCell>
-                              {dataMahasiswa?.major === "IF"
-                                ? "Informatika"
-                                : dataMahasiswa?.major === "SI"
-                                ? "Sistem Informasi"
-                                : ""}
-                            </TableCell>
-                            <TableCell>{dataMahasiswa?.value}</TableCell>
+                    <Typography
+                      variant="h2"
+                      sx={{
+                        marginTop: "6px",
+                        fontSize: "16px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {semesterData.semester}
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <TableContainer component={Paper}>
+                      <Table>
+                        <TableHead>
+                          <TableRow sx={{ background: "#F5F5F5" }}>
+                            <TableCell>Nomor</TableCell>
+                            <TableCell>NIM</TableCell>
+                            <TableCell>Nama Mahasiswa</TableCell>
+                            <TableCell>Program Studi</TableCell>
+                            <TableCell>Nilai</TableCell>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </AccordionDetails>
-              </Accordion>
-            )
-        )}
-      </Div>
-      {/* ) : (
+                        </TableHead>
+                        <TableBody>
+                          {semesterData?.students?.map(
+                            (dataMahasiswa, index) => (
+                              <TableRow key={index}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell>{dataMahasiswa?.nim}</TableCell>
+                                <TableCell>{dataMahasiswa?.fullName}</TableCell>
+                                <TableCell>
+                                  {dataMahasiswa?.major === "IF"
+                                    ? "Informatika"
+                                    : dataMahasiswa?.major === "SI"
+                                    ? "Sistem Informasi"
+                                    : ""}
+                                </TableCell>
+                                <TableCell>{dataMahasiswa?.value}</TableCell>
+                              </TableRow>
+                            )
+                          )}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </AccordionDetails>
+                </Accordion>
+              )
+          )}
+        </Div>
+      ) : (
         <Div
           sx={{
             display: "flex",
@@ -393,7 +395,7 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
             Belum ada daftar nilai mahasiswa
           </Typography>
         </Div>
-      )} */}
+      )}
     </Div>
   );
 };
