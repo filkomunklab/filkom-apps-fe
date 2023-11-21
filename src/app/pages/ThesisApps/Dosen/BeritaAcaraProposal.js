@@ -2693,7 +2693,13 @@ const BeritaAcara = () => {
                       <TableCell>{studentIndex + 1}</TableCell>
                       <TableCell>{student.fullName}</TableCell>
                       <TableCell>{student.nim}</TableCell>
-                      <TableCell>{student.major}</TableCell>
+                      <TableCell>
+                        {student.major === "IF"
+                          ? "Informatika"
+                          : student.major === "SI"
+                          ? "Sistem Informasi"
+                          : ""}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
