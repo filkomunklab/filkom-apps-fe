@@ -17,8 +17,10 @@ import {
   experimentalStyled as styled,
 } from "@mui/material";
 import SearchLocal from "app/shared/SearchLocal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { BASE_URL_API } from "../../../../../../@jumbo/config/env";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -28,20 +30,28 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const data = [...Array(15)].map(() => ({
-  submissionDate: "10 May 2000",
-  title: "Menang Lomba Desain Prototype",
-  category: "Faculty",
-  certifacePhoto: "Sertifikat menang lomba.pdf",
-  description:
-    "Saya mengikuti lomba desain prototype website kampus yang diselenggarakan oleh Fakultas Ilmu Komputer",
-  status: "Approved",
-}));
-
 const StudentCertificate = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortBy, setSortBy] = useState("");
+  const [certificates, setCertificates] = useState([]);
+
+  const getCertificate = async () => {
+    try {
+      const result = await axios.get(
+        `${BASE_URL_API}/certificate/student/dosen`
+      );
+      console.log(result);
+      setCertificates(result.data);
+      console.log(certificates);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getCertificate();
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -72,7 +82,7 @@ const StudentCertificate = () => {
         </Stack>
         <Grid container spacing={2} alignItems={"center"}>
           <Grid item md={12} xs={12}>
-            <Typography variant="h6">
+            <Typography variant="h6" sx={{ marginBottom: "10px" }}>
               Here is the data of the attached certificates belonging to this
               student.
             </Typography>
@@ -104,11 +114,17 @@ const StudentCertificate = () => {
             <TableHeading />
           </TableHead>
           <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((item, index) => (
-                <TableItem index={index} key={index} item={item} />
-              ))}
+            {Array.isArray(certificates) && certificates.length > 0 ? (
+              certificates
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((item, index) => (
+                  <TableItem index={index} key={index} item={item} />
+                ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={7}>No certificates available</TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </Stack>{" "}
@@ -124,7 +140,7 @@ const StudentCertificate = () => {
         <TablePagination
           rowsPerPageOptions={[10, 25, 50, 100]}
           component={"div"}
-          count={data.length}
+          count={certificates.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -155,13 +171,13 @@ const TableItem = ({ item, index }) => {
   let statusColor;
 
   switch (item.status) {
-    case "Waiting":
+    case "WAITING":
       statusColor = "#FFCC00";
       break;
-    case "Approved":
+    case "APPROVED":
       statusColor = "#005FDB";
       break;
-    case "Rejected":
+    case "REJECTED":
       statusColor = "#E21D12";
       break;
   }
