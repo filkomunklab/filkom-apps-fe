@@ -87,9 +87,9 @@ const Login = () => {
           validateOnChange={true}
           validationSchema={signInSchema}
           initialValues={{
-            username: "admin",
-            password: "12345",
-            loginAs: "admin",
+            // username: "admin",
+            // password: "12345",
+            // loginAs: "admin",
           }}
           onSubmit={(data, { setSubmitting }) => {
             console.log(data);

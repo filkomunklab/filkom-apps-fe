@@ -36,6 +36,7 @@ import {
   DialogTitle,
   Input,
   IconButton,
+  Chip,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -270,6 +271,23 @@ const PengisianSPT = () => {
     setPdfFile(null);
   };
 
+  const requiredFields = [
+    'nama', 
+    /* 'field2', 'field3', ... */];
+
+  const handleSubmitForm = () => {
+    // Check if all required fields are filled
+    const allFieldsFilled = requiredFields.every(field => dataSPT[field].trim() !== '');
+
+    if (allFieldsFilled) {
+      // Perform your submission logic here
+      setOpen(true);
+    } else {
+      // Show an error message or handle the empty case as needed
+      alert('Please fill in all required fields before submitting.');
+    }
+  };
+
   // submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -340,7 +358,7 @@ const PengisianSPT = () => {
               // type="number"
               variant="outlined"
               size="small"
-              placeholder="semester 1 2022/2023"
+              placeholder="semester I 2022/2023"
               sx={{ width: "180px", ml: "10px", marginRight: "10px" }}
               name="rencanaTamat"
               value={dataSPT.rencanaTamat}
@@ -349,7 +367,7 @@ const PengisianSPT = () => {
           </span>
           dengan sisa SKS yang harus diambil
           <span style={{ display: "inline-block", minWidth: "30px" }}>
-            <TextField
+            {/* <TextField
               type="number"
               variant="outlined"
               size="small"
@@ -358,7 +376,12 @@ const PengisianSPT = () => {
               name="sisaSKS"
               value={totalSKS}
               onChange={handleDataSPT}
-            />
+            /> */}
+            <Chip
+            label={totalSKS}
+            variant={"outlined"}
+            sx={{ marginX: "5px", borderRadius: "5px" }}
+          />
           </span>
           sks.
         </Typography>
@@ -779,7 +802,7 @@ const PengisianSPT = () => {
               </Button> */}
               {/* alert dialog */}
               <Div>
-                <Button variant="contained" onClick={() => setOpen(true)}>
+                <Button variant="contained" onClick={handleSubmitForm}>
                   Submit
                 </Button>
 
