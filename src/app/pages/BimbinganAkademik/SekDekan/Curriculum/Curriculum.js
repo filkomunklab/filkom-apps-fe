@@ -18,14 +18,11 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  TableContainer,
+  Paper,
 } from "@mui/material";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import CloseIcon from "@mui/icons-material/Close";
-import CurriculumInformatika2018 from "./CurriculumInformatika2018";
-import CurriculumInformatika2020 from "./CurriculumInformatika2020";
-import CurriculumSistemInformasi2018 from "./CurriculumSistemInformasi2018";
-import CurriculumSistemInformasi2020 from "./CurriculumSistemInformasi2020";
-import CurriculumTeknologiInformasi from "./CurriculumTeknologiInformasi";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -94,6 +91,7 @@ const Curriculum = () => {
   const [loading, setLoading] = useState(false);
 
   const [listCurriculum, setListCurriculum] = useState([]);
+  const [listSubject, setListSubject] = useState([]);
 
   const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
@@ -187,23 +185,22 @@ const Curriculum = () => {
 
   useEffect(() => {
     console.log("Curriculum effect triggered with curriculum:", curriculum);
-
-    curriculum === "informatika2018"
-      ? setInformatika2018ContentVisible(true)
-      : setInformatika2018ContentVisible(false);
-    curriculum === "informatika2020"
-      ? setInformatika2020ContentVisible(true)
-      : setInformatika2020ContentVisible(false);
-    curriculum === "sistemInfromasi2018"
-      ? setSistemInformasi2018ContentVisible(true)
-      : setSistemInformasi2018ContentVisible(false);
-    curriculum === "sistemInfromasi2020"
-      ? setSistemInformasi2020ContentVisible(true)
-      : setSistemInformasi2020ContentVisible(false);
-    curriculum === "teknologiInfomasi"
-      ? setTeknologiInformasiContentVisible(true)
-      : setTeknologiInformasiContentVisible(false);
+    getSubjectByIdCurriculum();
   }, [curriculum]);
+
+  const getSubjectByIdCurriculum = async () => {
+    try {
+      const result = await axios.get(`${BASE_URL_API}/subject/${curriculum}`);
+      if (result.data.status === "OK") {
+        console.log("Successful response:", result.data.data);
+        setListSubject(result.data.data);
+        console.log("ini isi list subject: ", listSubject);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      console.error("Error response:", error.response);
+    }
+  };
 
   const getCurriculum = async () => {
     try {
@@ -245,6 +242,7 @@ const Curriculum = () => {
 
   const handleOnChange = (e) => {
     setCurriculum(e.target.value);
+    console.log("ini adalah curriculum: ", curriculum);
   };
 
   const handleAddModalOpen = () => {
@@ -261,10 +259,6 @@ const Curriculum = () => {
 
   const handleYearChange = (event) => {
     setSelectedYear(event.target.value);
-  };
-
-  const handleImportFromExcel = () => {
-    // nanti taru dpe logic dsni tu import dari excel
   };
 
   const closeModal = () => {
@@ -298,7 +292,7 @@ const Curriculum = () => {
           Curriculum
         </Typography>
         <Grid container spacing={2} pb={1}>
-          <Grid item md={10}>
+          <Grid item md={8}>
             <Typography
               sx={{
                 fontSize: "15px",
@@ -312,7 +306,7 @@ const Curriculum = () => {
           </Grid>
           <Grid
             item
-            md={2}
+            md={4}
             sx={{
               display: "flex",
               flexDirection: "row",
@@ -332,6 +326,7 @@ const Curriculum = () => {
                 padding: "7px",
                 paddingLeft: "9px",
                 paddingRight: "9px",
+                minWidth: "110px",
                 gap: "5px",
                 "&:hover": {
                   backgroundColor: "#025ED8",
@@ -631,60 +626,70 @@ const Curriculum = () => {
         <Select
           value={curriculum}
           onChange={handleOnChange}
-          sx={{ width: "100%", backgroundColor: "rgba(26, 56, 96, 0.1)" }}
+          sx={{
+            width: "100%",
+            backgroundColor: "rgba(26, 56, 96, 0.1)",
+          }}
         >
           <MenuItem value="selectCurriculum">
             <Typography sx={{ fontWeight: 400 }}>View Curriculum</Typography>
           </MenuItem>
-          {/* <MenuItem value="informatika2018">informatika 2018</MenuItem>
-          <MenuItem value="informatika2020">informatika 2020</MenuItem>
-          <MenuItem value="sistemInfromasi2018">Sistem Informasi 2018</MenuItem>
-          <MenuItem value="sistemInfromasi2020">Sistem Informasi 2020</MenuItem>
-          <MenuItem value="teknologiInfomasi">Teknologi Infomasi 2023</MenuItem> */}
+
           {listCurriculum.map((value, index) => {
             return (
-              <MenuItem key={value.id} value={`${value.major} ${value.year}`}>
+              <MenuItem key={value.id} value={value.id}>
                 {value.major} {value.year}
               </MenuItem>
             );
           })}
         </Select>
       </div>
-      {/* {Informatika2018ContentVisible && <CurriculumInformatika2018 />}
-      {Informatika2020ContentVisible && <CurriculumInformatika2020 />}
-      {SistemInformasi2018ContentVisible && <CurriculumSistemInformasi2018 />}
-      {SistemInformasi2020ContentVisible && <CurriculumSistemInformasi2020 />}
-      {TeknologiInformasiContentVisible && <CurriculumTeknologiInformasi />} */}
 
-      <h1>halo bang</h1>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell colSpan={6} sx={{ top: 0, backgroundColor: "white" }}>
-              PREREQUISITE
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell sx={{ width: "80px", top: 57 }}>Number</TableCell>
-            <TableCell sx={{ width: "110px", top: 57 }}>Code</TableCell>
-            <TableCell sx={{ width: "400px", top: 57 }}>Name</TableCell>
-            <TableCell sx={{ width: "80px", top: 57 }}>Credit(s)</TableCell>
-            <TableCell sx={{ width: "120px", top: 57 }}>Type</TableCell>
-            <TableCell sx={{ width: "288px", top: 57 }}>Prerequisite</TableCell>
-          </TableRow>
-        </TableHead>
-        {/* {tableData1.map((data, index) => (
-          <TableItem key={index} data={data} />
-        ))} */}
-        <TableBody>
-          <TableCell>halo</TableCell>
-          <TableCell>halo</TableCell>
-          <TableCell>halo</TableCell>
-          <TableCell>halo</TableCell>
-          <TableCell>halo</TableCell>
-          <TableCell>halo</TableCell>
-        </TableBody>
-      </Table>
+      <Grid container pt={4}>
+        {curriculum === "selectCurriculum" ? (
+          ""
+        ) : (
+          <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
+            <Table>
+              {/* stickyHeader */}
+              <TableHead
+                sx={{
+                  position: "-webkit-sticky",
+                  position: "sticky",
+                  top: 0,
+                  backgroundColor: "rgb(245, 247, 250)",
+                }}
+              >
+                <TableCell sx={{ width: "80px" }}>Number</TableCell>
+                <TableCell sx={{ width: "80px" }}>Semester</TableCell>
+                <TableCell sx={{ width: "80px" }}>Code</TableCell>
+                <TableCell sx={{ width: "400px" }}>Name</TableCell>
+                <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
+                <TableCell sx={{ width: "80px" }}>Type</TableCell>
+                <TableCell sx={{ width: "400px" }}>Prerequisite</TableCell>
+              </TableHead>
+              {listSubject &&
+                listSubject.map((value, index) => (
+                  <TableRow key={value.id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>
+                      {value.semester === 0 ? "Pre-Requisite" : value.semester}
+                    </TableCell>
+                    <TableCell>{value.code}</TableCell>
+                    <TableCell>{value.name}</TableCell>
+                    <TableCell>{value.credits}</TableCell>
+                    <TableCell>{value.type}</TableCell>
+                    <TableCell>
+                      {value.prerequisite === null || value.prerequisite === ""
+                        ? "-"
+                        : value.prerequisite}
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </Table>
+          </TableContainer>
+        )}
+      </Grid>
     </div>
   );
 };
