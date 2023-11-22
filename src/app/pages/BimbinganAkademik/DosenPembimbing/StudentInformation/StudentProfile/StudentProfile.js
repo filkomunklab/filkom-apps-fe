@@ -30,6 +30,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
   "&:hover": {
     textDecoration: "underline",
+    cursor: "pointer",
   },
 }));
 
@@ -55,16 +56,14 @@ const StudentProfile = () => {
 
   const handleClick = (event) => {
     event.preventDefault();
-    navigate(-1);
+    navigate("/bimbingan-akademik/dosen-pembimbing/student-information");
   };
 
   return (
     <Div>
       <Div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/dosen-pembimbing/student-information">
-            Back
-          </StyledLink>
+          <StyledLink>Student Information</StyledLink>
           <Typography color="text.primary">Student Profile</Typography>
         </Breadcrumbs>
       </Div>
@@ -105,13 +104,13 @@ const StudentProfile = () => {
             </Grid>
             <Grid item xs={12} md={12}>
               <Typography variant="h5">Full Name</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 Christopher, Darell
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Gender</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 Male
               </Typography>
             </Grid>
@@ -122,91 +121,91 @@ const StudentProfile = () => {
                   <BorderColorIcon fontSize="inherit" />
                 </IconButton>
               </Stack>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 {status}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">NIM</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 105021810001
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Registration Number</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 S2200001
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Date of Birth</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 08/01/2005
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Religion</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 Christian
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Blood Type</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 B
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Married Status</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 Belum Menikah
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Email</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 s2200001@student.unklab.ac.id
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Phone Number</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 0853-1234-5678
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Curriculum</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 TI 2018
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Area of Concentration</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 -
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Previous High School</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 SMA Bakti Luhur
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Address</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 Winenet, lorong kopi-kopi 2, Kecamatan Aertembaga
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Current Address</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 Kost Pink
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Current Residence Status</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 Kost
               </Typography>
             </Grid>
@@ -261,49 +260,49 @@ const StudentProfile = () => {
               <Typography variant="h5" paddingTop={2}>
                 Full Name
               </Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 Adzana Shaliha
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Level of Education</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 S-1
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Religion</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 Christian
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Married Status</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 Married
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Relationship</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 Mother
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Email</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 adzana@gmail.com
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Phone</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 0853-1234-5678
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="h5">Address</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 Winenet, lorong kopi-kopi 2, Kecamatan Aertembaga
               </Typography>
             </Grid>
@@ -323,25 +322,25 @@ const StudentProfile = () => {
               <Typography variant="h5" paddingTop={2}>
                 Full Name
               </Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 Adzana Shaliha
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Email</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 adzana@gmail.com
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Phone</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 085335181818
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Address</Typography>
-              <Typography variant="h6" sx={textSyle}>
+              <Typography variant="h6" sx={textStyle}>
                 Winenet, lorong kopi-kopi 2, Kecamatan Aertembaga
               </Typography>
             </Grid>
@@ -352,7 +351,7 @@ const StudentProfile = () => {
   );
 };
 
-const textSyle = {
+const textStyle = {
   borderWidth: 1,
   borderColor: "#00000029",
   borderStyle: "solid",
