@@ -97,7 +97,7 @@ const StudentInformationFaculty = () => {
   return (
     <Div>
       <Div>
-        <Typography variant="h1" sx={{ mb: 3 }}>
+        <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
           Student Information
         </Typography>
         <Typography
@@ -302,7 +302,7 @@ const StudentInformationFaculty = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
+          <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
             <Table stickyHeader>
               <TableHead>
                 <TableHeading />

@@ -64,9 +64,11 @@ const StudentGradeDashboard = () => {
           <Typography color="text.primary">Student Grades</Typography>
         </Breadcrumbs>
       </Div>
-      <Stack gap={3}>
+      <Stack gap={3} paddingTop={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
-          <Typography variant="h1">Nilai Mahasiswa</Typography>
+          <Typography variant="h1" fontWeight={500}>
+            Student Grade
+          </Typography>
           <Typography variant="h6">Yuhu, Darell Deil</Typography>
         </Stack>
         <Typography variant="h5">
