@@ -136,7 +136,6 @@ const BerandaProposalMahasiswa = ({
           <Table>
             <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
                 <TableCell sx={{ width: "31%", textAlign: "center" }}>
                   Advisor
                 </TableCell>
@@ -154,7 +153,6 @@ const BerandaProposalMahasiswa = ({
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell>1</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
                   {details?.proposal_status?.advisor_status === null ? (
                     <Chip label={"Belum"} />
@@ -281,9 +279,6 @@ const BerandaProposalMahasiswa = ({
           <Table>
             <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                <TableCell sx={{ width: "5%", textAlign: "center" }}>
-                  Nomor
-                </TableCell>
                 <TableCell sx={{ width: "31%", textAlign: "center" }}>
                   Dokumen Proposal
                 </TableCell>
@@ -297,7 +292,6 @@ const BerandaProposalMahasiswa = ({
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell>1</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
                   {details?.ready_status?.proposalDocumentStatus === null ? (
                     <Chip label={"Belum"} />
@@ -373,30 +367,18 @@ const BerandaProposalMahasiswa = ({
           <Table>
             <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                <TableCell sx={{ width: "31%", textAlign: "center" }}>
-                  Ketua Panelis
-                </TableCell>
-                <TableCell sx={{ width: "31%", textAlign: "center" }}>
-                  Anggota Panelis
-                </TableCell>
-                <TableCell sx={{ width: "31%", textAlign: "center" }}>
-                  Advisor
-                </TableCell>
+                <TableCell sx={{ width: "31%" }}>Ketua Panelis</TableCell>
+                <TableCell sx={{ width: "31%" }}>Anggota Panelis</TableCell>
+                <TableCell sx={{ width: "31%" }}>Advisor</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell>1</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>
+                <TableCell>
                   {details?.panelist_team?.panelist_chairman}
                 </TableCell>
-                <TableCell sx={{ textAlign: "center" }}>
-                  {details?.panelist_team?.panelist_member}
-                </TableCell>
-                <TableCell sx={{ textAlign: "center" }}>
-                  {details?.panelist_team?.advisor}
-                </TableCell>
+                <TableCell>{details?.panelist_team?.panelist_member}</TableCell>
+                <TableCell>{details?.panelist_team?.advisor}</TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -418,20 +400,34 @@ const BerandaProposalMahasiswa = ({
           <Table>
             <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                <TableCell sx={{ width: "20%" }}>Nomor</TableCell>
-                <TableCell sx={{ width: "20%" }}>Mulai</TableCell>
-                <TableCell sx={{ width: "20%" }}>Selesai</TableCell>
-                <TableCell sx={{ width: "20%" }}>Tanggal</TableCell>
-                <TableCell sx={{ width: "20%" }}>Ruangan</TableCell>
+                <TableCell sx={{ width: "20%", textAlign: "center" }}>
+                  Mulai
+                </TableCell>
+                <TableCell sx={{ width: "20%", textAlign: "center" }}>
+                  Selesai
+                </TableCell>
+                <TableCell sx={{ width: "20%", textAlign: "center" }}>
+                  Tanggal
+                </TableCell>
+                <TableCell sx={{ width: "20%", textAlign: "center" }}>
+                  Ruangan
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell>1</TableCell>
-                <TableCell>{details?.schedule?.start}</TableCell>
-                <TableCell>{details?.schedule?.end}</TableCell>
-                <TableCell>{details?.schedule?.date}</TableCell>
-                <TableCell>{details?.schedule?.room}</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
+                  {details?.schedule?.start}
+                </TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
+                  {details?.schedule?.end}
+                </TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
+                  {details?.schedule?.date}
+                </TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
+                  {details?.schedule?.room}
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -453,14 +449,14 @@ const BerandaProposalMahasiswa = ({
           <Table>
             <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                <TableCell sx={{ width: "50%" }}>Nomor</TableCell>
-                <TableCell sx={{ width: "50%" }}>Status</TableCell>
+                <TableCell sx={{ width: "50%", textAlign: "center" }}>
+                  Status
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell>1</TableCell>
-                <TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
                   {details?.defence_status?.status === null ? (
                     <Chip label={"Belum"} />
                   ) : details?.defence_status?.status === "Repeat" ? (
@@ -512,9 +508,6 @@ const BerandaProposalMahasiswa = ({
           <Table>
             <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
               <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                <TableCell sx={{ width: "5%", textAlign: "center" }}>
-                  Nomor
-                </TableCell>
                 <TableCell sx={{ width: "31%", textAlign: "center" }}>
                   Ketua Panelis
                 </TableCell>
@@ -528,7 +521,6 @@ const BerandaProposalMahasiswa = ({
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell>1</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
                   {details?.revisi_status?.chairman_status === "Belum" ? (
                     <Chip label={"Belum"} />

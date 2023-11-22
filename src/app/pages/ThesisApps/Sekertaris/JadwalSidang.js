@@ -36,6 +36,16 @@ const PerbaruiJadwalSidangProposal = () => {
   // state - daftar dosen
   const [daftarDosen, setDaftarDosen] = useState([]);
 
+  // state - jadwal
+  const [ketuaPenelis, setKetuaPenelis] = useState("-");
+  const [anggotaPenelis, setAnggotaPenelis] = useState("-");
+  const [startTime, setStartTime] = useState("-");
+  const [endTime, setEndTime] = useState("-");
+  const [tanggal, setTanggal] = useState("-");
+  const [ruangan, setRuangan] = useState("-");
+  const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
@@ -67,25 +77,6 @@ const PerbaruiJadwalSidangProposal = () => {
           );
           setJadwalProposal(response.data.data);
           console.log("Request Get jadwal proposal?: ", response.data.data);
-
-          setKetuaPenelis(
-            response.data.data.panelist_chairman
-              ? daftarDosen.find(
-                  (dosen) => dosen.name === response.data.data.panelist_chairman
-                )?.id || ""
-              : ""
-          );
-          setAnggotaPenelis(
-            response.data.data.panelist_member
-              ? daftarDosen.find(
-                  (dosen) => dosen.name === response.data.data.panelist_member
-                )?.id || ""
-              : ""
-          );
-          setStartTime(response.data.data.start_defence || "");
-          setEndTime(response.data.data.end_defence || "");
-          setTanggal(response.data.data.defence_date || "");
-          setRuangan(response.data.data.defence_room || "");
         } catch (error) {
           console.error(
             "Terjadi kesalahan saat mengambil jadwal proposal",
@@ -109,25 +100,6 @@ const PerbaruiJadwalSidangProposal = () => {
           );
           setJadwalSkripsi(response.data.data);
           console.log("Request Get jadwal skripsi?: ", response.data.data);
-
-          setKetuaPenelis(
-            response.data.data.panelist_chairman
-              ? daftarDosen.find(
-                  (dosen) => dosen.name === response.data.data.panelist_chairman
-                )?.id || ""
-              : ""
-          );
-          setAnggotaPenelis(
-            response.data.data.panelist_member
-              ? daftarDosen.find(
-                  (dosen) => dosen.name === response.data.data.panelist_member
-                )?.id || ""
-              : ""
-          );
-          setStartTime(response.data.data.start_defence || "");
-          setEndTime(response.data.data.end_defence || "");
-          setTanggal(response.data.data.defence_date || "");
-          setRuangan(response.data.data.defence_room || "");
         } catch (error) {
           console.error(
             "Terjadi kesalahan saat mengambil jadwal skripsi",
@@ -158,16 +130,33 @@ const PerbaruiJadwalSidangProposal = () => {
     fetchDaftarDosen();
   }, [token, progress, proposalId, skripsiId]);
 
-  const [ketuaPenelis, setKetuaPenelis] = useState("-");
-  const [anggotaPenelis, setAnggotaPenelis] = useState("-");
-  const [startTime, setStartTime] = useState("-");
-  const [endTime, setEndTime] = useState("-");
-  const [tanggal, setTanggal] = useState("-");
-  const [ruangan, setRuangan] = useState("-");
-  const [isEditing, setIsEditing] = useState(false);
-  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-
   const handleEditClick = () => {
+    if (progress === "Proposal") {
+      setKetuaPenelis(
+        jadwalProposal.panelist_chairman
+          ? daftarDosen.find(
+              (dosen) => dosen.name === jadwalProposal.panelist_chairman
+            )?.id || ""
+          : ""
+      );
+      setAnggotaPenelis(
+        jadwalProposal.panelist_member
+          ? daftarDosen.find(
+              (dosen) => dosen.name === jadwalProposal.panelist_member
+            )?.id || ""
+          : ""
+      );
+      setStartTime(jadwalProposal.start_defence);
+      setEndTime(jadwalProposal.end_defence);
+      setTanggal(jadwalProposal.defence_date);
+      setRuangan(jadwalProposal.defence_room);
+    }
+    if (progress === "Skripsi") {
+      setStartTime(jadwalSkripsi.start_defence);
+      setEndTime(jadwalSkripsi.end_defence);
+      setTanggal(jadwalSkripsi.defence_date);
+      setRuangan(jadwalSkripsi.defence_room);
+    }
     setIsEditing(true);
   };
 
