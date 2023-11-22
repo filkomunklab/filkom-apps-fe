@@ -26,16 +26,17 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const StudentGrade = () => {
   const navigate = useNavigate();
 
-  const handleClick = (event) => {
-    event.preventDefault();
-    navigate(-1);
-  };
   return (
     <Div>
-      <div role="presentation" onClick={handleClick}>
+      <div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Back</StyledLink>
-          <Typography color="text.primary">Student Profile</Typography>
+          <StyledLink to="/bimbingan-akademik/dosen-pembimbing/student-information">
+            Student Information
+          </StyledLink>
+          <StyledLink to="/bimbingan-akademik/dosen-pembimbing/student-information/:id/grade">
+            Student Grades
+          </StyledLink>
+          <Typography color="text.primary">Grades</Typography>
         </Breadcrumbs>
       </div>
       <Stack gap={3} paddingTop={3}>
