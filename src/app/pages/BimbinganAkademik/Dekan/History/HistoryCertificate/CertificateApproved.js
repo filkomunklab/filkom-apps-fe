@@ -7,6 +7,7 @@ import {
   Paper,
   Breadcrumbs,
   experimentalStyled as styled,
+  Grid,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -19,7 +20,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const CertificateWaiting = () => {
+const CertificateApproved = () => {
   const navigate = useNavigate();
 
   const handleClick = (event) => {
@@ -38,93 +39,121 @@ const CertificateWaiting = () => {
         </Breadcrumbs>
       </div>
       <Typography
-        sx={{
-          fontSize: "24px",
-          fontWeight: 500,
-          paddingBottom: 2,
-          paddingTop: "20px",
-        }}
+        fontSize={"24px"}
+        fontWeight="500"
+        sx={{ marginBottom: 2, paddingTop: "20px" }}
       >
         Certificate
       </Typography>
-      <Container sx={{ display: "flex", alignItems: "center" }}>
-        <Box sx={{ flex: 0.4 }}>
-          <Typography variant="h3" fontWeight="500" sx={{ marginBottom: 2 }}>
-            Title
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Student Name
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Supervisor Name
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Category
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Submission Date
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Status
-          </Typography>
-        </Box>
-        <Box sx={{ flex: 0.04 }}>
-          <Typography variant="h3" fontWeight="500" sx={{ marginBottom: 2 }}>
-            :
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            :
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            :
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            :
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            :
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            :
-          </Typography>
-        </Box>
-        <Box sx={{ flex: 1 }}>
-          <Typography variant="h3" fontWeight="500" sx={{ marginBottom: 2 }}>
-            Menang lomba desain prototype
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Awuy, Diany Mariska
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Adzanu, Shaliha Alifyaa
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Local
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            10 May 2000
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2, color: "#006AF5" }}>
-            Approved
-          </Typography>
-        </Box>
-        <Box sx={{ flex: 1 }}>
-          <img
-            src={imageUrl}
-            alt="Certificate-pic"
-            style={{ maxWidth: "100%" }}
-          />
-        </Box>
-      </Container>
-      <Box sx={{ paddingLeft: 3, marginTop: 4 }}>
-        <Typography variant="h5" sx={{ marginBottom: 2 }}>
-          Descriptions:
-        </Typography>
-        <Typography variant="h5">
-          Saya mengikuti lomba desain prototype website kampus yang
-          diselenggarakan oleh Fakultas Ilmu Komputer.
-        </Typography>
-      </Box>
+      <Grid container spacing={2}>
+        <Grid item md={8} id="detail-item">
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Student Name</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">Awuy, Diany Mariska</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Supervisor Name</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">Dengah, Mesakh Leonardo</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Submission Date</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">November 14, 2023</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Approval Date</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">-</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Category</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">Local</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Status</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5" sx={{ color: "#005FDB" }}>
+                  Approved
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Descriptions</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5" sx={{ textAlign: "justify" }}>
+                  Saya mengikuti lomba desain prototype website kampus yang
+                  diselenggarakan oleh Fakultas Ilmu Komputer.
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item md={4} id="certificate-item">
+          <Box sx={{ flex: 1 }}>
+            <img
+              src={imageUrl}
+              alt="Certificate-pic"
+              style={{ maxWidth: "100%", scale: "0.8" }}
+            />
+          </Box>
+        </Grid>
+      </Grid>
       <Stack spacing={2} sx={{ padding: 3, marginTop: 4 }}>
         <Typography variant="h5" sx={{ fontWeight: 600 }}>
           Comments from Supervisor
@@ -142,4 +171,4 @@ const CertificateWaiting = () => {
   );
 };
 
-export default CertificateWaiting;
+export default CertificateApproved;
