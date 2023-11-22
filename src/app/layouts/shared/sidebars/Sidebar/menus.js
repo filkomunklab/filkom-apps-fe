@@ -351,16 +351,16 @@ export const dekanMenus = [
         ],
       },
       {
-        label: "Recent History",
+        label: "Current Activities",
         type: "nav-item",
         icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/dekan/recent-history",
+        uri: "/bimbingan-akademik/dekan/current-activities",
       },
       {
-        label: "Activity History",
+        label: "History",
         type: "nav-item",
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/dekan/activity-history",
+        uri: "/bimbingan-akademik/dekan/history",
       },
       {
         label: "Add Activity",
