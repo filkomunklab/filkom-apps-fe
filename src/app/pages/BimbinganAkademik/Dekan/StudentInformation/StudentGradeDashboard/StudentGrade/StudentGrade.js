@@ -26,21 +26,28 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const StudentGrade = () => {
   const navigate = useNavigate();
 
-  const handleClick = (event) => {
+  const handleClick = (event, step) => {
     event.preventDefault();
-    navigate(-1);
+    navigate(step);
   };
   return (
     <Div>
-      <Div role="presentation" onClick={handleClick}>
+      <Div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Back</StyledLink>
-          <Typography color="text.primary">Student Profile</Typography>
+          <StyledLink onClick={(event) => handleClick(event, -2)}>
+            Student Information
+          </StyledLink>
+          <StyledLink onClick={(event) => handleClick(event, -1)}>
+            Student Grades
+          </StyledLink>
+          <Typography color="text.primary">Grades</Typography>
         </Breadcrumbs>
       </Div>
       <Stack gap={3} paddingTop={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
-          <Typography variant="h1">Nilai Mahasiswa</Typography>
+          <Typography variant="h1" fontWeight={500}>
+            Student Grade
+          </Typography>
           <Typography variant="h6" sx={{ paddingRight: "15px" }}>
             Yuhu, Darell Deil
           </Typography>

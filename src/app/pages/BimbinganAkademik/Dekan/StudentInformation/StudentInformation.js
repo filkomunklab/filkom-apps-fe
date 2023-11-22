@@ -177,7 +177,7 @@ const StudentInformation = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
+          <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
             <Table stickyHeader>
               <TableHead>
                 <TableHeading />

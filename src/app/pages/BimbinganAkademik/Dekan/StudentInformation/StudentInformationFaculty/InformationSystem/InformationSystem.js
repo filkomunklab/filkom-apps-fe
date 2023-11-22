@@ -119,7 +119,9 @@ const InformationSystem = () => {
       </div>
       <Grid container spacing={2} paddingTop={1}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">Information System Students List</Typography>
+          <Typography variant="h2" fontWeight={500}>
+            Information System Students List
+          </Typography>
         </Grid>
         <Grid item xs={12} sm={8} md={3}>
           <SearchGlobal sx={{ height: "100%" }} />
@@ -192,7 +194,7 @@ const InformationSystem = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
+          <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
             <Table stickyHeader>
               <TableHead>
                 <TableHeading />
