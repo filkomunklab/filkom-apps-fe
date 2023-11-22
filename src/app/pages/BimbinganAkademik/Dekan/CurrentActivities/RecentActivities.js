@@ -9,28 +9,23 @@ import {
   experimentalStyled as styled,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-const StyledLink = styled(Link)(({ theme }) => ({
-  textDecoration: "none",
-  color: "rgba(0, 0, 0, 1)",
 
-  "&:hover": {
-    textDecoration: "underline",
-  },
-}));
-
-const RecentActivities = () => {
+const CurrentActivities = () => {
   return (
     <div>
-      <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
+      <Typography
+        sx={{ fontSize: { xs: "20px", md: "24px" }, fontWeight: 500 }}
+      >
         Current Activities
       </Typography>
       <Typography
         sx={{
           paddingTop: "22px",
           paddingBottom: "32px",
-          fontSize: "15px",
+          fontSize: { xs: "14px", md: "15px" },
           fontWeight: 400,
           color: "rgba(27, 43, 65, 0.69)",
+          textAlign: "justify",
         }}
       >
         Currently, you are on the Current Activities page. On this page, you can
@@ -63,9 +58,17 @@ const RecentActivities = () => {
         <ListItem component={Link} button to="view-consultation">
           <ListItemText
             primary={
-              <StyledLink to="view-consultation">
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: { xs: "12px", md: "14px" },
+                  "&:hover": {
+                    textDecorationLine: ["none"],
+                  },
+                }}
+              >
                 Consultation - Adzana, Shaliha Gracia
-              </StyledLink>
+              </Typography>
             }
             secondary={
               <Typography
@@ -74,6 +77,7 @@ const RecentActivities = () => {
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
                   color: "rgba(27, 43, 65, 0.69)",
+                  fontSize: { xs: "12px", md: "14px" },
                 }}
               >
                 Syalom sir, mohon maaf mengganggu, saya ingin melakukan
@@ -85,11 +89,27 @@ const RecentActivities = () => {
               </Typography>
             }
           />
-          <Box sx={{ marginLeft: "auto", width: "45%", textAlign: "right" }}>
-            <ListItemText secondary="Feb 2 2024, 14:00" />
+          <Box
+            sx={{
+              marginLeft: { xs: "auto", md: 0 },
+              width: { xs: "100%", md: "45%" },
+              textAlign: "right",
+            }}
+          >
+            <ListItemText
+              secondary={
+                <Typography
+                  sx={{
+                    fontSize: { xs: "10px", md: "14px" },
+                    color: "rgba(27, 43, 65, 0.69)",
+                  }}
+                >
+                  02:00 PM
+                </Typography>
+              }
+            />
           </Box>
         </ListItem>
-
         <Divider component="li" variant="inset" />
 
         <Box
@@ -108,10 +128,18 @@ const RecentActivities = () => {
         <ListItem component={Link} button to="view-activity">
           <ListItemText
             primary={
-              <StyledLink to="view-activity">
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: { xs: "12px", md: "14px" },
+                  "&:hover": {
+                    textDecorationLine: ["none"],
+                  },
+                }}
+              >
                 Pengumpulan Kartu Rencana Studi Semester ganjil tahun 2022/2023
                 Gelombang 1
-              </StyledLink>
+              </Typography>
             }
             secondary={
               <Typography
@@ -120,6 +148,7 @@ const RecentActivities = () => {
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
                   color: "rgba(27, 43, 65, 0.69)",
+                  fontSize: { xs: "12px", md: "14px" },
                 }}
               >
                 Diinfokan untuk semua mahasiswa yang akan mendaftar kuliah
@@ -131,8 +160,25 @@ const RecentActivities = () => {
               </Typography>
             }
           />
-          <Box sx={{ width: "45%", textAlign: "right", margin: 0, padding: 0 }}>
-            <ListItemText secondary="Jan 29 2024, 12:01" />
+          <Box
+            sx={{
+              marginLeft: { xs: "auto", md: 0 },
+              width: { xs: "100%", md: "45%" },
+              textAlign: "right",
+            }}
+          >
+            <ListItemText
+              secondary={
+                <Typography
+                  sx={{
+                    fontSize: { xs: "10px", md: "14px" },
+                    color: "rgba(27, 43, 65, 0.69)",
+                  }}
+                >
+                  08:00 PM
+                </Typography>
+              }
+            />
           </Box>
         </ListItem>
         <Divider component="li" />
@@ -140,9 +186,17 @@ const RecentActivities = () => {
         <ListItem component={Link} button to="view-activity">
           <ListItemText
             primary={
-              <StyledLink to="view-activity">
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: { xs: "12px", md: "14px" },
+                  "&:hover": {
+                    textDecorationLine: ["none"],
+                  },
+                }}
+              >
                 Akan Diadakan Pertemuan pada 10 Februari 2024
-              </StyledLink>
+              </Typography>
             }
             secondary={
               <Typography
@@ -151,15 +205,35 @@ const RecentActivities = () => {
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
                   color: "rgba(27, 43, 65, 0.69)",
+                  fontSize: { xs: "12px", md: "14px" },
                 }}
               >
                 Harap untuk memakai pakaian yang sesuai dengan standar UNKLAB,
-                dan jangan lupa untuk membawa ID Card dan Tumblr. Terima kasih.
+                dan jangan lupa untuk membawa ID Card dan Tumblr. Mohon untuk
+                datang tepat waktu karena pengambilan absen akan dilaksanakan di
+                awal kegiatan. Terima Kasih.
               </Typography>
             }
           />
-          <Box sx={{ marginLeft: "auto", width: "45%", textAlign: "right" }}>
-            <ListItemText secondary="Jan 29 2024, 08:46" />
+          <Box
+            sx={{
+              marginLeft: { xs: "auto", md: 0 },
+              width: { xs: "100%", md: "45%" },
+              textAlign: "right",
+            }}
+          >
+            <ListItemText
+              secondary={
+                <Typography
+                  sx={{
+                    fontSize: { xs: "10px", md: "14px" },
+                    color: "rgba(27, 43, 65, 0.69)",
+                  }}
+                >
+                  06:00 AM
+                </Typography>
+              }
+            />
           </Box>
         </ListItem>
         <Divider component="li" />
@@ -168,4 +242,4 @@ const RecentActivities = () => {
   );
 };
 
-export default RecentActivities;
+export default CurrentActivities;
