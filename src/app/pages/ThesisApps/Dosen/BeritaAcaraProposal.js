@@ -1417,18 +1417,14 @@ const BeritaAcara = () => {
                               style={{
                                 textDecoration: "none",
                                 cursor:
-                                  dataPerubahan?.changes_by_chairman === null
+                                  isOpen?.is_open === true
                                     ? "pointer"
                                     : "not-allowed", // Mengubah tampilan kursor
                                 color:
-                                  dataPerubahan?.changes_by_chairman === null
-                                    ? "blue"
-                                    : "gray", // Mengubah warna
+                                  isOpen?.is_open === true ? "blue" : "gray", // Mengubah warna
                               }}
                               onClick={() => {
-                                if (
-                                  dataPerubahan?.changes_by_chairman === null
-                                ) {
+                                if (isOpen?.is_open === true) {
                                   handleOpenRevisionDialog();
                                 }
                               }}
@@ -1446,16 +1442,14 @@ const BeritaAcara = () => {
                               style={{
                                 textDecoration: "none",
                                 cursor:
-                                  dataPerubahan?.changes_by_member === null
+                                  isOpen?.is_open === true
                                     ? "pointer"
                                     : "not-allowed", // Mengubah tampilan kursor
                                 color:
-                                  dataPerubahan?.changes_by_member === null
-                                    ? "blue"
-                                    : "gray", // Mengubah warna
+                                  isOpen?.is_open === true ? "blue" : "gray", // Mengubah warna
                               }}
                               onClick={() => {
-                                if (dataPerubahan?.changes_by_member === null) {
+                                if (isOpen?.is_open === true) {
                                   handleOpenRevisionDialog();
                                 }
                               }}
@@ -1473,18 +1467,14 @@ const BeritaAcara = () => {
                               style={{
                                 textDecoration: "none",
                                 cursor:
-                                  dataPerubahan?.changes_by_advisor === null
+                                  isOpen?.is_open === true
                                     ? "pointer"
                                     : "not-allowed", // Mengubah tampilan kursor
                                 color:
-                                  dataPerubahan?.changes_by_advisor === null
-                                    ? "blue"
-                                    : "gray", // Mengubah warna
+                                  isOpen?.is_open === true ? "blue" : "gray", // Mengubah warna
                               }}
                               onClick={() => {
-                                if (
-                                  dataPerubahan?.changes_by_advisor === null
-                                ) {
+                                if (isOpen?.is_open === true) {
                                   handleOpenRevisionDialog();
                                 }
                               }}
@@ -1660,7 +1650,7 @@ const BeritaAcara = () => {
                               }
                             }}
                           >
-                            Setujui
+                            Tandai
                           </span>
                         </TableCell>
                       )}
@@ -1689,7 +1679,7 @@ const BeritaAcara = () => {
                               }
                             }}
                           >
-                            Setujui
+                            Tandai
                           </span>
                         </TableCell>
                       )}
@@ -1718,7 +1708,7 @@ const BeritaAcara = () => {
                               }
                             }}
                           >
-                            Setujui
+                            Tandai
                           </span>
                         </TableCell>
                       )}
@@ -1747,7 +1737,7 @@ const BeritaAcara = () => {
                               }
                             }}
                           >
-                            Setujui
+                            Tandai
                           </span>
                         </TableCell>
                       )}
