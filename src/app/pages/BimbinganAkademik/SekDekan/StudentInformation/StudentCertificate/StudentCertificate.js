@@ -45,7 +45,8 @@ const StudentCertificate = () => {
       setCertificates(result.data);
       console.log(certificates);
     } catch (error) {
-      console.log(error);
+      console.error("Error:", error);
+      console.error("Error response:", error.response);
     }
   };
 
