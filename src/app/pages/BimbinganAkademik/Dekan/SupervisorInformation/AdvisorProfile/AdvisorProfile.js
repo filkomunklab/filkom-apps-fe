@@ -15,6 +15,7 @@ import {
   TableHead,
   TableBody,
   TablePagination,
+  TableContainer,
   Chip,
   Button,
   Breadcrumbs,
@@ -22,8 +23,9 @@ import {
 } from "@mui/material";
 import Div from "@jumbo/shared/Div";
 import { useState } from "react";
-import SearchLocal from "app/shared/SearchLocal";
+import SearchGlobal from "app/shared/SearchLocal";
 import { useNavigate, Link } from "react-router-dom";
+import SearchLocal from "app/shared/SearchLocal";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -137,7 +139,16 @@ const AdvisorProfile = () => {
         <Typography variant="h1" fontWeight={500} sx={{ mb: 3 }}>
           Advisor Profile
         </Typography>
-        <Typography variant="h6" sx={{ mb: 4 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            paddingBottom: "25px",
+            fontSize: "15px",
+            fontWeight: 400,
+            color: "rgba(27, 43, 65, 0.69)",
+            textAlign: "justify",
+          }}
+        >
           Currently, you are on the Academic Supervisor Information page, here
           you can easily see all information about academic supervisors in your
           department, along with their students.
@@ -194,37 +205,55 @@ const AdvisorProfile = () => {
         </Grid>
       </Paper>
       <Grid container spacing={2}>
-        <Grid item md={4} display="flex" alignItems="center">
-          <Typography variant="h2">List of mentored students</Typography>
+        <Grid display={"flex"} alignItems={"flex-end"} item md={6} xl={4}>
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: "justify",
+              "@media (max-width: 390px)": {
+                fontSize: "16px",
+                fontWeight: 500,
+              },
+            }}
+          >
+            List of Mentored Students
+          </Typography>
         </Grid>
-        <Grid
-          item
-          md={3}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <SearchLocal sx={{ height: "100%", alignItems: "center" }} />
+        <Grid item xs={12} sm={8} md={12} xl={3}>
+          <SearchGlobal
+            sx={{
+              height: "100%",
+              "@media (max-width: 390px)": {
+                height: "40px",
+              },
+            }}
+          />
         </Grid>
-        <Grid
-          item
-          md={3}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
+        <Grid item xs={12} sm={4} md={12} xl={3}>
           <FormControl
             sx={{
               width: "100%",
             }}
           >
-            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
+            <InputLabel>Filter</InputLabel>
             <Select
-              sx={{ borderRadius: 50 }}
+              sx={{
+                borderRadius: 50,
+                "@media (max-width: 390px)": {
+                  height: "45px",
+                },
+              }}
               multiple
               value={filter}
               label="Grouping"
               renderValue={(selected) => selected.join(", ")}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: "37%",
+                  },
+                },
+              }}
             >
               <MenuItem value="">
                 <em>None</em>
@@ -232,8 +261,24 @@ const AdvisorProfile = () => {
               <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
                 Status
               </ListSubheader>
-              <MenuItem value={"activeStudent"}>Active</MenuItem>
-              <MenuItem value={"nonactiveStudent"}>Nonactive</MenuItem>
+              <MenuItem
+                sx={{
+                  backgroundColor: "#FAFAFA",
+                  borderRadius: "5px",
+                }}
+                value={"activeStudent"}
+              >
+                Active
+              </MenuItem>
+              <MenuItem
+                sx={{
+                  backgroundColor: "#FAFAFA",
+                  borderRadius: "5px",
+                }}
+                value={"nonactiveStudent"}
+              >
+                Nonactive
+              </MenuItem>
               <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
                 Tahun Masuk
               </ListSubheader>
@@ -244,7 +289,6 @@ const AdvisorProfile = () => {
                   sx={{
                     backgroundColor: "#FAFAFA",
                     borderRadius: "5px",
-                    margin: "5px",
                   }}
                 >
                   {item.label}
@@ -262,7 +306,6 @@ const AdvisorProfile = () => {
                     sx={{
                       backgroundColor: "#FAFAFA",
                       borderRadius: "5px",
-                      justifyContent: "center",
                     }}
                   >
                     {item.label}
@@ -272,7 +315,7 @@ const AdvisorProfile = () => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item md={2} display="flex" alignItems="center">
+        <Grid item md={2} xl={2} display="flex" alignItems="center">
           <Link to={`/add-supervisor/informatics`}>
             <Button
               sx={{
@@ -283,6 +326,7 @@ const AdvisorProfile = () => {
                 minWidth: "132px",
                 fontSize: "12px",
                 padding: "10px",
+                width: "100%",
 
                 "&:hover": {
                   backgroundColor: "#025ED8",
@@ -294,21 +338,35 @@ const AdvisorProfile = () => {
           </Link>
         </Grid>
         <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
+          <TableContainer
+            sx={{
+              maxHeight: 440,
+            }}
+            component={Paper}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
             rowsPerPageOptions={[10, 25, 50, 100]}
-            component={"div"}
+            component="div"
             count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
@@ -344,6 +402,7 @@ const textSyle = {
   paddingX: "24px",
   paddingY: "16px",
   borderRadius: "8px",
+  textAlign: "justify",
 };
 
 const TableItem = ({ item, index }) => {

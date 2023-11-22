@@ -2,6 +2,7 @@ import Div from "@jumbo/shared/Div";
 import {
   Button,
   Chip,
+  Paper,
   FormControl,
   Grid,
   InputLabel,
@@ -14,6 +15,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TableContainer,
   Typography,
   Card,
   CardHeader,
@@ -71,7 +73,7 @@ const prodiList = [
 ];
 
 const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nidn: `105022010000`,
+  nidn: `022407712`,
   name: `Yuhu, Christopher Darell`,
   prodi: `Informatika`,
   year: `2021`,
@@ -96,132 +98,50 @@ const SupervisorInformation = () => {
   return (
     <Div>
       <Div>
-        <Typography variant="h1" sx={{ mb: 3 }}>
+        <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
           Supervisor Information
         </Typography>
-        <Typography variant="h6" sx={{ mb: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            paddingBottom: "25px",
+            fontSize: "15px",
+            fontWeight: 400,
+            color: "rgba(27, 43, 65, 0.69)",
+            textAlign: "justify",
+          }}
+        >
           Currently, you are on the Academic Supervisor Information page, here
           you can easily see all information about academic supervisors in your
           department, along with their students.
         </Typography>
       </Div>
-      <Grid container spacing={2} sx={{ mb: 5, mt: 2 }}>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/dekan/supervisor-information/informatics"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Informatics Supervisor " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`11 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/dekan/supervisor-information/information-system"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Information System Supervisor" />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`12 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/dekan/supervisor-information/information-technology"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Information Technology Supervisor " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`8 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-      </Grid>
       <Grid container spacing={2}>
-        <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">List of Academic Supervisors</Typography>
+        <Grid display={"flex"} alignItems={"flex-end"} item md={5.5} xl={5}>
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: "justify",
+              "@media (max-width: 390px)": {
+                fontSize: "16px",
+                fontWeight: 500,
+              },
+            }}
+          >
+            List of Academic Supervisors
+          </Typography>
         </Grid>
-        <Grid item md={4}>
-          <SearchGlobal sx={{ height: "100%", width: "100%" }} />
+        <Grid item xs={12} sm={8} md={4} xl={5}>
+          <SearchGlobal
+            sx={{
+              height: "100%",
+              "@media (max-width: 390px)": {
+                height: "40px",
+              },
+            }}
+          />
         </Grid>
-        <Grid
-          item
-          md={2}
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-end",
-          }}
-        >
+        <Grid item xs={12} sm={4} md={1}>
           <Link
             style={{ textDecoration: "none", color: "white" }}
             to="/bimbingan-akademik/dekan/supervisor-information/add-supervisor"
@@ -236,6 +156,7 @@ const SupervisorInformation = () => {
                 fontSize: "12px",
                 padding: "10px",
                 gap: "6px",
+                width: "100%",
 
                 "&:hover": {
                   backgroundColor: "#025ED8",
@@ -247,23 +168,36 @@ const SupervisorInformation = () => {
             </Button>
           </Link>
         </Grid>
-
         <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
+          <TableContainer
+            sx={{
+              maxHeight: 640,
+            }}
+            component={Paper}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
             rowsPerPageOptions={[10, 25, 50, 100]}
-            component={"div"}
+            component="div"
             count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
@@ -298,12 +232,14 @@ const TableItem = ({ item, index }) => {
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/dekan/supervisor-information/advisor-profile/${item.nidn}`
+          `/bimbingan-akademik/dekan/supervisor-information/advisor-profile/${item.nidn}`,
+          { state: item.nidn }
         );
         break;
       case "history":
         navigate(
-          `/bimbingan-akademik/dekan/supervisor-information${item.nidn}/history`
+          `/bimbingan-akademik/dekan/supervisor-information/advisor-history/${item.nidn}`,
+          { state: item.nidn }
         );
         break;
 

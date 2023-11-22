@@ -9,6 +9,8 @@ import {
   TablePagination,
   TableRow,
   TableCell,
+  TableContainer,
+  Paper,
   Checkbox,
   Breadcrumbs,
   experimentalStyled as styled,
@@ -38,7 +40,7 @@ const data = Array.from(Array(15).keys()).map((item, index) => ({
 
 const CountStudent = ({ selected, totalStudents }) => {
   return (
-    <Typography sx={{ fontSize: "16px" }}>
+    <Typography sx={{ fontSize: { xs: "14px", md: "16px", xl: "16px" } }}>
       You have selected {selected.length} out of {totalStudents} students
     </Typography>
   );
@@ -103,7 +105,7 @@ const Informatics = () => {
           <Typography color="text.primary">Informatics Student</Typography>
         </Breadcrumbs>
       </Div>
-      <Div sx={{ padding: 2 }}>
+      <Div sx={{ paddingTop: 2, paddingBottom: 4 }}>
         <Grid
           container
           display="flex"
@@ -116,69 +118,68 @@ const Informatics = () => {
               List of Students Majoring in Informatics
             </Typography>
           </Grid>
-          <Grid
-            item
-            md={4}
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-          >
-            <SearchLocal />
+          <Grid item xs={12} sm={8} md={4}>
+            <SearchLocal
+              sx={{
+                height: "100%",
+                "@media (max-width: 390px)": {
+                  height: "40px",
+                },
+              }}
+            />
           </Grid>
         </Grid>
       </Div>
-      <Div>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  indeterminate={
-                    selected.length > 0 && selected.length < data.length
-                  }
-                  checked={isAllSelected}
-                  onChange={handleSelectAllClick}
-                />
-              </TableCell>
-              <TableCell>No</TableCell>
-              <TableCell>NIM</TableCell>
-              <TableCell>Student Name</TableCell>
-              <TableCell>Program Studi</TableCell>
-              <TableCell>Tahun Masuk</TableCell>
-              <TableCell>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((item, index) => (
-                <TableItem
-                  item={item}
-                  index={index}
-                  key={index}
-                  isSelected={isItemSelected(index)}
-                  handleClick={handleClick}
-                />
-              ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Div>
-      <Grid display="flex" alignItems="center" gap={4}>
-        <Grid item md={4}>
+      <Grid item xs={12}>
+        <TableContainer
+          sx={{
+            maxHeight: 640,
+          }}
+          component={Paper}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    indeterminate={
+                      selected.length > 0 && selected.length < data.length
+                    }
+                    checked={isAllSelected}
+                    onChange={handleSelectAllClick}
+                  />
+                </TableCell>
+                <TableCell>No</TableCell>
+                <TableCell>NIM</TableCell>
+                <TableCell>Student Name</TableCell>
+                <TableCell>Program Studi</TableCell>
+                <TableCell>Tahun Masuk</TableCell>
+                <TableCell>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((item, index) => (
+                  <TableItem
+                    item={item}
+                    index={index}
+                    key={index}
+                    isSelected={isItemSelected(index)}
+                    handleClick={handleClick}
+                  />
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+      <Grid display="flex" alignItems="center" paddingTop={2} gap={4}>
+        <Grid item xs={12} md={4} xl={4}>
           <Div sx={{ alignItems: "center" }}>
             <CountStudent selected={selected} totalStudents={data.length} />
           </Div>
         </Grid>
-        <Grid item md={4}>
+        <Grid item xs={12} md={4} xl={4}>
           <Link
             to={`/bimbingan-akademik/dekan/supervisor-information/add-supervisor`}
           >
@@ -189,7 +190,7 @@ const Informatics = () => {
                 color: "white",
                 whiteSpace: "nowrap",
                 minWidth: "132px",
-                fontSize: "12px",
+                fontSize: { xs: "10px", md: "12px", xl: "16px" },
                 padding: "10px",
                 alignItems: "center",
 
