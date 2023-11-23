@@ -15,6 +15,8 @@ import {
   Typography,
   Breadcrumbs,
   experimentalStyled as styled,
+  Paper,
+  TableContainer,
 } from "@mui/material";
 import SearchLocal from "app/shared/SearchLocal";
 import { useEffect, useState } from "react";
@@ -38,18 +40,21 @@ const StudentCertificate = () => {
 
   const getCertificate = async () => {
     try {
-      const result = await axios.get(
-        `${BASE_URL_API}/certificate/student/dosen`
-      );
-      console.log(result);
-      setCertificates(result.data);
-      console.log(certificates);
+      const result = await axios.get(`${BASE_URL_API}/certificate/dosen/dosen`);
+      if (result.data.status === "OK") {
+        console.log("Successful response:", result.data);
+        setCertificates(result.data.data);
+
+        console.log("ini isi list sertifikat: ", certificates);
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error:", error);
+      console.error("Error response:", error.response);
     }
   };
 
   useEffect(() => {
+    console.log("ini url: ", BASE_URL_API);
     getCertificate();
   }, []);
 
@@ -109,25 +114,23 @@ const StudentCertificate = () => {
             </FormControl>
           </Grid>
         </Grid>
-        <Table sx={{ overflowX: "auto" }}>
-          <TableHead>
-            <TableHeading />
-          </TableHead>
-          <TableBody>
-            {Array.isArray(certificates) && certificates.length > 0 ? (
-              certificates
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem index={index} key={index} item={item} />
-                ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={7}>No certificates available</TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </Stack>{" "}
+        <TableContainer
+          sx={{ overflow: "auto", maxHeight: 640 }}
+          component={Paper}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableHeading />
+            </TableHead>
+            <TableBody>
+              {Array.isArray(certificates) &&
+                certificates.map((value, index) => (
+                  <TableItem index={index} key={index} value={value} />
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Stack>
       <Grid
         item
         sx={{
@@ -138,8 +141,15 @@ const StudentCertificate = () => {
         }}
       >
         <TablePagination
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+          }}
           rowsPerPageOptions={[10, 25, 50, 100]}
-          component={"div"}
+          component="div"
           count={certificates.length}
           rowsPerPage={rowsPerPage}
           page={page}
@@ -155,22 +165,23 @@ const TableHeading = () => {
   const style = { fontWeight: 400, whiteSpace: "nowrap" };
   return (
     <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={[style]}>No</TableCell>
-      <TableCell sx={[style]}>Submission Date</TableCell>
-      <TableCell sx={[style]}>Title</TableCell>
-      <TableCell sx={[style]}>Category</TableCell>
-      <TableCell sx={[style]}>Certificate Photo</TableCell>
-      <TableCell sx={[style]}>Description</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
+      <TableCell sx={{ ...style, width: "50px", align: "right" }}>No</TableCell>
+      <TableCell sx={{ ...style, width: "50px", align: "right" }}>
+        Submission Date
+      </TableCell>
+      <TableCell sx={{ ...style, width: "300px" }}>Title</TableCell>
+      <TableCell sx={{ ...style, width: "50px" }}>Category</TableCell>
+      <TableCell sx={{ ...style, width: "300px" }}>Description</TableCell>
+      <TableCell sx={{ ...style, width: "50px" }}>Status</TableCell>
     </TableRow>
   );
 };
 
-const TableItem = ({ item, index }) => {
+const TableItem = ({ value, index }) => {
   const navigate = useNavigate();
   let statusColor;
 
-  switch (item.status) {
+  switch (value.status) {
     case "WAITING":
       statusColor = "#FFCC00";
       break;
@@ -187,6 +198,19 @@ const TableItem = ({ item, index }) => {
       "/bimbingan-akademik/sek-dekan/student-information/10000002/certificate/1000001"
     );
   };
+  const formatDate = (dateString) => {
+    const options = { day: "numeric", month: "long", year: "numeric" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  const formattedStatus =
+    value.status.charAt(0) + value.status.slice(1).toLowerCase();
+
+  const submitDate = new Date(value.submitDate).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   return (
     <TableRow
@@ -203,12 +227,11 @@ const TableItem = ({ item, index }) => {
       }}
     >
       <TableCell>{index + 1}</TableCell>
-      <TableCell>{item.submissionDate}</TableCell>
-      <TableCell>{item.title}</TableCell>
-      <TableCell>{item.category}</TableCell>
-      <TableCell>{item.certifacePhoto}</TableCell>
-      <TableCell>{item.description}</TableCell>
-      <TableCell sx={{ color: statusColor }}>{item.status}</TableCell>
+      <TableCell>{submitDate}</TableCell>
+      <TableCell>{value.title}</TableCell>
+      <TableCell>{value.category}</TableCell>
+      <TableCell>{value.description}</TableCell>
+      <TableCell sx={{ color: statusColor }}>{formattedStatus}</TableCell>
     </TableRow>
   );
 };
