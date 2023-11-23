@@ -16,6 +16,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  TextareaAutosize,
 } from "@mui/material";
 import WarningIcon from "@mui/icons-material/Warning";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
@@ -315,10 +316,13 @@ const DokumenRevisiProposal = () => {
 
   // reject
   const handleReject = () => {
+    const data = {
+      comment: komentarText,
+    };
     axios
       .put(
         `http://localhost:2000/api/v1/proposal/proposal-revision-document/reject/${proposalId}`,
-        {},
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -327,6 +331,8 @@ const DokumenRevisiProposal = () => {
       )
       .then((response) => {
         console.log("Berhasil reject proposal: ", response.data.data);
+        handleCloseKomentarDialog();
+        setKomentarText("");
 
         // ketua
         setTolakConfirmationDialogOpen(false);
@@ -367,11 +373,20 @@ const DokumenRevisiProposal = () => {
         fetchDokumenProposalData();
       })
       .catch((error) => {
-        console.error(
-          "Terjadi kesalahan saat reject proposal:",
-          error.response.data.message
-        );
+        console.error("Terjadi kesalahan saat reject proposal:", error);
       });
+  };
+
+  // Komentar
+  const [openKomentarDialog, setOpenKomentarDialog] = useState(false);
+  const [komentarText, setKomentarText] = useState("");
+
+  const handleOpenKomentarDialog = () => {
+    setOpenKomentarDialog(true);
+  };
+
+  const handleCloseKomentarDialog = () => {
+    setOpenKomentarDialog(false);
   };
 
   let ActionRevision;
@@ -443,8 +458,7 @@ const DokumenRevisiProposal = () => {
                   marginTop: "5px",
                 }}
                 onClick={() => {
-                  setSelectedActionIndexAdvisor(2);
-                  setTolakConfirmationDialogOpenAdvisor(true);
+                  handleOpenKomentarDialog();
                 }}
               >
                 Tolak
@@ -524,8 +538,7 @@ const DokumenRevisiProposal = () => {
                   marginTop: "5px",
                 }}
                 onClick={() => {
-                  setSelectedActionIndex(2);
-                  setTolakConfirmationDialogOpen(true);
+                  handleOpenKomentarDialog();
                 }}
               >
                 Tolak
@@ -605,8 +618,7 @@ const DokumenRevisiProposal = () => {
                   marginTop: "5px",
                 }}
                 onClick={() => {
-                  setSelectedActionIndexAnggotaPanalis(2);
-                  setTolakConfirmationDialogOpenAnggotaPanalis(true);
+                  handleOpenKomentarDialog();
                 }}
               >
                 Tolak
@@ -987,6 +999,234 @@ const DokumenRevisiProposal = () => {
               )}
             </Div>
             {/* View Perubahan End */}
+
+            {(userRole === "KETUA_PANELIS" ||
+              userRole === "ANGGOTA_PANELIS" ||
+              userRole === "ADVISOR") && (
+              <>
+                {userRole === "KETUA_PANELIS" &&
+                  dokumenRevisi?.is_revision_approve_by_panelist_chairman !==
+                    "Approve" && (
+                    <>
+                      <Typography
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          padding: "24px",
+                          alignItems: "center",
+                          gap: "10px",
+                          color: "#192434",
+                          background: "rgba(26, 56, 96, 0.10)",
+                          borderRadius: "6px",
+                          fontSize: "12px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        Komentar
+                      </Typography>
+
+                      {/* View Komentar Start*/}
+                      <Div
+                        sx={{
+                          display: "flex",
+                          width: "100%",
+                          padding: "0 25px",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          gap: "25px",
+                        }}
+                      >
+                        {/* Komentar Ketua Panalis */}
+                        <Div
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                          }}
+                        >
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Komentar yang Anda berikan
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                              whiteSpace: "break-spaces",
+                            }}
+                          >
+                            <Typography>
+                              {
+                                dokumenRevisi?.panelist_chairman_revision_comment
+                              }
+                            </Typography>
+                          </Div>
+                        </Div>
+                      </Div>
+                    </>
+                  )}
+                {userRole === "ANGGOTA_PANELIS" &&
+                  dokumenRevisi?.is_revision_approve_by_panelist_member !==
+                    "Approve" && (
+                    <>
+                      <Typography
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          padding: "24px",
+                          alignItems: "center",
+                          gap: "10px",
+                          color: "#192434",
+                          background: "rgba(26, 56, 96, 0.10)",
+                          borderRadius: "6px",
+                          fontSize: "12px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        Komentar
+                      </Typography>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          width: "100%",
+                          padding: "0 25px",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          gap: "25px",
+                        }}
+                      >
+                        {/* Komentar Anggota Panalis */}
+                        <Div
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                          }}
+                        >
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Komentar yang Anda berikan
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                              whiteSpace: "break-spaces",
+                            }}
+                          >
+                            <Typography>
+                              {dokumenRevisi?.panelist_member_revision_comment}
+                            </Typography>
+                          </Div>
+                        </Div>
+                      </Div>
+                    </>
+                  )}
+                {userRole === "ADVISOR" &&
+                  dokumenRevisi?.is_revision_approve_by_advisor !==
+                    "Approve" && (
+                    <>
+                      <Typography
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          padding: "24px",
+                          alignItems: "center",
+                          gap: "10px",
+                          color: "#192434",
+                          background: "rgba(26, 56, 96, 0.10)",
+                          borderRadius: "6px",
+                          fontSize: "12px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        Komentar
+                      </Typography>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          width: "100%",
+                          padding: "0 25px",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          gap: "25px",
+                        }}
+                      >
+                        {/* Komentar Anggota Panalis */}
+                        <Div
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                          }}
+                        >
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Komentar yang Anda berikan
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                              whiteSpace: "break-spaces",
+                            }}
+                          >
+                            <Typography>
+                              {dokumenRevisi?.advisor_revision_comment}
+                            </Typography>
+                          </Div>
+                        </Div>
+                      </Div>
+                    </>
+                  )}
+                {/* View Komentar End */}
+              </>
+            )}
             <Typography
               sx={{
                 width: "100%",
@@ -1366,7 +1606,7 @@ const DokumenRevisiProposal = () => {
               },
             }}
           >
-            Ditolak
+            Tolak
           </Button>
         </DialogActions>
       </Dialog>
@@ -1462,7 +1702,7 @@ const DokumenRevisiProposal = () => {
               },
             }}
           >
-            Ditolak
+            Tolak
           </Button>
         </DialogActions>
       </Dialog>
@@ -1558,10 +1798,87 @@ const DokumenRevisiProposal = () => {
               },
             }}
           >
-            Ditolak
+            Tolak
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Dialog komentar Advisor */}
+      <Dialog
+        open={openKomentarDialog}
+        onClose={handleCloseKomentarDialog}
+        fullWidth
+        maxWidth="lg"
+      >
+        <DialogTitle
+          sx={{
+            padding: "14px 16px",
+            background: "rgba(26, 56, 96, 0.10)",
+            borderRadius: "6px 6px 0 0",
+            border: "1px",
+            textAlign: "center",
+          }}
+        >
+          KOMENTAR
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: "20px",
+            alignSelf: "stretch",
+          }}
+        >
+          <Div
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "20px",
+              alignSelf: "stretch",
+              padding: "40px",
+            }}
+          >
+            <TextareaAutosize
+              aria-label="minimum height"
+              minRows={20}
+              placeholder="Masukkan komentar"
+              style={{
+                width: "100%",
+                resize: "vertical",
+              }}
+              value={komentarText} // Set the value of the textarea to revisionText
+              onChange={(e) => setKomentarText(e.target.value)} // Update revisionText when input changes
+            />
+          </Div>
+        </DialogContent>
+        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+          <Button
+            onClick={handleCloseKomentarDialog}
+            sx={{
+              background: "white",
+              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+              textTransform: "none",
+              color: "black",
+            }}
+          >
+            Batal
+          </Button>
+          <Button
+            onClick={() => {
+              setSelectedActionIndexAdvisor(2);
+              setTolakConfirmationDialogOpenAdvisor(true);
+            }}
+            variant="contained"
+            sx={{ textTransform: "none" }}
+            color="primary"
+          >
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* Dialog komentar Advisor */}
     </Div>
   );
 };

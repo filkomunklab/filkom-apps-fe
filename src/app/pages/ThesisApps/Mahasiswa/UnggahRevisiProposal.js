@@ -597,6 +597,205 @@ const UploadRevisiProposal = () => {
               )}
             </Div>
             {/* View Perubahan End */}
+            {/* Komentar Start */}
+            {userRole === "MAHASISWA" && (
+              <>
+                {(dokumenRevisi?.is_revision_approve_by_panelist_chairman !==
+                  "Approve" ||
+                  dokumenRevisi?.is_revision_approve_by_panelist_member !==
+                    "Approve" ||
+                  dokumenRevisi?.is_revision_approve_by_advisor !==
+                    "Approve") && (
+                  <Typography
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      padding: "24px",
+                      alignItems: "center",
+                      gap: "10px",
+                      color: "#192434",
+                      background: "rgba(26, 56, 96, 0.10)",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Komentar
+                  </Typography>
+                )}
+                {dokumenRevisi?.is_revision_approve_by_panelist_chairman !==
+                  "Approve" &&
+                  dokumenRevisi?.panelist_chairman_revision_comment !==
+                    null && (
+                    <>
+                      {/* View Komentar Start*/}
+                      <Div
+                        sx={{
+                          display: "flex",
+                          width: "100%",
+                          padding: "0 25px",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          gap: "25px",
+                        }}
+                      >
+                        {/* Komentar Ketua Panelis */}
+                        <Div
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                          }}
+                        >
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Ketua Panelis
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                              whiteSpace: "break-spaces",
+                            }}
+                          >
+                            <Typography>
+                              {
+                                dokumenRevisi?.panelist_chairman_revision_comment
+                              }
+                            </Typography>
+                          </Div>
+                        </Div>
+                      </Div>
+                    </>
+                  )}
+                {dokumenRevisi?.is_revision_approve_by_panelist_member !==
+                  "Approve" &&
+                  dokumenRevisi?.panelist_member_revision_comment !== null && (
+                    <>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          width: "100%",
+                          padding: "0 25px",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          gap: "25px",
+                        }}
+                      >
+                        {/* Komentar Anggota Panelis */}
+                        <Div
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                          }}
+                        >
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Anggota Panelis
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                              whiteSpace: "break-spaces",
+                            }}
+                          >
+                            <Typography>
+                              {dokumenRevisi?.panelist_member_revision_comment}
+                            </Typography>
+                          </Div>
+                        </Div>
+                      </Div>
+                    </>
+                  )}
+                {dokumenRevisi?.is_revision_approve_by_advisor !== "Approve" &&
+                  dokumenRevisi?.advisor_revision_comment !== null && (
+                    <>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          width: "100%",
+                          padding: "0 25px",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          gap: "25px",
+                        }}
+                      >
+                        {/* Komentar Anggota Panelis */}
+                        <Div
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                          }}
+                        >
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">Advisor</Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                              whiteSpace: "break-spaces",
+                            }}
+                          >
+                            <Typography>
+                              {dokumenRevisi?.advisor_revision_comment}
+                            </Typography>
+                          </Div>
+                        </Div>
+                      </Div>
+                    </>
+                  )}
+                {/* View Komentar End */}
+              </>
+            )}
+            {/* Komentar End */}
             <Typography
               sx={{
                 width: "100%",

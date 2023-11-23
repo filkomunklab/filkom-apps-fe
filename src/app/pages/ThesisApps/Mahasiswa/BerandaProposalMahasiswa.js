@@ -166,7 +166,7 @@ const BerandaProposalMahasiswa = ({
                     />
                   ) : details?.proposal_status?.advisor_status === "Approve" ? (
                     <Chip
-                      label={"Diterima"}
+                      label={"Disetujui"}
                       sx={{
                         background: "rgba(21, 131, 67, 0.10)",
                         color: "#0A7637",
@@ -201,7 +201,7 @@ const BerandaProposalMahasiswa = ({
                     ) : details?.proposal_status?.co_advisor1_status ===
                       "Approve" ? (
                       <Chip
-                        label={"Diterima"}
+                        label={"Disetujui"}
                         sx={{
                           background: "rgba(21, 131, 67, 0.10)",
                           color: "#0A7637",
@@ -237,7 +237,7 @@ const BerandaProposalMahasiswa = ({
                     ) : details?.proposal_status?.co_advisor2_status ===
                       "Approve" ? (
                       <Chip
-                        label={"Diterima"}
+                        label={"Disetujui"}
                         sx={{
                           background: "rgba(21, 131, 67, 0.10)",
                           color: "#0A7637",
@@ -534,7 +534,7 @@ const BerandaProposalMahasiswa = ({
                     />
                   ) : details?.revisi_status?.chairman_status === "Approve" ? (
                     <Chip
-                      label={"Diterima"}
+                      label={"Disetujui"}
                       sx={{
                         background: "rgba(21, 131, 67, 0.10)",
                         color: "#0A7637",
@@ -565,7 +565,7 @@ const BerandaProposalMahasiswa = ({
                     />
                   ) : details?.revisi_status?.member_status === "Approve" ? (
                     <Chip
-                      label={"Diterima"}
+                      label={"Disetujui"}
                       sx={{
                         background: "rgba(21, 131, 67, 0.10)",
                         color: "#0A7637",
@@ -596,7 +596,7 @@ const BerandaProposalMahasiswa = ({
                     />
                   ) : details?.revisi_status?.advisor_status === "Approve" ? (
                     <Chip
-                      label={"Diterima"}
+                      label={"Disetujui"}
                       sx={{
                         background: "rgba(21, 131, 67, 0.10)",
                         color: "#0A7637",

@@ -702,11 +702,19 @@ const PerbaruiJadwalSidangProposal = () => {
                                 }}
                                 error={!!errorMessages.ketuaPenelis}
                               >
-                                {daftarDosen.map((dosen) => (
-                                  <MenuItem key={dosen.id} value={dosen.id}>
-                                    {dosen.name}
-                                  </MenuItem>
-                                ))}
+                                {daftarDosen
+                                  .filter(
+                                    (dosen) =>
+                                      dosen.name !== jadwalProposal.advisor &&
+                                      dosen.name !==
+                                        jadwalProposal.co_advisor1 &&
+                                      dosen.name !== jadwalProposal.co_advisor2
+                                  )
+                                  .map((dosen) => (
+                                    <MenuItem key={dosen.id} value={dosen.id}>
+                                      {dosen.name}
+                                    </MenuItem>
+                                  ))}
                               </Select>
                             ) : (
                               <FormControl fullWidth size="small">
@@ -773,11 +781,19 @@ const PerbaruiJadwalSidangProposal = () => {
                                 }}
                                 error={!!errorMessages.anggotaPenelis}
                               >
-                                {daftarDosen.map((dosen) => (
-                                  <MenuItem key={dosen.id} value={dosen.id}>
-                                    {dosen.name}
-                                  </MenuItem>
-                                ))}
+                                {daftarDosen
+                                  .filter(
+                                    (dosen) =>
+                                      dosen.name !== jadwalProposal.advisor &&
+                                      dosen.name !==
+                                        jadwalProposal.co_advisor1 &&
+                                      dosen.name !== jadwalProposal.co_advisor2
+                                  )
+                                  .map((dosen) => (
+                                    <MenuItem key={dosen.id} value={dosen.id}>
+                                      {dosen.name}
+                                    </MenuItem>
+                                  ))}
                               </Select>
                             ) : (
                               <FormControl fullWidth size="small">
