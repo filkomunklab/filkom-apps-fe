@@ -1,15 +1,4 @@
 import React from "react";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import EventNoteIcon from "@mui/icons-material/EventNote";
-import MyLocationIcon from "@mui/icons-material/MyLocation";
-import LoginIcon from "@mui/icons-material/Login";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-import LockResetIcon from "@mui/icons-material/LockReset";
-import PasswordOutlinedIcon from "@mui/icons-material/PasswordOutlined";
-import InsertChartOutlinedIcon from "@mui/icons-material/InsertChartOutlined";
-import InsertCommentIcon from "@mui/icons-material/InsertComment";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 import SchoolIcon from "@mui/icons-material/School";
@@ -19,25 +8,19 @@ import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import PeopleIcon from "@mui/icons-material/People";
-import PublicIcon from "@mui/icons-material/Public";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import GroupsIcon from "@mui/icons-material/Groups";
-import HomeIcon from "@mui/icons-material/Home";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import PersonIcon from "@mui/icons-material/Person";
 import GroupIcon from "@mui/icons-material/Group";
-import RecentActorsIcon from "@mui/icons-material/RecentActors";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import { EmailOutlined } from "@mui/icons-material";
 import AttachEmailIcon from "@mui/icons-material/AttachEmail";
 import MailIcon from "@mui/icons-material/Mail";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
-import ScheduleIcon from "@mui/icons-material/Schedule";
 import ChecklistIcon from "@mui/icons-material/Checklist";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 export const sekretarisMenus = [
   {
@@ -152,7 +135,7 @@ export const mahasiswaMenus = [
         icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/home-calon-tamatan",
       },
-      
+
       // {
       //   label: "SPT Form",
       //   type: "nav-item",
@@ -1166,6 +1149,18 @@ export const operatorMenus = [
 ];
 
 export const adminMenus = [
+  {
+    label: "Global",
+    type: "section",
+    children: [
+      {
+        label: "Account Management",
+        type: "nav-item",
+        icon: <ManageAccountsIcon sx={{ fontSize: 20 }} />,
+        uri: "/account-management",
+      },
+    ],
+  },
   {
     label: "Klabat Bridge",
     type: "section",

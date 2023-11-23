@@ -85,7 +85,7 @@ const FormTracerStudy = () => {
     f5c: "",
     f5d: "",
     f18a: "",
-    f18b: "",
+    f18b: "", 
     f18c: "",
     f18d: "",
     f1201: "",
