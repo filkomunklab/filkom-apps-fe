@@ -100,7 +100,9 @@ const ConsultationOnProcess = () => {
     <div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/history">History</StyledLink>
+          <StyledLink to="/bimbingan-akademik/dekan/supervisor-information/advisor-history/">
+            History
+          </StyledLink>
           <Typography color="text.primary">Consultation</Typography>
         </Breadcrumbs>
       </div>

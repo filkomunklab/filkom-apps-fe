@@ -52,7 +52,7 @@ const Curriculum = () => {
     <div>
       <div>
         <Typography
-          sx={{ fontSize: "24px", fontWeight: 400, paddingBottom: "24px" }}
+          sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "24px" }}
         >
           Curriculum
         </Typography>

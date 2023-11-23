@@ -1168,6 +1168,10 @@ const ReviewPreRegistrationStudent = () => {
   const handleClick = (event) => {
     event.preventDefault();
   };
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   return (
     <Div>
       <Div role="presentation" onClick={handleClick}>
@@ -1271,29 +1275,36 @@ const ReviewPreRegistrationStudent = () => {
           </Grid>
         </Grid>
       </Grid>
-      <TableContainer
-        sx={{ overflow: "auto", marginTop: 4, backgroundColor: "white" }}
-      >
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
-            <TableRow>
-              <TableCell sx={{ width: "40px" }}>Number</TableCell>
-              <TableCell sx={{ width: "40px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
-              <TableCell sx={{ width: "40px" }}>Credit(s)</TableCell>
-              <TableCell sx={{ width: "40px" }}>Grade</TableCell>
-              <TableCell sx={{ width: "200px" }}>Type </TableCell>
-              <TableCell sx={{ width: "380px" }}>Prerequisite</TableCell>
-              <TableCell sx={{ width: "110px" }}>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tableDataContract.map((data, index) => (
-              <TableItem1 key={index} data={data} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Grid item xs={12} paddingTop={4}>
+        <TableContainer
+          sx={{
+            maxHeight: 640,
+          }}
+          component={Paper}
+        >
+          <Table stickyHeader>
+            <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+              <TableRow>
+                <TableCell sx={{ width: "40px" }}>Number</TableCell>
+                <TableCell sx={{ width: "40px" }}>Code</TableCell>
+                <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
+                <TableCell sx={{ width: "40px" }}>Credit(s)</TableCell>
+                <TableCell sx={{ width: "40px" }}>Grade</TableCell>
+                <TableCell sx={{ width: "200px" }}>Type </TableCell>
+                <TableCell sx={{ width: "380px" }}>Prerequisite</TableCell>
+                <TableCell sx={{ width: "110px" }}>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tableDataContract
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((data, index) => (
+                  <TableItem1 key={index} data={data} />
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
       <Typography sx={{ my: 3 }}>
         Total Credits: {totalCredit} credits
       </Typography>

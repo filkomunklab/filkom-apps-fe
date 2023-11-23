@@ -7,7 +7,8 @@ import {
   Paper,
   Breadcrumbs,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -40,11 +41,6 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const StudentGradeDashboard = () => {
-  const navigate = useNavigate();
-
-  const handleClick = (event) => {
-    event.preventDefault();
-  };
   const semesterNames = [
     { label: "Semester 1", value: 1 },
     { label: "Semester 2", value: 2 },
@@ -55,12 +51,12 @@ const StudentGradeDashboard = () => {
   const id = "105022010000";
   return (
     <Div>
-      <div role="presentation" onClick={handleClick}>
+      <div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
           <StyledLink to="/bimbingan-akademik/dosen-pembimbing/student-information">
-            Back
+            Student Information
           </StyledLink>
-          <Typography color="text.primary">Student Profile</Typography>
+          <Typography color="text.primary">Student Grades</Typography>
         </Breadcrumbs>
       </div>
       <Stack gap={3} paddingTop={3}>

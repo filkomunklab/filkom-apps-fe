@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Typography,
   Table,
@@ -9,12 +9,13 @@ import {
   TableRow,
   Breadcrumbs,
   experimentalStyled as styled,
+  Box,
   Grid,
-  Container,
   Stack,
   Paper,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -33,11 +34,11 @@ const data = Array.from(Array(7).keys()).map((item, index) => ({
   retrieval: `1`,
 }));
 
-const RejectedHistoryGrade = () => {
+const ApprovedHistoryGrade = () => {
   const navigate = useNavigate();
-  const handleClick = (event) => {
+  const handleClick = (event, step) => {
     event.preventDefault();
-    navigate(-1);
+    navigate(step);
   };
 
   const [page, setPage] = useState(0);
@@ -54,9 +55,14 @@ const RejectedHistoryGrade = () => {
 
   return (
     <div>
-      <div role="presentation" onClick={handleClick}>
+      <div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>History</StyledLink>
+          <StyledLink onClick={(event) => handleClick(event, -2)}>
+            Supervisor Information
+          </StyledLink>
+          <StyledLink onClick={(event) => handleClick(event, -1)}>
+            History
+          </StyledLink>
           <Typography color="text.primary">Grade</Typography>
         </Breadcrumbs>
       </div>
@@ -133,8 +139,8 @@ const RejectedHistoryGrade = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography sx={{ color: "red" }} variant="h5">
-                  Rejected
+                <Typography sx={{ color: "#006AF5" }} variant="h5">
+                  Approved
                 </Typography>
               </Grid>
             </Grid>
@@ -213,4 +219,4 @@ const TableItem = ({ item, index }) => {
   );
 };
 
-export default RejectedHistoryGrade;
+export default ApprovedHistoryGrade;

@@ -20,21 +20,26 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const CertificateApproved = () => {
+const CertificateWaiting = () => {
   const navigate = useNavigate();
 
-  const handleClick = (event) => {
+  const handleClick = (event, step) => {
     event.preventDefault();
-    navigate(-1);
+    navigate(step);
   };
   const imageUrl =
     "https://i.pinimg.com/originals/fc/fa/29/fcfa2911e796d71f1bf6aa25ee1d8d89.jpg";
 
   return (
     <div>
-      <div role="presentation" onClick={handleClick}>
+      <div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>History</StyledLink>
+          <StyledLink onClick={(event) => handleClick(event, -2)}>
+            Supervisor Information
+          </StyledLink>
+          <StyledLink onClick={(event) => handleClick(event, -1)}>
+            History
+          </StyledLink>
           <Typography color="text.primary">Certificate</Typography>
         </Breadcrumbs>
       </div>
@@ -171,4 +176,4 @@ const CertificateApproved = () => {
   );
 };
 
-export default CertificateApproved;
+export default CertificateWaiting;

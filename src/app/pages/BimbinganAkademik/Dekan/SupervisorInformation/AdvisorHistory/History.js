@@ -9,10 +9,21 @@ import {
   ListItemText,
   Stack,
   Divider,
+  Breadcrumbs,
+  experimentalStyled as styled,
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import SearchLocal from "./SearchLocal/SearchLocal";
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -42,6 +53,7 @@ function a11yProps(index) {
 }
 
 const History = (props) => {
+  const var1 = useLocation();
   const [value, setValue] = React.useState(0);
 
   useEffect(() => {
@@ -49,17 +61,35 @@ const History = (props) => {
     if (storedValue !== null) {
       setValue(parseInt(storedValue));
     }
+    console.log("ini data state: ", var1);
   }, []);
 
   useEffect(() => {
     localStorage.setItem("historyTabValue", value);
   }, [value]);
 
+  const navigate = useNavigate();
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigate(-1);
+  };
+
   return (
     <div>
-      <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
-        History
-      </Typography>
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink>Supervisor Information</StyledLink>
+          <Typography color="text.primary">History</Typography>
+        </Breadcrumbs>
+      </div>
+      <Stack gap={2} paddingTop={3}>
+        <Stack direction={"row"} justifyContent={"space-between"}>
+          <Typography variant="h1" fontWeight={500}>
+            History
+          </Typography>
+          <Typography variant="h6">Yuhu, Darell Deil</Typography>
+        </Stack>
+      </Stack>
       <Typography
         sx={{
           paddingTop: "22px",
@@ -67,6 +97,7 @@ const History = (props) => {
           fontSize: "15px",
           fontWeight: 400,
           color: "rgba(27, 43, 65, 0.69)",
+          textAlign: "justify",
         }}
       >
         Currently you are in the history page, all the activities you have done
@@ -126,7 +157,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/activity/"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-activity`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -168,7 +199,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/activity/"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-activity`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -209,7 +240,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/activity/"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-activity`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -264,7 +295,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/activity/"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-activity`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -341,7 +372,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/pre-registrationwaiting/"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-preregistration`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -394,7 +425,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/pre-registrationapproved/"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-preregistration`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -447,7 +478,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/pre-registrationrejected/"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-preregistration`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -524,7 +555,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/student-certificate-waiting"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-certificate`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -578,7 +609,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/student-certificate-approved"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-certificate`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -618,7 +649,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/student-certificate-rejected"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-certificate`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -658,7 +689,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/student-certificate-approved"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-certificate`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -736,7 +767,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/grade-waiting"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-grade`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -791,7 +822,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/grade-approved"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-grade`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -869,7 +900,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/consultationWaiting"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-consultation`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -909,7 +940,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/consultationOnProcess"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-consultation`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -964,7 +995,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/consultationComplete"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-consultation`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -1004,7 +1035,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/consultationComplete"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-consultation`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -1044,7 +1075,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="/bimbingan-akademik/history/consultationComplete"
+                to={`/bimbingan-akademik/dekan/supervisor-information/advisor-history/${var1.state}/history-consultation`}
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText

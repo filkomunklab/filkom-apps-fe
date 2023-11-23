@@ -60,7 +60,12 @@ const CurrentActivities = () => {
             primary={
               <Typography
                 variant="body1"
-                sx={{ fontSize: { xs: "12px", md: "14px" } }}
+                sx={{
+                  fontSize: { xs: "12px", md: "14px" },
+                  "&:hover": {
+                    textDecorationLine: ["none"],
+                  },
+                }}
               >
                 Consultation - Adzana, Shaliha Gracia
               </Typography>
@@ -125,7 +130,12 @@ const CurrentActivities = () => {
             primary={
               <Typography
                 variant="body1"
-                sx={{ fontSize: { xs: "12px", md: "14px" } }}
+                sx={{
+                  fontSize: { xs: "12px", md: "14px" },
+                  "&:hover": {
+                    textDecorationLine: ["none"],
+                  },
+                }}
               >
                 Pengumpulan Kartu Rencana Studi Semester ganjil tahun 2022/2023
                 Gelombang 1
@@ -178,7 +188,12 @@ const CurrentActivities = () => {
             primary={
               <Typography
                 variant="body1"
-                sx={{ fontSize: { xs: "12px", md: "14px" } }}
+                sx={{
+                  fontSize: { xs: "12px", md: "14px" },
+                  "&:hover": {
+                    textDecorationLine: ["none"],
+                  },
+                }}
               >
                 Akan Diadakan Pertemuan pada 10 Februari 2024
               </Typography>

@@ -120,9 +120,9 @@ const TableItem = ({ data }) => (
 const PreRegistrationApproved = () => {
   const navigate = useNavigate();
 
-  const handleClick = (event) => {
+  const handleClick = (event, step) => {
     event.preventDefault();
-    navigate(-1);
+    navigate(step);
   };
 
   const [page, setPage] = useState(0);
@@ -130,9 +130,14 @@ const PreRegistrationApproved = () => {
 
   return (
     <div>
-      <div role="presentation" onClick={handleClick}>
+      <div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>History</StyledLink>
+          <StyledLink onClick={(event) => handleClick(event, -2)}>
+            Supervisor Information
+          </StyledLink>
+          <StyledLink onClick={(event) => handleClick(event, -1)}>
+            History
+          </StyledLink>
           <Typography color="text.primary">Pre-registration</Typography>
         </Breadcrumbs>
       </div>
@@ -229,7 +234,7 @@ const PreRegistrationApproved = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Stack spacing={2} sx={{ marginTop: 3, paddingBottom: 2 }}>
+      <Stack spacing={2} sx={{ marginTop: 3, paddingBottom: 4 }}>
         <Typography variant="h5" sx={{ fontWeight: 600 }}>
           Comments from Supervisor
         </Typography>
@@ -242,27 +247,25 @@ const PreRegistrationApproved = () => {
           </Typography>
         </Paper>
       </Stack>
-      <Grid item xs={12}>
-        <TableContainer
-          sx={{
-            maxHeight: 640,
-          }}
-          component={Paper}
-        >
-          <Table stickyHeader>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {tableData1
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((data, index) => (
-                  <TableItem data={data} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Grid>
+      <TableContainer
+        sx={{
+          maxHeight: 640,
+        }}
+        component={Paper}
+      >
+        <Table stickyHeader>
+          <TableHead>
+            <TableHeading />
+          </TableHead>
+          <TableBody>
+            {tableData1
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((data, index) => (
+                <TableItem data={data} index={index} key={index} />
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

@@ -67,6 +67,7 @@ const History = (props) => {
           fontSize: "15px",
           fontWeight: 400,
           color: "rgba(27, 43, 65, 0.69)",
+          textAlign: "justify",
         }}
       >
         Currently you are in the history page, all the activities you have done

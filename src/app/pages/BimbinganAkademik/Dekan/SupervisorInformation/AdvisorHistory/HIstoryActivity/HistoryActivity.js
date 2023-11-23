@@ -7,7 +7,7 @@ import {
   experimentalStyled as styled,
   Paper,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -18,14 +18,23 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const Activity = () => {
-  const handleClick = (event) => {
+  const navigate = useNavigate();
+
+  const handleClick = (event, step) => {
     event.preventDefault();
+    navigate(step);
   };
+
   return (
     <div>
-      <div role="presentation" onClick={handleClick}>
+      <div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/history">History</StyledLink>
+          <StyledLink onClick={(event) => handleClick(event, -2)}>
+            Supervisor Information
+          </StyledLink>
+          <StyledLink onClick={(event) => handleClick(event, -1)}>
+            History
+          </StyledLink>
           <Typography color="text.primary">Activity</Typography>
         </Breadcrumbs>
       </div>

@@ -273,7 +273,7 @@ const ReviewPreRegistration = () => {
         <Grid item xs={12}>
           <TableContainer
             sx={{
-              maxHeight: 440,
+              maxHeight: 640,
             }}
             component={Paper}
           >

@@ -13,7 +13,6 @@ import {
   Paper,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -117,17 +116,13 @@ const TableItem = ({ data }) => (
   </TableRow>
 );
 
-const PreRegistrationApproved = () => {
+const PreRegistrationRejected = () => {
   const navigate = useNavigate();
 
   const handleClick = (event) => {
     event.preventDefault();
     navigate(-1);
   };
-
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(7);
-
   return (
     <div>
       <div role="presentation" onClick={handleClick}>
@@ -153,7 +148,7 @@ const PreRegistrationApproved = () => {
               <Typography variant="h5">:</Typography>
             </Grid>
             <Grid item xs={7} paddingLeft={1}>
-              <Typography variant="h5">Peter, Parker Judith</Typography>
+              <Typography variant="h5">Awuy, Diany Mariska</Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -205,7 +200,7 @@ const PreRegistrationApproved = () => {
               <Typography variant="h5">:</Typography>
             </Grid>
             <Grid item xs={7} paddingLeft={1}>
-              <Typography variant="h5" sx={{ color: "#005FDB" }}>
+              <Typography variant="h5" sx={{ color: "red" }}>
                 Rejected
               </Typography>
             </Grid>
@@ -242,45 +237,31 @@ const PreRegistrationApproved = () => {
           </Typography>
         </Paper>
       </Stack>
-      <Grid item xs={12}>
-        <TableContainer
-          sx={{
-            maxHeight: 640,
-          }}
-          component={Paper}
-        >
-          <Table stickyHeader>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {tableData1
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((data, index) => (
-                  <TableItem data={data} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Grid>
+      <TableContainer
+        sx={{ overflow: "auto", marginTop: 4, backgroundColor: "white" }}
+      >
+        <Table>
+          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+            <TableRow>
+              <TableCell sx={{ width: "40px" }}>Number</TableCell>
+              <TableCell sx={{ width: "40px" }}>Code</TableCell>
+              <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
+              <TableCell sx={{ width: "40px" }}>Credit(s)</TableCell>
+              <TableCell sx={{ width: "40px" }}>Grade</TableCell>
+              <TableCell sx={{ width: "200px" }}>Type </TableCell>
+              <TableCell sx={{ width: "380px" }}>Prerequisite</TableCell>
+              <TableCell sx={{ width: "110px" }}>Status</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tableData1.map((data, index) => (
+              <TableItem key={index} data={data} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };
 
-const TableHeading = ({ index }) => {
-  const style = { fontWeight: 400 };
-  return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={[style]}>Number</TableCell>
-      <TableCell sx={[style]}>Code</TableCell>
-      <TableCell sx={[style]}>Subject Name</TableCell>
-      <TableCell sx={[style]}>Credit(s)</TableCell>
-      <TableCell sx={[style]}>Grade</TableCell>
-      <TableCell sx={[style]}>Type</TableCell>
-      <TableCell sx={[style]}>Prerequisite</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
-    </TableRow>
-  );
-};
-
-export default PreRegistrationApproved;
+export default PreRegistrationRejected;

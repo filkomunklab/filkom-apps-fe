@@ -20,21 +20,20 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const CertificateDetail = () => {
-  const navigate = useNavigate();
-
-  const handleClick = (event) => {
-    event.preventDefault();
-    navigate(-1);
-  };
-
   const imageUrl =
     "https://i.pinimg.com/originals/fc/fa/29/fcfa2911e796d71f1bf6aa25ee1d8d89.jpg";
+
   return (
     <Div>
-      <div role="presentation" onClick={handleClick}>
+      <div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Back</StyledLink>
-          <Typography color="text.primary">Student Profile</Typography>
+          <StyledLink to="/bimbingan-akademik/dosen-pembimbing/student-information">
+            Student Information
+          </StyledLink>
+          <StyledLink to="/bimbingan-akademik/dosen-pembimbing/student-information/:id/certificate">
+            Student Certificate
+          </StyledLink>
+          <Typography color="text.primary">Certificate</Typography>
         </Breadcrumbs>
       </div>
       <Typography

@@ -89,14 +89,9 @@ const data = [...Array(15)].map(() => ({
 }));
 
 const StudentCertificate = () => {
-  const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filter, setFilter] = useState([]);
-
-  const handleClick = (event) => {
-    event.preventDefault();
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -108,12 +103,12 @@ const StudentCertificate = () => {
   };
   return (
     <Div>
-      <div role="presentation" onClick={handleClick}>
+      <div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
           <StyledLink to="/bimbingan-akademik/dosen-pembimbing/student-information">
-            Back
+            Student Information
           </StyledLink>
-          <Typography color="text.primary">Student Profile</Typography>
+          <Typography color="text.primary">Student Certificate</Typography>
         </Breadcrumbs>
       </div>
       <Stack gap={3} paddingTop={3}>

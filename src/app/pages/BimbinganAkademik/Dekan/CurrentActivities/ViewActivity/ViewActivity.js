@@ -326,41 +326,38 @@ const ViewActivity = () => {
         </Typography>
         <TableContainer
           sx={{
-            overflow: "auto",
-            marginTop: 4,
-            backgroundColor: "white",
-            border: "1px solid #ddd",
-            borderRadius: "8px",
+            maxHeight: 640,
           }}
+          component={Paper}
         >
-          <Table>
+          <Table stickyHeader>
             <TableHead
               size="small"
               sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}
             >
               <TableRow size="small">
+                <TableCell>
+                  <Checkbox checked={selectedAll} onChange={handleSelectAll} />
+                </TableCell>
                 <TableCell>Number</TableCell>
                 <TableCell>Student Name</TableCell>
                 <TableCell>NIM</TableCell>
                 <TableCell>Prodi</TableCell>
-                <TableCell>
-                  <Checkbox checked={selectedAll} onChange={handleSelectAll} />
-                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {studentsData.map((student) => (
                 <TableRow key={student.id}>
-                  <TableCell sx={{ width: "40px" }}>{student.id}</TableCell>
-                  <TableCell sx={{ width: "190px" }}>{student.name}</TableCell>
-                  <TableCell sx={{ width: "80px" }}>{student.nim}</TableCell>
-                  <TableCell sx={{ width: "80px" }}>{student.prodi}</TableCell>
                   <TableCell sx={{ width: "40px" }}>
                     <Checkbox
                       checked={selectedStudents.includes(student.id)}
                       onChange={() => handleSelectStudent(student.id)}
                     />
                   </TableCell>
+                  <TableCell sx={{ width: "40px" }}>{student.id}</TableCell>
+                  <TableCell sx={{ width: "190px" }}>{student.name}</TableCell>
+                  <TableCell sx={{ width: "80px" }}>{student.nim}</TableCell>
+                  <TableCell sx={{ width: "80px" }}>{student.prodi}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
