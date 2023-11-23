@@ -1,20 +1,23 @@
 import { BASE_URL_API } from "@jumbo/config/env";
 import axios from "axios";
 
-export const getAuthToken = new Promise((resolve, reject) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    resolve(token);
-  } else {
-    reject("Token not found");
-  }
-});
+export const getAuthToken = () => {
+  return new Promise((resolve, reject) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      resolve(token);
+    }
+    // } else {
+    //   reject("Token not found");
+    // }
+  });
+};
 
 const jwtAuthAxios = axios.create({
   baseURL: BASE_URL_API,
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${getAuthToken}`,
+    Authorization: `Bearer ${getAuthToken()}`,
   },
 });
 
