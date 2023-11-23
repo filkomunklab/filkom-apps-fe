@@ -16,7 +16,11 @@ authService.signIn = async (formData) => {
       endPoint = "/auth/signin-employee";
       break;
   }
-  const { data } = await jwtAuthAxios.post(endPoint, formData);
+  const { data } = await jwtAuthAxios.post(endPoint, formData, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
   return data.data;
 };
 

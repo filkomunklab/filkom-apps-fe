@@ -36,7 +36,11 @@ const AccountManagement = () => {
 
   useEffect(() => {
     jwtAuthAxios
-      .get("/management/student")
+      .get("/management/student", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then((res) => {
         setData(res.data.data);
       })

@@ -140,20 +140,36 @@ const DaftarCalonTamatan = () => {
   };
 
   const handleTolakButton = async (item) => {
-    try { 
-      await jwtAuthAxios.patch(`spt/reg-approval/${item.id}?status=REJECTED`);
+    try {
+      await jwtAuthAxios.patch(
+        `spt/reg-approval/${item.id}?status=REJECTED`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
     } catch (error) {
       console.log(error);
     }
   };
   const handleTerimaButton = async (item) => {
     try {
-      await jwtAuthAxios.patch(`spt/reg-approval/${item.id}?status=APPROVED`);
+      await jwtAuthAxios.patch(
+        `spt/reg-approval/${item.id}?status=APPROVED`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
     } catch (error) {
       console.log(error);
     }
   };
-  
+
   const TableSPT = ({ index, item }) => (
     <TableRow>
       <TableCell>{index + 1}</TableCell>
@@ -175,7 +191,8 @@ const DaftarCalonTamatan = () => {
       </Typography>
       <Box sx={{ paddingX: 5 }}>
         <Typography variant="body1" sx={{ lineHeight: 2.5 }}>
-          Saya yang bertanda tangan di bawah ini, bermohon untuk dapat wisuda pada 
+          Saya yang bertanda tangan di bawah ini, bermohon untuk dapat wisuda
+          pada
           <Chip
             label={`${item?.graduate_plan}`}
             variant={"outlined"}
@@ -193,67 +210,67 @@ const DaftarCalonTamatan = () => {
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Nama Sesuai Ijazah</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.full_name}
+              {item?.full_name}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Nomor Registrasi</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.reg_num}
+              {item?.reg_num}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Tanggal Lahir</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.date_of_birth}
+              {item?.date_of_birth}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Jenis Kelamin</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.gender}
+              {item?.gender}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Nomor Induk Kependudukan (NIK)</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.nik}
+              {item?.nik}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Nomor Induk Mahasiswa (NIM)</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.nim}
+              {item?.nim}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Email</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.personal_email}
+              {item?.personal_email}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Program Studi</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.major}
+              {item?.major}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Minor/Konsentrasi</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.minor}
+              {item?.minor}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Nomor Telepon</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.phone_num}
+              {item?.phone_num}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Nama Ibu Kandung</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.birth_mother}
+              {item?.birth_mother}
             </Typography>
           </Grid>
         </Grid>
@@ -291,7 +308,13 @@ const DaftarCalonTamatan = () => {
           }}
         >
           {/* upload pdf sertifikat */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
             <Box>
               <iframe
                 title="certificate"
@@ -305,15 +328,15 @@ const DaftarCalonTamatan = () => {
             <Button
               size="small"
               sx={{
-                textTransform: 'none',
+                textTransform: "none",
                 mt: 1,
-                alignSelf: 'flex-start', // Align the button to the left
+                alignSelf: "flex-start", // Align the button to the left
               }}
               onClick={() => {
                 const pdfURL = item?.certificateURL;
 
                 // Open the link in a new tab or window
-                window.open(pdfURL, '_blank');
+                window.open(pdfURL, "_blank");
               }}
             >
               Open Certificate
@@ -385,19 +408,24 @@ const DaftarCalonTamatan = () => {
 
   React.useEffect(() => {
     // Fetch initial status values from the backend
-    jwtAuthAxios.get('/spt')
-      .then(response => {
+    jwtAuthAxios
+      .get("/spt", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
         const initialStatus = {};
 
-        console.log("get status mhs", response.data.data)
+        console.log("get status mhs", response.data.data);
 
-        response.data.data.forEach(item => {
+        response.data.data.forEach((item) => {
           initialStatus[item.nim] = item.student.status;
         });
         setSelectedStatus(initialStatus);
       })
-      .catch(error => {
-        console.error('Error fetching initial status:', error);
+      .catch((error) => {
+        console.error("Error fetching initial status:", error);
       });
   }, []); // Empty dependency array ensures that the effect runs once when the component mounts
 
@@ -407,17 +435,26 @@ const DaftarCalonTamatan = () => {
 
     // Send a PATCH request to update the backend
     // jwtAuthAxios.patch(`/spt/reg-changeStatus/${nim}`, { status: event.target.value })
-    jwtAuthAxios.patch(`/spt/reg-changeStatus/${nim}?status=${event.target.value}`)
-      .then(response => {
+    jwtAuthAxios
+      .patch(
+        `/spt/reg-changeStatus/${nim}?status=${event.target.value}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((response) => {
         console.log(response.data); // Handle successful response if needed
       })
-      .catch(error => {
-        console.error('Error updating status:', error);
+      .catch((error) => {
+        console.error("Error updating status:", error);
       });
   };
 
   // tabel calon tamatan
-  const TableItem = ({ index, item  }) => (
+  const TableItem = ({ index, item }) => (
     <TableRow>
       <TableCell>{index + 1 + rowsPerPage * page}</TableCell>
       <TableCell>
@@ -450,7 +487,7 @@ const DaftarCalonTamatan = () => {
           <Select
             labelId={`status-select-${index}`}
             id={`status-select-${index}`}
-            value={selectedStatus[item?.nim] || 'ACTIVE'} // Set default value based on backend data
+            value={selectedStatus[item?.nim] || "ACTIVE"} // Set default value based on backend data
             onChange={(event) => handleSelectChange(event, item?.nim)}
           >
             <MenuItem value="ACTIVE">Active</MenuItem>
@@ -465,34 +502,38 @@ const DaftarCalonTamatan = () => {
 
   React.useEffect(() => {
     jwtAuthAxios
-      .get(`/spt?search_query=${searchValue}`)
+      .get(`/spt?search_query=${searchValue}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then((res) => {
-      console.log(res.data.data);
-      const formattedData = res.data.data.map((item) => {
-        const remaining_classes = JSON.parse(item.remaining_classes);
-        return { ...item, remaining_classes };
+        console.log(res.data.data);
+        const formattedData = res.data.data.map((item) => {
+          const remaining_classes = JSON.parse(item.remaining_classes);
+          return { ...item, remaining_classes };
+        });
+
+        console.log("formatted data", formattedData);
+        // console.log(res.data.data);
+
+        setData(formattedData);
+
+        const uniqueStatusByFac = [
+          ...new Set(res.data.data.map((item) => item.approval_fac)),
+        ];
+        const uniqueStatusByReg = [
+          ...new Set(res.data.data.map((item) => item.approval_reg)),
+        ];
+        const uniqueGraduatePlan = [
+          ...new Set(res.data.data.map((item) => item.graduate_plan)),
+        ];
+
+        setStatusByFac(uniqueStatusByFac);
+        setStatusByRegister(uniqueStatusByReg);
+        setGraduatePlan(uniqueGraduatePlan);
+        // console.log(uniqueGraduatePlan);
       });
-
-      console.log("formatted data", formattedData);
-      // console.log(res.data.data);
-
-      setData(formattedData);
-
-      const uniqueStatusByFac = [
-        ...new Set(res.data.data.map((item) => item.approval_fac)),
-      ];
-      const uniqueStatusByReg = [
-        ...new Set(res.data.data.map((item) => item.approval_reg)),
-      ];
-      const uniqueGraduatePlan = [
-        ...new Set(res.data.data.map((item) => item.graduate_plan)),
-      ];
-
-      setStatusByFac(uniqueStatusByFac);
-      setStatusByRegister(uniqueStatusByReg);
-      setGraduatePlan(uniqueGraduatePlan);
-      // console.log(uniqueGraduatePlan);
-    });
   }, [searchBtn]);
 
   function filterData() {
@@ -605,21 +646,21 @@ const DaftarCalonTamatan = () => {
               ? filterData()
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => (
-                    <TableItem 
-                      index={index} 
-                      item={item} 
+                    <TableItem
+                      index={index}
+                      item={item}
                       key={item.nim} // Use a unique identifier from your data
                     />
                   ))
               : data
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => (
-                    <TableItem 
-                      index={index} 
-                      item={item} 
+                    <TableItem
+                      index={index}
+                      item={item}
                       key={item.nim} // Use a unique identifier from your data
                     />
-                ))}
+                  ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -706,7 +747,7 @@ const textSyle = {
   paddingX: "24px",
   paddingY: "16px",
   borderRadius: "8px",
-  minHeight: "50px", 
+  minHeight: "50px",
 };
 
 export default DaftarCalonTamatan;

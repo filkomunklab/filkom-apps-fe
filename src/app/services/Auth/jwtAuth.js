@@ -9,7 +9,6 @@ const jwtAuthAxios = axios.create({
   baseURL: BASE_URL_API,
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
   },
 });
 

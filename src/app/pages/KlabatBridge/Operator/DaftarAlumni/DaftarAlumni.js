@@ -115,14 +115,30 @@ const DaftarAlumni = () => {
 
   const handleSendButton = async () => {
     try {
-      await jwtAuthAxios.post("/operator/send-broadcast-email", {
-        recipientEmails: selectedEmails,
-      });
-      await jwtAuthAxios.post("/operator/alumni/send-broadcast-whatsapp", {
-        phoneNums: selectedPhoneNums,
-        pesan:
-          "Halo, ini adalah pesan broadcast dari Klabat Bridge. Terima kasih.",
-      });
+      await jwtAuthAxios.post(
+        "/operator/send-broadcast-email",
+        {
+          recipientEmails: selectedEmails,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      await jwtAuthAxios.post(
+        "/operator/alumni/send-broadcast-whatsapp",
+        {
+          phoneNums: selectedPhoneNums,
+          pesan:
+            "Halo, ini adalah pesan broadcast dari Klabat Bridge. Terima kasih.",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
     } catch (error) {
       console.log(error);
     }
@@ -130,11 +146,19 @@ const DaftarAlumni = () => {
 
   const handleWhatsappButton = async (phoneNum) => {
     try {
-      await jwtAuthAxios.post("/operator/alumni/send-broadcast-whatsapp", {
-        phoneNums: [phoneNum],
-        pesan:
-          "Halo, ini adalah pesan broadcast dari Klabat Bridge. Terima kasih.",
-      });
+      await jwtAuthAxios.post(
+        "/operator/alumni/send-broadcast-whatsapp",
+        {
+          phoneNums: [phoneNum],
+          pesan:
+            "Halo, ini adalah pesan broadcast dari Klabat Bridge. Terima kasih.",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
     } catch (error) {
       console.log(error);
     }
@@ -142,9 +166,17 @@ const DaftarAlumni = () => {
 
   const handleEmailButton = async (email) => {
     try {
-      await jwtAuthAxios.post("/operator/send-broadcast-email", {
-        recipientEmails: [email],
-      });
+      await jwtAuthAxios.post(
+        "/operator/send-broadcast-email",
+        {
+          recipientEmails: [email],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
     } catch (error) {
       console.log(error);
     }
@@ -152,9 +184,17 @@ const DaftarAlumni = () => {
 
   const handleExportButton = async () => {
     try {
-      const { data } = await jwtAuthAxios.get("/admin-operator/exportDataTS", {
-        responseType: "blob",
-      });
+      const { data } = await jwtAuthAxios.get(
+        "/admin-operator/exportDataTS",
+        {
+          responseType: "blob",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       const url = window.URL.createObjectURL(
         new Blob([data], {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -233,7 +273,11 @@ const DaftarAlumni = () => {
   React.useEffect(() => {
     let isMounted = true;
     jwtAuthAxios
-      .get(`/admin-operator/alumni?search_query=${searchValue}`)
+      .get(`/admin-operator/alumni?search_query=${searchValue}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then((res) => {
         if (isMounted) {
           setData(res.data.data);
@@ -248,7 +292,7 @@ const DaftarAlumni = () => {
           setMajor(uniqueMajor);
         }
       });
-      
+
     return () => {
       isMounted = false;
     };
@@ -259,7 +303,7 @@ const DaftarAlumni = () => {
     console.log(selectedPhoneNums);
   }, [selectedEmails]);
 
-  console.log(data)
+  console.log(data);
   return (
     <Box>
       <Div
@@ -374,7 +418,7 @@ const DaftarAlumni = () => {
               <TableCell>Status</TableCell>
               <TableCell sx={{ textAlign: "center" }}>Action</TableCell>
             </TableRow>
-          </TableHead> 
+          </TableHead>
           <TableBody>
             {filterData().length > 0
               ? filterData()

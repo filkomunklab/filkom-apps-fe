@@ -32,7 +32,12 @@ const ResetModal = ({ open, setOpen, data }) => {
         try {
           await jwtAuthAxios.patch(
             `/management/student/${data.nim}/password`,
-            values
+            values,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
           );
           setSubmitting(false);
           setOpen();
