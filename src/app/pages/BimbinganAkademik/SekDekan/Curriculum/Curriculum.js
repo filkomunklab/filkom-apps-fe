@@ -28,6 +28,7 @@ import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
 import { BASE_URL_API } from "../../../../../@jumbo/config/env";
 import * as XLSX from "xlsx";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const styleCurriculum = {
   position: "absolute",
@@ -100,6 +101,36 @@ const Curriculum = () => {
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
 
+  const [selectedCurriculumId, setSelectedCurriculumId] = useState(null);
+  const [isDeleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
+    useState(false);
+
+  const handleOpenDeleteConfirmationModal = () => {
+    setDeleteConfirmationModalOpen(true);
+  };
+
+  const handleCloseDeleteConfirmationModal = () => {
+    setDeleteConfirmationModalOpen(false);
+  };
+
+  const handleDeleteClick = (curriculumId) => {
+    setSelectedCurriculumId(curriculumId);
+    handleOpenDeleteConfirmationModal();
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await axios.delete(`${BASE_URL_API}/curriculum/${selectedCurriculumId}`);
+      handleCloseDeleteConfirmationModal();
+      setListCurriculum((prevList) =>
+        prevList.filter((item) => item.id !== selectedCurriculumId)
+      );
+      setCurriculum("selectCurriculum");
+    } catch (error) {
+      console.error("Error deleting curriculum:", error);
+    }
+  };
+
   const handleSubmitFirstModal = async () => {
     handleCloseFirstModal();
     setLoading(true);
@@ -166,22 +197,22 @@ const Curriculum = () => {
     getCurriculum();
   }, []);
 
-  const [Informatika2018ContentVisible, setInformatika2018ContentVisible] =
-    useState(false);
-  const [Informatika2020ContentVisible, setInformatika2020ContentVisible] =
-    useState(false);
-  const [
-    SistemInformasi2018ContentVisible,
-    setSistemInformasi2018ContentVisible,
-  ] = useState(false);
-  const [
-    SistemInformasi2020ContentVisible,
-    setSistemInformasi2020ContentVisible,
-  ] = useState(false);
-  const [
-    TeknologiInformasiContentVisible,
-    setTeknologiInformasiContentVisible,
-  ] = useState(false);
+  // const [Informatika2018ContentVisible, setInformatika2018ContentVisible] =
+  //   useState(false);
+  // const [Informatika2020ContentVisible, setInformatika2020ContentVisible] =
+  //   useState(false);
+  // const [
+  //   SistemInformasi2018ContentVisible,
+  //   setSistemInformasi2018ContentVisible,
+  // ] = useState(false);
+  // const [
+  //   SistemInformasi2020ContentVisible,
+  //   setSistemInformasi2020ContentVisible,
+  // ] = useState(false);
+  // const [
+  //   TeknologiInformasiContentVisible,
+  //   setTeknologiInformasiContentVisible,
+  // ] = useState(false);
 
   useEffect(() => {
     console.log("Curriculum effect triggered with curriculum:", curriculum);
@@ -635,14 +666,126 @@ const Curriculum = () => {
             <Typography sx={{ fontWeight: 400 }}>View Curriculum</Typography>
           </MenuItem>
 
-          {listCurriculum.map((value, index) => {
+          {/* {listCurriculum.map((value, index) => {
             return (
               <MenuItem key={value.id} value={value.id}>
                 {value.major} {value.year}
               </MenuItem>
             );
-          })}
+          })} */}
+
+          {listCurriculum.map((value, index) => (
+            <MenuItem
+              key={value.id}
+              value={value.id}
+              sx={{
+                "&:hover": {
+                  ".delete-icon": {
+                    display: ["flex"],
+                  },
+                },
+              }}
+              // onMouseEnter={() => handleMenuItemHover(index, true)}
+              // onMouseLeave={() => handleMenuItemHover(index, false)}
+            >
+              <div
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                {value.major} {value.year}
+                <IconButton
+                  className="delete-icon"
+                  onClick={() => handleDeleteClick(value.id)}
+                  sx={{
+                    color: "#4b4951",
+                    marginLeft: 1,
+                    display: "none",
+                    padding: 0,
+                  }}
+                >
+                  <DeleteIcon sx={{ fontSize: "18px" }} />
+                </IconButton>
+              </div>
+            </MenuItem>
+          ))}
         </Select>
+        <Modal
+          open={isDeleteConfirmationModalOpen}
+          onClose={handleCloseDeleteConfirmationModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <div style={style2}>
+            <IconButton
+              edge="end"
+              color="#D9D9D9"
+              onClick={handleCloseDeleteConfirmationModal}
+              aria-label="close"
+              sx={{
+                position: "absolute",
+                top: "10px",
+                right: "20px",
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography
+              id="modal-modal-title"
+              variant="h4"
+              component="h2"
+              sx={{
+                fontWeight: 600,
+              }}
+            >
+              Confirm Deletion
+            </Typography>
+            <Typography
+              id="modal-modal-description"
+              style={{ marginTop: "16px", marginBottom: "20px" }}
+            >
+              Are you sure you want to delete this curriculum?
+            </Typography>
+            <Grid container spacing={1} justifyContent="flex-end">
+              <Grid item>
+                <Button
+                  onClick={handleCloseDeleteConfirmationModal}
+                  sx={{
+                    backgroundColor: "white",
+                    borderRadius: "5px",
+                    color: "black",
+                    whiteSpace: "nowrap",
+                    "&:hover": {
+                      backgroundColor: "lightgrey",
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={handleConfirmDelete}
+                  sx={{
+                    borderRadius: "5px",
+                    color: "white",
+                    whiteSpace: "nowrap",
+                    backgroundColor: "#006AF5",
+                    "&:hover": {
+                      backgroundColor: "#025ED8",
+                    },
+                  }}
+                >
+                  Delete
+                </Button>
+              </Grid>
+            </Grid>
+          </div>
+        </Modal>
       </div>
 
       <Grid container pt={4}>
