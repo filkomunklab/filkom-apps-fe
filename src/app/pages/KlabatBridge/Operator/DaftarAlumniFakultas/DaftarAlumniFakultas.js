@@ -86,7 +86,7 @@ const DaftarAlumniFakultas = () => {
 
   const TableItem = ({ index, item }) => (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
+      <TableCell>{index + 1 + rowsPerPage * page}</TableCell>
       <TableCell>{`${item.firstName} ${item.lastName}`}</TableCell>
       <TableCell>{item.nim}</TableCell>
       <TableCell>{item.faculty}</TableCell>

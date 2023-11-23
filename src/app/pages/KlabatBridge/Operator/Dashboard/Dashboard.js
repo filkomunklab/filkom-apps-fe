@@ -195,12 +195,12 @@ const Dashboard = () => {
       // bar chart --- company category
       const categoryMapping = {
         "1": "Instansi Pemerintahan",
-        "2": "BUMN/BUMD",
-        "3": "Organisasi Multilateral",
-        "4": "LSM",
-        "5": "Perusahaan Swasta",
-        "6": "Wiraswasta",
-        "7": "Lainnya",
+        "6": "BUMN/BUMD",
+        "7": "Organisasi Multilateral",
+        "2": "LSM",
+        "3": "Perusahaan Swasta",
+        "4": "Wiraswasta",
+        "5": "Lainnya",
       };
       
       const formattedCompanyCategories = response.data.data.countCategories.map((item, index) => ({
