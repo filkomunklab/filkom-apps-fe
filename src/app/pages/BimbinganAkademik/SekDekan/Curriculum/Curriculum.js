@@ -120,22 +120,19 @@ const Curriculum = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await axios.delete(`${BASE_URL_API}/curriculum/${selectedCurriculumId}`);
+      await axios.delete(`${BASE_URL_API}/curriculums/${curriculum}`);
       handleCloseDeleteConfirmationModal();
-      setListCurriculum((prevList) =>
-        prevList.filter((item) => item.id !== selectedCurriculumId)
-      );
+      getCurriculum();
       setCurriculum("selectCurriculum");
     } catch (error) {
       console.error("Error deleting curriculum:", error);
+      console.error("Error response:", error.response);
     }
   };
 
   const handleSubmitFirstModal = async () => {
     handleCloseFirstModal();
     setLoading(true);
-
-    console.log("ini selected file: ", selectedFile);
     const file = selectedFile;
     const reader = new FileReader();
 
@@ -161,14 +158,15 @@ const Curriculum = () => {
       try {
         const result = await axios.post(`${BASE_URL_API}/curriculum`, data);
         if (result.data.status === "OK") {
-          console.log("Successful response:", result.data);
           setSelectedProdi("");
           setSelectedYear("");
           setSelectedFile(null);
+          setSelectedFileName("");
           handleOpenSecondModal();
           handleAddModalClose();
           getCurriculum();
           setLoading(false);
+          console.log("halo guyss");
         }
       } catch (error) {
         console.error("Error:", error);
@@ -183,7 +181,6 @@ const Curriculum = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      console.log("Closing second modal...");
       handleCloseSecondModal();
     }, 5000);
 
@@ -193,29 +190,10 @@ const Curriculum = () => {
   }, [handleOpenSecondModal]);
 
   useEffect(() => {
-    console.log("ini url: ", BASE_URL_API);
     getCurriculum();
   }, []);
 
-  // const [Informatika2018ContentVisible, setInformatika2018ContentVisible] =
-  //   useState(false);
-  // const [Informatika2020ContentVisible, setInformatika2020ContentVisible] =
-  //   useState(false);
-  // const [
-  //   SistemInformasi2018ContentVisible,
-  //   setSistemInformasi2018ContentVisible,
-  // ] = useState(false);
-  // const [
-  //   SistemInformasi2020ContentVisible,
-  //   setSistemInformasi2020ContentVisible,
-  // ] = useState(false);
-  // const [
-  //   TeknologiInformasiContentVisible,
-  //   setTeknologiInformasiContentVisible,
-  // ] = useState(false);
-
   useEffect(() => {
-    console.log("Curriculum effect triggered with curriculum:", curriculum);
     getSubjectByIdCurriculum();
   }, [curriculum]);
 
@@ -223,9 +201,7 @@ const Curriculum = () => {
     try {
       const result = await axios.get(`${BASE_URL_API}/subject/${curriculum}`);
       if (result.data.status === "OK") {
-        console.log("Successful response:", result.data.data);
         setListSubject(result.data.data);
-        console.log("ini isi list subject: ", listSubject);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -237,7 +213,6 @@ const Curriculum = () => {
     try {
       const result = await axios.get(`${BASE_URL_API}/curriculum`);
       if (result.data.status === "OK") {
-        console.log("Successful response:", result.data);
         setListCurriculum(result.data.data);
       }
     } catch (error) {
@@ -248,32 +223,34 @@ const Curriculum = () => {
 
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
+    if (file) {
+      const allowedExtensions = ["xlsx", "xls"];
+      const fileExtension = file.name.split(".").pop().toLowerCase();
 
-    const allowedExtensions = ["xlsx", "xls"];
-    const fileExtension = file.name.split(".").pop().toLowerCase();
+      if (allowedExtensions.includes(fileExtension)) {
+        setSelectedFile(file);
 
-    if (allowedExtensions.includes(fileExtension)) {
-      setSelectedFile(file);
-
-      const labelElement = document.getElementById("excel-file");
-      if (labelElement) {
-        labelElement.style.border = "0.2px solid #BCBCBC";
-      }
-
-      if (file) {
-        setSelectedFileName(file.name);
+        const labelElement = document.getElementById("excel-file");
+        if (labelElement) {
+          labelElement.style.border = "0.2px solid #BCBCBC";
+        }
+        if (file) {
+          setSelectedFileName(file.name);
+        } else {
+          setSelectedFileName("");
+        }
       } else {
-        setSelectedFileName("");
+        alert("Only Excel files (xlsx, xls) are allowed.");
+        event.target.value = "";
       }
     } else {
-      alert("Only Excel files (xlsx, xls) are allowed.");
-      event.target.value = "";
+      setSelectedFile(null);
+      setSelectedFileName("");
     }
   };
 
   const handleOnChange = (e) => {
     setCurriculum(e.target.value);
-    console.log("ini adalah curriculum: ", curriculum);
   };
 
   const handleAddModalOpen = () => {
@@ -472,16 +449,21 @@ const Curriculum = () => {
                       e.currentTarget.style.borderColor = "black";
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = "#BCBCBC";
+                      e.currentTarget.style.border = "0.2px solid #BCBCBC";
                     }}
                     onClick={(e) => {
                       e.currentTarget.style.border = "2px solid #006AF5";
                     }}
                     id="excel-file-label"
                   >
-                    <span style={{ color: "#7a7a7a" }}>
+                    <span
+                      style={{
+                        color: selectedFileName ? "#000000" : "#7a7a7a",
+                      }}
+                    >
                       {selectedFileName || "Import Excel"}
                     </span>
+
                     <SaveAltIcon style={{ color: "#888888" }} />
                   </label>
                 </FormControl>
@@ -665,15 +647,6 @@ const Curriculum = () => {
           <MenuItem value="selectCurriculum">
             <Typography sx={{ fontWeight: 400 }}>View Curriculum</Typography>
           </MenuItem>
-
-          {/* {listCurriculum.map((value, index) => {
-            return (
-              <MenuItem key={value.id} value={value.id}>
-                {value.major} {value.year}
-              </MenuItem>
-            );
-          })} */}
-
           {listCurriculum.map((value, index) => (
             <MenuItem
               key={value.id}
@@ -793,8 +766,7 @@ const Curriculum = () => {
           ""
         ) : (
           <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
-            <Table>
-              {/* stickyHeader */}
+            <Table stickyHeader>
               <TableHead
                 sx={{
                   position: "-webkit-sticky",
@@ -803,32 +775,39 @@ const Curriculum = () => {
                   backgroundColor: "rgb(245, 247, 250)",
                 }}
               >
-                <TableCell sx={{ width: "80px" }}>Number</TableCell>
-                <TableCell sx={{ width: "80px" }}>Semester</TableCell>
-                <TableCell sx={{ width: "80px" }}>Code</TableCell>
-                <TableCell sx={{ width: "400px" }}>Name</TableCell>
-                <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
-                <TableCell sx={{ width: "80px" }}>Type</TableCell>
-                <TableCell sx={{ width: "400px" }}>Prerequisite</TableCell>
+                <TableRow>
+                  <TableCell sx={{ width: "80px" }}>Number</TableCell>
+                  <TableCell sx={{ width: "80px" }}>Semester</TableCell>
+                  <TableCell sx={{ width: "80px" }}>Code</TableCell>
+                  <TableCell sx={{ width: "400px" }}>Name</TableCell>
+                  <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
+                  <TableCell sx={{ width: "80px" }}>Type</TableCell>
+                  <TableCell sx={{ width: "400px" }}>Prerequisite</TableCell>
+                </TableRow>
               </TableHead>
-              {listSubject &&
-                listSubject.map((value, index) => (
-                  <TableRow key={value.id}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>
-                      {value.semester === 0 ? "Pre-Requisite" : value.semester}
-                    </TableCell>
-                    <TableCell>{value.code}</TableCell>
-                    <TableCell>{value.name}</TableCell>
-                    <TableCell>{value.credits}</TableCell>
-                    <TableCell>{value.type}</TableCell>
-                    <TableCell>
-                      {value.prerequisite === null || value.prerequisite === ""
-                        ? "-"
-                        : value.prerequisite}
-                    </TableCell>
-                  </TableRow>
-                ))}
+              <TableBody>
+                {listSubject &&
+                  listSubject.map((value, index) => (
+                    <TableRow key={value.id}>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>
+                        {value.semester === 0
+                          ? "Pre-Requisite"
+                          : value.semester}
+                      </TableCell>
+                      <TableCell>{value.code}</TableCell>
+                      <TableCell>{value.name}</TableCell>
+                      <TableCell>{value.credits}</TableCell>
+                      <TableCell>{value.type}</TableCell>
+                      <TableCell>
+                        {value.prerequisite === null ||
+                        value.prerequisite === ""
+                          ? "-"
+                          : value.prerequisite}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
             </Table>
           </TableContainer>
         )}
