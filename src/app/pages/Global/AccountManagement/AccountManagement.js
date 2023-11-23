@@ -43,6 +43,7 @@ const AccountManagement = () => {
       })
       .then((res) => {
         setData(res.data.data);
+        console.log("data to change pass: ", res.data.data);
       })
       .catch((err) => {
         console.log(err.message);
@@ -79,12 +80,14 @@ const AccountManagement = () => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={data.length}
+        count={data?.length}
+        // count={data ? data.length : 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+
       <ResetModal
         open={modal.open}
         setOpen={() => {

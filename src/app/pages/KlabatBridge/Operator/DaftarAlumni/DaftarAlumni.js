@@ -43,6 +43,7 @@ const DaftarAlumni = () => {
   const [data, setData] = useState([]);
   const [year, setYear] = useState([]);
   const [major, setMajor] = useState([]);
+  const [status, setStatus] = useState([]);
   const [filterValue, setFilterValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [searchBtn, setSearchBtn] = useState(false);
@@ -266,7 +267,7 @@ const DaftarAlumni = () => {
   function filterData() {
     return data.filter(
       (item) =>
-        item["graduate_year"] === filterValue || item["major"] === filterValue
+        item["graduate_year"] === filterValue || item["major"] === filterValue || item["status"] === filterValue
     );
   }
 
@@ -287,9 +288,13 @@ const DaftarAlumni = () => {
           const uniqueMajor = [
             ...new Set(res.data.data.map((item) => item.major)),
           ];
+          const uniqueStatus = [
+            ...new Set(res.data.data.map((item) => item.status)),
+          ];
 
           setYear(uniqueYears);
           setMajor(uniqueMajor);
+          setStatus(uniqueStatus);
         }
       });
 
@@ -383,6 +388,12 @@ const DaftarAlumni = () => {
                 Graduation Year
               </ListSubheader>
               {year.map((item) => {
+                return <MenuItem value={item}>{item}</MenuItem>;
+              })}
+              <ListSubheader sx={{ color: "#192739F0" }}>
+                Status
+              </ListSubheader>
+              {status.map((item) => {
                 return <MenuItem value={item}>{item}</MenuItem>;
               })}
             </Select>

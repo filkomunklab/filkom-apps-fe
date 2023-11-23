@@ -208,45 +208,36 @@ const Dashboard = () => {
 
         console.log("Total Item Count:", totalAlumniEmployedIn12Months);
 
-        // bar chart --- company category
-        const categoryMapping = {
-          1: "Instansi Pemerintahan",
-          2: "BUMN/BUMD",
-          3: "Organisasi Multilateral",
-          4: "LSM",
-          5: "Perusahaan Swasta",
-          6: "Wiraswasta",
-          7: "Lainnya",
-        };
+      // bar chart --- company category
+      const categoryMapping = {
+        "1": "Instansi Pemerintahan",
+        "6": "BUMN/BUMD",
+        "7": "Organisasi Multilateral",
+        "2": "LSM",
+        "3": "Perusahaan Swasta",
+        "4": "Wiraswasta",
+        "5": "Lainnya",
+      };
+      
+      const formattedCompanyCategories = response.data.data.countCategories.map((item, index) => ({
+        organization: categoryMapping[item.f1101],
+        value: item._count,
+        fill: getColorBasedOnValue(index),
+      }));
 
-        const formattedCompanyCategories =
-          response.data.data.countCategories.map((item, index) => ({
-            organization: categoryMapping[item.f1101],
-            value: item._count,
-            fill: getColorBasedOnValue(index),
-          }));
+      function getColorBasedOnValue(index) {
+        const colors = ["#6200EE", "#FFF735", "#6BFAD7", "#128DFF", "#001AFF", "#C317FF", "#FC76DE"];
+        return colors[index % colors.length];
+      }
 
-        function getColorBasedOnValue(index) {
-          const colors = [
-            "#6200EE",
-            "#FFF735",
-            "#6BFAD7",
-            "#128DFF",
-            "#001AFF",
-            "#C317FF",
-            "#FC76DE",
-          ];
-          return colors[index % colors.length];
-        }
-
-        setData(response.data.data);
-        setDistribusiAlumni(formattedData);
-        setTotalITS(formattedData1);
-        setAlumni12Month(filteredAlumniEmployedIn12Months);
-        setTotalAlumni12month(totalAlumniEmployedIn12Months);
-        setCompanyCategory(formattedCompanyCategories);
-        setIndoDistribution(response.data.data.countDataForPeta);
-      });
+      setData(response.data.data);
+      setDistribusiAlumni(formattedData);
+      setTotalITS(formattedData1);
+      setAlumni12Month(filteredAlumniEmployedIn12Months);
+      setTotalAlumni12month(totalAlumniEmployedIn12Months);
+      setCompanyCategory(formattedCompanyCategories);
+      setIndoDistribution(response.data.data.countDataForPeta);
+    });
   };
 
   React.useEffect(() => {

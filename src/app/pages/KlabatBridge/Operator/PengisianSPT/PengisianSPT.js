@@ -38,7 +38,7 @@ import {
   IconButton,
   Chip,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
@@ -150,6 +150,11 @@ const PengisianSPT = () => {
       ...dataSPT,
       [event.target.name]: event.target.value,
     });
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [event.target.name]: false,
+    }));
   };
 
   // table
@@ -270,25 +275,103 @@ const PengisianSPT = () => {
     setPdfFile(null);
   };
 
-  const requiredFields = [
-    "nama",
-    /* 'field2', 'field3', ... */
-  ];
+  // handle submit (required fields)
+  const [errors, setErrors] = useState({
+    nama: false,
+    noRegis: false,
+    gender: false,
+    nik: false,
+    nim: false,
+    fakultas: false,
+    prodi: false,
+    minor: false,
+    ibuKandung: false,
+    noTelp: false,
+    email: false,
+    rencanaTamat: false,
+    // ... add other fields as needed
+  });
+  
+  // Create refs for each TextField
+  const namaRef = useRef();
+  const noRegisRef = useRef();
+  const genderRef = useRef();
+  const nikRef = useRef();
+  const nimRef = useRef();
+  const fakultasRef = useRef();
+  const prodiRef = useRef();
+  const minorRef = useRef();
+  const ibuKandungRef = useRef();
+  const noTelpRef = useRef();
+  const emailRef = useRef();
+  const rencanaTamatRef = useRef();
 
-  const handleSubmitForm = () => {
-    // Check if all required fields are filled
-    const allFieldsFilled = requiredFields.every(
-      (field) => dataSPT[field].trim() !== ""
-    );
-
-    if (allFieldsFilled) {
-      // Perform your submission logic here
-      setOpen(true);
-    } else {
-      // Show an error message or handle the empty case as needed
-      alert("Please fill in all required fields before submitting.");
+  const handleSubmitForm = async () => {
+    // Check for empty fields and set errors
+    const newErrors = {};
+    Object.keys(dataSPT).forEach((key) => {
+      if (!dataSPT[key]) {
+        newErrors[key] = true;
+      }
+    });
+    setErrors(newErrors);
+  
+    // If there are errors, focus on the first empty TextField
+    if (Object.values(newErrors).some((error) => error)) {
+      const firstEmptyField = Object.keys(newErrors).find((key) => newErrors[key]);
+      if (firstEmptyField) {
+        switch (firstEmptyField) {
+          case 'nama':
+            namaRef.current.focus();
+            break;
+          case 'noRegis':
+            noRegisRef.current.focus();
+            break;
+          case 'gender':
+            genderRef.current.focus();
+            break;
+          case 'nik':
+            nikRef.current.focus();
+            break;
+          case 'nim':
+            nimRef.current.focus();
+            break;
+          case 'fakultas':
+            fakultasRef.current.focus();
+            break;
+          case 'prodi':
+            prodiRef.current.focus();
+            break;
+          case 'minor':
+            minorRef.current.focus();
+            break;
+          case 'ibuKandung':
+            ibuKandungRef.current.focus();
+            break;
+          case 'noTelp':
+            noTelpRef.current.focus();
+            break;
+          case 'email':
+            emailRef.current.focus();
+            break;
+          case 'rencanaTamat':
+            rencanaTamatRef.current.focus();
+            break;
+          // Add cases for other fields as needed
+          default:
+            break;
+        }
+      }
+      return;
     }
+  
+    // If there are no errors, proceed with submission and set Open to true
+    setOpen(true);
+  
+    // ... rest of your code for submission
   };
+  
+  
 
   // submission
   const handleSubmit = async (e) => {
@@ -369,6 +452,9 @@ const PengisianSPT = () => {
               name="rencanaTamat"
               value={dataSPT.rencanaTamat}
               onChange={handleDataSPT}
+              error={errors.rencanaTamat}
+              helperText={errors.rencanaTamat ? 'This field is required' : ''}
+              inputRef={rencanaTamatRef} // Attach the ref to the TextField
             />
           </span>
           dengan sisa SKS yang harus diambil
@@ -404,8 +490,12 @@ const PengisianSPT = () => {
                 variant="outlined"
                 placeholder="Aurelea Saerang"
                 name="nama"
+                required
                 value={dataSPT.nama}
                 onChange={handleDataSPT}
+                error={errors.nama}
+                helperText={errors.nama ? 'This field is required' : ''}
+                inputRef={namaRef} // Attach the ref to the TextField
               />
             </Grid>
             <Grid item sm={12} md={6}>
@@ -419,6 +509,9 @@ const PengisianSPT = () => {
                 placeholder="1234567890"
                 value={dataSPT.noRegis}
                 onChange={handleDataSPT}
+                error={errors.noRegis}
+                helperText={errors.noRegis ? 'This field is required' : ''}
+                inputRef={namaRef} // Attach the ref to the TextField
               />
             </Grid>
             <Grid item sm={12} md={6}>
@@ -807,7 +900,7 @@ const PengisianSPT = () => {
               </Button> */}
               {/* alert dialog */}
               <Div>
-                <Button variant="contained" onClick={handleSubmitForm}>
+                <Button variant="contained" onClick={() => setOpen(true)}>
                   Submit
                 </Button>
 
