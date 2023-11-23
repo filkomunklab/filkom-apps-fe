@@ -20,10 +20,12 @@ import {
   CardHeader,
   CardContent,
   Paper,
+  TextField,
+  IconButton,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
 
 const yearList = [
   {
@@ -71,12 +73,12 @@ const prodiList = [
   },
 ];
 
-const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nim: `105022010000`,
-  name: `Yuhu, Christopher Darell`,
-  prodi: `Informatika`,
-  year: `2021`,
-  status: `Active`,
+const data = Array.from(Array(30).keys()).map((item, index) => ({
+  nim: `1050220100${index + 1}`,
+  name: `Student Name ${index + 1}`,
+  prodi: prodiList[index % prodiList.length].value,
+  year: yearList[index % yearList.length].value,
+  status: index % 2 === 0 ? " Active  " : "Nonactive",
 }));
 
 const StudentInformation = () => {
@@ -84,6 +86,7 @@ const StudentInformation = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const navigate = useNavigate();
+  const [searchValue, setSearchValue] = useState("");
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -93,6 +96,13 @@ const StudentInformation = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const filteredData = data.filter((item) => {
+    return (
+      item.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+      item.nim.includes(searchValue)
+    );
+  });
 
   return (
     <Div>
@@ -323,23 +333,28 @@ const StudentInformation = () => {
           </Typography>
         </Grid>
         <Grid item xs={12} sm={8} md={3}>
-          <SearchGlobal
-            sx={{
-              height: "100%",
-              "@media (max-width: 390px)": {
-                height: "40px",
-              },
+          <TextField
+            placeholder="Search by Name or NIM"
+            variant="outlined"
+            size="small"
+            onChange={(e) => setSearchValue(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <IconButton edge="end">
+                  <SearchIcon />
+                </IconButton>
+              ),
+              style: { borderRadius: "25px", width: "250px", height: "37px" },
             }}
           />
         </Grid>
         <Grid item xs={12} sm={4} md={3}>
-          <FormControl
-            sx={{
-              width: "100%",
-            }}
-          >
-            <InputLabel>Filter</InputLabel>
+          <FormControl sx={{ minWidth: 200 }} size="small">
+            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
             <Select
+              defaultValue=""
+              id="grouped-select"
+              label="Filter"
               sx={{
                 borderRadius: 50,
                 "@media (max-width: 390px)": {
@@ -348,7 +363,6 @@ const StudentInformation = () => {
               }}
               multiple
               value={filter}
-              label="Grouping"
               renderValue={(selected) => selected.join(", ")}
               MenuProps={{
                 PaperProps: {
@@ -421,7 +435,7 @@ const StudentInformation = () => {
         <Grid item xs={12}>
           <TableContainer
             sx={{
-              maxHeight: 440,
+              maxHeight: "80vh",
             }}
             component={Paper}
           >
@@ -430,7 +444,7 @@ const StudentInformation = () => {
                 <TableHeading />
               </TableHead>
               <TableBody>
-                {data
+                {filteredData
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => (
                     <TableItem item={item} index={index} key={index} />
@@ -510,7 +524,7 @@ const TableItem = ({ item, index }) => {
   return (
     <TableRow>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{`022407712`}</TableCell>
+      <TableCell sx={[rowStyle]}>{item.nim}</TableCell>
       <TableCell>
         <Button
           name="profile"
@@ -519,10 +533,12 @@ const TableItem = ({ item, index }) => {
             "@media (max-width: 390px)": { fontSize: "11px" },
           }}
           onClick={handleButtonNavigate}
-        >{`Yuhu, Christopher Darell`}</Button>
+        >
+          {item.name}
+        </Button>
       </TableCell>
-      <TableCell sx={[rowStyle]}>{`Informatika`}</TableCell>
-      <TableCell sx={[rowStyle]}>{`2021`}</TableCell>
+      <TableCell sx={[rowStyle]}>{item.prodi}</TableCell>
+      <TableCell sx={[rowStyle]}>{item.year}</TableCell>
 
       <TableCell>
         <Button
@@ -548,8 +564,13 @@ const TableItem = ({ item, index }) => {
           View Certificates
         </Button>
       </TableCell>
-      <TableCell sx={[rowStyle]}>
-        <Chip label={"Active"} variant="filled" color={"success"} />
+      <TableCell sx={{ rowStyle }}>
+        <Chip
+          sx={{ display: "flex", alignItems: "center" }}
+          label={item.status}
+          variant="filled"
+          color={item.status === " Active  " ? "success" : "default"}
+        />
       </TableCell>
     </TableRow>
   );
