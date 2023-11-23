@@ -13,6 +13,7 @@ import {
   Paper,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -117,6 +118,8 @@ const TableItem = ({ data }) => (
 );
 
 const PreRegistrationRejected = () => {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const navigate = useNavigate();
 
   const handleClick = (event) => {
@@ -237,29 +240,36 @@ const PreRegistrationRejected = () => {
           </Typography>
         </Paper>
       </Stack>
-      <TableContainer
-        sx={{ overflow: "auto", marginTop: 4, backgroundColor: "white" }}
-      >
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
-            <TableRow>
-              <TableCell sx={{ width: "40px" }}>Number</TableCell>
-              <TableCell sx={{ width: "40px" }}>Code</TableCell>
-              <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
-              <TableCell sx={{ width: "40px" }}>Credit(s)</TableCell>
-              <TableCell sx={{ width: "40px" }}>Grade</TableCell>
-              <TableCell sx={{ width: "200px" }}>Type </TableCell>
-              <TableCell sx={{ width: "380px" }}>Prerequisite</TableCell>
-              <TableCell sx={{ width: "110px" }}>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tableData1.map((data, index) => (
-              <TableItem key={index} data={data} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Grid item xs={12}>
+        <TableContainer
+          sx={{
+            maxHeight: 640,
+          }}
+          component={Paper}
+        >
+          <Table stickyHeader>
+            <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+              <TableRow>
+                <TableCell sx={{ width: "40px" }}>Number</TableCell>
+                <TableCell sx={{ width: "40px" }}>Code</TableCell>
+                <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
+                <TableCell sx={{ width: "40px" }}>Credit(s)</TableCell>
+                <TableCell sx={{ width: "40px" }}>Grade</TableCell>
+                <TableCell sx={{ width: "200px" }}>Type </TableCell>
+                <TableCell sx={{ width: "380px" }}>Prerequisite</TableCell>
+                <TableCell sx={{ width: "110px" }}>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tableData1
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((data, index) => (
+                  <TableItem key={index} data={data} />
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
     </div>
   );
 };
