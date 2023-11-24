@@ -13,6 +13,8 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
   Button,
+  TableContainer,
+  Paper,
 } from "@mui/material";
 import SearchLocal from "app/shared/SearchLocal";
 import Div from "@jumbo/shared/Div";
@@ -104,73 +106,75 @@ const InformationSystem = () => {
           </Typography>
         </Breadcrumbs>
       </Div>
-      <Grid
-        container
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <Grid item md={8} sm={7} xs={12}>
-          <Typography variant="h4" sx={{ fontWeight: 600 }}>
-            List of Students Majoring in Information System
-          </Typography>
-        </Grid>
+      <Div sx={{ paddingTop: 2, paddingBottom: 2 }}>
         <Grid
-          item
-          md={4}
-          sm={5}
-          xs={12}
+          container
           display="flex"
           flexDirection="row"
           alignItems="center"
-          sx={{
-            paddingLeft: "5px",
-            "@media (max-width: 573px)": {
-              paddingTop: "15px",
-              paddingBottom: "15px",
-            },
-          }}
+          justifyContent="space-between"
         >
-          <SearchLocal sx={{ width: "110%" }} />
+          <Grid item md={6}>
+            <Typography variant="h4" sx={{ fontWeight: 600 }}>
+              List of Students Majoring in Information System
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={8} md={5}>
+            <SearchLocal
+              sx={{
+                height: "100%",
+                "@media (max-width: 390px)": {
+                  height: "40px",
+                },
+              }}
+            />
+          </Grid>
         </Grid>
+      </Div>
+
+      <Grid item xs={12}>
+        <TableContainer
+          sx={{
+            maxHeight: 640,
+          }}
+          component={Paper}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    indeterminate={
+                      selected.length > 0 && selected.length < data.length
+                    }
+                    checked={isAllSelected}
+                    onChange={handleSelectAllClick}
+                  />
+                </TableCell>
+                <TableCell>No</TableCell>
+                <TableCell>NIM</TableCell>
+                <TableCell>Student Name</TableCell>
+                <TableCell>Program Studi</TableCell>
+                <TableCell>Tahun Masuk</TableCell>
+                <TableCell>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((item, index) => (
+                  <TableItem
+                    item={item}
+                    index={index}
+                    key={index}
+                    isSelected={isItemSelected(index)}
+                    handleClick={handleClick}
+                  />
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Grid>
-      <Div>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  indeterminate={
-                    selected.length > 0 && selected.length < data.length
-                  }
-                  checked={isAllSelected}
-                  onChange={handleSelectAllClick}
-                />
-              </TableCell>
-              <TableCell>No</TableCell>
-              <TableCell>NIM</TableCell>
-              <TableCell>Student Name</TableCell>
-              <TableCell>Program Studi</TableCell>
-              <TableCell>Tahun Masuk</TableCell>
-              <TableCell>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((item, index) => (
-                <TableItem
-                  item={item}
-                  index={index}
-                  key={index}
-                  isSelected={isItemSelected(index)}
-                  handleClick={handleClick}
-                />
-              ))}
-          </TableBody>
-        </Table>
-      </Div>{" "}
       <Grid
         item
         sx={{
