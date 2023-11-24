@@ -243,7 +243,10 @@ const PreRegistrationRejected = () => {
         </Paper>
       </Stack>
       <TableContainer
-        sx={{ overflow: "auto", marginTop: 4, backgroundColor: "white" }}
+        sx={{
+          maxHeight: 640,
+        }}
+        component={Paper}
       >
         <Table stickyHeader>
           <TableHead>

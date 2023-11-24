@@ -6,13 +6,14 @@ import {
   Table,
   TableHead,
   TableBody,
-  TablePagination,
+  TableContainer,
   TableRow,
   TableCell,
   Checkbox,
   Breadcrumbs,
   experimentalStyled as styled,
   Button,
+  Paper,
 } from "@mui/material";
 import SearchLocal from "app/shared/SearchLocal";
 import Div from "@jumbo/shared/Div";
@@ -37,7 +38,7 @@ const data = Array.from(Array(15).keys()).map((item, index) => ({
 
 const CountStudent = ({ selected, totalStudents }) => {
   return (
-    <Typography sx={{ fontSize: "16px" }}>
+    <Typography sx={{ fontSize: { xs: "14px", md: "16px", xl: "16px" } }}>
       You have selected {selected.length} out of {totalStudents} students
     </Typography>
   );
@@ -104,7 +105,7 @@ const InformationSystem = () => {
           </Typography>
         </Breadcrumbs>
       </Div>
-      <Div sx={{ padding: 2 }}>
+      <Div sx={{ paddingTop: 4, paddingBottom: 2 }}>
         <Grid
           container
           display="flex"
@@ -112,74 +113,73 @@ const InformationSystem = () => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Grid item md={6}>
+          <Grid item md={7}>
             <Typography variant="h4" sx={{ fontWeight: 600 }}>
               List of Students Majoring in Information System
             </Typography>
           </Grid>
-          <Grid
-            item
-            md={4}
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-          >
-            <SearchLocal />
+          <Grid item xs={12} sm={8} md={5}>
+            <SearchLocal
+              sx={{
+                height: "100%",
+                "@media (max-width: 390px)": {
+                  height: "40px",
+                },
+              }}
+            />
           </Grid>
         </Grid>
       </Div>
-      <Div>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  indeterminate={
-                    selected.length > 0 && selected.length < data.length
-                  }
-                  checked={isAllSelected}
-                  onChange={handleSelectAllClick}
-                />
-              </TableCell>
-              <TableCell>No</TableCell>
-              <TableCell>NIM</TableCell>
-              <TableCell>Student Name</TableCell>
-              <TableCell>Program Studi</TableCell>
-              <TableCell>Tahun Masuk</TableCell>
-              <TableCell>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((item, index) => (
-                <TableItem
-                  item={item}
-                  index={index}
-                  key={index}
-                  isSelected={isItemSelected(index)}
-                  handleClick={handleClick}
-                />
-              ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Div>
-      <Grid display="flex" alignItems="center" gap={4}>
-        <Grid item md={4}>
+      <Grid item xs={12}>
+        <TableContainer
+          sx={{
+            maxHeight: 640,
+          }}
+          component={Paper}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    indeterminate={
+                      selected.length > 0 && selected.length < data.length
+                    }
+                    checked={isAllSelected}
+                    onChange={handleSelectAllClick}
+                  />
+                </TableCell>
+                <TableCell>No</TableCell>
+                <TableCell>NIM</TableCell>
+                <TableCell>Student Name</TableCell>
+                <TableCell>Program Studi</TableCell>
+                <TableCell>Tahun Masuk</TableCell>
+                <TableCell>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((item, index) => (
+                  <TableItem
+                    item={item}
+                    index={index}
+                    key={index}
+                    isSelected={isItemSelected(index)}
+                    handleClick={handleClick}
+                  />
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+      <Grid display="flex" alignItems="center" gap={4} paddingTop={2}>
+        <Grid item xs={12} md={4} xl={4}>
           <Div sx={{ alignItems: "center" }}>
             <CountStudent selected={selected} totalStudents={data.length} />
           </Div>
         </Grid>
-        <Grid item md={4}>
+        <Grid item xs={12} md={4} xl={4}>
           <Link
             to={`/bimbingan-akademik/dekan/supervisor-information/add-supervisor`}
           >
@@ -190,9 +190,9 @@ const InformationSystem = () => {
                 color: "white",
                 whiteSpace: "nowrap",
                 minWidth: "132px",
-                fontSize: "12px",
                 padding: "10px",
                 alignItems: "center",
+                fontSize: { xs: "10px", md: "12px", xl: "16px" },
 
                 "&:hover": {
                   backgroundColor: "#025ED8",

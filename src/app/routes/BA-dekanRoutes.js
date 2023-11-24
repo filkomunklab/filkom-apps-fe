@@ -185,15 +185,15 @@ const dekanRoutes = [
     element: <Page component={HistoryConsultationAdvisor} />,
   },
   {
-    path: "/add-supervisor/informatics",
+    path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/informatics",
     element: <Page component={InformaticsLS} />,
   },
   {
-    path: "/add-supervisor/information-system",
+    path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/information-system",
     element: <Page component={InformationSytemLS} />,
   },
   {
-    path: "/add-supervisor/information-technology",
+    path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/information-technology",
     element: <Page component={InformationTechnologyLS} />,
   },
   {

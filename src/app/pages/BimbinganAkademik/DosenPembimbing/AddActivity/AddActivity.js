@@ -266,7 +266,7 @@ const AddActivity = () => {
       </Grid>
 
       <Grid container paddingTop={3}>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={4} xl={4}>
           <FormGroup sx={{ paddingLeft: { xs: 1, md: 3 } }}>
             <FormControlLabel
               control={<Switch size="small" color="primary" />}
@@ -276,7 +276,7 @@ const AddActivity = () => {
           </FormGroup>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6} xl={4}>
           <FormGroup sx={{ paddingLeft: { xs: 1, md: 3 } }}>
             <FormControlLabel
               control={<Switch size="small" color="primary" />}

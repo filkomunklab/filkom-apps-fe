@@ -17,6 +17,7 @@ import {
   TableHead,
   TableRow,
   TablePagination,
+  Paper,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
@@ -127,94 +128,141 @@ const GradeStudent = () => {
       >
         Student Grades
       </Typography>
-      <Grid container>
-        <Grid item id="detail-item">
-          <Grid container>
-            <Grid item md={"auto"}>
-              <Stack>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Student Name
+      <Grid container spacing={2}>
+        <Grid item md={12} xl={12} id="detail-item">
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Title</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5" fontWeight={500}>
+                  Menang Lomba Desan Prototype
                 </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Supervisor Name
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Semester
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Status
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Submission Date
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Approval Date
-                </Typography>
-              </Stack>
+              </Grid>
             </Grid>
-            <Grid item md={"auto"}>
-              <Stack paddingX={1}>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-              </Stack>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Student Name</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">Awuy, Diany Mariska</Typography>
+              </Grid>
             </Grid>
-            <Grid item md={"auto"}>
-              <Stack>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Bolung, Alexander Joseph
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Inkiriwang, Michelle Jesica
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  10 May 2000
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  11 May 2000
-                </Typography>
-                <Typography
-                  variant="h5"
-                  sx={{ marginBottom: 2, color: "#FFCC00" }}
-                >
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Supervisor Name</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">Dengah, Mesakh Leonardo</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Submission Date</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">November 14, 2023</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Approval Date</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">-</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Category</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">Local</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Status</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5" sx={{ color: "#FFCC00" }}>
                   Waiting
                 </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Seminar
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Descriptions</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5" sx={{ textAlign: "justify" }}>
+                  Saya mengikuti lomba desain prototype website kampus yang
+                  diselenggarakan oleh Fakultas Ilmu Komputer.
                 </Typography>
-              </Stack>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={12} sx={{ paddingTop: 3 }}>
-        <Table>
-          <TableHead>
-            <TableHeading />
-          </TableHead>
-          <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((item, index) => (
-                <TableItem item={item} index={index} key={index} />
-              ))}
-          </TableBody>
-        </Table>
+      <Grid item xs={12} paddingTop={2}>
+        <TableContainer
+          sx={{
+            maxHeight: 640,
+          }}
+          component={Paper}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableHeading />
+            </TableHead>
+            <TableBody>
+              {data
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((item, index) => (
+                  <TableItem item={item} index={index} key={index} />
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
         <TablePagination
           rowsPerPageOptions={[10, 25, 50, 100]}
           component={"div"}

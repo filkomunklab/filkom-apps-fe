@@ -9,10 +9,12 @@ import {
   TablePagination,
   TableRow,
   TableCell,
+  TableContainer,
   Checkbox,
   Breadcrumbs,
   experimentalStyled as styled,
   Button,
+  Paper,
 } from "@mui/material";
 import SearchLocal from "app/shared/SearchLocal";
 import Div from "@jumbo/shared/Div";
@@ -105,7 +107,7 @@ const InformationTechnology = () => {
           </Typography>
         </Breadcrumbs>
       </Div>
-      <Div sx={{ padding: 2 }}>
+      <Div sx={{ paddingTop: 4, paddingBottom: 2 }}>
         <Grid
           container
           display="flex"
@@ -120,50 +122,66 @@ const InformationTechnology = () => {
           </Grid>
           <Grid
             item
-            md={4}
+            xs={12}
+            sm={8}
+            md={5}
             display="flex"
             flexDirection="row"
             alignItems="center"
           >
-            <SearchLocal />
+            <SearchLocal
+              sx={{
+                height: "100%",
+                "@media (max-width: 390px)": {
+                  height: "40px",
+                },
+              }}
+            />
           </Grid>
         </Grid>
       </Div>
-      <Div>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  indeterminate={
-                    selected.length > 0 && selected.length < data.length
-                  }
-                  checked={isAllSelected}
-                  onChange={handleSelectAllClick}
-                />
-              </TableCell>
-              <TableCell>No</TableCell>
-              <TableCell>NIM</TableCell>
-              <TableCell>Student Name</TableCell>
-              <TableCell>Program Studi</TableCell>
-              <TableCell>Tahun Masuk</TableCell>
-              <TableCell>Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((item, index) => (
-                <TableItem
-                  item={item}
-                  index={index}
-                  key={index}
-                  isSelected={isItemSelected(index)}
-                  handleClick={handleClick}
-                />
-              ))}
-          </TableBody>
-        </Table>
+      <Grid item xs={12}>
+        <TableContainer
+          sx={{
+            maxHeight: 640,
+          }}
+          component={Paper}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    indeterminate={
+                      selected.length > 0 && selected.length < data.length
+                    }
+                    checked={isAllSelected}
+                    onChange={handleSelectAllClick}
+                  />
+                </TableCell>
+                <TableCell>No</TableCell>
+                <TableCell>NIM</TableCell>
+                <TableCell>Student Name</TableCell>
+                <TableCell>Program Studi</TableCell>
+                <TableCell>Tahun Masuk</TableCell>
+                <TableCell>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((item, index) => (
+                  <TableItem
+                    item={item}
+                    index={index}
+                    key={index}
+                    isSelected={isItemSelected(index)}
+                    handleClick={handleClick}
+                  />
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
         <TablePagination
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"
@@ -173,7 +191,7 @@ const InformationTechnology = () => {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      </Div>
+      </Grid>
       <Grid display="flex" alignItems="center" gap={4}>
         <Grid item md={4}>
           <Div sx={{ alignItems: "center" }}>
