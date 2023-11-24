@@ -111,11 +111,12 @@ const StudentInformation = () => {
           variant="h1"
           sx={{
             mb: 3,
-            "@media (max-width: 390px)": {
-              fontSize: "17px",
-              fontWeight: 500,
-              mb: "10px",
-            },
+            fontWeight: 500,
+            // "@media (max-width: 390px)": {
+            //   fontSize: "17px",
+            //   fontWeight: 500,
+            //   mb: "10px",
+            // },
           }}
         >
           Student Information
@@ -125,10 +126,10 @@ const StudentInformation = () => {
           sx={{
             mb: 3,
             textAlign: "justify",
-            "@media (max-width: 390px)": {
-              fontSize: "11px",
-              mb: "15px",
-            },
+            // "@media (max-width: 390px)": {
+            //   fontSize: "11px",
+            //   mb: "15px",
+            // },
           }}
         >
           Currently, you are on the Student Information page, where you can
@@ -167,7 +168,7 @@ const StudentInformation = () => {
             }}
             onClick={() =>
               navigate(
-                "/bimbingan-akademik/sek-dekan/student-information/information-technology"
+                "/bimbingan-akademik/sek-dekan/student-information/informatics"
               )
             }
           >
@@ -224,7 +225,7 @@ const StudentInformation = () => {
             }}
             onClick={() =>
               navigate(
-                "/bimbingan-akademik/sek-dekan/student-information/information-technology"
+                "/bimbingan-akademik/sek-dekan/student-information/information-system"
               )
             }
           >
@@ -318,18 +319,19 @@ const StudentInformation = () => {
         </Grid>
       </Grid>
       <Grid container spacing={2}>
-        <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
+        <Grid display={"flex"} alignItems={"flex-end"} item md={12} xl={6}>
           <Typography
             variant="h2"
             sx={{
               textAlign: "justify",
+              pt: 2,
               "@media (max-width: 390px)": {
                 fontSize: "16px",
                 fontWeight: 500,
               },
             }}
           >
-            Computer Sciences Faculty Students
+            Computer Sciences Faculty Students List
           </Typography>
         </Grid>
         <Grid item xs={12} sm={8} md={3}>
@@ -495,7 +497,7 @@ const TableItem = ({ item, index }) => {
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(`/bimbingan-akademik/sek-dekan/student-information/${item.nim}`);
+    // navigate(`/bimbingan-akademik/sek-dekan/student-information/${item.nim}`);
 
     switch (name) {
       case "profile":

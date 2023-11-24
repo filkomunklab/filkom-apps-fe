@@ -7,7 +7,7 @@ import {
   Paper,
   Breadcrumbs,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -49,22 +49,24 @@ const StudentGradeDashboard = () => {
   ];
   const id = "105022010000";
 
+  const navigate = useNavigate();
   const handleClick = (event) => {
     event.preventDefault();
+    navigate(-1);
   };
   return (
     <Div>
-      <Div role="presentation" onClick={handleClick} sx={{ paddingBottom: 3 }}>
+      <Div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/sek-dekan/student-information">
-            Student Information
-          </StyledLink>
-          <Typography color="text.primary">Students Grades</Typography>
+          <StyledLink>Student Information</StyledLink>
+          <Typography color="text.primary">Student Grades</Typography>
         </Breadcrumbs>
       </Div>
-      <Stack gap={3}>
+      <Stack gap={3} paddingTop={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
-          <Typography variant="h1">Nilai Mahasiswa</Typography>
+          <Typography variant="h1" fontWeight={500}>
+            Student Grade
+          </Typography>
           <Typography variant="h6">Yuhu, Darell Deil</Typography>
         </Stack>
         <Typography variant="h5">
