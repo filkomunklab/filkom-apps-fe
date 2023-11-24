@@ -6,7 +6,6 @@ import {
   Table,
   TableHead,
   TableBody,
-  TablePagination,
   TableRow,
   TableCell,
   TableContainer,
@@ -105,7 +104,7 @@ const Informatics = () => {
           <Typography color="text.primary">Informatics Student</Typography>
         </Breadcrumbs>
       </Div>
-      <Div sx={{ paddingTop: 2, paddingBottom: 4 }}>
+      <Div sx={{ paddingTop: 4, paddingBottom: 2 }}>
         <Grid
           container
           display="flex"
@@ -118,7 +117,7 @@ const Informatics = () => {
               List of Students Majoring in Informatics
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={8} md={4}>
+          <Grid item xs={12} sm={8} md={5}>
             <SearchLocal
               sx={{
                 height: "100%",

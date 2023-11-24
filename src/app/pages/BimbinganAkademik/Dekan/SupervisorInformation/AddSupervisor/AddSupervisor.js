@@ -214,7 +214,7 @@ const AddSupervisor = () => {
         >
           <Link
             style={{ textDecoration: "none", color: "white" }}
-            to={`/add-supervisor/${pilihJurusan}`}
+            to={`/bimbingan-akademik/dekan/supervisor-information/add-supervisor/${pilihJurusan}`}
           >
             <Button
               sx={{
