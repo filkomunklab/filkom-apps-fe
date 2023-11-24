@@ -50,6 +50,21 @@ const CertificateWaiting = () => {
           <Grid item xs={12}>
             <Grid container>
               <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Title</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5" fontWeight={500}>
+                  Menang Student Programmer Competition
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
                 <Typography variant="h5">Student Name</Typography>
               </Grid>
               <Grid item xs={1} xl={"auto"}>
