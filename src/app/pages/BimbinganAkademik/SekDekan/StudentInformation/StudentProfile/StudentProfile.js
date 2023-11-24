@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -23,16 +23,16 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const StudentProfile = () => {
+  const navigate = useNavigate();
   const handleClick = (event) => {
     event.preventDefault();
+    navigate(-1);
   };
   return (
     <Div>
       <Div role="presentation" onClick={handleClick} sx={{ paddingBottom: 3 }}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/sek-dekan/student-information">
-            Student Information
-          </StyledLink>
+          <StyledLink>Student Information</StyledLink>
           <Typography color="text.primary">Student Profile</Typography>
         </Breadcrumbs>
       </Div>
