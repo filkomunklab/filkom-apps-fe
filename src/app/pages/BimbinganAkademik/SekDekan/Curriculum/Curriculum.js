@@ -30,6 +30,8 @@ import { BASE_URL_API } from "../../../../../@jumbo/config/env";
 import * as XLSX from "xlsx";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+//test vercel
+
 const styleCurriculum = {
   position: "absolute",
   top: "50%",
@@ -131,7 +133,6 @@ const Curriculum = () => {
   };
 
   const handleSubmitFirstModal = async () => {
-    handleCloseFirstModal();
     setLoading(true);
     const file = selectedFile;
     const reader = new FileReader();
@@ -163,31 +164,40 @@ const Curriculum = () => {
           setSelectedFile(null);
           setSelectedFileName("");
           handleOpenSecondModal();
+          handleCloseFirstModal();
           handleAddModalClose();
           getCurriculum();
           setLoading(false);
-          console.log("halo guyss");
         }
       } catch (error) {
         console.error("Error:", error);
         console.error("Error response:", error.response);
+        setSelectedProdi("");
+        setSelectedYear("");
+        setSelectedFile(null);
+        setSelectedFileName("");
         handleOpenErrorModal();
+        handleCloseFirstModal();
+        handleAddModalClose();
         setLoading(false);
       }
     };
-
     reader.readAsArrayBuffer(file);
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      handleCloseSecondModal();
-    }, 5000);
+    let timer;
+
+    if (openSecondModal) {
+      timer = setTimeout(() => {
+        handleCloseSecondModal();
+      }, 5000);
+    }
 
     return () => {
       clearTimeout(timer);
     };
-  }, [handleOpenSecondModal]);
+  }, [openSecondModal, handleCloseSecondModal]);
 
   useEffect(() => {
     getCurriculum();
@@ -273,6 +283,41 @@ const Curriculum = () => {
     handleAddModalClose();
   };
 
+  const getRoleFromPath = () => {
+    const path = window.location.pathname;
+    if (path.includes("sek-dekan")) {
+      return "sekdekan";
+    } else if (path.includes("dekan")) {
+      return "dekan";
+    } else if (path.includes("kaprodi")) {
+      return "kaprodi";
+    } else if (path.includes("dospem")) {
+      return "dospem";
+    } else {
+      // Default role jika path tidak sesuai dengan yang diharapkan
+      return "defaultRole";
+    }
+  };
+
+  const [role, setRole] = useState(getRoleFromPath());
+
+  const determineAllowedFeatures = () => {
+    switch (role) {
+      case "sekdekan":
+        return ["view_kurikulum", "add_kurikulum", "delete_kurikulum"];
+      case "dekan":
+        return ["view_kurikulum"];
+      case "kaprodi":
+        return ["view_kurikulum"];
+      case "dospem":
+        return ["view_kurikulum"];
+      default:
+        return [];
+    }
+  };
+
+  const allowedFeatures = determineAllowedFeatures();
+
   return (
     <div>
       {loading && (
@@ -295,7 +340,7 @@ const Curriculum = () => {
       )}
       <div>
         <Typography
-          sx={{ fontSize: "24px", fontWeight: 400, paddingBottom: "10px" }}
+          sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "10px" }}
         >
           Curriculum
         </Typography>
@@ -312,327 +357,329 @@ const Curriculum = () => {
               You can choose the curriculum
             </Typography>
           </Grid>
-          <Grid
-            item
-            md={4}
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              padding: "3px",
-              paddingBottom: "15px",
-            }}
-          >
-            <Button
-              variant="outlined"
-              size="small"
+          {role === "sekdekan" && allowedFeatures.includes("add_kurikulum") && (
+            <Grid
+              item
+              md={4}
               sx={{
-                backgroundColor: "#006AF5",
-                borderRadius: "24px",
-                color: "white",
-                fontSize: "12px",
-                padding: "7px",
-                paddingLeft: "9px",
-                paddingRight: "9px",
-                minWidth: "110px",
-                gap: "5px",
-                "&:hover": {
-                  backgroundColor: "#025ED8",
-                },
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                padding: "3px",
+                paddingBottom: "15px",
               }}
-              onClick={handleAddModalOpen}
             >
-              <AddIcon sx={{ fontSize: "14px" }} />
-              Add Curriculum
-            </Button>
-            <Modal open={isAddModalOpen} onClose={handleAddModalClose}>
-              <Box style={styleCurriculum}>
-                <IconButton
-                  edge="end"
-                  color="#D9D9D9"
-                  onClick={closeModal}
-                  aria-label="close"
-                  sx={{
-                    position: "absolute",
-                    top: "10px",
-                    right: "20px",
-                  }}
-                >
-                  <CloseIcon />
-                </IconButton>
-                <Grid container paddingTop={2}>
-                  <Grid item md={8}>
-                    <Typography
-                      id="modal-modal-title"
-                      variant="h4"
-                      component="h2"
-                      sx={{
-                        fontWeight: 600,
-                        paddingBottom: 3,
-                        paddingTop: 2,
-                      }}
-                    >
-                      Add Curriculum
-                    </Typography>
-                  </Grid>
-                  <Grid item mt={2} md={4}>
-                    <Link
-                      sx={{
-                        cursor: "pointer",
-                        color: "#025ED8",
-                        display: "flex",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      Template Excel
-                    </Link>
-                  </Grid>
-                </Grid>
-                <FormControl
-                  fullWidth
-                  sx={{
-                    width: "100%",
-                    marginBottom: 3,
-                  }}
-                  label="Program Studi"
-                >
-                  <InputLabel>Program Studi</InputLabel>
-                  <Select
-                    label="Program Studi"
-                    value={selectedProdi}
-                    onChange={handleProdiChange}
-                  >
-                    <MenuItem value="Informatika">Informatika</MenuItem>
-                    <MenuItem value="Sistem Informasi">
-                      Sistem Informasi
-                    </MenuItem>
-                    <MenuItem value="Teknologi Informasi">
-                      Teknologi Informasi
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-                <TextField
-                  label="Tahun"
-                  variant="outlined"
-                  fullWidth
-                  value={selectedYear}
-                  onChange={handleYearChange}
-                  sx={{ marginBottom: 3 }}
-                />
-                <FormControl
-                  fullWidth
-                  variant="outlined"
-                  sx={{ backgroundColor: "white" }}
-                  size="small"
-                >
-                  <Input
-                    type="file"
-                    id="excel-file-input"
-                    onChange={handleFileInputChange}
-                    disableUnderline
-                    inputProps={{ style: { display: "none" } }}
-                  />
-                  <label
-                    htmlFor="excel-file-input"
-                    style={{
-                      border: "0.2px solid #BCBCBC",
-                      padding: "14px",
-                      height: "53px",
-                      borderRadius: "4px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      transition: "border-color 0.3s ease",
-                      cursor: "pointer",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = "black";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.border = "0.2px solid #BCBCBC";
-                    }}
-                    onClick={(e) => {
-                      e.currentTarget.style.border = "2px solid #006AF5";
-                    }}
-                    id="excel-file-label"
-                  >
-                    <span
-                      style={{
-                        color: selectedFileName ? "#000000" : "#7a7a7a",
-                      }}
-                    >
-                      {selectedFileName || "Import Excel"}
-                    </span>
-
-                    <SaveAltIcon style={{ color: "#888888" }} />
-                  </label>
-                </FormControl>
-                <Grid
-                  item
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    pt: 3,
-                  }}
-                >
-                  <Button
-                    size="small"
-                    onClick={handleOpenFirstModal}
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{
+                  backgroundColor: "#006AF5",
+                  borderRadius: "24px",
+                  color: "white",
+                  fontSize: "12px",
+                  padding: "7px",
+                  paddingLeft: "9px",
+                  paddingRight: "9px",
+                  minWidth: "110px",
+                  gap: "5px",
+                  "&:hover": {
+                    backgroundColor: "#025ED8",
+                  },
+                }}
+                onClick={handleAddModalOpen}
+              >
+                <AddIcon sx={{ fontSize: "14px" }} />
+                Add Curriculum
+              </Button>
+              <Modal open={isAddModalOpen} onClose={handleAddModalClose}>
+                <Box style={styleCurriculum}>
+                  <IconButton
+                    edge="end"
+                    color="#D9D9D9"
+                    onClick={closeModal}
+                    aria-label="close"
                     sx={{
-                      backgroundColor: "#006AF5",
-                      borderRadius: "24px",
-                      color: "white",
-                      fontSize: "12px",
-                      padding: "7px",
-                      paddingLeft: "20px",
-                      paddingRight: "20px",
-                      gap: "5px",
-                      "&:hover": {
-                        backgroundColor: "#025ED8",
-                      },
+                      position: "absolute",
+                      top: "10px",
+                      right: "20px",
                     }}
                   >
-                    Submit
-                  </Button>
-                </Grid>
-                <Modal
-                  open={openFirstModal}
-                  onClose={handleCloseFirstModal}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <div style={style}>
-                    <Typography
-                      id="modal-modal-title"
-                      variant="h4"
-                      component="h2"
-                      sx={{
-                        fontWeight: 600,
-                      }}
-                    >
-                      Send Certificate?
-                    </Typography>
-                    <Typography
-                      id="modal-modal-description"
-                      style={{ marginTop: "16px", marginBottom: "20px" }}
-                    >
-                      Are you sure you want to submit this? Forms that have been
-                      submitted cannot be edited again.
-                    </Typography>
-
-                    <Grid container spacing={1} justifyContent="flex-end">
-                      <Grid item>
-                        <Button
-                          onClick={handleCloseFirstModal}
-                          sx={{
-                            backgroundColor: "white",
-                            borderRadius: "5px",
-                            color: "black",
-                            whiteSpace: "nowrap",
-                            "&:hover": {
-                              backgroundColor: "lightgrey",
-                            },
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                      </Grid>
-                      <Grid item>
-                        <Button
-                          onClick={handleSubmitFirstModal}
-                          sx={{
-                            backgroundColor: "#006AF5",
-                            borderRadius: "5px",
-                            color: "white",
-                            whiteSpace: "nowrap",
-                            "&:hover": {
-                              backgroundColor: "#025ED8",
-                            },
-                          }}
-                        >
-                          Submit
-                        </Button>
-                      </Grid>
+                    <CloseIcon />
+                  </IconButton>
+                  <Grid container paddingTop={2}>
+                    <Grid item md={8}>
+                      <Typography
+                        id="modal-modal-title"
+                        variant="h4"
+                        component="h2"
+                        sx={{
+                          fontWeight: 600,
+                          paddingBottom: 3,
+                          paddingTop: 2,
+                        }}
+                      >
+                        Add Curriculum
+                      </Typography>
                     </Grid>
-                  </div>
-                </Modal>
-                <Modal
-                  open={openSecondModal}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <div style={style2}>
-                    <IconButton
-                      edge="end"
-                      color="#D9D9D9"
-                      onClick={handleCloseSecondModal}
-                      aria-label="close"
+                    <Grid item mt={2} md={4}>
+                      <Link
+                        sx={{
+                          cursor: "pointer",
+                          color: "#025ED8",
+                          display: "flex",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        Template Excel
+                      </Link>
+                    </Grid>
+                  </Grid>
+                  <FormControl
+                    fullWidth
+                    sx={{
+                      width: "100%",
+                      marginBottom: 3,
+                    }}
+                    label="Program Studi"
+                  >
+                    <InputLabel>Program Studi</InputLabel>
+                    <Select
+                      label="Program Studi"
+                      value={selectedProdi}
+                      onChange={handleProdiChange}
+                    >
+                      <MenuItem value="Informatika">Informatika</MenuItem>
+                      <MenuItem value="Sistem Informasi">
+                        Sistem Informasi
+                      </MenuItem>
+                      <MenuItem value="Teknologi Informasi">
+                        Teknologi Informasi
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                  <TextField
+                    label="Tahun"
+                    variant="outlined"
+                    fullWidth
+                    value={selectedYear}
+                    onChange={handleYearChange}
+                    sx={{ marginBottom: 3 }}
+                  />
+                  <FormControl
+                    fullWidth
+                    variant="outlined"
+                    sx={{ backgroundColor: "white" }}
+                    size="small"
+                  >
+                    <Input
+                      type="file"
+                      id="excel-file-input"
+                      onChange={handleFileInputChange}
+                      disableUnderline
+                      inputProps={{ style: { display: "none" } }}
+                    />
+                    <label
+                      htmlFor="excel-file-input"
+                      style={{
+                        border: "0.2px solid #BCBCBC",
+                        padding: "14px",
+                        height: "53px",
+                        borderRadius: "4px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        transition: "border-color 0.3s ease",
+                        cursor: "pointer",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = "black";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.border = "0.2px solid #BCBCBC";
+                      }}
+                      onClick={(e) => {
+                        e.currentTarget.style.border = "2px solid #006AF5";
+                      }}
+                      id="excel-file-label"
+                    >
+                      <span
+                        style={{
+                          color: selectedFileName ? "#000000" : "#7a7a7a",
+                        }}
+                      >
+                        {selectedFileName || "Import Excel"}
+                      </span>
+
+                      <SaveAltIcon style={{ color: "#888888" }} />
+                    </label>
+                  </FormControl>
+                  <Grid
+                    item
+                    sx={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      pt: 3,
+                    }}
+                  >
+                    <Button
+                      size="small"
+                      onClick={handleOpenFirstModal}
                       sx={{
-                        position: "absolute",
-                        top: "10px",
-                        right: "20px",
+                        backgroundColor: "#006AF5",
+                        borderRadius: "24px",
+                        color: "white",
+                        fontSize: "12px",
+                        padding: "7px",
+                        paddingLeft: "20px",
+                        paddingRight: "20px",
+                        gap: "5px",
+                        "&:hover": {
+                          backgroundColor: "#025ED8",
+                        },
                       }}
                     >
-                      <CloseIcon />
-                    </IconButton>
-                    <Typography
-                      id="modal-modal-title"
-                      variant="h4"
-                      component="h2"
-                      sx={{
-                        fontWeight: 600,
-                      }}
-                    >
-                      Successful Submission!
-                    </Typography>
-                    <Typography
-                      id="modal-modal-description"
-                      style={{ marginTop: "16px", marginBottom: "20px" }}
-                    >
-                      You have successfully preregistered for the course.
-                    </Typography>
-                  </div>
-                </Modal>
-                <Modal
-                  open={openErrorModal}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <div style={style2}>
-                    <IconButton
-                      edge="end"
-                      color="#D9D9D9"
-                      onClick={handleCloseErrorModal}
-                      aria-label="close"
-                      sx={{
-                        position: "absolute",
-                        top: "10px",
-                        right: "20px",
-                      }}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                    <Typography
-                      id="modal-modal-title"
-                      variant="h4"
-                      component="h2"
-                      sx={{
-                        fontWeight: 600,
-                      }}
-                    >
-                      Error Submission!
-                    </Typography>
-                    <Typography
-                      id="modal-modal-description"
-                      style={{ marginTop: "16px", marginBottom: "20px" }}
-                    >
-                      Error: Failed to add curriculum. Please try again.
-                    </Typography>
-                  </div>
-                </Modal>
-              </Box>
-            </Modal>
-          </Grid>
+                      Submit
+                    </Button>
+                  </Grid>
+                  <Modal
+                    open={openFirstModal}
+                    onClose={handleCloseFirstModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <div style={style}>
+                      <Typography
+                        id="modal-modal-title"
+                        variant="h4"
+                        component="h2"
+                        sx={{
+                          fontWeight: 600,
+                        }}
+                      >
+                        Send Certificate?
+                      </Typography>
+                      <Typography
+                        id="modal-modal-description"
+                        style={{ marginTop: "16px", marginBottom: "20px" }}
+                      >
+                        Are you sure you want to submit this? Forms that have
+                        been submitted cannot be edited again.
+                      </Typography>
+
+                      <Grid container spacing={1} justifyContent="flex-end">
+                        <Grid item>
+                          <Button
+                            onClick={handleCloseFirstModal}
+                            sx={{
+                              backgroundColor: "white",
+                              borderRadius: "5px",
+                              color: "black",
+                              whiteSpace: "nowrap",
+                              "&:hover": {
+                                backgroundColor: "lightgrey",
+                              },
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </Grid>
+                        <Grid item>
+                          <Button
+                            onClick={handleSubmitFirstModal}
+                            sx={{
+                              backgroundColor: "#006AF5",
+                              borderRadius: "5px",
+                              color: "white",
+                              whiteSpace: "nowrap",
+                              "&:hover": {
+                                backgroundColor: "#025ED8",
+                              },
+                            }}
+                          >
+                            Submit
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </div>
+                  </Modal>
+                </Box>
+              </Modal>
+              <Modal
+                open={openSecondModal}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <div style={style2}>
+                  <IconButton
+                    edge="end"
+                    color="#D9D9D9"
+                    onClick={handleCloseSecondModal}
+                    aria-label="close"
+                    sx={{
+                      position: "absolute",
+                      top: "10px",
+                      right: "20px",
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                  <Typography
+                    id="modal-modal-title"
+                    variant="h4"
+                    component="h2"
+                    sx={{
+                      fontWeight: 600,
+                    }}
+                  >
+                    Successful Submission!
+                  </Typography>
+                  <Typography
+                    id="modal-modal-description"
+                    style={{ marginTop: "16px", marginBottom: "20px" }}
+                  >
+                    You have successfully preregistered for the course.
+                  </Typography>
+                </div>
+              </Modal>
+              <Modal
+                open={openErrorModal}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <div style={style2}>
+                  <IconButton
+                    edge="end"
+                    color="#D9D9D9"
+                    onClick={handleCloseErrorModal}
+                    aria-label="close"
+                    sx={{
+                      position: "absolute",
+                      top: "10px",
+                      right: "20px",
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                  <Typography
+                    id="modal-modal-title"
+                    variant="h4"
+                    component="h2"
+                    sx={{
+                      fontWeight: 600,
+                    }}
+                  >
+                    Error Submission!
+                  </Typography>
+                  <Typography
+                    id="modal-modal-description"
+                    style={{ marginTop: "16px", marginBottom: "20px" }}
+                  >
+                    Error: Failed to add curriculum. Please try again.
+                  </Typography>
+                </div>
+              </Modal>
+            </Grid>
+          )}
         </Grid>
       </div>
       <div>
@@ -642,6 +689,13 @@ const Curriculum = () => {
           sx={{
             width: "100%",
             backgroundColor: "rgba(26, 56, 96, 0.1)",
+          }}
+          MenuProps={{
+            PaperProps: {
+              style: {
+                maxHeight: "40%",
+              },
+            },
           }}
         >
           <MenuItem value="selectCurriculum">
@@ -658,8 +712,6 @@ const Curriculum = () => {
                   },
                 },
               }}
-              // onMouseEnter={() => handleMenuItemHover(index, true)}
-              // onMouseLeave={() => handleMenuItemHover(index, false)}
             >
               <div
                 style={{
@@ -671,18 +723,21 @@ const Curriculum = () => {
                 }}
               >
                 {value.major} {value.year}
-                <IconButton
-                  className="delete-icon"
-                  onClick={() => handleDeleteClick(value.id)}
-                  sx={{
-                    color: "#4b4951",
-                    marginLeft: 1,
-                    display: "none",
-                    padding: 0,
-                  }}
-                >
-                  <DeleteIcon sx={{ fontSize: "18px" }} />
-                </IconButton>
+                {role === "sekdekan" &&
+                  allowedFeatures.includes("add_kurikulum") && (
+                    <IconButton
+                      className="delete-icon"
+                      onClick={() => handleDeleteClick(value.id)}
+                      sx={{
+                        color: "#4b4951",
+                        marginLeft: 1,
+                        display: "none",
+                        padding: 0,
+                      }}
+                    >
+                      <DeleteIcon sx={{ fontSize: "18px" }} />
+                    </IconButton>
+                  )}
               </div>
             </MenuItem>
           ))}
@@ -787,26 +842,69 @@ const Curriculum = () => {
               </TableHead>
               <TableBody>
                 {listSubject &&
-                  listSubject.map((value, index) => (
-                    <TableRow key={value.id}>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>
-                        {value.semester === 0
-                          ? "Pre-Requisite"
-                          : value.semester}
-                      </TableCell>
-                      <TableCell>{value.code}</TableCell>
-                      <TableCell>{value.name}</TableCell>
-                      <TableCell>{value.credits}</TableCell>
-                      <TableCell>{value.type}</TableCell>
-                      <TableCell>
-                        {value.prerequisite === null ||
-                        value.prerequisite === ""
-                          ? "-"
-                          : value.prerequisite}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  listSubject.map((value, index) => {
+                    // Variable untuk melacak apakah informasi tambahan untuk semester 1 sudah ditampilkan
+                    let isSemester1InfoDisplayed = false;
+
+                    // Check if the current semester is 1, then add an additional row only if it hasn't been displayed yet
+                    if (value.semester === 1 && !isSemester1InfoDisplayed) {
+                      isSemester1InfoDisplayed = true; // Set variabel menjadi true agar tidak ditampilkan lagi
+                      return (
+                        <React.Fragment key={`additional-row-semester-1`}>
+                          <TableRow>
+                            <TableCell colSpan={7}>
+                              Additional Row for Semester 1
+                            </TableCell>
+                          </TableRow>
+                          {/* Regular row */}
+                          <TableRow key={value.id}>
+                            <TableCell>{index + 1}</TableCell>
+                            <TableCell>
+                              {value.semester === 0
+                                ? "Pre-Requisite"
+                                : value.semester === 9
+                                ? "Elective"
+                                : value.semester}
+                            </TableCell>
+                            <TableCell>{value.code}</TableCell>
+                            <TableCell>{value.name}</TableCell>
+                            <TableCell>{value.credits}</TableCell>
+                            <TableCell>{value.type}</TableCell>
+                            <TableCell>
+                              {value.prerequisite === null ||
+                              value.prerequisite === ""
+                                ? "-"
+                                : value.prerequisite}
+                            </TableCell>
+                          </TableRow>
+                        </React.Fragment>
+                      );
+                    } else {
+                      // Regular row for other semesters
+                      return (
+                        <TableRow key={value.id}>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>
+                            {value.semester === 0
+                              ? "Pre-Requisite"
+                              : value.semester === 9
+                              ? "Elective"
+                              : value.semester}
+                          </TableCell>
+                          <TableCell>{value.code}</TableCell>
+                          <TableCell>{value.name}</TableCell>
+                          <TableCell>{value.credits}</TableCell>
+                          <TableCell>{value.type}</TableCell>
+                          <TableCell>
+                            {value.prerequisite === null ||
+                            value.prerequisite === ""
+                              ? "-"
+                              : value.prerequisite}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    }
+                  })}
               </TableBody>
             </Table>
           </TableContainer>
