@@ -14,9 +14,11 @@ import {
   TableContainer,
   Typography,
   Card,
+  Paper,
   CardHeader,
   CardContent,
 } from "@mui/material";
+
 import SearchGlobal from "app/shared/SearchGlobal";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
