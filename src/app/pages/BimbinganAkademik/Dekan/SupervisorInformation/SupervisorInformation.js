@@ -8,7 +8,6 @@ import {
   InputLabel,
   ListSubheader,
   MenuItem,
-  Select,
   Table,
   TableBody,
   TableCell,
