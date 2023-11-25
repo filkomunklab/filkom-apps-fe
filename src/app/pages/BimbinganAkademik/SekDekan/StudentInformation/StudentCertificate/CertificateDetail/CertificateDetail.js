@@ -32,6 +32,7 @@ const CertificateDetail = () => {
     event.preventDefault();
     navigate(step);
   };
+
   return (
     <Div>
       <Div role="presentation">
@@ -52,21 +53,20 @@ const CertificateDetail = () => {
       >
         Certificate
       </Typography>
-      <Grid container spacing={2}>
-        <Grid item md={8} id="detail-item">
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Title</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5" fontWeight={500}>
-                  Menang Student Programmer Competition
-                </Typography>
-              </Grid>
+      <Grid container spacing={2} />
+      <Grid item md={8} id="detail-item">
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={4} md={3} xl={3}>
+              <Typography variant="h5">Title</Typography>
+            </Grid>
+            <Grid item xs={1} xl={"auto"}>
+              <Typography variant="h5">:</Typography>
+            </Grid>
+            <Grid item xs={7} paddingLeft={1}>
+              <Typography variant="h5" fontWeight={500}>
+                Menang Student Programmer Competition
+              </Typography>
             </Grid>
           </Grid>
           <Grid item xs={12}>
