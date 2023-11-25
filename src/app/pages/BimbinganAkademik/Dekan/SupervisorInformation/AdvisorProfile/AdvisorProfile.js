@@ -316,7 +316,9 @@ const AdvisorProfile = () => {
           </FormControl>
         </Grid>
         <Grid item md={2} xl={2} display="flex" alignItems="center">
-          <Link to={`/add-supervisor/informatics`}>
+          <Link
+            to={`/bimbingan-akademik/dekan/supervisor-information/add-supervisor/${pilihJurusan}`}
+          >
             <Button
               sx={{
                 backgroundColor: "#006AF5",
