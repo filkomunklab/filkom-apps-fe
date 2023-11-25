@@ -67,22 +67,24 @@ const StudentCertificate = () => {
     setPage(0);
   };
 
+  const navigate = useNavigate();
   const handleClick = (event) => {
     event.preventDefault();
+    navigate(-1);
   };
   return (
     <Div>
       <Div role="presentation" onClick={handleClick} sx={{ paddingBottom: 3 }}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/sek-dekan/student-information">
-            Student Information
-          </StyledLink>
+          <StyledLink>Student Information</StyledLink>
           <Typography color="text.primary">Student Certificate</Typography>
         </Breadcrumbs>
       </Div>
       <Stack gap={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
-          <Typography variant="h1">All Certifications</Typography>
+          <Typography variant="h1" fontWeight={500}>
+            All Certifications
+          </Typography>
           <Typography variant="h6">Yuhu, Darell Deil</Typography>
         </Stack>
         <Grid container spacing={2} alignItems={"center"}>

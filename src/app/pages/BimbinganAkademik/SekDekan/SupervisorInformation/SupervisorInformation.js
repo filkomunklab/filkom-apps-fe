@@ -98,201 +98,50 @@ const SupervisorInformation = () => {
   return (
     <Div>
       <Div>
-        <Typography variant="h1" sx={{ mb: 3 }}>
+        <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
           Supervisor Information
         </Typography>
-        <Typography variant="h6" sx={{ mb: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            paddingBottom: "25px",
+            fontSize: "15px",
+            fontWeight: 400,
+            color: "rgba(27, 43, 65, 0.69)",
+            textAlign: "justify",
+          }}
+        >
           Currently, you are on the Academic Supervisor Information page, here
           you can easily see all information about academic supervisors in your
           department, along with their students.
         </Typography>
       </Div>
-      <Grid container spacing={2} sx={{ mb: 5, mt: 2 }}>
-        <Grid item sm={4} md={4} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-              "@media (max-width: 390px)": {
-                width: "90%",
-                "& .MuiCardHeader-title": {
-                  fontSize: "17px",
-                },
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/sek-dekan/supervisor-information/informatics"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Informatics Supervisor " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography
-                    variant="h3"
-                    color="#006AF5"
-                    sx={{
-                      fontSize: "20px",
-                      "@media (max-width: 390px)": {
-                        fontSize: "13px",
-                      },
-                    }}
-                  >
-                    {`11 people`}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      "@media (max-width: 390px)": {
-                        fontSize: "11px",
-                      },
-                    }}
-                  >
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={4} md={4} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-              "@media (max-width: 390px)": {
-                width: "90%",
-                "& .MuiCardHeader-title": {
-                  fontSize: "17px",
-                },
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/sek-dekan/supervisor-information/information-system"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Information System Supervisor" />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography
-                    variant="h3"
-                    color="#006AF5"
-                    sx={{
-                      fontSize: "20px",
-                      "@media (max-width: 390px)": {
-                        fontSize: "13px",
-                      },
-                    }}
-                  >
-                    {`12 people`}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      "@media (max-width: 390px)": {
-                        fontSize: "11px",
-                      },
-                    }}
-                  >
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={4} md={4} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-              "@media (max-width: 390px)": {
-                width: "90%",
-                "& .MuiCardHeader-title": {
-                  fontSize: "17px",
-                },
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/sek-dekan/supervisor-information/information-technology"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Information Technology Supervisor " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography
-                    variant="h3"
-                    color="#006AF5"
-                    sx={{
-                      fontSize: "18px",
-                      "@media (max-width: 390px)": {
-                        fontSize: "13px",
-                      },
-                    }}
-                  >
-                    {`8 people`}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      "@media (max-width: 390px)": {
-                        fontSize: "11px",
-                      },
-                    }}
-                  >
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-      </Grid>
       <Grid container spacing={2}>
-        <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">List of Academic Supervisors</Typography>
+        <Grid display={"flex"} alignItems={"flex-end"} item md={5.5} xl={5}>
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: "justify",
+              "@media (max-width: 390px)": {
+                fontSize: "16px",
+                fontWeight: 500,
+              },
+            }}
+          >
+            List of Academic Supervisors
+          </Typography>
         </Grid>
-        <Grid item xs={8} sm={9} md={4}>
-          <SearchGlobal sx={{ height: "100%", width: "100%" }} />
+        <Grid item xs={12} sm={8} md={4} xl={5}>
+          <SearchGlobal
+            sx={{
+              height: "100%",
+              "@media (max-width: 390px)": {
+                height: "40px",
+              },
+            }}
+          />
         </Grid>
-        <Grid
-          item
-          xs={4}
-          sm={3}
-          md={2}
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-end",
-            paddingLeft: "5px",
-          }}
-        >
+        <Grid item xs={12} sm={4} md={1}>
           <Link
             style={{ textDecoration: "none", color: "white" }}
             to="/bimbingan-akademik/sek-dekan/supervisor-information/add-supervisor"
@@ -303,6 +152,7 @@ const SupervisorInformation = () => {
                 borderRadius: "24px",
                 color: "white",
                 whiteSpace: "nowrap",
+                minWidth: "132px",
                 width: "100%",
                 fontSize: "12px",
                 padding: "10px",
@@ -318,13 +168,8 @@ const SupervisorInformation = () => {
             </Button>
           </Link>
         </Grid>
-        <Grid
-          sx={{ width: "100%", overflow: "hidden" }}
-          item
-          xs={12}
-          paddingTop={4}
-        >
-          <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
+        <Grid item xs={12}>
+          <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
             <Table stickyHeader>
               <TableHead>
                 <TableHeading />

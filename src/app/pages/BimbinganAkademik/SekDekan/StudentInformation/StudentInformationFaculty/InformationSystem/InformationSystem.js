@@ -20,6 +20,8 @@ import {
   CardContent,
   Breadcrumbs,
   experimentalStyled as styled,
+  TableContainer,
+  Paper,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { useState } from "react";
@@ -117,7 +119,9 @@ const InformationSystem = () => {
       </div>
       <Grid container spacing={2} paddingTop={1}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">Information System Students List</Typography>
+          <Typography variant="h2" fontWeight={500}>
+            Information System Students List
+          </Typography>
         </Grid>
         <Grid item xs={12} sm={8} md={3}>
           <SearchGlobal sx={{ height: "100%" }} />
@@ -204,18 +208,20 @@ const InformationSystem = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
+          <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Grid>
         <Grid
           item
@@ -261,7 +267,7 @@ const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(`/bimbingan-akademik/sek-dekan/student-information/${item.nim}`);
+    // navigate(`/bimbingan-akademik/sek-dekan/student-information/${item.nim}`);
 
     switch (name) {
       case "profile":
