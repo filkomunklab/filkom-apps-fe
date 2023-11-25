@@ -24,14 +24,16 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const CertificateDetail = () => {
-  const imageUrl =
-    "https://i.pinimg.com/originals/fc/fa/29/fcfa2911e796d71f1bf6aa25ee1d8d89.jpg";
-
   const navigate = useNavigate();
   const handleClick = (event, step) => {
     event.preventDefault();
     navigate(step);
   };
+
+
+  const pdfURL =
+    "https://firebasestorage.googleapis.com/v0/b/filkom-apps-project.appspot.com/o/certificate%2F10502201001%2FNational.pdf?alt=media&token=a60bad0e-9836-46c2-8707-f9883e4a812f";
+
   return (
     <Div>
       <Div role="presentation">
@@ -67,7 +69,6 @@ const CertificateDetail = () => {
                   Menang Student Programmer Competition
                 </Typography>
               </Grid>
-            </Grid>
           </Grid>
           <Grid item xs={12}>
             <Grid container>
@@ -178,6 +179,10 @@ const CertificateDetail = () => {
       </Grid>
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
+      </Grid>
+
+      <Grid container>
+        <Grid item md={8}>
           <Typography>Coments</Typography>
           <TextareaAutosize minRows={4} maxRows={8} style={{ width: "100%" }} />
         </Grid>
