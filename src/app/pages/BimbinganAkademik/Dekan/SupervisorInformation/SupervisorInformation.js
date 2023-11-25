@@ -14,6 +14,7 @@ import {
   Paper,
   CardHeader,
   CardContent,
+  Paper,
 } from "@mui/material";
 
 import SearchGlobal from "app/shared/SearchGlobal";
