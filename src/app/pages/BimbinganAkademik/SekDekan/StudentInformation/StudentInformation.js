@@ -318,39 +318,39 @@ const StudentInformation = () => {
           </Card>
         </Grid>
       </Grid>
-      <Grid container spacing={2}>
-        <Grid display={"flex"} alignItems={"flex-end"} item md={12} xl={6}>
-          <Typography
-            variant="h2"
-            sx={{
-              textAlign: "justify",
-              pt: 2,
-              "@media (max-width: 390px)": {
-                fontSize: "16px",
-                fontWeight: 500,
-              },
-            }}
-          >
-            Computer Sciences Faculty Students List
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={8} md={8} xl={3}>
-          <SearchGlobal
-            sx={{
-              height: "100%",
-              "@media (max-width: 390px)": {
-                height: "40px",
-              },
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={4} md={4} xl={3}>
-          <FormControl
-            sx={{
-              width: "100%",
-            }}
-          >
-            <InputLabel>Filter</InputLabel>
+      <Grid container spacing={2} />
+      <Grid display={"flex"} alignItems={"flex-end"} item md={12} xl={6}>
+        <Typography
+          variant="h2"
+          sx={{
+            textAlign: "justify",
+            pt: 2,
+            "@media (max-width: 390px)": {
+              fontSize: "16px",
+              fontWeight: 500,
+            },
+          }}
+        >
+          Computer Sciences Faculty Students List
+        </Typography>
+      </Grid>
+      <Grid item xs={12} sm={8} md={8} xl={3}>
+        {/* <SearchGlobal
+          sx={{
+            height: "100%",
+            "@media (max-width: 390px)": {
+              height: "40px",
+            },
+          }}
+        /> */}
+      </Grid>
+      <Grid item xs={12} sm={4} md={4} xl={3}>
+        <FormControl
+          sx={{
+            width: "100%",
+          }}
+        />
+        <InputLabel>Filter</InputLabel>
         <Grid item xs={12} sm={8} md={3}>
           <TextField
             placeholder="Search by Name or NIM"
