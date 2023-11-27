@@ -16,12 +16,15 @@ import {
   Autocomplete,
   Checkbox,
   Modal,
+  Alert,
 } from "@mui/material";
 import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const requiredStyle = {
   color: "red",
@@ -104,6 +107,54 @@ const AddActivity = () => {
     };
   }, [handleOpenSecondModal]);
 
+  // const getStudentList = async()=>{
+  //   try{
+  //     const headers = {
+  //         'Content-Type': 'multipart/form-data',
+  //         Authorization: `Bearer token_apa`,
+  //       };
+
+  //     let response;
+  //     if('Pilih mahasiswa bimbingan'){
+  //       response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+  //     }else if('Pilih mahasiswa fakultas'){
+  //       response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+  //     }
+  //     const {status, message, data, code} = response.data
+  //     console.log('ini data getStudentList', response)
+  //     if(code=== '200') {//string tergantung status dari backend
+  //       //simpan dalam usestate contoh:
+  //       //setStudentList = data
+  //     }else{
+  //       console.log(response)//buat handler sendiri misalkan alert
+  //     }
+        
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
+
+  // const handleSubmit = async() =>{
+  //   try{
+  //     //format header tergantung backend
+  //     const headers = {
+  //         'Content-Type': 'multipart/form-data',
+  //         Authorization: `Bearer token_apa`,
+  //       };
+  //     const response = await axios.post(`${BASE_URL_API}/bla/bla/bla`,
+  //       {title: valueTitle,
+  //       descriptions: inputDescription,
+  //       due_date: valueDueDate,
+  //       form_attendance: valueAttendance
+  //       },
+  //       {headers}
+  //     )
+  //     console.log(response)
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
+
   useEffect(() => {
     if (valueStudent === "MahasiswaBimbingan") {
       setStudentOptions([...Array(10).keys()].map((i) => `Student ${i + 1}`));
@@ -126,6 +177,7 @@ const AddActivity = () => {
 
       <Stack spacing={2} sx={{ paddingBottom: 3 }}>
         <RTypography>Title</RTypography>
+        div
         <TextField
           id="outlined-basic-1"
           variant="outlined"
