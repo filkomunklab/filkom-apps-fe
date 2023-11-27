@@ -32,6 +32,10 @@ const CertificateDetail = () => {
     event.preventDefault();
     navigate(step);
   };
+
+  const pdfURL =
+    "https://firebasestorage.googleapis.com/v0/b/filkom-apps-project.appspot.com/o/certificate%2F10502201001%2FNational.pdf?alt=media&token=a60bad0e-9836-46c2-8707-f9883e4a812f";
+
   return (
     <Div>
       <Div role="presentation">
@@ -169,7 +173,7 @@ const CertificateDetail = () => {
         <Grid item md={4} id="certificate-item">
           <Box sx={{ flex: 1 }}>
             <img
-              src={imageUrl}
+              src={""}
               alt="Certificate-pic"
               style={{ maxWidth: "100%", scale: "0.8" }}
             />

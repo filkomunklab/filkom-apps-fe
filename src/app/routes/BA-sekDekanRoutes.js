@@ -1,6 +1,6 @@
 import AcademicGuide from "app/pages/BimbinganAkademik/SekDekan/AcademicGuide/AcademicGuide";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/SekDekan/VisionMisionGoals";
-import Curriculum from "app/pages/BimbinganAkademik/SekDekan/Curriculum/Curriculum";
+import Curriculum from "app/layouts/shared/bimbingan-akademik/Curriculum/Curriculum";
 import StudentInformation from "app/pages/BimbinganAkademik/SekDekan/StudentInformation";
 import StudentInformationFacultyInformatics from "app/pages/BimbinganAkademik/SekDekan/StudentInformation/StudentInformationFaculty/Informatics";
 import StudentInformationFacultyInformationSystem from "app/pages/BimbinganAkademik/SekDekan/StudentInformation/StudentInformationFaculty/InformationSystem";

@@ -1,7 +1,7 @@
 import Page from "@jumbo/shared/Page";
 import AcademicGuide from "app/pages/BimbinganAkademik/Kaprodi/AcademicGuide";
 import AddActivity from "app/pages/BimbinganAkademik/Kaprodi/AddActivity";
-import Curriculum from "app/pages/BimbinganAkademik/Kaprodi/Curriculum";
+import Curriculum from "app/layouts/shared/bimbingan-akademik/Curriculum/Curriculum";
 import Dashboard from "app/pages/BimbinganAkademik/Kaprodi/Dashboard/Dashboard.";
 import History from "app/pages/BimbinganAkademik/Kaprodi/History";
 

@@ -20,8 +20,11 @@ import {
   CardHeader,
   CardContent,
   Paper,
+  TextField,
+  IconButton,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
+import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -84,6 +87,7 @@ const StudentInformation = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const navigate = useNavigate();
+  const [searchValue, setSearchValue] = useState("");
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -308,39 +312,58 @@ const StudentInformation = () => {
           </Card>
         </Grid>
       </Grid>
-      <Grid container spacing={2}>
-        <Grid display={"flex"} alignItems={"flex-end"} item md={12} xl={6}>
-          <Typography
-            variant="h2"
-            sx={{
-              textAlign: "justify",
-              pt: 2,
-              "@media (max-width: 390px)": {
-                fontSize: "16px",
-                fontWeight: 500,
-              },
-            }}
-          >
-            Computer Sciences Faculty Students List
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={8} md={8} xl={3}>
-          <SearchGlobal
-            sx={{
-              height: "100%",
-              "@media (max-width: 390px)": {
-                height: "40px",
-              },
+      <Grid container spacing={2} />
+      <Grid display={"flex"} alignItems={"flex-end"} item md={12} xl={6}>
+        <Typography
+          variant="h2"
+          sx={{
+            textAlign: "justify",
+            pt: 2,
+            "@media (max-width: 390px)": {
+              fontSize: "16px",
+              fontWeight: 500,
+            },
+          }}
+        >
+          Computer Sciences Faculty Students List
+        </Typography>
+      </Grid>
+      <Grid item xs={12} sm={8} md={8} xl={3}>
+        {/* <SearchGlobal
+          sx={{
+            height: "100%",
+            "@media (max-width: 390px)": {
+              height: "40px",
+            },
+          }}
+        /> */}
+      </Grid>
+      <Grid item xs={12} sm={4} md={4} xl={3}>
+        <FormControl
+          sx={{
+            width: "100%",
+          }}
+        />
+        <InputLabel>Filter</InputLabel>
+        <Grid item xs={12} sm={8} md={3}>
+          <TextField
+            placeholder="Search by Name or NIM"
+            variant="outlined"
+            size="small"
+            onChange={(e) => setSearchValue(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <IconButton edge="end">
+                  <SearchIcon />
+                </IconButton>
+              ),
+              style: { borderRadius: "25px", width: "250px", height: "37px" },
             }}
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={4} xl={3}>
-          <FormControl
-            sx={{
-              width: "100%",
-            }}
-          >
-            <InputLabel>Filter</InputLabel>
+        <Grid item xs={12} sm={4} md={3}>
+          <FormControl sx={{ minWidth: 200 }} size="small">
+            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
             <Select
               sx={{
                 borderRadius: 50,
