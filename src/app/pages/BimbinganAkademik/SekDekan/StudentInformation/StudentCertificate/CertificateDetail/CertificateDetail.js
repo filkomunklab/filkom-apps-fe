@@ -24,6 +24,9 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const CertificateDetail = () => {
+  const imageUrl =
+    "https://i.pinimg.com/originals/fc/fa/29/fcfa2911e796d71f1bf6aa25ee1d8d89.jpg";
+
   const navigate = useNavigate();
   const handleClick = (event, step) => {
     event.preventDefault();
@@ -53,20 +56,21 @@ const CertificateDetail = () => {
       >
         Certificate
       </Typography>
-      <Grid container spacing={2} />
-      <Grid item md={8} id="detail-item">
-        <Grid item xs={12}>
-          <Grid container>
-            <Grid item xs={4} md={3} xl={3}>
-              <Typography variant="h5">Title</Typography>
-            </Grid>
-            <Grid item xs={1} xl={"auto"}>
-              <Typography variant="h5">:</Typography>
-            </Grid>
-            <Grid item xs={7} paddingLeft={1}>
-              <Typography variant="h5" fontWeight={500}>
-                Menang Student Programmer Competition
-              </Typography>
+      <Grid container spacing={2}>
+        <Grid item md={8} id="detail-item">
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Title</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5" fontWeight={500}>
+                  Menang Student Programmer Competition
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12}>
@@ -177,11 +181,7 @@ const CertificateDetail = () => {
         </Grid>
       </Grid>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={8} />
-      </Grid>
-
-      <Grid container>
-        <Grid item md={8}>
+        <Grid item xs={12} md={8}>
           <Typography>Coments</Typography>
           <TextareaAutosize minRows={4} maxRows={8} style={{ width: "100%" }} />
         </Grid>

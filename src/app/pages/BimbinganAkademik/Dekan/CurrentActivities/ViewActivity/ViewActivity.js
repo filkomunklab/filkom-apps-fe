@@ -236,7 +236,7 @@ const ViewActivity = () => {
               fontWeight: 600,
             }}
           >
-            Send Certificate?
+            Submit Now?
           </Typography>
           <Typography
             id="modal-modal-description"
@@ -276,7 +276,7 @@ const ViewActivity = () => {
                   },
                 }}
               >
-                Submit
+                Submit the Attendance?
               </Button>
             </Grid>
           </Grid>
@@ -315,13 +315,13 @@ const ViewActivity = () => {
             id="modal-modal-description"
             style={{ marginTop: "16px", marginBottom: "20px" }}
           >
-            You have successfully preregistered for the course.
+            You have successfully entered the student attendance form.
           </Typography>
         </div>
       </Modal>
 
-      <div sx={{ mt: 2 }}>
-        <Typography sx={{ fontSize: "24px", fontWeight: 400 }}>
+      <div>
+        <Typography sx={{ fontSize: "24px", mt: 2, mb: 2, fontWeight: 400 }}>
           Attendance
         </Typography>
         <TableContainer
@@ -410,7 +410,7 @@ const ViewActivity = () => {
               fontWeight: 600,
             }}
           >
-            Send Certificate?
+            Submit the Attendance?
           </Typography>
           <Typography
             id="modal-modal-description"
@@ -489,7 +489,7 @@ const ViewActivity = () => {
             id="modal-modal-description"
             style={{ marginTop: "16px", marginBottom: "20px" }}
           >
-            You have successfully preregistered for the course.
+            You have successfully entered the student attendance form.
           </Typography>
         </div>
       </Modal>

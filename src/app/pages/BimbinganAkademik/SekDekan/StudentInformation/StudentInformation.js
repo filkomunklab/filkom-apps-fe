@@ -23,9 +23,10 @@ import {
   TextField,
   IconButton,
 } from "@mui/material";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import SearchGlobal from "app/shared/SearchGlobal";
 import SearchIcon from "@mui/icons-material/Search";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const yearList = [
   {
@@ -73,12 +74,12 @@ const prodiList = [
   },
 ];
 
-const data = Array.from(Array(30).keys()).map((item, index) => ({
-  nim: `1050220100${index + 1}`,
-  name: `Student Name ${index + 1}`,
-  prodi: prodiList[index % prodiList.length].value,
-  year: yearList[index % yearList.length].value,
-  status: index % 2 === 0 ? " Active  " : "Nonactive",
+const data = Array.from(Array(15).keys()).map((item, index) => ({
+  nim: `105022010000`,
+  name: `Yuhu, Christopher Darell`,
+  prodi: `Informatika`,
+  year: `2021`,
+  status: `Active`,
 }));
 
 const StudentInformation = () => {
@@ -96,13 +97,6 @@ const StudentInformation = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-
-  const filteredData = data.filter((item) => {
-    return (
-      item.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-      item.nim.includes(searchValue)
-    );
-  });
 
   return (
     <Div>
@@ -371,9 +365,6 @@ const StudentInformation = () => {
           <FormControl sx={{ minWidth: 200 }} size="small">
             <InputLabel htmlFor="grouped-select">Filter</InputLabel>
             <Select
-              defaultValue=""
-              id="grouped-select"
-              label="Filter"
               sx={{
                 borderRadius: 50,
                 "@media (max-width: 390px)": {
@@ -382,6 +373,7 @@ const StudentInformation = () => {
               }}
               multiple
               value={filter}
+              label="Grouping"
               renderValue={(selected) => selected.join(", ")}
               MenuProps={{
                 PaperProps: {
@@ -463,7 +455,7 @@ const StudentInformation = () => {
                 <TableHeading />
               </TableHead>
               <TableBody>
-                {filteredData
+                {data
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => (
                     <TableItem item={item} index={index} key={index} />
@@ -543,7 +535,7 @@ const TableItem = ({ item, index }) => {
   return (
     <TableRow>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{item.nim}</TableCell>
+      <TableCell sx={[rowStyle]}>{`022407712`}</TableCell>
       <TableCell>
         <Button
           name="profile"
@@ -552,12 +544,10 @@ const TableItem = ({ item, index }) => {
             "@media (max-width: 390px)": { fontSize: "11px" },
           }}
           onClick={handleButtonNavigate}
-        >
-          {item.name}
-        </Button>
+        >{`Yuhu, Christopher Darell`}</Button>
       </TableCell>
-      <TableCell sx={[rowStyle]}>{item.prodi}</TableCell>
-      <TableCell sx={[rowStyle]}>{item.year}</TableCell>
+      <TableCell sx={[rowStyle]}>{`Informatika`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`2021`}</TableCell>
 
       <TableCell>
         <Button
@@ -583,13 +573,8 @@ const TableItem = ({ item, index }) => {
           View Certificates
         </Button>
       </TableCell>
-      <TableCell sx={{ rowStyle }}>
-        <Chip
-          sx={{ display: "flex", alignItems: "center" }}
-          label={item.status}
-          variant="filled"
-          color={item.status === " Active  " ? "success" : "default"}
-        />
+      <TableCell sx={[rowStyle]}>
+        <Chip label={"Active"} variant="filled" color={"success"} />
       </TableCell>
     </TableRow>
   );
