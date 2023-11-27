@@ -24,8 +24,9 @@ import {
 import Div from "@jumbo/shared/Div";
 import { useState } from "react";
 import SearchGlobal from "app/shared/SearchLocal";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import SearchLocal from "app/shared/SearchLocal";
+import { useEffect } from "react";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -91,6 +92,8 @@ const prodiList = [
 ];
 
 const AdvisorProfile = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [showLabel, setShowLabel] = useState(true);
   const [pilihJurusan, setPilihJurusan] = useState("");
 
@@ -120,6 +123,18 @@ const AdvisorProfile = () => {
     handleClick(event);
     setShowLabel(false);
   };
+
+  const handleEditStudent = () => {
+    console.log("masokkk", location.state);
+    navigate(
+      `/bimbingan-akademik/dekan/supervisor-information/advisor-profile/${location.state}/edit-student`,
+      { state: location.state }
+    );
+  };
+
+  useEffect(() => {
+    console.log(location);
+  }, []);
 
   return (
     <Div>
@@ -316,28 +331,36 @@ const AdvisorProfile = () => {
           </FormControl>
         </Grid>
         <Grid item md={2} xl={2} display="flex" alignItems="center">
-          <Link
-            to={`/bimbingan-akademik/dekan/supervisor-information/add-supervisor/${pilihJurusan}`}
-          >
-            <Button
-              sx={{
-                backgroundColor: "#006AF5",
-                borderRadius: "24px",
-                color: "white",
-                whiteSpace: "nowrap",
-                minWidth: "132px",
-                fontSize: "12px",
-                padding: "10px",
-                width: "100%",
+          {/* <Link
+            // onClick={handleEditStudent}
+            // to={`/bimbingan-akademik/dekan/supervisor-information/advisor-profile/${location.state}/edit-student`}
+            
+          > */}
+          <Button
+            onClick={() =>
+              navigate(
+                `/bimbingan-akademik/dekan/supervisor-information/advisor-profile/${location.state}/edit-student`,
+                { state: location.state }
+              )
+            }
+            sx={{
+              backgroundColor: "#006AF5",
+              borderRadius: "24px",
+              color: "white",
+              whiteSpace: "nowrap",
+              minWidth: "132px",
+              fontSize: "12px",
+              padding: "10px",
+              width: "100%",
 
-                "&:hover": {
-                  backgroundColor: "#025ED8",
-                },
-              }}
-            >
-              Edit Student
-            </Button>
-          </Link>
+              "&:hover": {
+                backgroundColor: "#025ED8",
+              },
+            }}
+          >
+            Edit Student
+          </Button>
+          {/* </Link> */}
         </Grid>
         <Grid item xs={12}>
           <TableContainer
