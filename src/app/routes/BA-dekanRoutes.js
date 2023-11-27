@@ -19,6 +19,7 @@ import InformaticsLS from "app/pages/BimbinganAkademik/Dekan/SupervisorInformati
 import InformationSytemLS from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation/AddSupervisor/InformationSystem";
 import InformationTechnologyLS from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation/AddSupervisor/InformationTechnology";
 import AdvisorProfile from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation/AdvisorProfile";
+import EditStudent from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation/AdvisorProfile/EditStudent";
 import AdvisorHistory from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation/AdvisorHistory";
 import HistoryActivityAdvisor from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation/AdvisorHistory/HIstoryActivity";
 import HistoryGradeAdvisor from "app/pages/BimbinganAkademik/Dekan/SupervisorInformation/AdvisorHistory/HistoryGrade";
@@ -159,6 +160,10 @@ const dekanRoutes = [
   {
     path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id",
     element: <Page component={AdvisorProfile} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id/edit-student",
+    element: <Page component={EditStudent} />,
   },
   {
     path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id",
