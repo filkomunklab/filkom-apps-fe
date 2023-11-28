@@ -97,7 +97,7 @@ const EditStudent = () => {
     <Div>
       <Div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/dekan/supervisor-information/">
+          <StyledLink to="/bimbingan-akademik/sek-dekan/supervisor-information/">
             Supervisor Information
           </StyledLink>
           <StyledLink
@@ -109,7 +109,7 @@ const EditStudent = () => {
             //     { state: location.state }
             //   );
             // }}
-            to={`/bimbingan-akademik/dekan/supervisor-information/advisor-profile/${location.state}`}
+            to={`/bimbingan-akademik/sek-dekan/supervisor-information/advisor-profile/${location.state}`}
           >
             Advisor Profile
           </StyledLink>
@@ -194,7 +194,7 @@ const EditStudent = () => {
           <Button
             onClick={() => {
               navigate(
-                `/bimbingan-akademik/dekan/supervisor-information/advisor-profile/${location.state}`,
+                `/bimbingan-akademik/sek-dekan/supervisor-information/advisor-profile/${location.state}`,
                 { state: location.state }
               );
             }}
