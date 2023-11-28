@@ -509,7 +509,7 @@ function DaftarPengajuan() {
         </Div>
       </Div>
 
-      {daftarPengajuan.length > 0 ? (
+      {daftarPengajuan?.length > 0 ? (
         <TableContainer component={Paper}>
           <Table>
             <TableHead style={{ background: "rgba(26, 56, 96, 0.10)" }}>
