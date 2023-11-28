@@ -131,7 +131,7 @@ const AdvisorProfileFaculty = () => {
         sx={{ paddingBottom: "15px" }}
       >
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/sek-dekan/supervisor-information">
+          <StyledLink to="/bimbingan-akademik/sek-dekan/supervisor-information/">
             Supervisor Information
           </StyledLink>
           <Typography color="text.primary">Advisor Profile</Typography>
