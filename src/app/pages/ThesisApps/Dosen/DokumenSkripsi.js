@@ -82,11 +82,42 @@ const PDFViewerCekPlagiat = ({ hasilCekPlagiat }) => {
   );
 };
 
+// View Document Artikel Jurnal
+const PDFViewerArtikelJurnal = ({ jurnal, isUploading }) => {
+  const viewPDFArtikelJurnal = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
+    // Buat URL objek untuk file PDF
+    const pdfURL = jurnal?.file_path_journal;
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFArtikelJurnal}
+      >
+        Lihat
+      </span>
+    </div>
+  );
+};
+
 const DokumenSkripsi = () => {
   // state - menyimpan request data
   const [dokumenSkripsi, setDokumenSkripsi] = useState();
   const [buktiPembayaran, setBuktiPembayaran] = useState();
   const [hasilCekPlagiat, setHasilCekPlagiat] = useState();
+  const [jurnal, setJurnal] = useState();
 
   const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
 
@@ -164,9 +195,26 @@ const DokumenSkripsi = () => {
         );
       }
     };
+    const fetchJurnalData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setJurnal(response.data.data);
+        console.log("Request Get jurnal: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil jurnal:", error);
+      }
+    };
     fetchDokumenSkripsiData();
     fetchBuktiPembayaranData();
     fetchHasilCekPlagiatData();
+    fetchJurnalData();
   }, [token, skripsiId]);
 
   // Advisor setuju dan tolak
@@ -1663,6 +1711,124 @@ const DokumenSkripsi = () => {
                   {/* Table Upload Payment End*/}
                 </Div>
                 {/* Table 3 End */}
+
+                {userRole !== "OPERATOR_FILKOM" && (
+                  <>
+                    <Typography
+                      sx={{
+                        width: "100%",
+                        display: "flex",
+                        padding: "24px",
+                        alignItems: "center",
+                        gap: "10px",
+                        color: "#192434",
+                        background: "rgba(26, 56, 96, 0.10)",
+                        borderRadius: "6px",
+                        fontSize: "12px",
+                        fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+                      }}
+                    >
+                      Dokumen Artikel Jurnal
+                    </Typography>
+                    {/* Table 4 Start */}
+                    <Div
+                      sx={{
+                        width: "100%",
+                        padding: "0 25px",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        gap: "25px",
+                      }}
+                    >
+                      {/* Table Upload Artikel Jurnal Start*/}
+                      <TableContainer
+                        sx={{ marginBottom: "25px" }}
+                        component={Paper}
+                      >
+                        <Table>
+                          <TableHead sx={{ background: "#F5F5F5" }}>
+                            <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                              {/* <TableCell
+                          sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
+                        >
+                          Nomor
+                        </TableCell> */}
+                              <TableCell
+                                sx={{
+                                  fontSize: "12px",
+                                  padding: "11px",
+                                  width: "45%",
+                                }}
+                              >
+                                Nama File
+                              </TableCell>
+                              <TableCell
+                                sx={{
+                                  fontSize: "12px",
+                                  padding: "11px",
+                                  width: "20%",
+                                }}
+                              >
+                                Tanggal
+                              </TableCell>
+                              <TableCell
+                                sx={{
+                                  fontSize: "12px",
+                                  padding: "11px",
+                                  width: "20%",
+                                }}
+                              >
+                                Ukuran
+                              </TableCell>
+                              <TableCell
+                                sx={{
+                                  fontSize: "12px",
+                                  padding: "11px",
+                                  textAlign: "center",
+                                  width: "12%",
+                                }}
+                              >
+                                Action
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {jurnal && (
+                              <TableRow key={jurnal?.id}>
+                                {/* <TableCell sx={{ fontSize: "12px" }}>1</TableCell> */}
+                                <TableCell sx={{ fontSize: "12px" }}>
+                                  {jurnal?.file_name_journal}
+                                </TableCell>
+                                <TableCell sx={{ fontSize: "12px" }}>
+                                  {jurnal?.upload_date_journal}
+                                </TableCell>
+                                <TableCell sx={{ fontSize: "12px" }}>
+                                  {jurnal?.file_size_journal}
+                                </TableCell>
+                                <TableCell>
+                                  {jurnal?.file_name_journal !== null && (
+                                    <span
+                                      style={{
+                                        textDecoration: "none",
+                                        cursor: "pointer",
+                                        color: "blue",
+                                        fontSize: "12px",
+                                      }}
+                                    >
+                                      <PDFViewerArtikelJurnal jurnal={jurnal} />
+                                    </span>
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      {/* Table Upload Artikel Jurnal End*/}
+                    </Div>
+                    {/* Table 4 End */}
+                  </>
+                )}
               </>
             )}
           </Div>
