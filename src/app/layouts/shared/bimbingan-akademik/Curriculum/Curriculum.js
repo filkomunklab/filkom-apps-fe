@@ -29,6 +29,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { BASE_URL_API } from "../../../../../@jumbo/config/env";
 import * as XLSX from "xlsx";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { EXCEL_FILE_BASE64 } from "./constants";
+import FileSaver from "file-saver";
 
 const styleCurriculum = {
   position: "absolute",
@@ -296,6 +298,26 @@ const Curriculum = () => {
     handleAddModalClose();
   };
 
+  const handleTemplate = () => {
+    let dataBlob = EXCEL_FILE_BASE64;
+    let sliceSize = 1024;
+    let byteCharacters = atob(dataBlob);
+    let bytesLength = byteCharacters.length;
+    let slicesCount = Math.ceil(bytesLength / sliceSize);
+    let byteArrays = new Array(slicesCount);
+    for (let sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+      let begin = sliceIndex * sliceSize;
+      let end = Math.min(begin + sliceSize, bytesLength);
+      let bytes = new Array(end - begin);
+      for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
+        bytes[i] = byteCharacters[offset].charCodeAt(0);
+      }
+      byteArrays[sliceIndex] = new Uint8Array(bytes);
+    }
+    let blob = new Blob(byteArrays, { type: "application/vnd.ms.excel" });
+    FileSaver.saveAs(new Blob([blob], {}), "templateCurriculum.xlsx");
+  };
+
   return (
     <div>
       {loading && (
@@ -384,7 +406,7 @@ const Curriculum = () => {
                   <CloseIcon />
                 </IconButton>
                 <Grid container paddingTop={2}>
-                  <Grid item md={8}>
+                  <Grid item md={8} xs={8}>
                     <Typography
                       id="modal-modal-title"
                       variant="h4"
@@ -393,19 +415,24 @@ const Curriculum = () => {
                         fontWeight: 600,
                         paddingBottom: 3,
                         paddingTop: 2,
+                        "@media (max-width: 390px)": {
+                          fontSize: "15px",
+                        },
                       }}
                     >
                       Add Curriculum
                     </Typography>
                   </Grid>
-                  <Grid item mt={2} md={4}>
+                  <Grid item mt={2} md={4} xs={4}>
                     <Link
                       sx={{
                         cursor: "pointer",
                         color: "#025ED8",
                         display: "flex",
                         justifyContent: "flex-end",
+                        "@media (max-width: 390px)": { fontSize: "11px" },
                       }}
+                      onClick={handleTemplate}
                     >
                       Template Excel
                     </Link>

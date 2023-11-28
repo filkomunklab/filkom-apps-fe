@@ -169,7 +169,7 @@ const SupervisorInformation = () => {
           </Link>
         </Grid>
         <Grid item xs={12}>
-          <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
+          <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
             <Table stickyHeader>
               <TableHead>
                 <TableHeading />
@@ -231,12 +231,14 @@ const TableItem = ({ item, index }) => {
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/sek-dekan/supervisor-information/advisor-profile/${item.nidn}`
+          `/bimbingan-akademik/sek-dekan/supervisor-information/advisor-profile/${item.nidn}`,
+          { state: item.nidn }
         );
         break;
       case "history":
         navigate(
-          `/bimbingan-akademik/sek-dekan/supervisor-information/history`
+          `/bimbingan-akademik/sek-dekan/supervisor-information/history/${item.nidn}`,
+          { state: item.nidn }
         );
         break;
 

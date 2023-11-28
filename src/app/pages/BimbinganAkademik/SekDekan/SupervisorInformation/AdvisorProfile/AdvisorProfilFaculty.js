@@ -19,11 +19,12 @@ import {
   Button,
   Breadcrumbs,
   experimentalStyled as styled,
+  TableContainer,
 } from "@mui/material";
 import Div from "@jumbo/shared/Div";
 import { useState } from "react";
 import SearchLocal from "app/shared/SearchLocal";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -106,6 +107,7 @@ const AdvisorProfileFaculty = () => {
   };
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -139,7 +141,16 @@ const AdvisorProfileFaculty = () => {
         <Typography variant="h1" fontWeight={500} sx={{ mb: 3 }}>
           Advisor Profile
         </Typography>
-        <Typography variant="h6" sx={{ mb: 4 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            paddingBottom: "25px",
+            fontSize: "14px",
+            fontWeight: 400,
+            color: "rgba(27, 43, 65, 0.69)",
+            textAlign: "justify",
+          }}
+        >
           Currently, you are on the Academic Supervisor Information page, here
           you can easily see all information about academic supervisors in your
           department, along with their students.
@@ -159,72 +170,82 @@ const AdvisorProfileFaculty = () => {
         <Grid container spacing={3} sx={{ padding: 2 }}>
           <Grid item xs={12} md={12}>
             <Typography variant="h6">Full Name</Typography>
-            <Typography variant="h6" sx={textSyle}>
+            <Typography variant="h6" sx={textStyle}>
               Adzana Shaliha
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">NIDN</Typography>
-            <Typography variant="h6" sx={textSyle}>
+            <Typography variant="h6" sx={textStyle}>
               319288918900
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Email</Typography>
-            <Typography variant="h6" sx={textSyle}>
+            <Typography variant="h6" sx={textStyle}>
               AdzanaShaliha123@gmail.com
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Phone</Typography>
-            <Typography variant="h6" sx={textSyle}>
+            <Typography variant="h6" sx={textStyle}>
               082919912400
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Major</Typography>
-            <Typography variant="h6" sx={textSyle}>
+            <Typography variant="h6" sx={textStyle}>
               Informatics
             </Typography>
           </Grid>
           <Grid item xs={12} md={12}>
             <Typography variant="h6">Address</Typography>
-            <Typography variant="h6" sx={textSyle}>
+            <Typography variant="h6" sx={textStyle}>
               Perum Agape griya blok K/10, Tumaluntung, Kabupaten Minahasa Utara
             </Typography>
           </Grid>
         </Grid>
       </Paper>
       <Grid container spacing={2}>
-        <Grid
-          item
-          lg={4}
-          md={12}
-          sm={12}
-          xs={12}
-          display="flex"
-          alignItems="center"
-        >
-          <Typography variant="h2">List of mentored students</Typography>
+        <Grid display={"flex"} alignItems={"flex-end"} item md={6} xl={4}>
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: "justify",
+              "@media (max-width: 390px)": {
+                fontSize: "16px",
+                fontWeight: 500,
+              },
+            }}
+          >
+            List of mentored students
+          </Typography>
         </Grid>
         <Grid
           item
-          lg={3}
-          md={5}
-          sm={4}
           xs={12}
+          sm={8}
+          md={12}
+          xl={3}
           display="flex"
           alignItems="center"
           justifyContent="center"
         >
-          <SearchLocal sx={{ height: "100%", alignItems: "center" }} />
+          <SearchLocal
+            sx={{
+              height: "100%",
+              "@media (max-width: 390px)": {
+                height: "40px",
+              },
+            }}
+          />
         </Grid>
         <Grid
           item
-          lg={3}
-          md={4}
+          xs={12}
           sm={4}
-          xs={6}
+          md={12}
+          xl={3}
           display="flex"
           alignItems="center"
           justifyContent="center"
@@ -236,7 +257,12 @@ const AdvisorProfileFaculty = () => {
           >
             <InputLabel htmlFor="grouped-select">Filter</InputLabel>
             <Select
-              sx={{ borderRadius: 50 }}
+              sx={{
+                borderRadius: 50,
+                "@media (max-width: 390px)": {
+                  height: "45px",
+                },
+              }}
               multiple
               value={filter}
               label="Grouping"
@@ -304,50 +330,60 @@ const AdvisorProfileFaculty = () => {
           display="flex"
           alignItems="center"
         >
-          <Link to={`/add-supervisor/informatics`}>
-            <Button
-              sx={{
-                backgroundColor: "#006AF5",
-                borderRadius: "24px",
-                color: "white",
-                whiteSpace: "nowrap",
-                minWidth: "135px",
-                fontSize: "12px",
-                padding: "10px",
+          {/* <Link to={`/add-supervisor/informatics`}> */}
+          <Button
+            onClick={() =>
+              navigate(
+                `/bimbingan-akademik/sek-dekan/supervisor-information/advisor-profile/${location.state}/edit-student`,
+                { state: location.state }
+              )
+            }
+            sx={{
+              backgroundColor: "#006AF5",
+              borderRadius: "24px",
+              color: "white",
+              whiteSpace: "nowrap",
+              minWidth: "135px",
+              fontSize: "12px",
+              padding: "10px",
 
-                "&:hover": {
-                  backgroundColor: "#025ED8",
-                },
-              }}
-            >
-              Edit Student
-            </Button>
-          </Link>
+              "&:hover": {
+                backgroundColor: "#025ED8",
+              },
+            }}
+          >
+            Edit Student
+          </Button>
+          {/* </Link> */}
         </Grid>
         <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
-        </Grid>
-        <Grid
-          item
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "flex-end",
-            "@media (max-width: 890px)": { justifyContent: "flex-start" },
-          }}
-        >
+          <TableContainer
+            sx={{
+              maxHeight: 440,
+            }}
+            component={Paper}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
             count={data.length}
@@ -378,7 +414,7 @@ const TableHeading = ({ index }) => {
   );
 };
 
-const textSyle = {
+const textStyle = {
   borderWidth: 1,
   borderColor: "#00000029",
   borderStyle: "solid",
@@ -394,17 +430,17 @@ const TableItem = ({ item, index }) => {
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/sek-dekan/supervisor-information/${item.nim}`
+          `/bimbingan-akademik/sek-dekan/student-information/${item.nim}`
         );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/sek-dekan/supervisor-information/${item.nim}/grade`
+          `/bimbingan-akademik/sek-dekan/student-information/${item.nim}/grade`
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/sek-dekan/supervisor-information/${item.nim}/certificate`
+          `/bimbingan-akademik/sek-dekan/student-information/${item.nim}/certificate`
         );
         break;
 
