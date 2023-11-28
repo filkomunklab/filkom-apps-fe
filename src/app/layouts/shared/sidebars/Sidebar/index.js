@@ -81,7 +81,7 @@ const Sidebar = () => {
             </Div>
           }
         >
-          <JumboVerticalNavbar translate items={sekretarisMenus} />
+          <JumboVerticalNavbar translate items={dekanMenus} />
         </Suspense>
         <Div
           sx={{
