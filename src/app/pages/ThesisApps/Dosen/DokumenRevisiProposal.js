@@ -15,7 +15,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Typography,
   TextareaAutosize,
   Paper,
@@ -82,40 +81,6 @@ const DokumenRevisiProposal = () => {
   const { role } = JSON.parse(localStorage.getItem("user"));
   // const role = ["ADVISOR", "DOSEN"];
   console.log("role user yang sign in: ", role);
-
-  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const [originalDate, setOriginalDate] = useState(date);
-  const [isEditing, setEditing] = useState(false);
-  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
-
-  const formatDateForDisplay = (dateString) => {
-    const [year, month, day] = dateString.split("-");
-    return `${day}/${month}/${year}`;
-  };
-
-  const handleEdit = () => {
-    setOriginalDate(date);
-    setEditing(true);
-  };
-
-  const handleCancel = () => {
-    setDate(originalDate);
-    setEditing(false);
-  };
-
-  const handleSave = () => {
-    setConfirmationDialogOpen(true);
-  };
-
-  const handleConfirmSave = () => {
-    // Lakukan apa pun yang perlu dilakukan saat menyimpan data
-    setConfirmationDialogOpen(false);
-    setEditing(false);
-  };
-
-  const handleCancelSave = () => {
-    setConfirmationDialogOpen(false);
-  };
 
   useEffect(() => {
     const fetchDokumenProposalData = async () => {
@@ -939,6 +904,68 @@ const DokumenRevisiProposal = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
+            {/* Date Start */}
+            <Div
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 2,
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              {isEditing ? (
+                <TextField
+                  size="small"
+                  id="inputDate"
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  style={{ marginRight: "10px" }}
+                />
+              ) : (
+                <Typography variant="subtitle1">
+                  Batas pengumpulan revisi: {date?.submission_dateline}
+                </Typography>
+              )}
+
+              {isEditing ? (
+                <Div>
+                  <Button
+                    size="small"
+                    sx={{
+                      background: "white",
+                      boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                      textTransform: "none",
+                      color: "black",
+                    }}
+                    onClick={handleCancelEdit}
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    onClick={handleSubmitDate}
+                    style={{ marginLeft: "10px", textTransform: "none" }}
+                  >
+                    Simpan
+                  </Button>
+                </Div>
+              ) : (
+                <Div hidden={userRole === "KETUA_PANELIS" ? false : true}>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                    onClick={handleEdit}
+                  >
+                    Ubah
+                  </Button>
+                </Div>
+              )}
+            </Div>
+            {/* Date End */}
             <Typography
               sx={{
                 width: "100%",
@@ -950,10 +977,10 @@ const DokumenRevisiProposal = () => {
                 background: "rgba(26, 56, 96, 0.10)",
                 borderRadius: "6px",
                 fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+                fontWeight: 600,
               }}
             >
-              Perubahan Proposal
+              Perubahan
             </Typography>
 
             {/* View PerubahanStart*/}

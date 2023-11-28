@@ -17,6 +17,7 @@ import skripsiAppSekretarisRoutes from "./skripsi_app_sekretaris_routes";
 import skripsiAppMahasiswaRoutes from "./skripsi_app_mahasiswa_routes";
 import skripsiAppAdminRoutes from "./skripsi_app_admin_routes";
 import SkripsiFakultasIlmuKomputer from "app/pages/ThesisApps/Mahasiswa/SkripsiFakultasIlmuKomputer";
+import testPrintPage from "app/pages/ThesisApps/Sekertaris/testPrintPage";
 /**
  routes which you want to make accessible to both authenticated and anonymous users
  **/
@@ -61,6 +62,10 @@ const routesForNotAuthenticatedOnly = [
     element: (
       <Page component={SkripsiFakultasIlmuKomputer} layout={"bare-page"} />
     ),
+  },
+  {
+    path: "/test-print",
+    element: <Page component={testPrintPage} layout={"bare-page"} />,
   },
 ];
 

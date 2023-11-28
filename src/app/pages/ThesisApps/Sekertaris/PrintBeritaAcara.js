@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import Button from "@mui/material/Button";
 
@@ -113,6 +113,35 @@ const convertHourToText = (hour, minute) => {
 };
 
 const ReportContent = React.forwardRef((props, ref) => {
+  const [studentInfo, setStudentInfo] = useState({
+    name: "Geovalga Fransiscus Lim",
+    nim: "105021910051",
+    educationLevel: "S1",
+    faculty: "Ilmu Komputer",
+    studyProgram: "Informatika",
+  });
+
+  const [examinerInfo, setExaminerInfo] = useState([
+    { no: 1, name: "Andrew T. Liem, MT, PhD", signature: "" },
+    { no: 2, name: "Stenly R. Pungus, MT, PhD", signature: "" },
+    { no: 3, name: "Jimmy H. Moedjahedy, SKom, MKom, MM", signature: "" },
+  ]);
+
+  const [signatures, setSignatures] = useState([
+    { name: "Dekan FILKOM", role: "", nidn: "" },
+    { name: "Ketua Tim Penguji", role: "", nidn: "" },
+    {
+      name: "Andrew Tenny Liem, S.SI., MT., PhD",
+      role: "",
+      nidn: "0916038101",
+    },
+    {
+      name: "Stenly Richard Pungus, S.Kom., MT., MM",
+      role: "",
+      nidn: "0922098101",
+    },
+  ]);
+
   const renderSignatureBlock = (name, role, nidn, position) => (
     <div style={{ textAlign: position, marginTop: "20px" }}>
       <div style={{ marginBottom: "10px", textDecoration: "none" }}>{name}</div>
@@ -124,7 +153,6 @@ const ReportContent = React.forwardRef((props, ref) => {
       )}
     </div>
   );
-
   const currentDate = new Date(); // Tanggal hari ini
   const dayNumber = currentDate.getDay();
   const monthNumber = currentDate.getMonth();
@@ -218,27 +246,27 @@ const ReportContent = React.forwardRef((props, ref) => {
             <tr>
               <td>Atas Nama</td>
               <td>:</td>
-              <td>Geovalga Fransiscus Lim</td>
+              <td>{studentInfo.name}</td>
             </tr>
             <tr>
               <td>NIM</td>
               <td>:</td>
-              <td>105021910051</td>
+              <td>{studentInfo.nim}</td>
             </tr>
             <tr>
               <td>Jenjang Pendidikan</td>
               <td>:</td>
-              <td>S1</td>
+              <td>{studentInfo.educationLevel}</td>
             </tr>
             <tr>
               <td>Fakultasi</td>
               <td>:</td>
-              <td>Ilmu Komputer</td>
+              <td>{studentInfo.faculty}</td>
             </tr>
             <tr>
               <td>Program Studi</td>
               <td>:</td>
-              <td>Informatika</td>
+              <td>{studentInfo.studyProgram}</td>
             </tr>
           </tbody>
         </table>
@@ -259,8 +287,8 @@ const ReportContent = React.forwardRef((props, ref) => {
                 style={{
                   border: "1px solid black",
                   padding: "8px",
-                  borderBottom: "none",
                   textAlign: "center",
+                  borderBottom: "none",
                 }}
               >
                 Tim Penguji
@@ -309,27 +337,19 @@ const ReportContent = React.forwardRef((props, ref) => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td style={{ border: "1px solid black", padding: "8px" }}>1</td>
-              <td style={{ border: "1px solid black", padding: "8px" }}>
-                Andrew T. Liem, MT, PhD
-              </td>
-              <td style={{ border: "1px solid black", padding: "8px" }}></td>
-            </tr>
-            <tr>
-              <td style={{ border: "1px solid black", padding: "8px" }}>2</td>
-              <td style={{ border: "1px solid black", padding: "8px" }}>
-                Stenly R. Pungus, MT, PhD
-              </td>
-              <td style={{ border: "1px solid black", padding: "8px" }}></td>
-            </tr>
-            <tr>
-              <td style={{ border: "1px solid black", padding: "8px" }}>3</td>
-              <td style={{ border: "1px solid black", padding: "8px" }}>
-                Jimmy H. Moedjahedy, SKom, MKom, MM
-              </td>
-              <td style={{ border: "1px solid black", padding: "8px" }}></td>
-            </tr>
+            {examinerInfo.map((examiner) => (
+              <tr key={examiner.no}>
+                <td style={{ border: "1px solid black", padding: "8px" }}>
+                  {examiner.no}
+                </td>
+                <td style={{ border: "1px solid black", padding: "8px" }}>
+                  {examiner.name}
+                </td>
+                <td style={{ border: "1px solid black", padding: "8px" }}>
+                  {examiner.signature}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -344,15 +364,26 @@ const ReportContent = React.forwardRef((props, ref) => {
           textAlign: "right",
           marginTop: "50px",
           margin: "auto",
+          height: "150px",
         }}
       >
         <p style={{ marginRight: "23%", marginBottom: "-5px" }}>
           Unklab, 2 April 2023
         </p>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div>{renderSignatureBlock("Dekan FILKOM", "", "")}</div>
+          <div>
+            {renderSignatureBlock(
+              signatures[0].name,
+              signatures[0].role,
+              signatures[0].nidn
+            )}
+          </div>
           <div style={{ marginRight: "25%" }}>
-            {renderSignatureBlock("Ketua Tim Penguji", "", "")}
+            {renderSignatureBlock(
+              signatures[1].name,
+              signatures[1].role,
+              signatures[1].nidn
+            )}
           </div>
         </div>
       </div>
@@ -362,19 +393,18 @@ const ReportContent = React.forwardRef((props, ref) => {
           width: "80%",
           display: "flex",
           justifyContent: "space-between",
-          marginTop: "100px",
           margin: "auto",
         }}
       >
         {renderSignatureBlock(
-          "Andrew Tenny Liem, S.SI., MT., PhD",
-          "",
-          "0916038101"
+          signatures[2].name,
+          signatures[2].role,
+          signatures[2].nidn
         )}
         {renderSignatureBlock(
-          "Stenly Richard Pungus, S.Kom., MT., MM",
-          "",
-          "0922098101"
+          signatures[3].name,
+          signatures[3].role,
+          signatures[3].nidn
         )}
       </div>
     </div>
