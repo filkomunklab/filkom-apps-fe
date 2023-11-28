@@ -312,44 +312,31 @@ const StudentInformation = () => {
           </Card>
         </Grid>
       </Grid>
-      <Grid container spacing={2} />
-      <Grid display={"flex"} alignItems={"flex-end"} item md={12} xl={6}>
-        <Typography
-          variant="h2"
-          sx={{
-            textAlign: "justify",
-            pt: 2,
-            "@media (max-width: 390px)": {
-              fontSize: "16px",
-              fontWeight: 500,
-            },
-          }}
-        >
-          Computer Sciences Faculty Students List
-        </Typography>
-      </Grid>
-      <Grid item xs={12} sm={8} md={8} xl={3}>
-        {/* <SearchGlobal
-          sx={{
-            height: "100%",
-            "@media (max-width: 390px)": {
-              height: "40px",
-            },
-          }}
-        /> */}
-      </Grid>
-      <Grid item xs={12} sm={4} md={4} xl={3}>
-        <FormControl
-          sx={{
-            width: "100%",
-          }}
-        />
-        <InputLabel>Filter</InputLabel>
-        <Grid item xs={12} sm={8} md={3}>
+      <Grid container spacing={2} pt={1}>
+        <Grid display={"flex"} alignItems={"flex-end"} item md={12} xl={5}>
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: "justify",
+              pt: 1,
+              "@media (max-width: 390px)": {
+                fontSize: "16px",
+                fontWeight: 500,
+              },
+            }}
+          >
+            Computer Sciences Faculty Students List
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={4} md={8} xl={4}>
           <TextField
             placeholder="Search by Name or NIM"
             variant="outlined"
             size="small"
+            sx={{
+              width: "100%",
+              height: "100%",
+            }}
             onChange={(e) => setSearchValue(e.target.value)}
             InputProps={{
               endAdornment: (
@@ -357,12 +344,12 @@ const StudentInformation = () => {
                   <SearchIcon />
                 </IconButton>
               ),
-              style: { borderRadius: "25px", width: "250px", height: "37px" },
+              style: { borderRadius: "25px" },
             }}
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={3}>
-          <FormControl sx={{ minWidth: 200 }} size="small">
+        <Grid item xs={12} sm={4} md={4} xl={3}>
+          <FormControl sx={{ width: "100%", height: "110%" }} size="small">
             <InputLabel htmlFor="grouped-select">Filter</InputLabel>
             <Select
               sx={{
@@ -443,10 +430,22 @@ const StudentInformation = () => {
             </Select>
           </FormControl>
         </Grid>
+      </Grid>
+      {/* <Grid item xs={12} sm={8} md={8} xl={3}>
+         <SearchGlobal
+          sx={{
+            height: "100%",
+            "@media (max-width: 390px)": {
+              height: "40px",
+            },
+          }}
+        />  
+      </Grid> */}
+      <Grid container pt={3}>
         <Grid item xs={12}>
           <TableContainer
             sx={{
-              maxHeight: 640,
+              maxHeight: 440,
             }}
             component={Paper}
           >
