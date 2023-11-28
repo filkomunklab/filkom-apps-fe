@@ -237,7 +237,7 @@ const TableItem = ({ item, index }) => {
         break;
       case "history":
         navigate(
-          `/bimbingan-akademik/sek-dekan/supervisor-information/history/${item.nidn}`,
+          `/bimbingan-akademik/sek-dekan/supervisor-information/advisor-history/${item.nidn}`,
           { state: item.nidn }
         );
         break;
@@ -267,6 +267,7 @@ const TableItem = ({ item, index }) => {
       <TableCell sx={[rowStyle]}>{`Informatika`}</TableCell>
       <TableCell>
         <Button
+          name="history"
           onClick={handleButtonNavigate}
           sx={{
             "@media (max-width: 650px)": { fontSize: "11px" },
