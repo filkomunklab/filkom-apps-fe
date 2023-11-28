@@ -13,6 +13,7 @@ import StudentGradeDashboard from "app/pages/BimbinganAkademik/SekDekan/StudentI
 import Profile from "app/pages/BimbinganAkademik/SekDekan/Profile";
 import SupervisorInformation from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation";
 import AdvisorProfile from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/AdvisorProfile/AdvisorProfilFaculty";
+import EditStudent from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/AdvisorProfile/EditStudent";
 import SupervisorInformatics from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/Informatics";
 import SupervisorInformationSystem from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/InformationSystem";
 import SupervisorInformationTechnology from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/InformationTechnology";
@@ -118,6 +119,10 @@ const sekDekanRoutes = [
   {
     path: "/bimbingan-akademik/sek-dekan/supervisor-information/advisor-profile/:id",
     element: <Page component={AdvisorProfile} />,
+  },
+  {
+    path: "/bimbingan-akademik/sek-dekan/supervisor-information/advisor-profile/:id/edit-student",
+    element: <Page component={EditStudent} />,
   },
   {
     path: "/bimbingan-akademik/sek-dekan/supervisor-information/advisor-profile/",
