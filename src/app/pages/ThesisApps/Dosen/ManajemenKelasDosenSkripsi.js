@@ -262,7 +262,7 @@ const ManajemenKelasDosenSkripsi = () => {
         classroom_id: selectedClassroom.id,
         students: nims.map((nim) => ({ nim })),
       };
-      console.log("create new students:", newStudents);
+      console.log("mahasiswa yang akan ditambahkan:", newStudents);
 
       axios
         .post(
