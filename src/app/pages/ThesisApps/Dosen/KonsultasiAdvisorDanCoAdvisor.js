@@ -29,6 +29,7 @@ import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
 const BuatKonsultasi = () => {
   // state - simpan request konsultasi
   const [konsultasi, setKonsultasi] = useState();
+  const createdConsultations = konsultasi?.constultation || [];
 
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
@@ -146,6 +147,20 @@ const BuatKonsultasi = () => {
     }
   };
 
+  const getConsultationMessage = () => {
+    const targetConsultations = 4; // Change this to the total number of consultations needed
+    const consultationsCount = createdConsultations.length;
+
+    // Proposal
+    if (consultationsCount === 0) {
+      return `Konsultasi Mahasiswa 0/${targetConsultations}`;
+    } else if (consultationsCount < targetConsultations) {
+      return `Konsultasi Mahasiswa ${consultationsCount}/${targetConsultations}`;
+    } else {
+      return `Konsultasi Mahasiswa telah terpenuhi ${consultationsCount}/${targetConsultations}`;
+    }
+  };
+
   return (
     <Div>
       <Div
@@ -253,6 +268,15 @@ const BuatKonsultasi = () => {
                 gap: "50px",
               }}
             >
+              <Typography
+                sx={{
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  color: "#rgba(25, 36, 52, 0.94)",
+                }}
+              >
+                {getConsultationMessage()}
+              </Typography>
               {/* Table Konsultasi Start*/}
               <Container
                 sx={{

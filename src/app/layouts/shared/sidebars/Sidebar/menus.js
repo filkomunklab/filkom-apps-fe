@@ -123,6 +123,18 @@ export const sekretarisMenus = [
             type: "nav-item",
             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
           },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-proposal",
+            label: "Riwayat Proposal",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-skripsi",
+            label: "Riwayat Skripsi",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
         ],
       },
       {
