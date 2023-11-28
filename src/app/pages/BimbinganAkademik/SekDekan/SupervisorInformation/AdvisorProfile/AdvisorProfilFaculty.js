@@ -430,17 +430,17 @@ const TableItem = ({ item, index }) => {
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/sek-dekan/supervisor-information/${item.nim}`
+          `/bimbingan-akademik/sek-dekan/student-information/${item.nim}`
         );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/sek-dekan/supervisor-information/${item.nim}/grade`
+          `/bimbingan-akademik/sek-dekan/student-information/${item.nim}/grade`
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/sek-dekan/supervisor-information/${item.nim}/certificate`
+          `/bimbingan-akademik/sek-dekan/student-information/${item.nim}/certificate`
         );
         break;
 
