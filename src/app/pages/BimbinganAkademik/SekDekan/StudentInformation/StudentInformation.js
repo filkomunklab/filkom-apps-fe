@@ -446,7 +446,7 @@ const StudentInformation = () => {
         <Grid item xs={12}>
           <TableContainer
             sx={{
-              maxHeight: 640,
+              maxHeight: 440,
             }}
             component={Paper}
           >
