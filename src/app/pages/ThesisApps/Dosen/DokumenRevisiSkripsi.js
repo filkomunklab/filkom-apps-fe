@@ -16,7 +16,14 @@ import {
   TableHead,
   TableRow,
   Typography,
+  TextareaAutosize,
+  Paper,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  TextField,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import WarningIcon from "@mui/icons-material/Warning";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
@@ -28,8 +35,8 @@ import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
 import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 
 // View Document Revisi
-const PDFViewerProposal = ({ dokumenRevisi }) => {
-  const viewPDFProposal = () => {
+const PDFViewerSkripsi = ({ dokumenRevisi }) => {
+  const viewPDFSkripsi = () => {
     // Buat URL objek untuk file PDF
     const pdfURL = dokumenRevisi?.file_path_revision;
 
@@ -39,7 +46,7 @@ const PDFViewerProposal = ({ dokumenRevisi }) => {
 
   return (
     <div>
-      <span sx={{ fontSize: "10px" }} onClick={viewPDFProposal}>
+      <span sx={{ fontSize: "10px" }} onClick={viewPDFSkripsi}>
         Lihat
       </span>
     </div>
@@ -50,6 +57,12 @@ const DokumenRevisiSkripsi = () => {
   // state - menyimpan request data
   const [dokumenRevisi, setDokumenRevisi] = useState();
   const [perubahan, setPerubahan] = useState();
+  const [date, setDate] = useState();
+
+  // State - mengatur tanggal
+  const [selectedDate, setSelectedDate] = useState("");
+  const [isEditing, setEditing] = useState(false);
+  const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
 
   const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
 
@@ -108,11 +121,108 @@ const DokumenRevisiSkripsi = () => {
         );
       }
     };
+    const fetchTanggalData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/submission-dateline/${skripsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDate(response.data.data);
+        console.log("Request Get tanggal batas revisi: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil tanggal batas revisi:",
+          error
+        );
+      }
+    };
     fetchDokumenSkripsiData();
     fetchPerubahanData();
+    fetchTanggalData();
   }, [token, skripsiId]);
 
-  // state untuk Upload RevisiSkripsi Ketua Panalis
+  // mengatur tanggal
+  const handleEdit = () => {
+    // mengisi date dengan data yang sudah ada
+    setSelectedDate(date?.submission_dateline);
+    setEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    // reset date
+    setSelectedDate();
+    setEditing(false);
+  };
+
+  const handleSubmitDate = () => {
+    setConfirmationDialogOpen(true);
+  };
+
+  const handleConfirmSubmitDate = () => {
+    const batasRevisi = {
+      submission_dateline: selectedDate,
+    };
+    console.log("Tanggal batas revisi yang akan dikirim: ", batasRevisi);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/submission-dateline/${skripsiId}`,
+        batasRevisi,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(`Berhasil mengisi tanggal batas revisi: `, response.data);
+
+        // reset date
+        setSelectedDate();
+        setConfirmationDialogOpen(false);
+        setEditing(false);
+
+        // request data
+        const fetchTanggalData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/submission-dateline/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDate(response.data.data);
+            console.log(
+              "Request Get tanggal batas revisi: ",
+              response.data.data
+            );
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil tanggal batas revisi:",
+              error
+            );
+          }
+        };
+        fetchTanggalData();
+      })
+      .catch((error) => {
+        console.error(
+          `Terjadi kesalahan saat mengisi tanggal batas revisi: `,
+          error
+        );
+      });
+  };
+
+  const handleCancelSubmitDate = () => {
+    setConfirmationDialogOpen(false);
+  };
+
+  // state untuk Upload RevisiSkripsi Ketua Panelis
   const [isSetujuClicked, setIsSetujuClicked] = useState(false);
   const [isTolakClicked, setIsTolakClicked] = useState(false);
   const [isSetujuDisabled, setIsSetujuDisabled] = useState(false);
@@ -124,7 +234,7 @@ const DokumenRevisiSkripsi = () => {
   const [isSetujuDisabledAdvisor, setIsSetujuDisabledAdvisor] = useState(false);
   const [isTolakDisabledAdvisor, setIsTolakDisabledAdvisor] = useState(false);
 
-  // state untuk Upload RevisiSkripsi Anggota Panalis
+  // state untuk Upload RevisiSkripsi Anggota Panelis
   const [isSetujuClickedAnggotaPanalis, setIsSetujuClickedAnggotaPanalis] =
     useState(false);
   const [isTolakClickedAnggotaPanalis, setIsTolakClickedAnggotaPanalis] =
@@ -134,7 +244,7 @@ const DokumenRevisiSkripsi = () => {
   const [isTolakDisabledAnggotaPanalis, setIsTolakDisabledAnggotaPanalis] =
     useState(false);
 
-  // menggubah status Ketua Panalis setuju atau tolak
+  // menggubah status Ketua Panelis setuju atau tolak
   const [ketuaPenelisStatus, setKetuaPenelisStatus] = useState([]);
   const [selectedRevisiSkripsiIndex, setSelectedRevisiSkripsiIndex] =
     useState(null);
@@ -146,7 +256,7 @@ const DokumenRevisiSkripsi = () => {
     setSelectedRevisiSkripsiIndexAdvisor,
   ] = useState(null);
 
-  // menggubah status Anggota Panalis setuju atau tolak
+  // menggubah status Anggota Panelis setuju atau tolak
   const [AnggotaPanalisStatus, setAnggotaPanalisStatus] = useState([]);
   const [
     selectedRevisiSkripsiIndexAnggotaPanalis,
@@ -186,7 +296,7 @@ const DokumenRevisiSkripsi = () => {
     setSelectedActionIndexAnggotaPanalis,
   ] = useState(null);
 
-  // Ketua Panalis
+  // Ketua Panelis
   const handleActionClick = (index, status) => {
     // Memeriksa apakah tindakan tersebut sudah dilakukan
     if (
@@ -228,7 +338,7 @@ const DokumenRevisiSkripsi = () => {
     }
   };
 
-  // Anggota Panalis
+  // Anggota Panelis
   const handleActionClickAnggotaPanalis = (index, status) => {
     // Memeriksa apakah tindakan tersebut sudah dilakukan
     if (
@@ -312,10 +422,13 @@ const DokumenRevisiSkripsi = () => {
 
   // reject
   const handleReject = () => {
+    const data = {
+      comment: komentarText,
+    };
     axios
       .put(
         `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/reject/${skripsiId}`,
-        {},
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -324,6 +437,8 @@ const DokumenRevisiSkripsi = () => {
       )
       .then((response) => {
         console.log("Berhasil reject skripsi: ", response.data.data);
+        handleCloseKomentarDialog();
+        setKomentarText("");
 
         // ketua
         setTolakConfirmationDialogOpen(false);
@@ -364,11 +479,20 @@ const DokumenRevisiSkripsi = () => {
         fetchDokumenSkripsiData();
       })
       .catch((error) => {
-        console.error(
-          "Terjadi kesalahan saat reject skripsi:",
-          error.response.data.message
-        );
+        console.error("Terjadi kesalahan saat reject skripsi:", error);
       });
+  };
+
+  // Komentar
+  const [openKomentarDialog, setOpenKomentarDialog] = useState(false);
+  const [komentarText, setKomentarText] = useState("");
+
+  const handleOpenKomentarDialog = () => {
+    setOpenKomentarDialog(true);
+  };
+
+  const handleCloseKomentarDialog = () => {
+    setOpenKomentarDialog(false);
   };
 
   let ActionRevision;
@@ -440,8 +564,7 @@ const DokumenRevisiSkripsi = () => {
                   marginTop: "5px",
                 }}
                 onClick={() => {
-                  setSelectedActionIndexAdvisor(2);
-                  setTolakConfirmationDialogOpenAdvisor(true);
+                  handleOpenKomentarDialog();
                 }}
               >
                 Tolak
@@ -521,8 +644,7 @@ const DokumenRevisiSkripsi = () => {
                   marginTop: "5px",
                 }}
                 onClick={() => {
-                  setSelectedActionIndex(2);
-                  setTolakConfirmationDialogOpen(true);
+                  handleOpenKomentarDialog();
                 }}
               >
                 Tolak
@@ -602,8 +724,7 @@ const DokumenRevisiSkripsi = () => {
                   marginTop: "5px",
                 }}
                 onClick={() => {
-                  setSelectedActionIndexAnggotaPanalis(2);
-                  setTolakConfirmationDialogOpenAnggotaPanalis(true);
+                  handleOpenKomentarDialog();
                 }}
               >
                 Tolak
@@ -780,6 +901,68 @@ const DokumenRevisiSkripsi = () => {
               boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
             }}
           >
+            {/* Date Start */}
+            <Div
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 2,
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              {isEditing ? (
+                <TextField
+                  size="small"
+                  id="inputDate"
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  style={{ marginRight: "10px" }}
+                />
+              ) : (
+                <Typography variant="subtitle1">
+                  Batas pengumpulan revisi: {date?.submission_dateline}
+                </Typography>
+              )}
+
+              {isEditing ? (
+                <Div>
+                  <Button
+                    size="small"
+                    sx={{
+                      background: "white",
+                      boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                      textTransform: "none",
+                      color: "black",
+                    }}
+                    onClick={handleCancelEdit}
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    onClick={handleSubmitDate}
+                    style={{ marginLeft: "10px", textTransform: "none" }}
+                  >
+                    Simpan
+                  </Button>
+                </Div>
+              ) : (
+                <Div hidden={userRole === "KETUA_PANELIS" ? false : true}>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                    onClick={handleEdit}
+                  >
+                    Ubah
+                  </Button>
+                </Div>
+              )}
+            </Div>
+            {/* Date End */}
             <Typography
               sx={{
                 width: "100%",
@@ -806,184 +989,834 @@ const DokumenRevisiSkripsi = () => {
                 flexDirection: "column",
                 alignItems: "flex-start",
                 gap: "25px",
+                alignSelf: "stretch",
               }}
             >
-              {/* Perubahan Ketua Panalis */}
               <Div
                 sx={{
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "flex-start",
                   alignSelf: "stretch",
+                  boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
                 }}
               >
-                <Div
-                  sx={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    alignSelf: "stretch",
-                    background: "rgba(26, 56, 96, 0.10)",
-                    padding: "14px 16px",
-                    borderRadius: "6px",
-                  }}
-                >
-                  <Typography variant="subtitle2">Ketua Panalis</Typography>
-                </Div>
-                <Div
-                  sx={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    alignSelf: "stretch",
-                    padding: "14px 16px",
-                    border: "2px solid rgba(26, 56, 96, 0.10)",
-                    borderRadius: "0 0 6px 6px",
-                  }}
-                >
-                  <Typography>{perubahan?.changes_by_chairman}</Typography>
-                </Div>
+                <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography>Ketua Panelis</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Abstrak</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_chairman_abstrak
+                          ? perubahan?.changes_by_chairman_abstrak
+                          : "-"}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 1</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_chairman_bab1}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 2</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_chairman_bab2}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 3</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_chairman_bab3}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 4</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_chairman_bab4}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 5</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_chairman_bab5}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Lainnya</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_chairman_other}
+                      </Typography>
+                    </Div>
+                  </AccordionDetails>
+                </Accordion>
+                <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography>Anggota Panelis</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Abstrak</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_member_abstrak}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 1</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_member_bab1}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 2</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_member_bab2}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 3</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_member_bab3}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 4</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_member_bab4}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 5</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_member_bab5}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Lainnya</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_member_other}
+                      </Typography>
+                    </Div>
+                  </AccordionDetails>
+                </Accordion>
+                <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography>Advisor</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Abstrak</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_advisor_abstrak}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 1</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_advisor_bab1}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 2</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_advisor_bab2}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 3</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_advisor_bab3}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 4</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_advisor_bab4}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 5</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_advisor_bab5}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Lainnya</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_advisor_other}
+                      </Typography>
+                    </Div>
+                  </AccordionDetails>
+                </Accordion>
+                {advisorAndCoAdvisor?.coAdvisor1 && (
+                  <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
+                    >
+                      <Typography>Co-Advisor 1</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Abstrak</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor1_abstrak}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Bab 1</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor1_bab1}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Bab 2</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor1_bab2}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Bab 3</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor1_bab3}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Bab 4</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor1_bab4}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Bab 5</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor1_bab5}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Lainnya</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor1_other}
+                        </Typography>
+                      </Div>
+                    </AccordionDetails>
+                  </Accordion>
+                )}
+                {advisorAndCoAdvisor?.coAdvisor2 && (
+                  <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
+                    >
+                      <Typography>Co-Advisor 2</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Abstrak</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor2_abstrak}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Bab 1</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor2_bab1}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Bab 2</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor2_bab2}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Bab 3</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor2_bab3}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Bab 4</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor2_bab4}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Bab 5</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor2_bab5}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Lainnya</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor2_other}
+                        </Typography>
+                      </Div>
+                    </AccordionDetails>
+                  </Accordion>
+                )}
               </Div>
-              {/* Perubahan Anggota Panalis */}
-              <Div
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  alignSelf: "stretch",
-                }}
-              >
-                <Div
-                  sx={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    alignSelf: "stretch",
-                    background: "rgba(26, 56, 96, 0.10)",
-                    padding: "14px 16px",
-                    borderRadius: "6px",
-                  }}
-                >
-                  <Typography variant="subtitle2">Anggota Panalis</Typography>
-                </Div>
-                <Div
-                  sx={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    alignSelf: "stretch",
-                    padding: "14px 16px",
-                    border: "2px solid rgba(26, 56, 96, 0.10)",
-                    borderRadius: "0 0 6px 6px",
-                  }}
-                >
-                  <Typography>{perubahan?.changes_by_member}</Typography>
-                </Div>
-              </Div>
-              {/* Perubahan Advisor */}
-              <Div
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  alignSelf: "stretch",
-                }}
-              >
-                <Div
-                  sx={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    alignSelf: "stretch",
-                    background: "rgba(26, 56, 96, 0.10)",
-                    padding: "14px 16px",
-                    borderRadius: "6px",
-                  }}
-                >
-                  <Typography variant="subtitle2">Advisor</Typography>
-                </Div>
-                <Div
-                  sx={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    alignSelf: "stretch",
-                    padding: "14px 16px",
-                    border: "2px solid rgba(26, 56, 96, 0.10)",
-                    borderRadius: "0 0 6px 6px",
-                  }}
-                >
-                  <Typography>{perubahan?.changes_by_advisor}</Typography>
-                </Div>
-              </Div>
-              {/* Perubahan Co-Advisor 1 */}
-              {advisorAndCoAdvisor?.coAdvisor1 && (
-                <Div
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    alignSelf: "stretch",
-                  }}
-                >
-                  <Div
-                    sx={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      alignSelf: "stretch",
-                      background: "rgba(26, 56, 96, 0.10)",
-                      padding: "14px 16px",
-                      borderRadius: "6px",
-                    }}
-                  >
-                    <Typography variant="subtitle2">Co-Advisor 1</Typography>
-                  </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      alignSelf: "stretch",
-                      padding: "14px 16px",
-                      border: "2px solid rgba(26, 56, 96, 0.10)",
-                      borderRadius: "0 0 6px 6px",
-                    }}
-                  >
-                    <Typography>{perubahan?.changes_by_co_advisor1}</Typography>
-                  </Div>
-                </Div>
-              )}
-              {/* Perubahan Co-Advisor 2 */}
-              {advisorAndCoAdvisor?.coAdvisor2 && (
-                <Div
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    alignSelf: "stretch",
-                  }}
-                >
-                  <Div
-                    sx={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      alignSelf: "stretch",
-                      background: "rgba(26, 56, 96, 0.10)",
-                      padding: "14px 16px",
-                      borderRadius: "6px",
-                    }}
-                  >
-                    <Typography variant="subtitle2">Co-Advisor 2</Typography>
-                  </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      alignSelf: "stretch",
-                      padding: "14px 16px",
-                      border: "2px solid rgba(26, 56, 96, 0.10)",
-                      borderRadius: "0 0 6px 6px",
-                    }}
-                  >
-                    <Typography>{perubahan?.changes_by_co_advisor2}</Typography>
-                  </Div>
-                </Div>
-              )}
             </Div>
             {/* View Perubahan End */}
+            {(userRole === "KETUA_PANELIS" ||
+              userRole === "ANGGOTA_PANELIS" ||
+              userRole === "ADVISOR") && (
+              <>
+                {userRole === "KETUA_PANELIS" &&
+                  dokumenRevisi?.is_revision_approve_by_panelist_chairman !==
+                    "Approve" && (
+                    <>
+                      <Typography
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          padding: "24px",
+                          alignItems: "center",
+                          gap: "10px",
+                          color: "#192434",
+                          background: "rgba(26, 56, 96, 0.10)",
+                          borderRadius: "6px",
+                          fontSize: "12px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        Komentar
+                      </Typography>
+
+                      {/* View Komentar Start*/}
+                      <Div
+                        sx={{
+                          display: "flex",
+                          width: "100%",
+                          padding: "0 25px",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          gap: "25px",
+                        }}
+                      >
+                        {/* Komentar Ketua Panelis */}
+                        <Div
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                          }}
+                        >
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Komentar yang Anda berikan
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                              whiteSpace: "break-spaces",
+                            }}
+                          >
+                            <Typography>
+                              {
+                                dokumenRevisi?.panelist_chairman_revision_comment
+                              }
+                            </Typography>
+                          </Div>
+                        </Div>
+                      </Div>
+                    </>
+                  )}
+                {userRole === "ANGGOTA_PANELIS" &&
+                  dokumenRevisi?.is_revision_approve_by_panelist_member !==
+                    "Approve" && (
+                    <>
+                      <Typography
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          padding: "24px",
+                          alignItems: "center",
+                          gap: "10px",
+                          color: "#192434",
+                          background: "rgba(26, 56, 96, 0.10)",
+                          borderRadius: "6px",
+                          fontSize: "12px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        Komentar
+                      </Typography>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          width: "100%",
+                          padding: "0 25px",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          gap: "25px",
+                        }}
+                      >
+                        {/* Komentar Anggota Panelis */}
+                        <Div
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                          }}
+                        >
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Komentar yang Anda berikan
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                              whiteSpace: "break-spaces",
+                            }}
+                          >
+                            <Typography>
+                              {dokumenRevisi?.panelist_member_revision_comment}
+                            </Typography>
+                          </Div>
+                        </Div>
+                      </Div>
+                    </>
+                  )}
+                {userRole === "ADVISOR" &&
+                  dokumenRevisi?.is_revision_approve_by_advisor !==
+                    "Approve" && (
+                    <>
+                      <Typography
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          padding: "24px",
+                          alignItems: "center",
+                          gap: "10px",
+                          color: "#192434",
+                          background: "rgba(26, 56, 96, 0.10)",
+                          borderRadius: "6px",
+                          fontSize: "12px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        Komentar
+                      </Typography>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          width: "100%",
+                          padding: "0 25px",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
+                          gap: "25px",
+                        }}
+                      >
+                        {/* Komentar Anggota Panelis */}
+                        <Div
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                          }}
+                        >
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Komentar yang Anda berikan
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                              whiteSpace: "break-spaces",
+                            }}
+                          >
+                            <Typography>
+                              {dokumenRevisi?.advisor_revision_comment}
+                            </Typography>
+                          </Div>
+                        </Div>
+                      </Div>
+                    </>
+                  )}
+                {/* View Komentar End */}
+              </>
+            )}
             <Typography
               sx={{
                 width: "100%",
@@ -1051,12 +1884,12 @@ const DokumenRevisiSkripsi = () => {
                       <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
                       >
-                        Ketua Panalis
+                        Ketua Panelis
                       </TableCell>
                       <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
                       >
-                        Anggota Panalis
+                        Anggota Panelis
                       </TableCell>
                       <TableCell
                         sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
@@ -1229,9 +2062,7 @@ const DokumenRevisiSkripsi = () => {
                                 padding: "5px 0",
                               }}
                             >
-                              <PDFViewerProposal
-                                dokumenRevisi={dokumenRevisi}
-                              />
+                              <PDFViewerSkripsi dokumenRevisi={dokumenRevisi} />
                             </span>
                           )}
                           {/* Menampilkan pengisian ADVISOR, KETUA PANALIS, DAN ANGGOTA PANALIS */}
@@ -1250,7 +2081,52 @@ const DokumenRevisiSkripsi = () => {
         </Div>
       </Div>
 
-      {/* popup konfirmasi setuju Ketua Panalis*/}
+      {/* popup konfirmasi Konfirmasi Tanggal */}
+      <Dialog
+        open={isConfirmationDialogOpen}
+        onClose={handleCancelSubmitDate}
+        fullWidth
+        maxWidth="xs"
+      >
+        <DialogTitle
+          sx={{
+            color: "#0A0A0A",
+            fontSize: "20px",
+            fontWeight: "500px",
+          }}
+        >
+          Batas pengumpulan revisi
+        </DialogTitle>
+        <DialogContent>
+          <Typography sx={{ color: "#616161" }}>
+            Apakah Anda yakin ingin menyimpan perubahan?
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+          <Button
+            onClick={handleCancelSubmitDate}
+            color="primary"
+            sx={{
+              background: "white",
+              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+              textTransform: "none",
+              color: "black",
+            }}
+          >
+            Batal
+          </Button>
+          <Button
+            onClick={handleConfirmSubmitDate}
+            color="primary"
+            variant="contained"
+            sx={{ textTransform: "none" }}
+          >
+            Simpan
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* popup konfirmasi setuju Ketua Panelis*/}
       <Dialog
         open={setujuConfirmationDialogOpen}
         onClose={() => setSetujuConfirmationDialogOpen(false)}
@@ -1295,7 +2171,7 @@ const DokumenRevisiSkripsi = () => {
         </DialogActions>
       </Dialog>
 
-      {/* popup konfirmasi tolak Ketua Panalis */}
+      {/* popup konfirmasi tolak Ketua Panelis */}
       <Dialog
         open={tolakConfirmationDialogOpen}
         onClose={() => setTolakConfirmationDialogOpen(false)}
@@ -1341,12 +2217,12 @@ const DokumenRevisiSkripsi = () => {
               },
             }}
           >
-            Ditolak
+            Tolak
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/* popup konfirmasi setuju Anggota Panalis*/}
+      {/* popup konfirmasi setuju Anggota Panelis*/}
       <Dialog
         open={setujuConfirmationDialogOpenAnggotaPanalis}
         onClose={() => setSetujuConfirmationDialogOpenAnggotaPanalis(false)}
@@ -1391,7 +2267,7 @@ const DokumenRevisiSkripsi = () => {
         </DialogActions>
       </Dialog>
 
-      {/* popup konfirmasi tolak Anggota Panalis */}
+      {/* popup konfirmasi tolak Anggota Panelis */}
       <Dialog
         open={tolakConfirmationDialogOpenAnggotaPanalis}
         onClose={() => setTolakConfirmationDialogOpenAnggotaPanalis(false)}
@@ -1437,7 +2313,7 @@ const DokumenRevisiSkripsi = () => {
               },
             }}
           >
-            Ditolak
+            Tolak
           </Button>
         </DialogActions>
       </Dialog>
@@ -1533,10 +2409,87 @@ const DokumenRevisiSkripsi = () => {
               },
             }}
           >
-            Ditolak
+            Tolak
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Dialog komentar Advisor */}
+      <Dialog
+        open={openKomentarDialog}
+        onClose={handleCloseKomentarDialog}
+        fullWidth
+        maxWidth="lg"
+      >
+        <DialogTitle
+          sx={{
+            padding: "14px 16px",
+            background: "rgba(26, 56, 96, 0.10)",
+            borderRadius: "6px 6px 0 0",
+            border: "1px",
+            textAlign: "center",
+          }}
+        >
+          KOMENTAR
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: "20px",
+            alignSelf: "stretch",
+          }}
+        >
+          <Div
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "20px",
+              alignSelf: "stretch",
+              padding: "40px",
+            }}
+          >
+            <TextareaAutosize
+              aria-label="minimum height"
+              minRows={20}
+              placeholder="Masukkan komentar"
+              style={{
+                width: "100%",
+                resize: "vertical",
+              }}
+              value={komentarText} // Set the value of the textarea to revisionText
+              onChange={(e) => setKomentarText(e.target.value)} // Update revisionText when input changes
+            />
+          </Div>
+        </DialogContent>
+        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+          <Button
+            onClick={handleCloseKomentarDialog}
+            sx={{
+              background: "white",
+              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+              textTransform: "none",
+              color: "black",
+            }}
+          >
+            Batal
+          </Button>
+          <Button
+            onClick={() => {
+              setSelectedActionIndexAdvisor(2);
+              setTolakConfirmationDialogOpenAdvisor(true);
+            }}
+            variant="contained"
+            sx={{ textTransform: "none" }}
+            color="primary"
+          >
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* Dialog komentar Advisor */}
     </Div>
   );
 };

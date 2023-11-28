@@ -149,15 +149,13 @@ const BuatKonsultasi = () => {
 
   const getConsultationMessage = () => {
     const targetConsultations = 4; // Change this to the total number of consultations needed
-    const consultationsCount = createdConsultations.length;
+    const consultationsCount = konsultasi?.consultation?.length;
 
     // Proposal
-    if (consultationsCount === 0) {
-      return `Konsultasi Mahasiswa 0/${targetConsultations}`;
-    } else if (consultationsCount < targetConsultations) {
-      return `Konsultasi Mahasiswa ${consultationsCount}/${targetConsultations}`;
-    } else {
+    if (consultationsCount >= targetConsultations) {
       return `Konsultasi Mahasiswa telah terpenuhi ${consultationsCount}/${targetConsultations}`;
+    } else {
+      return `Konsultasi Mahasiswa ${consultationsCount}/${targetConsultations}`;
     }
   };
 
@@ -277,6 +275,18 @@ const BuatKonsultasi = () => {
               >
                 {getConsultationMessage()}
               </Typography>
+              <Typography
+                sx={{
+                  fontSize: "14px",
+                  fontWeight: 400,
+                  color: "#rgba(25, 36, 52, 0.94)",
+                  marginBottom: "25px",
+                }}
+              >
+                Catatan: Mahasiswa wajib melakukan konsultasi bersama advisor
+                dan co-advisor (jika ada) minimal sebanyak 4x
+              </Typography>
+
               {/* Table Konsultasi Start*/}
               <Container
                 sx={{
@@ -398,7 +408,7 @@ const BuatKonsultasi = () => {
                   </DialogActions>
                 </Dialog>
               </Container>
-              {konsultasi?.constultation?.length > 0 ? (
+              {konsultasi?.consultation?.length > 0 ? (
                 <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                   <Table>
                     <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
@@ -410,7 +420,7 @@ const BuatKonsultasi = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {konsultasi?.constultation?.map((consultation, index) => (
+                      {konsultasi?.consultation?.map((consultation, index) => (
                         <TableRow key={index}>
                           <TableCell>{index + 1}</TableCell>
                           <TableCell>{consultation.description}</TableCell>

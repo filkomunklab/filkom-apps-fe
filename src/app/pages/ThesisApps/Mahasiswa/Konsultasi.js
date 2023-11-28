@@ -57,33 +57,41 @@ const Konsultasi = () => {
     fetchKonsultasiData();
   }, [token, groupId]);
 
-  const data = [
-    {
-      deskripsi: "Diskusi Tentang Judul",
-      tanggal: "08/09/2023",
-      tertera: "Andrew T.Liem",
-    },
-    {
-      deskripsi: "Diskusi Tentang Metode",
-      tanggal: "08/09/2023",
-      tertera: "Andrew T.Liem",
-    },
-    {
-      deskripsi: "Diskusi Tentang Penulisan",
-      tanggal: "08/09/2023",
-      tertera: "Andrew T.Liem",
-    },
-    {
-      deskripsi: "Diskusi Tentang Perubahan",
-      tanggal: "08/09/2023",
-      tertera: "Andrew T.Liem",
-    },
-    {
-      deskripsi: "Diskusi Tentang Latar Belakang",
-      tanggal: "08/09/2023",
-      tertera: "Andrew T.Liem",
-    },
-  ];
+  const getProposalConsultationMessage = () => {
+    const targetConsultations = 4; // Ganti ini dengan total jumlah konsultasi yang dibutuhkan
+    const consultations = konsultasi?.consultation;
+
+    if (!consultations) {
+      return "Tidak ada konsultasi yang tersedia.";
+    }
+
+    // Menghitung jumlah konsultasi dengan status "Proposal"
+    const proposalConsultations = consultations?.filter(
+      (consultation) => consultation.consultation_status === "Proposal"
+    ).length;
+
+    if (proposalConsultations >= targetConsultations) {
+      return `Konsultasi Proposal telah terpenuhi ${proposalConsultations}/${targetConsultations}`;
+    } else {
+      return `Konsultasi Proposal ${proposalConsultations}/${targetConsultations}`;
+    }
+  };
+
+  const getSkripsiConsultationMessage = () => {
+    const targetConsultations = 4; // Ganti ini dengan total jumlah konsultasi yang dibutuhkan
+    const consultations = konsultasi?.consultation;
+
+    // Menghitung jumlah konsultasi dengan status "Skripsi"
+    const skripsiConsultations = consultations?.filter(
+      (consultation) => consultation.consultation_status === "Skripsi"
+    ).length;
+
+    if (skripsiConsultations >= targetConsultations) {
+      return `Konsultasi Skripsi telah terpenuhi ${skripsiConsultations}/${targetConsultations}`;
+    } else {
+      return `Konsultasi Skripsi ${skripsiConsultations}/${targetConsultations}`;
+    }
+  };
 
   return (
     <Div>
@@ -225,7 +233,7 @@ const Konsultasi = () => {
           </Div>
           {/* Menu horizontal End */}
 
-          {konsultasi?.constultation?.length > 0 ? (
+          {konsultasi?.consultation?.length > 0 ? (
             <Div
               sx={{
                 display: "flex",
@@ -249,6 +257,79 @@ const Konsultasi = () => {
                   gap: "50px",
                 }}
               >
+                {userRole === "MAHASISWA" && progress === "Proposal" && (
+                  <>
+                    <Typography
+                      sx={{
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        color: "#rgba(25, 36, 52, 0.94)",
+                      }}
+                    >
+                      {getProposalConsultationMessage()}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "14px",
+                        fontWeight: 400,
+                        color: "#rgba(25, 36, 52, 0.94)",
+                        marginBottom: "25px",
+                      }}
+                    >
+                      Catatan: Mahasiswa wajib melakukan konsultasi proposal
+                      bersama advisor dan co-advisor (jika ada) minimal sebanyak
+                      4x
+                    </Typography>
+                  </>
+                )}
+                {userRole === "MAHASISWA" && progress === "Skripsi" && (
+                  <>
+                    <Typography
+                      sx={{
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        color: "#rgba(25, 36, 52, 0.94)",
+                      }}
+                    >
+                      {getSkripsiConsultationMessage()}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "14px",
+                        fontWeight: 400,
+                        color: "#rgba(25, 36, 52, 0.94)",
+                        marginBottom: "25px",
+                      }}
+                    >
+                      Catatan: Mahasiswa wajib melakukan konsultasi skripsi
+                      bersama advisor dan co-advisor (jika ada) minimal sebanyak
+                      4x
+                    </Typography>
+                  </>
+                )}
+                {userRole === "MAHASISWA" && progress === "Finished" && (
+                  <>
+                    <Typography
+                      sx={{
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        color: "#rgba(25, 36, 52, 0.94)",
+                      }}
+                    >
+                      {getProposalConsultationMessage()}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        color: "#rgba(25, 36, 52, 0.94)",
+                      }}
+                    >
+                      {getSkripsiConsultationMessage()}
+                    </Typography>
+                  </>
+                )}
+
                 {/* Table Konsultasi Start*/}
                 <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                   <Table>
@@ -261,7 +342,7 @@ const Konsultasi = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {konsultasi?.constultation?.map((item, index) => (
+                      {konsultasi?.consultation?.map((item, index) => (
                         <TableRow key={index}>
                           <TableCell>{index + 1}</TableCell>
                           <TableCell>{item.description}</TableCell>
