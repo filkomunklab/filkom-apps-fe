@@ -124,7 +124,7 @@ const DokumenRevisiSkripsi = () => {
     const fetchTanggalData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skrippsi/submission-dateline/${skripsiId}`,
+          `http://localhost:2000/api/v1/skripsi/submission-dateline/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -1020,10 +1020,10 @@ const DokumenRevisiSkripsi = () => {
                         alignSelf: "stretch",
                       }}
                     >
-                      <Typography>Judul</Typography>
+                      <Typography>Abstrak</Typography>
                       <Typography>
-                        {perubahan?.changes_by_chairman_judul
-                          ? perubahan?.changes_by_chairman_judul
+                        {perubahan?.changes_by_chairman_abstrak
+                          ? perubahan?.changes_by_chairman_abstrak
                           : "-"}
                       </Typography>
                     </Div>
@@ -1082,6 +1082,36 @@ const DokumenRevisiSkripsi = () => {
                         alignSelf: "stretch",
                       }}
                     >
+                      <Typography>Bab 4</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_chairman_bab4}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 5</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_chairman_bab5}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
                       <Typography>Lainnya</Typography>
                       <Typography>
                         {perubahan?.changes_by_chairman_other}
@@ -1108,9 +1138,9 @@ const DokumenRevisiSkripsi = () => {
                         alignSelf: "stretch",
                       }}
                     >
-                      <Typography>Judul</Typography>
+                      <Typography>Abstrak</Typography>
                       <Typography>
-                        {perubahan?.changes_by_member_judul}
+                        {perubahan?.changes_by_member_abstrak}
                       </Typography>
                     </Div>
                     <Div
@@ -1168,7 +1198,37 @@ const DokumenRevisiSkripsi = () => {
                         alignSelf: "stretch",
                       }}
                     >
-                      <Typography>Llainnya</Typography>
+                      <Typography>Bab 4</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_member_bab4}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 5</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_member_bab5}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Lainnya</Typography>
                       <Typography>
                         {perubahan?.changes_by_member_other}
                       </Typography>
@@ -1194,9 +1254,9 @@ const DokumenRevisiSkripsi = () => {
                         alignSelf: "stretch",
                       }}
                     >
-                      <Typography>Judul</Typography>
+                      <Typography>Abstrak</Typography>
                       <Typography>
-                        {perubahan?.changes_by_advisor_judul}
+                        {perubahan?.changes_by_advisor_abstrak}
                       </Typography>
                     </Div>
                     <Div
@@ -1254,6 +1314,36 @@ const DokumenRevisiSkripsi = () => {
                         alignSelf: "stretch",
                       }}
                     >
+                      <Typography>Bab 4</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_advisor_bab4}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 5</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_advisor_bab5}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
                       <Typography>Lainnya</Typography>
                       <Typography>
                         {perubahan?.changes_by_advisor_other}
@@ -1281,9 +1371,9 @@ const DokumenRevisiSkripsi = () => {
                           alignSelf: "stretch",
                         }}
                       >
-                        <Typography>Judul</Typography>
+                        <Typography>Abstrak</Typography>
                         <Typography>
-                          {perubahan?.changes_by_co_advisor1_judul}
+                          {perubahan?.changes_by_co_advisor1_abstrak}
                         </Typography>
                       </Div>
                       <Div
@@ -1341,6 +1431,36 @@ const DokumenRevisiSkripsi = () => {
                           alignSelf: "stretch",
                         }}
                       >
+                        <Typography>Bab 4</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor1_bab4}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Bab 5</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor1_bab5}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
                         <Typography>Lainnya</Typography>
                         <Typography>
                           {perubahan?.changes_by_co_advisor1_other}
@@ -1369,9 +1489,9 @@ const DokumenRevisiSkripsi = () => {
                           alignSelf: "stretch",
                         }}
                       >
-                        <Typography>Judul</Typography>
+                        <Typography>Abstrak</Typography>
                         <Typography>
-                          {perubahan?.changes_by_co_advisor2_judul}
+                          {perubahan?.changes_by_co_advisor2_abstrak}
                         </Typography>
                       </Div>
                       <Div
@@ -1417,6 +1537,36 @@ const DokumenRevisiSkripsi = () => {
                         <Typography>Bab 3</Typography>
                         <Typography>
                           {perubahan?.changes_by_co_advisor2_bab3}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Bab 4</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor2_bab4}
+                        </Typography>
+                      </Div>
+                      <Div
+                        sx={{
+                          display: "flex",
+                          padding: "14px 16px",
+                          flexDirection: "column",
+                          gap: "10px",
+                          flex: "1 0 0",
+                          alignSelf: "stretch",
+                        }}
+                      >
+                        <Typography>Bab 5</Typography>
+                        <Typography>
+                          {perubahan?.changes_by_co_advisor2_bab5}
                         </Typography>
                       </Div>
                       <Div

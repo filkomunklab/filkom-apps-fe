@@ -1171,7 +1171,7 @@ const DokumenRevisiProposal = () => {
                         alignSelf: "stretch",
                       }}
                     >
-                      <Typography>Llainnya</Typography>
+                      <Typography>Lainnya</Typography>
                       <Typography>
                         {perubahan?.changes_by_member_other}
                       </Typography>

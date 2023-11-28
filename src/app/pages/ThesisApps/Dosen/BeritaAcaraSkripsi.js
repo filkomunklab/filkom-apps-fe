@@ -51,10 +51,12 @@ const BeritaAcara = () => {
   const [selectedProdi, setSelectedProdi] = useState();
 
   // State - menyimpan Perubahan
-  const [judul, setJudul] = useState("");
+  const [abstrak, setAbstrak] = useState("");
   const [bab1, setBab1] = useState("");
   const [bab2, setBab2] = useState("");
   const [bab3, setBab3] = useState("");
+  const [bab4, setBab4] = useState("");
+  const [bab5, setBab5] = useState("");
   const [lainnya, setLainnya] = useState("");
 
   // State - mengatur tanggal
@@ -667,44 +669,54 @@ const BeritaAcara = () => {
   const handleOpenRevisionDialog = () => {
     // ketika menekan "Komen" = mengambil data perubahan sesuai role
     if (userRole === "KETUA_PANELIS") {
-      setJudul(dataPerubahan?.changes_by_chairman_judul);
+      setAbstrak(dataPerubahan?.changes_by_chairman_abstrak);
       setBab1(dataPerubahan?.changes_by_chairman_bab1);
       setBab2(dataPerubahan?.changes_by_chairman_bab2);
       setBab3(dataPerubahan?.changes_by_chairman_bab3);
+      setBab4(dataPerubahan?.changes_by_chairman_bab4);
+      setBab5(dataPerubahan?.changes_by_chairman_bab5);
       setLainnya(dataPerubahan?.changes_by_chairman_other);
     }
     if (userRole === "ANGGOTA_PANELIS") {
-      setJudul(dataPerubahan?.changes_by_member_judul);
+      setAbstrak(dataPerubahan?.changes_by_member_abstrak);
       setBab1(dataPerubahan?.changes_by_member_bab1);
       setBab2(dataPerubahan?.changes_by_member_bab2);
       setBab3(dataPerubahan?.changes_by_member_bab3);
+      setBab4(dataPerubahan?.changes_by_member_bab4);
+      setBab5(dataPerubahan?.changes_by_member_bab5);
       setLainnya(dataPerubahan?.changes_by_member_other);
     }
     if (userRole === "ADVISOR") {
-      setJudul(dataPerubahan?.changes_by_advisor_judul);
+      setAbstrak(dataPerubahan?.changes_by_advisor_abstrak);
       setBab1(dataPerubahan?.changes_by_advisor_bab1);
       setBab2(dataPerubahan?.changes_by_advisor_bab2);
       setBab3(dataPerubahan?.changes_by_advisor_bab3);
+      setBab4(dataPerubahan?.changes_by_advisor_bab4);
+      setBab5(dataPerubahan?.changes_by_advisor_bab5);
       setLainnya(dataPerubahan?.changes_by_advisor_other);
     }
     setOpenRevisionDialog(true);
   };
 
   const handleCloseRevisionDialog = () => {
-    setJudul();
+    setAbstrak();
     setBab1();
     setBab2();
     setBab3();
+    setBab4();
+    setBab5();
     setLainnya();
     setOpenRevisionDialog(false);
   };
 
   const handleRevisionSubmit = () => {
     const perubahan = {
-      judul: judul,
+      abstrak: abstrak,
       bab1: bab1,
       bab2: bab2,
       bab3: bab3,
+      bab4: bab4,
+      bab5: bab5,
       other: lainnya,
     };
     axios
@@ -1408,7 +1420,7 @@ const BeritaAcara = () => {
                     <TableRow>
                       <TableCell>1</TableCell>
                       <TableCell sx={{ textAlign: "center" }}>
-                        {dataPerubahan?.changes_by_chairman_judul !== null ? (
+                        {dataPerubahan?.changes_by_chairman_abstrak !== null ? (
                           <Chip
                             size="small"
                             label="Sudah"
@@ -1423,7 +1435,7 @@ const BeritaAcara = () => {
                         )}
                       </TableCell>
                       <TableCell sx={{ textAlign: "center" }}>
-                        {dataPerubahan?.changes_by_member_judul !== null ? (
+                        {dataPerubahan?.changes_by_member_abstrak !== null ? (
                           <Chip
                             size="small"
                             label="Sudah"
@@ -1443,7 +1455,7 @@ const BeritaAcara = () => {
                         )}
                       </TableCell>
                       <TableCell sx={{ textAlign: "center" }}>
-                        {dataPerubahan?.changes_by_advisor_judul !== null ? (
+                        {dataPerubahan?.changes_by_advisor_abstrak !== null ? (
                           <Chip
                             size="small"
                             label="Sudah"
@@ -1464,7 +1476,7 @@ const BeritaAcara = () => {
                       </TableCell>
                       {advisorAndCoAdvisor?.coAdvisor1 && (
                         <TableCell sx={{ textAlign: "center" }}>
-                          {dataPerubahan?.changes_by_co_advisor1_judul !==
+                          {dataPerubahan?.changes_by_co_advisor1_abstrak !==
                           null ? (
                             <Chip
                               size="small"
@@ -1487,7 +1499,7 @@ const BeritaAcara = () => {
                       )}
                       {advisorAndCoAdvisor?.coAdvisor2 && (
                         <TableCell sx={{ textAlign: "center" }}>
-                          {dataPerubahan?.changes_by_co_advisor2_judul !==
+                          {dataPerubahan?.changes_by_co_advisor2_abstrak !==
                           null ? (
                             <Chip
                               size="small"
@@ -2108,9 +2120,9 @@ const BeritaAcara = () => {
                             value.value_by_member === null ||
                             value.value_by_advisor === null
                         ) ||
-                        dataPerubahan?.changes_by_chairman_judul === null ||
-                        dataPerubahan?.changes_by_member_judul === null ||
-                        dataPerubahan?.changes_by_advisor_judul === null ||
+                        dataPerubahan?.changes_by_chairman_abstrak === null ||
+                        dataPerubahan?.changes_by_member_abstrak === null ||
+                        dataPerubahan?.changes_by_advisor_abstrak === null ||
                         dataBeritaAcara?.is_report_approve_by_panelist_chairman ===
                           null ||
                         dataBeritaAcara?.is_report_approve_by_panelist_member ===
@@ -2778,21 +2790,21 @@ const BeritaAcara = () => {
             }}
           >
             <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-              Judul
+              Abstrak
             </DialogContentText>
             <TextareaAutosize
               aria-label="minimum height"
               minRows={3}
               maxRows={10}
-              placeholder="Masukan Perubahan Judul"
+              placeholder="Masukan Perubahan Abstrak"
               style={{
                 width: "100%",
                 marginBottom: "25px",
 
                 resize: "vertical",
               }}
-              value={judul}
-              onChange={(e) => setJudul(e.target.value)}
+              value={abstrak}
+              onChange={(e) => setAbstrak(e.target.value)}
             />
             <DialogContentText sx={{ width: "100%", margin: "auto" }}>
               Bab 1
@@ -2846,13 +2858,47 @@ const BeritaAcara = () => {
               onChange={(e) => setBab3(e.target.value)}
             />
             <DialogContentText sx={{ width: "100%", margin: "auto" }}>
+              Bab 4
+            </DialogContentText>
+            <TextareaAutosize
+              aria-label="minimum height"
+              minRows={3}
+              maxRows={10}
+              placeholder="Masukkan Perubahan Bab 4"
+              style={{
+                width: "100%",
+                marginBottom: "25px",
+
+                resize: "vertical",
+              }}
+              value={bab4}
+              onChange={(e) => setBab4(e.target.value)}
+            />
+            <DialogContentText sx={{ width: "100%", margin: "auto" }}>
+              Bab 3
+            </DialogContentText>
+            <TextareaAutosize
+              aria-label="minimum height"
+              minRows={3}
+              maxRows={10}
+              placeholder="Masukkan Perubahan Bab 5"
+              style={{
+                width: "100%",
+                marginBottom: "25px",
+
+                resize: "vertical",
+              }}
+              value={bab5}
+              onChange={(e) => setBab5(e.target.value)}
+            />
+            <DialogContentText sx={{ width: "100%", margin: "auto" }}>
               Lainnya
             </DialogContentText>
             <TextareaAutosize
               aria-label="minimum height"
               minRows={3}
               maxRows={10}
-              placeholder="Masukkan Perubahan Bab 3"
+              placeholder="Masukkan Perubahan Lainnya"
               style={{
                 width: "100%",
                 marginBottom: "25px",
@@ -2992,10 +3038,10 @@ const BeritaAcara = () => {
                       alignSelf: "stretch",
                     }}
                   >
-                    <Typography>Judul</Typography>
+                    <Typography>Abstrak</Typography>
                     <Typography>
-                      {dataPerubahan?.changes_by_chairman_judul
-                        ? dataPerubahan?.changes_by_chairman_judul
+                      {perubahan?.changes_by_chairman_abstrak
+                        ? perubahan?.changes_by_chairman_abstrak
                         : "-"}
                     </Typography>
                   </Div>
@@ -3011,7 +3057,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 1</Typography>
                     <Typography>
-                      {dataPerubahan?.changes_by_chairman_bab1}
+                      {perubahan?.changes_by_chairman_bab1}
                     </Typography>
                   </Div>
                   <Div
@@ -3026,7 +3072,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 2</Typography>
                     <Typography>
-                      {dataPerubahan?.changes_by_chairman_bab2}
+                      {perubahan?.changes_by_chairman_bab2}
                     </Typography>
                   </Div>
                   <Div
@@ -3041,7 +3087,37 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 3</Typography>
                     <Typography>
-                      {dataPerubahan?.changes_by_chairman_bab3}
+                      {perubahan?.changes_by_chairman_bab3}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 4</Typography>
+                    <Typography>
+                      {perubahan?.changes_by_chairman_bab4}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 5</Typography>
+                    <Typography>
+                      {perubahan?.changes_by_chairman_bab5}
                     </Typography>
                   </Div>
                   <Div
@@ -3056,7 +3132,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Lainnya</Typography>
                     <Typography>
-                      {dataPerubahan?.changes_by_chairman_other}
+                      {perubahan?.changes_by_chairman_other}
                     </Typography>
                   </Div>
                 </AccordionDetails>
@@ -3080,9 +3156,9 @@ const BeritaAcara = () => {
                       alignSelf: "stretch",
                     }}
                   >
-                    <Typography>Judul</Typography>
+                    <Typography>Abstrak</Typography>
                     <Typography>
-                      {dataPerubahan?.changes_by_member_judul}
+                      {perubahan?.changes_by_member_abstrak}
                     </Typography>
                   </Div>
                   <Div
@@ -3096,9 +3172,7 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 1</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_member_bab1}
-                    </Typography>
+                    <Typography>{perubahan?.changes_by_member_bab1}</Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3111,9 +3185,7 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 2</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_member_bab2}
-                    </Typography>
+                    <Typography>{perubahan?.changes_by_member_bab2}</Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3126,9 +3198,7 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 3</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_member_bab3}
-                    </Typography>
+                    <Typography>{perubahan?.changes_by_member_bab3}</Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3140,9 +3210,35 @@ const BeritaAcara = () => {
                       alignSelf: "stretch",
                     }}
                   >
-                    <Typography>Llainnya</Typography>
+                    <Typography>Bab 4</Typography>
+                    <Typography>{perubahan?.changes_by_member_bab4}</Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 5</Typography>
+                    <Typography>{perubahan?.changes_by_member_bab5}</Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Lainnya</Typography>
                     <Typography>
-                      {dataPerubahan?.changes_by_member_other}
+                      {perubahan?.changes_by_member_other}
                     </Typography>
                   </Div>
                 </AccordionDetails>
@@ -3166,9 +3262,9 @@ const BeritaAcara = () => {
                       alignSelf: "stretch",
                     }}
                   >
-                    <Typography>Judul</Typography>
+                    <Typography>Abstrak</Typography>
                     <Typography>
-                      {dataPerubahan?.changes_by_advisor_judul}
+                      {perubahan?.changes_by_advisor_abstrak}
                     </Typography>
                   </Div>
                   <Div
@@ -3183,7 +3279,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 1</Typography>
                     <Typography>
-                      {dataPerubahan?.changes_by_advisor_bab1}
+                      {perubahan?.changes_by_advisor_bab1}
                     </Typography>
                   </Div>
                   <Div
@@ -3198,7 +3294,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 2</Typography>
                     <Typography>
-                      {dataPerubahan?.changes_by_advisor_bab2}
+                      {perubahan?.changes_by_advisor_bab2}
                     </Typography>
                   </Div>
                   <Div
@@ -3213,7 +3309,37 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 3</Typography>
                     <Typography>
-                      {dataPerubahan?.changes_by_advisor_bab3}
+                      {perubahan?.changes_by_advisor_bab3}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 4</Typography>
+                    <Typography>
+                      {perubahan?.changes_by_advisor_bab4}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 5</Typography>
+                    <Typography>
+                      {perubahan?.changes_by_advisor_bab5}
                     </Typography>
                   </Div>
                   <Div
@@ -3228,7 +3354,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Lainnya</Typography>
                     <Typography>
-                      {dataPerubahan?.changes_by_advisor_other}
+                      {perubahan?.changes_by_advisor_other}
                     </Typography>
                   </Div>
                 </AccordionDetails>
@@ -3253,9 +3379,9 @@ const BeritaAcara = () => {
                         alignSelf: "stretch",
                       }}
                     >
-                      <Typography>Judul</Typography>
+                      <Typography>Abstrak</Typography>
                       <Typography>
-                        {dataPerubahan?.changes_by_co_advisor1_judul}
+                        {perubahan?.changes_by_co_advisor1_abstrak}
                       </Typography>
                     </Div>
                     <Div
@@ -3270,7 +3396,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 1</Typography>
                       <Typography>
-                        {dataPerubahan?.changes_by_co_advisor1_bab1}
+                        {perubahan?.changes_by_co_advisor1_bab1}
                       </Typography>
                     </Div>
                     <Div
@@ -3285,7 +3411,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 2</Typography>
                       <Typography>
-                        {dataPerubahan?.changes_by_co_advisor1_bab2}
+                        {perubahan?.changes_by_co_advisor1_bab2}
                       </Typography>
                     </Div>
                     <Div
@@ -3300,7 +3426,37 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 3</Typography>
                       <Typography>
-                        {dataPerubahan?.changes_by_co_advisor1_bab3}
+                        {perubahan?.changes_by_co_advisor1_bab3}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 4</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_co_advisor1_bab4}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 5</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_co_advisor1_bab5}
                       </Typography>
                     </Div>
                     <Div
@@ -3315,7 +3471,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Lainnya</Typography>
                       <Typography>
-                        {dataPerubahan?.changes_by_co_advisor1_other}
+                        {perubahan?.changes_by_co_advisor1_other}
                       </Typography>
                     </Div>
                   </AccordionDetails>
@@ -3341,9 +3497,9 @@ const BeritaAcara = () => {
                         alignSelf: "stretch",
                       }}
                     >
-                      <Typography>Judul</Typography>
+                      <Typography>Abstrak</Typography>
                       <Typography>
-                        {dataPerubahan?.changes_by_co_advisor2_judul}
+                        {perubahan?.changes_by_co_advisor2_abstrak}
                       </Typography>
                     </Div>
                     <Div
@@ -3358,7 +3514,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 1</Typography>
                       <Typography>
-                        {dataPerubahan?.changes_by_co_advisor2_bab1}
+                        {perubahan?.changes_by_co_advisor2_bab1}
                       </Typography>
                     </Div>
                     <Div
@@ -3373,7 +3529,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 2</Typography>
                       <Typography>
-                        {dataPerubahan?.changes_by_co_advisor2_bab2}
+                        {perubahan?.changes_by_co_advisor2_bab2}
                       </Typography>
                     </Div>
                     <Div
@@ -3388,7 +3544,37 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 3</Typography>
                       <Typography>
-                        {dataPerubahan?.changes_by_co_advisor2_bab3}
+                        {perubahan?.changes_by_co_advisor2_bab3}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 4</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_co_advisor2_bab4}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 5</Typography>
+                      <Typography>
+                        {perubahan?.changes_by_co_advisor2_bab5}
                       </Typography>
                     </Div>
                     <Div
@@ -3403,7 +3589,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Lainnya</Typography>
                       <Typography>
-                        {dataPerubahan?.changes_by_co_advisor2_other}
+                        {perubahan?.changes_by_co_advisor2_other}
                       </Typography>
                     </Div>
                   </AccordionDetails>

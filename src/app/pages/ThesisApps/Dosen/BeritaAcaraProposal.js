@@ -2947,7 +2947,7 @@ const BeritaAcara = () => {
               aria-label="minimum height"
               minRows={3}
               maxRows={10}
-              placeholder="Masukkan Perubahan Bab 3"
+              placeholder="Masukkan Perubahan Lainnya"
               style={{
                 width: "100%",
                 marginBottom: "25px",
