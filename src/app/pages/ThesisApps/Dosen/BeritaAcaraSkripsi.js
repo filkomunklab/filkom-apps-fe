@@ -116,7 +116,7 @@ const BeritaAcara = () => {
         setDataPenilaian(response.data.data);
 
         // Membuat array objek baru untuk nilaiMahasiswa
-        const newNilaiMahasiswa = dataPenilaian.map((mahasiswa) => ({
+        const newNilaiMahasiswa = response.data.data.map((mahasiswa) => ({
           student_id: mahasiswa.student_id,
           assessment_conclution: "",
         }));
@@ -3659,7 +3659,7 @@ const BeritaAcara = () => {
         <DialogTitle>Berita Acara</DialogTitle>
         <DialogContent>
           <Typography>
-            Apakah Anda yakin ingin menyetujui berita acara?
+            Apakah Anda yakin ingin menandatangani berita acara?
           </Typography>
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>

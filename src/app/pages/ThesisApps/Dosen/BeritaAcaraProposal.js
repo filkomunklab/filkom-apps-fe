@@ -65,8 +65,6 @@ const BeritaAcara = () => {
   // state - menyimpan nilai kesimpulan
   const [nilaiMahasiswa, setNilaiMahasiswa] = useState([]);
 
-  console.log("nilai: ", nilaiMahasiswa);
-
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
@@ -116,10 +114,12 @@ const BeritaAcara = () => {
         setDataPenilaian(response.data.data);
 
         // Membuat array objek baru untuk nilaiMahasiswa
-        const newNilaiMahasiswa = dataPenilaian.map((mahasiswa) => ({
+        const newNilaiMahasiswa = response.data.data.map((mahasiswa) => ({
           student_id: mahasiswa.student_id,
           assessment_conclution: "",
         }));
+
+        console.log("nilai mahasiswa di fetch", newNilaiMahasiswa);
 
         // Mengatur nilaiMahasiswa dengan array baru yang dibuat
         setNilaiMahasiswa(newNilaiMahasiswa);
@@ -283,6 +283,7 @@ const BeritaAcara = () => {
   const handleSubmitData = () => {
     // Di sini Anda dapat menambahkan logika untuk mengirim data atau tindakan yang diperlukan
 
+    console.log("nilai mahasiswa: ", nilaiMahasiswa);
     for (const entry of nilaiMahasiswa) {
       const nilaiKesimpulan = {
         student_id: entry.student_id,
@@ -3568,7 +3569,7 @@ const BeritaAcara = () => {
         <DialogTitle>Berita Acara</DialogTitle>
         <DialogContent>
           <Typography>
-            Apakah Anda yakin ingin menyetujui berita acara?
+            Apakah Anda yakin ingin menandatangani berita acara?
           </Typography>
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
