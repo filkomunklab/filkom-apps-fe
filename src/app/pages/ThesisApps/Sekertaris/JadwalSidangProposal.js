@@ -776,15 +776,20 @@ const JadwalSidangProposal = () => {
           <Typography
             sx={{
               display: "flex",
+              flexDirection: "column", // Mengubah orientasi menjadi kolom
               padding: "24px",
-              alignItems: "center",
+              alignItems: "flex-start", // Mengatur rata kiri
               gap: "10px",
               alignSelf: "stretch",
               background: "rgba(26, 56, 96, 0.10)",
               borderRadius: "6px",
             }}
           >
-            Jadwal Sidang
+            <div>Jadwal Sidang</div>
+            <div>
+              Catatan: Periksa kembali jadwal yang sudah ada supaya tidak
+              bertabrakan dengan jadwal yang akan dibuat!
+            </div>
           </Typography>
           <Container sx={{ marginTop: "10px" }}>
             <Grid container spacing={2}>
