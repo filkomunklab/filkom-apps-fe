@@ -610,7 +610,7 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
                 fontWeight: 600,
               }}
             >
-              Belum ada mahasiswa yang pengujian Proposal.
+              Belum ada mahasiswa yang pengujian Skripsi.
             </Typography>
           </Div>
         )}
