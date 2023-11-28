@@ -9,8 +9,35 @@ import {
   experimentalStyled as styled,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import { BASE_URL_API } from "@jumbo/config/env";
+import axios from "axios";
 
 const CurrentActivities = () => {
+
+  // const getActivities = async()=>{
+  //   try{
+  //     //content-type dan Authorization liat di dokumentasi API atau postman
+  //     const headers = {
+  //         'Content-Type': 'multipart/form-data',
+  //         Authorization: `Bearer token_apa`,
+  //       };
+
+  //   const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+
+  //   const {status, message, code, data} = response.data
+  //   if(status === 'OK'){ //isi status atau code tergantung API
+  //     //simpan dalam usestate contoh:
+  //     //setActivityList = data
+  //     //tambahkan handle lain jika perlu
+  //   }else{
+  //     //handle jika respon lain, kalau tidak ada hapus saja
+  //     console.log(response)
+  //   }
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
+
   return (
     <div>
       <Typography
