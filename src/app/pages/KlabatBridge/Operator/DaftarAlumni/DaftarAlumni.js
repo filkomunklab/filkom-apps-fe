@@ -267,7 +267,9 @@ const DaftarAlumni = () => {
   function filterData() {
     return data.filter(
       (item) =>
-        item["graduate_year"] === filterValue || item["major"] === filterValue || item["status"] === filterValue
+        item["graduate_year"] === filterValue ||
+        item["major"] === filterValue ||
+        item["status"] === filterValue
     );
   }
 
@@ -390,9 +392,7 @@ const DaftarAlumni = () => {
               {year.map((item) => {
                 return <MenuItem value={item}>{item}</MenuItem>;
               })}
-              <ListSubheader sx={{ color: "#192739F0" }}>
-                Status
-              </ListSubheader>
+              <ListSubheader sx={{ color: "#192739F0" }}>Status</ListSubheader>
               {status.map((item) => {
                 return <MenuItem value={item}>{item}</MenuItem>;
               })}

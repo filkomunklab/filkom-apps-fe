@@ -5,7 +5,7 @@ import {
   Select,
   Table,
   TableBody,
-  TableCell, 
+  TableCell,
   TableContainer,
   TableHead,
   TableRow,
@@ -86,7 +86,7 @@ const DaftarAlumniFakultas = () => {
 
   const TableItem = ({ index, item }) => (
     <TableRow>
-      <TableCell>{index + 1 + rowsPerPage * page}</TableCell>
+      <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
       <TableCell>{`${item.firstName} ${item.lastName}`}</TableCell>
       <TableCell>{item.nim}</TableCell>
       <TableCell>{item.faculty}</TableCell>
@@ -125,7 +125,7 @@ const DaftarAlumniFakultas = () => {
       .then((res) => {
         if (isMounted) {
           setData(res.data.data);
-          console.log(res.data.data)
+          console.log(res.data.data);
           const uniqueYears = [
             ...new Set(res.data.data.map((item) => item.graduate_year)),
           ];
@@ -217,8 +217,8 @@ const DaftarAlumniFakultas = () => {
                   case "SI":
                     label = "Sistem Informasi";
                     break;
-                  case 'DKV':
-                    label='DKV'
+                  case "DKV":
+                    label = "DKV";
                     break;
                   default:
                     break;
@@ -255,8 +255,8 @@ const DaftarAlumniFakultas = () => {
               : data
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => (
-                  <TableItem index={index} item={item} />
-                ))}
+                    <TableItem index={index} item={item} />
+                  ))}
           </TableBody>
         </Table>
       </TableContainer>

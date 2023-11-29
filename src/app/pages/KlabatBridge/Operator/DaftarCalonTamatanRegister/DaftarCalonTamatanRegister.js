@@ -520,13 +520,13 @@ const DaftarCalonTamatan = () => {
   const getColorForApproval = (approvalValue) => {
     switch (approvalValue) {
       case "APPROVED":
-        return "#5cb85c"; 
+        return "#5cb85c";
       case "WAITING":
-        return "#f0ad4e"; 
+        return "#f0ad4e";
       case "REJECTED":
-        return "#d9534f"; 
+        return "#d9534f";
       default:
-        return "default"; 
+        return "default";
     }
   };
 
