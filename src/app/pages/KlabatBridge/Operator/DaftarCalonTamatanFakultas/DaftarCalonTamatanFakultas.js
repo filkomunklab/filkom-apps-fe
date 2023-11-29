@@ -454,10 +454,40 @@ const DaftarCalonTamatan = () => {
         {item?.major}
       </TableCell>
       <TableCell>{item?.graduate_plan}</TableCell>
-      <TableCell>{item?.approval_fac}</TableCell>
-      <TableCell>{item?.approval_reg}</TableCell>
+      <TableCell align="center">
+        <Chip
+          label={item?.approval_fac}
+          style={{
+            backgroundColor: getColorForApproval(item?.approval_fac),
+            color: "white",
+          }}
+        />
+      </TableCell>
+      <TableCell align="center">
+        <Chip
+          label={item?.approval_reg}
+          style={{
+            backgroundColor: getColorForApproval(item?.approval_reg),
+            color: "white",
+          }}
+        />
+      </TableCell>
     </TableRow>
   );
+
+  // colors for student's approval
+  const getColorForApproval = (approvalValue) => {
+    switch (approvalValue) {
+      case "APPROVED":
+        return "#5cb85c";
+      case "WAITING":
+        return "#f0ad4e";
+      case "REJECTED":
+        return "#d9534f";
+      default:
+        return "default";
+    }
+  };
 
   React.useEffect(() => {
     jwtAuthAxios
