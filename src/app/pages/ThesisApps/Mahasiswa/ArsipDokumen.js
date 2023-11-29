@@ -4,6 +4,10 @@ import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Paper,
   Table,
   TableBody,
@@ -11,6 +15,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
@@ -107,6 +112,15 @@ const PDFViewerSourceCode = ({ sourceCode, isUploading }) => {
   );
 };
 
+const formatIndonesianDate = (date) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1; // Perhatikan bahwa bulan dimulai dari 0
+  const year = date.getFullYear();
+
+  const formattedDate = `${day}/${month}/${year}`;
+  return formattedDate;
+};
+
 const ArsipDocument = () => {
   // state - menyimpan request data
   const [HKI, setHKI] = useState();
@@ -124,6 +138,52 @@ const ArsipDocument = () => {
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
   const [skripsiId, setSkripsiId] = useState(null);
+
+  const [open, setOpen] = useState(false);
+  const [link, setLink] = useState("");
+  const [links, setLinks] = useState([]);
+  const [selectedLinkId, setSelectedLinkId] = useState(null);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleLinkSubmit = () => {
+    if (selectedLinkId !== null) {
+      // Update link yang sudah ada
+      const updatedLinks = [...links];
+      updatedLinks[selectedLinkId] = {
+        link,
+        date: formatIndonesianDate(new Date()),
+      };
+      setLinks(updatedLinks);
+    } else {
+      // Tambahkan link baru
+      setLinks([...links, { link, date: formatIndonesianDate(new Date()) }]);
+    }
+
+    // Reset form dan tutup popup
+    setLink("");
+    setSelectedLinkId(null);
+    handleClose();
+  };
+
+  const handleEditLink = (index) => {
+    const selectedLink = links[index];
+    setLink(selectedLink.link);
+    setSelectedLinkId(index);
+    setOpen(true);
+  };
+
+  const handleDeleteLink = (index) => {
+    const updatedLinks = [...links];
+    updatedLinks.splice(index, 1);
+    setLinks(updatedLinks);
+  };
 
   const role = useParams().role;
   console.log(role);
@@ -1511,6 +1571,160 @@ const ArsipDocument = () => {
                 </Table>
               </TableContainer>
               {/* Table upload Link End */}
+
+              {/* table upload link2 Start */}
+              <Div
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginTop: "20px",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  component="label"
+                  sx={{
+                    textTransform: "none",
+                    color: "white",
+                    fontSize: "12px",
+                    borderRadius: "6px",
+                    width: "150px",
+                    height: "30px",
+                  }}
+                  onClick={handleClickOpen}
+                >
+                  <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
+                  Unggah Link
+                </Button>
+              </Div>
+
+              <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+                <DialogTitle>
+                  <Typography variant="h3">
+                    {selectedLinkId !== null ? "Update Link" : "Unggah Link"}
+                  </Typography>
+                </DialogTitle>
+                <DialogContent>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="link"
+                    label="Link"
+                    type="text"
+                    fullWidth
+                    value={link}
+                    onChange={(e) => setLink(e.target.value)}
+                  />
+                </DialogContent>
+                <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                  <Button
+                    onClick={handleClose}
+                    size="small"
+                    sx={{
+                      background: "white",
+                      boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                      textTransform: "none",
+                      color: "black",
+                    }}
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    onClick={handleLinkSubmit}
+                    size="small"
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                    color="primary"
+                  >
+                    {selectedLinkId !== null ? "Update" : "Submit"}
+                  </Button>
+                </DialogActions>
+              </Dialog>
+
+              <TableContainer component={Paper} style={{ marginTop: 20 }}>
+                <Table>
+                  <TableHead sx={{ background: "#F5F5F5" }}>
+                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "65%" }}
+                      >
+                        Link
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                      >
+                        Tanggal
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          textAlign: "center",
+                          width: "12%",
+                        }}
+                      >
+                        Action
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {links.map((item, index) => (
+                      <TableRow key={index}>
+                        <TableCell sx={{ fontSize: "12px" }}>
+                          <a
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              textDecoration: "underline",
+                              color: "blue",
+                            }}
+                          >
+                            {item.link}
+                          </a>
+                        </TableCell>
+                        <TableCell>{item.date}</TableCell>
+                        <TableCell>
+                          <Div sx={{ display: "flex" }}>
+                            <span
+                              style={{
+                                textDecoration: "none",
+                                cursor: "pointer",
+                                color: "blue",
+                                fontSize: "12px",
+                              }}
+                              onClick={() => handleEditLink(index)}
+                            >
+                              Update
+                            </span>
+                            <Div
+                              style={{
+                                margin: "0 5px",
+                                color: "#E0E0E0",
+                              }}
+                            >
+                              |
+                            </Div>
+                            <span
+                              style={{
+                                textDecoration: "none",
+                                cursor: isSubmittingLink
+                                  ? "not-allowed"
+                                  : "pointer",
+                                color: isSubmittingLink ? "#A0A0A0" : "red",
+                                fontSize: "12px",
+                              }}
+                              onClick={() => handleDeleteLink(index)}
+                            >
+                              Hapus
+                            </span>
+                          </Div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Div>
             {/* Table 3 End */}
           </Div>
