@@ -83,6 +83,17 @@ const style2 = {
   borderRadius: 10,
 };
 
+const style3 = {
+  position: "fixed",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  padding: 24,
+  backgroundColor: "white",
+  borderRadius: 10,
+};
+
 const Curriculum = () => {
   const [curriculum, setCurriculum] = useState("selectCurriculum");
   const [isAddModalOpen, setAddModalOpen] = useState(false);
@@ -98,7 +109,6 @@ const Curriculum = () => {
   const [listCurriculum, setListCurriculum] = useState([]);
   const [listSubject, setListSubject] = useState([]);
 
-  const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
   const handleOpenSecondModal = () => setOpenSecondModal(true);
   const handleCloseSecondModal = () => setOpenSecondModal(false);
@@ -278,7 +288,19 @@ const Curriculum = () => {
   };
 
   const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
+    const inputValue = event.target.value;
+
+    if (!isNaN(Number(inputValue))) {
+      setSelectedYear(inputValue);
+    }
+  };
+  const handleOpenFirstModal = (event) => {
+    if (!selectedProdi || !selectedYear || !selectedFile) {
+      alert("Please fill the field first");
+      return;
+    } else {
+      setOpenFirstModal(true);
+    }
   };
 
   const closeModal = () => {
@@ -295,9 +317,24 @@ const Curriculum = () => {
       return "kaprodi";
     } else if (path.includes("dospem")) {
       return "dospem";
-    } else {
-      // Default role jika path tidak sesuai dengan yang diharapkan
-      return "defaultRole";
+    }
+  };
+
+  const handleTemplate = () => {
+    let dataBlob = EXCEL_FILE_BASE64;
+    let sliceSize = 1024;
+    let byteCharacters = atob(dataBlob);
+    let bytesLength = byteCharacters.length;
+    let slicesCount = Math.ceil(bytesLength / sliceSize);
+    let byteArrays = new Array(slicesCount);
+    for (let sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+      let begin = sliceIndex * sliceSize;
+      let end = Math.min(begin + sliceSize, bytesLength);
+      let bytes = new Array(end - begin);
+      for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
+        bytes[i] = byteCharacters[offset].charCodeAt(0);
+      }
+      byteArrays[sliceIndex] = new Uint8Array(bytes);
     }
   };
 
@@ -409,7 +446,7 @@ const Curriculum = () => {
                     <CloseIcon />
                   </IconButton>
                   <Grid container paddingTop={2}>
-                    <Grid item md={8}>
+                    <Grid item md={8} xs={8}>
                       <Typography
                         id="modal-modal-title"
                         variant="h4"
@@ -418,19 +455,24 @@ const Curriculum = () => {
                           fontWeight: 600,
                           paddingBottom: 3,
                           paddingTop: 2,
+                          "@media (max-width: 390px)": {
+                            fontSize: "15px",
+                          },
                         }}
                       >
                         Add Curriculum
                       </Typography>
                     </Grid>
-                    <Grid item mt={2} md={4}>
+                    <Grid item mt={2} md={4} xs={4}>
                       <Link
                         sx={{
                           cursor: "pointer",
                           color: "#025ED8",
                           display: "flex",
                           justifyContent: "flex-end",
+                          "@media (max-width: 390px)": { fontSize: "11px" },
                         }}
+                        onClick={handleTemplate}
                       >
                         Template Excel
                       </Link>
@@ -511,8 +553,7 @@ const Curriculum = () => {
                       >
                         {selectedFileName || "Import Excel"}
                       </span>
-
-                      <SaveAltIcon style={{ color: "#888888" }} />
+                      <SaveAltIcon sx={{ color: "#888888" }} />
                     </label>
                   </FormControl>
                   <Grid
@@ -558,14 +599,14 @@ const Curriculum = () => {
                           fontWeight: 600,
                         }}
                       >
-                        Send Certificate?
+                        Add Curriculum?
                       </Typography>
                       <Typography
                         id="modal-modal-description"
-                        style={{ marginTop: "16px", marginBottom: "20px" }}
+                        sx={{ marginTop: "16px", marginBottom: "20px" }}
                       >
-                        Are you sure you want to submit this? Forms that have
-                        been submitted cannot be edited again.
+                        Are you sure you want to add this curriculum on the
+                        list?
                       </Typography>
 
                       <Grid container spacing={1} justifyContent="flex-end">
@@ -577,12 +618,13 @@ const Curriculum = () => {
                               borderRadius: "5px",
                               color: "black",
                               whiteSpace: "nowrap",
+                              backgroundColor: "lightgrey",
                               "&:hover": {
-                                backgroundColor: "lightgrey",
+                                backgroundColor: "darkgrey",
                               },
                             }}
                           >
-                            Cancel
+                            No
                           </Button>
                         </Grid>
                         <Grid item>
@@ -598,7 +640,7 @@ const Curriculum = () => {
                               },
                             }}
                           >
-                            Submit
+                            Yes
                           </Button>
                         </Grid>
                       </Grid>
@@ -633,13 +675,13 @@ const Curriculum = () => {
                       fontWeight: 600,
                     }}
                   >
-                    Successful Submission!
+                    Successful Adding Curriculum!
                   </Typography>
                   <Typography
                     id="modal-modal-description"
                     style={{ marginTop: "16px", marginBottom: "20px" }}
                   >
-                    You have successfully preregistered for the course.
+                    You have successfully added a new curriculum to the list
                   </Typography>
                 </div>
               </Modal>
@@ -823,7 +865,7 @@ const Curriculum = () => {
           ""
         ) : (
           <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
-            <Table stickyHeader>
+            <Table>
               <TableHead
                 sx={{
                   position: "-webkit-sticky",
@@ -833,7 +875,6 @@ const Curriculum = () => {
                 }}
               >
                 <TableRow>
-                  <TableCell sx={{ width: "80px" }}>Number</TableCell>
                   <TableCell sx={{ width: "80px" }}>Semester</TableCell>
                   <TableCell sx={{ width: "80px" }}>Code</TableCell>
                   <TableCell sx={{ width: "400px" }}>Name</TableCell>
@@ -844,69 +885,27 @@ const Curriculum = () => {
               </TableHead>
               <TableBody>
                 {listSubject &&
-                  listSubject.map((value, index) => {
-                    // Variable untuk melacak apakah informasi tambahan untuk semester 1 sudah ditampilkan
-                    let isSemester1InfoDisplayed = false;
-
-                    // Check if the current semester is 1, then add an additional row only if it hasn't been displayed yet
-                    if (value.semester === 1 && !isSemester1InfoDisplayed) {
-                      isSemester1InfoDisplayed = true; // Set variabel menjadi true agar tidak ditampilkan lagi
-                      return (
-                        <React.Fragment key={`additional-row-semester-1`}>
-                          <TableRow>
-                            <TableCell colSpan={7}>
-                              Additional Row for Semester 1
-                            </TableCell>
-                          </TableRow>
-                          {/* Regular row */}
-                          <TableRow key={value.id}>
-                            <TableCell>{index + 1}</TableCell>
-                            <TableCell>
-                              {value.semester === 0
-                                ? "Pre-Requisite"
-                                : value.semester === 9
-                                ? "Elective"
-                                : value.semester}
-                            </TableCell>
-                            <TableCell>{value.code}</TableCell>
-                            <TableCell>{value.name}</TableCell>
-                            <TableCell>{value.credits}</TableCell>
-                            <TableCell>{value.type}</TableCell>
-                            <TableCell>
-                              {value.prerequisite === null ||
-                              value.prerequisite === ""
-                                ? "-"
-                                : value.prerequisite}
-                            </TableCell>
-                          </TableRow>
-                        </React.Fragment>
-                      );
-                    } else {
-                      // Regular row for other semesters
-                      return (
-                        <TableRow key={value.id}>
-                          <TableCell>{index + 1}</TableCell>
-                          <TableCell>
-                            {value.semester === 0
-                              ? "Pre-Requisite"
-                              : value.semester === 9
-                              ? "Elective"
-                              : value.semester}
-                          </TableCell>
-                          <TableCell>{value.code}</TableCell>
-                          <TableCell>{value.name}</TableCell>
-                          <TableCell>{value.credits}</TableCell>
-                          <TableCell>{value.type}</TableCell>
-                          <TableCell>
-                            {value.prerequisite === null ||
-                            value.prerequisite === ""
-                              ? "-"
-                              : value.prerequisite}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    }
-                  })}
+                  listSubject.map((value, index) => (
+                    <TableRow key={value.id}>
+                      <TableCell>
+                        {value.semester === 0
+                          ? "Pre-Requisite"
+                          : value.semester === 9
+                          ? "Elective"
+                          : value.semester}
+                      </TableCell>
+                      <TableCell>{value.code}</TableCell>
+                      <TableCell>{value.name}</TableCell>
+                      <TableCell>{value.credits}</TableCell>
+                      <TableCell>{value.type}</TableCell>
+                      <TableCell>
+                        {value.prerequisite === null ||
+                        value.prerequisite === ""
+                          ? "-"
+                          : value.prerequisite}
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
