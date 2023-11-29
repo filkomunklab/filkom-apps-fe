@@ -1,17 +1,15 @@
-import Div from "@jumbo/shared/Div";
+import React from "react";
 import {
-  Box,
-  Button,
   Container,
-  Grid,
-  Stack,
-  TextareaAutosize,
   Typography,
+  Box,
+  Stack,
+  Paper,
   Breadcrumbs,
   experimentalStyled as styled,
-  Link,
+  Grid,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -19,33 +17,28 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
   "&:hover": {
     textDecoration: "underline",
-    cursor: "pointer",
   },
 }));
 
-const CertificateDetail = () => {
-  const pdfURL =
-    "https://firebasestorage.googleapis.com/v0/b/filkom-apps-project.appspot.com/o/certificate%2F10502201001%2FNational.pdf?alt=media&token=a60bad0e-9836-46c2-8707-f9883e4a812f";
-
+const CertificateWaiting = () => {
   const navigate = useNavigate();
-  const handleClick = (event, step) => {
+
+  const handleClick = (event) => {
     event.preventDefault();
-    navigate(step);
+    navigate(-1);
   };
 
+  const imageUrl =
+    "https://i.pinimg.com/originals/fc/fa/29/fcfa2911e796d71f1bf6aa25ee1d8d89.jpg";
+
   return (
-    <Div>
-      <Div role="presentation">
+    <div>
+      <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink onClick={(event) => handleClick(event, -2)}>
-            Student Information
-          </StyledLink>
-          <StyledLink onClick={(event) => handleClick(event, -1)}>
-            Student Certificates
-          </StyledLink>
+          <StyledLink>History</StyledLink>
           <Typography color="text.primary">Certificate</Typography>
         </Breadcrumbs>
-      </Div>
+      </div>
       <Typography
         fontSize={"24px"}
         fontWeight="500"
@@ -55,21 +48,6 @@ const CertificateDetail = () => {
       </Typography>
       <Grid container spacing={2}>
         <Grid item md={8} id="detail-item">
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Title</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5" fontWeight={500}>
-                  Menang Student Programmer Competition
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
           <Grid item xs={12}>
             <Grid container>
               <Grid item xs={4} md={3} xl={3}>
@@ -144,8 +122,8 @@ const CertificateDetail = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5" sx={{ color: "#FFCC00" }}>
-                  Waiting
+                <Typography variant="h5" sx={{ color: "red" }}>
+                  Rejected
                 </Typography>
               </Grid>
             </Grid>
@@ -168,71 +146,31 @@ const CertificateDetail = () => {
           </Grid>
         </Grid>
         <Grid item md={4} id="certificate-item">
-          <Box
-            sx={{
-              flex: 1,
-              maxWidth: "100%",
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            <iframe
-              src={pdfURL}
-              title="Certificate-pdf"
-              style={{
-                width: "100%",
-                height: "350px",
-                border: "none",
-                transform: "scale(1)",
-                overflow: "hidden",
-              }}
+          <Box sx={{ flex: 1 }}>
+            <img
+              src={imageUrl}
+              alt="Certificate-pic"
+              style={{ maxWidth: "100%", scale: "0.8" }}
             />
           </Box>
         </Grid>
       </Grid>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
-          <Typography>Coments</Typography>
-          <TextareaAutosize minRows={4} maxRows={8} style={{ width: "100%" }} />
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          md={4}
-          display="flex"
-          alignItems={"center"}
-          justifyContent={"space-evenly"}
-        >
-          <Stack direction={"row"} gap={2}>
-            <Button
-              variant="contained"
-              color="error"
-              sx={{
-                borderRadius: "24px",
-                textTransform: "capitalize",
-                width: "100%",
-                fontSize: "1rem",
-              }}
-            >
-              Reject
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{
-                borderRadius: "24px",
-                textTransform: "capitalize",
-                width: "100%",
-                fontSize: "1rem",
-              }}
-            >
-              Approve
-            </Button>
-          </Stack>
-        </Grid>
-      </Grid>
-    </Div>
+
+      <Stack spacing={2} sx={{ padding: 3, marginTop: 4 }}>
+        <Typography variant="h5" sx={{ fontWeight: 600 }}>
+          Comments from Supervisor
+        </Typography>
+        <Paper elevation={0} variant="outlined" fullWidth>
+          <Typography variant="body1" sx={{ p: 2 }}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+            commodo nunc in ligula tempus, sed feugiat justo vestibulum. Etiam
+            pellentesque, odio vel facilisis posuere, urna velit gravida est, eu
+            pharetra massa tortor eget quam.
+          </Typography>
+        </Paper>
+      </Stack>
+    </div>
   );
 };
 
-export default CertificateDetail;
+export default CertificateWaiting;

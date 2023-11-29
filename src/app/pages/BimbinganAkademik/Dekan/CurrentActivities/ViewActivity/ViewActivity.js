@@ -21,6 +21,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -68,8 +70,90 @@ const studentsData = Array.from({ length: 29 }, (_, index) => ({
 }));
 
 const ViewActivity = () => {
+  const navigate = useNavigate();
   const [selectedAll, setSelectedAll] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState([]);
+  const [openFirstModal, setOpenFirstModal] = useState(false);
+  const [openSecondModal, setOpenSecondModal] = useState(false);
+
+  // const getActivityDetail = async() => {
+  //   try{
+  //     const headers = {
+  //         'Content-Type': 'multipart/form-data',
+  //         Authorization: `Bearer token_apa`,
+  //     };
+
+  //     const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+
+  //     const {status, message, code, data} = response.data
+  //     if(status === 'OK'){ //isi status atau code tergantung API
+  //     //simpan dalam usestate contoh:
+  //     //setStudentList = data
+  //     //tambahkan handle lain jika perlu
+  //     }else{
+  //     //tambah handler jika respon lain, kalau tidak perlu hapus saja
+  //       console.log(response)
+  //     }
+
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
+
+  // const getStudentList = async() =>{
+  //   try{
+  //     const headers = {
+  //         'Content-Type': 'multipart/form-data',
+  //         Authorization: `Bearer token_apa`,
+  //     };
+
+  //     const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+
+  //     const {status, message, code, data} = response.data
+  //     if(status === 'OK'){ //isi status atau code tergantung API
+  //     //simpan dalam usestate contoh:
+  //     //setStudentList = data
+  //     //tambahkan handle lain jika perlu
+  //     }else{
+  //     //tambah handler jika respon lain, kalau tidak perlu hapus saja
+  //       console.log(response)
+  //     }
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
+
+  // const submitAttendance = async()=>{
+  //   try{
+  //     const headers = {
+  //         'Content-Type': 'multipart/form-data',
+  //         Authorization: `Bearer token_apa`,
+  //     };
+
+  //     const response = await axios.post(`${BASE_URL_API}/bla/bla/bla`,{body: 'data apa'},{headers})
+
+  //   // jika tidak akan melakukan handle terhadap response maka hapus saja "const response =", jadi sisa await dst...
+  //     console.log(response)
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
+
+  // const submitActivity = async()=>{
+  //   try{
+  //     const headers = {
+  //         'Content-Type': 'multipart/form-data',
+  //         Authorization: `Bearer token_apa`,
+  //     };
+
+  //     const response = await axios.post(`${BASE_URL_API}/bla/bla/bla`,{body: 'data apa'},{headers})
+
+  //   // jika tidak akan melakukan handle terhadap response maka hapus saja "const response =", jadi sisa await dst...
+  //     console.log(response)
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
 
   const handleSelectAll = () => {
     setSelectedAll(!selectedAll);
@@ -87,32 +171,25 @@ const ViewActivity = () => {
     setSelectedStudents(updatedSelectedStudents);
   };
 
-  const navigate = useNavigate();
-
   const handleClick = (event) => {
     event.preventDefault();
     navigate(-1);
   };
 
-  const [openFirstModal, setOpenFirstModal] = React.useState(false);
-  const [openSecondModal, setOpenSecondModal] = React.useState(false);
-  const handleOpenFirstModal = () => setOpenFirstModal(true);
-  const handleCloseFirstModal = () => setOpenFirstModal(false);
-  const handleOpenSecondModal = () => setOpenSecondModal(true);
-  const handleCloseSecondModal = () => setOpenSecondModal(false);
   const handleSubmitFirstModal = () => {
-    handleCloseFirstModal();
-    handleOpenSecondModal();
+    setOpenFirstModal(false);
+    setOpenSecondModal(true);
   };
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      handleCloseSecondModal();
+      setOpenSecondModal(false);
     }, 5000);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [handleOpenSecondModal]);
+  }, [openSecondModal === true]);
 
   return (
     <div>
@@ -192,7 +269,7 @@ const ViewActivity = () => {
         </Grid>
       </Grid>
 
-      <Grid
+      {/* <Grid
         sx={{
           padding: 2,
           paddingTop: "30px",
@@ -201,7 +278,7 @@ const ViewActivity = () => {
         }}
       >
         <Button
-          onClick={handleOpenFirstModal}
+          onClick={()=>setOpenFirstModal(true)}
           sx={{
             backgroundColor: "#006AF5",
             borderRadius: "24px",
@@ -219,11 +296,10 @@ const ViewActivity = () => {
         >
           Submit
         </Button>
-      </Grid>
-
-      <Modal
+      </Grid> */}
+      {/* <Modal
         open={openFirstModal}
-        onClose={handleCloseFirstModal}
+        onClose={() => setOpenFirstModal(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -249,7 +325,7 @@ const ViewActivity = () => {
           <Grid container spacing={1} justifyContent="flex-end">
             <Grid item>
               <Button
-                onClick={handleCloseFirstModal}
+                onClick={() => setOpenFirstModal(false)}
                 sx={{
                   backgroundColor: "white",
                   borderRadius: "5px",
@@ -291,7 +367,7 @@ const ViewActivity = () => {
           <IconButton
             edge="end"
             color="#D9D9D9"
-            onClick={handleCloseSecondModal}
+            onClick={() => setOpenSecondModal(false)}
             aria-label="close"
             sx={{
               position: "absolute",
@@ -318,7 +394,7 @@ const ViewActivity = () => {
             You have successfully entered the student attendance form.
           </Typography>
         </div>
-      </Modal>
+      </Modal> */}
 
       <div>
         <Typography sx={{ fontSize: "24px", mt: 2, mb: 2, fontWeight: 400 }}>
@@ -375,7 +451,7 @@ const ViewActivity = () => {
         }}
       >
         <Button
-          onClick={handleOpenFirstModal}
+          onClick={() => setOpenFirstModal(true)}
           sx={{
             backgroundColor: "#006AF5",
             borderRadius: "24px",
@@ -391,13 +467,13 @@ const ViewActivity = () => {
             },
           }}
         >
-          Submit Attendance
+          Submit
         </Button>
       </Grid>
 
       <Modal
         open={openFirstModal}
-        onClose={handleCloseFirstModal}
+        onClose={() => setOpenFirstModal(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -423,7 +499,7 @@ const ViewActivity = () => {
           <Grid container spacing={1} justifyContent="flex-end">
             <Grid item>
               <Button
-                onClick={handleCloseFirstModal}
+                onClick={() => setOpenFirstModal(false)}
                 sx={{
                   backgroundColor: "white",
                   borderRadius: "5px",
@@ -465,7 +541,7 @@ const ViewActivity = () => {
           <IconButton
             edge="end"
             color="#D9D9D9"
-            onClick={handleCloseSecondModal}
+            onClick={() => setOpenSecondModal(false)}
             aria-label="close"
             sx={{
               position: "absolute",

@@ -24,14 +24,17 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const CertificateDetail = () => {
-  const pdfURL =
-    "https://firebasestorage.googleapis.com/v0/b/filkom-apps-project.appspot.com/o/certificate%2F10502201001%2FNational.pdf?alt=media&token=a60bad0e-9836-46c2-8707-f9883e4a812f";
+  const imageUrl =
+    "https://i.pinimg.com/originals/fc/fa/29/fcfa2911e796d71f1bf6aa25ee1d8d89.jpg";
 
   const navigate = useNavigate();
   const handleClick = (event, step) => {
     event.preventDefault();
     navigate(step);
   };
+
+  const pdfURL =
+    "https://firebasestorage.googleapis.com/v0/b/filkom-apps-project.appspot.com/o/certificate%2F10502201001%2FNational.pdf?alt=media&token=a60bad0e-9836-46c2-8707-f9883e4a812f";
 
   return (
     <Div>
@@ -168,24 +171,11 @@ const CertificateDetail = () => {
           </Grid>
         </Grid>
         <Grid item md={4} id="certificate-item">
-          <Box
-            sx={{
-              flex: 1,
-              maxWidth: "100%",
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            <iframe
-              src={pdfURL}
-              title="Certificate-pdf"
-              style={{
-                width: "100%",
-                height: "350px",
-                border: "none",
-                transform: "scale(1)",
-                overflow: "hidden",
-              }}
+          <Box sx={{ flex: 1 }}>
+            <img
+              src={""}
+              alt="Certificate-pic"
+              style={{ maxWidth: "100%", scale: "0.8" }}
             />
           </Box>
         </Grid>

@@ -150,13 +150,12 @@ const Certificate = () => {
       title,
       category,
       description,
-      employeeId: "dosen",
       certificateFile,
     };
 
     try {
       const result = await axios.post(
-        `${BASE_URL_API}/certificate/10502201003`,
+        `${BASE_URL_API}/certificate/10502201001`,
         data
       );
 

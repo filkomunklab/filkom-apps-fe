@@ -10,12 +10,10 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import SendIcon from "@mui/icons-material/Send";
 import { format } from "date-fns";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -38,63 +36,39 @@ const style = {
   borderRadius: 10,
 };
 
-const ViewConsultation = () => {
-  const navigate = useNavigate();
-  const [openFirstModal, setOpenFirstModal] = useState(false);
+// const style2 = {
+//   position: "fixed",
+//   top: "15%",
+//   right: "2%",
+//   width: 400,
+//   boxShadow: 24,
+//   padding: 24,
+//   backgroundColor: "white",
+//   borderRadius: 10,
+// };
+
+const ConsultationOnProcess = () => {
+  const [openFirstModal, setOpenFirstModal] = React.useState(false);
+  // const [openSecondModal, setOpenSecondModal] = React.useState(false);
+
+  const handleOpenFirstModal = () => setOpenFirstModal(true);
+  const handleCloseFirstModal = () => setOpenFirstModal(false);
+  // const handleOpenSecondModal = () => setOpenSecondModal(true);
+  // const handleCloseSecondModal = () => setOpenSecondModal(false);
+
   const [inputValue, setInputValue] = useState("");
   const [submittedValue, setSubmittedValue] = useState("");
-
-  // const getConsultation = async()=>{
-  //   try{
-  //     const headers = {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer token_apa`,
-  //       };
-
-  //   const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
-
-  //   const {status, message, code, data} = response.data
-  //   if(status === 'OK'){ //isi status atau code tergantung API
-  //     //simpan dalam usestate contoh:
-  //     //setConsultation = data
-  //     //tambahkan handle lain jika perlu
-  //   }else{
-  //     //tambah handler jika respon lain, kalau tidak perlu hapus saja
-  //     console.log(response)
-  //   }
-  //   }catch(error){
-  //     console.log(error)
-  //   }
-  // }
-
-  // const postMessage = async () =>{
-  //   try{
-  //     const headers = {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer token_apa`,
-  //       };
-      
-  //     const response = await axios.post(`${BASE_URL_API}/bla/bla/bla`,{message: 'Helo bang'}, {headers})
-
-  //     //jika tidak akan melakukan handle terhadap response maka hapus saja "const response =", jadi sisa await dst...
-  //     console.log(response)
-  //   }catch(error){
-  //     console.log(error)
-  //   }
-  // }
-
-  
 
   const handleIconClick = () => {
     handleSubmit();
   };
   const handleClick = (event) => {
     event.preventDefault();
-    navigate(-1);
   };
 
   const handleSubmitFirstModal = () => {
-    setOpenFirstModal(false)
+    handleCloseFirstModal();
+    // handleOpenSecondModal();
   };
 
   const handleKeyPress = (e) => {
@@ -112,11 +86,23 @@ const ViewConsultation = () => {
 
   const currentDate = format(new Date(), "dd/MM/yyyy HH:mm");
 
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     handleCloseSecondModal();
+  //   }, 5000);
+
+  //   return () => {
+  //     clearTimeout(timer);
+  //   };
+  // }, [handleOpenSecondModal]);
+
   return (
     <div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Back</StyledLink>
+          <StyledLink to="/bimbingan-akademik/dekan/supervisor-information/advisor-history/">
+            History
+          </StyledLink>
           <Typography color="text.primary">Consultation</Typography>
         </Breadcrumbs>
       </div>
@@ -329,7 +315,7 @@ const ViewConsultation = () => {
                   />
                   <Grid container spacing={1} justifyContent="flex-end">
                     <Button
-                      onClick={()=>setOpenFirstModal(true)}
+                      onClick={handleOpenFirstModal}
                       sx={{
                         backgroundColor: "#006AF5",
                         borderRadius: "5px",
@@ -345,7 +331,7 @@ const ViewConsultation = () => {
                     </Button>
                     <Modal
                       open={openFirstModal}
-                      onClose={()=>setOpenFirstModal(false)}
+                      onClose={handleCloseFirstModal}
                       aria-labelledby="modal-modal-title"
                       aria-describedby="modal-modal-description"
                     >
@@ -370,7 +356,7 @@ const ViewConsultation = () => {
                         <Grid container spacing={1} justifyContent="flex-end">
                           <Grid item>
                             <Button
-                              onClick={()=>setOpenFirstModal(false)}
+                              onClick={handleCloseFirstModal}
                               sx={{
                                 backgroundColor: "white",
                                 borderRadius: "5px",
@@ -422,4 +408,4 @@ const ViewConsultation = () => {
   );
 };
 
-export default ViewConsultation;
+export default ConsultationOnProcess;

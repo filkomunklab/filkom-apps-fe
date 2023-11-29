@@ -32,8 +32,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { EXCEL_FILE_BASE64 } from "./constants";
 import FileSaver from "file-saver";
 
-//test vercel
-
 const styleCurriculum = {
   position: "absolute",
   top: "50%",
@@ -146,6 +144,8 @@ const Curriculum = () => {
 
   const handleSubmitFirstModal = async () => {
     setLoading(true);
+
+    console.log("ini selected file: ", selectedFile);
     const file = selectedFile;
     const reader = new FileReader();
 
@@ -171,6 +171,7 @@ const Curriculum = () => {
       try {
         const result = await axios.post(`${BASE_URL_API}/curriculum`, data);
         if (result.data.status === "OK") {
+          console.log("Successful response:", result.data);
           setSelectedProdi("");
           setSelectedYear("");
           setSelectedFile(null);
@@ -194,6 +195,7 @@ const Curriculum = () => {
         setLoading(false);
       }
     };
+
     reader.readAsArrayBuffer(file);
   };
 
@@ -319,6 +321,22 @@ const Curriculum = () => {
       return "dospem";
     }
   };
+  const [role, setRole] = useState(getRoleFromPath());
+  const determineAllowedFeatures = () => {
+    switch (role) {
+      case "sekdekan":
+        return ["view_kurikulum", "add_kurikulum", "delete_kurikulum"];
+      case "dekan":
+        return ["view_kurikulum"];
+      case "kaprodi":
+        return ["view_kurikulum"];
+      case "dospem":
+        return ["view_kurikulum"];
+      default:
+        return [];
+    }
+  };
+  const allowedFeatures = determineAllowedFeatures();
 
   const handleTemplate = () => {
     let dataBlob = EXCEL_FILE_BASE64;
@@ -336,26 +354,9 @@ const Curriculum = () => {
       }
       byteArrays[sliceIndex] = new Uint8Array(bytes);
     }
+    let blob = new Blob(byteArrays, { type: "application/vnd.ms.excel" });
+    FileSaver.saveAs(new Blob([blob], {}), "templateCurriculum.xlsx");
   };
-
-  const [role, setRole] = useState(getRoleFromPath());
-
-  const determineAllowedFeatures = () => {
-    switch (role) {
-      case "sekdekan":
-        return ["view_kurikulum", "add_kurikulum", "delete_kurikulum"];
-      case "dekan":
-        return ["view_kurikulum"];
-      case "kaprodi":
-        return ["view_kurikulum"];
-      case "dospem":
-        return ["view_kurikulum"];
-      default:
-        return [];
-    }
-  };
-
-  const allowedFeatures = determineAllowedFeatures();
 
   return (
     <div>
@@ -396,6 +397,7 @@ const Curriculum = () => {
               You can choose the curriculum
             </Typography>
           </Grid>
+
           {role === "sekdekan" && allowedFeatures.includes("add_kurikulum") && (
             <Grid
               item
@@ -745,6 +747,7 @@ const Curriculum = () => {
           <MenuItem value="selectCurriculum">
             <Typography sx={{ fontWeight: 400 }}>View Curriculum</Typography>
           </MenuItem>
+
           {listCurriculum.map((value, index) => (
             <MenuItem
               key={value.id}
