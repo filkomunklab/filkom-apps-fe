@@ -1,38 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  FormHelperText,
-  Grid,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Typography,
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Paper,
+  Chip,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import PrintBeritaAcara from "./PrintBeritaAcara";
+import { useReactToPrint } from "react-to-print";
 
 const DaftarRiwayatProposal = () => {
   // State untuk melacak panel accordion yang terbuka
@@ -67,6 +57,11 @@ const DaftarRiwayatProposal = () => {
   // fungsi untuk mendapatkan data token JWT
   const token = localStorage.getItem("token");
   // console.log("token", token);
+
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   const formatDate = (date) => {
     const options = { year: "numeric", month: "numeric", day: "numeric" };
@@ -427,6 +422,9 @@ const DaftarRiwayatProposal = () => {
                             Tanggal
                           </TableCell>
                           <TableCell sx={{ fontSize: "13px" }}>
+                            Status
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
                             Action
                           </TableCell>
                         </TableRow>
@@ -453,6 +451,20 @@ const DaftarRiwayatProposal = () => {
                             <TableCell>
                               <Typography>{jadwal.defence_date}</Typography>
                             </TableCell>
+                            {/* harus di ubah statusnya*/}
+                            <TableCell>
+                              {jadwal ? (
+                                <Chip
+                                  label={"Sudah"}
+                                  sx={{
+                                    background: "rgba(21, 131, 67, 0.10)",
+                                    color: "#0A7637",
+                                  }}
+                                />
+                              ) : (
+                                <Chip label={"Belum"} />
+                              )}
+                            </TableCell>
                             <TableCell>
                               <Div sx={{ display: "flex" }}>
                                 <span
@@ -460,6 +472,10 @@ const DaftarRiwayatProposal = () => {
                                     textDecoration: "none",
                                     cursor: "pointer",
                                     color: "blue",
+                                  }}
+                                  onClick={() => {
+                                    console.log("trigger");
+                                    handlePrint();
                                   }}
                                 >
                                   Print
@@ -475,6 +491,7 @@ const DaftarRiwayatProposal = () => {
               </Accordion>
             ))}
         </Div>
+        <PrintBeritaAcara ref={componentRef} />
       </Div>
     </Div>
   );

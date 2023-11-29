@@ -2,16 +2,10 @@ import React, { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import Button from "@mui/material/Button";
 
-const PrintButton = ({ onPrint }) => {
+const PrintButton = ({ onPrint, ref }) => {
   const handlePrint = useReactToPrint({
     content: onPrint,
   });
-
-  return (
-    <Button variant="contained" color="primary" onClick={handlePrint}>
-      Print
-    </Button>
-  );
 };
 
 // Fungsi untuk mengonversi tahun ke dalam format teks
@@ -197,229 +191,232 @@ const ReportContent = React.forwardRef((props, ref) => {
   const hourText = convertHourToText(11, 30);
 
   return (
-    <div
-      ref={ref}
-      style={{
-        width: "210mm",
-        height: "297mm",
-        margin: "auto",
-        background: "white",
-        padding: "20px", // Optional: Add padding for spacing
-      }}
-    >
-      <p>Proposal Skripsi</p>
-      <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <h3>BERITA ACARA</h3>
-        <h3>UJIAN PROPOSAL SKRIPSI MAHASISWA</h3>
-        <p>Semester II, 2022 - 2023</p>
-      </div>
-      <div style={{ width: "80%", margin: "auto" }}>
-        <p>
-          Pada hari ini <strong>{dayName}</strong> Tanggal
-          <strong> {convertToText(currentDate.getDate())}</strong>
-          bulan <strong> {monthName}</strong> tahun
-          <strong> {yearText}</strong> pukul
-          <strong> {hourText} </strong>
-          hingga selesai di Ruang <strong>GK1-207</strong> dari Fakultasi Ilmu
-          Komputer Universitas Klabat, telah diadakan Ujian Proposal Skripsi:
-        </p>
-      </div>
-      <div style={{ textAlign: "center", marginBottom: "30px" }}>
-        <h4>JUDUL</h4>
-        <p>
-          <strong>
-            Pengembangan Aplikasi Traces Study Berbasis Web di Universitas
-            Klabat
-          </strong>
-        </p>
-      </div>
-      <div style={{ width: "50%", margin: "auto" }}>
-        <table
-          style={{
-            width: "100%",
-            marginBottom: "20px",
-            textAlign: "left",
-            margin: "auto",
-          }}
-        >
-          <tbody>
-            <tr>
-              <td>Atas Nama</td>
-              <td>:</td>
-              <td>{studentInfo.name}</td>
-            </tr>
-            <tr>
-              <td>NIM</td>
-              <td>:</td>
-              <td>{studentInfo.nim}</td>
-            </tr>
-            <tr>
-              <td>Jenjang Pendidikan</td>
-              <td>:</td>
-              <td>{studentInfo.educationLevel}</td>
-            </tr>
-            <tr>
-              <td>Fakultasi</td>
-              <td>:</td>
-              <td>{studentInfo.faculty}</td>
-            </tr>
-            <tr>
-              <td>Program Studi</td>
-              <td>:</td>
-              <td>{studentInfo.studyProgram}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div style={{ width: "80%", margin: "auto", marginTop: "25px" }}>
-        <table
-          style={{
-            width: "100%",
-            marginBottom: "20px",
-            textAlign: "left",
-            margin: "auto",
-            borderCollapse: "collapse",
-          }}
-        >
-          <thead>
-            <tr>
-              <th
-                style={{
-                  border: "1px solid black",
-                  padding: "8px",
-                  textAlign: "center",
-                  borderBottom: "none",
-                }}
-              >
-                Tim Penguji
-              </th>
-            </tr>
-          </thead>
-        </table>
-        <table
-          style={{
-            width: "100%",
-            marginBottom: "20px",
-            textAlign: "left",
-            margin: "auto",
-            borderCollapse: "collapse",
-          }}
-        >
-          <thead>
-            <tr>
-              <th
-                style={{
-                  border: "1px solid black",
-                  padding: "8px",
-                  textAlign: "center",
-                }}
-              >
-                No
-              </th>
-              <th
-                style={{
-                  border: "1px solid black",
-                  padding: "8px",
-                  textAlign: "center",
-                }}
-              >
-                Nama
-              </th>
-              <th
-                style={{
-                  border: "1px solid black",
-                  padding: "8px",
-                  textAlign: "center",
-                }}
-              >
-                Tanda Tanggan
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {examinerInfo.map((examiner) => (
-              <tr key={examiner.no}>
-                <td style={{ border: "1px solid black", padding: "8px" }}>
-                  {examiner.no}
-                </td>
-                <td style={{ border: "1px solid black", padding: "8px" }}>
-                  {examiner.name}
-                </td>
-                <td style={{ border: "1px solid black", padding: "8px" }}>
-                  {examiner.signature}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div style={{ width: "80%", margin: "auto" }}>
-        <p>Nilai Kesimpulan Ujian Proposal Skripsi : A</p>
-        <p>Deskripsi : Lulus</p>
-      </div>
-
+    <div style={{ display: "none" }}>
       <div
+        ref={ref}
         style={{
-          width: "80%",
-          textAlign: "right",
-          marginTop: "50px",
+          width: "210mm",
+          height: "297mm",
           margin: "auto",
-          height: "150px",
+          background: "white",
+          padding: "20px", // Optional: Add padding for spacing
+          fontFamily: "Times  New Roman",
         }}
       >
-        <p style={{ marginRight: "23%", marginBottom: "-5px" }}>
-          Unklab, 2 April 2023
-        </p>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div>
-            {renderSignatureBlock(
-              signatures[0].name,
-              signatures[0].role,
-              signatures[0].nidn
-            )}
-          </div>
-          <div style={{ marginRight: "25%" }}>
-            {renderSignatureBlock(
-              signatures[1].name,
-              signatures[1].role,
-              signatures[1].nidn
-            )}
+        <p>Proposal Skripsi</p>
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <h3>BERITA ACARA</h3>
+          <h3>UJIAN PROPOSAL SKRIPSI MAHASISWA</h3>
+          <p>Semester II, 2022 - 2023</p>
+        </div>
+        <div style={{ width: "80%", margin: "auto" }}>
+          <p>
+            Pada hari ini <strong>{dayName}</strong> Tanggal
+            <strong> {convertToText(currentDate.getDate())} </strong>
+            bulan <strong> {monthName}</strong> tahun
+            <strong> {yearText}</strong> pukul
+            <strong> {hourText} </strong>
+            hingga selesai di Ruang <strong>GK1-207</strong> dari Fakultasi Ilmu
+            Komputer Universitas Klabat, telah diadakan Ujian Proposal Skripsi:
+          </p>
+        </div>
+        <div style={{ textAlign: "center", marginBottom: "30px" }}>
+          <h4>JUDUL</h4>
+          <p>
+            <strong>
+              Pengembangan Aplikasi Traces Study Berbasis Web di Universitas
+              Klabat
+            </strong>
+          </p>
+        </div>
+        <div style={{ width: "50%", margin: "auto" }}>
+          <table
+            style={{
+              width: "100%",
+              marginBottom: "20px",
+              textAlign: "left",
+              margin: "auto",
+            }}
+          >
+            <tbody>
+              <tr>
+                <td>Atas Nama</td>
+                <td>:</td>
+                <td>{studentInfo.name}</td>
+              </tr>
+              <tr>
+                <td>NIM</td>
+                <td>:</td>
+                <td>{studentInfo.nim}</td>
+              </tr>
+              <tr>
+                <td>Jenjang Pendidikan</td>
+                <td>:</td>
+                <td>{studentInfo.educationLevel}</td>
+              </tr>
+              <tr>
+                <td>Fakultasi</td>
+                <td>:</td>
+                <td>{studentInfo.faculty}</td>
+              </tr>
+              <tr>
+                <td>Program Studi</td>
+                <td>:</td>
+                <td>{studentInfo.studyProgram}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style={{ width: "80%", margin: "auto", marginTop: "25px" }}>
+          <table
+            style={{
+              width: "100%",
+              marginBottom: "20px",
+              textAlign: "left",
+              margin: "auto",
+              borderCollapse: "collapse",
+            }}
+          >
+            <thead>
+              <tr>
+                <th
+                  style={{
+                    border: "1px solid black",
+                    padding: "8px",
+                    textAlign: "center",
+                    borderBottom: "none",
+                  }}
+                >
+                  Tim Penguji
+                </th>
+              </tr>
+            </thead>
+          </table>
+          <table
+            style={{
+              width: "100%",
+              marginBottom: "20px",
+              textAlign: "left",
+              margin: "auto",
+              borderCollapse: "collapse",
+            }}
+          >
+            <thead>
+              <tr>
+                <th
+                  style={{
+                    border: "1px solid black",
+                    padding: "8px",
+                    textAlign: "center",
+                  }}
+                >
+                  No
+                </th>
+                <th
+                  style={{
+                    border: "1px solid black",
+                    padding: "8px",
+                    textAlign: "center",
+                  }}
+                >
+                  Nama
+                </th>
+                <th
+                  style={{
+                    border: "1px solid black",
+                    padding: "8px",
+                    textAlign: "center",
+                  }}
+                >
+                  Tanda Tanggan
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {examinerInfo.map((examiner) => (
+                <tr key={examiner.no}>
+                  <td style={{ border: "1px solid black", padding: "8px" }}>
+                    {examiner.no}
+                  </td>
+                  <td style={{ border: "1px solid black", padding: "8px" }}>
+                    {examiner.name}
+                  </td>
+                  <td style={{ border: "1px solid black", padding: "8px" }}>
+                    {examiner.signature}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div style={{ width: "80%", margin: "auto" }}>
+          <p>Nilai Kesimpulan Ujian Proposal Skripsi : A</p>
+          <p>Deskripsi : Lulus</p>
+        </div>
+
+        <div
+          style={{
+            width: "80%",
+            textAlign: "right",
+            marginTop: "50px",
+            margin: "auto",
+            height: "150px",
+          }}
+        >
+          <p style={{ marginRight: "23%", marginBottom: "-5px" }}>
+            Unklab, 2 April 2023
+          </p>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div>
+              {renderSignatureBlock(
+                signatures[0].name,
+                signatures[0].role,
+                signatures[0].nidn
+              )}
+            </div>
+            <div style={{ marginRight: "25%" }}>
+              {renderSignatureBlock(
+                signatures[1].name,
+                signatures[1].role,
+                signatures[1].nidn
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      <div
-        style={{
-          width: "80%",
-          display: "flex",
-          justifyContent: "space-between",
-          margin: "auto",
-        }}
-      >
-        {renderSignatureBlock(
-          signatures[2].name,
-          signatures[2].role,
-          signatures[2].nidn
-        )}
-        {renderSignatureBlock(
-          signatures[3].name,
-          signatures[3].role,
-          signatures[3].nidn
-        )}
+        <div
+          style={{
+            width: "80%",
+            display: "flex",
+            justifyContent: "space-between",
+            margin: "auto",
+          }}
+        >
+          {renderSignatureBlock(
+            signatures[2].name,
+            signatures[2].role,
+            signatures[2].nidn
+          )}
+          {renderSignatureBlock(
+            signatures[3].name,
+            signatures[3].role,
+            signatures[3].nidn
+          )}
+        </div>
       </div>
     </div>
   );
 });
 
-const PrintBeritaAcara = () => {
-  const reportContentRef = useRef();
+const PrintBeritaAcara = React.forwardRef((_, ref) => {
+  // const reportContentRef = useRef();
 
   return (
     <div className="App" style={{ background: "#f5f5f5", minHeight: "100vh" }}>
-      <PrintButton onPrint={() => reportContentRef.current} />
-      <ReportContent ref={reportContentRef} />
+      {/* <PrintButton onPrint={() => reportContentRef.current} /> */}
+      <ReportContent ref={ref} />
     </div>
   );
-};
+});
 
 export default PrintBeritaAcara;

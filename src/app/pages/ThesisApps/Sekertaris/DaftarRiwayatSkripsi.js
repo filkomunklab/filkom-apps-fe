@@ -1,27 +1,18 @@
 import Div from "@jumbo/shared/Div";
 import {
   Button,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  FormHelperText,
-  Grid,
-  InputAdornment,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Typography,
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Paper,
+  Chip,
 } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -405,6 +396,9 @@ const DaftarRiwayatSkripsi = () => {
                             Anggota Panelis
                           </TableCell>
                           <TableCell sx={{ fontSize: "13px" }}>
+                            Status
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
                             Tanggal
                           </TableCell>
                           <TableCell sx={{ fontSize: "13px" }}>
@@ -428,6 +422,20 @@ const DaftarRiwayatSkripsi = () => {
                             </TableCell>
                             <TableCell>
                               <Typography>{jadwal.panelist_member}</Typography>
+                            </TableCell>
+                            {/* harus di ubah statusnya*/}
+                            <TableCell>
+                              {jadwal ? (
+                                <Chip
+                                  label={"Sudah"}
+                                  sx={{
+                                    background: "rgba(21, 131, 67, 0.10)",
+                                    color: "#0A7637",
+                                  }}
+                                />
+                              ) : (
+                                <Chip label={"Belum"} />
+                              )}
                             </TableCell>
                             <TableCell>
                               <Typography>{jadwal.defence_date}</Typography>
