@@ -3019,11 +3019,12 @@ const BeritaAcara = () => {
                 boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
               }}
             >
-              <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
+              <Accordion sx={{ width: "100%" }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
+                  sx={{ background: "#F5F5F5" }}
                 >
                   <Typography>Ketua Panelis</Typography>
                 </AccordionSummary>
@@ -3137,11 +3138,12 @@ const BeritaAcara = () => {
                   </Div>
                 </AccordionDetails>
               </Accordion>
-              <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
+              <Accordion sx={{ width: "100%" }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
+                  sx={{ background: "#F5F5F5" }}
                 >
                   <Typography>Anggota Panelis</Typography>
                 </AccordionSummary>
@@ -3243,11 +3245,12 @@ const BeritaAcara = () => {
                   </Div>
                 </AccordionDetails>
               </Accordion>
-              <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
+              <Accordion sx={{ width: "100%" }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
+                  sx={{ background: "#F5F5F5" }}
                 >
                   <Typography>Advisor</Typography>
                 </AccordionSummary>
@@ -3360,11 +3363,12 @@ const BeritaAcara = () => {
                 </AccordionDetails>
               </Accordion>
               {advisorAndCoAdvisor?.coAdvisor1 && (
-                <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
+                <Accordion sx={{ width: "100%" }}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
+                    sx={{ background: "#F5F5F5" }}
                   >
                     <Typography>Co-Advisor 1</Typography>
                   </AccordionSummary>
@@ -3478,11 +3482,12 @@ const BeritaAcara = () => {
                 </Accordion>
               )}
               {advisorAndCoAdvisor?.coAdvisor2 && (
-                <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
+                <Accordion sx={{ width: "100%" }}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
+                    sx={{ background: "#F5F5F5" }}
                   >
                     <Typography>Co-Advisor 2</Typography>
                   </AccordionSummary>
