@@ -1,18 +1,8 @@
 import {
-  Box,
   Card,
   CardContent,
   CardHeader,
-  Container,
   Grid,
-  LinearProgress,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -30,9 +20,8 @@ import {
 } from "recharts";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import LinearProgressWithLabel from "app/shared/LinearProgressWithLabel";
+import BubbleChartIcon from "@mui/icons-material/BubbleChart";
 import Div from "@jumbo/shared/Div";
-import moment from "moment";
-import { Link } from "react-router-dom";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -125,10 +114,10 @@ const Dashboard = () => {
   return (
     <Div>
       <Grid container spacing={2}>
-        <Grid item sm={12} md={12} lg={12} xs={12}>
+        <Grid item xs={12} sm={12} md={7}>
           <Card>
             <CardHeader title="Distribution of students" />
-            <CardContent>
+            <CardContent style={{ width: "100%" }}>
               <ResponsiveContainer width={"100%"} height={250}>
                 <BarChart data={data}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -143,84 +132,20 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item sm={12} md={12} lg={6} xs={12}>
+        <Grid item xs={12} sm={6} md={5}>
           <Card>
-            <Grid container>
-              <Grid item xs={6}>
-                <CardHeader title="Number of Mentored Students " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="26px">
-                    {`85 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-              <Grid item xs={6}>
-                <CardHeader title="Student Status" />
-                <CardContent
-                  sx={{
-                    position: "relative",
-                    paddingRight: 2.5,
-                    paddingY: 0,
-                  }}
-                >
-                  <Typography variant="body1">{`Active`}</Typography>
-                  <LinearProgressWithLabel value={80} />
-                  <Typography variant="body1">{`Non-active`}</Typography>
-                  <LinearProgressWithLabel value={20} color="warning" />
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={6} xs={12}>
-          <Card>
-            <Grid container>
-              <Grid item xs={6}>
-                <CardHeader title="Faculty of Computer Science Students" />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="26px">
-                    {`85 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-              <Grid item xs={6}>
-                <CardHeader title="Student Status" />
-                <CardContent
-                  sx={{
-                    position: "relative",
-                    paddingRight: 2.5,
-                    paddingY: 0,
-                  }}
-                >
-                  <Typography variant="body1">{`Active`}</Typography>
-                  <LinearProgressWithLabel value={80} />
-                  <Typography variant="body1">{`Non-active`}</Typography>
-                  <LinearProgressWithLabel value={20} color="warning" />
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={6} xs={12}>
-          <Card sx={{ height: "100%" }}>
             <CardHeader title="Certificate" />
             <CardContent>
-              <ResponsiveContainer width={"100%"} height={280}>
+              <ResponsiveContainer width={"100%"} height={250}>
                 <PieChart>
                   <Pie
                     data={data02}
                     dataKey="value"
                     nameKey="name"
                     cx="50%"
-                    cy="55%"
-                    innerRadius={50}
-                    outerRadius={100}
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
                     fill="#82ca9d"
                     label
                   >
@@ -237,154 +162,114 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item sm={12} md={12} lg={6} xs={12}>
-          <Card>
-            <CardHeader
-              title="Review Certificates"
-              action={
-                <Link type="">
-                  <Typography>View All</Typography>{" "}
-                </Link>
-              }
-            />
-            <CardContent sx={{ paddingY: 0 }}>
-              <Stack gap={2}>
-                {data03.map((item, index) => (
-                  <Div
-                    sx={{
-                      display: "flex",
-                      direction: "row",
-                      justifyContent: "space-between",
-                    }}
-                    key={index}
-                  >
-                    <Div
-                      sx={{
-                        display: "flex",
-                        direction: "row",
-                        alignItems: "center",
-                        gap: 2,
-                      }}
-                    >
-                      <img
-                        src={item.profileImage}
-                        alt="profile"
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          objectFit: "contain",
-                          borderRadius: "50%",
-                        }}
-                      />
-                      <Box>
-                        <Typography>{item.title}</Typography>
-                        <Typography variant="caption" color={"#6200EE"}>
-                          {item.name}{" "}
-                          <span style={{ color: "#00000061" }}>
-                            {moment(item.submiteDate, "DD MMMM YYYY").fromNow()}
-                          </span>
-                        </Typography>
-                      </Box>
-                    </Div>
-                    <Typography color={statusColor(item.status)}>
-                      {item.status}
-                    </Typography>
-                  </Div>
-                ))}
-              </Stack>
-            </CardContent>
-          </Card>
+        <Grid item container spacing={2} xs={12} sm={6} md={12} xl={12}>
+          <Grid item xs={12} sm={6} md={6}>
+            <Card>
+              <CardHeader title="Number of Guidance Students" />
+              <CardContent sx={{ position: "relative", paddingY: 0 }}>
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: 32,
+                      md: 42,
+                      xl: 42,
+                    },
+                    color: "#006AF5",
+                  }}
+                >{`27 people`}</Typography>
+                <Typography
+                  sx={{ fontSize: 12 }}
+                >{`last updated: 11 September 2023`}</Typography>
+                <PeopleOutlinedIcon
+                  sx={{
+                    position: "absolute",
+                    right: 0,
+                    fontSize: 50,
+                    bottom: 0,
+                    color: "#006AF5",
+                  }}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={6}>
+            <Card>
+              <CardHeader title="Student Status" />
+              <CardContent
+                sx={{ position: "relative", paddingRight: 6.5, paddingY: 0 }}
+              >
+                <Typography variant="body1">{`Active`}</Typography>
+                <LinearProgressWithLabel value={80} />
+                <Typography variant="body1">{`Non-active`}</Typography>
+                <LinearProgressWithLabel value={20} color="warning" />
+                <BubbleChartIcon
+                  sx={{
+                    position: "absolute",
+                    right: 0,
+                    fontSize: 50,
+                    bottom: 0,
+                    color: "#006AF5",
+                  }}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-        <Grid item sm={12} md={12} lg={6} xs={12}>
-          <Card>
-            <CardHeader
-              title="Review Pre-registrations"
-              action={
-                <Link type="">
-                  <Typography>View All</Typography>{" "}
-                </Link>
-              }
-            />
-            <CardContent sx={{ padding: 0, overflowX: "auto" }}>
-              <Table>
-                <TableHead children={<TableHeading />} />
-                <TableBody>
-                  {data04.map((item, index) => (
-                    <TableItem key={index} item={item} index={index} />
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={6} xs={12}>
-          <Card>
-            <CardHeader
-              title="Review Grades"
-              action={
-                <Link type="">
-                  <Typography>View All</Typography>{" "}
-                </Link>
-              }
-            />
-            <CardContent sx={{ padding: 0, overflowX: "auto" }}>
-              <Table>
-                <TableHead children={<TableHeading />} />
-                <TableBody>
-                  {data04.map((item, index) => (
-                    <TableItem key={index} item={item} index={index} />
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+        <Grid item container spacing={2} xs={12} sm={6} md={12} xl={12}>
+          <Grid item xs={12} sm={6} md={6}>
+            <Card>
+              <CardHeader title="Number of Study Program Students" />
+              <CardContent sx={{ position: "relative", paddingY: 0 }}>
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: 32,
+                      md: 42,
+                      xl: 42,
+                    },
+                    color: "#006AF5",
+                  }}
+                >{`118 people`}</Typography>
+                <Typography
+                  sx={{ fontSize: 12 }}
+                >{`last updated: 11 September 2023`}</Typography>
+                <PeopleOutlinedIcon
+                  sx={{
+                    position: "absolute",
+                    right: 0,
+                    fontSize: 50,
+                    bottom: 0,
+                    color: "#006AF5",
+                  }}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6} md={6}>
+            <Card>
+              <CardHeader title="Student Status" />
+              <CardContent
+                sx={{ position: "relative", paddingRight: 6.5, paddingY: 0 }}
+              >
+                <Typography variant="body1">{`Active`}</Typography>
+                <LinearProgressWithLabel value={85} />
+                <Typography variant="body1">{`Non-active`}</Typography>
+                <LinearProgressWithLabel value={15} color="warning" />
+                <BubbleChartIcon
+                  sx={{
+                    position: "absolute",
+                    right: 0,
+                    fontSize: 50,
+                    bottom: 0,
+                    color: "#006AF5",
+                  }}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
       </Grid>
     </Div>
-  );
-};
-
-const TableHeading = () => {
-  const style = { fontWeight: 400, whiteSpace: "nowrap" };
-  return (
-    <TableRow>
-      <TableCell sx={[style]}>NIM</TableCell>
-      <TableCell sx={[style]}>Student</TableCell>
-      <TableCell sx={[style]}>Semester</TableCell>
-      <TableCell sx={[style]}>Program Studi</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
-    </TableRow>
-  );
-};
-
-const TableItem = ({ item, index }) => {
-  const style = { whiteSpace: "nowrap" };
-  return (
-    <TableRow>
-      <TableCell sx={[style]}>{item.nim}</TableCell>
-      <TableCell sx={[style]}>
-        <Stack direction="row" alignItems="center" gap={2}>
-          <img
-            src={item.profileImage}
-            alt="profile"
-            style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "50%",
-              objectFit: "cover",
-            }}
-          />
-          <Typography>{item.name}</Typography>
-        </Stack>
-      </TableCell>
-      <TableCell sx={[style, { textAlign: "center" }]}>
-        {item.semester}
-      </TableCell>
-      <TableCell sx={[style]}>{item.prodi}</TableCell>
-      <TableCell sx={[style, { color: statusColor(item.status) }]}>
-        {item.status}
-      </TableCell>
-    </TableRow>
   );
 };
 

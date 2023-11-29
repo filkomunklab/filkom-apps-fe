@@ -177,19 +177,19 @@ const ViewActivity = () => {
   };
 
   const handleSubmitFirstModal = () => {
-    setOpenFirstModal(false)
-    setOpenSecondModal(true)
+    setOpenFirstModal(false);
+    setOpenSecondModal(true);
   };
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setOpenSecondModal(false)
+      setOpenSecondModal(false);
     }, 5000);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [openSecondModal=== true]);
+  }, [openSecondModal === true]);
 
   return (
     <div>
@@ -269,7 +269,7 @@ const ViewActivity = () => {
         </Grid>
       </Grid>
 
-      <Grid
+      {/* <Grid
         sx={{
           padding: 2,
           paddingTop: "30px",
@@ -296,11 +296,10 @@ const ViewActivity = () => {
         >
           Submit
         </Button>
-      </Grid>
-
-      <Modal
+      </Grid> */}
+      {/* <Modal
         open={openFirstModal}
-        onClose={()=>setOpenFirstModal(false)}
+        onClose={() => setOpenFirstModal(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -326,7 +325,7 @@ const ViewActivity = () => {
           <Grid container spacing={1} justifyContent="flex-end">
             <Grid item>
               <Button
-                onClick={()=>setOpenFirstModal(false)}
+                onClick={() => setOpenFirstModal(false)}
                 sx={{
                   backgroundColor: "white",
                   borderRadius: "5px",
@@ -368,7 +367,7 @@ const ViewActivity = () => {
           <IconButton
             edge="end"
             color="#D9D9D9"
-            onClick={()=>setOpenSecondModal(false)}
+            onClick={() => setOpenSecondModal(false)}
             aria-label="close"
             sx={{
               position: "absolute",
@@ -395,7 +394,7 @@ const ViewActivity = () => {
             You have successfully entered the student attendance form.
           </Typography>
         </div>
-      </Modal>
+      </Modal> */}
 
       <div>
         <Typography sx={{ fontSize: "24px", mt: 2, mb: 2, fontWeight: 400 }}>
@@ -452,7 +451,7 @@ const ViewActivity = () => {
         }}
       >
         <Button
-          onClick={()=>setOpenFirstModal(true)}
+          onClick={() => setOpenFirstModal(true)}
           sx={{
             backgroundColor: "#006AF5",
             borderRadius: "24px",
@@ -468,13 +467,13 @@ const ViewActivity = () => {
             },
           }}
         >
-          Submit Attendance
+          Submit
         </Button>
       </Grid>
 
       <Modal
         open={openFirstModal}
-        onClose={()=>setOpenFirstModal(false)}
+        onClose={() => setOpenFirstModal(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -500,7 +499,7 @@ const ViewActivity = () => {
           <Grid container spacing={1} justifyContent="flex-end">
             <Grid item>
               <Button
-                onClick={()=>setOpenFirstModal(false)}
+                onClick={() => setOpenFirstModal(false)}
                 sx={{
                   backgroundColor: "white",
                   borderRadius: "5px",
@@ -542,7 +541,7 @@ const ViewActivity = () => {
           <IconButton
             edge="end"
             color="#D9D9D9"
-            onClick={()=>setOpenSecondModal(false)}
+            onClick={() => setOpenSecondModal(false)}
             aria-label="close"
             sx={{
               position: "absolute",

@@ -56,6 +56,11 @@ const AcademicGuide = () => {
                 paddingLeft: "26px",
                 paddingRight: "26px",
                 textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
               }}
             >
               <ol sx={{ listStylePosition: "inside" }}>
@@ -115,6 +120,11 @@ const AcademicGuide = () => {
                 paddingLeft: "26px",
                 paddingRight: "26px",
                 textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
               }}
             >
               <ol sx={{ listStylePosition: "inside" }}>
@@ -178,6 +188,11 @@ const AcademicGuide = () => {
                 paddingLeft: "26px",
                 paddingRight: "26px",
                 textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
               }}
             >
               <ol sx={{ listStylePosition: "inside" }}>
@@ -238,6 +253,11 @@ const AcademicGuide = () => {
                 paddingLeft: "26px",
                 paddingRight: "26px",
                 textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
               }}
             >
               <ol sx={{ listStylePosition: "inside" }}>
@@ -287,6 +307,11 @@ const AcademicGuide = () => {
                 paddingLeft: "26px",
                 paddingRight: "26px",
                 textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
               }}
             >
               <ol sx={{ listStylePosition: "inside" }}>
@@ -335,6 +360,11 @@ const AcademicGuide = () => {
                 paddingLeft: "26px",
                 paddingRight: "26px",
                 textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
               }}
             >
               <ol sx={{ listStylePosition: "inside" }}>
@@ -368,6 +398,11 @@ const AcademicGuide = () => {
                 paddingLeft: "26px",
                 paddingRight: "26px",
                 textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
               }}
             >
               <ol sx={{ listStylePosition: "inside" }}>

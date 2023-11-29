@@ -27,18 +27,11 @@ import HistoryGradeAdvisor from "app/pages/BimbinganAkademik/SekDekan/Supervisor
 import HistoryPreRegistrationAdvisor from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/AdvisorHistory/HistoryPreRegis";
 import HistoryCertificateAdvisor from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/AdvisorHistory/HistoryCertificate";
 import HistoryConsultationAdvisor from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/AdvisorHistory/HistoryConsultation";
-// import HistoryActivity from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/History/HIstoryActivity/HistoryActivity";
-// import HistoryActivity1 from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/History/HIstoryActivity/HistoryActivity1";
-// import HistoryActivity2 from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/History/HIstoryActivity/HistoryActivity2";
-// import HistoryActivity3 from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/History/HIstoryActivity/HistoryActivity3";
-// import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/History/HistoryPreRegis/PreRegistrationApproved";
-// import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/History/HistoryPreRegis/PreRegistrationRejected";
-// import HistoryCertificateApproved from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/History/HistoryCertificate/CertificateApproved";
-// import HistoryCertificateRejected from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/History/HistoryCertificate/CertificateRejected";
-// import HistoryGradeApproved from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/History/HistoryGrade/ApprovedHistoryGrade";
-// import HistoryGradeRejected from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/History/HistoryGrade/RejectedHistoryGrade";
-// import HistoryConsultationComplete from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/History/HistoryConsultation/ConsultationComplete";
 import AdvisorProfileFaculty from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/AdvisorProfile/AdvisorProfilFaculty";
+import AdvisorStudentProfile from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/AdvisorProfile/StudentProfile";
+import AdvisorStudentGrade from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/AdvisorProfile/StudentGradeDashboard";
+import AdvisorStudentGrade2 from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/AdvisorProfile/StudentGradeDashboard/StudentGrade";
+// import AdvisorStudentCertificate from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/AdvisorProfile/StudentCertificate";
 
 const { default: Page } = require("@jumbo/shared/Page");
 
@@ -133,6 +126,22 @@ const sekDekanRoutes = [
     path: "/bimbingan-akademik/sek-dekan/supervisor-information/advisor-profile/",
     element: <Page component={AdvisorProfileFaculty} />,
   },
+  {
+    path: "/bimbingan-akademik/sek-dekan/supervisor-information/advisor-profile/:id/student-profile",
+    element: <Page component={AdvisorStudentProfile} />,
+  },
+  {
+    path: "/bimbingan-akademik/sek-dekan/supervisor-information/advisor-profile/:id/student-grade",
+    element: <Page component={AdvisorStudentGrade} />,
+  },
+  {
+    path: "/bimbingan-akademik/sek-dekan/supervisor-information/advisor-profile/:id/grade/semester/:id",
+    element: <Page component={AdvisorStudentGrade2} />,
+  },
+  // {
+  //   path: "/bimbingan-akademik/sek-dekan/supervisor-information/advisor-profile/student-certificate",
+  //   element: <Page component={AdvisorStudentCertificate} />,
+  // },
   {
     path: "/bimbingan-akademik/sek-dekan/supervisor-information/advisor-history/:id",
     element: <Page component={AdvisorHistory} />,
