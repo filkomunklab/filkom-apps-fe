@@ -1,6 +1,6 @@
 import Dashboard from "../pages/BimbinganAkademik/Dekan/Dashboard";
-import AcademicGuide from "app/pages/BimbinganAkademik/Dekan/AcademicGuide";
-import VisionMisionGoals from "app/pages/BimbinganAkademik/Dekan/VisionMisionGoals";
+import AcademicGuide from "app/layouts/shared/bimbingan-akademik/AcademicGuide/AcademicGuide";
+import VisionMisionGoals from "app/layouts/shared/bimbingan-akademik/VisionMisionGoals/VisionMissionGoals";
 import Curriculum from "app/layouts/shared/bimbingan-akademik/Curriculum/Curriculum";
 import StudentInformation from "../pages/BimbinganAkademik/Dekan/StudentInformation";
 import StudentInformationMentored from "app/pages/BimbinganAkademik/Dekan/StudentInformation/StudentInformationMentored";
@@ -50,7 +50,7 @@ import CurrentActivities from "app/pages/BimbinganAkademik/Dekan/CurrentActiviti
 import ViewActivity from "app/pages/BimbinganAkademik/Dekan/CurrentActivities/ViewActivity/ViewActivity";
 import ViewConsultation from "app/pages/BimbinganAkademik/Dekan/CurrentActivities/ViewConsultation/ViewConsultation";
 import AddActivity from "app/pages/BimbinganAkademik/Dekan/AddActivity";
-import Profile from "app/pages/BimbinganAkademik/Dekan/Profile";
+import Profile from "app/layouts/shared/bimbingan-akademik/Profile/Profile";
 
 const { default: Page } = require("@jumbo/shared/Page");
 

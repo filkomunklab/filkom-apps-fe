@@ -1,7 +1,6 @@
 import Page from "@jumbo/shared/Page";
-// import DaftarAlumni from "app/pages/Mahasiswa/KlabatBridge/DaftarAlumni";
-// import DaftarAlumni from "app/pages/KlabatBridge/DaftarAlumni";
-import AcademicGuide from "app/pages/BimbinganAkademik/Mahasiswa/AcademicGuide";
+import AcademicGuide from "app/layouts/shared/bimbingan-akademik/AcademicGuide/AcademicGuide";
+import VisionMisionGoals from "app/layouts/shared/bimbingan-akademik/VisionMisionGoals/VisionMissionGoals";
 import Certificate from "app/pages/BimbinganAkademik/Mahasiswa/Certificate";
 import AddNewCertificate from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/";
 import CertificateWaiting from "app/pages/BimbinganAkademik/Mahasiswa/Certificate/CertificateWaiting";
@@ -27,7 +26,6 @@ import PreRegistrationWaiting from "app/pages/BimbinganAkademik/Mahasiswa/PreReg
 import PreRegistrationRejected from "app/pages/BimbinganAkademik/Mahasiswa/PreRegistration/PreRegistrationRejected";
 import PreRegistrationApproved from "app/pages/BimbinganAkademik/Mahasiswa/PreRegistration/PreRegistrationApproved";
 import Profile from "app/pages/BimbinganAkademik/Mahasiswa/Profile";
-import VisionMisionGoals from "app/pages/BimbinganAkademik/Mahasiswa/VisionMisionGoals";
 import StudentGrade from "app/pages/BimbinganAkademik/Mahasiswa/Grades/StudentGrade";
 
 const mahasiswaRoutes = [
