@@ -1,5 +1,6 @@
 import {
   Card,
+  Container,
   CardContent,
   CardHeader,
   Grid,
@@ -113,162 +114,164 @@ const statusColor = (status) => {
 const Dashboard = () => {
   return (
     <Div>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={12} md={7}>
-          <Card>
-            <CardHeader title="Distribution of students" />
-            <CardContent style={{ width: "100%" }}>
-              <ResponsiveContainer width={"100%"} height={250}>
-                <BarChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="pv" fill="#8884d8" />
-                  <Bar dataKey="uv" fill="#82ca9d" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={5}>
-          <Card>
-            <CardHeader title="Certificate" />
-            <CardContent>
-              <ResponsiveContainer width={"100%"} height={250}>
-                <PieChart>
-                  <Pie
-                    data={data02}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    fill="#82ca9d"
-                    label
-                  >
-                    {data.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item container spacing={2} xs={12} sm={6} md={12} xl={12}>
-          <Grid item xs={12} sm={6} md={6}>
+      <Container>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={12} md={7}>
             <Card>
-              <CardHeader title="Number of Guidance Students" />
-              <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                <Typography
-                  sx={{
-                    fontSize: {
-                      xs: 32,
-                      md: 42,
-                      xl: 42,
-                    },
-                    color: "#006AF5",
-                  }}
-                >{`27 people`}</Typography>
-                <Typography
-                  sx={{ fontSize: 12 }}
-                >{`last updated: 11 September 2023`}</Typography>
-                <PeopleOutlinedIcon
-                  sx={{
-                    position: "absolute",
-                    right: 0,
-                    fontSize: 50,
-                    bottom: 0,
-                    color: "#006AF5",
-                  }}
-                />
+              <CardHeader title="Distribution of students" />
+              <CardContent style={{ width: "100%" }}>
+                <ResponsiveContainer width={"100%"} height={250}>
+                  <BarChart data={data}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="pv" fill="#8884d8" />
+                    <Bar dataKey="uv" fill="#82ca9d" />
+                  </BarChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} sm={6} md={6}>
+          <Grid item xs={12} sm={6} md={5}>
             <Card>
-              <CardHeader title="Student Status" />
-              <CardContent
-                sx={{ position: "relative", paddingRight: 6.5, paddingY: 0 }}
-              >
-                <Typography variant="body1">{`Active`}</Typography>
-                <LinearProgressWithLabel value={80} />
-                <Typography variant="body1">{`Non-active`}</Typography>
-                <LinearProgressWithLabel value={20} color="warning" />
-                <BubbleChartIcon
-                  sx={{
-                    position: "absolute",
-                    right: 0,
-                    fontSize: 50,
-                    bottom: 0,
-                    color: "#006AF5",
-                  }}
-                />
+              <CardHeader title="Certificate" />
+              <CardContent>
+                <ResponsiveContainer width={"100%"} height={250}>
+                  <PieChart>
+                    <Pie
+                      data={data02}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      fill="#82ca9d"
+                      label
+                    >
+                      {data.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
+          </Grid>
+          <Grid item container spacing={2} xs={12} sm={6} md={12} xl={12}>
+            <Grid item xs={12} sm={6} md={6}>
+              <Card>
+                <CardHeader title="Number of Guidance Students" />
+                <CardContent sx={{ position: "relative", paddingY: 0 }}>
+                  <Typography
+                    sx={{
+                      fontSize: {
+                        xs: 32,
+                        md: 42,
+                        xl: 42,
+                      },
+                      color: "#006AF5",
+                    }}
+                  >{`27 people`}</Typography>
+                  <Typography
+                    sx={{ fontSize: 12 }}
+                  >{`last updated: 11 September 2023`}</Typography>
+                  <PeopleOutlinedIcon
+                    sx={{
+                      position: "absolute",
+                      right: 0,
+                      fontSize: 50,
+                      bottom: 0,
+                      color: "#006AF5",
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+              <Card>
+                <CardHeader title="Student Status" />
+                <CardContent
+                  sx={{ position: "relative", paddingRight: 6.5, paddingY: 0 }}
+                >
+                  <Typography variant="body1">{`Active`}</Typography>
+                  <LinearProgressWithLabel value={80} />
+                  <Typography variant="body1">{`Non-active`}</Typography>
+                  <LinearProgressWithLabel value={20} color="warning" />
+                  <BubbleChartIcon
+                    sx={{
+                      position: "absolute",
+                      right: 0,
+                      fontSize: 50,
+                      bottom: 0,
+                      color: "#006AF5",
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+          <Grid item container spacing={2} xs={12} sm={6} md={12} xl={12}>
+            <Grid item xs={12} sm={6} md={6}>
+              <Card>
+                <CardHeader title="Number of Study Program Students" />
+                <CardContent sx={{ position: "relative", paddingY: 0 }}>
+                  <Typography
+                    sx={{
+                      fontSize: {
+                        xs: 32,
+                        md: 42,
+                        xl: 42,
+                      },
+                      color: "#006AF5",
+                    }}
+                  >{`118 people`}</Typography>
+                  <Typography
+                    sx={{ fontSize: 12 }}
+                  >{`last updated: 11 September 2023`}</Typography>
+                  <PeopleOutlinedIcon
+                    sx={{
+                      position: "absolute",
+                      right: 0,
+                      fontSize: 50,
+                      bottom: 0,
+                      color: "#006AF5",
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={6}>
+              <Card>
+                <CardHeader title="Student Status" />
+                <CardContent
+                  sx={{ position: "relative", paddingRight: 6.5, paddingY: 0 }}
+                >
+                  <Typography variant="body1">{`Active`}</Typography>
+                  <LinearProgressWithLabel value={85} />
+                  <Typography variant="body1">{`Non-active`}</Typography>
+                  <LinearProgressWithLabel value={15} color="warning" />
+                  <BubbleChartIcon
+                    sx={{
+                      position: "absolute",
+                      right: 0,
+                      fontSize: 50,
+                      bottom: 0,
+                      color: "#006AF5",
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
         </Grid>
-        <Grid item container spacing={2} xs={12} sm={6} md={12} xl={12}>
-          <Grid item xs={12} sm={6} md={6}>
-            <Card>
-              <CardHeader title="Number of Study Program Students" />
-              <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                <Typography
-                  sx={{
-                    fontSize: {
-                      xs: 32,
-                      md: 42,
-                      xl: 42,
-                    },
-                    color: "#006AF5",
-                  }}
-                >{`118 people`}</Typography>
-                <Typography
-                  sx={{ fontSize: 12 }}
-                >{`last updated: 11 September 2023`}</Typography>
-                <PeopleOutlinedIcon
-                  sx={{
-                    position: "absolute",
-                    right: 0,
-                    fontSize: 50,
-                    bottom: 0,
-                    color: "#006AF5",
-                  }}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-            <Card>
-              <CardHeader title="Student Status" />
-              <CardContent
-                sx={{ position: "relative", paddingRight: 6.5, paddingY: 0 }}
-              >
-                <Typography variant="body1">{`Active`}</Typography>
-                <LinearProgressWithLabel value={85} />
-                <Typography variant="body1">{`Non-active`}</Typography>
-                <LinearProgressWithLabel value={15} color="warning" />
-                <BubbleChartIcon
-                  sx={{
-                    position: "absolute",
-                    right: 0,
-                    fontSize: 50,
-                    bottom: 0,
-                    color: "#006AF5",
-                  }}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </Grid>
+      </Container>
     </Div>
   );
 };
