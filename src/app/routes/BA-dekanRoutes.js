@@ -36,9 +36,6 @@ import StudentConsultation from "app/pages/BimbinganAkademik/Dekan/ReviewActivit
 import ReplyConsultation from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/StudentConsultation/ReplyConsultation/Consultation";
 import History from "app/pages/BimbinganAkademik/Dekan/History";
 import HistoryActivity from "app/pages/BimbinganAkademik/Dekan/History/HistoryActivity/HistoryActivity";
-import HistoryActivity1 from "app/pages/BimbinganAkademik/Dekan/History/HistoryActivity/HistoryActivity1";
-import HistoryActivity2 from "app/pages/BimbinganAkademik/Dekan/History/HistoryActivity/HistoryActivity2";
-import HistoryActivity3 from "app/pages/BimbinganAkademik/Dekan/History/HistoryActivity/HistoryActivity3";
 import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/Dekan/History/HistoryPreRegis/PreRegistrationApproved";
 import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/Dekan/History/HistoryPreRegis/PreRegistrationRejected";
 import HistoryCertificateApproved from "app/pages/BimbinganAkademik/Dekan/History/HistoryCertificate/CertificateApproved";
@@ -208,18 +205,6 @@ const dekanRoutes = [
   {
     path: "/bimbingan-akademik/dekan/history/activity",
     element: <Page component={HistoryActivity} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/history/activity1",
-    element: <Page component={HistoryActivity1} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/history/activity2",
-    element: <Page component={HistoryActivity2} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/history/activity3",
-    element: <Page component={HistoryActivity3} />,
   },
   {
     path: "/bimbingan-akademik/dekan/history/pre-registration-approved",
