@@ -71,41 +71,38 @@ const style2 = {
 
 const AddActivity = () => {
   const [studentOptions, setStudentOptions] = useState([]);
-
   const [valueDueDate, setValueDueDate] = useState(null);
   const [valueTimePicker, setValueTimePicker] = useState(null);
-  const [valueAttendance, setValueAttendance] = React.useState("");
+  const [valueAttendance, setValueAttendance] = useState("");
   const [showLabel, setShowLabel] = useState(true);
-  const handleAttendanceChange = (event) => {
-    setValueAttendance(event.target.value);
-    setShowLabel(false);
-  };
-  const [valueStudent, setValueStudent] = React.useState("");
+  const [valueStudent, setValueStudent] = useState("");
   const [showLabel2, setShowLabel2] = useState(true);
+  const [openFirstModal, setOpenFirstModal] = useState(false);
+  const [openSecondModal, setOpenSecondModal] = useState(false);
+
   const handleStudentChange = (event) => {
     setValueStudent(event.target.value);
     setShowLabel2(false);
   };
-
-  const [openFirstModal, setOpenFirstModal] = React.useState(false);
-  const [openSecondModal, setOpenSecondModal] = React.useState(false);
-  const handleOpenFirstModal = () => setOpenFirstModal(true);
-  const handleCloseFirstModal = () => setOpenFirstModal(false);
-  const handleOpenSecondModal = () => setOpenSecondModal(true);
-  const handleCloseSecondModal = () => setOpenSecondModal(false);
+  
+  const handleAttendanceChange = (event) => {
+    setValueAttendance(event.target.value);
+    setShowLabel(false);
+  };
+  
   const handleSubmitFirstModal = () => {
-    handleCloseFirstModal();
-    handleOpenSecondModal();
+    setOpenFirstModal(false)
+    setOpenSecondModal(true)
   };
   useEffect(() => {
     const timer = setTimeout(() => {
-      handleCloseSecondModal();
+      setOpenSecondModal(false)
     }, 5000);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [handleOpenSecondModal]);
+  }, [openSecondModal === true]);
 
   // const getStudentList = async()=>{
   //   try{
@@ -348,7 +345,7 @@ const AddActivity = () => {
         }}
       >
         <Button
-          onClick={handleOpenFirstModal}
+          onClick={()=>setOpenFirstModal(true)}
           sx={{
             backgroundColor: "#006AF5",
             borderRadius: "24px",
@@ -370,7 +367,7 @@ const AddActivity = () => {
 
       <Modal
         open={openFirstModal}
-        onClose={handleCloseFirstModal}
+        onClose={()=>setOpenFirstModal(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -396,7 +393,7 @@ const AddActivity = () => {
           <Grid container spacing={1} justifyContent="flex-end">
             <Grid item>
               <Button
-                onClick={handleCloseFirstModal}
+                onClick={()=>setOpenFirstModal(false)}
                 sx={{
                   backgroundColor: "white",
                   borderRadius: "5px",
@@ -438,7 +435,7 @@ const AddActivity = () => {
           <IconButton
             edge="end"
             color="#D9D9D9"
-            onClick={handleCloseSecondModal}
+            onClick={()=>setOpenSecondModal(false)}
             aria-label="close"
             sx={{
               position: "absolute",

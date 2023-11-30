@@ -13,6 +13,8 @@ import {
 import Chip from "@mui/material/Chip";
 import { Link } from "react-router-dom";
 import SearchLocal from "./SearchLocal/SearchLocal";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -42,7 +44,44 @@ function a11yProps(index) {
 }
 
 const History = (props) => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+
+  // const getHistory = async() =>{
+  //   try{
+  //     const headers = {
+  //       'Content-Type': 'multipart/form-data',
+  //       Authorization: `Bearer token_apa`,
+  //     }
+
+  //     let response
+
+  //     if('pilih tab activity'){
+  //       response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+  //     }else if('pilih tab pre-registration'){
+  //       response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+  //     }else if('pilih tab certification'){
+  //       response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+  //     }else if('pilih tab grade'){
+  //       response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+  //     }else if('pilih tab consultation'){
+  //       response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+  //     }
+
+  //     const {status, message, code, data}= response.data
+
+  //     if(status === 'OK'){ //isi status atau code tergantung API
+  //       //simpan dalam usestate contoh:
+  //       //setHistoryData = data
+  //       //tambahkan handle lain jika perlu
+  //     }else{
+  //       //tambah handler jika respon lain, kalau tidak perlu hapus saja
+  //       console.log(response)
+  //     }
+
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
 
   useEffect(() => {
     const storedValue = localStorage.getItem("historyTabValue");
@@ -128,7 +167,7 @@ const History = (props) => {
                 size="small"
                 button
                 component={Link}
-                to="activity2"
+                to="activity"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -172,7 +211,7 @@ const History = (props) => {
                 size="small"
                 button
                 component={Link}
-                to="activity1"
+                to="activity"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -270,7 +309,7 @@ const History = (props) => {
                 size="small"
                 button
                 component={Link}
-                to="activity3"
+                to="activity"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
