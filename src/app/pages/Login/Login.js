@@ -22,6 +22,8 @@ import { LoadingButton } from "@mui/lab";
 import * as yup from "yup";
 import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
 import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
+import { useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/system";
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
@@ -50,6 +52,16 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.75)",
   },
+  "@media (max-width: 927px)": {
+    pageContainer: {
+      flexDirection: "column", // Mengubah arah flex menjadi kolom
+      alignItems: "center", // Pusatkan elemen secara horizontal
+      justifyContent: "center", // Pusatkan elemen secara vertikal
+    },
+    leftSide: {
+      display: "none", // Sembunyikan gambar di sisi kiri
+    },
+  },
 }));
 
 const signInSchema = yup.object({
@@ -60,6 +72,9 @@ const signInSchema = yup.object({
 
 const Login = () => {
   const style = useStyles();
+  const theme = useTheme();
+  const maxWidth515 = useMediaQuery("(max-width: 515px)");
+
   const { setAuthToken } = useJumboAuth();
   const navigate = useNavigate();
 
@@ -100,11 +115,20 @@ const Login = () => {
         >
           {({ isSubmitting }) => (
             <Form noValidate>
-              <Stack sx={{ backgroundColor: "white", width: "433px" }}>
+              <Stack
+                sx={{
+                  backgroundColor: "white",
+                  width: maxWidth515 ? "275px" : "433px",
+                }}
+              >
                 <Logo mini sx={{ height: "104px" }} />
                 <Typography
                   variant="h1"
-                  style={{ fontSize: "60px", fontWeight: 700 }}
+                  sx={{
+                    fontSize: maxWidth515 ? "40px" : "60px",
+                    fontWeight: 700,
+                    padding: maxWidth515 ? "15px 0 " : "5px 0",
+                  }}
                 >
                   Sign In
                 </Typography>
@@ -130,7 +154,9 @@ const Login = () => {
                     <JumboSelectField
                       name="loginAs"
                       label="Login as"
-                      fullWidth
+                      sx={{
+                        width: maxWidth515 ? "275px" : "150px",
+                      }}
                       options={[
                         { value: "", label: "None" },
                         { value: "admin", label: "Admin" },
@@ -144,11 +170,22 @@ const Login = () => {
                       <FormControlLabel
                         control={<Checkbox />}
                         label={"Remember Me"}
+                        sx={{
+                          "& .MuiTypography-root": {
+                            fontSize: maxWidth515 ? "12px" : "14px",
+                            marginLeft: maxWidth515 ? "-4px" : "0px",
+                          },
+                        }}
                       />
                     </Grid>
                     <Grid item>
                       <Button
-                        sx={{ textTransform: "capitalize" }}
+                        sx={{
+                          fontSize: maxWidth515 ? "11px" : "14px",
+                          textTransform: "capitalize",
+                          paddingTop: maxWidth515 ? "11px" : "0",
+                          paddingRight: maxWidth515 ? "0" : "0",
+                        }}
                         variant="text"
                       >
                         Forgot Password?
