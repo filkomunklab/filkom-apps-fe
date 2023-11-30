@@ -73,7 +73,7 @@ const prodiList = [
 ];
 
 const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nidn: `105022010000`,
+  nidn: `022407712`,
   name: `Yuhu, Christopher Darell`,
   prodi: `Informatika`,
   year: `2021`,

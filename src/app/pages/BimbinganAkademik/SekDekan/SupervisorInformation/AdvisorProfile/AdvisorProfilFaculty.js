@@ -36,7 +36,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nim: `105022010000`,
+  nim: `022407712`,
   name: `Yuhu, Christopher Darell`,
   prodi: `Informatika`,
   year: `2021`,
@@ -451,7 +451,7 @@ const TableItem = ({ item, index }) => {
   return (
     <TableRow>
       <TableCell>{index + 1}</TableCell>
-      <TableCell>{`105022010000`}</TableCell>
+      <TableCell>{`022407712`}</TableCell>
       <TableCell>
         <Button
           name="profile"

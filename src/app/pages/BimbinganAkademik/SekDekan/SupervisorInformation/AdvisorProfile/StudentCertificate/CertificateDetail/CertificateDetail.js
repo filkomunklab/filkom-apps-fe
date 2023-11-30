@@ -32,21 +32,20 @@ const CertificateDetail = () => {
     event.preventDefault();
     navigate(step);
   };
-
-  const pdfURL =
-    "https://firebasestorage.googleapis.com/v0/b/filkom-apps-project.appspot.com/o/certificate%2F10502201001%2FNational.pdf?alt=media&token=a60bad0e-9836-46c2-8707-f9883e4a812f";
-
   return (
     <Div>
       <Div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink onClick={(event) => handleClick(event, -3)}>
+            Supervisor Information
+          </StyledLink>
           <StyledLink onClick={(event) => handleClick(event, -2)}>
-            Student Information
+            Advisor Profile
           </StyledLink>
           <StyledLink onClick={(event) => handleClick(event, -1)}>
-            Student Certificates
+            Student Certificate
           </StyledLink>
-          <Typography color="text.primary">Certificate</Typography>
+          <Typography color="text.primary">Certificates</Typography>
         </Breadcrumbs>
       </Div>
       <Typography
@@ -173,7 +172,7 @@ const CertificateDetail = () => {
         <Grid item md={4} id="certificate-item">
           <Box sx={{ flex: 1 }}>
             <img
-              src={""}
+              src={imageUrl}
               alt="Certificate-pic"
               style={{ maxWidth: "100%", scale: "0.8" }}
             />
