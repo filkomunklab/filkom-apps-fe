@@ -1,5 +1,6 @@
 import Page from "@jumbo/shared/Page";
-import AcademicGuide from "app/pages/BimbinganAkademik/Kaprodi/AcademicGuide";
+import AcademicGuide from "app/layouts/shared/bimbingan-akademik/AcademicGuide/AcademicGuide";
+import VisionMisionGoals from "app/layouts/shared/bimbingan-akademik/VisionMisionGoals/VisionMissionGoals";
 import AddActivity from "app/pages/BimbinganAkademik/Kaprodi/AddActivity";
 import Curriculum from "app/layouts/shared/bimbingan-akademik/Curriculum/Curriculum";
 import Dashboard from "app/pages/BimbinganAkademik/Kaprodi/Dashboard/Dashboard.";
@@ -22,7 +23,6 @@ import StudentInformationMentored from "app/pages/BimbinganAkademik/Kaprodi/Stud
 import StudentInformationFacultyInformatics from "app/pages/BimbinganAkademik/Kaprodi/StudentInformation/StudentInformationFaculty/Informatics";
 import StudentInformationFacultyInformationSystem from "app/pages/BimbinganAkademik/Kaprodi/StudentInformation/StudentInformationFaculty/InformationSystem";
 import StudentInformationFacultyInformationTechnology from "app/pages/BimbinganAkademik/Kaprodi/StudentInformation/StudentInformationFaculty/InformationTechnology";
-import VisionMisionGoals from "app/pages/BimbinganAkademik/Kaprodi/VisionMisionGoals";
 
 import SupervisorInformation from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation";
 import AdvisorProfile from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/AdvisorProfile";
@@ -63,7 +63,7 @@ import SupervisorStudentGradeDashboard from "app/pages/BimbinganAkademik/Kaprodi
 import SupervisorStudentGrade from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/StudentProfile/StudentGradeDashboard/StudentGrade";
 import SupervisorStudentCertificate from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/StudentProfile/StudentCertificate";
 import SupervisorCertificateDetail from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/StudentProfile/StudentCertificate/CertificateDetail";
-import Profile from "app/pages/BimbinganAkademik/Kaprodi/Profile";
+import Profile from "app/layouts/shared/bimbingan-akademik/Profile/Profile";
 
 const kepalaProgramStudiRoutes = [
   {

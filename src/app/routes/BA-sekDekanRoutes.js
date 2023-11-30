@@ -1,5 +1,5 @@
-import AcademicGuide from "app/pages/BimbinganAkademik/SekDekan/AcademicGuide/AcademicGuide";
-import VisionMisionGoals from "app/pages/BimbinganAkademik/SekDekan/VisionMisionGoals";
+import AcademicGuide from "app/layouts/shared/bimbingan-akademik/AcademicGuide/AcademicGuide";
+import VisionMisionGoals from "app/layouts/shared/bimbingan-akademik/VisionMisionGoals/VisionMissionGoals";
 import Curriculum from "app/layouts/shared/bimbingan-akademik/Curriculum/Curriculum";
 import StudentInformation from "app/pages/BimbinganAkademik/SekDekan/StudentInformation";
 import StudentInformationFacultyInformatics from "app/pages/BimbinganAkademik/SekDekan/StudentInformation/StudentInformationFaculty/Informatics";
@@ -10,7 +10,7 @@ import StudentGrade from "app/pages/BimbinganAkademik/SekDekan/StudentInformatio
 import StudentCertificate from "app/pages/BimbinganAkademik/SekDekan/StudentInformation/StudentCertificate";
 import CertificateDetail from "app/pages/BimbinganAkademik/SekDekan/StudentInformation/StudentCertificate/CertificateDetail";
 import StudentGradeDashboard from "app/pages/BimbinganAkademik/SekDekan/StudentInformation/StudentGradeDashboard";
-import Profile from "app/pages/BimbinganAkademik/SekDekan/Profile";
+import Profile from "app/layouts/shared/bimbingan-akademik/Profile/Profile";
 import SupervisorInformation from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation";
 import AdvisorProfile from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/AdvisorProfile/AdvisorProfilFaculty";
 import EditStudent from "app/pages/BimbinganAkademik/SekDekan/SupervisorInformation/AdvisorProfile/EditStudent";
