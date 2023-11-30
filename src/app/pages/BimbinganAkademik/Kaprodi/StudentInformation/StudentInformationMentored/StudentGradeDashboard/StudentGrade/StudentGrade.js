@@ -6,11 +6,15 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TableContainer,
+  Paper,
   Typography,
   Breadcrumbs,
   experimentalStyled as styled,
+  Grid,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -23,42 +27,71 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const StudentGrade = () => {
   const navigate = useNavigate();
 
-  const handleClick = (event) => {
+  const handleClick = (event, step) => {
     event.preventDefault();
-    navigate(-1);
+    navigate(step);
   };
   return (
     <Div>
-      <div role="presentation" onClick={handleClick}>
+      <Div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Back</StyledLink>
-          <Typography color="text.primary">Student Profile</Typography>
+          <StyledLink onClick={(event) => handleClick(event, -2)}>
+            Student Information
+          </StyledLink>
+          <StyledLink onClick={(event) => handleClick(event, -1)}>
+            Student Grades
+          </StyledLink>
+          <Typography color="text.primary">Grades</Typography>
         </Breadcrumbs>
-      </div>
+      </Div>
       <Stack gap={3} paddingTop={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
-          <Typography variant="h1">Nilai Mahasiswa</Typography>
+          <Typography variant="h1" fontWeight={500}>
+            Student Grade
+          </Typography>
           <Typography variant="h6" sx={{ paddingRight: "15px" }}>
             Yuhu, Darell Deil
           </Typography>
         </Stack>
         <Typography variant="h5">Semester 1</Typography>
-        <Table>
-          <TableHead>
-            <TableHeading />
-          </TableHead>
-          <TableBody>
-            {[...Array(10)].map((item, index) => (
-              <TableItem index={index} key={index} />
-            ))}
-          </TableBody>
-        </Table>
+        <Grid item xs={12}>
+          <TableContainer
+            sx={{
+              maxHeight: 640,
+            }}
+            component={Paper}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {[...Array(10)].map((item, index) => (
+                  <TableItem index={index} key={index} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
         <Stack>
-          <Typography variant="h2">
+          <Typography
+            variant="h4"
+            sx={{ fontSize: { xs: 14, md: 16, xl: 18 } }}
+          >
             Semester 1, Tahun Akademik 2022/2023
           </Typography>
-          <Typography variant="h2">Total Grade: 3.92</Typography>
-          <Typography variant="h2">Total Major Grade: 3.95</Typography>
+          <Typography
+            variant="h4"
+            sx={{ fontSize: { xs: 14, md: 16, xl: 18 } }}
+          >
+            Total Grade: 3.92
+          </Typography>
+          <Typography
+            variant="h4"
+            sx={{ fontSize: { xs: 14, md: 16, xl: 18 } }}
+          >
+            Total Major Grade: 3.95
+          </Typography>
         </Stack>
       </Stack>
     </Div>

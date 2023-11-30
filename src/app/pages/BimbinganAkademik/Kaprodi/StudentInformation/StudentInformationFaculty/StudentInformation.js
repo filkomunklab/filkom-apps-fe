@@ -18,6 +18,8 @@ import {
   Card,
   CardHeader,
   CardContent,
+  TableContainer,
+  Paper,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { useState } from "react";
@@ -95,16 +97,17 @@ const StudentInformationFaculty = () => {
   return (
     <Div>
       <Div>
-        <Typography variant="h1" sx={{ mb: 3 }}>
+        <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
           Student Information
         </Typography>
         <Typography
           variant="h6"
           sx={{
-            paddingBottom: "18px",
+            paddingBottom: "25px",
             fontSize: "15px",
             fontWeight: 400,
             color: "rgba(27, 43, 65, 0.69)",
+            textAlign: "justify",
           }}
         >
           Currently, you are on the Student Information page, where you can
@@ -113,7 +116,7 @@ const StudentInformationFaculty = () => {
         </Typography>
       </Div>
       <Grid container spacing={2} sx={{ paddingBottom: 4, paddingTop: 2 }}>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
+        <Grid item sm={12} md={4} lg={4} xs={12}>
           <Card
             sx={{
               height: "100%",
@@ -146,7 +149,7 @@ const StudentInformationFaculty = () => {
             </Grid>
           </Card>
         </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
+        <Grid item sm={12} md={4} lg={4} xs={12}>
           <Card
             sx={{
               height: "100%",
@@ -179,7 +182,7 @@ const StudentInformationFaculty = () => {
             </Grid>
           </Card>
         </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
+        <Grid item sm={12} md={4} lg={4} xs={12}>
           <Card
             sx={{
               height: "100%",
@@ -215,14 +218,23 @@ const StudentInformationFaculty = () => {
       </Grid>
       <Grid container spacing={2}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: "justify",
+              "@media (max-width: 390px)": {
+                fontSize: "16px",
+                fontWeight: 500,
+              },
+            }}
+          >
             Computer Sciences Faculty Students List
           </Typography>
         </Grid>
-        <Grid item md={3}>
-          <SearchGlobal sx={{ height: "100%" }} />
+        <Grid item xs={12} sm={8} md={8} xl={3}>
+          <SearchGlobal sx={{ height: "100%", maxHeight: "53px" }} />
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={4} md={4} xl={3}>
           <FormControl
             sx={{
               width: "100%",
@@ -235,6 +247,13 @@ const StudentInformationFaculty = () => {
               value={filter}
               label="Grouping"
               renderValue={(selected) => selected.join(", ")}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: "37%",
+                  },
+                },
+              }}
             >
               <MenuItem value="">
                 <em>None</em>
@@ -283,19 +302,28 @@ const StudentInformationFaculty = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
+          <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
             count={data.length}
@@ -331,9 +359,7 @@ const TableItem = ({ item, index }) => {
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(
-      `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}`
-    );
+    // navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
 
     switch (name) {
       case "profile":
@@ -356,25 +382,34 @@ const TableItem = ({ item, index }) => {
         console.log("Path not found");
     }
   };
+  const rowStyle = {
+    "@media (max-width: 650px)": { fontSize: "11px" },
+  };
   return (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{`105022010000`}</TableCell>
+      <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
+      <TableCell sx={[rowStyle]}>{`105022010000`}</TableCell>
       <TableCell>
         <Button
           name="profile"
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
           onClick={handleButtonNavigate}
         >{`Yuhu, Christopher Darell`}</Button>
       </TableCell>
-      <TableCell>{`Informatika`}</TableCell>
-      <TableCell>{`2021`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`Informatika`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`2021`}</TableCell>
 
       <TableCell>
         <Button
           name="grade"
           onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
         >
           View Grades
         </Button>
@@ -383,12 +418,15 @@ const TableItem = ({ item, index }) => {
         <Button
           name="certificate"
           onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
         >
           View Certificates
         </Button>
       </TableCell>
-      <TableCell>
+      <TableCell sx={[rowStyle]}>
         <Chip label={"Active"} variant="filled" color={"success"} />
       </TableCell>
     </TableRow>

@@ -20,6 +20,8 @@ import {
   CardContent,
   Breadcrumbs,
   experimentalStyled as styled,
+  TableContainer,
+  Paper,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { useState } from "react";
@@ -82,7 +84,7 @@ const prodiList = [
 const data = Array.from(Array(15).keys()).map((item, index) => ({
   nim: `105022010000`,
   name: `Yuhu, Christopher Darell`,
-  prodi: `Information System`,
+  prodi: `Informatika`,
   year: `2021`,
   status: `Active`,
 }));
@@ -100,29 +102,31 @@ const InformationSystem = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-  const navigate = useNavigate();
 
   const handleClick = (event) => {
     event.preventDefault();
-    navigate(-1);
   };
 
   return (
     <Div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink> Faculty Student</StyledLink>
+          <StyledLink to="/bimbingan-akademik/kaprodi/student-information/faculty-student">
+            Faculty Student
+          </StyledLink>
           <Typography color="text.primary">Information System</Typography>
         </Breadcrumbs>
       </div>
       <Grid container spacing={2} paddingTop={1}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">Information System Students List</Typography>
+          <Typography variant="h2" fontWeight={500}>
+            Information System Students List
+          </Typography>
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={8} md={3}>
           <SearchGlobal sx={{ height: "100%" }} />
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={4} md={3}>
           <FormControl
             sx={{
               width: "100%",
@@ -135,6 +139,13 @@ const InformationSystem = () => {
               value={filter}
               label="Grouping"
               renderValue={(selected) => selected.join(", ")}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: "37%",
+                  },
+                },
+              }}
             >
               <MenuItem value="">
                 <em>None</em>
@@ -183,19 +194,28 @@ const InformationSystem = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
+          <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
             count={data.length}
@@ -230,9 +250,7 @@ const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    navigate(
-      `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}`
-    );
+    // navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
 
     switch (name) {
       case "profile":
@@ -255,25 +273,34 @@ const TableItem = ({ item, index }) => {
         console.log("Path not found");
     }
   };
+  const rowStyle = {
+    "@media (max-width: 650px)": { fontSize: "11px" },
+  };
   return (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{`105022010000`}</TableCell>
+      <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
+      <TableCell sx={[rowStyle]}>{`105022010000`}</TableCell>
       <TableCell>
         <Button
           name="profile"
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
           onClick={handleButtonNavigate}
         >{`Yuhu, Christopher Darell`}</Button>
       </TableCell>
-      <TableCell>{`Information System`}</TableCell>
-      <TableCell>{`2021`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`Informatika`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`2021`}</TableCell>
 
       <TableCell>
         <Button
           name="grade"
           onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
         >
           View Grades
         </Button>
@@ -282,12 +309,15 @@ const TableItem = ({ item, index }) => {
         <Button
           name="certificate"
           onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
         >
           View Certificates
         </Button>
       </TableCell>
-      <TableCell>
+      <TableCell sx={[rowStyle]}>
         <Chip label={"Active"} variant="filled" color={"success"} />
       </TableCell>
     </TableRow>

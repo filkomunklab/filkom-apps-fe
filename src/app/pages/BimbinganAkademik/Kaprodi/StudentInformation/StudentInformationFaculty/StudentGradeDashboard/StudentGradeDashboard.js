@@ -8,6 +8,7 @@ import {
   Breadcrumbs,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -40,12 +41,6 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const StudentGradeDashboard = () => {
-  const navigate = useNavigate();
-
-  const handleClick = (event) => {
-    event.preventDefault();
-    navigate(-2);
-  };
   const semesterNames = [
     { label: "Semester 1", value: 1 },
     { label: "Semester 2", value: 2 },
@@ -54,17 +49,26 @@ const StudentGradeDashboard = () => {
     { label: "Semester 5", value: 5 },
   ];
   const id = "105022010000";
+
+  const navigate = useNavigate();
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigate(-1);
+  };
+
   return (
     <Div>
-      <div role="presentation" onClick={handleClick}>
+      <Div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Back</StyledLink>
-          <Typography color="text.primary">Student Profile</Typography>
+          <StyledLink>Student Information</StyledLink>
+          <Typography color="text.primary">Student Grades</Typography>
         </Breadcrumbs>
-      </div>
+      </Div>
       <Stack gap={3} paddingTop={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
-          <Typography variant="h1">Nilai Mahasiswa</Typography>
+          <Typography variant="h1" fontWeight={500}>
+            Student Grade
+          </Typography>
           <Typography variant="h6">Yuhu, Darell Deil</Typography>
         </Stack>
         <Typography variant="h5">
