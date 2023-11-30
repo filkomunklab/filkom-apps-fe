@@ -3,11 +3,11 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const MenuSekertaris = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open1 = Boolean(anchorEl);
-  const [anchorE2, setAnchorE2] = React.useState(null);
-  const open2 = Boolean(anchorE2);
+const MenuSekertaris = ({
+  dataGroupId: groupId,
+  dataProgress: progress,
+  page: setPage,
+}) => {
   return (
     <Div>
       {/* Menu Horizontal Start */}
@@ -26,16 +26,22 @@ const MenuSekertaris = () => {
       >
         <Div sx={{ width: "100%", display: "flex" }}>
           <Div sx={{ margin: "auto" }}>
-            <Link to="#">
+            <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan-${
+                (progress === "Proposal" && "proposal") ||
+                (progress === "Skripsi" && "skripsi") ||
+                (progress === "Finished" && "skripsi")
+              }/beranda/${groupId}/OPERATOR_FILKOM`}
+            >
               <Button
                 sx={{
                   fontSize: "13px",
                   padding: "6px 16px",
                   fontWeight: 500,
-                  color: "#192434",
+                  color: setPage === "Beranda" ? "#006AF5" : "#192434",
                   textTransform: "none",
                   "&:hover": {
-                    color: "#006AF5",
+                    color: setPage === "Beranda" ? "#006AF5" : "#006AF5",
                   },
                 }}
               >
@@ -43,25 +49,23 @@ const MenuSekertaris = () => {
               </Button>
             </Link>
           </Div>
-          <Div
-            sx={{
-              width: "1px",
-              transform: "90px",
-              alignSelf: "stretch",
-              background: "rgba(26, 56, 96, 0.10)",
-            }}
-          ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="#">
+            <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan-${
+                (progress === "Proposal" && "proposal") ||
+                (progress === "Skripsi" && "skripsi") ||
+                (progress === "Finished" && "skripsi")
+              }/jadwal-sidang/${groupId}/OPERATOR_FILKOM`}
+            >
               <Button
                 sx={{
                   // width: "150px",
                   fontSize: "13px",
                   fontWeight: 500,
-                  color: "#192434",
+                  color: setPage === "Jadwal Sidang" ? "#006AF5" : "#192434",
                   textTransform: "none",
                   "&:hover": {
-                    color: "#006AF5",
+                    color: setPage === "Jadwal Sidang" ? "#006AF5" : "#006AF5",
                   },
                 }}
               >
@@ -69,25 +73,23 @@ const MenuSekertaris = () => {
               </Button>
             </Link>
           </Div>
-          <Div
-            sx={{
-              width: "1px",
-              transform: "90px",
-              alignSelf: "stretch",
-              background: "rgba(26, 56, 96, 0.10)",
-            }}
-          ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Link to="#">
+            <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan-${
+                (progress === "Proposal" && "proposal") ||
+                (progress === "Skripsi" && "skripsi") ||
+                (progress === "Finished" && "skripsi")
+              }/konsultasi/${groupId}/OPERATOR_FILKOM`}
+            >
               <Button
                 sx={{
                   // width: "130px",
                   fontSize: "13px",
                   fontWeight: 500,
-                  color: "#192434",
+                  color: setPage === "Konsultasi" ? "#006AF5" : "#192434",
                   textTransform: "none",
                   "&:hover": {
-                    color: "#006AF5",
+                    color: setPage === "Konsultasi" ? "#006AF5" : "#006AF5",
                   },
                 }}
               >
@@ -95,100 +97,55 @@ const MenuSekertaris = () => {
               </Button>
             </Link>
           </Div>
-          <Div
-            sx={{
-              width: "1px",
-              transform: "90px",
-              alignSelf: "stretch",
-              background: "rgba(26, 56, 96, 0.10)",
-            }}
-          ></Div>
           <Div sx={{ margin: "auto" }}>
-            <Button
-              onClick={(event) => setAnchorEl(event.currentTarget)}
-              sx={{
-                fontSize: "13px",
-                fontWeight: 500,
-                color: "#192434",
-                textTransform: "none",
-                "&:hover": {
-                  color: "#006AF5",
-                },
-              }}
+            <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan-${
+                (progress === "Proposal" && "proposal") ||
+                (progress === "Skripsi" && "skripsi") ||
+                (progress === "Finished" && "skripsi")
+              }/dokumen-proposal/${groupId}/OPERATOR_FILKOM`}
             >
-              Pengajuan Proposal
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={open1}
-              onClose={() => setAnchorEl(null)}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-            >
-              <MenuItem onClick={() => setAnchorEl(null)}>
-                Upload Proposal
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorEl(null)}>
-                Berita Acara
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorEl(null)}>
-                Upload Revisi Proposal
-              </MenuItem>
-            </Menu>
+              <Button
+                sx={{
+                  // width: "130px",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  color: setPage === "Dokumen Proposal" ? "#006AF5" : "#192434",
+                  textTransform: "none",
+                  "&:hover": {
+                    color:
+                      setPage === "Dokumen Proposal" ? "#006AF5" : "#006AF5",
+                  },
+                }}
+              >
+                Dokumen Proposal
+              </Button>
+            </Link>
           </Div>
-          <Div
-            sx={{
-              width: "1px",
-              transform: "90px",
-              alignSelf: "stretch",
-              background: "rgba(26, 56, 96, 0.10)",
-            }}
-          ></Div>
-          {/* Menu Pengajuan Skripsi */}
-          <Div>
-            <Button
-              onClick={(event) => setAnchorE2(event.currentTarget)}
-              sx={{
-                fontSize: "13px",
-                fontWeight: 500,
-                color: "#192434",
-                textTransform: "none",
-                "&:hover": {
-                  color: "#006AF5",
-                },
-              }}
+          <Div sx={{ margin: "auto" }}>
+            <Link
+              to={`/sistem-informasi-skripsi/daftar-pengajuan-${
+                (progress === "Proposal" && "proposal") ||
+                (progress === "Skripsi" && "skripsi") ||
+                (progress === "Finished" && "skripsi")
+              }/dokumen-skripsi/${groupId}/OPERATOR_FILKOM`}
             >
-              Pengajuan Skripsi
-            </Button>
-            <Menu
-              anchorEl={anchorE2}
-              open={open2}
-              onClose={() => setAnchorE2(null)}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-            >
-              <MenuItem onClick={() => setAnchorE2(null)}>
+              <Button
+                sx={{
+                  // width: "130px",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  color: setPage === "Dokumen Skripsi" ? "#006AF5" : "#192434",
+                  textTransform: "none",
+                  "&:hover": {
+                    color:
+                      setPage === "Dokumen Skripsi" ? "#006AF5" : "#006AF5",
+                  },
+                }}
+              >
                 Dokumen Skripsi
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Berita Acara Skripsi
-              </MenuItem>
-              <MenuItem onClick={() => setAnchorE2(null)}>
-                Dokumen Revisi Skripsi
-              </MenuItem>
-            </Menu>
+              </Button>
+            </Link>
           </Div>
         </Div>
       </Div>

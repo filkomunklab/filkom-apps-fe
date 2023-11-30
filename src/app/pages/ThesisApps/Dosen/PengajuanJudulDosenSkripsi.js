@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
   Chip,
-  Menu,
   MenuItem,
   Table,
   TableBody,
@@ -21,20 +21,221 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogContentText,
 } from "@mui/material";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
+import MenuDosen from "app/shared/MenuHorizontal/MenuDosen";
+import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
+import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
+import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 
 const PengajuanJudulDosenSkripsi = () => {
+  // state - simpan request pengajuan judul
+  const [pengajuanJudul, setPengajuanJudul] = useState();
+  const [daftarDosen, setDaftarDosen] = useState();
+
+  const groupId = useParams().groupId;
+  // console.log("group id: ", groupId);
+  const [progress, setProgress] = useState(null);
+  const [submissionId, setSubmissionId] = useState(null);
+
+  const userRole = useParams().role;
+  console.log("role user akses page: ", userRole);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  // const role = ["ADVISOR", "DOSEN"];
+  console.log("role user yang sign in: ", role);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchPengajuanJudulData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/submission/${submissionId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Atur state 'setPengajuanJudul' dengan data dari respons
+        setPengajuanJudul(response.data.data);
+
+        // Setel visibility tombol sesuai kondisi is_approve
+        setGantiAdvisorCoAdvisorButtonVisible(
+          response.data.data.is_approve === "Waiting"
+        );
+        setTolakTerimaButtonsVisible(
+          response.data.data.is_approve === "Waiting"
+        );
+        console.log("Request Get pengajuan judul: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil pengajuan judul:",
+          error
+        );
+      }
+    };
+    const fetchDaftarDosenData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/dosen-list`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDaftarDosen(response.data.data);
+        console.log("Request Get daftar dosen: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil daftar dosen:", error);
+      }
+    };
+    fetchPengajuanJudulData();
+    fetchDaftarDosenData();
+  }, [token, submissionId]);
+
+  const [confirmTolakOpen, setConfirmTolakOpen] = useState(false); // State untuk dialog konfirmasi tolak
+  const [confirmTerimaOpen, setConfirmTerimaOpen] = useState(false); // State untuk dialog konfirmasi terima
+
+  const [
+    gantiAdvisorCoAdvisorButtonVisible,
+    setGantiAdvisorCoAdvisorButtonVisible,
+  ] = useState(false);
+
+  const [tolakTerimaButtonsVisible, setTolakTerimaButtonsVisible] =
+    useState(false);
+
   const handleTolakClick = () => {
-    // Di sini Anda bisa menambahkan logika untuk menolak pengajuan
-    // Setelah pengajuan ditolak, update status menjadi "Ditolak"
-    setStatus("Ditolak");
+    // Menampilkan dialog konfirmasi tolak
+    setConfirmTolakOpen(true);
   };
 
   const handleTerimaClick = () => {
-    // Di sini Anda bisa menambahkan logika untuk menerima pengajuan
+    // Menampilkan dialog konfirmasi terima
+    setConfirmTerimaOpen(true);
+  };
+
+  const handleTolak = () => {
+    // Di sini Anda bisa menambahkan logika untuk menolak pengajuan setelah konfirmasi
+    // Setelah pengajuan ditolak, update status menjadi "Ditolak"
+    // setStatus("Ditolak");
+
+    // Tutup dialog konfirmasi
+    setConfirmTolakOpen(false);
+    console.log("token di handle tolak: ", token);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/submission/reject/${submissionId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        setTolakTerimaButtonsVisible(false);
+        setGantiAdvisorCoAdvisorButtonVisible(false);
+
+        console.log("Berhasil menolak pengajuan ");
+        // Ambil data terbaru dari database
+        const fetchPengajuanJudulData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/submission/${submissionId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            // Atur state 'setPengajuanJudul' dengan data dari respons
+            setPengajuanJudul(response.data.data);
+
+            // Setel visibility tombol sesuai kondisi is_approve
+            setGantiAdvisorCoAdvisorButtonVisible(
+              response.data.data.is_approve === "Waiting"
+            );
+            setTolakTerimaButtonsVisible(
+              response.data.data.is_approve === "Waiting"
+            );
+            console.log("Request Get pengajuan judul: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil pengajuan judul:",
+              error
+            );
+          }
+        };
+        fetchPengajuanJudulData();
+      })
+      .catch((error) => {
+        console.error("Terjadi kesalahan saat menolak pengajuan:", error);
+      });
+  };
+
+  const handleTerima = () => {
+    // Di sini Anda bisa menambahkan logika untuk menerima pengajuan setelah konfirmasi
     // Setelah pengajuan diterima, update status menjadi "Diterima"
-    setStatus("Diterima");
+    // setStatus("Diterima");
+
+    // Tutup dialog konfirmasi
+    setConfirmTerimaOpen(false);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/submission/approve/${submissionId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        setTolakTerimaButtonsVisible(false);
+        setGantiAdvisorCoAdvisorButtonVisible(false);
+
+        console.log("Berhasil menerima pengajuan ");
+        // Ambil data terbaru dari database
+        const fetchPengajuanJudulData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/submission/${submissionId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            // Atur state 'setPengajuanJudul' dengan data dari respons
+            setPengajuanJudul(response.data.data);
+
+            // Setel visibility tombol sesuai kondisi is_approve
+            setGantiAdvisorCoAdvisorButtonVisible(
+              response.data.data.is_approve === "Waiting"
+            );
+            setTolakTerimaButtonsVisible(
+              response.data.data.is_approve === "Waiting"
+            );
+            console.log("Request Get pengajuan judul: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil pengajuan judul:",
+              error
+            );
+          }
+        };
+        fetchPengajuanJudulData();
+      })
+      .catch((error) => {
+        console.error("Terjadi kesalahan saat menolak pengajuan:", error);
+      });
   };
 
   const [status, setStatus] = useState("Menunggu"); // Tambahkan state untuk status
@@ -55,33 +256,8 @@ const PengajuanJudulDosenSkripsi = () => {
   const [isStatusVisible] = useState(true);
 
   // State untuk mengelola berbagai data termasuk judul, latar belakang, dll.
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [judul] = useState(
     "Pengembangan Sistem Informasi Skripsi di Fakultas Ilmu Komputer Universitas Klabat"
-  );
-
-  const [latarBelakang] = useState(
-    "Perkembangan teknologi informasi semakin mengguncangkan dunia dengan pesatnya. Seiring dengan adanya inovasi terbaru, teknologi informasi telah mempengaruhi banyak aspek kehidupan manusia, khususnya dalam bidang informasi. Sebagai contoh, perguruan tinggi negeri dan swasta saat ini semakin gencar untuk mengembangkan sistem referensi repository, khususnya untuk skripsi alumni guna meningkatkan kemajuan universitas. Tidak hanya itu, teknologi informasi juga telah mengubah dunia bisnis tradisional dengan munculnya komputasi awan dan pertumbuhan platform bisnis digital seluler berbasis smartphone dan tablet. Inovasi ini memberikan peluang bagi pengusaha dan perusahaan tradisional untuk menciptakan produk dan layanan baru, mengembangkan model bisnis baru, dan mengubah perilaku bisnis sehari-hari. Oleh karena itu, teknologi informasi menjadi fondasi bisnis di abad ke-21 karena banyak bisnis atau perusahaan dapat beroperasi dan berkembang dengan adanya sistem informasi yang mumpuni. Sebagaimana disebutkan dalam UU No. 11 Tahun 2008 tentang Informasi dan Transaksi Elektronik, teknologi informasi adalah teknik untuk mengumpulkan, menyiapkan, menyimpan, memproses, mengumumkan, menganalisis, dan/atau menyebarkan informasi."
-  );
-
-  const [rumusanMasalah] = useState(
-    "Berdasarkan latar belakang masalah penelitian, maka dibuatsuatu rumusan masalah dalam penelitian ini, yaitu bagaimana mengembangkan sistem informasi manajemen skripsi berbasis web-application untuk penyerahan skripsi yang sudah selesai dinilai dan disimpan di repository?"
-  );
-
-  const [tujuan] = useState(
-    "Tujuan dari penelitian ini adalah untuk mengembangkan dan mengimplementasikan sistem informasi managemen skripsi untuk penyerahan skripsi dan penyimpanan skripsi yang terintegrasi yang memudahkan mahasiswa untuk mencari referensi judul skripsi yang sesuai dengan minat dan keahlian mereka serta membantu dosen pembimbing dalam memberikan saran dan rekomendasi judul skripsi melalui sistem ini sehingga judul atau topik penelitian yang diajukan tidak sama dengan penelitian yang sudah ada."
-  );
-
-  const [manfaat] = useState(
-    "1.	Mahasiswa dan dosen pembimbing Fakultas Ilmu Komputer dapat mencari referensi judul skripsi lebih mudah dan cepat sehingga dapat menghindari duplikasi penelitian yang sudah dilakukan sebelumnya. 2.	Meningkatkan efisiensi dalam penyerahan skripsi dan penyimpanan dengan sistem yang terintegrasi sehingga mahasiswa tidak perlu melakukan permohonan akses ke Fakultas Ilmu Komputer untuk mengakses skripsi yang sudah disetujui atau diuji dan lulus.3.	Dengan adanya sistem terintegrasi, kesalahan dalam penyimpanan skripsi dapat dihindari. "
-  );
-
-  const [cakupan] = useState(
-    "1.	Sistem hanya mencakup manajemen skripsi Fakultas Ilmu Komputer Universitas Klabat 2.	Sistem hanya menerima penyerahan skripsi yang sudah diuji dan lulus oleh dosen penguji dan menyimpannya. 3.	Sistem menyediakan pencarian skripsi beserta teks lengkap di repository. Pencarian skripsi dibuka untuk umum tetapi teks lengkap hanya dapat diakses oleh mahasiswa dan dosen Universitas Klabat."
-  );
-
-  const [batasan] = useState(
-    "1)	Sistem hanya dibangun untuk digunakan Fakultas Ilmu Komputer Universitas Klabat.2)	Sistem hanya mengelola lembar pengesahan dan skripsi yang sudah diuji di Fakultas Ilmu Komputer Universitas Klabat.3)	Sistem hanya menerima penyerahan skripsi dalam format file tertentu seperti PDF atau Microsoft Word dengan batasan ukuran file sebesar 50MB.4)	Sistem tidak menyimpan data pribadi lengkap  penulis atau mahasiswa.5)	Sistem hanya memberikan akses lihat dan unduh teks lengkap skripsi kepada dosen dan mahasiswa Universitas Klabat.6)	Sistem tidak dapat menampilkan skripsi yang paling sering dicari atau paling tren.7)	Sistem tidak menyediakan fitur notifikasi persetujuan penyerahan skripsi 8)	Sistem ini berbasis web-application."
   );
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -92,10 +268,18 @@ const PengajuanJudulDosenSkripsi = () => {
   const [coAdvisor2, setCoAdvisor2] = useState("");
 
   const handleClickOpen = () => {
+    // isi state advisor dan co advisor dengan nilai awal sebelum diganti
+    setAdvisor(pengajuanJudul?.proposed_advisor_id);
+    setCoAdvisor1(pengajuanJudul?.proposed_co_advisor1_id);
+    setCoAdvisor2(pengajuanJudul?.proposed_co_advisor2_id);
     setOpenDialog(true);
   };
 
   const handleClose = () => {
+    // set advisor dan co advisor ke nilai awal
+    setAdvisor(pengajuanJudul?.proposed_advisor_id);
+    setCoAdvisor1(pengajuanJudul?.proposed_co_advisor1_id);
+    setCoAdvisor2(pengajuanJudul?.proposed_co_advisor2_id);
     setOpenDialog(false);
   };
 
@@ -105,9 +289,60 @@ const PengajuanJudulDosenSkripsi = () => {
 
     // Setelah Anda menyimpan perubahan, Anda bisa menutup dialog.
     handleClose();
-  };
 
-  const open = Boolean(anchorEl);
+    const data = {
+      proposed_advisor_id: advisor,
+      proposed_co_advisor1_id: coAdvisor1 || null,
+      proposed_co_advisor2_id: coAdvisor2 || null,
+    };
+    console.log(data);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/submission/advisor-and-co-advisor/${submissionId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil mengganti advisor dan co-advisor ");
+        // Ambil data terbaru dari database
+        const fetchPengajuanJudulData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/submission/${submissionId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            // Atur state 'setPengajuanJudul' dengan data dari respons
+            setPengajuanJudul(response.data.data);
+
+            // Setel visibility tombol sesuai kondisi is_approve
+            setGantiAdvisorCoAdvisorButtonVisible(
+              response.data.data.is_approve === "Waiting"
+            );
+            setTolakTerimaButtonsVisible(
+              response.data.data.is_approve === "Waiting"
+            );
+            console.log("Request Get pengajuan judul: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil pengajuan judul:",
+              error
+            );
+          }
+        };
+        fetchPengajuanJudulData();
+      })
+      .catch((error) => {
+        console.error("Terjadi kesalahan saat mengganti pembimbing:", error);
+      });
+  };
 
   return (
     <Div>
@@ -121,8 +356,8 @@ const PengajuanJudulDosenSkripsi = () => {
           gap: 2,
         }}
       >
-        <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Beranda
+        <Typography variant="subtitle2" sx={{ fontSize: "24px" }}>
+          Pengajuan Judul
         </Typography>
       </Div>
 
@@ -146,139 +381,15 @@ const PengajuanJudulDosenSkripsi = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          {/* Riwayat Log Start */}
-          <Div
-            sx={{
-              width: "320px",
-              height: "500px",
-              borderRadius: "6px",
-              border: "1px solid rgba(26, 56, 96, 0.10)",
-              background: "#FFF",
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(data) => {
+              if (data) {
+                setProgress(data.progress);
+                setSubmissionId(data.submission_id);
+              }
             }}
-          >
-            Riwayat Log
-          </Div>
-          {/* Riwayat Log End */}
-
-          {/* Dosen Pembimbing Start */}
-          <Div
-            sx={{
-              display: "flex",
-              width: "320px",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              borderRadius: "6px",
-              border: "1px solid rgba(26, 56, 96, 0.10)",
-              background: "#FFF",
-            }}
-          >
-            {/* Advisor */}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Advisor
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-            {/* Co-Advisor 1*/}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Co-Advisor 1
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-            {/* Co-Advisor 2*/}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Co-Advisor 2
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-          </Div>
-          {/* Dosen Pembimbing End */}
+          />
         </Div>
         {/* Element 1 End */}
         {/* Element 2 Start */}
@@ -295,188 +406,51 @@ const PengajuanJudulDosenSkripsi = () => {
           }}
         >
           {/* Menu Horizontal Start */}
+          {/* DOSEN */}
           <Div
-            sx={{
-              display: "flex",
-              // padding: "5px 16px",
-              width: "100%",
-              alignSelf: "stretch",
-              borderRadius: "8px",
-              border: "1px solid #E0E0E0",
-              background: "#FFF",
-              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
-              flexDirection: "column",
-            }}
+            hidden={userRole === "DOSEN" ? false : true}
+            sx={{ width: "100%" }}
           >
-            <Div sx={{ width: "100%", display: "flex" }}>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    sx={{
-                      fontSize: "13px",
-                      padding: "6px 16px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Beranda
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    sx={{
-                      // width: "150px",
-                      fontSize: "13px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Pengajuan Judul
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    disabled
-                    sx={{
-                      // width: "130px",
-                      fontSize: "13px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Konsultasi
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Button
-                  disabled
-                  onClick={(event) => setAnchorEl(event.currentTarget)}
-                  sx={{
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: "#006AF5",
-                    },
-                  }}
-                >
-                  Pengajuan Proposal
-                </Button>
-                <Menu
-                  disabled
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={() => setAnchorEl(null)}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Proposal
-                  </MenuItem>
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Revisi Proposal
-                  </MenuItem>
-                </Menu>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              {/* Menu Pengajuan Skripsi */}
-              <Div>
-                <Button
-                  disabled
-                  onClick={(event) => setAnchorEl(event.currentTarget)}
-                  sx={{
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: "#006AF5",
-                    },
-                  }}
-                >
-                  Pengajuan Skripsi
-                </Button>
-                <Menu
-                  disabled
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={() => setAnchorEl(null)}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Skripsi
-                  </MenuItem>
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Revisi Skripsi
-                  </MenuItem>
-                </Menu>
-              </Div>
-            </Div>
+            <MenuDosen
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Pengajuan Judul"}
+            />
           </Div>
-          {/* Menu horizontal End */}
-
+          {/* DOSEN SKRIPSI */}
+          <Div
+            hidden={userRole === "DOSEN_MK" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDosenSkripsi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Pengajuan Judul"}
+            />
+          </Div>
+          {/* DEKAN */}
+          <Div
+            hidden={userRole === "DEKAN" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDekan
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Pengajuan Judul"}
+            />
+          </Div>
+          {/* KAPRODI */}
+          <Div
+            hidden={userRole === "KAPRODI" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKaprodi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Pengajuan Judul"}
+            />
+          </Div>
+          {/* Menu Horizontal End */}
           <Div
             sx={{
               display: "flex",
@@ -493,19 +467,34 @@ const PengajuanJudulDosenSkripsi = () => {
           >
             <Div sx={{ marginBottom: "25px" }}>
               <Typography variant="subtitle2">Status</Typography>
-              <Chip
-                label={status} // Gunakan nilai status yang diperbarui
-                sx={{
-                  background:
-                    status === "Menunggu"
-                      ? "rgba(255, 204, 0, 0.10)"
-                      : status === "Ditolak"
-                      ? "red"
-                      : "green",
-                  color: status === "Menunggu" ? "#985211" : "white",
-                  height: "25px",
-                }}
-              />
+              {pengajuanJudul?.is_approve === "Waiting" ? (
+                <Chip
+                  label="Menunggu"
+                  sx={{
+                    background: "rgba(255, 204, 0, 0.10)",
+                    color: "#985211",
+                    height: "25px",
+                  }}
+                />
+              ) : pengajuanJudul?.is_approve === "Approve" ? (
+                <Chip
+                  label={"Diterima"}
+                  sx={{
+                    background: "rgba(21, 131, 67, 0.10)",
+                    color: "#0A7637",
+                  }}
+                />
+              ) : pengajuanJudul?.is_approve === "Rejected" ? (
+                <Chip
+                  label={"Ditolak"}
+                  sx={{
+                    background: "rgba(226, 29, 18, 0.10)",
+                    color: "#CA150C",
+                  }}
+                />
+              ) : (
+                pengajuanJudul?.is_approve
+              )}
             </Div>
             {/* Table Start*/}
             <Div
@@ -540,18 +529,20 @@ const PengajuanJudulDosenSkripsi = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>Geovalga Fransiscus Lim</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>2</TableCell>
-                      <TableCell>Frances Rully Yong</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
+                    {pengajuanJudul?.students?.map((student, studentIndex) => (
+                      <TableRow>
+                        <TableCell>{studentIndex + 1}</TableCell>
+                        <TableCell>{student.fullName}</TableCell>
+                        <TableCell>{student.nim}</TableCell>
+                        <TableCell>
+                          {student.major === "IF"
+                            ? "Informatika"
+                            : student.major === "SI"
+                            ? "Sistem Informasi"
+                            : student.major}
+                        </TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -559,66 +550,76 @@ const PengajuanJudulDosenSkripsi = () => {
               {/* Judul Start */}
               <Div sx={{ marginBottom: "25px" }}>
                 <Typography variant="subtitle2">Judul</Typography>
-                <Typography sx={{ whiteSpace: "pre-line" }}>{judul}</Typography>
+                <Typography sx={{ whiteSpace: "pre-line" }}>
+                  {pengajuanJudul?.title}
+                </Typography>
               </Div>
+              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
+                <Table>
+                  <TableHead sx={{ background: "#F5F5F5" }}>
+                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
+                      >
+                        Nomor
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
+                      >
+                        Nama File
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                      >
+                        Tanggal
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                      >
+                        Ukuran
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          textAlign: "center",
+                          width: "12%",
+                        }}
+                      >
+                        Action
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>1</TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {pengajuanJudul?.file_name}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {pengajuanJudul?.upload_date}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "12px" }}>
+                        {pengajuanJudul?.file_size}
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          style={{
+                            textDecoration: "none",
+                            cursor: "pointer",
+                            color: "blue",
+                            fontSize: "12px",
+                            padding: "5px 0",
+                          }}
+                        >
+                          Lihat
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
               {/* Judul End */}
-              {/* Latar Belakang Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography variant="subtitle2">
-                  Latar Belakang Masalah
-                </Typography>
-                <Typography
-                  style={{
-                    width: "100%",
-                    whiteSpace: "pre-line",
-                  }}
-                >
-                  {latarBelakang}
-                </Typography>
-              </Div>
-              {/* Latar Belakang End */}
-              {/* Rumusan Masalah Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography variant="subtitle2">Rumusan Masalah</Typography>
-                <Typography sx={{ whiteSpace: "pre-line" }}>
-                  {rumusanMasalah}
-                </Typography>
-              </Div>
-              {/* Rumusan Masalah End */}
-              {/* Tujuan Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography variant="subtitle2">Tujuan</Typography>
-                <Typography sx={{ whiteSpace: "pre-line" }}>
-                  {tujuan}
-                </Typography>
-              </Div>
-              {/* Tujuan End */}
-              {/* Manfaat Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography variant="subtitle2">Manfaat</Typography>
-                <Typography sx={{ whiteSpace: "pre-line" }}>
-                  {manfaat}
-                </Typography>
-              </Div>
-              {/* Manfaat End*/}
-              {/* Cakupan Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography variant="subtitle2">Cakupan</Typography>
-
-                <Typography sx={{ whiteSpace: "pre-line" }}>
-                  {cakupan}
-                </Typography>
-              </Div>
-              {/* Cakupan End */}
-              {/* Batasan Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography variant="subtitle2">Batasan</Typography>
-                <Typography sx={{ whiteSpace: "pre-line" }}>
-                  {batasan}
-                </Typography>
-              </Div>
-              {/* Batasan End */}
-
               {/* Select Dosen Pembimbing Start */}
               <Div
                 sx={{
@@ -647,94 +648,150 @@ const PengajuanJudulDosenSkripsi = () => {
                     }}
                   >
                     {/* Menampilkan Advisor */}
-                    <Typography variant="subtitle2">Advisor</Typography>
-                    <Typography>{advisor}</Typography>
+                    <Typography variant="subtitle2">
+                      Mengusulkan Advisor
+                    </Typography>
+                    <Typography>
+                      {
+                        daftarDosen?.find(
+                          (dosen) =>
+                            dosen.id === pengajuanJudul?.proposed_advisor_id
+                        )?.name
+                      }
+                    </Typography>
                   </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      gap: "15px",
-                    }}
-                  >
-                    {/* Menampilkan Co-advisor 1 */}
-                    <Typography variant="subtitle2">Co-Advisor 1</Typography>
-                    <Typography>{coAdvisor1}</Typography>
-                  </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      gap: "15px",
-                    }}
-                  >
-                    {/* Menampilkan co-advisor 2 */}
-                    <Typography variant="subtitle2">Co-Advisor 2</Typography>
-                    <Typography>{coAdvisor2}</Typography>
-                  </Div>
+                  {pengajuanJudul?.proposed_co_advisor1_id !== null && (
+                    <Div
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        gap: "15px",
+                      }}
+                    >
+                      {/* Menampilkan Co-advisor 1 */}
+                      <Typography variant="subtitle2">
+                        Mengusulkan Co-Advisor 1
+                      </Typography>
+                      <Typography>
+                        {
+                          daftarDosen?.find(
+                            (dosen) =>
+                              dosen.id ===
+                              pengajuanJudul?.proposed_co_advisor1_id
+                          )?.name
+                        }
+                      </Typography>
+                    </Div>
+                  )}
+                  {pengajuanJudul?.proposed_co_advisor2_id !== null && (
+                    <Div
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        gap: "15px",
+                      }}
+                    >
+                      {/* Menampilkan co-advisor 2 */}
+                      <Typography variant="subtitle2">
+                        Mengusulkan Co-Advisor 2
+                      </Typography>
+                      <Typography>
+                        {
+                          daftarDosen?.find(
+                            (dosen) =>
+                              dosen.id ===
+                              pengajuanJudul?.proposed_co_advisor2_id
+                          )?.name
+                        }
+                      </Typography>
+                    </Div>
+                  )}
                 </Div>
               </Div>
               {/* Select Dosen Pembimbing End */}
 
               {/* Button Ganti Dosen Pembimbing Start */}
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                sx={{ textTransform: "none", marginBottom: "25px" }}
-                onClick={handleClickOpen}
-              >
-                <BorderColorIcon fontSize="small" />
-                Ganti Advisor dan Co-Advisor
-              </Button>
-              {/* Button GAnti Dosen Pembimbing End */}
+              <Div hidden={userRole === "DOSEN_MK" ? false : true}>
+                {pengajuanJudul?.is_approve !== "Approve" && (
+                  <>
+                    {gantiAdvisorCoAdvisorButtonVisible && (
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="primary"
+                        sx={{ textTransform: "none", marginBottom: "25px" }}
+                        onClick={handleClickOpen}
+                      >
+                        <BorderColorIcon fontSize="small" />
+                        Ganti Advisor dan Co-Advisor
+                      </Button>
+                    )}
+                    {/* Button GAnti Dosen Pembimbing End */}
+                  </>
+                )}
 
-              {/* Radio Button Start */}
-              <Div
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <Typography component="div">
-                  Apakah Anda sudah melakukan konsultasi dengan Advisor sebelum
-                  mengajukan judul?
-                </Typography>
-                <Typography>Ya</Typography>
+                {/* Radio Button Start */}
+                <Div
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Typography variant="subtitle2" component="div">
+                    Apakah Anda sudah melakukan konsultasi dengan Advisor
+                    sebelum mengajukan judul?
+                  </Typography>
+                  <Typography>
+                    {pengajuanJudul?.is_consultation === true
+                      ? "Ya"
+                      : pengajuanJudul?.is_consultation === false
+                      ? "Tidak"
+                      : pengajuanJudul?.is_consultation}
+                  </Typography>
+                </Div>
               </Div>
             </Div>
-            <Div
-              sx={{
-                display: "flex",
-                padding: "12px 24px 12px 0px",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                gap: "12px",
-                alignSelf: "stretch",
-                background: "#F5F5F5",
-              }}
-            >
-              <Button
-                size="small"
-                variant="contained"
-                sx={{ textTransform: "none" }}
-                color="error"
-                onClick={handleTolakClick} // Menggunakan fungsi handleTolakClick saat tombol Tolak diklik
+            {pengajuanJudul?.is_approve !== "Approve" && (
+              <Div
+                hidden={userRole === "DOSEN_MK" ? false : true}
+                sx={{ width: "100%" }}
               >
-                Tolak
-              </Button>
-              <Button
-                size="small"
-                variant="contained"
-                sx={{ textTransform: "none" }}
-                color="primary"
-                onClick={handleTerimaClick} // Menggunakan fungsi handleTerimaClick saat tombol Terima diklik
-              >
-                Terima
-              </Button>
-            </Div>
+                {tolakTerimaButtonsVisible && (
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "12px 24px 12px 0px",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                      gap: "12px",
+                      alignSelf: "stretch",
+                      background: "#F5F5F5",
+                    }}
+                  >
+                    <Button
+                      size="small"
+                      variant="contained"
+                      sx={{ textTransform: "none" }}
+                      color="error"
+                      onClick={handleTolakClick} // Menggunakan fungsi handleTolakClick saat tombol Tolak diklik
+                    >
+                      Tolak
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      sx={{ textTransform: "none" }}
+                      color="primary"
+                      onClick={handleTerimaClick} // Menggunakan fungsi handleTerimaClick saat tombol Terima diklik
+                    >
+                      Terima
+                    </Button>
+                  </Div>
+                )}
+              </Div>
+            )}
           </Div>
         </Div>
         {/* Element 2 End */}
@@ -756,177 +813,48 @@ const PengajuanJudulDosenSkripsi = () => {
           </DialogTitle>
           <DialogContent>
             <FormControl fullWidth sx={{ margin: "25px 0 25px 0" }}>
-              <InputLabel>Advisor</InputLabel>
+              <InputLabel>Mengusulkan Advisor</InputLabel>
               <Select
-                label="Advisor"
+                label="Mengusulkan Advisor"
                 value={advisor}
                 onChange={handleAdvisorChange}
               >
-                <MenuItem value={"Andrew T. Liem, MT, PhD"}>
-                  Andrew T. Liem, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Green Mandias, SKom, MCs"}>
-                  Green Mandias, SKom, MCs
-                </MenuItem>
-                <MenuItem value={"Stenly R. Pungus, MT, PhD"}>
-                  Stenly R. Pungus, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Debby E. Sondakh, MT, PhD"}>
-                  Debby E. Sondakh, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Ir. Edson Y. Putra, MKom"}>
-                  Ir. Edson Y. Putra, MKom
-                </MenuItem>
-                <MenuItem value={"Green A. Sandag, SKom, MS"}>
-                  Green A. Sandag, SKom, MS
-                </MenuItem>
-                <MenuItem value={"Jacquline M. S. Waworundeng, ST, MT"}>
-                  Jacquline M. S. Waworundeng, ST, MT
-                </MenuItem>
-                <MenuItem value={"Jimmy H. Moedjahedy, SKom, MKom, MM"}>
-                  Jimmy H. Moedjahedy, SKom, MKom, MM
-                </MenuItem>
-                <MenuItem value={"Joe Y. Mambu, BSIT, MCIS"}>
-                  Joe Y. Mambu, BSIT, MCIS
-                </MenuItem>
-                <MenuItem value={"Lidya C. Laoh, SKom, MMSi"}>
-                  Lidya C. Laoh, SKom, MMSi
-                </MenuItem>
-                <MenuItem value={"Marshal Tombeng,"}>Marshal Tombeng,</MenuItem>
-                <MenuItem value={"Oktoverano H. Lengkong, SKom, MDs, MM"}>
-                  Oktoverano H. Lengkong, SKom, MDs, MM
-                </MenuItem>
-                <MenuItem value={"Reymon Rotikan, SKom, MS, MM"}>
-                  Reymon Rotikan, SKom, MS, MM
-                </MenuItem>
-                <MenuItem value={"Reynoldus A. Sahulata, SKom, MM"}>
-                  Reynoldus A. Sahulata, SKom, MM
-                </MenuItem>
-                <MenuItem value={"Rolly Lontaan, MKom"}>
-                  Rolly Lontaan, MKom
-                </MenuItem>
-                <MenuItem value={"Semmy W. Taju, SKom"}>
-                  Semmy W. Taju, SKom
-                </MenuItem>
-                <MenuItem value={"Senly I. Adam, SKom, MSc"}>
-                  Senly I. Adam, SKom, MSc
-                </MenuItem>
+                <MenuItem value="">-</MenuItem>
+                {daftarDosen?.map((dosen) => (
+                  <MenuItem key={dosen.id} value={dosen.id}>
+                    {dosen.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <FormControl fullWidth sx={{ marginBottom: "25px" }}>
-              <InputLabel>Co-Advisor 1</InputLabel>
+              <InputLabel>Mengusulkan Co-Advisor 1</InputLabel>
               <Select
-                label="Co-Advisor 1"
+                label="Mengusulkan Co-Advisor 1"
                 value={coAdvisor1}
                 onChange={handleCoAdvisor1Change}
               >
-                <MenuItem value={"Andrew T. Liem, MT, PhD"}>
-                  Andrew T. Liem, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Green Mandias, SKom, MCs"}>
-                  Green Mandias, SKom, MCs
-                </MenuItem>
-                <MenuItem value={"Stenly R. Pungus, MT, PhD"}>
-                  Stenly R. Pungus, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Debby E. Sondakh, MT, PhD"}>
-                  Debby E. Sondakh, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Ir. Edson Y. Putra, MKom"}>
-                  Ir. Edson Y. Putra, MKom
-                </MenuItem>
-                <MenuItem value={"Green A. Sandag, SKom, MS"}>
-                  Green A. Sandag, SKom, MS
-                </MenuItem>
-                <MenuItem value={"Jacquline M. S. Waworundeng, ST, MT"}>
-                  Jacquline M. S. Waworundeng, ST, MT
-                </MenuItem>
-                <MenuItem value={"Jimmy H. Moedjahedy, SKom, MKom, MM"}>
-                  Jimmy H. Moedjahedy, SKom, MKom, MM
-                </MenuItem>
-                <MenuItem value={"Joe Y. Mambu, BSIT, MCIS"}>
-                  Joe Y. Mambu, BSIT, MCIS
-                </MenuItem>
-                <MenuItem value={"Lidya C. Laoh, SKom, MMSi"}>
-                  Lidya C. Laoh, SKom, MMSi
-                </MenuItem>
-                <MenuItem value={"Marshal Tombeng,"}>Marshal Tombeng,</MenuItem>
-                <MenuItem value={"Oktoverano H. Lengkong, SKom, MDs, MM"}>
-                  Oktoverano H. Lengkong, SKom, MDs, MM
-                </MenuItem>
-                <MenuItem value={"Reymon Rotikan, SKom, MS, MM"}>
-                  Reymon Rotikan, SKom, MS, MM
-                </MenuItem>
-                <MenuItem value={"Reynoldus A. Sahulata, SKom, MM"}>
-                  Reynoldus A. Sahulata, SKom, MM
-                </MenuItem>
-                <MenuItem value={"Rolly Lontaan, MKom"}>
-                  Rolly Lontaan, MKom
-                </MenuItem>
-                <MenuItem value={"Semmy W. Taju, SKom"}>
-                  Semmy W. Taju, SKom
-                </MenuItem>
-                <MenuItem value={"Senly I. Adam, SKom, MSc"}>
-                  Senly I. Adam, SKom, MSc
-                </MenuItem>
+                <MenuItem value="">-</MenuItem>
+                {daftarDosen?.map((dosen) => (
+                  <MenuItem key={dosen.id} value={dosen.id}>
+                    {dosen.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <FormControl fullWidth>
-              <InputLabel>Co-Advisor 2</InputLabel>
+              <InputLabel>Mengusulkan Co-Advisor 2</InputLabel>
               <Select
-                label="Co-Advisor 2"
+                label="Mengusulkan Co-Advisor 2"
                 value={coAdvisor2}
                 onChange={handleCoAdvisor2Change}
               >
-                <MenuItem value={"Andrew T. Liem, MT, PhD"}>
-                  Andrew T. Liem, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Green Mandias, SKom, MCs"}>
-                  Green Mandias, SKom, MCs
-                </MenuItem>
-                <MenuItem value={"Stenly R. Pungus, MT, PhD"}>
-                  Stenly R. Pungus, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Debby E. Sondakh, MT, PhD"}>
-                  Debby E. Sondakh, MT, PhD
-                </MenuItem>
-                <MenuItem value={"Ir. Edson Y. Putra, MKom"}>
-                  Ir. Edson Y. Putra, MKom
-                </MenuItem>
-                <MenuItem value={"Green A. Sandag, SKom, MS"}>
-                  Green A. Sandag, SKom, MS
-                </MenuItem>
-                <MenuItem value={"Jacquline M. S. Waworundeng, ST, MT"}>
-                  Jacquline M. S. Waworundeng, ST, MT
-                </MenuItem>
-                <MenuItem value={"Jimmy H. Moedjahedy, SKom, MKom, MM"}>
-                  Jimmy H. Moedjahedy, SKom, MKom, MM
-                </MenuItem>
-                <MenuItem value={"Joe Y. Mambu, BSIT, MCIS"}>
-                  Joe Y. Mambu, BSIT, MCIS
-                </MenuItem>
-                <MenuItem value={"Lidya C. Laoh, SKom, MMSi"}>
-                  Lidya C. Laoh, SKom, MMSi
-                </MenuItem>
-                <MenuItem value={"Marshal Tombeng,"}>Marshal Tombeng,</MenuItem>
-                <MenuItem value={"Oktoverano H. Lengkong, SKom, MDs, MM"}>
-                  Oktoverano H. Lengkong, SKom, MDs, MM
-                </MenuItem>
-                <MenuItem value={"Reymon Rotikan, SKom, MS, MM"}>
-                  Reymon Rotikan, SKom, MS, MM
-                </MenuItem>
-                <MenuItem value={"Reynoldus A. Sahulata, SKom, MM"}>
-                  Reynoldus A. Sahulata, SKom, MM
-                </MenuItem>
-                <MenuItem value={"Rolly Lontaan, MKom"}>
-                  Rolly Lontaan, MKom
-                </MenuItem>
-                <MenuItem value={"Semmy W. Taju, SKom"}>
-                  Semmy W. Taju, SKom
-                </MenuItem>
-                <MenuItem value={"Senly I. Adam, SKom, MSc"}>
-                  Senly I. Adam, SKom, MSc
-                </MenuItem>
+                <MenuItem value="">-</MenuItem>
+                {daftarDosen?.map((dosen) => (
+                  <MenuItem key={dosen.id} value={dosen.id}>
+                    {dosen.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </DialogContent>
@@ -944,12 +872,87 @@ const PengajuanJudulDosenSkripsi = () => {
               Batal
             </Button>
             <Button onClick={handleSave} color="primary" variant="contained">
-              Simpan
+              Ganti
             </Button>
           </DialogActions>
         </Dialog>
         {/* Dialog Select Dosen Pembimbing Start */}
       </Div>
+
+      {/* Dialog konfirmasi Tolak */}
+      <Dialog
+        open={confirmTolakOpen}
+        onClose={() => setConfirmTolakOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle variant="subtitle2">Menolak Pengajuan Judul</DialogTitle>
+        <DialogContent>
+          <Typography>Apakah Anda yakin ingin menerima judul ini?</Typography>
+        </DialogContent>
+        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+          <Button
+            onClick={() => setConfirmTolakOpen(false)}
+            sx={{
+              background: "white",
+              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+              textTransform: "none",
+              color: "black",
+            }}
+          >
+            Batal
+          </Button>
+          <Button
+            onClick={handleTolak}
+            sx={{
+              textTransform: "none",
+              background: "#FC0",
+              color: "black",
+              "&:hover": {
+                color: "#FC0",
+              },
+            }}
+          >
+            Tolak
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Dialog konfirmasi Terima */}
+      <Dialog
+        open={confirmTerimaOpen}
+        onClose={() => setConfirmTerimaOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle variant="subtitle2">Konfirmasi Terima</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Apakah Anda yakin ingin menerima pengajuan ini?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+          <Button
+            onClick={() => setConfirmTerimaOpen(false)}
+            sx={{
+              background: "white",
+              boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+              textTransform: "none",
+              color: "black",
+            }}
+          >
+            Batal
+          </Button>
+          <Button
+            onClick={handleTerima}
+            variant="contained"
+            sx={{ textTransform: "none" }}
+            color="primary"
+          >
+            Terima
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Div>
   );
 };

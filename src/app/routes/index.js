@@ -6,17 +6,16 @@ import mahasiswaRoutes from "./BA-mahasiswaRoutes";
 import NotFound from "../pages/404";
 import Unauthorized from "app/pages/unauthorized";
 import operatorRoutes from "./operatorRoutes";
-import dosenRoutes from "./dosenRoutes";
-import sekertarisRoutes from "./sekertarisRoutes";
-import advisorRoutes from "./advisorRoutes";
-import coAdvisorRoutes from "./coAdvisorRoutes";
-import dosenSkripsiRoutes from "./dosenSkripsiRoutes";
-import ketuaPenelisRoutes from "./ketuaPenelisRoutes";
-import anggotaPenelisRoutes from "./anggotaPenelisRoutes";
 import dosenPembimbingRoutes from "./BA-dosenPembimbingRoutes";
 import dekanRoutes from "./BA-dekanRoutes";
 import kepalaProgramStudiRoutes from "./BA-kepalaProgramStudiRoutes";
 import sekretarisDekanRoutes from "./BA-sekDekanRoutes";
+import skripsiAppDekanRoutes from "./skripsi_app_dekan_routes";
+import skripsiAppKaprodiRoutes from "./skripsi_app_kaprodi_routes";
+import skripsiAppDosenRoutes from "./skripsi_app_dosen_routes";
+import skripsiAppSekretarisRoutes from "./skripsi_app_sekretaris_routes";
+import skripsiAppMahasiswaRoutes from "./skripsi_app_mahasiswa_routes";
+import adminRoutes from "./adminRoutes";
 /**
  routes which you want to make accessible to both authenticated and anonymous users
  **/
@@ -35,20 +34,17 @@ const routesForAuthenticatedOnly = [
   },
   ...mahasiswaRoutes,
   ...operatorRoutes,
-  ...dosenRoutes,
-  ...sekertarisRoutes,
-  ...advisorRoutes,
-  ...coAdvisorRoutes,
-  ...dosenSkripsiRoutes,
-  ...ketuaPenelisRoutes,
-  ...anggotaPenelisRoutes,
-  // ...calonTamatanRoutes,
-  ...mahasiswaRoutes,
   ...dosenPembimbingRoutes,
   ...dekanRoutes,
   ...kepalaProgramStudiRoutes,
   ...sekretarisDekanRoutes,
   //...operatorRoutes,
+  ...skripsiAppDekanRoutes,
+  ...skripsiAppKaprodiRoutes,
+  ...skripsiAppDosenRoutes,
+  ...skripsiAppSekretarisRoutes,
+  ...skripsiAppMahasiswaRoutes,
+  ...adminRoutes,
 ];
 
 /**

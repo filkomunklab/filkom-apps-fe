@@ -14,6 +14,7 @@ import { ROLES } from "app/utils/constants/roles";
 import {
   adminMenus,
   dekanMenus,
+  dosenMKMenus,
   dosenMenus,
   kaprodiMenus,
   mahasiswaMenus,
@@ -22,6 +23,7 @@ import {
   registerMenus,
   sekretarisMenus,
 } from "./menus";
+import { Rocket } from "@mui/icons-material";
 
 const roleCheck = () => {
   const roles = JSON.parse(localStorage.getItem("user"))?.role;
@@ -33,17 +35,26 @@ const roleCheck = () => {
     case ROLES.ADMIN:
       return adminMenus;
     case ROLES.MAHASISWA:
+    case ROLES.ALUMNI:
       if (JSON.parse(localStorage.getItem("user")).status === "GRADUATE") {
         return mahasiswaMenusGraduate;
       }
       return mahasiswaMenus;
     case ROLES.DOSEN:
+      if (roles.includes(ROLES.DEKAN)) {
+        return dekanMenus;
+      } else if (roles.includes(ROLES.KAPRODI)) {
+        return kaprodiMenus;
+      } else if (roles.includes(ROLES.DOSEN_MK)) {
+        return dosenMKMenus;
+      }
       return dosenMenus;
     case ROLES.DEKAN:
       return dekanMenus;
     case ROLES.KAPRODI:
       return kaprodiMenus;
     case ROLES.SEKRETARIS:
+    case ROLES.OPERATOR_FAKULTAS:
       return sekretarisMenus;
     case ROLES.REGISTER:
       return registerMenus;
@@ -81,7 +92,7 @@ const Sidebar = () => {
             </Div>
           }
         >
-          <JumboVerticalNavbar translate items={sekretarisMenus} />
+          <JumboVerticalNavbar translate items={validatedMenus} />
         </Suspense>
         <Div
           sx={{
@@ -97,12 +108,37 @@ const Sidebar = () => {
 };
 
 const SidebarHeader = () => {
+  const navigate = useNavigate();
+
   // const { sidebarOptions, setSidebarOptions } = useJumboLayoutSidebar();
   // const { sidebarTheme } = useJumboSidebarTheme();
 
   // const isMiniAndClosed = React.useMemo(() => {
   //   return sidebarOptions?.view === SIDEBAR_VIEWS.MINI && !sidebarOptions?.open;
   // }, [sidebarOptions.view, sidebarOptions.open]);
+  const name = JSON.parse(localStorage.getItem("user"))?.name;
+  const role = JSON.parse(localStorage.getItem("user"))?.role;
+
+  console.log(role);
+
+  const checkArrayRole = () =>
+    role?.find(
+      (role) =>
+        role === ROLES.DEKAN ||
+        role === ROLES.KAPRODI ||
+        role === ROLES.OPERATOR_LPMI ||
+        role === ROLES.OPERATOR_FAKULTAS
+    )
+      ? role?.find(
+          (role) =>
+            role === ROLES.DEKAN ||
+            role === ROLES.KAPRODI ||
+            role === ROLES.OPERATOR_LPMI ||
+            role === ROLES.OPERATOR_FAKULTAS
+        )
+      : "DOSEN";
+
+  const accessRole = typeof role === "string" ? role : checkArrayRole();
 
   return (
     <React.Fragment>
@@ -115,7 +151,11 @@ const SidebarHeader = () => {
           borderBottomColor: "divider",
           display: "flex",
           gap: "16px",
+          ":hover": {
+            cursor: "pointer",
+          },
         }}
+        onClick={() => navigate("/bimbingan-akademik/profile")}
       >
         <Avatar
           //   src={authUser.profile_pic}
@@ -123,9 +163,9 @@ const SidebarHeader = () => {
           sx={{ width: 48, height: 48 }}
         />
         <Div>
-          <Typography variant={"h5"}>{`Darell Yuhu`}</Typography>
+          <Typography variant={"h5"}>{name}</Typography>
           <Typography variant={""} color="text.secondary">
-            Mahasiswa Ganteng :v
+            {accessRole}
           </Typography>
         </Div>
       </Div>
@@ -140,12 +180,12 @@ const SidebarFooter = () => {
     label: "Settings",
     type: "section",
     children: [
-      {
-        uri: "/change-password",
-        label: "Change Password",
-        type: "nav-item",
-        icon: <VpnKeyIcon sx={{ fontSize: 20 }} />,
-      },
+      // {
+      //   uri: "/change-password",
+      //   label: "Change Password",
+      //   type: "nav-item",
+      //   icon: <VpnKeyIcon sx={{ fontSize: 20 }} />,
+      // },
       {
         onClick: () => {
           localStorage.clear();

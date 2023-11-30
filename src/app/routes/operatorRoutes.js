@@ -2,16 +2,21 @@
 import Page from "@jumbo/shared/Page";
 import DaftarAlumni from "app/pages/KlabatBridge/Operator/DaftarAlumni";
 import FormTracerStudy from "app/pages/KlabatBridge/Operator/FormTracerStudy";
-import GrafikAlumni from "app/pages/KlabatBridge/Operator/GrafikAlumni";
 import Dashboard from "app/pages/KlabatBridge/Operator/Dashboard";
 import ViewDetailStudent from "app/pages/KlabatBridge/Operator/ViewDetailStudent";
 import PengisianSPT from "app/pages/KlabatBridge/Operator/PengisianSPT";
-import DaftarCalonTamatan from "app/pages/KlabatBridge/Operator/DaftarCalonTamatan";
-import HomeAlumni from "app/pages/KlabatBridge/Operator/HomeAlumni";
-import HomeCalonTamatan from "app/pages/KlabatBridge/Operator/HomeCalonTamatan";
+import DaftarCalonTamatanRegister from "app/pages/KlabatBridge/Operator/DaftarCalonTamatanRegister";
 import DaftarCalonTamatanFakultas from "app/pages/KlabatBridge/Operator/DaftarCalonTamatanFakultas";
+import HomeAlumni from "app/pages/KlabatBridge/Operator/HomeAlumni";
+import HomeCalonTamatan from "app/pages/KlabatBridge/Operator/HomeCalonTamatan"; 
+import DaftarAlumniFakultas from "app/pages/KlabatBridge/Operator/DaftarAlumniFakultas";
+import IsiForm from "app/pages/KlabatBridge/Operator/HomeCalonTamatan/IsiForm"
+import React, { useState } from 'react';
+
+
 
 const operatorRoutes = [
+  
   {
     path: "klabat-bridge/dashboard",
     element: <Page component={Dashboard} />,
@@ -21,12 +26,12 @@ const operatorRoutes = [
     element: <Page component={DaftarAlumni} />,
   },
   {
-    path: "klabat-bridge/form-tracer-study",
-    element: <Page component={FormTracerStudy} />,
+    path: "klabat-bridge/daftar-alumni-fakultas",
+    element: <Page component={DaftarAlumniFakultas} />,
   },
   {
-    path: "klabat-bridge/grafik-alumni",
-    element: <Page component={GrafikAlumni} />,
+    path: "klabat-bridge/form-tracer-study",
+    element: <Page component={FormTracerStudy} />,
   },
   {
     path: "klabat-bridge/view-detail-student",
@@ -37,8 +42,8 @@ const operatorRoutes = [
     element: <Page component={PengisianSPT} />,
   },
   {
-    path: "klabat-bridge/daftar-calon-tamatan",
-    element: <Page component={DaftarCalonTamatan} />,
+    path: "klabat-bridge/daftar-calon-tamatan-register",
+    element: <Page component={DaftarCalonTamatanRegister} />,
   },
   {
     path: "klabat-bridge/daftar-calon-tamatan-fakultas",
@@ -52,6 +57,12 @@ const operatorRoutes = [
     path: "klabat-bridge/home-calon-tamatan",
     element: <Page component={HomeCalonTamatan} />,
   },
+  {
+    path: "klabat-bridge/isi-form",
+    element: <Page component={IsiForm} />,
+  },
+  
+  
 ];
 
 export default operatorRoutes;

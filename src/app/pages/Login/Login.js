@@ -97,11 +97,13 @@ const Login = () => {
         <Formik
           validateOnChange={true}
           validationSchema={signInSchema}
-          initialValues={{
-            username: "admin",
-            password: "12345",
-            loginAs: "admin",
-          }}
+          initialValues={
+            {
+              // username: "admin",
+              // password: "12345",
+              // loginAs: "admin",
+            }
+          }
           onSubmit={(data, { setSubmitting }) => {
             console.log(data);
             setSubmitting(true);

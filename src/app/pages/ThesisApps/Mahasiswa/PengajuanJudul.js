@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
   Chip,
   Dialog,
   DialogContent,
-  Menu,
   MenuItem,
   Table,
   TableBody,
@@ -25,17 +25,131 @@ import {
   DialogTitle,
   DialogContentText,
   DialogActions,
+  Paper,
 } from "@mui/material";
+import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
+import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
+import { pdfjs } from "react-pdf";
+import AttachmentIcon from "@mui/icons-material/Attachment";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
+// View Document pengajuan judul
+const PDFViewerPengajuanJudul = ({ pengajuanJudulFile }) => {
+  const viewPDFPengajuanJudul = () => {
+    // Buat URL objek untuk file PDF
+    const pdfURL = URL.createObjectURL(pengajuanJudulFile);
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span onClick={viewPDFPengajuanJudul}>Lihat</span>
+    </div>
+  );
+};
 
 const PengajuanJudul = () => {
+  // state - simpan request pengajuan judul
+  const [pengajuanJudul, setPengajuanJudul] = useState();
+  // state - simpan request daftar dosen
+  const [daftarDosen, setDaftarDosen] = useState([]);
+
+  const groupId = useParams().groupId;
+  // console.log("group id: ", groupId);
+  const [progress, setProgress] = useState(null);
+  const [submissionId, setSubmissionId] = useState(null);
+
+  const [initialPengajuanJudulFile, setInitialPengajuanJudulFile] =
+    useState(null);
+  const [initialPengajuanJudulFileName, setInitialPengajuanJudulFileName] =
+    useState("");
+  const [initialPengajuanJudulFileSize, setInitialPengajuanJudulFileSize] =
+    useState([]);
+
+  if (progress !== null) {
+    console.log("Progress:", progress);
+  }
+  if (submissionId !== null) {
+    console.log("submission_id:", submissionId);
+  }
+
+  const userRole = useParams().role;
+  console.log("role user akses page: ", userRole);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  console.log("role user yang sign in: ", role);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchPengajuanJudulData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/submission/${submissionId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Atur state 'setPengajuanJudul' dengan data dari respons
+        setPengajuanJudul(response.data.data);
+        setJudul(response.data.data.title || "");
+        setAdvisor(response.data.data.proposed_advisor_id || "");
+        setCoAdvisor1(response.data.data.proposed_co_advisor1_id || "");
+        setCoAdvisor2(response.data.data.proposed_co_advisor2_id || "");
+        setSelectedOption(response.data.data.is_consultation ? "ya" : "tidak");
+        setKonsultasi(response.data.data.is_consultation);
+
+        const newFileData = {
+          name: response.data.data.file_name,
+          size: response.data.data.file_size,
+          path: response.data.data.file_path,
+        };
+        setPengajuanJudulUploadedFiles([newFileData]);
+        setInitialPengajuanJudulFile([newFileData]);
+        setInitialPengajuanJudulFileName(response.data.data.file_name);
+        setInitialPengajuanJudulFileSize(response.data.data.file_size);
+
+        console.log("Request Get pengajuan judul: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil pengajuan judul:",
+          error
+        );
+      }
+    };
+    const fetchDaftarDosenData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/dosen-list`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDaftarDosen(response.data.data);
+        console.log("Request Get daftar dosen: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil daftar dosen:", error);
+      }
+    };
+    fetchPengajuanJudulData();
+    fetchDaftarDosenData();
+  }, [token, submissionId]);
+
   // State untuk input select
   const [selectedOption, setSelectedOption] = useState("");
-
+  const [konsultasi, setKonsultasi] = useState(null);
   // menyembunyikan status
   const [isStatusVisible, setStatusVisible] = useState(true);
-
   const [initialSelectedOption, setInitialSelectedOption] = useState("");
-
   const [advisor, setAdvisor] = useState(""); // State untuk advisor
   const [coAdvisor1, setCoAdvisor1] = useState(""); // State untuk co-advisor 1
   const [coAdvisor2, setCoAdvisor2] = useState(""); // State untuk co-advisor 2
@@ -43,46 +157,19 @@ const PengajuanJudul = () => {
   // State untuk option yang dipilih pada dialog
 
   // State untuk mengelola berbagai data termasuk judul, latar belakang, dll.
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [judul, setJudul] = useState(
-    "Pengembangan Sistem Informasi Skripsi di Fakultas Ilmu Komputer Universitas Klabat"
-  );
-  const [latarBelakang, setLatarBelakang] = useState("tuliskan kalimat disini");
-  const [rumusanMasalah, setRumusanMasalah] = useState(
-    "tuliskan kalimat disini"
-  );
-  const [tujuan, setTujuan] = useState("tuliskan kalimat disini");
-  const [manfaat, setManfaat] = useState("tuliskan kalimat disini ");
-  const [cakupan, setCakupan] = useState("tuliskan kalimat disini");
-  const [batasan, setBatasan] = useState("tuliskan kalimat disini");
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [judul, setJudul] = useState("");
   // State untuk manajemen dialog konfirmasi perubahan judul
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [initialJudul, setInitialJudul] = useState(judul);
-  const [initialLatarBelakang, setInitialLatarBelakang] =
-    useState(latarBelakang);
-  const [initialRumusanMasalah, setInitialRumusanMasalah] =
-    useState(rumusanMasalah);
-  const [initialTujuan, setInitialTujuan] = useState(tujuan);
-  const [initialManfaat, setInitialManfaat] = useState(manfaat);
-  const [initialCakupan, setInitialCakupan] = useState(cakupan);
-  const [initialBatasan, setInitialBatasan] = useState(batasan);
 
   const handleCancelAllEdits = () => {
     setJudul(initialJudul);
-    setLatarBelakang(initialLatarBelakang);
-    setRumusanMasalah(initialRumusanMasalah);
-    setTujuan(initialTujuan);
-    setManfaat(initialManfaat);
-    setCakupan(initialCakupan);
-    setBatasan(initialBatasan);
     setIsEditing(false);
     setSelectedOption(initialSelectedOption);
     setStatusVisible(true);
   };
-
-  const open = Boolean(anchorEl);
 
   // Fungsi yang dipanggil ketika tombol "Ubah" ditekan
   const handleEditClick = () => {
@@ -90,20 +177,22 @@ const PengajuanJudul = () => {
     setInitialSelectedOption(selectedOption);
     setStatusVisible(false); // Menyembunyikan status dan chip
     setInitialJudul(judul); // Simpan nilai awal judul
-    setInitialLatarBelakang(latarBelakang); // Simpan nilai awal latar belakang
-    setInitialTujuan(tujuan); // Simpan nilai awal tujuan
-    setInitialManfaat(manfaat); // Simpan nilai awal manfaat
-    setInitialCakupan(cakupan); // Simpan nilai awal cakupan
-    setInitialBatasan(batasan); // Simpan nilai awal batasan
   };
 
   // Fungsi yang dipanggil ketika tombol "Batal" ditekan dalam mode edit
   const handleCancelEdit = () => {
     setJudul(initialJudul);
-    setLatarBelakang(initialLatarBelakang); // Kembalikan nilai awal latar belakang
     setIsEditing(false);
     setSelectedOption(initialSelectedOption);
     setStatusVisible(true); // Menampilkan kembali status dan chip
+    resetUploadedFile(); // Panggil fungsi resetUploadedFile
+  };
+
+  const resetUploadedFile = () => {
+    setPengajuanJudulFile(initialPengajuanJudulFile);
+    setSelectedPengajuanJudulFileName(initialPengajuanJudulFileName);
+    setPengajuanJudulUploadedFiles(initialPengajuanJudulFile);
+    setIsPaymentUploaded(false);
   };
 
   // Fungsi yang dipanggil ketika tombol "Simpan" ditekan
@@ -127,34 +216,160 @@ const PengajuanJudul = () => {
     setIsConfirmationOpen(false);
   };
 
-  // Fungsi yang dipanggil ketika isi latar belakang berubah
-  const handleLatarBelakangChange = (event) => {
-    setLatarBelakang(event.target.value);
+  const [pengajuanJudulFile, setPengajuanJudulFile] = useState(null);
+  const [selectedPengajuanJudulFileName, setSelectedPengajuanJudulFileName] =
+    useState("");
+  const [pengajuanJudulUploadedFiles, setPengajuanJudulUploadedFiles] =
+    useState([]);
+  // Tambahkan state untuk melacak apakah file pembayaran telah diunggah
+  const [isPaymentUploaded, setIsPaymentUploaded] = useState(false);
+
+  const onPengajuanJudulFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      if (pengajuanJudulUploadedFiles.length === 0) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          // e.target.result berisi data URL dari file
+          const dataURL = e.target.result;
+
+          // Mengonversi data URL ke base64
+          const base64String = dataURL.split(",")[1];
+
+          setPengajuanJudulFile(file);
+          setSelectedPengajuanJudulFileName(file.name);
+
+          // Tambahkan data file baru ke state paymentUploadedFiles
+          const newFileData = {
+            name: file.name,
+            size: file.size,
+            buffer: base64String,
+          };
+          setPengajuanJudulUploadedFiles([newFileData]);
+          // Set isPaymentUploaded menjadi true
+          setIsPaymentUploaded(true);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // alert(
+        //   "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
+        // );
+      }
+    }
+  };
+  // Fungsi untuk menghapus file Pengajuan Judul
+  const handleDeletePengajuanJudulFile = (index) => {
+    if (index >= 0 && index < pengajuanJudulUploadedFiles.length && isEditing) {
+      // Hapus file dari state
+      const updatedFiles = [...pengajuanJudulUploadedFiles];
+      updatedFiles.splice(index, 1);
+      setPengajuanJudulUploadedFiles(updatedFiles);
+      // Reset file yang dipilih
+      setPengajuanJudulFile(null);
+      setSelectedPengajuanJudulFileName("");
+      // Juga set isPaymentUploaded menjadi false karena file dihapus
+      setIsPaymentUploaded(false);
+    }
   };
 
-  // Fungsi yang dipanggil ketika isi rumusan masalah berubah
-  const handleRumusanMasalahChange = (event) => {
-    setRumusanMasalah(event.target.value);
+  // fungsi - tombol menumtup Konfirmasi perbarui
+  const handleClose = () => {
+    setIsEditing(false);
   };
 
-  // Fungsi yang dipanggil ketika isi tujuan berubah
-  const handleTujuanChange = (event) => {
-    setTujuan(event.target.value);
+  // fungsi - radio button konsultasi
+  const handleOptionChange = (e) => {
+    const value = e.target.value;
+    setSelectedOption(value);
+
+    if (value === "ya") {
+      setKonsultasi(true);
+    } else if (value === "tidak") {
+      setKonsultasi(false);
+    } else {
+      // Handle kasus ketika tidak ada opsi yang dipilih
+      setKonsultasi(false); // Atau Anda bisa menentukan nilai yang sesuai dengan kebutuhan Anda.
+    }
   };
 
-  // Fungsi yang dipanggil ketika isi manfaat berubah
-  const handleManfaatChange = (event) => {
-    setManfaat(event.target.value);
-  };
+  const handleUpdatePengajuanJudul = () => {
+    closeConfirmationDialog();
 
-  // Fungsi yang dipanggil ketika isi cakupan berubah
-  const handleCakupanChange = (event) => {
-    setCakupan(event.target.value);
-  };
+    const submission_file = {
+      file_name: pengajuanJudulUploadedFiles[0].name,
+      file_size: pengajuanJudulUploadedFiles[0].size.toString(),
+      buffer: pengajuanJudulUploadedFiles[0].buffer,
+    };
+    const pengajuanData = {
+      title: judul,
+      is_consultation: konsultasi,
+      proposed_advisor_id: advisor,
+      proposed_co_advisor1_id: coAdvisor1 || null,
+      proposed_co_advisor2_id: coAdvisor2 || null,
+      submission_file,
+    };
+    console.log(pengajuanData);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/submission/${submissionId}`,
+        pengajuanData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        // batalkan edit/perbarui
+        setIsEditing(false);
+        closeConfirmationDialog();
+        handleCancelEdit();
+        handleCancelAllEdits();
 
-  // Fungsi yang dipanggil ketika isi batasan berubah
-  const handleBatasanChange = (event) => {
-    setBatasan(event.target.value);
+        const fetchPengajuanJudulData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/submission/${submissionId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            // Atur state 'setPengajuanJudul' dengan data dari respons
+            setPengajuanJudul(response.data.data);
+            setJudul(response.data.data.title || "");
+            setAdvisor(response.data.data.proposed_advisor_id || "");
+            setCoAdvisor1(response.data.data.proposed_co_advisor1_id || "");
+            setCoAdvisor2(response.data.data.proposed_co_advisor2_id || "");
+            setSelectedOption(
+              response.data.data.is_consultation ? "ya" : "tidak"
+            );
+            setKonsultasi(response.data.data.is_consultation);
+
+            const newFileData = {
+              name: response.data.data.file_name,
+              size: response.data.data.file_size,
+              path: response.data.data.file_path,
+            };
+            setPengajuanJudulUploadedFiles([newFileData]);
+            setInitialPengajuanJudulFile([newFileData]);
+            setInitialPengajuanJudulFileName(response.data.data.file_name);
+            setInitialPengajuanJudulFileSize(response.data.data.file_size);
+
+            console.log("Request Get pengajuan judul: ", response.data.data);
+          } catch (error) {
+            console.error(
+              "Terjadi kesalahan saat mengambil pengajuan judul:",
+              error
+            );
+          }
+        };
+        fetchPengajuanJudulData();
+      })
+      .catch((error) => {
+        console.error("Terjadi kesalahan:", error);
+      });
   };
   return (
     <Div>
@@ -169,7 +384,7 @@ const PengajuanJudul = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Beranda
+          Pengajuan Judul
         </Typography>
       </Div>
 
@@ -193,139 +408,15 @@ const PengajuanJudul = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          {/* Riwayat Log Start */}
-          <Div
-            sx={{
-              width: "320px",
-              height: "500px",
-              borderRadius: "6px",
-              border: "1px solid rgba(26, 56, 96, 0.10)",
-              background: "#FFF",
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(data) => {
+              if (data) {
+                setProgress(data.progress);
+                setSubmissionId(data.submission_id);
+              }
             }}
-          >
-            Riwayat Log
-          </Div>
-          {/* Riwayat Log End */}
-
-          {/* Dosen Pembimbing Start */}
-          <Div
-            sx={{
-              display: "flex",
-              width: "320px",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              borderRadius: "6px",
-              border: "1px solid rgba(26, 56, 96, 0.10)",
-              background: "#FFF",
-            }}
-          >
-            {/* Advisor */}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Advisor
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-            {/* Co-Advisor 1*/}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Co-Advisor 1
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-            {/* Co-Advisor 2*/}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Co-Advisor 2
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-          </Div>
-          {/* Dosen Pembimbing End */}
+          />
         </Div>
         {/* Element 1 End */}
         {/* Element 2 Start */}
@@ -342,185 +433,12 @@ const PengajuanJudul = () => {
           }}
         >
           {/* Menu Horizontal Start */}
+          {/* MAHASISWA */}
           <Div
-            sx={{
-              display: "flex",
-              // padding: "5px 16px",
-              width: "100%",
-              alignSelf: "stretch",
-              borderRadius: "8px",
-              border: "1px solid #E0E0E0",
-              background: "#FFF",
-              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
-              flexDirection: "column",
-            }}
+            hidden={userRole.includes("MAHASISWA") ? false : true}
+            sx={{ width: "100%" }}
           >
-            <Div sx={{ width: "100%", display: "flex" }}>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    sx={{
-                      fontSize: "13px",
-                      padding: "6px 16px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Beranda
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    sx={{
-                      // width: "150px",
-                      fontSize: "13px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Pengajuan Judul
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    disabled
-                    sx={{
-                      // width: "130px",
-                      fontSize: "13px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Konsultasi
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Button
-                  disabled
-                  onClick={(event) => setAnchorEl(event.currentTarget)}
-                  sx={{
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: "#006AF5",
-                    },
-                  }}
-                >
-                  Pengajuan Proposal
-                </Button>
-                <Menu
-                  disabled
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={() => setAnchorEl(null)}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Proposal
-                  </MenuItem>
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Revisi Proposal
-                  </MenuItem>
-                </Menu>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              {/* Menu Pengajuan Skripsi */}
-              <Div>
-                <Button
-                  disabled
-                  onClick={(event) => setAnchorEl(event.currentTarget)}
-                  sx={{
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: "#006AF5",
-                    },
-                  }}
-                >
-                  Pengajuan Skripsi
-                </Button>
-                <Menu
-                  disabled
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={() => setAnchorEl(null)}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Skripsi
-                  </MenuItem>
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Revisi Skripsi
-                  </MenuItem>
-                </Menu>
-              </Div>
-            </Div>
+            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
           </Div>
           {/* Menu horizontal End */}
 
@@ -542,14 +460,34 @@ const PengajuanJudul = () => {
               {isStatusVisible && (
                 <>
                   <Typography>Status</Typography>
-                  <Chip
-                    label="Menunggu"
-                    sx={{
-                      background: "rgba(255, 204, 0, 0.10)",
-                      color: "#985211",
-                      height: "25px",
-                    }}
-                  />
+                  {pengajuanJudul?.is_approve === "Waiting" ? (
+                    <Chip
+                      label="Menunggu"
+                      sx={{
+                        background: "rgba(255, 204, 0, 0.10)",
+                        color: "#985211",
+                        height: "25px",
+                      }}
+                    />
+                  ) : pengajuanJudul?.is_approve === "Approve" ? (
+                    <Chip
+                      label={"Diterima"}
+                      sx={{
+                        background: "rgba(21, 131, 67, 0.10)",
+                        color: "#0A7637",
+                      }}
+                    />
+                  ) : pengajuanJudul?.is_approve === "Rejected" ? (
+                    <Chip
+                      label={"Ditolak"}
+                      sx={{
+                        background: "rgba(226, 29, 18, 0.10)",
+                        color: "#CA150C",
+                      }}
+                    />
+                  ) : (
+                    pengajuanJudul?.is_approve
+                  )}
                 </>
               )}
             </Div>
@@ -574,7 +512,7 @@ const PengajuanJudul = () => {
               >
                 Kelompok Mahasiswa
               </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Table>
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
@@ -585,25 +523,27 @@ const PengajuanJudul = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>Geovalga Fransiscus Lim</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>2</TableCell>
-                      <TableCell>Frances Rully Yong</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
+                    {pengajuanJudul?.students?.map((student, studentIndex) => (
+                      <TableRow>
+                        <TableCell>{studentIndex + 1}</TableCell>
+                        <TableCell>{student.fullName}</TableCell>
+                        <TableCell>{student.nim}</TableCell>
+                        <TableCell>
+                          {student.major === "IF"
+                            ? "Informatika"
+                            : student.major === "SI"
+                            ? "Sistem Informasi"
+                            : student.major}
+                        </TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
               {/* Table Kelompok mahasiswa End */}
               {/* Judul Start */}
               <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Judul</Typography>
+                <Typography variant="subtitle2">Judul</Typography>
                 {isEditing ? (
                   <TextareaAutosize
                     value={judul}
@@ -622,274 +562,256 @@ const PengajuanJudul = () => {
                 )}
               </Div>
               {/* Judul End */}
-              {/* Latar Belakang Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Latar Belakang Masalah</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={latarBelakang}
-                    onChange={handleLatarBelakangChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
+              {/* Upload Pengajuan Judul Start */}
+              {isEditing && (
+                <Div sx={{ display: "flex", marginBottom: "20px" }}>
+                  <Button
+                    variant="contained"
+                    component="label"
+                    sx={{
+                      textTransform: "none",
+                      background: "#006AF5",
+                      color: "white",
+                      fontSize: "12px",
+                      borderRadius: "6px",
+                      width: "130px",
+                      height: "30px",
+                      padding: "6px 12px",
                     }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {latarBelakang}
-                  </Typography>
-                )}
-              </Div>
-              {/* Latar Belakang End */}
-              {/* Rumusan Masalah Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Rumusan Masalah</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={rumusanMasalah}
-                    onChange={handleRumusanMasalahChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {rumusanMasalah}
-                  </Typography>
-                )}
-              </Div>
-              {/* Rumusan Masalah End */}
-              {/* Tujuan Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Tujuan</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={tujuan}
-                    onChange={handleTujuanChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {tujuan}
-                  </Typography>
-                )}
-              </Div>
-              {/* Tujuan End */}
-              {/* Manfaat Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Manfaat</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={manfaat}
-                    onChange={handleManfaatChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {manfaat}
-                  </Typography>
-                )}
-              </Div>
-              {/* Manfaat End*/}
-              {/* Cakupan Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Cakupan</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={cakupan}
-                    onChange={handleCakupanChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {cakupan}
-                  </Typography>
-                )}
-              </Div>
-              {/* Cakupan End */}
-              {/* Batasan Start */}
-              <Div sx={{ marginBottom: "25px" }}>
-                <Typography>Batasan</Typography>
-                {isEditing ? (
-                  <TextareaAutosize
-                    value={batasan}
-                    onChange={handleBatasanChange}
-                    rowsMin={3}
-                    style={{
-                      width: "100%",
-                      resize: "vertical",
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                ) : (
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {batasan}
-                  </Typography>
-                )}
-              </Div>
-              {/* Batasan End */}
-
+                  >
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      onChange={onPengajuanJudulFileChange}
+                      style={{ display: "none" }}
+                    />
+                    <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
+                    Unggah file
+                  </Button>
+                </Div>
+              )}
+              {/* UPload Pengajuan Judul End */}
+              {/* Table Upload Pengajuan Judul Start*/}
+              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
+                <Table>
+                  <TableHead sx={{ background: "#F5F5F5" }}>
+                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
+                      >
+                        Nomor
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
+                      >
+                        Nama File
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                      >
+                        Ukuran
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          textAlign: "center",
+                          width: "12%",
+                        }}
+                      >
+                        Action
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {pengajuanJudulUploadedFiles.map((file, index) => (
+                      <TableRow key={index}>
+                        <TableCell sx={{ fontSize: "12px" }}>
+                          {index + 1}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "12px" }}>
+                          {file.name}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "12px" }}>
+                          {file.size} bytes
+                        </TableCell>
+                        <TableCell>
+                          <Div sx={{ display: "flex" }}>
+                            <span
+                              style={{
+                                textDecoration: "none",
+                                cursor: "pointer",
+                                color: "blue",
+                                fontSize: "12px",
+                              }}
+                            >
+                              <PDFViewerPengajuanJudul
+                                pengajuanJudulFile={pengajuanJudulFile}
+                              />
+                            </span>
+                            <Div
+                              style={{
+                                margin: "0 5px", // Margin di sekitar garis vertikal
+                                color: "#E0E0E0",
+                              }}
+                            >
+                              |
+                            </Div>
+                            <span
+                              style={{
+                                textDecoration: "none",
+                                cursor: isEditing ? "pointer" : "default", // Nonaktifkan jika bukan mode edit
+                                color: isEditing ? "red" : "#E0E0E0", // Ubah warna saat dalam mode edit
+                                fontSize: "12px",
+                              }}
+                              onClick={() =>
+                                handleDeletePengajuanJudulFile(index)
+                              }
+                            >
+                              Hapus
+                            </span>
+                          </Div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* Table Upload Pengajuan Judul End*/}
               {/* Select Dosen Pembimbing Start */}
-              <Div sx={{ display: "flex", marginBottom: "25px" }}>
-                <FormControl fullWidth size="small">
-                  <InputLabel id="demo-simple-select-label">Advisor</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={advisor}
-                    label="Advisor"
-                    onChange={(e) => setAdvisor(e.target.value)}
-                    disabled={!isEditing}
-                    sx={{
-                      width: "230px",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis", // Opsi ini akan memotong teks yang terlalu panjang
-                    }}
-                  >
-                    <MenuItem value={10}>Andrew T. Liem, MT, PhD</MenuItem>
-                    <MenuItem value={20}>Green Mandias, SKom, MCs</MenuItem>
-                    <MenuItem value={30}>Stenly R. Pungus, MT, PhD</MenuItem>
-                    <MenuItem value={40}>Debby E. Sondakh, MT, PhD</MenuItem>
-                    <MenuItem value={50}>Ir. Edson Y. Putra, MKom</MenuItem>
-                    <MenuItem value={60}>Green A. Sandag, SKom, MS</MenuItem>
-                    <MenuItem value={70}>
-                      Jacquline M. S. Waworundeng, ST, MT
-                    </MenuItem>
-                    <MenuItem value={80}>
-                      Jimmy H. Moedjahedy, SKom, MKom, MM
-                    </MenuItem>
-                    <MenuItem value={90}>Joe Y. Mambu, BSIT, MCIS</MenuItem>
-                    <MenuItem value={100}>Lidya C. Laoh, SKom, MMSi</MenuItem>
-                    <MenuItem value={110}>Marshal Tombeng,</MenuItem>
-                    <MenuItem value={120}>
-                      Oktoverano H. Lengkong, SKom, MDs, MM
-                    </MenuItem>
-                    <MenuItem value={130}>
-                      Reymon Rotikan, SKom, MS, MM
-                    </MenuItem>
-                    <MenuItem value={140}>
-                      Reynoldus A. Sahulata, SKom, MM
-                    </MenuItem>
-                    <MenuItem value={150}>Rolly Lontaan, MKom</MenuItem>
-                    <MenuItem value={160}>Semmy W. Taju, SKom</MenuItem>
-                    <MenuItem value={170}>Senly I. Adam, SKom, MSc</MenuItem>
-                  </Select>
-                </FormControl>
+              {!isEditing && (
+                <>
+                  <Typography variant="subtitle2">Judul</Typography>
+                  <Typography sx={{ whiteSpace: "pre-line" }}>
+                    {
+                      (
+                        daftarDosen?.find(
+                          (dosen) =>
+                            dosen.id === pengajuanJudul?.proposed_advisor_id
+                        ) || {}
+                      ).name
+                    }
+                  </Typography>
+                </>
+              )}
+              {isEditing && (
+                <Div sx={{ display: "flex", marginBottom: "25px" }}>
+                  <>
+                    <FormControl fullWidth size="small">
+                      <InputLabel id="demo-simple-select-label">
+                        Mengusulkan Advisor
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={advisor}
+                        label="Mengusulkan Advisor"
+                        onChange={(e) => setAdvisor(e.target.value)}
+                        disabled={!isEditing}
+                        sx={{
+                          width: "230px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis", // Opsi ini akan memotong teks yang terlalu panjang
+                        }}
+                      >
+                        <MenuItem value="">-</MenuItem>
+                        {daftarDosen.map((dosen) => (
+                          <MenuItem key={dosen.id} value={dosen.id}>
+                            {dosen.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    {coAdvisor1 !== null && (
+                      <FormControl
+                        fullWidth
+                        size="small"
+                        sx={{ margin: "0 25px" }}
+                      >
+                        <InputLabel id="demo-simple-select-label">
+                          Mengusulkan Co-Advisor 1
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={coAdvisor1}
+                          label="Mengusulkan Co-Advisor 1"
+                          onChange={(e) => setCoAdvisor1(e.target.value)}
+                          disabled={!isEditing}
+                          MenuProps={{
+                            anchorOrigin: {
+                              vertical: "bottom",
+                              horizontal: "left",
+                            },
+                            transformOrigin: {
+                              vertical: "top",
+                              horizontal: "left",
+                            },
+                            getContentAnchorEl: null,
+                            style: {
+                              maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                            },
+                          }}
+                          sx={{
+                            width: "230px",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis", // Opsi ini akan memotong teks yang terlalu panjang
+                          }}
+                        >
+                          <MenuItem value="">-</MenuItem>
+                          {daftarDosen.map((dosen) => (
+                            <MenuItem key={dosen.id} value={dosen.id}>
+                              {dosen.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    )}
 
-                <FormControl fullWidth size="small" sx={{ margin: "0 25px" }}>
-                  <InputLabel id="demo-simple-select-label">
-                    Co-Advisor 1
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={coAdvisor1}
-                    label="Co-Advisor"
-                    onChange={(e) => setCoAdvisor1(e.target.value)}
-                    disabled={!isEditing}
-                    sx={{
-                      width: "230px",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis", // Opsi ini akan memotong teks yang terlalu panjang
-                    }}
-                  >
-                    <MenuItem value={10}>Andrew T. Liem, MT, PhD</MenuItem>
-                    <MenuItem value={20}>Green Mandias, SKom, MCs</MenuItem>
-                    <MenuItem value={30}>Stenly R. Pungus, MT, PhD</MenuItem>
-                    <MenuItem value={40}>Debby E. Sondakh, MT, PhD</MenuItem>
-                    <MenuItem value={50}>Ir. Edson Y. Putra, MKom</MenuItem>
-                    <MenuItem value={60}>Green A. Sandag, SKom, MS</MenuItem>
-                    <MenuItem value={70}>
-                      Jacquline M. S. Waworundeng, ST, MT
-                    </MenuItem>
-                    <MenuItem value={80}>
-                      Jimmy H. Moedjahedy, SKom, MKom, MM
-                    </MenuItem>
-                    <MenuItem value={90}>Joe Y. Mambu, BSIT, MCIS</MenuItem>
-                    <MenuItem value={100}>Lidya C. Laoh, SKom, MMSi</MenuItem>
-                    <MenuItem value={110}>Marshal Tombeng,</MenuItem>
-                    <MenuItem value={120}>
-                      Oktoverano H. Lengkong, SKom, MDs, MM
-                    </MenuItem>
-                    <MenuItem value={130}>
-                      Reymon Rotikan, SKom, MS, MM
-                    </MenuItem>
-                    <MenuItem value={140}>
-                      Reynoldus A. Sahulata, SKom, MM
-                    </MenuItem>
-                    <MenuItem value={150}>Rolly Lontaan, MKom</MenuItem>
-                    <MenuItem value={160}>Semmy W. Taju, SKom</MenuItem>
-                    <MenuItem value={170}>Senly I. Adam, SKom, MSc</MenuItem>
-                  </Select>
-                </FormControl>
-
-                <FormControl fullWidth size="small">
-                  <InputLabel id="demo-simple-select-label">
-                    Co-Advisor 2
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={coAdvisor2}
-                    label="Co-Advisor"
-                    onChange={(e) => setCoAdvisor2(e.target.value)}
-                    disabled={!isEditing}
-                    sx={{
-                      width: "230px",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis", // Opsi ini akan memotong teks yang terlalu panjang
-                    }}
-                  >
-                    <MenuItem value={10}>Andrew T. Liem, MT, PhD</MenuItem>
-                    <MenuItem value={20}>Green Mandias, SKom, MCs</MenuItem>
-                    <MenuItem value={30}>Stenly R. Pungus, MT, PhD</MenuItem>
-                    <MenuItem value={40}>Debby E. Sondakh, MT, PhD</MenuItem>
-                    <MenuItem value={50}>Ir. Edson Y. Putra, MKom</MenuItem>
-                    <MenuItem value={60}>Green A. Sandag, SKom, MS</MenuItem>
-                    <MenuItem value={70}>
-                      Jacquline M. S. Waworundeng, ST, MT
-                    </MenuItem>
-                    <MenuItem value={80}>
-                      Jimmy H. Moedjahedy, SKom, MKom, MM
-                    </MenuItem>
-                    <MenuItem value={90}>Joe Y. Mambu, BSIT, MCIS</MenuItem>
-                    <MenuItem value={100}>Lidya C. Laoh, SKom, MMSi</MenuItem>
-                    <MenuItem value={110}>Marshal Tombeng,</MenuItem>
-                    <MenuItem value={120}>
-                      Oktoverano H. Lengkong, SKom, MDs, MM
-                    </MenuItem>
-                    <MenuItem value={130}>
-                      Reymon Rotikan, SKom, MS, MM
-                    </MenuItem>
-                    <MenuItem value={140}>
-                      Reynoldus A. Sahulata, SKom, MM
-                    </MenuItem>
-                    <MenuItem value={150}>Rolly Lontaan, MKom</MenuItem>
-                    <MenuItem value={160}>Semmy W. Taju, SKom</MenuItem>
-                    <MenuItem value={170}>Senly I. Adam, SKom, MSc</MenuItem>
-                  </Select>
-                </FormControl>
-              </Div>
+                    {coAdvisor2 !== null && (
+                      <FormControl fullWidth size="small">
+                        <InputLabel id="demo-simple-select-label">
+                          Mengusulkan Co-Advisor 2
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={coAdvisor2}
+                          label="Mengusulkan Co-Advisor 2"
+                          onChange={(e) => setCoAdvisor2(e.target.value)}
+                          disabled={!isEditing}
+                          MenuProps={{
+                            anchorOrigin: {
+                              vertical: "bottom",
+                              horizontal: "left",
+                            },
+                            transformOrigin: {
+                              vertical: "top",
+                              horizontal: "left",
+                            },
+                            getContentAnchorEl: null,
+                            style: {
+                              maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                            },
+                          }}
+                          sx={{
+                            width: "230px",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis", // Opsi ini akan memotong teks yang terlalu panjang
+                          }}
+                        >
+                          <MenuItem value="">-</MenuItem>
+                          {daftarDosen.map((dosen) => (
+                            <MenuItem key={dosen.id} value={dosen.id}>
+                              {dosen.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    )}
+                  </>
+                </Div>
+              )}
               {/* Select Dosen Pembimbing End */}
 
               {/* Radio Button Start */}
@@ -907,7 +829,7 @@ const PengajuanJudul = () => {
                   aria-label="konsultasi"
                   name="konsultasi"
                   value={selectedOption}
-                  onChange={(e) => setSelectedOption(e.target.value)}
+                  onChange={handleOptionChange}
                   sx={{
                     display: "flex",
                     flexDirection: "row",
@@ -939,6 +861,25 @@ const PengajuanJudul = () => {
               >
                 {isEditing ? (
                   <Div>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        handleClose();
+                        handleCancelEdit();
+                      }}
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: "6px",
+                        border: "#E0E0E0",
+                        background: "#FFFF",
+                        boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
+                        color: "black",
+                        textTransform: "none",
+                        marginRight: "20px",
+                      }}
+                    >
+                      Kembali
+                    </Button>
                     <Button
                       onClick={handleSaveClick}
                       sx={{
@@ -998,8 +939,8 @@ const PengajuanJudul = () => {
           <Button
             onClick={() => {
               closeConfirmationDialog();
-              handleCancelEdit();
-              handleCancelAllEdits();
+              // handleCancelEdit();
+              // handleCancelAllEdits();
             }}
             sx={{
               textTransform: "none",
@@ -1010,13 +951,14 @@ const PengajuanJudul = () => {
               color: "black",
             }}
           >
-            Cancel
+            Batal
           </Button>
           <Button
             onClick={() => {
-              closeConfirmationDialog();
-              setIsEditing(false);
-              setInitialJudul(judul);
+              handleUpdatePengajuanJudul();
+              // closeConfirmationDialog();
+              // setIsEditing(false);
+              // setInitialJudul(judul);
               // Simpan perubahan ke server jika diperlukan
             }}
             color="primary"
@@ -1030,7 +972,7 @@ const PengajuanJudul = () => {
               },
             }}
           >
-            Confirm
+            Perbarui
           </Button>
         </DialogActions>
       </Dialog>

@@ -27,6 +27,7 @@ import PreRegistrationRejected from "app/pages/BimbinganAkademik/Mahasiswa/PreRe
 import PreRegistrationApproved from "app/pages/BimbinganAkademik/Mahasiswa/PreRegistration/PreRegistrationApproved";
 import Profile from "app/pages/BimbinganAkademik/Mahasiswa/Profile";
 import StudentGrade from "app/pages/BimbinganAkademik/Mahasiswa/Grades/StudentGrade";
+import DaftarAlumni from "app/pages/Mahasiswa/KlabatBridge/DaftarAlumni";
 
 const mahasiswaRoutes = [
   // {

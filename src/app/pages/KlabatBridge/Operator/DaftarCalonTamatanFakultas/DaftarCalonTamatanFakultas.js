@@ -13,10 +13,10 @@ import {
   FormControl,
   InputLabel,
   Pagination,
-  Dialog, 
-  DialogActions, 
-  DialogContent, 
-  DialogContentText, 
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
   DialogTitle,
   Box,
   Modal,
@@ -24,24 +24,30 @@ import {
   Chip,
   Grid,
   Paper,
-  Divider, 
+  Divider,
   FormControlLabel,
   Checkbox,
+  ListSubheader,
+  TablePagination,
+  IconButton,
 } from "@mui/material";
 import ActionButton from "app/shared/ActionButton";
 import SearchGlobal from "app/shared/SearchGlobal";
 import React, { useState } from "react";
 import CreateIcon from "@mui/icons-material/Create";
 import MarkunreadIcon from "@mui/icons-material/Markunread";
-import CheckIcon from '@mui/icons-material/Check';
+import axios from "axios";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { Document } from "react-pdf";
+import SearchIcon from "@mui/icons-material/Search";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 1000,
-  bgcolor: 'background.paper',
+  bgcolor: "background.paper",
   //border: '2px solid #000',
   borderRadius: "5px",
   boxShadow: 24,
@@ -49,21 +55,73 @@ const style = {
 };
 
 const rows = [
-  { id: 1, name: 'Row 1', mk: 'Robotics', sks: '3', keterangan: 'Summer 2023' },
-  { id: 2, name: 'Row 2', mk: 'Research Project 2', sks: '3', keterangan: 'Summer 2023' },
-  { id: 3, name: 'Row 3', mk: 'Machine Learning', sks: '3', keterangan: 'Semester 1 2023/2024' },
-  { id: 4, name: 'Row 4', mk: 'ITPM', sks: '3', keterangan: 'Semester 1 2023/2024' },
-  { id: 5, name: 'Row 5', mk: 'DevOps', sks: '3', keterangan: 'Semester 1 2023/2024' },
-  { id: 6, name: 'Row 6', mk: 'Internet of Things', sks: '3', keterangan: 'Semester 1 2023/2024' },
+  { id: 1, name: "Row 1", mk: "Robotics", sks: "3", keterangan: "Summer 2023" },
+  {
+    id: 2,
+    name: "Row 2",
+    mk: "Research Project 2",
+    sks: "3",
+    keterangan: "Summer 2023",
+  },
+  {
+    id: 3,
+    name: "Row 3",
+    mk: "Machine Learning",
+    sks: "3",
+    keterangan: "Semester 1 2023/2024",
+  },
+  {
+    id: 4,
+    name: "Row 4",
+    mk: "ITPM",
+    sks: "3",
+    keterangan: "Semester 1 2023/2024",
+  },
+  {
+    id: 5,
+    name: "Row 5",
+    mk: "DevOps",
+    sks: "3",
+    keterangan: "Semester 1 2023/2024",
+  },
+  {
+    id: 6,
+    name: "Row 6",
+    mk: "Internet of Things",
+    sks: "3",
+    keterangan: "Semester 1 2023/2024",
+  },
   // Add more rows as needed
 ];
 
 const DaftarCalonTamatan = () => {
-  // sort by year
-  const [sortBy, setSortBy] = useState(null);
+  const [data, setData] = useState([]);
+  const [statusByFac, setStatusByFac] = useState([]);
+  const [statusByRegister, setStatusByRegister] = useState([]);
+  const [graduatePlan, setGraduatePlan] = useState([]);
+  const [filterValue, setFilterValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const [searchBtn, setSearchBtn] = useState(false);
+  // const [filterBy, setFilterBy] = useState([]);
+  const [selectedData, setSelectedData] = useState(null);
+  const [dataRemainingClasses, setDataRemainingClasses] = useState([]);
 
-  // dialog box to send data calon tamatan to operator
-  const [open, setOpen] = React.useState(false);
+  // pagination
+  const [filter, setFilter] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  // // dialog box to send data calon tamatan to operator
+  // const [open, setOpen] = React.useState(false);
 
   // dialog box to accept student's SPT
   const [terimaSPT, setTerimaSPT] = React.useState(false);
@@ -71,215 +129,419 @@ const DaftarCalonTamatan = () => {
   // open modal box to see form SPT of student
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (item) => {
+    setSelectedData(item);
     setModalOpen(true);
   };
 
   const handleCloseModal = () => {
+    setSelectedData(null);
     setModalOpen(false);
   };
 
+  const handleTolakButton = async (item) => {
+    try {
+      await jwtAuthAxios.patch(
+        `spt/fac-approval/${item.id}?status=REJECTED`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleTerimaButton = async (item) => {
+    try {
+      await jwtAuthAxios.patch(
+        `spt/fac-approval/${item.id}?status=APPROVED`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  // modal content to see student's SPT 
-  const viewDetailSPT = (
+  const TableSPT = ({ index, item }) => (
+    <TableRow>
+      <TableCell>{index + 1}</TableCell>
+      <TableCell>{item?.subject}</TableCell>
+      <TableCell>{item?.sks}</TableCell>
+      <TableCell>{item?.keterangan}</TableCell>
+    </TableRow>
+  );
+
+  // modal content to see student's SPT
+  const viewDetailSPT = (item) => (
     <Div>
-      <Typography id="modal-modal-title" mb={2} sx={{ fontSize: "24px", fontWeight: 500, }}>
+      <Box sx={{ paddingX: 5 }}>
+        <Typography
+          id="modal-modal-title"
+          mb={2}
+          sx={{ fontSize: "24px", fontWeight: 500 }}
+        >
           Surat Permohonan Tamat
-      </Typography>
-      <Box sx={{paddingX: 5}}>
-        <Typography variant="body1" sx={{lineHeight: 2.5}}>
-            Saya yang bertanda tangan di bawah ini, bermohon untuk dapat wisuda pada semester 1 2022/2023 dengan sisa SKS yang harus diambil
-                <Chip label={"15"} variant={"outlined"} sx={{marginX: "5px", borderRadius: "5px"}}/>
-            sks.
         </Typography>
-        <Typography id="modal-modal-description" sx={{mt: 2}}>
-            Nama Sesuai Ijazah: Shyereal Saerang
-        </Typography>
-        <Typography id="modal-modal-description" sx={{mt: 2}}>
-            No. Regis: S2200131
-        </Typography>
-        <Typography id="modal-modal-description" sx={{mt: 2}}>
-            Tanggal Lahir: 18 Agustus 2002
-        </Typography>
-        <Typography id="modal-modal-description" sx={{mt: 2}}>
-            Jenis Kelamin: Perempuan
-        </Typography>
-        <Typography id="modal-modal-description" sx={{mt: 2}}>
-            Nomor Induk Kependudukan (NIK): 1000200381384
-        </Typography>
-        <Typography id="modal-modal-description" sx={{mt: 2}}>
-            Nomor Induk Mahasiswa (NIM): 10202000131
-        </Typography>
-        <Typography id="modal-modal-description" sx={{mt: 2}}>
-            Email: shyereal@gmail.com
-        </Typography>
-        <Typography id="modal-modal-description" sx={{mt: 2}}>
-            Prodi: Informatika
-        </Typography>
-        <Typography id="modal-modal-description" sx={{mt: 2}}>
-            Minor/Konsentrasi: -
-        </Typography>
-        <Typography id="modal-modal-description" sx={{mt: 2}}>
-            No. Telp: 0812239292832
-        </Typography>
-        <Typography id="modal-modal-description" sx={{mt: 2}}>
-            Nama Ibu Kandung: Regina Latun
+        <Typography variant="body1" sx={{ lineHeight: 2.5 }}>
+          Saya yang bertanda tangan di bawah ini, bermohon untuk dapat wisuda
+          pada semester 1 2022/2023 dengan sisa SKS yang harus diambil
+          <Chip
+            label={`${item?.remaining_credits}`}
+            variant={"outlined"}
+            sx={{ marginX: "5px", borderRadius: "5px" }}
+          />
+          sks.
         </Typography>
 
+        <Grid container spacing={3} sx={{ paddingTop: 5 }}>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Nama Sesuai Ijazah</Typography>
+            <Typography variant="h6" sx={textSyle}>
+              {item?.full_name}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Nomor Registrasi</Typography>
+            <Typography variant="h6" sx={textSyle}>
+              {item?.reg_num}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Tanggal Lahir</Typography>
+            <Typography variant="h6" sx={textSyle}>
+              {item?.date_of_birth}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Jenis Kelamin</Typography>
+            <Typography variant="h6" sx={textSyle}>
+              {item?.gender}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Nomor Induk Kependudukan (NIK)</Typography>
+            <Typography variant="h6" sx={textSyle}>
+              {item?.nik}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Nomor Induk Mahasiswa (NIM)</Typography>
+            <Typography variant="h6" sx={textSyle}>
+              {item?.nim}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Email</Typography>
+            <Typography variant="h6" sx={textSyle}>
+              {item?.personal_email}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Program Studi</Typography>
+            <Typography variant="h6" sx={textSyle}>
+              {item?.major}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Minor/Konsentrasi</Typography>
+            <Typography variant="h6" sx={textSyle}>
+              {item?.minor}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Nomor Telepon</Typography>
+            <Typography variant="h6" sx={textSyle}>
+              {item?.phone_num}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Nama Ibu Kandung</Typography>
+            <Typography variant="h6" sx={textSyle}>
+              {item?.birth_mother}
+            </Typography>
+          </Grid>
+        </Grid>
 
         {/* table */}
-        <Typography mt={5} sx={{ fontSize: "24px", fontWeight: 500, }}>
-            Sisa mata kuliah yang harus diambil:
+        <Typography mt={5} sx={{ fontSize: "24px", fontWeight: 500 }}>
+          Sisa mata kuliah yang harus diambil:
         </Typography>
-        <Box sx={{marginY:2}}>
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                      <TableRow style={{ backgroundColor: '#f5f5f5' }}>
-                          <TableCell sx={{ width: '10px' }}>No.</TableCell>
-                          <TableCell sx={{ width: '300px' }}>Mata kuliah</TableCell>
-                          <TableCell sx={{ width: '200px' }}>SKS</TableCell>
-                          <TableCell sx={{ width: '400px' }}>Keterangan</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {rows.map((row) => (
-                      <TableRow key={row.id}>
-                          <TableCell>{row.id}</TableCell>
-                          <TableCell>{row.mk}</TableCell>
-                          <TableCell>{row.sks}</TableCell>
-                          <TableCell>{row.keterangan}</TableCell>
-                      </TableRow>
-                      ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+        <Box sx={{ marginY: 2 }}>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow style={{ backgroundColor: "#f5f5f5" }}>
+                  <TableCell sx={{ width: "10px" }}>No.</TableCell>
+                  <TableCell sx={{ width: "300px" }}>Mata kuliah</TableCell>
+                  <TableCell sx={{ width: "200px" }}>SKS</TableCell>
+                  <TableCell sx={{ width: "400px" }}>Keterangan</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {item?.remaining_classes?.map((item, index) => (
+                  <TableSPT index={index} item={item} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Box>
 
-        <Div sx={{
+        <Div
+          sx={{
             display: "flex",
             direction: "row",
             justifyContent: "space-between",
-            marginTop:'30px',
-        }}>
+            marginTop: "30px",
+          }}
+        >
           {/* upload pdf sertifikat */}
-          <Div
-            sx={{
-                // display: 'flex',
-                // flexWrap: 'wrap',
-                '& > :not(style)': {
-                    width: 245,
-                    height: 130,
-                    backgroundColor:'red',
-                },
+
+          {console.log("PDF URL:", item?.certificateURL)}
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
-            <Paper elevation={3}/>
-          </Div>
+            <Box>
+              <iframe
+                title="certificate"
+                src={item?.certificateURL}
+                // width="100%"
+                // height="500px"
+                //frameBorder="0"
+              ></iframe>
+            </Box>
+
+            <Button
+              size="small"
+              sx={{
+                textTransform: "none",
+                mt: 1,
+                alignSelf: "flex-start", // Align the button to the left
+              }}
+              onClick={() => {
+                const pdfURL = item?.certificateURL;
+
+                // Open the link in a new tab or window
+                window.open(pdfURL, "_blank");
+              }}
+            >
+              Open Certificate
+            </Button>
+          </div>
+
+          {/* <iframe src={`${item?.certificateURL}`}></iframe>
+
+          <Button onClick={ () => {
+            const pdfURL = item?.certificateURL; // Anda dapat memodifikasi ini sesuai dengan kebutuhan
+
+            // Buka tautan dalam tab atau jendela baru
+            window.open(pdfURL, "_blank");
+          }} 
+          >
+            open certificate
+          </Button> */}
+
+          {/* <Document file={{
+              url:
+              'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            }} onLoadError={console.error} >
+          </Document> */}
+
+          {/* <iframe src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"></iframe> */}
+
+          {/* <Document file={`${item?.certificateURL}`} /> */}
 
           {/* total sks */}
-          <Typography variant="body1" sx={{lineHeight: 2.5}}>
-            Total SKS yang diambil: 15 sks.
+          <Typography variant="body1" sx={{ lineHeight: 2.5 }}>
+            Total SKS yang diambil: {item?.remaining_credits} sks.
           </Typography>
         </Div>
-        
-        <Divider sx={{ marginY: 3 }} />
-        
-        <Box display="flex" justifyContent="flex-end">
-            <Button variant="outlined" color="primary" onClick={() => setModalOpen(false)} style={{ marginRight: "10px" }}>
-              Tolak
-            </Button>
-            <Div >
-                <Button variant="contained" onClick={() => setTerimaSPT(true)}>
-                  Terima
-                </Button>
-                <Dialog
-                    open={terimaSPT}
-                    onClose={() => {
-                      setTerimaSPT(false);
-                      setModalOpen(false);
-                    }}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogTitle id="alert-dialog-title">
-                        {"Berhasil!"}
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                            Data berhasil ditambahkan
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button 
-                        onClick={() => {
-                          setTerimaSPT(false);
-                          setModalOpen(false);
-                        }} 
-                        autoFocus>
-                            Confirm
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </Div>
-        </Box>
 
+        <Divider sx={{ marginY: 3 }} />
+
+        <Box display="flex" justifyContent="flex-end">
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => {
+              setModalOpen(false);
+              handleTolakButton(item);
+            }}
+            style={{ marginRight: "10px" }}
+          >
+            Tolak
+          </Button>
+          <Div>
+            <Button
+              variant="contained"
+              onClick={() => {
+                setTerimaSPT(true);
+                handleTerimaButton(item);
+              }}
+            >
+              Terima
+            </Button>
+            <Dialog
+              open={terimaSPT}
+              onClose={() => {
+                setTerimaSPT(false);
+                setModalOpen(false);
+              }}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">{"Berhasil!"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Data berhasil ditambahkan
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={() => {
+                    setTerimaSPT(false);
+                    setModalOpen(false);
+                  }}
+                  autoFocus
+                >
+                  Confirm
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Div>
+        </Box>
       </Box>
     </Div>
   );
 
-  // table data (temporary)
-  const TableItem = ({ index }) => (
+  // tabel calon tamatan
+  const TableItem = ({ index, item }) => (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
+      <TableCell>{index + 1 + rowsPerPage * page}</TableCell>
       <TableCell>
-        <Button 
-          variant="text" 
+        <Button
+          variant="text"
           color="primary"
-          onClick={handleOpenModal}
+          onClick={() => handleOpenModal(item)}
           sx={{
-            color:'black',
-            '&:hover': {
-            color: '#4C5EFF', // Change background color on hover
+            color: "black",
+            textTransform: "capitalize",
+            textAlign: "left",
+            "&:hover": {
+              color: "#4C5EFF", // Change background color on hover
             },
-          }}>
-          Shyereal Imanuelita Saerang
+          }}
+        >
+          {item?.full_name}
         </Button>
       </TableCell>
-      <TableCell>105011810011</TableCell>
-      <TableCell>Sistem Informasi</TableCell>
-      <TableCell>Fakultas Ilmu Komputer</TableCell>
-      <TableCell>Semester 1 2023/2024</TableCell>
-      <TableCell>Approved</TableCell>
+      <TableCell>{item?.nim}</TableCell>
+      <TableCell>{item?.faculty}</TableCell>
       <TableCell>
-        <Grid container alignItems="center" justifyContent="center">
-          <Grid item>
-            <CheckIcon sx={{ fontSize: 20 }} />
-          </Grid>
-        </Grid>
-        </TableCell>
+        {/* {item?.major === "IF" ? "Informatika" : "Sistem Informasi"} */}
+        {item?.major}
+      </TableCell>
+      <TableCell>{item?.graduate_plan}</TableCell>
+      <TableCell align="center">
+        <Chip
+          label={item?.approval_fac}
+          style={{
+            backgroundColor: getColorForApproval(item?.approval_fac),
+            color: "white",
+          }}
+        />
+      </TableCell>
+      <TableCell align="center">
+        <Chip
+          label={item?.approval_reg}
+          style={{
+            backgroundColor: getColorForApproval(item?.approval_reg),
+            color: "white",
+          }}
+        />
+      </TableCell>
     </TableRow>
   );
 
-  // table
-  const [data, setData] = useState(rows);
+  // colors for student's approval
+  const getColorForApproval = (approvalValue) => {
+    switch (approvalValue) {
+      case "APPROVED":
+        return "#5cb85c";
+      case "WAITING":
+        return "#f0ad4e";
+      case "REJECTED":
+        return "#d9534f";
+      default:
+        return "default";
+    }
+  };
 
-    const handleInputChange = (e, id, columnName) => {
-        const updatedData = data.map((row) => {
-        if (row.id === id) {
-            return { ...row, [columnName]: e.target.value };
-        }
-        return row;
+  React.useEffect(() => {
+    jwtAuthAxios
+      .get(`/spt?search_query=${searchValue}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        // await axios.get("http://localhost:2000/api/v1/spt/").then((res) => {
+        console.log(res.data.data);
+        const formattedData = res.data.data.map((item) => {
+          const remaining_classes = JSON.parse(item.remaining_classes);
+          return { ...item, remaining_classes };
         });
-        setData(updatedData);
-    };
 
-    // sisa total sks
-    const sisaSKS = 15;
-  
+        console.log(formattedData);
+        // console.log(res.data.data);
 
+        setData(formattedData);
+
+        const uniqueStatusByFac = [
+          ...new Set(res.data.data.map((item) => item.approval_fac)),
+        ];
+        const uniqueStatusByReg = [
+          ...new Set(res.data.data.map((item) => item.approval_reg)),
+        ];
+        const uniqueGraduatePlan = [
+          ...new Set(res.data.data.map((item) => item.graduate_plan)),
+        ];
+
+        setStatusByFac(uniqueStatusByFac);
+        setStatusByRegister(uniqueStatusByReg);
+        setGraduatePlan(uniqueGraduatePlan);
+
+        // console.log(uniqueGraduatePlan);
+      });
+  }, [searchBtn]);
+
+  const getData = async () => {};
+
+  function filterData() {
+    // return data.filter(item => item["graduate_year"] === filterValue || item["major"] === filterValue);
+    return data.filter(
+      (item) =>
+        item["approval_fac"] + "FACULTY" === filterValue ||
+        item["approval_reg"] + "REGISTER" === filterValue ||
+        item["graduate_plan"] === filterValue
+    );
+  }
+
+  console.log(selectedData);
   return (
-    <Div>
+    <Box>
       <Div
         sx={{
           display: "flex",
@@ -290,62 +552,96 @@ const DaftarCalonTamatan = () => {
           mb: 2,
         }}
       >
-        <Div sx={{ 
-          display: "flex",
-          direction: "row",
-          gap: 3,
-          }}
-        >
-          <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
-            Calon Tamatan (fakultas)
-          </Typography>
-          <FormControl sx={{minWidth: 150}} size="small">
-          <InputLabel id="demo-select-small">Tahun</InputLabel>
-          <Select
-            sx={{ borderRadius: "50px", minWidth: "150px"}}
-            labelId="demo-select-small"
-            id="demo-select-small"
-            value={sortBy}
-            label="Tahun"
-            onChange={(event) => setSortBy(event.target.value)}
-          >
-            <MenuItem value={"2017"}>2017</MenuItem>
-            <MenuItem value={"2018"}>2018</MenuItem>
-            <MenuItem value={"2019"}>2019</MenuItem>
-            <MenuItem value={"2020"}>2020</MenuItem>
-            <MenuItem value={"2021"}>2021</MenuItem>
-          </Select>
-          </FormControl>
-        </Div>
+        <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
+          Graduate Candidates
+        </Typography>
         <Div
           sx={{
-            // display: "flex",
-            // direction: "row",
-            // alignItems: "center",
-            // justifyContent: "space-between",
+            display: "flex",
+            direction: "row",
+            gap: 3,
+            alignItems: "center",
           }}
         >
-          <SearchGlobal sx={{ minWidth: { xs: 100, md: 300 } }} />
+          {/* searchbar */}
+          <TextField
+            // label="Search"
+            placeholder="Search by Name or NIM"
+            variant="outlined"
+            size="small"
+            // value={searchTerm}
+            onChange={(e) => setSearchValue(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <IconButton onClick={() => setSearchBtn(!searchBtn)} edge="end">
+                  <SearchIcon />
+                </IconButton>
+              ),
+              style: { borderRadius: "25px", width: "250px", height: "35px" }, // Apply border radius here
+            }}
+          />
+          <FormControl sx={{ minWidth: 200 }} size="small">
+            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
+            <Select
+              defaultValue=""
+              id="grouped-select"
+              label="Filter"
+              sx={{ borderRadius: 10, maxHeight: "50px" }}
+              value={filterValue}
+              onChange={(event) => setFilterValue(event.target.value)}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <ListSubheader sx={{ color: "#192739F0" }}>
+                Status by Faculty
+              </ListSubheader>
+              {statusByFac.map((item) => {
+                return <MenuItem value={item + "FACULTY"}>{item}</MenuItem>;
+              })}
+
+              <ListSubheader sx={{ color: "#192739F0" }}>
+                Status by Register
+              </ListSubheader>
+              {statusByRegister.map((item) => {
+                return <MenuItem value={item + "REGISTER"}>{item}</MenuItem>;
+              })}
+
+              <ListSubheader sx={{ color: "#192739F0" }}>
+                Rencana Tamat
+              </ListSubheader>
+              {graduatePlan.map((item) => {
+                return <MenuItem value={item}>{item}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
         </Div>
       </Div>
-      <TableContainer sx={{ overflow: "auto" }}>
+
+      <TableContainer component={Paper} sx={{ overflow: "auto" }}>
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell >No</TableCell>
+            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+              <TableCell>No</TableCell>
               <TableCell>Nama Lengkap</TableCell>
               <TableCell>Nim</TableCell>
-              <TableCell>Nama Prodi</TableCell>
               <TableCell>Fakultas</TableCell>
-              <TableCell>Waktu Kelulusan</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Status</TableCell>
+              <TableCell>Program Studi</TableCell>
+              <TableCell>Rencana Tamat</TableCell>
+              <TableCell>Approved by Faculty</TableCell>
+              <TableCell>Approved by Registar</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {[...Array(10)].map((item, index) => (
-              <TableItem index={index} />
-            ))}
+            {filterData().length > 0
+              ? filterData()
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => <TableItem index={index} item={item} />)
+              : data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem index={index} item={item} />
+                  ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -360,25 +656,39 @@ const DaftarCalonTamatan = () => {
       >
         {viewDetailSPT}
       </Modal> */}
-      <Dialog open={modalOpen} onClose={handleCloseModal} maxWidth="lg" fullWidth>
-        <DialogContent style={{ maxHeight: '1200px', overflowY: 'auto' }}>
-          {viewDetailSPT}
+      <Dialog
+        open={modalOpen}
+        onClose={handleCloseModal}
+        maxWidth="lg"
+        fullWidth
+      >
+        <DialogContent style={{ maxHeight: "1200px", overflowY: "auto" }}>
+          {viewDetailSPT(selectedData)}
         </DialogContent>
       </Dialog>
 
       {/* below the table Data Calon Tamatan */}
-      <Grid container justifyContent="flex-end" >
+      <Grid container justifyContent="flex-end">
         <Grid item>
-          {/* Content you want to position on the right side */}
-          <Pagination count={10} color="primary" sx={{marginY:5}}/>
+          {/* <Pagination count={10} color="primary" sx={{ marginY: 5 }} /> */}
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50, 100]}
+            component={"div"}
+            count={filterData().length > 0 ? filterData().length : data.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            sx={{ marginY: 2 }}
+          />
         </Grid>
       </Grid>
 
-      <Box display="flex" justifyContent="flex-end">
+      {/* <Box display="flex" justifyContent="flex-end">
         <Button variant="outlined" color="primary" style={{ marginRight: "10px" }}>
           Batal
         </Button>
-        {/* alert dialog */}
+        
         <Div >
           <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
             Kirim
@@ -405,9 +715,19 @@ const DaftarCalonTamatan = () => {
             </DialogActions>
           </Dialog>
         </Div>
-      </Box>
-    </Div>
+      </Box> */}
+    </Box>
   );
+};
+
+const textSyle = {
+  borderWidth: 1,
+  borderColor: "#00000029",
+  borderStyle: "solid",
+  paddingX: "24px",
+  paddingY: "16px",
+  borderRadius: "8px",
+  minHeight: "50px",
 };
 
 export default DaftarCalonTamatan;

@@ -1,9 +1,9 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
-  Button,
   Chip,
-  Menu,
-  MenuItem,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -12,332 +12,184 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
-import React from "react";
-import { Link } from "react-router-dom";
 
-const BerandaPengajuanJudul = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open1 = Boolean(anchorEl);
-  const [anchorE2, setAnchorE2] = React.useState(null);
-  const open2 = Boolean(anchorE2);
+const BerandaPengajuanJudul = ({ value: groupId }) => {
+  const [details, setDetails] = useState([]);
 
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchDetailsData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/submission_details/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Atur state 'setDetails' dengan data dari respons
+        setDetails(response.data.data);
+        console.log("Request Get details: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil detail:", error);
+      }
+    };
+    fetchDetailsData();
+  }, [token, groupId]);
+
+  //   const { role } = JSON.parse(localStorage.getItem("user"));
+  //   const role = ["ADVISOR", "DOSEN"];
+  //   console.log(role);
   return (
-    <Div>
+    <Div sx={{ width: "100%" }}>
+      {/* Element 2 Start */}
       <Div
         sx={{
+          direction: "row",
           display: "flex",
-          flexDirection: "row",
-          padding: "24px",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 2,
-        }}
-      >
-        <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Beranda
-        </Typography>
-      </Div>
-
-      <Div
-        sx={{
-          display: "flex",
+          paddingBottom: "0px",
+          flexDirection: "column",
           alignItems: "flex-start",
           gap: 2,
+          borderRadius: "8px",
         }}
       >
-        {/* Element 1 Start */}
-        <Div
+        <Typography
           sx={{
+            width: "100%",
             display: "flex",
-            width: "350px",
-            padding: "5px",
-            flexDirection: "column",
+            padding: "24px",
             alignItems: "center",
-            gap: 2,
-            borderRadius: "8px",
-            boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+            justifyContent: "center",
+            gap: "10px",
+            color: "#192434",
+            background: "rgba(26, 56, 96, 0.10)",
+            borderRadius: "6px",
+            fontSize: "12px",
+            fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
           }}
         >
-          {/* Riwayat Log Start */}
-          <Div
-            sx={{
-              width: "320px",
-              height: "500px",
-              borderRadius: "6px",
-              border: "1px solid rgba(26, 56, 96, 0.10)",
-              background: "#FFF",
-            }}
-          >
-            Riwayat Log
-          </Div>
-          {/* Riwayat Log End */}
+          {details.title}
+        </Typography>
+        {/* Table Start*/}
 
-          {/* Dosen Pembimbing Start */}
-          <Div
-            sx={{
-              display: "flex",
-              width: "320px",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              borderRadius: "6px",
-              border: "1px solid rgba(26, 56, 96, 0.10)",
-              background: "#FFF",
-            }}
-          >
-            {/* Advisor */}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Advisor
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-            {/* Co-Advisor 1*/}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Co-Advisor 1
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-            {/* Co-Advisor 2*/}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Co-Advisor 2
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-          </Div>
-          {/* Dosen Pembimbing End */}
-        </Div>
-        {/* Element 1 End */}
-
-        {/* Element 2 Start */}
         <Div
           sx={{
-            direction: "row",
-            display: "flex",
-            width: "1050px",
-            paddingBottom: "0px",
+            width: "100%",
+            padding: "0 25px",
             flexDirection: "column",
             alignItems: "flex-start",
-            gap: 2,
-            borderRadius: "8px",
+            gap: "50px",
           }}
         >
-          {/* Menu Horizontal Start */}
-          <Div sx={{ width: "100%" }}>
-            <MenuMahasiswa />
-          </Div>
-
-          {/* Menu horizontal End */}
-
-          <Div
+          {/* Table Kelompok Mahasiswa Start*/}
+          <Typography
             sx={{
-              display: "flex",
-              padding: "29px 42px",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: 2,
-              alignSelf: "stretch",
-              borderRadius: "8px",
-              border: "1px solid #E0E0E0",
-              background: "#FFF",
-              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+              padding: "14px 16px",
+              background: "rgba(26, 56, 96, 0.10)",
+              borderRadius: "6px 6px 0 0",
+              border: "1px",
             }}
           >
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
-              }}
-            >
-              PENGEMBANGAN SISTEM INFORMASI SKRIPSI DI FAKULTAS ILMU KOMPUTER
-              UNIVERSITAS KLABAT
-            </Typography>
+            Kelompok Mahasiswa
+          </Typography>
+          <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
+            <Table>
+              <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                  <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
+                  <TableCell sx={{ width: "25%" }}>Nama Lengkap</TableCell>
+                  <TableCell sx={{ width: "25%" }}>NIM</TableCell>
+                  <TableCell sx={{ width: "25%" }}>Program Studi</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {details?.students?.map((student, studentIndex) => (
+                  <TableRow key={studentIndex}>
+                    <TableCell>{studentIndex + 1}</TableCell>
+                    <TableCell>{student.fullName}</TableCell>
+                    <TableCell>{student.nim}</TableCell>
+                    <TableCell>
+                      {student.major === "IF"
+                        ? "Informatika"
+                        : student.major === "SI"
+                        ? "Sistem Informasi"
+                        : student.major}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {/* Table Kelompok mahasiswa End */}
 
-            {/* Table Start*/}
-
-            <Div
-              sx={{
-                width: "100%",
-                padding: "0 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "50px",
-              }}
-            >
-              {/* Table Kelompok Mahasiswa Start*/}
-              <Typography
-                sx={{
-                  padding: "14px 16px",
-                  background: "rgba(26, 56, 96, 0.10)",
-                  borderRadius: "6px 6px 0 0",
-                  border: "1px",
-                }}
-              >
-                Kelompok Mahasiswa
-              </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
-                <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Nama Lengkap</TableCell>
-                      <TableCell sx={{ width: "25%" }}>NIM</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Program Studi</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>Geovalga Fransiscus Lim</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>2</TableCell>
-                      <TableCell>Frances Rully Yong</TableCell>
-                      <TableCell>105021910051</TableCell>
-                      <TableCell>Informatika</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Kelompok mahasiswa End */}
-
-              {/* Table Pengajuan Proposal Start */}
-              <Typography
-                sx={{
-                  padding: "14px 16px",
-                  background: "rgba(26, 56, 96, 0.10)",
-                  borderRadius: "6px 6px 0 0",
-                  border: "1px",
-                }}
-              >
-                Status Pengajuan Judul
-              </Typography>
-              <TableContainer sx={{ marginBottom: "50px" }}>
-                <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ width: "50%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "50%" }}>Dosen Skripsi</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>
-                        <Chip
-                          label="Menunggu"
-                          sx={{
-                            background: "rgba(255, 204, 0, 0.10)",
-                            color: "#985211",
-                          }}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Pengajuan Proposal End */}
-            </Div>
-          </Div>
+          {/* Table Pengajuan Proposal Start */}
+          <Typography
+            sx={{
+              padding: "14px 16px",
+              background: "rgba(26, 56, 96, 0.10)",
+              borderRadius: "6px 6px 0 0",
+              border: "1px",
+            }}
+          >
+            Status Pengajuan Judul
+          </Typography>
+          <TableContainer
+            sx={{ marginBottom: "50px", width: "100%" }}
+            component={Paper}
+          >
+            <Table>
+              <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                  <TableCell sx={{ width: "50%" }}>Nomor</TableCell>
+                  <TableCell sx={{ width: "50%" }}>Dosen Skripsi</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell>1</TableCell>
+                  <TableCell>
+                    {details?.submission_status?.status === "Waiting" ? (
+                      <Chip
+                        label={"Menunggu"}
+                        sx={{
+                          background: "rgba(255, 204, 0, 0.10)",
+                          color: "#985211",
+                        }}
+                      />
+                    ) : details?.submission_status?.status === "Approve" ? (
+                      <Chip
+                        label={"Diterima"}
+                        sx={{
+                          background: "rgba(21, 131, 67, 0.10)",
+                          color: "#0A7637",
+                        }}
+                      />
+                    ) : details?.submission_status?.status === "Rejected" ? (
+                      <Chip
+                        label={"Ditolak"}
+                        sx={{
+                          background: "rgba(226, 29, 18, 0.10)",
+                          color: "#CA150C",
+                        }}
+                      />
+                    ) : (
+                      details?.submission_status?.status
+                    )}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {/* Table Pengajuan Proposal End */}
         </Div>
-        {/* Element 2 End */}
       </Div>
+
+      {/* Element 2 End */}
     </Div>
   );
 };

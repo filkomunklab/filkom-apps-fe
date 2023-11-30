@@ -1,15 +1,4 @@
 import React from "react";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import EventNoteIcon from "@mui/icons-material/EventNote";
-import MyLocationIcon from "@mui/icons-material/MyLocation";
-import LoginIcon from "@mui/icons-material/Login";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-import LockResetIcon from "@mui/icons-material/LockReset";
-import PasswordOutlinedIcon from "@mui/icons-material/PasswordOutlined";
-import InsertChartOutlinedIcon from "@mui/icons-material/InsertChartOutlined";
-import InsertCommentIcon from "@mui/icons-material/InsertComment";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 import SchoolIcon from "@mui/icons-material/School";
@@ -19,83 +8,21 @@ import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import PeopleIcon from "@mui/icons-material/People";
-import PublicIcon from "@mui/icons-material/Public";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import GroupsIcon from "@mui/icons-material/Groups";
-import HomeIcon from "@mui/icons-material/Home";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import PersonIcon from "@mui/icons-material/Person";
 import GroupIcon from "@mui/icons-material/Group";
-import RecentActorsIcon from "@mui/icons-material/RecentActors";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import { EmailOutlined } from "@mui/icons-material";
 import AttachEmailIcon from "@mui/icons-material/AttachEmail";
 import MailIcon from "@mui/icons-material/Mail";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
-import ScheduleTwoToneIcon from "@mui/icons-material/ScheduleTwoTone";
+import ChecklistIcon from "@mui/icons-material/Checklist";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 export const sekretarisMenus = [
-  {
-    label: "Sistem Informasi Skripsi",
-    type: "section",
-    children: [
-      {
-        label: "Pengajuan",
-        type: "collapsible",
-        icon: <MailIcon sx={{ fontSize: 20 }} />,
-        children: [
-          {
-            uri: "/sistem-informasi-skripsi/daftar-pengajuan-proposal",
-            label: "Pengajuan Proposal",
-            type: "nav-item",
-            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
-          },
-          {
-            uri: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi",
-            label: "Pengajuan Skripsi",
-            type: "nav-item",
-            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-          },
-        ],
-      },
-      {
-        uri: "/sistem-informasi-skripsi/manajemen-jadwal",
-        label: "Kelola Jadwal",
-        type: "collapsible",
-        icon: <ScheduleTwoToneIcon sx={{ fontSize: 20 }} />,
-        children: [
-          {
-            uri: "/sistem-informasi-skripsi/jadwal-proposal",
-            label: "Jadwal Proposal",
-            type: "nav-item",
-            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
-          },
-          {
-            uri: "/sistem-informasi-skripsi/jadwal-skripsi",
-            label: "Jadwal Skripsi",
-            type: "nav-item",
-            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-          },
-        ],
-      },
-      {
-        uri: "/sistem-informasi-skripsi/manajamen-dosen-skripsi",
-        label: "Dosen Skripsi",
-        type: "nav-item",
-        icon: <PersonIcon sx={{ fontSize: 20 }} />,
-      },
-      {
-        uri: "/sistem-informasi-skripsi/manajamen-dosen",
-        label: "Dosen",
-        type: "nav-item",
-        icon: <PersonIcon sx={{ fontSize: 20 }} />,
-      },
-    ],
-  },
   {
     label: "Bimbingan Akademik",
     type: "section",
@@ -138,6 +65,56 @@ export const sekretarisMenus = [
       },
     ],
   },
+  {
+    label: "Sistem Informasi Skripsi",
+    type: "section",
+    children: [
+      {
+        label: "Pengajuan",
+        type: "collapsible",
+        icon: <MailIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengajuan-proposal",
+            label: "Pengajuan Proposal",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi",
+            label: "Pengajuan Skripsi",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+        ],
+      },
+      {
+        label: "Manajemen Jadwal",
+        type: "collapsible",
+        icon: <MailIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            uri: "/sistem-informasi-skripsi/daftar-jadwal-sidang-proposal",
+            label: "Jadwal Proposal",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-jadwal-sidang-skripsi",
+            label: "Jadwal Skripsi",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+        ],
+      },
+      {
+        uri: "/sistem-informasi-skripsi/manajamen-dosen-skripsi",
+        label: "Manajamen Dosen Skripsi",
+        type: "nav-item",
+        icon: <PersonIcon sx={{ fontSize: 20 }} />,
+      },
+    ],
+  },
 ];
 
 export const mahasiswaMenus = [
@@ -147,17 +124,24 @@ export const mahasiswaMenus = [
     children: [
       // CALON TAMATAN ===============
       {
-        label: "Home (Calon Tamatan)",
+        label: "Dashboard",
         type: "nav-item",
-        icon: <HomeIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/home-calon-tamatan",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Pengisian SPT",
+        label: "SPT Form",
         type: "nav-item",
         icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/pengisian-spt",
+        uri: "/klabat-bridge/home-calon-tamatan",
       },
+
+      // {
+      //   label: "SPT Form",
+      //   type: "nav-item",
+      //   icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
+      //   uri: "/klabat-bridge/pengisian-spt",
+      // },
     ],
   },
   {
@@ -231,7 +215,7 @@ export const mahasiswaMenus = [
     type: "section",
     children: [
       {
-        label: "Mahasiswa",
+        label: "Daftar Pengajuan",
         type: "nav-item",
         icon: <PersonIcon sx={{ fontSize: 20 }} />,
         uri: "/sistem-informasi-skripsi/daftar-pengajuan",
@@ -253,22 +237,16 @@ export const dekanMenus = [
         uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Dafter Alumni",
-        type: "nav-item",
-        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-alumni",
-      },
-      {
-        label: "Daftar Calon Tamatan",
-        type: "nav-item",
-        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-calon-tamatan",
-      },
-      {
-        label: "Daftar Calon Tamatan Fakultas",
+        label: "Graduate Candidates",
         type: "nav-item",
         icon: <GroupsIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/daftar-calon-tamatan-fakultas",
+      },
+      {
+        label: "Alumni",
+        type: "nav-item",
+        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/daftar-alumni-fakultas",
       },
     ],
   },
@@ -381,28 +359,157 @@ export const dekanMenus = [
     type: "section",
     children: [
       {
-        uri: "/sistem-informasi-skripsi/pengajuan-judul-kaprodi",
+        uri: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dekan",
         label: "Pengajuan Judul",
         type: "nav-item",
         icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/pengajuan-proposal-kaprodi",
+        uri: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dekan",
         label: "Pengajuan Proposal",
         type: "nav-item",
         icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/pengajuan-skripsi-kaprodi",
+        uri: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dekan",
         label: "Pengajuan Skripsi",
         type: "nav-item",
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/riwayat-kaprodi",
+        uri: "/sistem-informasi-skripsi/daftar-riwayat-skripsi-dekan",
         label: "Riwayat",
         type: "nav-item",
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+      },
+      {
+        label: "Pengajuan",
+        type: "collapsible",
+        icon: <MailIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi",
+            label: "Pengajuan Judul",
+            type: "nav-item",
+            icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi",
+            label: "Pengajuan Proposal",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi",
+            label: "Pengajuan Skripsi",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+        ],
+      },
+      {
+        uri: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
+        label: "Riwayat Nilai",
+        type: "nav-item",
+        icon: <ChecklistIcon sx={{ fontSize: 20 }} />,
+      },
+      {
+        uri: "/sistem-informasi-skripsi/manajemen-kelas-dosen-skripsi",
+        label: "Manajemen Kelas",
+        type: "nav-item",
+        icon: <CollectionsBookmarkIcon sx={{ fontSize: 20 }} />,
+      },
+      {
+        uri: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
+        label: "Komite Judul",
+        type: "nav-item",
+        icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
+      },
+      {
+        label: "Bimbingan",
+        type: "collapsible",
+        icon: <MailIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor",
+            label: "BProp Adv",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor",
+            label: "BProp Co-Adv",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor",
+            label: "BSkrip Adv",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-co-advisor",
+            label: "BSkrip Co-Adv",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor",
+            label: "RBimb Adv",
+            type: "nav-item",
+            icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor",
+            label: "RBimb Co-Adv",
+            type: "nav-item",
+            icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+        ],
+      },
+      {
+        label: "Pengujian",
+        type: "collapsible",
+        icon: <MailIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-proposal-ketua",
+            label: "Uji Proposal Ketua",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-proposal-anggota",
+            label: "Uji Proposal Anggota",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-skripsi-ketua",
+            label: "Uji Skripsi Ketua",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-skripsi-anggota",
+            label: "Uji Skripsi Anggota",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-ketua",
+            label: "Riwayat Uji Ketua",
+            type: "nav-item",
+            icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-anggota",
+            label: "Riwayat Uji Anggota",
+            type: "nav-item",
+            icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+        ],
       },
     ],
   },
@@ -496,7 +603,108 @@ export const dosenMenus = [
     type: "section",
     children: [
       {
-        uri: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen",
+        uri: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
+        label: "Komite Judul",
+        type: "nav-item",
+        icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
+      },
+      {
+        label: "Bimbingan",
+        type: "collapsible",
+        icon: <MailIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor",
+            label: "BProp Adv",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor",
+            label: "BProp Co-Adv",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor",
+            label: "BSkrip Adv",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-co-advisor",
+            label: "BSkrip Co-Adv",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor",
+            label: "RBimb Adv",
+            type: "nav-item",
+            icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor",
+            label: "RBimb Co-Adv",
+            type: "nav-item",
+            icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+        ],
+      },
+      {
+        label: "Pengujian",
+        type: "collapsible",
+        icon: <MailIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-proposal-ketua",
+            label: "Uji Proposal Ketua",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-proposal-anggota",
+            label: "Uji Proposal Anggota",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-skripsi-ketua",
+            label: "Uji Skripsi Ketua",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-skripsi-anggota",
+            label: "Uji Skripsi Anggota",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-ketua",
+            label: "Riwayat Uji Ketua",
+            type: "nav-item",
+            icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-anggota",
+            label: "Riwayat Uji Anggota",
+            type: "nav-item",
+            icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+        ],
+      },
+    ],
+  },
+];
+
+export const dosenMKMenus = [
+  {
+    label: "Sistem Informasi Skripsi",
+    type: "section",
+    children: [
+      {
+        uri: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
         label: "Komite Judul",
         type: "nav-item",
         icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
@@ -533,42 +741,48 @@ export const dosenMenus = [
         icon: <CollectionsBookmarkIcon sx={{ fontSize: 20 }} />,
       },
       {
+        uri: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
+        label: "Riwayat Nilai",
+        type: "nav-item",
+        icon: <ChecklistIcon sx={{ fontSize: 20 }} />,
+      },
+      {
         label: "Bimbingan",
         type: "collapsible",
         icon: <MailIcon sx={{ fontSize: 20 }} />,
         children: [
           {
-            uri: "/sistem-informasi-skripsi/bimbingan-proposal-advisor",
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor",
             label: "BProp Adv",
             type: "nav-item",
             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/bimbingan-proposal-co-advisor",
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor",
             label: "BProp Co-Adv",
             type: "nav-item",
             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/bimbingan-skripsi-advisor",
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor",
             label: "BSkrip Adv",
             type: "nav-item",
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/bimbingan-skripsi-co-advisor",
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-co-advisor",
             label: "BSkrip Co-Adv",
             type: "nav-item",
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-bimbingan-advisor",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor",
             label: "RBimb Adv",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-bimbingan-co-advisor",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor",
             label: "RBimb Co-Adv",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
@@ -581,37 +795,37 @@ export const dosenMenus = [
         icon: <MailIcon sx={{ fontSize: 20 }} />,
         children: [
           {
-            uri: "/sistem-informasi-skripsi/uji-proposal-ketua",
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-proposal-ketua",
             label: "Uji Proposal Ketua",
             type: "nav-item",
             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/uji-proposal-anggota",
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-proposal-anggota",
             label: "Uji Proposal Anggota",
             type: "nav-item",
             icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/uji-skripsi-ketua",
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-skripsi-ketua",
             label: "Uji Skripsi Ketua",
             type: "nav-item",
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/uji-skripsi-anggota",
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-skripsi-anggota",
             label: "Uji Skripsi Anggota",
             type: "nav-item",
             icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-uji-ketua",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-ketua",
             label: "Riwayat Uji Ketua",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
           },
           {
-            uri: "/sistem-informasi-skripsi/riwayat-uji-anggota",
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-anggota",
             label: "Riwayat Uji Anggota",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
@@ -635,19 +849,13 @@ export const kaprodiMenus = [
         uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Dafter Alumni",
+        label: "Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-alumni",
+        uri: "/klabat-bridge/daftar-alumni-fakultas",
       },
       {
-        label: "Daftar Calon Tamatan",
-        type: "nav-item",
-        icon: <GroupsIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-calon-tamatan",
-      },
-      {
-        label: "Daftar Calon Tamatan Fakultas",
+        label: "Graduate Candidates",
         type: "nav-item",
         icon: <GroupsIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/daftar-calon-tamatan-fakultas",
@@ -763,28 +971,157 @@ export const kaprodiMenus = [
     type: "section",
     children: [
       {
-        uri: "/sistem-informasi-skripsi/pengajuan-judul-kaprodi",
+        uri: "/sistem-informasi-skripsi/daftar-pengajuan-judul-kaprodi",
         label: "Pengajuan Judul",
         type: "nav-item",
         icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/pengajuan-proposal-kaprodi",
+        uri: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-kaprodi",
         label: "Pengajuan Proposal",
         type: "nav-item",
         icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/pengajuan-skripsi-kaprodi",
+        uri: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-kaprodi",
         label: "Pengajuan Skripsi",
         type: "nav-item",
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
       },
       {
-        uri: "/sistem-informasi-skripsi/riwayat-kaprodi",
+        uri: "/sistem-informasi-skripsi/daftar-riwayat-skripsi-kaprodi",
         label: "Riwayat",
         type: "nav-item",
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+      },
+      {
+        label: "Pengajuan",
+        type: "collapsible",
+        icon: <MailIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dosen-skripsi",
+            label: "Pengajuan Judul",
+            type: "nav-item",
+            icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi",
+            label: "Pengajuan Proposal",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dosen-skripsi",
+            label: "Pengajuan Skripsi",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+        ],
+      },
+      {
+        uri: "/sistem-informasi-skripsi/daftar-riwayat-nilai",
+        label: "Riwayat Nilai",
+        type: "nav-item",
+        icon: <ChecklistIcon sx={{ fontSize: 20 }} />,
+      },
+      {
+        uri: "/sistem-informasi-skripsi/manajemen-kelas-dosen-skripsi",
+        label: "Manajemen Kelas",
+        type: "nav-item",
+        icon: <CollectionsBookmarkIcon sx={{ fontSize: 20 }} />,
+      },
+      {
+        uri: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
+        label: "Komite Judul",
+        type: "nav-item",
+        icon: <AttachEmailIcon sx={{ fontSize: 20 }} />,
+      },
+      {
+        label: "Bimbingan",
+        type: "collapsible",
+        icon: <MailIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-advisor",
+            label: "BProp Adv",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-proposal-co-advisor",
+            label: "BProp Co-Adv",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-advisor",
+            label: "BSkrip Adv",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-bimbingan-skripsi-co-advisor",
+            label: "BSkrip Co-Adv",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor",
+            label: "RBimb Adv",
+            type: "nav-item",
+            icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-bimbingan-co-advisor",
+            label: "RBimb Co-Adv",
+            type: "nav-item",
+            icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+        ],
+      },
+      {
+        label: "Pengujian",
+        type: "collapsible",
+        icon: <MailIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-proposal-ketua",
+            label: "Uji Proposal Ketua",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-proposal-anggota",
+            label: "Uji Proposal Anggota",
+            type: "nav-item",
+            icon: <BorderColorIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-skripsi-ketua",
+            label: "Uji Skripsi Ketua",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-pengujian-skripsi-anggota",
+            label: "Uji Skripsi Anggota",
+            type: "nav-item",
+            icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-ketua",
+            label: "Riwayat Uji Ketua",
+            type: "nav-item",
+            icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+          {
+            uri: "/sistem-informasi-skripsi/daftar-riwayat-pengujian-anggota",
+            label: "Riwayat Uji Anggota",
+            type: "nav-item",
+            icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+        ],
       },
     ],
   },
@@ -802,7 +1139,7 @@ export const operatorMenus = [
         uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Dafter Alumni",
+        label: "Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
         uri: "/klabat-bridge/daftar-alumni",
@@ -812,6 +1149,18 @@ export const operatorMenus = [
 ];
 
 export const adminMenus = [
+  {
+    label: "Global",
+    type: "section",
+    children: [
+      {
+        label: "Account Management",
+        type: "nav-item",
+        icon: <ManageAccountsIcon sx={{ fontSize: 20 }} />,
+        uri: "/account-management",
+      },
+    ],
+  },
   {
     label: "Klabat Bridge",
     type: "section",
@@ -823,16 +1172,10 @@ export const adminMenus = [
         uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Dafter Alumni",
+        label: "Alumni",
         type: "nav-item",
         icon: <PeopleIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-alumni",
-      },
-      {
-        label: "Form Tracer Study",
-        type: "nav-item",
-        icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/form-tracer-study",
+        uri: "/klabat-bridge/daftar-alumni-fakultas",
       },
     ],
   },
@@ -844,10 +1187,10 @@ export const registerMenus = [
     type: "section",
     children: [
       {
-        label: "Daftar Calon Tamatan",
+        label: "Graduate Candidates",
         type: "nav-item",
         icon: <GroupsIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/daftar-calon-tamatan",
+        uri: "/klabat-bridge/daftar-calon-tamatan-register",
       },
     ],
   },
@@ -860,17 +1203,23 @@ export const mahasiswaMenusGraduate = [
     children: [
       // ALUMNI ================
       {
-        label: "Home (Alumni)",
+        label: "Dashboard",
         type: "nav-item",
-        icon: <HomeIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/home-alumni",
+        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+        uri: "/klabat-bridge/dashboard",
       },
       {
-        label: "Form Tracer Study",
+        label: "Tracer Study Form",
         type: "nav-item",
         icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/form-tracer-study",
+        uri: "/klabat-bridge/home-alumni",
       },
+      // {
+      //   label: "Form Tracer Study",
+      //   type: "nav-item",
+      //   icon: <InsertDriveFileIcon sx={{ fontSize: 20 }} />,
+      //   uri: "/klabat-bridge/form-tracer-study",
+      // },
     ],
   },
 ];

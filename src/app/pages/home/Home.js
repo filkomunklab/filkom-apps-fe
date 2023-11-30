@@ -3,9 +3,11 @@ import React from 'react';
 const Home = () => {
     return (
         <div>
-            <h2>Sample blank page</h2>
+            <h3>Welcome to FILKOM SuperApp</h3>
+            
+            {/* <h2>Sample blank page</h2>
             <p>This page is just to showcase the way you can add your own pages.</p>
-            <p>Happy Coding!</p>
+            <p>Happy Coding!</p> */}
         </div>
     );
 };

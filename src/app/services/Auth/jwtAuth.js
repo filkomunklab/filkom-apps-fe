@@ -1,6 +1,10 @@
 import { BASE_URL_API } from "@jumbo/config/env";
 import axios from "axios";
 
+export const getAuthToken = () => {
+  return localStorage.getItem("token");
+};
+
 const jwtAuthAxios = axios.create({
   baseURL: BASE_URL_API,
   headers: {
@@ -17,9 +21,5 @@ jwtAuthAxios.interceptors.request.use(
     return Promise.reject(err);
   }
 );
-
-export const getAuthToken = () => {
-  return sessionStorage.getItem("token");
-};
 
 export default jwtAuthAxios;

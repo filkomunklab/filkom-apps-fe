@@ -1,8 +1,13 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
-import React from "react";
 import PeopleIcon from "@mui/icons-material/People";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Chip,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -17,44 +22,56 @@ import DateRangeIcon from "@mui/icons-material/DateRange";
 import GavelIcon from "@mui/icons-material/Gavel";
 import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const DaftarPengujianProposalKetuaPenelis = () => {
-  const TableItem = ({ index }) => {
-    return (
-      <TableRow key={index}>
-        <TableCell sx={{ fontSize: "13px" }}>{index + 1}</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>Geovalga Fransiscus Lim</TableCell>
-        <TableCell sx={{ fontSize: "13px" }}>
-          SISTEM INFORMASI MANAJEMEN SKRIIPSI DI FAKULTAS ILMU KOMPUTER
-          UNIVERSITAS KLABAT
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Chip label={"Belum"} />
-        </TableCell>
-        <TableCell>
-          <Typography
-            component={Link}
-            to="/halaman-berikutnya"
-            sx={{
-              textDecoration: "none",
-              color: "blue",
-            }}
-          >
-            View
-          </Typography>
-        </TableCell>
-      </TableRow>
-    );
+  // State untuk melacak panel accordion yang terbuka
+  const [expanded, setExpanded] = useState(false);
+
+  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
+  const handleChangee = (panel) => (event, isExpanded) => {
+    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
+    setExpanded(isExpanded ? panel : false);
   };
+
+  const [daftarPengujianProposal, setDaftarPengujianProposal] = useState({
+    dashboard: {
+      total_group: 0,
+      not_defence: 0,
+      has_defence: 0,
+      has_revision: 0,
+      not_revision: 0,
+    },
+    semesterData: [],
+  });
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchDaftarPengujianProposalData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:2000/api/v1/group/proposal-list-chairman",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Atur state 'setDaftarPengujianProposal' dengan data dari respons
+        setDaftarPengujianProposal(response.data.data);
+        console.log("Request get daftar proposal: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil daftar pengujian proposal:",
+          error
+        );
+      }
+    };
+    fetchDaftarPengujianProposalData();
+  }, [token]);
 
   return (
     <Div>
@@ -104,7 +121,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
                 lineHeight: "32px",
               }}
             >
-              68 Kelompok
+              {daftarPengujianProposal.dashboard.total_group} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -144,7 +161,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
                 lineHeight: "32px",
               }}
             >
-              29 Kelompok
+              {daftarPengujianProposal.dashboard.not_defence} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -182,7 +199,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
                 lineHeight: "32px",
               }}
             >
-              39 Kelompok
+              {daftarPengujianProposal.dashboard.has_defence} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -222,7 +239,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
                 lineHeight: "32px",
               }}
             >
-              5 Kelompok
+              {daftarPengujianProposal.dashboard.has_revision} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -262,7 +279,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
                 lineHeight: "32px",
               }}
             >
-              34 Kelompok
+              {daftarPengujianProposal.dashboard.not_revision} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -303,7 +320,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
               lineHeight: "32px",
             }}
           >
-            Daftar Pengujian Proposal
+            Daftar Pengujian Proposal Ketua Panelis
           </Typography>
           <Div
             sx={{
@@ -323,59 +340,451 @@ const DaftarPengujianProposalKetuaPenelis = () => {
         {/* Semester Start */}
         <Div
           sx={{
-            display: "flex",
+            display: "inline-flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: "25px",
             width: "100%",
-            padding: "24px",
-            alignItems: "center",
-            gap: "10px",
-            borderRadius: "6px",
-            background: "rgba(26, 56, 96, 0.10)",
+            height: "460px",
+            overflowY: "auto",
+            background: "#FFF",
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+            padding: "8px",
+            borderRadius: "8px",
           }}
         >
-          <Typography
-            sx={{
-              fontSize: "16px",
-              fontStyle: "normal",
-              fontWeight: 500,
-              lineHeight: "24px",
-              color: "#192434",
-            }}
-          >
-            2023/2024-Genap (Proposal)
-          </Typography>
+          {daftarPengujianProposal.semesterData.map(
+            (semesterData, semesterIndex) => (
+              <Accordion
+                key={semesterIndex}
+                expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
+                onChange={handleChangee(`panel${semesterIndex}`)} // Menangani perubahan state accordion
+                sx={{
+                  width: "100%",
+                  padding: "1px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel${semesterIndex}bh-content`}
+                  id={`panel${semesterIndex}bh-header`}
+                >
+                  <Typography
+                    variant="h2"
+                    sx={{
+                      marginTop: "6px",
+                      fontSize: "16px",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {semesterData.semester}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <TableHead>
+                        <TableRow sx={{ background: "#F5F5F5" }}>
+                          <TableCell sx={{ width: "25px", fontSize: "13px" }}>
+                            Nomor
+                          </TableCell>
+                          <TableCell sx={{ width: "200px", fontSize: "13px" }}>
+                            Mahasiswa
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Sidang
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Revisi Ketua Penelis
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Revisi Anggota Penelis
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Revisi Advisor
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Action
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {semesterData.proposals.map(
+                          (proposal, proposalIndex) => (
+                            <TableRow key={proposalIndex}>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposalIndex + 1}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.students.map((student) => (
+                                  <div key={student.id}>{student.fullName}</div>
+                                ))}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.title}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.defence_status === null ? (
+                                  <Chip label={"Belum"} />
+                                ) : proposal.defence_status === "Repeat" ? (
+                                  <Chip
+                                    label={"Mengulang"}
+                                    sx={{
+                                      background: "rgba(255, 204, 0, 0.10)",
+                                      color: "#985211",
+                                    }}
+                                  />
+                                ) : proposal.defence_status === "Pass" ? (
+                                  <Chip
+                                    label={"Lulus"}
+                                    sx={{
+                                      background: "rgba(21, 131, 67, 0.10)",
+                                      color: "#0A7637",
+                                    }}
+                                  />
+                                ) : proposal.defence_status === "Fail" ? (
+                                  <Chip
+                                    label={"Tidak Lulus"}
+                                    sx={{
+                                      background: "rgba(226, 29, 18, 0.10)",
+                                      color: "#CA150C",
+                                    }}
+                                  />
+                                ) : (
+                                  proposal.defence_status
+                                )}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.approve_chairman === null ? (
+                                  <Chip label={"Belum"} />
+                                ) : proposal.approve_chairman === "Waiting" ? (
+                                  <Chip
+                                    label={"Mengunggu"}
+                                    sx={{
+                                      background: "rgba(255, 204, 0, 0.10)",
+                                      color: "#985211",
+                                    }}
+                                  />
+                                ) : proposal.approve_chairman === "Approve" ? (
+                                  <Chip
+                                    label={"Diterima"}
+                                    sx={{
+                                      background: "rgba(21, 131, 67, 0.10)",
+                                      color: "#0A7637",
+                                    }}
+                                  />
+                                ) : proposal.approve_chairman === "Rejected" ? (
+                                  <Chip
+                                    label={"Ditolak"}
+                                    sx={{
+                                      background: "rgba(226, 29, 18, 0.10)",
+                                      color: "#CA150C",
+                                    }}
+                                  />
+                                ) : (
+                                  proposal.approve_chairman
+                                )}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.approve_member === null ? (
+                                  <Chip label={"Belum"} />
+                                ) : proposal.approve_member === "Waiting" ? (
+                                  <Chip
+                                    label={"Mengunggu"}
+                                    sx={{
+                                      background: "rgba(255, 204, 0, 0.10)",
+                                      color: "#985211",
+                                    }}
+                                  />
+                                ) : proposal.approve_member === "Approve" ? (
+                                  <Chip
+                                    label={"Diterima"}
+                                    sx={{
+                                      background: "rgba(21, 131, 67, 0.10)",
+                                      color: "#0A7637",
+                                    }}
+                                  />
+                                ) : proposal.approve_member === "Rejected" ? (
+                                  <Chip
+                                    label={"Ditolak"}
+                                    sx={{
+                                      background: "rgba(226, 29, 18, 0.10)",
+                                      color: "#CA150C",
+                                    }}
+                                  />
+                                ) : (
+                                  proposal.approve_member
+                                )}
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                {proposal.approve_advisor === null ? (
+                                  <Chip label={"Belum"} />
+                                ) : proposal.approve_advisor === "Waiting" ? (
+                                  <Chip
+                                    label={"Mengunggu"}
+                                    sx={{
+                                      background: "rgba(255, 204, 0, 0.10)",
+                                      color: "#985211",
+                                    }}
+                                  />
+                                ) : proposal.approve_advisor === "Approve" ? (
+                                  <Chip
+                                    label={"Diterima"}
+                                    sx={{
+                                      background: "rgba(21, 131, 67, 0.10)",
+                                      color: "#0A7637",
+                                    }}
+                                  />
+                                ) : proposal.approve_advisor === "Rejected" ? (
+                                  <Chip
+                                    label={"Ditolak"}
+                                    sx={{
+                                      background: "rgba(226, 29, 18, 0.10)",
+                                      color: "#CA150C",
+                                    }}
+                                  />
+                                ) : (
+                                  proposal.approve_advisor
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                <Typography
+                                  component={Link}
+                                  to={`/sistem-informasi-skripsi/daftar-pengujian-proposal-ketua/beranda/${proposal.group_id}/KETUA_PANELIS`}
+                                  sx={{
+                                    textDecoration: "none",
+                                    color: "blue",
+                                  }}
+                                >
+                                  Detail
+                                </Typography>
+                              </TableCell>
+                            </TableRow>
+                          )
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </AccordionDetails>
+              </Accordion>
+            )
+          )}
         </Div>
-        {/* Semester End */}
-        {/* Table Mahasiswa Proposal Start */}
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ width: "25px", fontSize: "13px" }}>
-                  Nomor
-                </TableCell>
-                <TableCell sx={{ width: "200px", fontSize: "13px" }}>
-                  Mahasiswa
-                </TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Sidang</TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>
-                  Revisi Ketua Penelis
-                </TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>
-                  Revisi Anggota Penelis
-                </TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Revisi Advisor</TableCell>
-                <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {[...Array(10)].map((item, index) => (
-                <TableItem index={index} />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        {/* Table Mahasiswa Proposal End */}
+
+        {/* {daftarPengujianProposal.semesterData.map(
+          (semesterData, semesterIndex) => (
+            <div key={semesterIndex} style={{ width: "100%" }}>
+              <Div
+                sx={{
+                  display: "flex",
+                  width: "100%",
+                  padding: "24px",
+                  alignItems: "center",
+                  gap: "10px",
+                  borderRadius: "6px",
+                  background: "rgba(26, 56, 96, 0.10)",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "16px",
+                    fontStyle: "normal",
+                    fontWeight: 500,
+                    lineHeight: "24px",
+                    color: "#192434",
+                  }}
+                >
+                  {semesterData.semester}
+                </Typography>
+              </Div>
+              {/* Semester End */}
+        {/* Table Mahasiswa Proposal Start *
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ width: "25px", fontSize: "13px" }}>
+                        Nomor
+                      </TableCell>
+                      <TableCell sx={{ width: "200px", fontSize: "13px" }}>
+                        Mahasiswa
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Sidang</TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Revisi Ketua Penelis
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Revisi Anggota Penelis
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Revisi Advisor
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {semesterData.proposals.map((proposal, proposalIndex) => (
+                      <TableRow key={proposalIndex}>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposalIndex + 1}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.students.map((student) => (
+                            <div key={student.id}>{student.fullName}</div>
+                          ))}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.title}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.defence_status === null ? (
+                            <Chip label={"Belum"} />
+                          ) : proposal.defence_status === "Repeat" ? (
+                            <Chip
+                              label={"Mengulang"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : proposal.defence_status === "Pass" ? (
+                            <Chip
+                              label={"Lulus"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : proposal.defence_status === "Fail" ? (
+                            <Chip
+                              label={"Tidak Lulus"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            proposal.defence_status
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.approve_chairman === null ? (
+                            <Chip label={"Belum"} />
+                          ) : proposal.approve_chairman === "Waiting" ? (
+                            <Chip
+                              label={"Mengunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : proposal.approve_chairman === "Approve" ? (
+                            <Chip
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : proposal.approve_chairman === "Rejected" ? (
+                            <Chip
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            proposal.approve_chairman
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.approve_member === null ? (
+                            <Chip label={"Belum"} />
+                          ) : proposal.approve_member === "Waiting" ? (
+                            <Chip
+                              label={"Mengunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : proposal.approve_member === "Approve" ? (
+                            <Chip
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : proposal.approve_member === "Rejected" ? (
+                            <Chip
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            proposal.approve_member
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.approve_advisor === null ? (
+                            <Chip label={"Belum"} />
+                          ) : proposal.approve_advisor === "Waiting" ? (
+                            <Chip
+                              label={"Mengunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : proposal.approve_advisor === "Approve" ? (
+                            <Chip
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : proposal.approve_advisor === "Rejected" ? (
+                            <Chip
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            proposal.approve_advisor
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            component={Link}
+                            to={`/sistem-informasi-skripsi/daftar-pengujian-proposal-ketua/beranda/${proposal.group_id}/KETUA_PANELIS`}
+                            sx={{
+                              textDecoration: "none",
+                              color: "blue",
+                            }}
+                          >
+                            Detail
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* Table Mahasiswa Proposal End *
+            </div>
+          )
+        )} */}
       </Div>
       {/* Table Master End */}
     </Div>

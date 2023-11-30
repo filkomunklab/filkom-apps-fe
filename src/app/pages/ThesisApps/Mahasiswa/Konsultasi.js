@@ -1,8 +1,9 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
-  Button,
-  Menu,
-  MenuItem,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -11,14 +12,78 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React from "react";
-import { Link } from "react-router-dom";
+import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
+import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
+import MenuKetuaPanelis from "app/shared/MenuHorizontal/MenuKetuaPanelis";
+import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
+import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
+import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
+import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
+import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 
 const Konsultasi = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const [anchorE2, setAnchorE2] = React.useState(null);
-  const open2 = Boolean(anchorE2);
+  // state - simpan request konsultasi
+  const [konsultasi, setKonsultasi] = useState();
+  // state - simpan progress dari riwayat
+  const [progress, setProgress] = useState(null);
+
+  const groupId = useParams().groupId;
+  // console.log("group id: ", groupId);
+
+  const userRole = useParams().role;
+  // console.log(role);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+
+  useEffect(() => {
+    const fetchKonsultasiData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/consultation/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setKonsultasi(response.data.data);
+        console.log("Request Get konsultasi: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil daftar dosen:", error);
+      }
+    };
+    fetchKonsultasiData();
+  }, [token, groupId]);
+
+  const data = [
+    {
+      deskripsi: "Diskusi Tentang Judul",
+      tanggal: "08/09/2023",
+      tertera: "Andrew T.Liem",
+    },
+    {
+      deskripsi: "Diskusi Tentang Metode",
+      tanggal: "08/09/2023",
+      tertera: "Andrew T.Liem",
+    },
+    {
+      deskripsi: "Diskusi Tentang Penulisan",
+      tanggal: "08/09/2023",
+      tertera: "Andrew T.Liem",
+    },
+    {
+      deskripsi: "Diskusi Tentang Perubahan",
+      tanggal: "08/09/2023",
+      tertera: "Andrew T.Liem",
+    },
+    {
+      deskripsi: "Diskusi Tentang Latar Belakang",
+      tanggal: "08/09/2023",
+      tertera: "Andrew T.Liem",
+    },
+  ];
 
   return (
     <Div>
@@ -57,139 +122,14 @@ const Konsultasi = () => {
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
           }}
         >
-          {/* Riwayat Log Start */}
-          <Div
-            sx={{
-              width: "320px",
-              height: "500px",
-              borderRadius: "6px",
-              border: "1px solid rgba(26, 56, 96, 0.10)",
-              background: "#FFF",
+          <Riwayatlog
+            value={groupId}
+            riwayatData={(data) => {
+              if (data) {
+                setProgress(data.progress);
+              }
             }}
-          >
-            Riwayat Log
-          </Div>
-          {/* Riwayat Log End */}
-
-          {/* Dosen Pembimbing Start */}
-          <Div
-            sx={{
-              display: "flex",
-              width: "320px",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              borderRadius: "6px",
-              border: "1px solid rgba(26, 56, 96, 0.10)",
-              background: "#FFF",
-            }}
-          >
-            {/* Advisor */}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Advisor
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-            {/* Co-Advisor 1*/}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Co-Advisor 1
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-            {/* Co-Advisor 2*/}
-            <Div
-              sx={{
-                display: "flex",
-                width: "480px",
-                alignItems: "flex-start",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "150px",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: 2,
-                  flexShrink: "0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Co-Advisor 2
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "flex-start",
-                  gap: 2,
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                -
-              </Div>
-            </Div>
-          </Div>
-          {/* Dosen Pembimbing End */}
+          />
         </Div>
         {/* Element 1 End */}
         {/* Element 2 Start */}
@@ -206,254 +146,168 @@ const Konsultasi = () => {
           }}
         >
           {/* Menu Horizontal Start */}
+          {/* DOSEN SKRIPSI */}
           <Div
-            sx={{
-              display: "flex",
-              // padding: "5px 16px",
-              width: "100%",
-              alignSelf: "stretch",
-              borderRadius: "8px",
-              border: "1px solid #E0E0E0",
-              background: "#FFF",
-              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
-              flexDirection: "column",
-            }}
+            hidden={userRole === "DOSEN_MK" ? false : true}
+            sx={{ width: "100%" }}
           >
-            <Div sx={{ width: "100%", display: "flex" }}>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    sx={{
-                      fontSize: "13px",
-                      padding: "6px 16px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Beranda
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    sx={{
-                      // width: "150px",
-                      fontSize: "13px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Pengajuan Judul
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Link to="#">
-                  <Button
-                    sx={{
-                      // width: "130px",
-                      fontSize: "13px",
-                      fontWeight: 500,
-                      color: "#192434",
-                      textTransform: "none",
-                      "&:hover": {
-                        color: "#006AF5",
-                      },
-                    }}
-                  >
-                    Konsultasi
-                  </Button>
-                </Link>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              <Div sx={{ margin: "auto" }}>
-                <Button
-                  onClick={(event) => setAnchorEl(event.currentTarget)}
-                  sx={{
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: "#006AF5",
-                    },
-                  }}
-                >
-                  Pengajuan Proposal
-                </Button>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={() => setAnchorEl(null)}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Proposal
-                  </MenuItem>
-                  <MenuItem onClick={() => setAnchorEl(null)}>
-                    Upload Revisi Proposal
-                  </MenuItem>
-                </Menu>
-              </Div>
-              <Div
-                sx={{
-                  width: "1px",
-                  transform: "90px",
-                  alignSelf: "stretch",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              ></Div>
-              {/* Menu Pengajuan Skripsi */}
-              <Div>
-                <Button
-                  onClick={(event) => setAnchorEl(event.currentTarget)}
-                  sx={{
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    color: "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color: "#006AF5",
-                    },
-                  }}
-                >
-                  Pengajuan Skripsi
-                </Button>
-                <Menu
-                  anchorEl={anchorE2}
-                  open={open2}
-                  onClose={() => setAnchorE2(null)}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuItem onClick={() => setAnchorE2(null)}>
-                    Upload Skripsi
-                  </MenuItem>
-                  <MenuItem onClick={() => setAnchorE2(null)}>
-                    Upload Revisi Skripsi
-                  </MenuItem>
-                </Menu>
-              </Div>
-            </Div>
+            <MenuDosenSkripsi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
+          {/* KETUA_PANELIS */}
+          <Div
+            hidden={userRole === "KETUA_PANELIS" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKetuaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
+          {/* ANGGOTA_PANELIS */}
+          <Div
+            hidden={userRole === "ANGGOTA_PANELIS" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuAnggotaPanelis
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
+          {/* DEKAN */}
+          <Div
+            hidden={userRole === "DEKAN" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuDekan
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
+          {/* KAPRODI */}
+          <Div
+            hidden={userRole === "KAPRODI" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuKaprodi
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
+          {/* SEKRETARIS */}
+          <Div
+            hidden={userRole === "OPERATOR_FILKOM" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuSekertaris
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
+          </Div>
+          {/* MAHASISWA */}
+          <Div
+            hidden={userRole === "MAHASISWA" ? false : true}
+            sx={{ width: "100%" }}
+          >
+            <MenuMahasiswa
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Konsultasi"}
+            />
           </Div>
           {/* Menu horizontal End */}
 
-          <Div
-            sx={{
-              display: "flex",
-              padding: "29px 42px",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: 2,
-              alignSelf: "stretch",
-              borderRadius: "8px",
-              border: "1px solid #E0E0E0",
-              background: "#FFF",
-              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
-            }}
-          >
+          {konsultasi?.constultation > 0 ? (
             <Div
               sx={{
-                width: "100%",
-                padding: "0 25px",
+                display: "flex",
+                padding: "29px 42px",
                 flexDirection: "column",
                 alignItems: "flex-start",
-                gap: "50px",
+                gap: 2,
+                alignSelf: "stretch",
+                borderRadius: "8px",
+                border: "1px solid #E0E0E0",
+                background: "#FFF",
+                boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
               }}
             >
-              {/* Table Konsultasi Start*/}
-              <TableContainer sx={{ marginBottom: "50px" }}>
-                <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Deskripsi</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Tanggal</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Tertenda</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>1</TableCell>
-                      <TableCell>Diskusi Tentang Judul</TableCell>
-                      <TableCell>08/09/2023</TableCell>
-                      <TableCell>Andrew T.Liem</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>2</TableCell>
-                      <TableCell>Diskusi Tentang Metode</TableCell>
-                      <TableCell>08/09/2023</TableCell>
-                      <TableCell>Andrew T.Liem</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>3</TableCell>
-                      <TableCell>Diskusi Tentang Penulisan</TableCell>
-                      <TableCell>08/09/2023</TableCell>
-                      <TableCell>Andrew T.Liem</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>4</TableCell>
-                      <TableCell>Diskusi Tentang Perubahan</TableCell>
-                      <TableCell>08/09/2023</TableCell>
-                      <TableCell>Andrew T.Liem</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>5</TableCell>
-                      <TableCell>Diskusi Tentang Latar Belakang</TableCell>
-                      <TableCell>08/09/2023</TableCell>
-                      <TableCell>Andrew T.Liem</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Kelompok mahasiswa End */}
+              <Div
+                sx={{
+                  width: "100%",
+                  padding: "0 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "50px",
+                }}
+              >
+                {/* Table Konsultasi Start*/}
+                <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
+                  <Table>
+                    <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                      <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                        <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
+                        <TableCell sx={{ width: "25%" }}>Deskripsi</TableCell>
+                        <TableCell sx={{ width: "25%" }}>Tanggal</TableCell>
+                        <TableCell sx={{ width: "25%" }}>Tertera</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {konsultasi?.constultation?.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>{item.description}</TableCell>
+                          <TableCell>{item.date}</TableCell>
+                          <TableCell>{item.dosen}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                {/* Table Kelompok mahasiswa End */}
+              </Div>
             </Div>
-          </Div>
+          ) : (
+            <Div
+              sx={{
+                display: "flex",
+                padding: "29px 42px",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: 2,
+                alignSelf: "stretch",
+                borderRadius: "8px",
+                border: "1px solid #E0E0E0",
+                background: "#FFF",
+                boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+              }}
+            >
+              <Typography
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  padding: "24px",
+                  alignItems: "center",
+                  gap: "10px",
+                  color: "#CA150C",
+                  background: "rgba(226, 29, 18, 0.50)",
+                  borderRadius: "6px",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                }}
+              >
+                Belum ada konsultasi.
+              </Typography>
+            </Div>
+          )}
         </Div>
         {/* Element 2 End */}
       </Div>

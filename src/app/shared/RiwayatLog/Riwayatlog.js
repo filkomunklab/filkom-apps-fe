@@ -1,28 +1,131 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
-import React from "react";
+import {
+  Button,
+  Step,
+  StepContent,
+  StepLabel,
+  Stepper,
+  Typography,
+} from "@mui/material";
 
-const Riwayatlog = () => {
+const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
+  const [riwayat, setRiwayat] = useState([]);
+  const [timPembimbing, setTimPembimbing] = useState();
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [selectedStep, setSelectedStep] = React.useState(0);
+  // const [steps, setSteps] = useState([]);
+
+  const handleStepClick = (index) => {
+    setSelectedStep(index); // Memperbarui langkah terpilih
+    setActiveStep(index);
+  };
+
+  const token = localStorage.getItem("token");
+  // console.log("token", token);
+  console.log("GroupId di komponen riwayatlog", groupId);
+
+  useEffect(() => {
+    const fetchRiwayatData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/thesis_history/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Atur state 'setRiwayat' dengan data dari respons
+        setRiwayat(response.data.data);
+        // set riwayat terakhir untuk aktif/buka
+        setActiveStep(response.data.data.length - 1);
+        console.log("Request Get riwayat: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil riwayat:", error);
+      }
+    };
+    const fetchTimPembimbingData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/group/advisor-group/${groupId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // Atur state 'setTimPembimbing' dengan data dari respons
+        setTimPembimbing(response.data.data);
+        riwayatData(response.data.data);
+        console.log("Progress dari Riwayat: ", response.data.data);
+        console.log("Request Get tim pembimbing: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil tim pembimbing:",
+          error
+        );
+      }
+    };
+    fetchRiwayatData();
+    fetchTimPembimbingData();
+  }, [token, groupId]);
+
   return (
-    <Div>
+    <Div sx={{ width: "100%" }}>
       {/* Riwayat Log Start */}
       <Div
         sx={{
-          width: "320px",
+          width: "100%",
           height: "500px",
           borderRadius: "6px",
           border: "1px solid rgba(26, 56, 96, 0.10)",
           background: "#FFF",
         }}
       >
-        Riwayat Log
+        {/* Steper Start */}
+        <Div
+          sx={{
+            maxWidth: 400,
+            marginLeft: "20px",
+
+            maxHeight: "100%",
+            overflowY: "auto",
+          }}
+        >
+          <Stepper
+            activeStep={activeStep}
+            orientation="vertical"
+            sx={{
+              marginBottom: "20px",
+              flexDirection: "column-reverse", // Balik arah tata letak kolom
+            }}
+          >
+            {riwayat?.map((step, index) => (
+              <Step key={index} completed={false}>
+                <StepLabel
+                  onClick={() => handleStepClick(index)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {step.description}
+                </StepLabel>
+                <StepContent>
+                  <Typography>{step.user}</Typography>
+                  <Typography>{step.date}</Typography>
+                </StepContent>
+              </Step>
+            ))}
+          </Stepper>
+        </Div>
+        {/* Steper End */}
       </Div>
       {/* Riwayat Log End */}
-
       {/* Dosen Pembimbing Start */}
       <Div
         sx={{
           display: "flex",
-          width: "320px",
+          width: "100%",
           flexDirection: "column",
           alignItems: "flex-start",
           borderRadius: "6px",
@@ -34,107 +137,121 @@ const Riwayatlog = () => {
         <Div
           sx={{
             display: "flex",
-            width: "480px",
+            width: "100%",
             alignItems: "flex-start",
           }}
         >
           <Div
+            variant="subtitle2"
             sx={{
               display: "flex",
-              width: "150px",
-              padding: "14px 16px",
+              width: "120px",
+              padding: "16px 16px",
               alignItems: "center",
-              gap: 2,
-              flexShrink: "0",
-              alignSelf: "stretch",
               background: "#F5F5F5",
             }}
           >
-            Advisor
+            <Typography
+              variant="subtitle2"
+              gutterBottom
+              sx={{ fontSize: "12px" }}
+            >
+              Advisor
+            </Typography>
           </Div>
           <Div
             sx={{
               display: "flex",
-              padding: "14px 16px",
+              padding: "10px 16px",
               alignItems: "flex-start",
-              gap: 2,
-              flex: "1 0 0",
-              alignSelf: "stretch",
             }}
           >
-            -
+            <Typography sx={{ fontSize: "12px" }}>
+              {timPembimbing?.advisor ? timPembimbing?.advisor : ""}
+            </Typography>
           </Div>
         </Div>
+
         {/* Co-Advisor 1*/}
-        <Div
-          sx={{
-            display: "flex",
-            width: "480px",
-            alignItems: "flex-start",
-          }}
-        >
+        {timPembimbing?.co_advisor1 && (
           <Div
             sx={{
               display: "flex",
-              width: "150px",
-              padding: "14px 16px",
-              alignItems: "center",
-              gap: 2,
-              flexShrink: "0",
-              alignSelf: "stretch",
-              background: "#F5F5F5",
-            }}
-          >
-            Co-Advisor 1
-          </Div>
-          <Div
-            sx={{
-              display: "flex",
-              padding: "14px 16px",
+              width: "100%",
               alignItems: "flex-start",
-              gap: 2,
-              flex: "1 0 0",
-              alignSelf: "stretch",
             }}
           >
-            -
+            <Div
+              variant="subtitle2"
+              sx={{
+                display: "flex",
+                width: "120px",
+                padding: "14px 16px",
+                alignItems: "center",
+                background: "#F5F5F5",
+              }}
+            >
+              <Typography
+                variant="subtitle2"
+                gutterBottom
+                sx={{ fontSize: "12px" }}
+              >
+                Co-Advisor 1
+              </Typography>
+            </Div>
+            <Div
+              sx={{
+                display: "flex",
+                padding: "10px 16px",
+                alignItems: "flex-start",
+              }}
+            >
+              <Typography sx={{ fontSize: "12px" }}>
+                {timPembimbing.co_advisor1 ? timPembimbing.co_advisor1 : ""}
+              </Typography>
+            </Div>
           </Div>
-        </Div>
+        )}
         {/* Co-Advisor 2*/}
-        <Div
-          sx={{
-            display: "flex",
-            width: "480px",
-            alignItems: "flex-start",
-          }}
-        >
+        {timPembimbing?.co_advisor2 && (
           <Div
             sx={{
               display: "flex",
-              width: "150px",
-              padding: "14px 16px",
-              alignItems: "center",
-              gap: 2,
-              flexShrink: "0",
-              alignSelf: "stretch",
-              background: "#F5F5F5",
-            }}
-          >
-            Co-Advisor 2
-          </Div>
-          <Div
-            sx={{
-              display: "flex",
-              padding: "14px 16px",
+              width: "100%",
               alignItems: "flex-start",
-              gap: 2,
-              flex: "1 0 0",
-              alignSelf: "stretch",
             }}
           >
-            -
+            <Div
+              variant="subtitle2"
+              sx={{
+                display: "flex",
+                width: "120px",
+                padding: "14px 16px",
+                alignItems: "center",
+                background: "#F5F5F5",
+              }}
+            >
+              <Typography
+                variant="subtitle2"
+                gutterBottom
+                sx={{ fontSize: "12px" }}
+              >
+                Co-Advisor 2
+              </Typography>
+            </Div>
+            <Div
+              sx={{
+                display: "flex",
+                padding: "10px 16px",
+                alignItems: "flex-start",
+              }}
+            >
+              <Typography sx={{ fontSize: "12px" }}>
+                {timPembimbing.co_advisor2 ? timPembimbing.co_advisor2 : ""}
+              </Typography>
+            </Div>
           </Div>
-        </Div>
+        )}
       </Div>
       {/* Dosen Pembimbing End */}
     </Div>
