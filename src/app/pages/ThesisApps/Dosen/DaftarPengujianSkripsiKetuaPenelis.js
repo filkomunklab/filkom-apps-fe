@@ -6,7 +6,14 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  InputAdornment,
   Paper,
   Table,
   TableBody,
@@ -14,19 +21,26 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import GavelIcon from "@mui/icons-material/Gavel";
 import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import SearchIcon from "@mui/icons-material/Search";
 
 const DaftarPengujianSkripsiKetuaPenelis = () => {
   // State untuk melacak panel accordion yang terbuka
   const [expanded, setExpanded] = useState(false);
+
+  // state Pencarian
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   // Fungsi untuk menangani perubahan pada state accordion yang terbuka
   const handleChangee = (panel) => (event, isExpanded) => {
@@ -48,6 +62,33 @@ const DaftarPengujianSkripsiKetuaPenelis = () => {
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
   console.log("token", token);
+
+  // Fungsi untuk menangani pencarian
+  const handleSearch = () => {
+    const results = daftarPengujianSkripsi.semesterData.flatMap(
+      (semesterData) =>
+        semesterData.skripsis.filter((skripsi) => {
+          const studentNames = skripsi.students.map((student) =>
+            student.fullName.toLowerCase()
+          );
+          return (
+            studentNames.some((name) =>
+              name.includes(searchKeyword.toLowerCase())
+            ) ||
+            skripsi.title.toLowerCase().includes(searchKeyword.toLowerCase())
+          );
+        })
+    );
+
+    setSearchResults(results);
+    setSearchQuery(searchKeyword);
+    setIsSearchModalOpen(true);
+  };
+
+  // Fungsi untuk menutup modal pencarian
+  const handleCloseSearchModal = () => {
+    setIsSearchModalOpen(false);
+  };
 
   useEffect(() => {
     const fetchDaftarPengujianSkripsiData = async () => {
@@ -333,8 +374,243 @@ const DaftarPengujianSkripsiKetuaPenelis = () => {
               flexShrink: 0,
             }}
           >
-            {/* <SearchGlobal></SearchGlobal> */}
+            {/* input search */}
+            <TextField
+              id="search-input"
+              variant="outlined"
+              placeholder="Cari Nama Mahasiswa atau Judul"
+              size="small"
+              sx={{
+                borderRadius: 25,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 25,
+                },
+              }}
+              fullWidth
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment>
+                    <IconButton onClick={handleSearch}>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
           </Div>
+          {/* popup Pencarian */}
+          <Dialog
+            open={isSearchModalOpen}
+            onClose={handleCloseSearchModal}
+            fullWidth
+            maxWidth="xl"
+          >
+            <DialogTitle sx={{ textAlign: "center" }}>
+              <Typography variant="h2" gutterBottom>
+                Hasil Pencarian
+              </Typography>
+            </DialogTitle>
+            <DialogContent>
+              <Typography sx={{ marginBottom: "20px" }}>
+                Pencarian Anda : {searchQuery}
+              </Typography>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ background: "#F5F5F5" }}>
+                      <TableCell sx={{ width: "25px", fontSize: "13px" }}>
+                        Nomor
+                      </TableCell>
+                      <TableCell sx={{ width: "200px", fontSize: "13px" }}>
+                        Mahasiswa
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Sidang</TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Revisi Ketua Penelis
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Revisi Anggota Penelis
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Revisi Advisor
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {searchResults.map((skripsi, skripsiIndex) => (
+                      <TableRow key={skripsiIndex}>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsiIndex + 1}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.students.map((student) => (
+                            <div key={student.id}>{student.fullName}</div>
+                          ))}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.title}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.defence_status === null ? (
+                            <Chip label={"Belum"} />
+                          ) : skripsi.defence_status === "Repeat" ? (
+                            <Chip
+                              label={"Mengulang"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : skripsi.defence_status === "Pass" ? (
+                            <Chip
+                              label={"Lulus"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : skripsi.defence_status === "Fail" ? (
+                            <Chip
+                              label={"Tidak Lulus"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            skripsi.defence_status
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.approve_chairman === null ? (
+                            <Chip label={"Belum"} />
+                          ) : skripsi.approve_chairman === "Waiting" ? (
+                            <Chip
+                              label={"Mengunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : skripsi.approve_chairman === "Approve" ? (
+                            <Chip
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : skripsi.approve_chairman === "Rejected" ? (
+                            <Chip
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            skripsi.approve_chairman
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.approve_member === null ? (
+                            <Chip label={"Belum"} />
+                          ) : skripsi.approve_member === "Waiting" ? (
+                            <Chip
+                              label={"Mengunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : skripsi.approve_member === "Approve" ? (
+                            <Chip
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : skripsi.approve_member === "Rejected" ? (
+                            <Chip
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            skripsi.approve_member
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.approve_advisor === null ? (
+                            <Chip label={"Belum"} />
+                          ) : skripsi.approve_advisor === "Waiting" ? (
+                            <Chip
+                              label={"Mengunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : skripsi.approve_advisor === "Approve" ? (
+                            <Chip
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : skripsi.approve_advisor === "Rejected" ? (
+                            <Chip
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            skripsi.approve_advisor
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            component={Link}
+                            to={`/sistem-informasi-skripsi/daftar-pengujian-skripsi-ketua/beranda/${skripsi.group_id}/KETUA_PANELIS`}
+                            sx={{
+                              textDecoration: "none",
+                              color: "blue",
+                            }}
+                          >
+                            Detail
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </DialogContent>
+            <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+              <Button
+                onClick={handleCloseSearchModal}
+                color="primary"
+                sx={{
+                  background: "white",
+                  boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                  textTransform: "none",
+                  color: "black",
+                }}
+              >
+                Kembali
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Div>
         {/* Header End */}
         {/* Semester Start */}

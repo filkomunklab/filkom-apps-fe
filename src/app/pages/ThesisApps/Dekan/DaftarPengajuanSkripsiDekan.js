@@ -15,6 +15,14 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Button,
+  DialogActions,
+  TextField,
+  InputAdornment,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
@@ -23,10 +31,17 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 // import StarBorderIcon from "@mui/icons-material/StarBorder";
 // import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
 
 const DaftarPengajuanSkripsiDekan = () => {
   // State untuk melacak panel accordion yang terbuka
   const [expanded, setExpanded] = useState(false);
+
+  // state Pencarian
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   // Fungsi untuk menangani perubahan pada state accordion yang terbuka
   const handleChange = (panel) => (event, isExpanded) => {
@@ -49,6 +64,33 @@ const DaftarPengajuanSkripsiDekan = () => {
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
   console.log("token", token);
+
+  // Fungsi untuk menangani pencarian
+  const handleSearch = () => {
+    const results = daftarPengajuanSkripsi.semesterData.flatMap(
+      (semesterData) =>
+        semesterData.skripsis.filter((skripsi) => {
+          const studentNames = skripsi.students.map((student) =>
+            student.fullName.toLowerCase()
+          );
+          return (
+            studentNames.some((name) =>
+              name.includes(searchKeyword.toLowerCase())
+            ) ||
+            skripsi.title.toLowerCase().includes(searchKeyword.toLowerCase())
+          );
+        })
+    );
+
+    setSearchResults(results);
+    setSearchQuery(searchKeyword);
+    setIsSearchModalOpen(true);
+  };
+
+  // Fungsi untuk menutup modal pencarian
+  const handleCloseSearchModal = () => {
+    setIsSearchModalOpen(false);
+  };
 
   useEffect(() => {
     const fetchDaftarPengajuanSkripsiData = async () => {
@@ -384,8 +426,142 @@ const DaftarPengajuanSkripsiDekan = () => {
               flexShrink: 0,
             }}
           >
-            {/* <SearchGlobal></SearchGlobal> */}
+            {/* input search */}
+            <TextField
+              id="search-input"
+              variant="outlined"
+              placeholder="Cari Nama Mahasiswa atau Judul"
+              size="small"
+              sx={{
+                borderRadius: 25,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 25,
+                },
+              }}
+              fullWidth
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment>
+                    <IconButton onClick={handleSearch}>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
           </Div>
+          {/* popup Pencarian */}
+          <Dialog
+            open={isSearchModalOpen}
+            onClose={handleCloseSearchModal}
+            fullWidth
+            maxWidth="xl"
+          >
+            <DialogTitle sx={{ textAlign: "center" }}>
+              <Typography variant="h2" gutterBottom>
+                Hasil Pencarian
+              </Typography>
+            </DialogTitle>
+            <DialogContent>
+              <Typography sx={{ marginBottom: "20px" }}>
+                Pencarian Anda : {searchQuery}
+              </Typography>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ background: "#F5F5F5" }}>
+                      <TableCell sx={{ width: "25px", fontSize: "13px" }}>
+                        Nomor
+                      </TableCell>
+                      <TableCell sx={{ width: "200px", fontSize: "13px" }}>
+                        Mahasiswa
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Status</TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {searchResults.map((skripsi, skripsiIndex) => (
+                      <TableRow key={skripsiIndex}>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsiIndex + 1}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.students.map((student) => (
+                            <div key={student.id}>{student.fullName}</div>
+                          ))}
+                        </TableCell>
+
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.title}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {skripsi.is_pass === null ? (
+                            <Chip label={"Belum"} />
+                          ) : skripsi.is_pass === "Repeat" ? (
+                            <Chip
+                              label={"Mengulang"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : skripsi.is_pass === "Pass" ? (
+                            <Chip
+                              label={"Lulus"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : skripsi.is_pass === "Fail" ? (
+                            <Chip
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            skripsi.is_pass
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            component={Link}
+                            to={`/sistem-informasi-skripsi/daftar-pengajuan-skripsi-dekan/beranda/${skripsi.group_id}/DEKAN`}
+                            sx={{
+                              textDecoration: "none",
+                              color: "blue",
+                            }}
+                          >
+                            Detail
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </DialogContent>
+            <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+              <Button
+                onClick={handleCloseSearchModal}
+                color="primary"
+                sx={{
+                  background: "white",
+                  boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                  textTransform: "none",
+                  color: "black",
+                }}
+              >
+                Kembali
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Div>
         {/* Header End */}
         {/* Semester Start */}
