@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Checkbox,
   CssBaseline,
@@ -13,7 +12,6 @@ import { makeStyles } from "@mui/styles";
 import Div from "@jumbo/shared/Div";
 import { ASSET_IMAGES } from "app/utils/constants/paths";
 import Logo from "app/shared/Logo";
-import { mainTheme } from "app/themes/main/default";
 import useJumboAuth from "@jumbo/hooks/useJumboAuth";
 import { useNavigate } from "react-router-dom";
 import authService from "app/services/Auth/auth.service";
@@ -23,7 +21,6 @@ import * as yup from "yup";
 import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
 import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
 import { useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/system";
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
@@ -54,12 +51,12 @@ const useStyles = makeStyles((theme) => ({
   },
   "@media (max-width: 927px)": {
     pageContainer: {
-      flexDirection: "column", // Mengubah arah flex menjadi kolom
-      alignItems: "center", // Pusatkan elemen secara horizontal
-      justifyContent: "center", // Pusatkan elemen secara vertikal
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
     },
     leftSide: {
-      display: "none", // Sembunyikan gambar di sisi kiri
+      display: "none",
     },
   },
 }));
@@ -72,7 +69,6 @@ const signInSchema = yup.object({
 
 const Login = () => {
   const style = useStyles();
-  const theme = useTheme();
   const maxWidth515 = useMediaQuery("(max-width: 515px)");
 
   const { setAuthToken } = useJumboAuth();
@@ -155,7 +151,7 @@ const Login = () => {
                       name="loginAs"
                       label="Login as"
                       sx={{
-                        width: maxWidth515 ? "275px" : "150px",
+                        width: maxWidth515 ? "275px" : "135px",
                       }}
                       options={[
                         { value: "", label: "None" },
@@ -172,7 +168,7 @@ const Login = () => {
                         label={"Remember Me"}
                         sx={{
                           "& .MuiTypography-root": {
-                            fontSize: maxWidth515 ? "12px" : "14px",
+                            fontSize: maxWidth515 ? "12px" : "15px",
                             marginLeft: maxWidth515 ? "-4px" : "0px",
                           },
                         }}
@@ -183,7 +179,7 @@ const Login = () => {
                         sx={{
                           fontSize: maxWidth515 ? "11px" : "14px",
                           textTransform: "capitalize",
-                          paddingTop: maxWidth515 ? "11px" : "0",
+                          paddingTop: maxWidth515 ? "11px" : "9px",
                           paddingRight: maxWidth515 ? "0" : "0",
                         }}
                         variant="text"
@@ -207,7 +203,13 @@ const Login = () => {
                     </LoadingButton>
                   </Grid>
                   <Grid item alignSelf={"center"}>
-                    <Button sx={{ textTransform: "capitalize" }} variant="text">
+                    <Button
+                      sx={{
+                        fontSize: maxWidth515 ? "12px" : "14px",
+                        textTransform: "capitalize",
+                      }}
+                      variant="text"
+                    >
                       Create an account
                     </Button>
                   </Grid>
