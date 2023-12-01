@@ -8,7 +8,14 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  InputAdornment,
   Paper,
   Table,
   TableBody,
@@ -16,17 +23,24 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
 import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import { Mail } from "@mui/icons-material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import SearchIcon from "@mui/icons-material/Search";
 
 const DaftarPengajuanJudulKaprodi = () => {
   // State untuk melacak panel accordion yang terbuka
   const [expanded, setExpanded] = useState(false);
+
+  // state Pencarian
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   // Fungsi untuk menangani perubahan pada state accordion yang terbuka
   const handleChange = (panel) => (event, isExpanded) => {
@@ -47,6 +61,31 @@ const DaftarPengajuanJudulKaprodi = () => {
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
   console.log("token", token);
+
+  // Fungsi untuk menangani pencarian
+  const handleSearch = () => {
+    // Lakukan pencarian di sini, misalnya menggunakan filter
+    const results = daftarPengajuanJudul.semesterData
+      .flatMap((semesterData) => semesterData.submissions)
+      .filter((submission) =>
+        submission.students.some(
+          (student) =>
+            student.fullName
+              .toLowerCase()
+              .includes(searchKeyword.toLowerCase()) ||
+            submission.title.toLowerCase().includes(searchKeyword.toLowerCase())
+        )
+      );
+
+    setSearchResults(results);
+    setSearchQuery(searchKeyword);
+    setIsSearchModalOpen(true);
+  };
+
+  // Fungsi untuk menutup modal pencarian
+  const handleCloseSearchModal = () => {
+    setIsSearchModalOpen(false);
+  };
 
   useEffect(() => {
     const fetchDaftarPengajuanJudulData = async () => {
@@ -330,8 +369,180 @@ const DaftarPengajuanJudulKaprodi = () => {
               flexShrink: 0,
             }}
           >
-            {/* <SearchGlobal></SearchGlobal> */}
+            {/* input search */}
+            <TextField
+              id="search-input"
+              variant="outlined"
+              placeholder="Cari Nama Mahasiswa atau Judul"
+              size="small"
+              sx={{
+                borderRadius: 25,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 25,
+                },
+              }}
+              fullWidth
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment>
+                    <IconButton onClick={handleSearch}>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
           </Div>
+          {/* popup Pencarian */}
+          <Dialog
+            open={isSearchModalOpen}
+            onClose={handleCloseSearchModal}
+            fullWidth
+            maxWidth="xl"
+          >
+            <DialogTitle sx={{ textAlign: "center" }}>
+              <Typography variant="h2" gutterBottom>
+                Hasil Pencarian
+              </Typography>
+            </DialogTitle>
+            <DialogContent>
+              <Typography sx={{ marginBottom: "20px" }}>
+                Pencarian Anda : {searchQuery}
+              </Typography>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ background: "#F5F5F5" }}>
+                      <TableCell sx={{ width: "25px", fontSize: "13px" }}>
+                        Nomor
+                      </TableCell>
+                      <TableCell sx={{ width: "200px", fontSize: "13px" }}>
+                        Mahasiswa
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Calon Advisor
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Calon Co-Advisor 1
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Calon Co-Advisor 2
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Konsultasi
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Status</TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {searchResults.map((submission, submissionIndex) => (
+                      <TableRow key={submissionIndex}>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {submissionIndex + 1}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {submission.students.map((student) => (
+                            <div key={student.id}>{student.fullName}</div>
+                          ))}
+                        </TableCell>
+
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {submission.title}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {submission.proposed_advisor}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {submission.proposed_co_advisor1}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {submission.proposed_co_advisor2}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {submission.is_consultation ? (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : (
+                            <Chip
+                              label={"Belum"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {submission.is_approve === "Waiting" ? (
+                            <Chip
+                              label={"Menunggu"}
+                              sx={{
+                                background: "rgba(255, 204, 0, 0.10)",
+                                color: "#985211",
+                              }}
+                            />
+                          ) : submission.is_approve === "Approve" ? (
+                            <Chip
+                              label={"Diterima"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : submission.is_approve === "Rejected" ? (
+                            <Chip
+                              label={"Ditolak"}
+                              sx={{
+                                background: "rgba(226, 29, 18, 0.10)",
+                                color: "#CA150C",
+                              }}
+                            />
+                          ) : (
+                            submission.is_approve
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            component={Link}
+                            to={`/sistem-informasi-skripsi/daftar-pengajuan-judul-kaprodi/beranda/${submission.group_id}/KAPRODI`}
+                            sx={{
+                              textDecoration: "none",
+                              color: "blue",
+                            }}
+                          >
+                            Detail
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </DialogContent>
+            <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+              <Button
+                onClick={handleCloseSearchModal}
+                color="primary"
+                sx={{
+                  background: "white",
+                  boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                  textTransform: "none",
+                  color: "black",
+                }}
+              >
+                Kembali
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Div>
         {/* Header End */}
         {/* Semester and Table Mahasiswa Proposal Start */}
@@ -547,156 +758,6 @@ const DaftarPengajuanJudulKaprodi = () => {
             </Typography>
           </Div>
         )}
-
-        {/* {daftarPengajuanJudul.semesterData.map(
-          (semesterData, semesterIndex) => (
-            <div key={semesterIndex} style={{ width: "100%" }}>
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "100%",
-                  padding: "24px",
-                  alignItems: "center",
-                  gap: "10px",
-                  borderRadius: "6px",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "16px",
-                    fontStyle: "normal",
-                    fontWeight: 500,
-                    lineHeight: "24px",
-                    color: "#192434",
-                  }}
-                >
-                  {semesterData.semester}
-                </Typography>
-              </Div>
-              {/* Semester End */}
-        {/* Table Mahasiswa Proposal Start *
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell sx={{ width: "25px", fontSize: "13px" }}>
-                        Nomor
-                      </TableCell>
-                      <TableCell sx={{ width: "200px", fontSize: "13px" }}>
-                        Mahasiswa
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Calon Advisor
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Calon Co-Advisor 1
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Calon Co-Advisor 2
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Konsultasi
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Status</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {semesterData.submissions.map(
-                      (submission, submissionIndex) => (
-                        <TableRow key={submissionIndex}>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            {submissionIndex + 1}
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            {submission.students.map((student) => (
-                              <div key={student.id}>{student.fullName}</div>
-                            ))}
-                          </TableCell>
-
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            {submission.title}
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            {submission.proposed_advisor}
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            {submission.proposed_co_advisor1}
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            {submission.proposed_co_advisor2}
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            {submission.is_consultation ? (
-                              <Chip
-                                label={"Sudah"}
-                                sx={{
-                                  background: "rgba(21, 131, 67, 0.10)",
-                                  color: "#0A7637",
-                                }}
-                              />
-                            ) : (
-                              <Chip
-                                label={"Belum"}
-                                sx={{
-                                  background: "rgba(226, 29, 18, 0.10)",
-                                  color: "#CA150C",
-                                }}
-                              />
-                            )}
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            {submission.is_approve === "Waiting" ? (
-                              <Chip
-                                label={"Menunggu"}
-                                sx={{
-                                  background: "rgba(255, 204, 0, 0.10)",
-                                  color: "#985211",
-                                }}
-                              />
-                            ) : submission.is_approve === "Approve" ? (
-                              <Chip
-                                label={"Diterima"}
-                                sx={{
-                                  background: "rgba(21, 131, 67, 0.10)",
-                                  color: "#0A7637",
-                                }}
-                              />
-                            ) : submission.is_approve === "Rejected" ? (
-                              <Chip
-                                label={"Ditolak"}
-                                sx={{
-                                  background: "rgba(226, 29, 18, 0.10)",
-                                  color: "#CA150C",
-                                }}
-                              />
-                            ) : (
-                              submission.is_approve
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            <Typography
-                              component={Link}
-                              to="/sistem-informasi-skripsi/daftar-pengajuan-proposal-dosen-skripsi/beranda/4353987/kaprodi"
-                              sx={{
-                                textDecoration: "none",
-                                color: "blue",
-                              }}
-                            >
-                              Detail
-                            </Typography>
-                          </TableCell>
-                        </TableRow>
-                      )
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div>
-          )
-        )} */}
         {/* Table Mahasiswa Proposal End */}
       </Div>
       {/* Table Master End */}
