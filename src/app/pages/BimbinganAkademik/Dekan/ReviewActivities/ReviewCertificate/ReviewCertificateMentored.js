@@ -234,7 +234,7 @@ const ReviewCertificateMentored = () => {
         <Grid item xs={12}>
           <TableContainer
             sx={{
-              maxHeight: 640,
+              maxHeight: 540,
             }}
             component={Paper}
           >

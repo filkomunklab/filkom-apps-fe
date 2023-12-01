@@ -8,12 +8,23 @@ import {
   Button,
   IconButton,
   Paper,
+  Breadcrumbs,
+  experimentalStyled as styled,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import Div from "@jumbo/shared/Div";
 import SendIcon from "@mui/icons-material/Send";
 import { format } from "date-fns";
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const requiredStyle = {
   color: "red",
@@ -48,6 +59,7 @@ const Consultation = () => {
   const [message, setMessage] = useState("");
   const [showLabel, setShowLabel] = useState(true);
   const [showLabel2, setShowLabel2] = useState(true);
+  const [status, setStatus] = useState("Waiting");
 
   const [openFirstModal, setOpenFirstModal] = React.useState(false);
   const [openSecondModal, setOpenSecondModal] = React.useState(false);
@@ -72,6 +84,7 @@ const Consultation = () => {
     if (inputValue.trim() !== "") {
       setSubmittedValue(inputValue);
       setInputValue("");
+      setStatus("On-Process");
     }
   };
   const currentDate = format(new Date(), "dd/MM/yyyy HH:mm");
@@ -88,6 +101,7 @@ const Consultation = () => {
 
   const handleSubmitFirstModal = () => {
     handleCloseFirstModal();
+    setStatus("Complete");
 
     setTopic("");
     setReceiver("");
@@ -100,6 +114,12 @@ const Consultation = () => {
 
   return (
     <Div>
+      <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
+        <StyledLink to="/bimbingan-akademik/kaprodi/review-activities/consultation/">
+          Student Consultation
+        </StyledLink>
+        <Typography color="text.primary">View Consultation</Typography>
+      </Breadcrumbs>
       <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
         Consultation
       </Typography>
@@ -211,11 +231,18 @@ const Consultation = () => {
               variant="h5"
               sx={{
                 fontWeight: 600,
-                color: "#0A7637",
+                color:
+                  status === "Waiting"
+                    ? "#FFCC00"
+                    : status === "On-Process"
+                    ? "#0A7637"
+                    : status === "Complete"
+                    ? "blue"
+                    : "#005FDB",
                 marginLeft: 1,
               }}
             >
-              On-Process
+              {status}
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -320,27 +347,26 @@ const Consultation = () => {
                           </Button>
                         </Grid>
                         <Grid item>
-                          <Link
+                          {/* <Link
                             style={{ textDecoration: "none", color: "white" }}
                             to="/bimbingan-akademik/consultation/consultationComplete"
+                          > */}
+                          <Button
+                            onClick={handleSubmitFirstModal}
+                            sx={{
+                              backgroundColor: "#006AF5",
+                              borderRadius: "5px",
+                              boxShadow: 4,
+                              color: "white",
+                              whiteSpace: "nowrap",
+                              "&:hover": {
+                                backgroundColor: "#025ED8",
+                              },
+                            }}
                           >
-                            <Button
-                              onClick={handleSubmitFirstModal}
-                              sx={{
-                                backgroundColor: "#006AF5",
-                                borderRadius: "5px",
-                                boxShadow: 4,
-                                color: "white",
-                                whiteSpace: "nowrap",
-                                "&:hover": {
-                                  backgroundColor: "#025ED8",
-                                },
-                              }}
-                            >
-                              Yes
-                            </Button>
-                          </Link>
-                          .
+                            Yes
+                          </Button>
+                          {/* </Link> */}.
                         </Grid>
                       </Grid>
                     </div>

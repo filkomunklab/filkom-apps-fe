@@ -16,15 +16,13 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  FormControl,
-  InputLabel,
-  ListSubheader,
-  MenuItem,
-  Select,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import { Link, useNavigate } from "react-router-dom";
-import SearchGlobal from "app/shared/SearchGlobal";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -71,57 +69,91 @@ const studentsData = Array.from({ length: 29 }, (_, index) => ({
   prodi: "Informatika",
 }));
 
-const yearList = [
-  {
-    value: "2017",
-    label: "2017",
-  },
-  {
-    value: "2018",
-    label: "2018",
-  },
-  {
-    value: "2019",
-    label: "2019",
-  },
-  {
-    value: "2020",
-    label: "2020",
-  },
-  {
-    value: "2021",
-    label: "2021",
-  },
-  {
-    value: "2022",
-    label: "2022",
-  },
-  {
-    value: "2023",
-    label: "2023",
-  },
-];
-
-const prodiList = [
-  {
-    value: "informatika",
-    label: "Informatika",
-  },
-  {
-    value: "dkv",
-    label: "DKV",
-  },
-  {
-    value: "si",
-    label: "SI",
-  },
-];
-
 const ViewActivity = () => {
+  const navigate = useNavigate();
   const [selectedAll, setSelectedAll] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState([]);
-  const [filter, setFilter] = useState([]);
-  const [showLabel, setShowLabel] = useState(true);
+  const [openFirstModal, setOpenFirstModal] = useState(false);
+  const [openSecondModal, setOpenSecondModal] = useState(false);
+
+  // const getActivityDetail = async() => {
+  //   try{
+  //     const headers = {
+  //         'Content-Type': 'multipart/form-data',
+  //         Authorization: `Bearer token_apa`,
+  //     };
+
+  //     const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+
+  //     const {status, message, code, data} = response.data
+  //     if(status === 'OK'){ //isi status atau code tergantung API
+  //     //simpan dalam usestate contoh:
+  //     //setStudentList = data
+  //     //tambahkan handle lain jika perlu
+  //     }else{
+  //     //tambah handler jika respon lain, kalau tidak perlu hapus saja
+  //       console.log(response)
+  //     }
+
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
+
+  // const getStudentList = async() =>{
+  //   try{
+  //     const headers = {
+  //         'Content-Type': 'multipart/form-data',
+  //         Authorization: `Bearer token_apa`,
+  //     };
+
+  //     const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+
+  //     const {status, message, code, data} = response.data
+  //     if(status === 'OK'){ //isi status atau code tergantung API
+  //     //simpan dalam usestate contoh:
+  //     //setStudentList = data
+  //     //tambahkan handle lain jika perlu
+  //     }else{
+  //     //tambah handler jika respon lain, kalau tidak perlu hapus saja
+  //       console.log(response)
+  //     }
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
+
+  // const submitAttendance = async()=>{
+  //   try{
+  //     const headers = {
+  //         'Content-Type': 'multipart/form-data',
+  //         Authorization: `Bearer token_apa`,
+  //     };
+
+  //     const response = await axios.post(`${BASE_URL_API}/bla/bla/bla`,{body: 'data apa'},{headers})
+
+  //   // jika tidak akan melakukan handle terhadap response maka hapus saja "const response =", jadi sisa await dst...
+  //     console.log(response)
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
+
+  // const submitActivity = async()=>{
+  //   try{
+  //     const headers = {
+  //         'Content-Type': 'multipart/form-data',
+  //         Authorization: `Bearer token_apa`,
+  //     };
+
+  //     const response = await axios.post(`${BASE_URL_API}/bla/bla/bla`,{body: 'data apa'},{headers})
+
+  //   // jika tidak akan melakukan handle terhadap response maka hapus saja "const response =", jadi sisa await dst...
+  //     console.log(response)
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
 
   const handleSelectAll = () => {
     setSelectedAll(!selectedAll);
@@ -139,38 +171,31 @@ const ViewActivity = () => {
     setSelectedStudents(updatedSelectedStudents);
   };
 
-  const navigate = useNavigate();
-
   const handleClick = (event) => {
     event.preventDefault();
     navigate(-1);
   };
 
-  const [openFirstModal, setOpenFirstModal] = React.useState(false);
-  const [openSecondModal, setOpenSecondModal] = React.useState(false);
-  const handleOpenFirstModal = () => setOpenFirstModal(true);
-  const handleCloseFirstModal = () => setOpenFirstModal(false);
-  const handleOpenSecondModal = () => setOpenSecondModal(true);
-  const handleCloseSecondModal = () => setOpenSecondModal(false);
   const handleSubmitFirstModal = () => {
-    handleCloseFirstModal();
-    handleOpenSecondModal();
+    setOpenFirstModal(false);
+    setOpenSecondModal(true);
   };
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      handleCloseSecondModal();
+      setOpenSecondModal(false);
     }, 5000);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [handleOpenSecondModal]);
+  }, [openSecondModal === true]);
 
   return (
     <div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Back</StyledLink>
+          <StyledLink>Current Activities</StyledLink>
           <Typography color="text.primary">Activity</Typography>
         </Breadcrumbs>
       </div>
@@ -178,25 +203,25 @@ const ViewActivity = () => {
         sx={{ fontSize: "24px", fontWeight: 500, paddingTop: "20px" }}
       >
         Activity
-      </Typography>{" "}
+      </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Stack spacing={2} sx={{ paddingTop: 3 }}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Title</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 1 }}>
-                Pengumpulan Krtu Rencana Studi Semester Ganjil Tahun Ajaran
-                2022/2023 Gelombang 1
+                Pengumpulan Kartu Rencana Studi Semester ganjil tahun 2022/2023
+                Gelombang 1
               </Typography>
             </Paper>
           </Stack>
         </Grid>
         <Grid item xs={12}>
           <Stack spacing={2}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Descriptions</Typography>
             </Grid>
 
@@ -215,23 +240,23 @@ const ViewActivity = () => {
           </Stack>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={6}>
           <Stack spacing={2}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Due Date</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                Monday, 22 September 2023
+                Senin, 22 September 2023
               </Typography>
             </Paper>
           </Stack>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={6}>
           <Stack spacing={2}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Clock (optional)</Typography>
             </Grid>
 
@@ -242,50 +267,9 @@ const ViewActivity = () => {
             </Paper>
           </Stack>
         </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Stack spacing={2}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
-              <Typography>Form Attendance</Typography>
-            </Grid>
-
-            <Paper elevation={0} variant="outlined" fullWidth>
-              <Typography variant="body1" sx={{ p: 2 }}>
-                Yes
-              </Typography>
-            </Paper>
-          </Stack>
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <Stack spacing={2}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
-              <Typography>For</Typography>
-            </Grid>
-
-            <Paper elevation={0} variant="outlined" fullWidth>
-              <Typography variant="body1" sx={{ p: 2 }}>
-                Mahasiswa Fakultas
-              </Typography>
-            </Paper>
-          </Stack>
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <Stack spacing={2}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
-              <Typography>Student</Typography>
-            </Grid>
-
-            <Paper elevation={0} variant="outlined" fullWidth>
-              <Typography variant="body1" sx={{ p: 2 }}>
-                All Student
-              </Typography>
-            </Paper>
-          </Stack>
-        </Grid>
       </Grid>
-      <Grid
+
+      {/* <Grid
         sx={{
           padding: 2,
           paddingTop: "30px",
@@ -294,7 +278,180 @@ const ViewActivity = () => {
         }}
       >
         <Button
-          onClick={handleOpenFirstModal}
+          onClick={()=>setOpenFirstModal(true)}
+          sx={{
+            backgroundColor: "#006AF5",
+            borderRadius: "24px",
+            color: "white",
+            whiteSpace: "nowrap",
+            minWidth: "132px",
+            fontSize: "12px",
+            padding: "10px",
+            gap: "6px",
+
+            "&:hover": {
+              backgroundColor: "#025ED8",
+            },
+          }}
+        >
+          Submit
+        </Button>
+      </Grid> */}
+      {/* <Modal
+        open={openFirstModal}
+        onClose={() => setOpenFirstModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div style={style}>
+          <Typography
+            id="modal-modal-title"
+            variant="h4"
+            component="h2"
+            sx={{
+              fontWeight: 600,
+            }}
+          >
+            Submit Now?
+          </Typography>
+          <Typography
+            id="modal-modal-description"
+            style={{ marginTop: "16px", marginBottom: "20px" }}
+          >
+            Are you sure you want to submit this? Forms that have been submitted
+            cannot be edited again.
+          </Typography>
+
+          <Grid container spacing={1} justifyContent="flex-end">
+            <Grid item>
+              <Button
+                onClick={() => setOpenFirstModal(false)}
+                sx={{
+                  backgroundColor: "white",
+                  borderRadius: "5px",
+                  color: "black",
+                  whiteSpace: "nowrap",
+                  "&:hover": {
+                    backgroundColor: "lightgrey",
+                  },
+                }}
+              >
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                onClick={handleSubmitFirstModal}
+                sx={{
+                  backgroundColor: "#006AF5",
+                  borderRadius: "5px",
+                  color: "white",
+                  whiteSpace: "nowrap",
+                  "&:hover": {
+                    backgroundColor: "#025ED8",
+                  },
+                }}
+              >
+                Submit the Attendance?
+              </Button>
+            </Grid>
+          </Grid>
+        </div>
+      </Modal>
+      <Modal
+        open={openSecondModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div style={style2}>
+          <IconButton
+            edge="end"
+            color="#D9D9D9"
+            onClick={() => setOpenSecondModal(false)}
+            aria-label="close"
+            sx={{
+              position: "absolute",
+              top: "10px",
+              right: "20px",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Typography
+            id="modal-modal-title"
+            variant="h4"
+            component="h2"
+            sx={{
+              fontWeight: 600,
+            }}
+          >
+            Successful Submission!
+          </Typography>
+          <Typography
+            id="modal-modal-description"
+            style={{ marginTop: "16px", marginBottom: "20px" }}
+          >
+            You have successfully entered the student attendance form.
+          </Typography>
+        </div>
+      </Modal> */}
+
+      <div>
+        <Typography sx={{ fontSize: "24px", mt: 2, mb: 2, fontWeight: 400 }}>
+          Attendance
+        </Typography>
+        <TableContainer
+          sx={{
+            maxHeight: 640,
+          }}
+          component={Paper}
+        >
+          <Table stickyHeader>
+            <TableHead
+              size="small"
+              sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}
+            >
+              <TableRow size="small">
+                <TableCell>
+                  <Checkbox checked={selectedAll} onChange={handleSelectAll} />
+                </TableCell>
+                <TableCell>Number</TableCell>
+                <TableCell>Student Name</TableCell>
+                <TableCell>NIM</TableCell>
+                <TableCell>Prodi</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {studentsData.map((student) => (
+                <TableRow key={student.id}>
+                  <TableCell sx={{ width: "40px" }}>
+                    <Checkbox
+                      checked={selectedStudents.includes(student.id)}
+                      onChange={() => handleSelectStudent(student.id)}
+                    />
+                  </TableCell>
+                  <TableCell sx={{ width: "40px" }}>{student.id}</TableCell>
+                  <TableCell sx={{ width: "190px" }}>{student.name}</TableCell>
+                  <TableCell sx={{ width: "80px" }}>{student.nim}</TableCell>
+                  <TableCell sx={{ width: "80px" }}>{student.prodi}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+
+      <Grid
+        sx={{
+          padding: 2,
+          paddingTop: "30px",
+          display: "flex",
+          justifyContent: "flex-end",
+          paddingBottom: "60px",
+        }}
+      >
+        <Button
+          onClick={() => setOpenFirstModal(true)}
           sx={{
             backgroundColor: "#006AF5",
             borderRadius: "24px",
@@ -313,9 +470,10 @@ const ViewActivity = () => {
           Submit
         </Button>
       </Grid>
+
       <Modal
         open={openFirstModal}
-        onClose={handleCloseFirstModal}
+        onClose={() => setOpenFirstModal(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -328,7 +486,7 @@ const ViewActivity = () => {
               fontWeight: 600,
             }}
           >
-            Send Certificate?
+            Submit the Attendance?
           </Typography>
           <Typography
             id="modal-modal-description"
@@ -341,7 +499,7 @@ const ViewActivity = () => {
           <Grid container spacing={1} justifyContent="flex-end">
             <Grid item>
               <Button
-                onClick={handleCloseFirstModal}
+                onClick={() => setOpenFirstModal(false)}
                 sx={{
                   backgroundColor: "white",
                   borderRadius: "5px",
@@ -383,7 +541,7 @@ const ViewActivity = () => {
           <IconButton
             edge="end"
             color="#D9D9D9"
-            onClick={handleCloseSecondModal}
+            onClick={() => setOpenSecondModal(false)}
             aria-label="close"
             sx={{
               position: "absolute",
@@ -407,163 +565,10 @@ const ViewActivity = () => {
             id="modal-modal-description"
             style={{ marginTop: "16px", marginBottom: "20px" }}
           >
-            You have successfully preregistered for the course.
+            You have successfully entered the student attendance form.
           </Typography>
         </div>
       </Modal>
-      <Grid container spacing={2} marginTop={1}>
-        <Grid display={"flex"} alignItems={"flex-end"} item md={7}>
-          <Typography sx={{ fontSize: "24px", fontWeight: 400 }}>
-            Attendance
-          </Typography>
-        </Grid>
-        <Grid item md={3}>
-          <SearchGlobal sx={{ height: "100%" }} />
-        </Grid>
-        <Grid item md={2}>
-          <FormControl
-            sx={{
-              width: "139px",
-              paddingLeft: "7px",
-            }}
-          >
-            <InputLabel
-              sx={{ paddingLeft: "9px", paddingTop: "2px" }}
-              shrink={false}
-            >
-              {showLabel ? "Filter" : ""}
-            </InputLabel>
-            <Select
-              sx={{ borderRadius: 50 }}
-              multiple
-              value={filter}
-              renderValue={(selected) => selected.join(", ")}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: "37%",
-                  },
-                },
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Status
-              </ListSubheader>
-              <MenuItem value={"activeStudent"}>Active</MenuItem>
-              <MenuItem value={"nonactiveStudent"}>Nonactive</MenuItem>
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Tahun Masuk
-              </ListSubheader>
-              {yearList.map((item) => (
-                <MenuItem
-                  key={item.value}
-                  value={item.value}
-                  sx={{
-                    backgroundColor: "#FAFAFA",
-                    borderRadius: "5px",
-                    margin: "5px",
-                  }}
-                >
-                  {item.label}
-                </MenuItem>
-              ))}
-              <div>
-                <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                  Prodi
-                </ListSubheader>
-                {prodiList.map((item) => (
-                  <MenuItem
-                    key={item.value}
-                    onChange={(event) => console.log(event.currentTarget.value)}
-                    value={item.value}
-                    sx={{
-                      backgroundColor: "#FAFAFA",
-                      borderRadius: "5px",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </div>
-            </Select>
-          </FormControl>
-        </Grid>
-        <TableContainer
-          sx={{
-            overflow: "auto",
-            marginTop: 4,
-            backgroundColor: "white",
-            border: "1px solid #ddd",
-            borderRadius: "8px",
-          }}
-        >
-          <Table>
-            <TableHead
-              size="small"
-              sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}
-            >
-              <TableRow size="small">
-                <TableCell>Number</TableCell>
-                <TableCell>Student Name</TableCell>
-                <TableCell>NIM</TableCell>
-                <TableCell>Prodi</TableCell>
-                <TableCell>
-                  <Checkbox checked={selectedAll} onChange={handleSelectAll} />
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {studentsData.map((student) => (
-                <TableRow key={student.id}>
-                  <TableCell sx={{ width: "40px" }}>{student.id}</TableCell>
-                  <TableCell sx={{ width: "190px" }}>{student.name}</TableCell>
-                  <TableCell sx={{ width: "80px" }}>{student.nim}</TableCell>
-                  <TableCell sx={{ width: "80px" }}>{student.prodi}</TableCell>
-                  <TableCell sx={{ width: "40px" }}>
-                    <Checkbox
-                      checked={selectedStudents.includes(student.id)}
-                      onChange={() => handleSelectStudent(student.id)}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Grid>
-      <Grid
-        sx={{
-          padding: 2,
-          paddingTop: "30px",
-          display: "flex",
-          justifyContent: "flex-end",
-          paddingBottom: "60px",
-        }}
-      >
-        <Button
-          onClick={handleOpenFirstModal}
-          sx={{
-            backgroundColor: "#006AF5",
-            borderRadius: "24px",
-            color: "white",
-            whiteSpace: "nowrap",
-            minWidth: "132px",
-            fontSize: "12px",
-            padding: "10px",
-            gap: "6px",
-
-            "&:hover": {
-              backgroundColor: "#025ED8",
-            },
-          }}
-        >
-          Submit Attendance
-        </Button>
-      </Grid>
     </div>
   );
 };
