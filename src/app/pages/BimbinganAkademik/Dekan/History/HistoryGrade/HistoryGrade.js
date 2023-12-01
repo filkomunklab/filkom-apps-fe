@@ -15,6 +15,8 @@ import {
   Paper,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+import { BASE_URL_API } from "@jumbo/config/env";
+import axios from "axios";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -33,7 +35,7 @@ const data = Array.from(Array(7).keys()).map((item, index) => ({
   retrieval: `1`,
 }));
 
-const RejectedHistoryGrade = () => {
+const HistoryGrade = () => {
   const navigate = useNavigate();
   const handleClick = (event) => {
     event.preventDefault();
@@ -42,6 +44,31 @@ const RejectedHistoryGrade = () => {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [isGradeApproved, setIsGradeApproved] = useState(true)
+
+  const getGrade = async() =>{
+    try{
+      const headers = {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer token_apa`,
+      }
+
+      const response = await axios(`${BASE_URL_API}/bla/bla/bla`,{headers})
+
+      const {status, message, data, code} = response.data;
+
+      if(status === 'OK'){ //isi status atau code tergantung API
+        //simpan dalam usestate contoh:
+        //setGrade = data
+        //tambahkan handle lain jika perlu (Approved grade, dll)
+      }else{
+        //tambah handler jika respon lain, kalau tidak perlu hapus saja
+        console.log(response)
+      }
+    }catch(error){
+      console.log(error)
+    }
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -133,8 +160,8 @@ const RejectedHistoryGrade = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography sx={{ color: "red" }} variant="h5">
-                  Rejected
+                <Typography sx={{ color: isGradeApproved ? "#005fdb" : "#ca150c" }} variant="h5">
+                  {isGradeApproved ? 'Approved': 'Rejected'}
                 </Typography>
               </Grid>
             </Grid>
@@ -213,4 +240,4 @@ const TableItem = ({ item, index }) => {
   );
 };
 
-export default RejectedHistoryGrade;
+export default HistoryGrade;

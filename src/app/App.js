@@ -45,7 +45,7 @@ function App() {
                       }}
                       maxSnack={3}
                     >
-                      <JumboAuthProvider>
+                      {/* <JumboAuthProvider> */}
                         <AppLayout>
                           <Suspense
                             fallback={
@@ -65,7 +65,7 @@ function App() {
                             <AppRoutes />
                           </Suspense>
                         </AppLayout>
-                      </JumboAuthProvider>
+                      {/* </JumboAuthProvider> */}
                     </SnackbarProvider>
                   </JumboDialogProvider>
                 </JumboRTL>
