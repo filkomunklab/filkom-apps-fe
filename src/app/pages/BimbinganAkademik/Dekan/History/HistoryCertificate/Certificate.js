@@ -10,6 +10,9 @@ import {
   Grid,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
+import { useState } from "react";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -20,14 +23,38 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const CertificateRejected = () => {
+const Certificate = () => {
   const navigate = useNavigate();
+  const [isApproved, setIsApproved] = useState(false)
+
+  // const getCertificate = async() =>{
+  //   try{
+  //     const headers = {
+  //       'Content-Type': 'multipart/form-data',
+  //       Authorization: `Bearer token_apa`,
+  //     }
+
+  //     const response = await axios(`${BASE_URL_API}/bla/bla/bla`,{headers})
+
+  //     const {status, message, data, code} = response.data;
+
+  //      if(status === 'OK'){ //isi status atau code tergantung API
+  //       //simpan dalam usestate contoh:
+  //       //setCertificate = data
+  //       //tambahkan handle lain jika perlu (Approved certificate, dll)
+  //     }else{
+  //       //tambah handler jika respon lain, kalau tidak perlu hapus saja
+  //       console.log(response)
+  //     }
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
 
   const handleClick = (event) => {
     event.preventDefault();
     navigate(-1);
   };
-
   const imageUrl =
     "https://i.pinimg.com/originals/fc/fa/29/fcfa2911e796d71f1bf6aa25ee1d8d89.jpg";
 
@@ -137,8 +164,8 @@ const CertificateRejected = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5" sx={{ color: "red" }}>
-                  Rejected
+                <Typography variant="h5" sx={{ color: isApproved ? "#005FDB" : "#ca150c"}}>
+                  {isApproved?  'Approved':'Rejected'}
                 </Typography>
               </Grid>
             </Grid>
@@ -170,7 +197,6 @@ const CertificateRejected = () => {
           </Box>
         </Grid>
       </Grid>
-
       <Stack spacing={2} sx={{ padding: 3, marginTop: 4 }}>
         <Typography variant="h5" sx={{ fontWeight: 600 }}>
           Comments from Supervisor
@@ -188,4 +214,4 @@ const CertificateRejected = () => {
   );
 };
 
-export default CertificateRejected;
+export default Certificate;
