@@ -6,25 +6,35 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Chip,
-  FormControl,
-  MenuItem,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  InputAdornment,
   Paper,
-  Select,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import SearchIcon from "@mui/icons-material/Search";
 
 const RiwayatPengujianAnggota = () => {
   // State untuk melacak panel accordion yang terbuka
   const [expanded, setExpanded] = useState(false);
+
+  // state Pencarian
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   // Fungsi untuk menangani perubahan pada state accordion yang terbuka
   const handleChangee = (panel) => (event, isExpanded) => {
@@ -38,6 +48,31 @@ const RiwayatPengujianAnggota = () => {
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
   // console.log("token", token);
+
+  // Fungsi untuk menangani pencarian
+  const handleSearch = () => {
+    const results = daftarRiwayat.flatMap((semesterData) =>
+      semesterData.skripsis.filter((riwayat) => {
+        const studentNames = riwayat.students.map((student) =>
+          student.fullName.toLowerCase()
+        );
+        return (
+          studentNames.some((name) =>
+            name.includes(searchKeyword.toLowerCase())
+          ) || riwayat.title.toLowerCase().includes(searchKeyword.toLowerCase())
+        );
+      })
+    );
+
+    setSearchResults(results);
+    setSearchQuery(searchKeyword);
+    setIsSearchModalOpen(true);
+  };
+
+  // Fungsi untuk menutup modal pencarian
+  const handleCloseSearchModal = () => {
+    setIsSearchModalOpen(false);
+  };
 
   useEffect(() => {
     const fetchDaftarRiwayat = async () => {
@@ -180,8 +215,106 @@ const RiwayatPengujianAnggota = () => {
             flexShrink: 0,
           }}
         >
-          {/* <SearchGlobal /> */}
+          {/* input search */}
+          <TextField
+            id="search-input"
+            variant="outlined"
+            placeholder="Cari Nama Mahasiswa atau Judul"
+            size="small"
+            sx={{
+              borderRadius: 25,
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 25,
+              },
+            }}
+            fullWidth
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment>
+                  <IconButton onClick={handleSearch}>
+                    <SearchIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
         </Div>
+        <Dialog
+          open={isSearchModalOpen}
+          onClose={handleCloseSearchModal}
+          fullWidth
+          maxWidth="xl"
+        >
+          <DialogTitle sx={{ textAlign: "center" }}>
+            <Typography variant="h2" gutterBottom>
+              Hasil Pencarian
+            </Typography>
+          </DialogTitle>
+          <DialogContent>
+            <Typography sx={{ marginBottom: "20px" }}>
+              Pencarian Anda : {searchQuery}
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow sx={{ background: "#F5F5F5" }}>
+                    <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
+                    <TableCell sx={{ width: "30%" }}>
+                      Nama Lengkap Mahasiswa
+                    </TableCell>
+                    <TableCell sx={{ width: "45%" }}>Judul</TableCell>
+                    <TableCell sx={{ width: "10%" }}>
+                      Tanggal Diterima
+                    </TableCell>
+                    <TableCell sx={{ width: "10%" }}>Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {searchResults.map((skripsi) =>
+                    skripsi.students.map((student, index) => (
+                      <TableRow key={skripsi.group_id + index}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{student.fullName}</TableCell>
+                        <TableCell>{skripsi.title}</TableCell>
+                        {/* Tambahkan tanggal diterima jika tersedia */}
+                        <TableCell>
+                          {/* Tambahkan tanggal diterima di sini */}
+                        </TableCell>
+                        <TableCell>
+                          <Link
+                            to={`/sistem-informasi-skripsi/daftar-riwayat-pengujian-anggota/beranda/${skripsi.group_id}/ANGGOTA_PANELIS`}
+                            style={{
+                              textDecoration: "none",
+                              color: "blue",
+                            }}
+                          >
+                            Detail
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </DialogContent>
+          <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+            <Button
+              onClick={handleCloseSearchModal}
+              color="primary"
+              sx={{
+                background: "white",
+                boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                textTransform: "none",
+                color: "black",
+              }}
+            >
+              Kembali
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Div>
       {/* Riwayat Mahasiswa */}
       {daftarRiwayat?.length > 0 ? (

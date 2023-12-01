@@ -6,25 +6,35 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Chip,
-  FormControl,
-  MenuItem,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  InputAdornment,
   Paper,
-  Select,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import SearchIcon from "@mui/icons-material/Search";
 
 const RiwayatBimbinganAdvisor = () => {
   // State untuk melacak panel accordion yang terbuka
   const [expanded, setExpanded] = useState(false);
+
+  // state Pencarian
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   // Fungsi untuk menangani perubahan pada state accordion yang terbuka
   const handleChangee = (panel) => (event, isExpanded) => {
@@ -38,6 +48,31 @@ const RiwayatBimbinganAdvisor = () => {
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
   // console.log("token", token);
+
+  // Fungsi untuk menangani pencarian
+  const handleSearch = () => {
+    const results = daftarRiwayat.flatMap((semesterData) =>
+      semesterData.skripsis.filter((riwayat) => {
+        const studentNames = riwayat.students.map((student) =>
+          student.fullName.toLowerCase()
+        );
+        return (
+          studentNames.some((name) =>
+            name.includes(searchKeyword.toLowerCase())
+          ) || riwayat.title.toLowerCase().includes(searchKeyword.toLowerCase())
+        );
+      })
+    );
+
+    setSearchResults(results);
+    setSearchQuery(searchKeyword);
+    setIsSearchModalOpen(true);
+  };
+
+  // Fungsi untuk menutup modal pencarian
+  const handleCloseSearchModal = () => {
+    setIsSearchModalOpen(false);
+  };
 
   useEffect(() => {
     const fetchDaftarRiwayat = async () => {
@@ -63,45 +98,11 @@ const RiwayatBimbinganAdvisor = () => {
     fetchDaftarRiwayat();
   }, [token]);
 
-  const [selectedValue, setSelectedValue] = useState("Kelas"); // Tentukan teks default di sini
-
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
-
   //--------------------------------------
-  const [showTable, setShowTable] = useState(false);
-  const [showTable2, setShowTable2] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isTransitioning2, setIsTransitioning2] = useState(false);
-
-  const tableVisibleStyle = {
-    opacity: 1,
-    maxHeight: "200px", // Sesuaikan tinggi maksimal sesuai kebutuhan
-    transition: "opacity 0.3s ease-in-out, max-height 0.3s ease-in-out",
-  };
-
-  const tableHiddenStyle = {
-    opacity: 0,
-    maxHeight: "0",
-    transition: "opacity 0.3s ease-in-out, max-height 0.3s ease-in-out",
-  };
-
-  const handleSemesterClick = () => {
-    setIsTransitioning(true); // Mulai animasi
-    setTimeout(() => {
-      setShowTable(!showTable); // Toggle visibilitas tabel setelah animasi selesai
-      setIsTransitioning(false); // Selesaikan animasi
-    }, 300); // Waktu animasi dalam milidetik (0.3 detik)
-  };
-
-  const handleSemesterClick2 = () => {
-    setIsTransitioning2(true); // Mulai animasi
-    setTimeout(() => {
-      setShowTable2(!showTable2); // Toggle visibilitas tabel setelah animasi selesai
-      setIsTransitioning2(false); // Selesaikan animasi
-    }, 300); // Waktu animasi dalam milidetik (0.3 detik)
-  };
+  // const [showTable, setShowTable] = useState(false);
+  // const [showTable2, setShowTable2] = useState(false);
+  // const [isTransitioning, setIsTransitioning] = useState(false);
+  // const [isTransitioning2, setIsTransitioning2] = useState(false);
 
   return (
     <Div
@@ -180,8 +181,102 @@ const RiwayatBimbinganAdvisor = () => {
             flexShrink: 0,
           }}
         >
-          {/* <SearchGlobal /> */}
+          {/* input search */}
+          <TextField
+            id="search-input"
+            variant="outlined"
+            placeholder="Cari Nama Mahasiswa atau Judul"
+            size="small"
+            sx={{
+              borderRadius: 25,
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 25,
+              },
+            }}
+            fullWidth
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment>
+                  <IconButton onClick={handleSearch}>
+                    <SearchIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
         </Div>
+        <Dialog
+          open={isSearchModalOpen}
+          onClose={handleCloseSearchModal}
+          fullWidth
+          maxWidth="xl"
+        >
+          <DialogTitle sx={{ textAlign: "center" }}>
+            <Typography variant="h2" gutterBottom>
+              Hasil Pencarian
+            </Typography>
+          </DialogTitle>
+          <DialogContent>
+            <Typography sx={{ marginBottom: "20px" }}>
+              Pencarian Anda : {searchQuery}
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow sx={{ background: "#F5F5F5" }}>
+                    <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
+                    <TableCell sx={{ width: "30%" }}>
+                      Nama Lengkap Mahasiswa
+                    </TableCell>
+                    <TableCell sx={{ width: "45%" }}>Judul</TableCell>
+                    <TableCell sx={{ width: "10%" }}>
+                      Tanggal Diterima
+                    </TableCell>
+                    <TableCell sx={{ width: "10%" }}>Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {searchResults.map((skripsi, index) => (
+                    <TableRow key={skripsi.group_id + index}>
+                      <TableCell>{index + 1}</TableCell>
+                      {skripsi.students.map((student, studentIndex) => (
+                        <TableCell key={studentIndex}>
+                          {student.fullName}
+                        </TableCell>
+                      ))}
+                      <TableCell>{skripsi.title}</TableCell>
+                      <TableCell>{skripsi.approve_date}</TableCell>
+                      <TableCell>
+                        <Link
+                          to={`/sistem-informasi-skripsi/daftar-riwayat-bimbingan-advisor/beranda/${skripsi.group_id}/ADVISOR`}
+                          style={{ textDecoration: "none", color: "blue" }}
+                        >
+                          Detail
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </DialogContent>
+          <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+            <Button
+              onClick={handleCloseSearchModal}
+              color="primary"
+              sx={{
+                background: "white",
+                boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                textTransform: "none",
+                color: "black",
+              }}
+            >
+              Kembali
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Div>
       {/* Riwayat Mahasiswa */}
       {daftarRiwayat?.length > 0 ? (
