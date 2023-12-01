@@ -225,8 +225,7 @@ const MenuMahasiswa = ({
                 color:
                   setPage === "Unggah Skripsi" ||
                   setPage === "Unggah Revisi Skripsi" ||
-                  setPage === "Arsip Dokumen" ||
-                  setPage === "Metadata Repositori"
+                  setPage === "Arsip Dokumen"
                     ? "#006AF5"
                     : "#192434",
                 textTransform: "none",
@@ -234,8 +233,7 @@ const MenuMahasiswa = ({
                   color:
                     setPage === "Unggah Skripsi" ||
                     setPage === "Unggah Revisi Skripsi" ||
-                    setPage === "Arsip Dokumen" ||
-                    setPage === "Metadata Repositori"
+                    setPage === "Arsip Dokumen"
                       ? "#006AF5"
                       : "#006AF5",
                 },
@@ -314,27 +312,6 @@ const MenuMahasiswa = ({
                   }}
                 >
                   Arsip Dokumen
-                </MenuItem>
-              </Link>
-              <Link
-                to={`/sistem-informasi-skripsi/daftar-pengajuan/metadata-repository/${groupId}/MAHASISWA`}
-                style={{ textDecoration: "none", color: "black" }}
-              >
-                <MenuItem
-                  onClick={() => setAnchorE2(null)}
-                  style={{
-                    color:
-                      setPage === "Metadata Repositori" ? "#006AF5" : "#192434",
-                    textTransform: "none",
-                    "&:hover": {
-                      color:
-                        setPage === "Metadata Repositori"
-                          ? "#006AF5"
-                          : "#006AF5",
-                    },
-                  }}
-                >
-                  Metadata Repositori
                 </MenuItem>
               </Link>
             </Menu>

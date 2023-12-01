@@ -826,289 +826,353 @@ const PerbaruiJadwalSidangProposal = () => {
                     {/* input select Tim Penelis End */}
 
                     {/* Table Status Siap Maju Sidang Start*/}
-                    <Typography
-                      sx={{
-                        padding: "14px 16px",
-                        background: "rgba(26, 56, 96, 0.10)",
-                        borderRadius: "6px",
-                        border: "1px",
-                        marginBottom: "25px",
-                      }}
-                    >
-                      Menyusun Jadwal Sidang Proposal
-                    </Typography>
-
-                    <Container>
-                      <Container>
-                        <Grid container spacing={2}>
-                          <Grid item xs={6}>
-                            <Typography variant="subtitle2">Mulai</Typography>
-                            {isEditing ? (
-                              <TextField
-                                id="start-time"
-                                type="time"
-                                fullWidth
-                                value={startTime}
-                                onChange={(e) => setStartTime(e.target.value)}
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                size="small"
-                                MenuProps={{
-                                  anchorOrigin: {
-                                    vertical: "bottom",
-                                    horizontal: "left",
-                                  },
-                                  transformOrigin: {
-                                    vertical: "top",
-                                    horizontal: "left",
-                                  },
-                                  getContentAnchorEl: null,
-                                  style: {
-                                    maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
-                                  },
-                                }}
-                                error={!!errorMessages.startTime}
-                                InputProps={{
-                                  startAdornment: (
-                                    <InputAdornment position="start"></InputAdornment>
-                                  ),
-                                }}
-                                inputProps={{
-                                  step: 300, // 5 minute intervals
-                                }}
-                              />
-                            ) : (
-                              <FormControl fullWidth size="small">
-                                <TextField
-                                  id="start"
-                                  fullWidth
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  size="small"
-                                  InputProps={{
-                                    readOnly: true,
-                                    startAdornment: (
-                                      <InputAdornment position="start"></InputAdornment>
-                                    ),
-                                  }}
-                                  value={startTime}
-                                />
-                              </FormControl>
-                            )}
-                            <FormHelperText error={!!errorMessages.startTime}>
-                              {errorMessages.startTime}
-                            </FormHelperText>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography variant="subtitle2">Selesai</Typography>
-                            {isEditing ? (
-                              <TextField
-                                id="end-time"
-                                type="time"
-                                fullWidth
-                                value={endTime}
-                                onChange={(e) => setEndTime(e.target.value)}
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                size="small"
-                                MenuProps={{
-                                  anchorOrigin: {
-                                    vertical: "bottom",
-                                    horizontal: "left",
-                                  },
-                                  transformOrigin: {
-                                    vertical: "top",
-                                    horizontal: "left",
-                                  },
-                                  getContentAnchorEl: null,
-                                  style: {
-                                    maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
-                                  },
-                                }}
-                                error={!!errorMessages.endTime}
-                                InputProps={{
-                                  startAdornment: (
-                                    <InputAdornment position="start"></InputAdornment>
-                                  ),
-                                }}
-                                inputProps={{
-                                  step: 300, // 5 minute intervals
-                                }}
-                              />
-                            ) : (
-                              <FormControl fullWidth size="small">
-                                <TextField
-                                  id="end"
-                                  fullWidth
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  size="small"
-                                  InputProps={{
-                                    readOnly: true,
-                                    startAdornment: (
-                                      <InputAdornment position="start"></InputAdornment>
-                                    ),
-                                  }}
-                                  value={endTime}
-                                />
-                              </FormControl>
-                            )}
-                            <FormHelperText error={!!errorMessages.endTime}>
-                              {errorMessages.endTime}
-                            </FormHelperText>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography variant="subtitle2">Tanggal</Typography>
-                            {isEditing ? (
-                              <TextField
-                                id="start-date"
-                                type="date"
-                                fullWidth
-                                value={tanggal}
-                                onChange={(e) => setTanggal(e.target.value)}
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                size="small"
-                                MenuProps={{
-                                  anchorOrigin: {
-                                    vertical: "bottom",
-                                    horizontal: "left",
-                                  },
-                                  transformOrigin: {
-                                    vertical: "top",
-                                    horizontal: "left",
-                                  },
-                                  getContentAnchorEl: null,
-                                  style: {
-                                    maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
-                                  },
-                                }}
-                                error={!!errorMessages.tanggal}
-                                InputProps={{
-                                  startAdornment: (
-                                    <InputAdornment position="start"></InputAdornment>
-                                  ),
-                                }}
-                              />
-                            ) : (
-                              <FormControl fullWidth size="small">
-                                <TextField
-                                  id="date"
-                                  fullWidth
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  size="small"
-                                  InputProps={{
-                                    readOnly: true,
-                                    startAdornment: (
-                                      <InputAdornment position="start"></InputAdornment>
-                                    ),
-                                  }}
-                                  value={tanggal}
-                                />
-                              </FormControl>
-                            )}
-                            <FormHelperText error={!!errorMessages.tanggal}>
-                              {errorMessages.tanggal}
-                            </FormHelperText>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography variant="subtitle2">Ruangan</Typography>
-                            {isEditing ? (
-                              <TextField
-                                id="room-name"
-                                fullWidth
-                                value={ruangan}
-                                onChange={(e) => setRuangan(e.target.value)}
-                                size="small"
-                                error={!!errorMessages.ruangan}
-                              />
-                            ) : (
-                              <FormControl fullWidth size="small">
-                                <TextField
-                                  id="room"
-                                  fullWidth
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  size="small"
-                                  InputProps={{
-                                    readOnly: true,
-                                    startAdornment: (
-                                      <InputAdornment position="start"></InputAdornment>
-                                    ),
-                                  }}
-                                  value={ruangan}
-                                />
-                              </FormControl>
-                            )}
-                            <FormHelperText error={!!errorMessages.ruangan}>
-                              {errorMessages.ruangan}
-                            </FormHelperText>
-                          </Grid>
-                        </Grid>
-
-                        <Dialog
-                          open={isConfirmationOpen}
-                          onClose={handleCancelConfirmation}
-                          fullWidth
-                          maxWidth="sm"
+                    {isEditing ? (
+                      <>
+                        <Typography
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column", // Mengubah orientasi menjadi kolom
+                            padding: "24px",
+                            alignItems: "flex-start", // Mengatur rata kiri
+                            gap: "10px",
+                            alignSelf: "stretch",
+                            background: "rgba(26, 56, 96, 0.10)",
+                            borderRadius: "6px",
+                          }}
                         >
-                          <DialogTitle
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              padding: "24px",
-                            }}
-                          >
-                            <Typography
-                              sx={{
-                                fontSize: "20px",
-                                fontWeight: 500,
-                                lineHeight: "24px",
-                              }}
+                          <div>Menyusun Jadwal Sidang Proposal</div>
+                          <div>
+                            Catatan: Periksa kembali jadwal yang sudah ada
+                            supaya tidak bertabrakan dengan jadwal yang akan
+                            dibuat!
+                          </div>
+                        </Typography>
+                        <Container>
+                          <Container>
+                            <Grid container spacing={2}>
+                              <Grid item xs={6}>
+                                <Typography variant="subtitle2">
+                                  Mulai
+                                </Typography>
+                                <TextField
+                                  id="start-time"
+                                  type="time"
+                                  fullWidth
+                                  value={startTime}
+                                  onChange={(e) => setStartTime(e.target.value)}
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  size="small"
+                                  MenuProps={{
+                                    anchorOrigin: {
+                                      vertical: "bottom",
+                                      horizontal: "left",
+                                    },
+                                    transformOrigin: {
+                                      vertical: "top",
+                                      horizontal: "left",
+                                    },
+                                    getContentAnchorEl: null,
+                                    style: {
+                                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                                    },
+                                  }}
+                                  error={!!errorMessages.startTime}
+                                  InputProps={{
+                                    startAdornment: (
+                                      <InputAdornment position="start"></InputAdornment>
+                                    ),
+                                  }}
+                                  inputProps={{
+                                    step: 300, // 5 minute intervals
+                                  }}
+                                />
+                                <FormHelperText
+                                  error={!!errorMessages.startTime}
+                                >
+                                  {errorMessages.startTime}
+                                </FormHelperText>
+                              </Grid>
+                              <Grid item xs={6}>
+                                <Typography variant="subtitle2">
+                                  Selesai
+                                </Typography>
+                                <TextField
+                                  id="end-time"
+                                  type="time"
+                                  fullWidth
+                                  value={endTime}
+                                  onChange={(e) => setEndTime(e.target.value)}
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  size="small"
+                                  MenuProps={{
+                                    anchorOrigin: {
+                                      vertical: "bottom",
+                                      horizontal: "left",
+                                    },
+                                    transformOrigin: {
+                                      vertical: "top",
+                                      horizontal: "left",
+                                    },
+                                    getContentAnchorEl: null,
+                                    style: {
+                                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                                    },
+                                  }}
+                                  error={!!errorMessages.endTime}
+                                  InputProps={{
+                                    startAdornment: (
+                                      <InputAdornment position="start"></InputAdornment>
+                                    ),
+                                  }}
+                                  inputProps={{
+                                    step: 300, // 5 minute intervals
+                                  }}
+                                />
+                                <FormHelperText error={!!errorMessages.endTime}>
+                                  {errorMessages.endTime}
+                                </FormHelperText>
+                              </Grid>
+                              <Grid item xs={6}>
+                                <Typography variant="subtitle2">
+                                  Tanggal
+                                </Typography>
+                                <TextField
+                                  id="start-date"
+                                  type="date"
+                                  fullWidth
+                                  value={tanggal}
+                                  onChange={(e) => setTanggal(e.target.value)}
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  size="small"
+                                  MenuProps={{
+                                    anchorOrigin: {
+                                      vertical: "bottom",
+                                      horizontal: "left",
+                                    },
+                                    transformOrigin: {
+                                      vertical: "top",
+                                      horizontal: "left",
+                                    },
+                                    getContentAnchorEl: null,
+                                    style: {
+                                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                                    },
+                                  }}
+                                  error={!!errorMessages.tanggal}
+                                  InputProps={{
+                                    startAdornment: (
+                                      <InputAdornment position="start"></InputAdornment>
+                                    ),
+                                  }}
+                                />
+                                <FormHelperText error={!!errorMessages.tanggal}>
+                                  {errorMessages.tanggal}
+                                </FormHelperText>
+                              </Grid>
+                              <Grid item xs={6}>
+                                <Typography variant="subtitle2">
+                                  Ruangan
+                                </Typography>
+                                <TextField
+                                  id="room-name"
+                                  fullWidth
+                                  value={ruangan}
+                                  onChange={(e) => setRuangan(e.target.value)}
+                                  size="small"
+                                  error={!!errorMessages.ruangan}
+                                />
+                                <FormHelperText error={!!errorMessages.ruangan}>
+                                  {errorMessages.ruangan}
+                                </FormHelperText>
+                              </Grid>
+                            </Grid>
+
+                            <Dialog
+                              open={isConfirmationOpen}
+                              onClose={handleCancelConfirmation}
+                              fullWidth
+                              maxWidth="sm"
                             >
-                              Perbarui Jadwal
-                            </Typography>
-                          </DialogTitle>
-                          <DialogContent>
-                            <Typography gutterBottom>
-                              Apakah Anda yakin ingin perbarui jadwal?
-                            </Typography>
-                          </DialogContent>
-                          <DialogActions
-                            sx={{ background: "rgba(26, 56, 96, 0.10)" }}
-                          >
-                            <Button
-                              onClick={handleCancelConfirmation}
-                              sx={{
-                                background: "white",
-                                boxShadow:
-                                  "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-                                textTransform: "none",
-                                color: "black",
-                              }}
-                            >
-                              Batal
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={handleConfirm}
-                              sx={{ textTransform: "none" }}
-                            >
-                              Perbarui
-                            </Button>
-                          </DialogActions>
-                        </Dialog>
-                      </Container>
-                    </Container>
+                              <DialogTitle
+                                sx={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  padding: "24px",
+                                }}
+                              >
+                                <Typography
+                                  sx={{
+                                    fontSize: "20px",
+                                    fontWeight: 500,
+                                    lineHeight: "24px",
+                                  }}
+                                >
+                                  Perbarui Jadwal
+                                </Typography>
+                              </DialogTitle>
+                              <DialogContent>
+                                <Typography gutterBottom>
+                                  Apakah Anda yakin ingin perbarui jadwal?
+                                </Typography>
+                              </DialogContent>
+                              <DialogActions
+                                sx={{ background: "rgba(26, 56, 96, 0.10)" }}
+                              >
+                                <Button
+                                  onClick={handleCancelConfirmation}
+                                  sx={{
+                                    background: "white",
+                                    boxShadow:
+                                      "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                                    textTransform: "none",
+                                    color: "black",
+                                  }}
+                                >
+                                  Batal
+                                </Button>
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  onClick={handleConfirm}
+                                  sx={{ textTransform: "none" }}
+                                >
+                                  Perbarui
+                                </Button>
+                              </DialogActions>
+                            </Dialog>
+                          </Container>
+                        </Container>
+                      </>
+                    ) : (
+                      <>
+                        <Typography
+                          sx={{
+                            padding: "14px 16px",
+                            background: "rgba(26, 56, 96, 0.10)",
+                            borderRadius: "6px",
+                            border: "1px",
+                            marginBottom: "25px",
+                          }}
+                        >
+                          Jadwal Sidang Proposal
+                        </Typography>
+
+                        <Container>
+                          <Container>
+                            <Grid container spacing={2}>
+                              <Grid item xs={6}>
+                                <Typography variant="subtitle2">
+                                  Mulai
+                                </Typography>
+                                <FormControl fullWidth size="small">
+                                  <TextField
+                                    id="start"
+                                    fullWidth
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    size="small"
+                                    InputProps={{
+                                      readOnly: true,
+                                      startAdornment: (
+                                        <InputAdornment position="start"></InputAdornment>
+                                      ),
+                                    }}
+                                    value={startTime}
+                                  />
+                                </FormControl>
+                                <FormHelperText
+                                  error={!!errorMessages.startTime}
+                                >
+                                  {errorMessages.startTime}
+                                </FormHelperText>
+                              </Grid>
+                              <Grid item xs={6}>
+                                <Typography variant="subtitle2">
+                                  Selesai
+                                </Typography>
+                                <FormControl fullWidth size="small">
+                                  <TextField
+                                    id="end"
+                                    fullWidth
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    size="small"
+                                    InputProps={{
+                                      readOnly: true,
+                                      startAdornment: (
+                                        <InputAdornment position="start"></InputAdornment>
+                                      ),
+                                    }}
+                                    value={endTime}
+                                  />
+                                </FormControl>
+                                <FormHelperText error={!!errorMessages.endTime}>
+                                  {errorMessages.endTime}
+                                </FormHelperText>
+                              </Grid>
+                              <Grid item xs={6}>
+                                <Typography variant="subtitle2">
+                                  Tanggal
+                                </Typography>
+                                <FormControl fullWidth size="small">
+                                  <TextField
+                                    id="date"
+                                    fullWidth
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    size="small"
+                                    InputProps={{
+                                      readOnly: true,
+                                      startAdornment: (
+                                        <InputAdornment position="start"></InputAdornment>
+                                      ),
+                                    }}
+                                    value={tanggal}
+                                  />
+                                </FormControl>
+                                <FormHelperText error={!!errorMessages.tanggal}>
+                                  {errorMessages.tanggal}
+                                </FormHelperText>
+                              </Grid>
+                              <Grid item xs={6}>
+                                <Typography variant="subtitle2">
+                                  Ruangan
+                                </Typography>
+                                <FormControl fullWidth size="small">
+                                  <TextField
+                                    id="room"
+                                    fullWidth
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    size="small"
+                                    InputProps={{
+                                      readOnly: true,
+                                      startAdornment: (
+                                        <InputAdornment position="start"></InputAdornment>
+                                      ),
+                                    }}
+                                    value={ruangan}
+                                  />
+                                </FormControl>
+                                <FormHelperText error={!!errorMessages.ruangan}>
+                                  {errorMessages.ruangan}
+                                </FormHelperText>
+                              </Grid>
+                            </Grid>
+                          </Container>
+                        </Container>
+                      </>
+                    )}
 
                     <Div
                       sx={{
@@ -1342,237 +1406,367 @@ const PerbaruiJadwalSidangProposal = () => {
                       {/* input select Tim Penelis End */}
 
                       {/* Table Status Siap Maju Sidang Start*/}
-                      <Typography
-                        sx={{
-                          padding: "14px 16px",
-                          background: "rgba(26, 56, 96, 0.10)",
-                          borderRadius: "6px",
-                          border: "1px",
-                          marginBottom: "25px",
-                        }}
-                      >
-                        Menyusun Jadwal Sidang Skripsi
-                      </Typography>
-
-                      <Container>
-                        <Container>
-                          <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle2">Mulai</Typography>
-                              {isEditing ? (
-                                <TextField
-                                  id="start-time"
-                                  type="time"
-                                  fullWidth
-                                  value={startTime}
-                                  onChange={(e) => setStartTime(e.target.value)}
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  size="small"
-                                  InputProps={{
-                                    startAdornment: (
-                                      <InputAdornment position="start"></InputAdornment>
-                                    ),
-                                  }}
-                                  inputProps={{
-                                    step: 300, // 5 minute intervals
-                                  }}
-                                />
-                              ) : (
-                                <FormControl fullWidth size="small">
-                                  <TextField
-                                    id="start"
-                                    fullWidth
-                                    InputLabelProps={{
-                                      shrink: true,
-                                    }}
-                                    size="small"
-                                    InputProps={{
-                                      readOnly: true,
-                                      startAdornment: (
-                                        <InputAdornment position="start"></InputAdornment>
-                                      ),
-                                    }}
-                                    value={startTime}
-                                  />
-                                </FormControl>
-                              )}
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle2">
-                                Selesai
-                              </Typography>
-                              {isEditing ? (
-                                <TextField
-                                  id="end-time"
-                                  type="time"
-                                  fullWidth
-                                  value={endTime}
-                                  onChange={(e) => setEndTime(e.target.value)}
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  size="small"
-                                  InputProps={{
-                                    startAdornment: (
-                                      <InputAdornment position="start"></InputAdornment>
-                                    ),
-                                  }}
-                                  inputProps={{
-                                    step: 300, // 5 minute intervals
-                                  }}
-                                />
-                              ) : (
-                                <FormControl fullWidth size="small">
-                                  <TextField
-                                    id="end"
-                                    fullWidth
-                                    InputLabelProps={{
-                                      shrink: true,
-                                    }}
-                                    size="small"
-                                    InputProps={{
-                                      readOnly: true,
-                                      startAdornment: (
-                                        <InputAdornment position="start"></InputAdornment>
-                                      ),
-                                    }}
-                                    value={endTime}
-                                  />
-                                </FormControl>
-                              )}
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle2">
-                                Tanggal
-                              </Typography>
-                              {isEditing ? (
-                                <TextField
-                                  id="start-date"
-                                  type="date"
-                                  fullWidth
-                                  value={tanggal}
-                                  onChange={(e) => setTanggal(e.target.value)}
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  size="small"
-                                  InputProps={{
-                                    startAdornment: (
-                                      <InputAdornment position="start"></InputAdornment>
-                                    ),
-                                  }}
-                                />
-                              ) : (
-                                <FormControl fullWidth size="small">
-                                  <TextField
-                                    id="date"
-                                    fullWidth
-                                    InputLabelProps={{
-                                      shrink: true,
-                                    }}
-                                    size="small"
-                                    InputProps={{
-                                      readOnly: true,
-                                      startAdornment: (
-                                        <InputAdornment position="start"></InputAdornment>
-                                      ),
-                                    }}
-                                    value={tanggal}
-                                  />
-                                </FormControl>
-                              )}
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle2">
-                                Ruangan
-                              </Typography>
-                              {isEditing ? (
-                                <TextField
-                                  id="room-name"
-                                  fullWidth
-                                  value={ruangan}
-                                  onChange={(e) => setRuangan(e.target.value)}
-                                  size="small"
-                                />
-                              ) : (
-                                <FormControl fullWidth size="small">
-                                  <TextField
-                                    id="room"
-                                    fullWidth
-                                    InputLabelProps={{
-                                      shrink: true,
-                                    }}
-                                    size="small"
-                                    InputProps={{
-                                      readOnly: true,
-                                      startAdornment: (
-                                        <InputAdornment position="start"></InputAdornment>
-                                      ),
-                                    }}
-                                    value={ruangan}
-                                  />
-                                </FormControl>
-                              )}
-                            </Grid>
-                          </Grid>
-
-                          <Dialog
-                            open={isConfirmationOpen}
-                            onClose={handleCancelConfirmation}
-                            fullWidth
-                            maxWidth="sm"
+                      {isEditing ? (
+                        <>
+                          <Typography
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column", // Mengubah orientasi menjadi kolom
+                              padding: "24px",
+                              alignItems: "flex-start", // Mengatur rata kiri
+                              gap: "10px",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              borderRadius: "6px",
+                            }}
                           >
-                            <DialogTitle
-                              sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                padding: "24px",
-                              }}
-                            >
-                              <Typography
-                                sx={{
-                                  fontSize: "20px",
-                                  fontWeight: 500,
-                                  lineHeight: "24px",
-                                }}
+                            <div>Menyusun Jadwal Sidang Skripsi</div>
+                            <div>
+                              Catatan: Periksa kembali jadwal yang sudah ada
+                              supaya tidak bertabrakan dengan jadwal yang akan
+                              dibuat!
+                            </div>
+                          </Typography>
+                          <Container>
+                            <Container>
+                              <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                  <Typography variant="subtitle2">
+                                    Mulai
+                                  </Typography>
+                                  <TextField
+                                    id="start-time"
+                                    type="time"
+                                    fullWidth
+                                    value={startTime}
+                                    onChange={(e) =>
+                                      setStartTime(e.target.value)
+                                    }
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    size="small"
+                                    MenuProps={{
+                                      anchorOrigin: {
+                                        vertical: "bottom",
+                                        horizontal: "left",
+                                      },
+                                      transformOrigin: {
+                                        vertical: "top",
+                                        horizontal: "left",
+                                      },
+                                      getContentAnchorEl: null,
+                                      style: {
+                                        maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                                      },
+                                    }}
+                                    error={!!errorMessages.startTime}
+                                    InputProps={{
+                                      startAdornment: (
+                                        <InputAdornment position="start"></InputAdornment>
+                                      ),
+                                    }}
+                                    inputProps={{
+                                      step: 300, // 5 minute intervals
+                                    }}
+                                  />
+                                  <FormHelperText
+                                    error={!!errorMessages.startTime}
+                                  >
+                                    {errorMessages.startTime}
+                                  </FormHelperText>
+                                </Grid>
+                                <Grid item xs={6}>
+                                  <Typography variant="subtitle2">
+                                    Selesai
+                                  </Typography>
+                                  <TextField
+                                    id="end-time"
+                                    type="time"
+                                    fullWidth
+                                    value={endTime}
+                                    onChange={(e) => setEndTime(e.target.value)}
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    size="small"
+                                    MenuProps={{
+                                      anchorOrigin: {
+                                        vertical: "bottom",
+                                        horizontal: "left",
+                                      },
+                                      transformOrigin: {
+                                        vertical: "top",
+                                        horizontal: "left",
+                                      },
+                                      getContentAnchorEl: null,
+                                      style: {
+                                        maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                                      },
+                                    }}
+                                    error={!!errorMessages.endTime}
+                                    InputProps={{
+                                      startAdornment: (
+                                        <InputAdornment position="start"></InputAdornment>
+                                      ),
+                                    }}
+                                    inputProps={{
+                                      step: 300, // 5 minute intervals
+                                    }}
+                                  />
+                                  <FormHelperText
+                                    error={!!errorMessages.endTime}
+                                  >
+                                    {errorMessages.endTime}
+                                  </FormHelperText>
+                                </Grid>
+                                <Grid item xs={6}>
+                                  <Typography variant="subtitle2">
+                                    Tanggal
+                                  </Typography>
+                                  <TextField
+                                    id="start-date"
+                                    type="date"
+                                    fullWidth
+                                    value={tanggal}
+                                    onChange={(e) => setTanggal(e.target.value)}
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    size="small"
+                                    MenuProps={{
+                                      anchorOrigin: {
+                                        vertical: "bottom",
+                                        horizontal: "left",
+                                      },
+                                      transformOrigin: {
+                                        vertical: "top",
+                                        horizontal: "left",
+                                      },
+                                      getContentAnchorEl: null,
+                                      style: {
+                                        maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                                      },
+                                    }}
+                                    error={!!errorMessages.tanggal}
+                                    InputProps={{
+                                      startAdornment: (
+                                        <InputAdornment position="start"></InputAdornment>
+                                      ),
+                                    }}
+                                  />
+                                  <FormHelperText
+                                    error={!!errorMessages.tanggal}
+                                  >
+                                    {errorMessages.tanggal}
+                                  </FormHelperText>
+                                </Grid>
+                                <Grid item xs={6}>
+                                  <Typography variant="subtitle2">
+                                    Ruangan
+                                  </Typography>
+                                  <TextField
+                                    id="room-name"
+                                    fullWidth
+                                    value={ruangan}
+                                    onChange={(e) => setRuangan(e.target.value)}
+                                    size="small"
+                                    error={!!errorMessages.ruangan}
+                                  />
+                                  <FormHelperText
+                                    error={!!errorMessages.ruangan}
+                                  >
+                                    {errorMessages.ruangan}
+                                  </FormHelperText>
+                                </Grid>
+                              </Grid>
+
+                              <Dialog
+                                open={isConfirmationOpen}
+                                onClose={handleCancelConfirmation}
+                                fullWidth
+                                maxWidth="sm"
                               >
-                                Perbarui Jadwal
-                              </Typography>
-                            </DialogTitle>
-                            <DialogContent>
-                              <Typography gutterBottom>
-                                Apakah Anda yakin ingin perbarui jadwal?
-                              </Typography>
-                            </DialogContent>
-                            <DialogActions
-                              sx={{ background: "rgba(26, 56, 96, 0.10)" }}
-                            >
-                              <Button
-                                onClick={handleCancelConfirmation}
-                                sx={{
-                                  background: "white",
-                                  boxShadow:
-                                    "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-                                  textTransform: "none",
-                                  color: "black",
-                                }}
-                              >
-                                Batal
-                              </Button>
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleConfirm}
-                                sx={{ textTransform: "none" }}
-                              >
-                                Perbarui
-                              </Button>
-                            </DialogActions>
-                          </Dialog>
-                        </Container>
-                      </Container>
+                                <DialogTitle
+                                  sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    padding: "24px",
+                                  }}
+                                >
+                                  <Typography
+                                    sx={{
+                                      fontSize: "20px",
+                                      fontWeight: 500,
+                                      lineHeight: "24px",
+                                    }}
+                                  >
+                                    Perbarui Jadwal
+                                  </Typography>
+                                </DialogTitle>
+                                <DialogContent>
+                                  <Typography gutterBottom>
+                                    Apakah Anda yakin ingin perbarui jadwal?
+                                  </Typography>
+                                </DialogContent>
+                                <DialogActions
+                                  sx={{ background: "rgba(26, 56, 96, 0.10)" }}
+                                >
+                                  <Button
+                                    onClick={handleCancelConfirmation}
+                                    sx={{
+                                      background: "white",
+                                      boxShadow:
+                                        "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                                      textTransform: "none",
+                                      color: "black",
+                                    }}
+                                  >
+                                    Batal
+                                  </Button>
+                                  <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleConfirm}
+                                    sx={{ textTransform: "none" }}
+                                  >
+                                    Perbarui
+                                  </Button>
+                                </DialogActions>
+                              </Dialog>
+                            </Container>
+                          </Container>
+                        </>
+                      ) : (
+                        <>
+                          <Typography
+                            sx={{
+                              padding: "14px 16px",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              borderRadius: "6px",
+                              border: "1px",
+                              marginBottom: "25px",
+                            }}
+                          >
+                            Jadwal Sidang Skripsi
+                          </Typography>
+
+                          <Container>
+                            <Container>
+                              <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                  <Typography variant="subtitle2">
+                                    Mulai
+                                  </Typography>
+                                  <FormControl fullWidth size="small">
+                                    <TextField
+                                      id="start"
+                                      fullWidth
+                                      InputLabelProps={{
+                                        shrink: true,
+                                      }}
+                                      size="small"
+                                      InputProps={{
+                                        readOnly: true,
+                                        startAdornment: (
+                                          <InputAdornment position="start"></InputAdornment>
+                                        ),
+                                      }}
+                                      value={startTime}
+                                    />
+                                  </FormControl>
+                                  <FormHelperText
+                                    error={!!errorMessages.startTime}
+                                  >
+                                    {errorMessages.startTime}
+                                  </FormHelperText>
+                                </Grid>
+                                <Grid item xs={6}>
+                                  <Typography variant="subtitle2">
+                                    Selesai
+                                  </Typography>
+                                  <FormControl fullWidth size="small">
+                                    <TextField
+                                      id="end"
+                                      fullWidth
+                                      InputLabelProps={{
+                                        shrink: true,
+                                      }}
+                                      size="small"
+                                      InputProps={{
+                                        readOnly: true,
+                                        startAdornment: (
+                                          <InputAdornment position="start"></InputAdornment>
+                                        ),
+                                      }}
+                                      value={endTime}
+                                    />
+                                  </FormControl>
+                                  <FormHelperText
+                                    error={!!errorMessages.endTime}
+                                  >
+                                    {errorMessages.endTime}
+                                  </FormHelperText>
+                                </Grid>
+                                <Grid item xs={6}>
+                                  <Typography variant="subtitle2">
+                                    Tanggal
+                                  </Typography>
+                                  <FormControl fullWidth size="small">
+                                    <TextField
+                                      id="date"
+                                      fullWidth
+                                      InputLabelProps={{
+                                        shrink: true,
+                                      }}
+                                      size="small"
+                                      InputProps={{
+                                        readOnly: true,
+                                        startAdornment: (
+                                          <InputAdornment position="start"></InputAdornment>
+                                        ),
+                                      }}
+                                      value={tanggal}
+                                    />
+                                  </FormControl>
+                                  <FormHelperText
+                                    error={!!errorMessages.tanggal}
+                                  >
+                                    {errorMessages.tanggal}
+                                  </FormHelperText>
+                                </Grid>
+                                <Grid item xs={6}>
+                                  <Typography variant="subtitle2">
+                                    Ruangan
+                                  </Typography>
+                                  <FormControl fullWidth size="small">
+                                    <TextField
+                                      id="room"
+                                      fullWidth
+                                      InputLabelProps={{
+                                        shrink: true,
+                                      }}
+                                      size="small"
+                                      InputProps={{
+                                        readOnly: true,
+                                        startAdornment: (
+                                          <InputAdornment position="start"></InputAdornment>
+                                        ),
+                                      }}
+                                      value={ruangan}
+                                    />
+                                  </FormControl>
+                                  <FormHelperText
+                                    error={!!errorMessages.ruangan}
+                                  >
+                                    {errorMessages.ruangan}
+                                  </FormHelperText>
+                                </Grid>
+                              </Grid>
+                            </Container>
+                          </Container>
+                        </>
+                      )}
 
                       <Div
                         sx={{
