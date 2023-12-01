@@ -21,7 +21,6 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import axios from "axios";
-import DaftarPengajuanProposalSekertaris from "./DaftarPengajuanProposalSekertaris";
 
 const DaftarPengajuanSkripsiSekertaris = () => {
   // State untuk melacak panel accordion yang terbuka
@@ -430,7 +429,7 @@ const DaftarPengajuanSkripsiSekertaris = () => {
                                 Judul
                               </TableCell>
                               <TableCell sx={{ fontSize: "13px" }}>
-                                Dokumen Proposal
+                                Dokumen Skripsi
                               </TableCell>
                               <TableCell sx={{ fontSize: "13px" }}>
                                 Pembayaran

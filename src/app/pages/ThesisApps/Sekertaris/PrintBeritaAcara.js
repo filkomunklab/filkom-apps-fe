@@ -1,12 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import Button from "@mui/material/Button";
-
-const PrintButton = ({ onPrint, ref }) => {
-  const handlePrint = useReactToPrint({
-    content: onPrint,
-  });
-};
+import { scheduleData } from "app/shared/widgets/ScheduleCard/data";
 
 // Fungsi untuk mengonversi tahun ke dalam format teks
 const convertToText = (number) => {
@@ -106,48 +101,62 @@ const convertHourToText = (hour, minute) => {
   } ${periodText}`;
 };
 
-const ReportContent = React.forwardRef((props, ref) => {
-  const [studentInfo, setStudentInfo] = useState({
-    name: "Geovalga Fransiscus Lim",
-    nim: "105021910051",
-    educationLevel: "S1",
-    faculty: "Ilmu Komputer",
-    studyProgram: "Informatika",
-  });
+const PrintBeritaAcara = React.forwardRef((props, ref) => {
+  const { selectedSemester, selectedSchedule, convertedTime } = props;
 
-  const [examinerInfo, setExaminerInfo] = useState([
-    { no: 1, name: "Andrew T. Liem, MT, PhD", signature: "" },
-    { no: 2, name: "Stenly R. Pungus, MT, PhD", signature: "" },
-    { no: 3, name: "Jimmy H. Moedjahedy, SKom, MKom, MM", signature: "" },
+  const [formattedSemester, setFormattedSemester] = useState();
+  const [hourText, setHourText] = useState();
+
+  // Membuat fungsi untuk mendapatkan jenis semester
+  const getSemesterType = (semester) => {
+    if (semester.includes("Ganjil")) {
+      return "I";
+    } else if (semester.includes("Genap")) {
+      return "II";
+    } else {
+      return "Padat";
+    }
+  };
+
+  useEffect(() => {
+    if (selectedSemester) {
+      // Mendapatkan jenis semester dari selectedSemester
+      const semesterType = getSemesterType(selectedSemester);
+
+      // Mendapatkan tahun ajaran dari selectedSemester
+      const academicYear = selectedSemester.match(/\d{4}\/\d{4}/)[0];
+
+      setFormattedSemester(`Semester ${semesterType}, ${academicYear}`);
+    }
+
+    // if (selectedTime) {
+    //   //  jam
+    //   const waktu = selectedTime;
+
+    //   // Memisahkan jam dan menit dari selectedSchedule
+    //   const [jam, menit] = waktu?.split(":").map(Number);
+    //   console.log("waktu: ", waktu);
+    //   console.log("jam: ", jam);
+    //   console.log("menit: ", menit);
+
+    //   const convertedHour = convertHourToText(jam, menit);
+
+    //   setHourText(convertedHour);
+    // }
+  }, [
+    selectedSemester,
+    // selectedTime
   ]);
 
-  const [signatures, setSignatures] = useState([
-    { name: "Dekan FILKOM", role: "", nidn: "" },
-    { name: "Ketua Tim Penguji", role: "", nidn: "" },
-    {
-      name: "Andrew Tenny Liem, S.SI., MT., PhD",
-      role: "",
-      nidn: "0916038101",
-    },
-    {
-      name: "Stenly Richard Pungus, S.Kom., MT., MM",
-      role: "",
-      nidn: "0922098101",
-    },
-  ]);
+  // Gunakan formattedSemester sesuai kebutuhan
+  console.log(formattedSemester);
 
-  const renderSignatureBlock = (name, role, nidn, position) => (
-    <div style={{ textAlign: position, marginTop: "20px" }}>
-      <div style={{ marginBottom: "10px", textDecoration: "none" }}>{name}</div>
-      <div style={{ marginBottom: "5px", textDecoration: "none" }}>{role}</div>
-      {nidn && (
-        <div style={{ marginBottom: "5px", textDecoration: "none" }}>
-          NIDN: {nidn}
-        </div>
-      )}
-    </div>
-  );
-  const currentDate = new Date(); // Tanggal hari ini
+  // Dapatkan data jadwal yang terpilih dan gunakan sesuai kebutuhan
+  console.log("Selected Schedule in PrintBeritaAcara:", selectedSchedule);
+  // Dapatkan data jadwal yang terpilih dan gunakan sesuai kebutuhan
+  console.log("Selected Semester in PrintBeritaAcara:", selectedSemester);
+
+  const currentDate = new Date(selectedSchedule?.defence_date); // Tanggal hari ini
   const dayNumber = currentDate.getDay();
   const monthNumber = currentDate.getMonth();
   const yearNumber = currentDate.getFullYear();
@@ -187,234 +196,258 @@ const ReportContent = React.forwardRef((props, ref) => {
 
   const yearText = convertYearToText(yearNumber);
 
-  //  input manual jam
-  const hourText = convertHourToText(11, 30);
+  const renderSignatureBlock = (name, role, nidn, position) => (
+    <div style={{ textAlign: position, marginTop: "20px" }}>
+      <div style={{ marginBottom: "10px", textDecoration: "none" }}>{name}</div>
+      <div style={{ marginBottom: "5px", textDecoration: "none" }}>{role}</div>
+      {nidn && (
+        <div style={{ marginBottom: "5px", textDecoration: "none" }}>
+          NIDN: {nidn}
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div style={{ display: "none" }}>
       <div
         ref={ref}
-        style={{
-          width: "210mm",
-          height: "297mm",
-          margin: "auto",
-          background: "white",
-          padding: "20px", // Optional: Add padding for spacing
-          fontFamily: "Times  New Roman",
-        }}
+        className="App"
+        style={{ background: "#f5f5f5", minHeight: "100vh" }}
       >
-        <p>Proposal Skripsi</p>
-        <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <h3>BERITA ACARA</h3>
-          <h3>UJIAN PROPOSAL SKRIPSI MAHASISWA</h3>
-          <p>Semester II, 2022 - 2023</p>
-        </div>
-        <div style={{ width: "80%", margin: "auto" }}>
-          <p>
-            Pada hari ini <strong>{dayName}</strong> Tanggal
-            <strong> {convertToText(currentDate.getDate())} </strong>
-            bulan <strong> {monthName}</strong> tahun
-            <strong> {yearText}</strong> pukul
-            <strong> {hourText} </strong>
-            hingga selesai di Ruang <strong>GK1-207</strong> dari Fakultasi Ilmu
-            Komputer Universitas Klabat, telah diadakan Ujian Proposal Skripsi:
-          </p>
-        </div>
-        <div style={{ textAlign: "center", marginBottom: "30px" }}>
-          <h4>JUDUL</h4>
-          <p>
-            <strong>
-              Pengembangan Aplikasi Traces Study Berbasis Web di Universitas
-              Klabat
-            </strong>
-          </p>
-        </div>
-        <div style={{ width: "50%", margin: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              marginBottom: "20px",
-              textAlign: "left",
-              margin: "auto",
-            }}
-          >
-            <tbody>
-              <tr>
-                <td>Atas Nama</td>
-                <td>:</td>
-                <td>{studentInfo.name}</td>
-              </tr>
-              <tr>
-                <td>NIM</td>
-                <td>:</td>
-                <td>{studentInfo.nim}</td>
-              </tr>
-              <tr>
-                <td>Jenjang Pendidikan</td>
-                <td>:</td>
-                <td>{studentInfo.educationLevel}</td>
-              </tr>
-              <tr>
-                <td>Fakultasi</td>
-                <td>:</td>
-                <td>{studentInfo.faculty}</td>
-              </tr>
-              <tr>
-                <td>Program Studi</td>
-                <td>:</td>
-                <td>{studentInfo.studyProgram}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div style={{ width: "80%", margin: "auto", marginTop: "25px" }}>
-          <table
-            style={{
-              width: "100%",
-              marginBottom: "20px",
-              textAlign: "left",
-              margin: "auto",
-              borderCollapse: "collapse",
-            }}
-          >
-            <thead>
-              <tr>
-                <th
+        {/* <PrintButton onPrint={() => reportContentRef.current} /> */}
+        {selectedSchedule?.students?.map((mahasiswa, index) => (
+          <div key={index}>
+            <div
+              style={{
+                width: "210mm",
+                height: "297mm",
+                margin: "auto",
+                background: "white",
+                padding: "20px", // Optional: Add padding for spacing
+                fontFamily: "Times  New Roman",
+              }}
+            >
+              <p>Proposal Skripsi</p>
+              <div style={{ textAlign: "center", marginBottom: "20px" }}>
+                <h3>BERITA ACARA</h3>
+                <h3>UJIAN PROPOSAL SKRIPSI MAHASISWA</h3>
+                <p>{formattedSemester}</p>
+              </div>
+              <div style={{ width: "80%", margin: "auto" }}>
+                <p>
+                  Pada hari ini <strong>{dayName}</strong> Tanggal
+                  <strong> {convertToText(currentDate.getDate())} </strong>
+                  bulan <strong> {monthName}</strong> tahun
+                  <strong> {yearText}</strong> pukul
+                  <strong> {convertedTime} </strong>
+                  hingga selesai di Ruang <strong>GK1-207</strong> dari
+                  Fakultasi Ilmu Komputer Universitas Klabat, telah diadakan
+                  Ujian Proposal Skripsi:
+                </p>
+              </div>
+              <div style={{ textAlign: "center", marginBottom: "30px" }}>
+                <h4>JUDUL</h4>
+                <p>
+                  <strong>{selectedSchedule?.title}</strong>
+                </p>
+              </div>
+              <div style={{ width: "50%", margin: "auto" }}>
+                <table
                   style={{
-                    border: "1px solid black",
-                    padding: "8px",
-                    textAlign: "center",
-                    borderBottom: "none",
+                    width: "100%",
+                    marginBottom: "20px",
+                    textAlign: "left",
+                    margin: "auto",
                   }}
                 >
-                  Tim Penguji
-                </th>
-              </tr>
-            </thead>
-          </table>
-          <table
-            style={{
-              width: "100%",
-              marginBottom: "20px",
-              textAlign: "left",
-              margin: "auto",
-              borderCollapse: "collapse",
-            }}
-          >
-            <thead>
-              <tr>
-                <th
+                  <tbody>
+                    <tr>
+                      <td>Atas Nama</td>
+                      <td>:</td>
+                      <td>{mahasiswa.fullName}</td>
+                    </tr>
+                    <tr>
+                      <td>NIM</td>
+                      <td>:</td>
+                      <td>{mahasiswa.nim}</td>
+                    </tr>
+                    <tr>
+                      <td>Jenjang Pendidikan</td>
+                      <td>:</td>
+                      <td>S-1</td>
+                    </tr>
+                    <tr>
+                      <td>Fakultasi</td>
+                      <td>:</td>
+                      <td>Fakultas Ilmu Komputer</td>
+                    </tr>
+                    <tr>
+                      <td>Program Studi</td>
+                      <td>:</td>
+                      <td>
+                        {mahasiswa.major === "IF"
+                          ? "Informatika"
+                          : "Sistem Infomasi"}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div style={{ width: "80%", margin: "auto", marginTop: "25px" }}>
+                <table
                   style={{
-                    border: "1px solid black",
-                    padding: "8px",
-                    textAlign: "center",
+                    width: "100%",
+                    marginBottom: "20px",
+                    textAlign: "left",
+                    margin: "auto",
+                    borderCollapse: "collapse",
                   }}
                 >
-                  No
-                </th>
-                <th
+                  <thead>
+                    <tr>
+                      <th
+                        style={{
+                          border: "1px solid black",
+                          padding: "8px",
+                          textAlign: "center",
+                          borderBottom: "none",
+                        }}
+                      >
+                        Tim Penguji
+                      </th>
+                    </tr>
+                  </thead>
+                </table>
+                <table
                   style={{
-                    border: "1px solid black",
-                    padding: "8px",
-                    textAlign: "center",
+                    width: "100%",
+                    marginBottom: "20px",
+                    textAlign: "left",
+                    margin: "auto",
+                    borderCollapse: "collapse",
                   }}
                 >
-                  Nama
-                </th>
-                <th
-                  style={{
-                    border: "1px solid black",
-                    padding: "8px",
-                    textAlign: "center",
-                  }}
-                >
-                  Tanda Tanggan
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {examinerInfo.map((examiner) => (
-                <tr key={examiner.no}>
-                  <td style={{ border: "1px solid black", padding: "8px" }}>
-                    {examiner.no}
-                  </td>
-                  <td style={{ border: "1px solid black", padding: "8px" }}>
-                    {examiner.name}
-                  </td>
-                  <td style={{ border: "1px solid black", padding: "8px" }}>
-                    {examiner.signature}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div style={{ width: "80%", margin: "auto" }}>
-          <p>Nilai Kesimpulan Ujian Proposal Skripsi : A</p>
-          <p>Deskripsi : Lulus</p>
-        </div>
+                  <thead>
+                    <tr>
+                      <th
+                        style={{
+                          border: "1px solid black",
+                          padding: "8px",
+                          textAlign: "center",
+                        }}
+                      >
+                        No
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid black",
+                          padding: "8px",
+                          textAlign: "center",
+                        }}
+                      >
+                        Nama
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid black",
+                          padding: "8px",
+                          textAlign: "center",
+                        }}
+                      >
+                        Tanda Tanggan
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style={{ border: "1px solid black", padding: "8px" }}>
+                        1
+                      </td>
+                      <td style={{ border: "1px solid black", padding: "8px" }}>
+                        {selectedSchedule?.panelis_chairman.name}
+                      </td>
+                      <td style={{ border: "1px solid black", padding: "8px" }}>
+                        {selectedSchedule?.is_sign_by_chairman.name}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{ border: "1px solid black", padding: "8px" }}>
+                        2
+                      </td>
+                      <td style={{ border: "1px solid black", padding: "8px" }}>
+                        {selectedSchedule?.panelis_member.name}
+                      </td>
+                      <td style={{ border: "1px solid black", padding: "8px" }}>
+                        {selectedSchedule?.is_sign_by_member.name}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{ border: "1px solid black", padding: "8px" }}>
+                        3
+                      </td>
+                      <td style={{ border: "1px solid black", padding: "8px" }}>
+                        {selectedSchedule?.advisor.name}
+                      </td>
+                      <td style={{ border: "1px solid black", padding: "8px" }}>
+                        {selectedSchedule?.is_sign_by_advisor.name}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div style={{ width: "80%", margin: "auto" }}>
+                <p>
+                  Nilai Kesimpulan Ujian Proposal Skripsi :{" "}
+                  {mahasiswa.assessment_conclution}
+                </p>
+                <p>Deskripsi : {selectedSchedule?.is_pass}</p>
+              </div>
 
-        <div
-          style={{
-            width: "80%",
-            textAlign: "right",
-            marginTop: "50px",
-            margin: "auto",
-            height: "150px",
-          }}
-        >
-          <p style={{ marginRight: "23%", marginBottom: "-5px" }}>
-            Unklab, 2 April 2023
-          </p>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
-              {renderSignatureBlock(
-                signatures[0].name,
-                signatures[0].role,
-                signatures[0].nidn
-              )}
-            </div>
-            <div style={{ marginRight: "25%" }}>
-              {renderSignatureBlock(
-                signatures[1].name,
-                signatures[1].role,
-                signatures[1].nidn
-              )}
+              <div
+                style={{
+                  width: "80%",
+                  textAlign: "right",
+                  marginTop: "50px",
+                  margin: "auto",
+                  height: "150px",
+                }}
+              >
+                <p style={{ marginRight: "23%", marginBottom: "-5px" }}>
+                  Unklab, {selectedSchedule?.defence_date}
+                </p>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <div>{renderSignatureBlock("Dekan FILKOM", "", "")}</div>
+                  <div style={{ marginRight: "25%" }}>
+                    {renderSignatureBlock("Ketua Tim Penguji", "", "")}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    width: "80%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    margin: "auto",
+                  }}
+                >
+                  {renderSignatureBlock(
+                    selectedSchedule?.dekan.name,
+                    "",
+                    selectedSchedule?.dekan.nidn
+                  )}
+                  {renderSignatureBlock(
+                    selectedSchedule?.panelis_chairman.name,
+                    "",
+                    selectedSchedule?.panelis_chairman.nidn
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div
-          style={{
-            width: "80%",
-            display: "flex",
-            justifyContent: "space-between",
-            margin: "auto",
-          }}
-        >
-          {renderSignatureBlock(
-            signatures[2].name,
-            signatures[2].role,
-            signatures[2].nidn
-          )}
-          {renderSignatureBlock(
-            signatures[3].name,
-            signatures[3].role,
-            signatures[3].nidn
-          )}
-        </div>
+        ))}
       </div>
-    </div>
-  );
-});
-
-const PrintBeritaAcara = React.forwardRef((_, ref) => {
-  // const reportContentRef = useRef();
-
-  return (
-    <div className="App" style={{ background: "#f5f5f5", minHeight: "100vh" }}>
-      {/* <PrintButton onPrint={() => reportContentRef.current} /> */}
-      <ReportContent ref={ref} />
     </div>
   );
 });

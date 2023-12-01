@@ -108,16 +108,48 @@ const PDFViewerCekPlagiat = ({ hasilCekPlagiat, isUploading }) => {
   );
 };
 
+// View Document Artikel Jurnal
+const PDFViewerArtikelJurnal = ({ jurnal, isUploading }) => {
+  const viewPDFArtikelJurnal = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
+    // Buat URL objek untuk file PDF
+    const pdfURL = jurnal?.file_path_journal;
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFArtikelJurnal}
+      >
+        Lihat
+      </span>
+    </div>
+  );
+};
+
 const UploadSkipsi = () => {
   // state - menyimpan request data
   const [dokumenSkripsi, setDokumenSkripsi] = useState();
   const [buktiPembayaran, setBuktiPembayaran] = useState();
   const [hasilCekPlagiat, setHasilCekPlagiat] = useState();
+  const [jurnal, setJurnal] = useState();
 
   // state - disabled button
   const [isSubmittingSkripsi, setSubmittionSkripsi] = useState(false);
   const [isSubmittingPayment, setSubmittionPayment] = useState(false);
   const [isSubmittingPlagiat, setSubmittionPlagiat] = useState(false);
+  const [isSubmittingJurnal, setSubmittionJurnal] = useState(false);
 
   const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
 
@@ -194,9 +226,26 @@ const UploadSkipsi = () => {
         );
       }
     };
+    const fetchJurnalData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setJurnal(response.data.data);
+        console.log("Request Get jurnal: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil jurnal:", error);
+      }
+    };
     fetchDokumenSkripsiData();
     fetchBuktiPembayaranData();
     fetchHasilCekPlagiatData();
+    fetchJurnalData();
   }, [token, skripsiId]);
 
   const handleUnggahDokumenProposal = (event) => {
@@ -514,6 +563,105 @@ const UploadSkipsi = () => {
       });
   };
 
+  // Jurnal
+  const handleUnggahJurnal = (event) => {
+    const file = event.target.files[0];
+
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionJurnal(true);
+
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
+
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionJurnal(false); // Aktifkan kembali tombol
+      return;
+    }
+
+    const reader = new FileReader();
+
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
+
+    reader.onload = (e) => {
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1];
+
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
+
+      // Logika pengolahan file
+      const data = {
+        journal_file: {
+          file_name_journal: file.name,
+          file_size_journal: fileSizeString,
+          buffer: base64String,
+        },
+      };
+
+      // Panggil fungsi untuk mengirim file ke server
+      sendJurnalToServer(data);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const sendJurnalToServer = (data) => {
+    console.log("Jurnal yang akan diunggah: ", data);
+    axios
+      .put(`http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Berhasil unggah Jurnal: ", response.data.data);
+
+        // request data
+        const fetchJurnalData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setJurnal(response.data.data);
+            console.log("Request Get jurnal: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil jurnal:", error);
+          }
+        };
+        fetchJurnalData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah Jurnal:",
+          error.response.data.message
+        );
+      })
+      .finally(() => {
+        setSubmittionJurnal(false);
+      });
+  };
+
   const handleHapusDokumenSkripsi = () => {
     // Nonaktifkan tombol Hapus
     setSubmittionSkripsi(true);
@@ -670,6 +818,54 @@ const UploadSkipsi = () => {
       .finally(() => {
         // Aktifkan tombol Hapus
         setSubmittionPlagiat(false);
+      });
+  };
+
+  const handleHapusJurnal = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionJurnal(true);
+
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/journal/delete/${skripsiId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil menghapus Jurnal: ", response.data.data);
+
+        // request data
+        const fetchJurnalData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setJurnal(response.data.data);
+            console.log("Request Get jurnal: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil jurnal:", error);
+          }
+        };
+        fetchJurnalData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat menghapus Jurnal:",
+          error.response.data.message
+        );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionJurnal(false);
       });
   };
 
@@ -1545,6 +1741,171 @@ const UploadSkipsi = () => {
               {/* Table Upload Payment End*/}
             </Div>
             {/* Table 3 End */}
+
+            <Typography
+              sx={{
+                width: "100%",
+                display: "flex",
+                padding: "24px",
+                alignItems: "center",
+                gap: "10px",
+                color: "#192434",
+                background: "rgba(26, 56, 96, 0.10)",
+                borderRadius: "6px",
+                fontSize: "12px",
+                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+              }}
+            >
+              Unggah Artikel Jurnal
+            </Typography>
+            {/* Table 4 Start */}
+            <Div
+              sx={{
+                width: "100%",
+                padding: "0 25px",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "25px",
+              }}
+            >
+              {/* file upload for Artikel Jurnal */}
+              <Div
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginBottom: "20px",
+                }}
+                component={Paper}
+              >
+                <Button
+                  variant="contained"
+                  component="label"
+                  sx={{
+                    textTransform: "none",
+                    background: isSubmittingJurnal ? "#A0A0A0" : "#006AF5",
+                    color: "white",
+                    fontSize: "12px",
+                    borderRadius: "6px",
+                    width: "150px",
+                    height: "30px",
+                    cursor: isSubmittingJurnal ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingJurnal ? "#A0A0A0" : "#006AF5",
+                    },
+                  }}
+                  disabled={isSubmittingJurnal}
+                >
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    onChange={handleUnggahJurnal}
+                    style={{ display: "none" }}
+                  />
+                  <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
+                  Unggah file
+                </Button>
+              </Div>
+              {/* file upload end for Artikel Jurnal */}
+
+              {/* Table Upload Artikel Jurnal Start*/}
+              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
+                <Table>
+                  <TableHead sx={{ background: "#F5F5F5" }}>
+                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                      {/* <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
+                      >
+                        Nomor
+                      </TableCell> */}
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
+                      >
+                        Nama File
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                      >
+                        Tanggal
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                      >
+                        Ukuran
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          textAlign: "center",
+                          width: "12%",
+                        }}
+                      >
+                        Action
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {jurnal && (
+                      <TableRow key={jurnal?.id}>
+                        {/* <TableCell sx={{ fontSize: "12px" }}>1</TableCell> */}
+                        <TableCell sx={{ fontSize: "12px" }}>
+                          {jurnal?.file_name_journal}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "12px" }}>
+                          {jurnal?.upload_date_journal}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "12px" }}>
+                          {jurnal?.file_size_journal}
+                        </TableCell>
+                        <TableCell>
+                          {jurnal?.file_name_journal !== null && (
+                            <Div sx={{ display: "flex" }}>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                }}
+                              >
+                                <PDFViewerArtikelJurnal
+                                  jurnal={jurnal}
+                                  isUploading={isSubmittingJurnal}
+                                />
+                              </span>
+                              <Div
+                                style={{
+                                  margin: "0 5px",
+                                  color: "#E0E0E0",
+                                }}
+                              >
+                                |
+                              </Div>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: isSubmittingJurnal
+                                    ? "not-allowed"
+                                    : "pointer",
+                                  color: isSubmittingJurnal ? "#A0A0A0" : "red",
+                                  fontSize: "12px",
+                                }}
+                                onClick={handleHapusJurnal}
+                                disabled={isSubmittingJurnal}
+                              >
+                                Hapus
+                              </span>
+                            </Div>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* Table Upload Artikel Jurnal End*/}
+            </Div>
+            {/* Table 4 End */}
           </Div>
           {/* Element 2 End */}
         </Div>

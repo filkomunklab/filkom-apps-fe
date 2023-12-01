@@ -9,8 +9,8 @@ import JadwalSidangProposal from "app/pages/ThesisApps/Sekertaris/JadwalSidangPr
 import JadwalSidangSkripsi from "app/pages/ThesisApps/Sekertaris/JadwalSidangSkripsi";
 import ManajemenDosenSkripsi from "app/pages/ThesisApps/Sekertaris/ManajemenDosenSkripsi";
 import JadwalSidang from "app/pages/ThesisApps/Sekertaris/JadwalSidang";
-import DaftarRiwayatProposal from "app/pages/ThesisApps/Sekertaris/DaftarRiwayatProposal";
-import DaftarRiwayatSkripsi from "app/pages/ThesisApps/Sekertaris/DaftarRiwayatSkripsi";
+import RiwayatProposal from "app/pages/ThesisApps/Sekertaris/RiwayatProposal";
+import RiwayatSkripsi from "app/pages/ThesisApps/Sekertaris/RiwayatSkripsi";
 
 const sekretarisRoutes = [
   // PROPOSAL
@@ -82,11 +82,11 @@ const sekretarisRoutes = [
   },
   {
     path: "/sistem-informasi-skripsi/daftar-riwayat-proposal",
-    element: <Page component={DaftarRiwayatProposal} />,
+    element: <Page component={RiwayatProposal} />,
   },
   {
     path: "/sistem-informasi-skripsi/daftar-riwayat-skripsi",
-    element: <Page component={DaftarRiwayatSkripsi} />,
+    element: <Page component={RiwayatSkripsi} />,
   },
   // MANAJEMEN DOSEN SKRIPSI
   {

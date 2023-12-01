@@ -123,29 +123,27 @@ const MenuSekertaris = ({
             </Link>
           </Div>
           <Div sx={{ margin: "auto" }}>
-            <Link
+            <Button
+              component={Link}
               to={`/sistem-informasi-skripsi/daftar-pengajuan-${
                 (progress === "Proposal" && "proposal") ||
                 (progress === "Skripsi" && "skripsi") ||
                 (progress === "Finished" && "skripsi")
               }/dokumen-skripsi/${groupId}/OPERATOR_FILKOM`}
+              sx={{
+                // width: "130px",
+                fontSize: "13px",
+                fontWeight: 500,
+                color: setPage === "Dokumen Skripsi" ? "#006AF5" : "#192434",
+                textTransform: "none",
+                "&:hover": {
+                  color: setPage === "Dokumen Skripsi" ? "#006AF5" : "#006AF5",
+                },
+              }}
+              disabled={progress !== "Skripsi" && progress !== "Finished"}
             >
-              <Button
-                sx={{
-                  // width: "130px",
-                  fontSize: "13px",
-                  fontWeight: 500,
-                  color: setPage === "Dokumen Skripsi" ? "#006AF5" : "#192434",
-                  textTransform: "none",
-                  "&:hover": {
-                    color:
-                      setPage === "Dokumen Skripsi" ? "#006AF5" : "#006AF5",
-                  },
-                }}
-              >
-                Dokumen Skripsi
-              </Button>
-            </Link>
+              Dokumen Skripsi
+            </Button>
           </Div>
         </Div>
       </Div>
