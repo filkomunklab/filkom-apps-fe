@@ -22,6 +22,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   TextField,
+  DialogContentText,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import WarningIcon from "@mui/icons-material/Warning";
@@ -63,6 +64,11 @@ const DokumenRevisiSkripsi = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [isEditing, setEditing] = useState(false);
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
+
+  const [open, setOpen] = useState(false);
+  const [tanggal, setTanggal] = useState("");
+  const [konfirmasiOpen, setKonfirmasiOpen] = useState(false);
+  const [showTanggal, setShowTanggal] = useState(false);
 
   const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
 
@@ -145,22 +151,49 @@ const DokumenRevisiSkripsi = () => {
     fetchTanggalData();
   }, [token, skripsiId]);
 
-  // mengatur tanggal
-  const handleEdit = () => {
-    // mengisi date dengan data yang sudah ada
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSimpan = () => {
+    setKonfirmasiOpen(true);
+  };
+
+  const handleBatal = () => {
     setSelectedDate(date?.submission_dateline);
-    setEditing(true);
+    setOpen(false);
   };
 
-  const handleCancelEdit = () => {
-    // reset date
-    setSelectedDate();
-    setEditing(false);
+  const handleKonfirmasiClose = () => {
+    setKonfirmasiOpen(false);
   };
 
-  const handleSubmitDate = () => {
-    setConfirmationDialogOpen(true);
+  const handleKonfirmasiSimpan = () => {
+    setOpen(false);
+    setKonfirmasiOpen(false);
+    setShowTanggal(true);
   };
+
+  // // mengatur tanggal
+  // const handleEdit = () => {
+  //   // mengisi date dengan data yang sudah ada
+  //   setSelectedDate(date?.submission_dateline);
+  //   setEditing(true);
+  // };
+
+  // const handleCancelEdit = () => {
+  //   // reset date
+  //   setSelectedDate();
+  //   setEditing(false);
+  // };
+
+  // const handleSubmitDate = () => {
+  //   setConfirmationDialogOpen(true);
+  // };
 
   const handleConfirmSubmitDate = () => {
     const batasRevisi = {
@@ -911,7 +944,45 @@ const DokumenRevisiSkripsi = () => {
                 width: "100%",
               }}
             >
-              {isEditing ? (
+              <Typography variant="subtitle1">
+                Batas pengumpulan revisi: {date?.submission_dateline}
+              </Typography>
+
+              <Div hidden={userRole === "KETUA_PANELIS" ? false : true}>
+                <Button
+                  size="small"
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                  onClick={handleOpen}
+                >
+                  Ubah
+                </Button>
+              </Div>
+            </Div>
+            {/* Date End */}
+
+            {/* popup Date */}
+            <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+              <Div
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  alignSelf: "stretch",
+                  background: "rgba(26, 56, 96, 0.10)",
+                  justifyContent: "center",
+                }}
+              >
+                <DialogTitle
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    alignSelf: "stretch",
+                  }}
+                >
+                  Batas Pengumpulan Revisi
+                </DialogTitle>
+              </Div>
+              <DialogContent sx={{ margin: "auto", width: "70%" }}>
                 <TextField
                   size="small"
                   id="inputDate"
@@ -920,49 +991,71 @@ const DokumenRevisiSkripsi = () => {
                   onChange={(e) => setSelectedDate(e.target.value)}
                   style={{ marginRight: "10px" }}
                 />
-              ) : (
-                <Typography variant="subtitle1">
-                  Batas pengumpulan revisi: {date?.submission_dateline}
-                </Typography>
-              )}
+              </DialogContent>
+              <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                <Button
+                  onClick={handleBatal}
+                  color="primary"
+                  size="small"
+                  sx={{
+                    background: "white",
+                    boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                    textTransform: "none",
+                    color: "black",
+                  }}
+                >
+                  Kembali
+                </Button>
+                <Button
+                  size="small"
+                  onClick={handleSimpan}
+                  color="primary"
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                >
+                  Simpan
+                </Button>
+              </DialogActions>
+            </Dialog>
 
-              {isEditing ? (
-                <Div>
-                  <Button
-                    size="small"
-                    sx={{
-                      background: "white",
-                      boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-                      textTransform: "none",
-                      color: "black",
-                    }}
-                    onClick={handleCancelEdit}
-                  >
-                    Batal
-                  </Button>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    onClick={handleSubmitDate}
-                    style={{ marginLeft: "10px", textTransform: "none" }}
-                  >
-                    Simpan
-                  </Button>
-                </Div>
-              ) : (
-                <Div hidden={userRole === "KETUA_PANELIS" ? false : true}>
-                  <Button
-                    size="small"
-                    variant="contained"
-                    sx={{ textTransform: "none" }}
-                    onClick={handleEdit}
-                  >
-                    Ubah
-                  </Button>
-                </Div>
-              )}
-            </Div>
-            {/* Date End */}
+            {/* Popup Konfirmasi Tanggal*/}
+            <Dialog
+              open={konfirmasiOpen}
+              onClose={handleKonfirmasiClose}
+              maxWidth="xs"
+              fullWidth
+            >
+              <DialogTitle variant="subtitle2">Konfirmasi Tanggal</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Anda yakin ingin memasukan tanggal ini?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                <Button
+                  size="small"
+                  onClick={handleKonfirmasiClose}
+                  sx={{
+                    background: "white",
+                    boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                    textTransform: "none",
+                    color: "black",
+                  }}
+                >
+                  Batal
+                </Button>
+                <Button
+                  size="small"
+                  onClick={handleConfirmSubmitDate}
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                  color="primary"
+                >
+                  Ya
+                </Button>
+              </DialogActions>
+            </Dialog>
+
             <Typography
               sx={{
                 width: "100%",

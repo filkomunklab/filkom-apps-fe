@@ -95,7 +95,7 @@ const ArsipDocument = () => {
   // state - menyimpan request data
   const [HKI, setHKI] = useState();
   const [sourceCode, setSourceCode] = useState();
-  const [linkSourceCode, setLinkSourceCode] = useState();
+  const [linkList, setLinkList] = useState();
 
   // state - disabled button
   const [isSubmittingHKI, setSubmittionHKI] = useState(false);
@@ -106,52 +106,6 @@ const ArsipDocument = () => {
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
   const [skripsiId, setSkripsiId] = useState(null);
-
-  const [open, setOpen] = useState(false);
-  const [link, setLink] = useState("");
-  const [links, setLinks] = useState([]);
-  const [selectedLinkId, setSelectedLinkId] = useState(null);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleLinkSubmit = () => {
-    if (selectedLinkId !== null) {
-      // Update link yang sudah ada
-      const updatedLinks = [...links];
-      updatedLinks[selectedLinkId] = {
-        link,
-        date: formatIndonesianDate(new Date()),
-      };
-      setLinks(updatedLinks);
-    } else {
-      // Tambahkan link baru
-      setLinks([...links, { link, date: formatIndonesianDate(new Date()) }]);
-    }
-
-    // Reset form dan tutup popup
-    setLink("");
-    setSelectedLinkId(null);
-    handleClose();
-  };
-
-  const handleEditLink = (index) => {
-    const selectedLink = links[index];
-    setLink(selectedLink.link);
-    setSelectedLinkId(index);
-    setOpen(true);
-  };
-
-  const handleDeleteLink = (index) => {
-    const updatedLinks = [...links];
-    updatedLinks.splice(index, 1);
-    setLinks(updatedLinks);
-  };
 
   const role = useParams().role;
   console.log(role);
@@ -193,29 +147,191 @@ const ArsipDocument = () => {
         console.error("Terjadi kesalahan saat mengambil source code:", error);
       }
     };
-    const fetchLinkSourceCodeData = async () => {
+    const fetchLinkData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/link-source-code/${skripsiId}`,
+          `http://localhost:2000/api/v1/group/skripsi/all-link/${groupId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
             },
           }
         );
-        setLinkSourceCode(response.data.data);
-        console.log("Request Get link source code: ", response.data.data);
+        setLinkList(response.data.data);
+        console.log("Request Get all link: ", response.data.data);
       } catch (error) {
-        console.error(
-          "Terjadi kesalahan saat mengambil link source code:",
-          error
-        );
+        console.error("Terjadi kesalahan saat mengambil semua ink:", error);
       }
     };
     fetchHKIData();
     fetchSourceCodeData();
-    fetchLinkSourceCodeData();
+    fetchLinkData();
   }, [token, skripsiId]);
+
+  const [openUnggahLink, setOpenUnggahLink] = useState(false);
+  const [openUpdateLink, setOpenUpdateLink] = useState(false);
+  const [newLink, setNewLink] = useState();
+  const [newLinkName, setNewLinkName] = useState();
+  const [updateLink, setUpdateLink] = useState();
+  const [updateLinkName, setUpdateLinkName] = useState();
+  const [selectedLinkId, setSelectedLinkId] = useState();
+  const [link, setLink] = useState("");
+  const [links, setLinks] = useState([]);
+
+  // Unggah Link
+  const handleClickOpenUnggahLink = () => {
+    setOpenUnggahLink(true);
+  };
+
+  const handleCloseUnggahLink = () => {
+    setOpenUnggahLink(false);
+  };
+
+  const handleSubmitNewLink = () => {
+    const linkData = {
+      group_id: groupId,
+      name: newLinkName,
+      link: newLink,
+    };
+    console.log("link yang akan diunggah: ", linkData);
+    axios
+      .post(`http://localhost:2000/api/v1/group/skripsi/link/`, linkData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // membersihkan kotak link
+        setNewLink();
+        setNewLinkName();
+
+        console.log("Berhasil unggah link: ", response.data.data);
+
+        // request data
+        const fetchLinkData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/group/skripsi/all-link/${groupId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setLinkList(response.data.data);
+            console.log("Request Get all link: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil semua ink:", error);
+          }
+        };
+        fetchLinkData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah link:",
+          error.response.data.message
+        );
+      });
+
+    handleCloseUnggahLink();
+  };
+
+  // Update Link
+  const handleOpenUpdateLink = () => {
+    setOpenUpdateLink(true);
+  };
+
+  const handleCloseUpdateLink = () => {
+    setOpenUpdateLink(false);
+  };
+
+  const handleSubmitUpdateLink = () => {
+    const linkData = {
+      name: updateLinkName,
+      link: updateLink,
+    };
+    console.log("link yang akan diperbarui: ", linkData);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/group/skripsi/link/${selectedLinkId}`,
+        linkData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        // membersihkan kotak link
+        setUpdateLink();
+        setUpdateLinkName();
+
+        console.log("Berhasil perbarui link: ", response.data.data);
+
+        // request data
+        const fetchLinkData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/group/skripsi/all-link/${groupId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setLinkList(response.data.data);
+            console.log("Request Get all link: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil semua ink:", error);
+          }
+        };
+        fetchLinkData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat perbarui link:",
+          error.response.data.message
+        );
+      });
+
+    handleCloseUpdateLink();
+  };
+
+  // Delete Link
+  const handleDeleteLink = (linkId) => {
+    console.log("link id yang akan dihapus: ", linkId);
+    axios
+      .delete(`http://localhost:2000/api/v1/group/skripsi/link/${linkId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Berhasil menghapus link: ", response.data.data);
+
+        // request data
+        const fetchLinkData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/group/skripsi/all-link/${groupId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setLinkList(response.data.data);
+            console.log("Request Get all link: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil semua ink:", error);
+          }
+        };
+        fetchLinkData();
+      })
+      .catch((error) => {
+        console.error("Terjadi kesalahan saat menghapus link:", error);
+      });
+  };
 
   // HKI
   const handleUnggahHKI = (event) => {
@@ -461,7 +577,7 @@ const ArsipDocument = () => {
                   },
                 }
               );
-              setLinkSourceCode(response.data.data);
+              setLinkList(response.data.data);
               console.log("Request Get link source code: ", response.data.data);
             } catch (error) {
               console.error(
@@ -616,7 +732,7 @@ const ArsipDocument = () => {
                 },
               }
             );
-            setLinkSourceCode(response.data.data);
+            setLinkList(response.data.data);
             console.log("Request Get link source code: ", response.data.data);
           } catch (error) {
             console.error(
@@ -1080,136 +1196,6 @@ const ArsipDocument = () => {
                 </Table>
               </TableContainer>
               {/* Table Upload Source Code End*/}
-              {/* file upload for Link Start */}
-              <Div
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginBottom: "20px",
-                }}
-              >
-                <input
-                  style={{
-                    height: "30px",
-                    border: "1px solid #ccc",
-                    width: "430px",
-                    borderRadius: "6px",
-                    fontSize: "12px",
-                  }}
-                  type="text"
-                  placeholder="Masukkan link"
-                  value={currentLink}
-                  onChange={(e) => setCurrentLink(e.target.value)}
-                />
-                <div style={{ flex: 1 }}></div>
-                <Button
-                  variant="contained"
-                  component="label"
-                  sx={{
-                    textTransform: "none",
-                    background: isSubmittingLink ? "#A0A0A0" : "#006AF5",
-                    color: "white",
-                    fontSize: "12px",
-                    borderRadius: "6px",
-                    width: "150px",
-                    height: "30px",
-                    cursor: isSubmittingLink ? "not-allowed" : "pointer",
-                    "&:hover": {
-                      background: isSubmittingLink ? "#A0A0A0" : "#006AF5",
-                    },
-                  }}
-                  disabled={isSubmittingLink}
-                  onClick={handleUngggahLink}
-                >
-                  <AttachmentIcon
-                    sx={{ fontSize: "14px", marginRight: "5px" }}
-                  />
-                  Unggah Link
-                </Button>
-              </Div>
-              {/* file upload for Link End */}
-              {/* Table upload Link Start */}
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead sx={{ background: "#F5F5F5" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      {/* <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
-                      >
-                        No
-                      </TableCell> */}
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "65%" }}
-                      >
-                        Link
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Tanggal
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          fontSize: "12px",
-                          padding: "11px",
-                          textAlign: "center",
-                          width: "12%",
-                        }}
-                      >
-                        Action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {linkSourceCode && (
-                      <TableRow>
-                        {/* <TableCell>1</TableCell> */}
-                        <TableCell>
-                          <span
-                            style={{
-                              textDecoration: "underline",
-                              cursor: isSubmittingLink
-                                ? "not-allowed"
-                                : "pointer",
-                              color: isSubmittingLink ? "#A0A0A0" : "blue",
-                              fontSize: "12px",
-                            }}
-                            onClick={() =>
-                              openLink(linkSourceCode?.link_soucecode)
-                            }
-                            disabled={isSubmittingLink}
-                          >
-                            {breakLongLink(linkSourceCode?.link_soucecode)}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          {linkSourceCode?.upload_date_link_soucecode}
-                        </TableCell>
-                        <TableCell>
-                          {linkSourceCode?.link_soucecode !== null && (
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: isSubmittingLink
-                                  ? "not-allowed"
-                                  : "pointer",
-                                color: isSubmittingLink ? "#A0A0A0" : "red",
-                                fontSize: "12px",
-                              }}
-                              onClick={handleHapusLink}
-                              disabled={isSubmittingLink}
-                            >
-                              Hapus
-                            </span>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table upload Link End */}
-
               {/* table upload link2 Start */}
               <Div
                 sx={{
@@ -1229,20 +1215,34 @@ const ArsipDocument = () => {
                     width: "150px",
                     height: "30px",
                   }}
-                  onClick={handleClickOpen}
+                  onClick={handleClickOpenUnggahLink}
                 >
                   <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
                   Unggah Link
                 </Button>
               </Div>
 
-              <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+              {/* dialog unggah link */}
+              <Dialog
+                open={openUnggahLink}
+                onClose={handleCloseUnggahLink}
+                maxWidth="xs"
+                fullWidth
+              >
                 <DialogTitle>
-                  <Typography variant="h3">
-                    {selectedLinkId !== null ? "Update Link" : "Unggah Link"}
-                  </Typography>
+                  <Typography variant="h3">Unggah Link</Typography>
                 </DialogTitle>
                 <DialogContent>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="nama"
+                    label="Nama Link"
+                    type="text"
+                    fullWidth
+                    value={newLinkName}
+                    onChange={(e) => setNewLinkName(e.target.value)}
+                  />
                   <TextField
                     autoFocus
                     margin="dense"
@@ -1250,13 +1250,13 @@ const ArsipDocument = () => {
                     label="Link"
                     type="text"
                     fullWidth
-                    value={link}
-                    onChange={(e) => setLink(e.target.value)}
+                    value={newLink}
+                    onChange={(e) => setNewLink(e.target.value)}
                   />
                 </DialogContent>
                 <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                   <Button
-                    onClick={handleClose}
+                    onClick={handleCloseUnggahLink}
                     size="small"
                     sx={{
                       background: "white",
@@ -1268,101 +1268,192 @@ const ArsipDocument = () => {
                     Batal
                   </Button>
                   <Button
-                    onClick={handleLinkSubmit}
+                    onClick={handleSubmitNewLink}
                     size="small"
                     variant="contained"
                     sx={{ textTransform: "none" }}
                     color="primary"
                   >
-                    {selectedLinkId !== null ? "Update" : "Submit"}
+                    Submit
                   </Button>
                 </DialogActions>
               </Dialog>
 
-              <TableContainer component={Paper} style={{ marginTop: 20 }}>
-                <Table>
-                  <TableHead sx={{ background: "#F5F5F5" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "65%" }}
-                      >
-                        Link
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Tanggal
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          fontSize: "12px",
-                          padding: "11px",
-                          textAlign: "center",
-                          width: "12%",
-                        }}
-                      >
-                        Action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {links.map((item, index) => (
-                      <TableRow key={index}>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          <a
-                            href={item.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                              textDecoration: "underline",
-                              color: "blue",
+              {/* dialog update link */}
+              <Dialog
+                open={openUpdateLink}
+                onClose={handleCloseUpdateLink}
+                maxWidth="xs"
+                fullWidth
+              >
+                <DialogTitle>
+                  <Typography variant="h3">Update Link</Typography>
+                </DialogTitle>
+                <DialogContent>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="nama"
+                    label="Nama Link"
+                    type="text"
+                    fullWidth
+                    value={updateLinkName}
+                    onChange={(e) => setUpdateLinkName(e.target.value)}
+                  />
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="link"
+                    label="Link"
+                    type="text"
+                    fullWidth
+                    value={updateLink}
+                    onChange={(e) => setUpdateLink(e.target.value)}
+                  />
+                </DialogContent>
+                <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                  <Button
+                    onClick={handleCloseUpdateLink}
+                    size="small"
+                    sx={{
+                      background: "white",
+                      boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                      textTransform: "none",
+                      color: "black",
+                    }}
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    onClick={handleSubmitUpdateLink}
+                    size="small"
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                    color="primary"
+                  >
+                    Submit
+                  </Button>
+                </DialogActions>
+              </Dialog>
+
+              {linkList?.map((linkdata, index) => (
+                <>
+                  <Typography
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      padding: "24px",
+                      alignItems: "center",
+                      gap: "10px",
+                      color: "#192434",
+                      background: "rgba(26, 56, 96, 0.10)",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {linkdata.name}
+                  </Typography>
+                  <TableContainer component={Paper} style={{ marginTop: 20 }}>
+                    <Table>
+                      <TableHead sx={{ background: "#F5F5F5" }}>
+                        <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "65%",
                             }}
                           >
-                            {item.link}
-                          </a>
-                        </TableCell>
-                        <TableCell>{item.date}</TableCell>
-                        <TableCell>
-                          <Div sx={{ display: "flex" }}>
-                            <span
+                            Link
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "20%",
+                            }}
+                          >
+                            Tanggal
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              textAlign: "center",
+                              width: "12%",
+                            }}
+                          >
+                            Action
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow key={index}>
+                          <TableCell sx={{ fontSize: "12px" }}>
+                            <a
+                              href={linkdata.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
                               style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
+                                textDecoration: "underline",
                                 color: "blue",
-                                fontSize: "12px",
-                              }}
-                              onClick={() => handleEditLink(index)}
-                            >
-                              Update
-                            </span>
-                            <Div
-                              style={{
-                                margin: "0 5px",
-                                color: "#E0E0E0",
                               }}
                             >
-                              |
+                              {linkdata.link}
+                            </a>
+                          </TableCell>
+                          <TableCell>{linkdata.date}</TableCell>
+                          <TableCell>
+                            <Div sx={{ display: "flex" }}>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                }}
+                                onClick={() => {
+                                  setSelectedLinkId(linkdata.id);
+                                  setUpdateLinkName(linkdata.name);
+                                  setUpdateLink(linkdata.link);
+                                  handleOpenUpdateLink();
+                                }}
+                              >
+                                Update
+                              </span>
+                              <Div
+                                style={{
+                                  margin: "0 5px",
+                                  color: "#E0E0E0",
+                                }}
+                              >
+                                |
+                              </Div>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: isSubmittingLink
+                                    ? "not-allowed"
+                                    : "pointer",
+                                  color: isSubmittingLink ? "#A0A0A0" : "red",
+                                  fontSize: "12px",
+                                }}
+                                onClick={() => {
+                                  setSelectedLinkId(linkdata.id);
+                                  handleDeleteLink(linkdata.id);
+                                }}
+                              >
+                                Hapus
+                              </span>
                             </Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: isSubmittingLink
-                                  ? "not-allowed"
-                                  : "pointer",
-                                color: isSubmittingLink ? "#A0A0A0" : "red",
-                                fontSize: "12px",
-                              }}
-                              onClick={() => handleDeleteLink(index)}
-                            >
-                              Hapus
-                            </span>
-                          </Div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </>
+              ))}
             </Div>
             {/* Table 3 End */}
           </Div>

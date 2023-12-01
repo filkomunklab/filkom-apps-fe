@@ -89,6 +89,7 @@ const DokumenRevisiProposal = () => {
   };
 
   const handleBatal = () => {
+    setSelectedDate(date?.submission_dateline);
     setOpen(false);
   };
 
@@ -213,8 +214,11 @@ const DokumenRevisiProposal = () => {
 
         // reset date
         setSelectedDate();
-        setConfirmationDialogOpen(false);
-        setEditing(false);
+        // setConfirmationDialogOpen(false);
+        // setEditing(false);
+        setOpen(false);
+        setKonfirmasiOpen(false);
+        setShowTanggal(true);
 
         // request data
         const fetchTanggalData = async () => {
@@ -940,10 +944,7 @@ const DokumenRevisiProposal = () => {
               }}
             >
               <Typography variant="subtitle1">
-                Batas pengumpulan revisi:{" "}
-                {showTanggal && (
-                  <span>{formatDateIndonesiaWithMonth(tanggal)}</span>
-                )}
+                Batas pengumpulan revisi: {date?.submission_dateline}
               </Typography>
 
               <Div hidden={userRole === "KETUA_PANELIS" ? false : true}>
@@ -981,11 +982,12 @@ const DokumenRevisiProposal = () => {
               </Div>
               <DialogContent sx={{ margin: "auto", width: "70%" }}>
                 <TextField
-                  label="Tanggal"
+                  size="small"
+                  id="inputDate"
                   type="date"
-                  InputLabelProps={{ shrink: true }}
-                  onChange={(e) => setTanggal(e.target.value)}
-                  sx={{ width: "100%" }}
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  style={{ marginRight: "10px" }}
                 />
               </DialogContent>
               <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
@@ -1042,7 +1044,7 @@ const DokumenRevisiProposal = () => {
                 </Button>
                 <Button
                   size="small"
-                  onClick={handleKonfirmasiSimpan}
+                  onClick={handleConfirmSubmitDate}
                   variant="contained"
                   sx={{ textTransform: "none" }}
                   color="primary"
