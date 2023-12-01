@@ -21,7 +21,7 @@ import { Link } from "react-router-dom";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import PrintBeritaAcara from "./PrintBeritaAcara";
+import PrintBeritaAcaraProposal from "./PrintBeritaAcaraProposal";
 import { useReactToPrint } from "react-to-print";
 
 const DaftarRiwayatProposal = () => {
@@ -382,7 +382,7 @@ const DaftarRiwayatProposal = () => {
               </Accordion>
             ))}
         </Div>
-        <PrintBeritaAcara
+        <PrintBeritaAcaraProposal
           selectedSemester={selectedSemester}
           selectedSchedule={selectedSchedule}
           convertedTime={convertedTime}

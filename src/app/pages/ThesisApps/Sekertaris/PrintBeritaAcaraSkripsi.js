@@ -32,80 +32,23 @@ const convertToText = (number) => {
   }
 };
 
-// Fungsi untuk mengonversi jam ke dalam format teks
-const convertHourToText = (hour, minute) => {
-  const digit = [
-    "",
-    "satu",
-    "dua",
-    "tiga",
-    "empat",
-    "lima",
-    "enam",
-    "tujuh",
-    "delapan",
-    "sembilan",
-  ];
-
-  // Menentukan puluhan dan satuan pada jam
-  const tenHour = Math.floor(hour / 10);
-  const unitHour = hour % 10;
-
-  // Menentukan puluhan dan satuan pada menit
-  const tenMinute = Math.floor(minute / 10);
-  const unitMinute = minute % 10;
-
-  // Menentukan periode waktu (pagi, siang, sore, malam)
-  let periodText = "";
-  if (hour < 11) {
-    periodText = "pagi";
-  } else if (hour < 15) {
-    periodText = "siang";
-  } else if (hour < 18) {
-    periodText = "sore";
-  } else {
-    periodText = "malam";
-  }
-
-  // Menggabungkan teks jam dan menit
-  let hourText = "";
-  if (hour === 10) {
-    hourText = "sepuluh";
-  } else if (hour === 11 || (hour > 11 && hour < 20)) {
-    hourText = hour === 11 ? "sebelas" : `${digit[unitHour]} belas`;
-  } else if (hour === 20) {
-    hourText = "dua puluh";
-  } else if (hour > 20 && hour < 24) {
-    hourText = `dua puluh ${digit[unitHour]}`;
-  } else {
-    hourText = digit[hour];
-  }
-
-  let minuteText = "";
-  if (minute === 0) {
-    minuteText = "sejuta";
-  } else if (minute === 10) {
-    minuteText = "sepuluh";
-  } else if (minute > 0 && minute < 10) {
-    minuteText = digit[minute];
-  } else if (minute >= 10 && minute < 20) {
-    minuteText = `${digit[minute - 10]} belas`;
-  } else {
-    minuteText = tenMinute ? `${digit[tenMinute]} puluh` : "";
-    const unitMinuteText = unitMinute ? ` ${digit[unitMinute]}` : "";
-    minuteText += unitMinuteText;
-  }
-
-  return `${hourText}${
-    minuteText === "sejuta" ? "" : " " + minuteText
-  } ${periodText}`;
-};
-
-const PrintBeritaAcara = React.forwardRef((props, ref) => {
+const PrintBeritaAcaraSkripsi = React.forwardRef((props, ref) => {
   const { selectedSemester, selectedSchedule, convertedTime } = props;
 
+  console.log("tanggal: ", selectedSchedule?.defence_date);
+  // Tanggal awal
+  const defenceDate = new Date(selectedSchedule?.defence_date);
+
+  // Options untuk format tanggal
+  const options = { day: "numeric", month: "long", year: "numeric" };
+
+  // Menggunakan toLocaleDateString untuk mendapatkan tanggal dalam format yang diinginkan
+  const formattedDate = defenceDate.toLocaleDateString("id-ID", options);
+
+  // Menampilkan hasil
+  console.log("hasil tanggal", formattedDate);
+
   const [formattedSemester, setFormattedSemester] = useState();
-  const [hourText, setHourText] = useState();
 
   // Membuat fungsi untuk mendapatkan jenis semester
   const getSemesterType = (semester) => {
@@ -128,25 +71,7 @@ const PrintBeritaAcara = React.forwardRef((props, ref) => {
 
       setFormattedSemester(`Semester ${semesterType}, ${academicYear}`);
     }
-
-    // if (selectedTime) {
-    //   //  jam
-    //   const waktu = selectedTime;
-
-    //   // Memisahkan jam dan menit dari selectedSchedule
-    //   const [jam, menit] = waktu?.split(":").map(Number);
-    //   console.log("waktu: ", waktu);
-    //   console.log("jam: ", jam);
-    //   console.log("menit: ", menit);
-
-    //   const convertedHour = convertHourToText(jam, menit);
-
-    //   setHourText(convertedHour);
-    // }
-  }, [
-    selectedSemester,
-    // selectedTime
-  ]);
+  }, [selectedSemester]);
 
   // Gunakan formattedSemester sesuai kebutuhan
   console.log(formattedSemester);
@@ -228,10 +153,10 @@ const PrintBeritaAcara = React.forwardRef((props, ref) => {
                 fontFamily: "Times  New Roman",
               }}
             >
-              <p>Proposal Skripsi</p>
+              <p>Skripsi</p>
               <div style={{ textAlign: "center", marginBottom: "20px" }}>
                 <h3>BERITA ACARA</h3>
-                <h3>UJIAN PROPOSAL SKRIPSI MAHASISWA</h3>
+                <h3>UJIAN SKRIPSI MAHASISWA</h3>
                 <p>{formattedSemester}</p>
               </div>
               <div style={{ width: "80%", margin: "auto" }}>
@@ -243,7 +168,7 @@ const PrintBeritaAcara = React.forwardRef((props, ref) => {
                   <strong> {convertedTime} </strong>
                   hingga selesai di Ruang <strong>GK1-207</strong> dari
                   Fakultasi Ilmu Komputer Universitas Klabat, telah diadakan
-                  Ujian Proposal Skripsi:
+                  Ujian Skripsi:
                 </p>
               </div>
               <div style={{ textAlign: "center", marginBottom: "30px" }}>
@@ -398,10 +323,17 @@ const PrintBeritaAcara = React.forwardRef((props, ref) => {
               </div>
               <div style={{ width: "80%", margin: "auto" }}>
                 <p>
-                  Nilai Kesimpulan Ujian Proposal Skripsi :{" "}
+                  Nilai Kesimpulan Ujian Skripsi :{" "}
                   {mahasiswa.assessment_conclution}
                 </p>
-                <p>Deskripsi : {selectedSchedule?.is_pass}</p>
+                <p>
+                  Deskripsi :{" "}
+                  {selectedSchedule?.is_pass === "Pass"
+                    ? "Lulus"
+                    : selectedSchedule?.is_pass === "Repeat"
+                    ? "Mengulang"
+                    : "Tidak Lulus"}
+                </p>
               </div>
 
               <div
@@ -414,7 +346,7 @@ const PrintBeritaAcara = React.forwardRef((props, ref) => {
                 }}
               >
                 <p style={{ marginRight: "23%", marginBottom: "-5px" }}>
-                  Unklab, {selectedSchedule?.defence_date}
+                  Unklab, {formattedDate}
                 </p>
                 <div
                   style={{ display: "flex", justifyContent: "space-between" }}
@@ -452,4 +384,4 @@ const PrintBeritaAcara = React.forwardRef((props, ref) => {
   );
 });
 
-export default PrintBeritaAcara;
+export default PrintBeritaAcaraSkripsi;

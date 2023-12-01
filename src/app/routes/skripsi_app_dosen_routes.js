@@ -30,9 +30,13 @@ import PerubahanSkripsiCoAvisor from "app/pages/ThesisApps/Dosen/PerubahanSkrips
 import ManajemenKelasDosenSkripsi from "app/pages/ThesisApps/Dosen/ManajemenKelasDosenSkripsi";
 import DaftarRiwayatNilaiDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarRiwayatNilaiDosenSkripsi";
 import PengajuanJudulDosen from "app/pages/ThesisApps/Dosen/PengajuanJudulDosen";
-import TestBeritaAcaraProposal from "app/pages/ThesisApps/Dosen/TestBeritaAcaraProposal";
+import DaftarSkripsiFILKOM from "app/pages/ThesisApps/Global/DaftarSkripsiFILKOM";
 
 const dosenRoutes = [
+  {
+    path: "/sistem-informasi-skripsi/daftar-judul-skrisi-fakultas-ilmu-komputer",
+    element: <Page component={DaftarSkripsiFILKOM} />,
+  },
   // KOMITE
   // ----------Dosen
   {
@@ -418,7 +422,7 @@ const dosenRoutes = [
   },
   {
     path: "/sistem-informasi-skripsi/daftar-pengujian-proposal-ketua/berita-acara-proposal/:groupId/:role",
-    element: <Page component={TestBeritaAcaraProposal} />,
+    element: <Page component={BeritaAcaraProposal} />,
   },
   {
     path: "/sistem-informasi-skripsi/daftar-pengujian-proposal-ketua/dokumen-revisi-proposal/:groupId/:role",

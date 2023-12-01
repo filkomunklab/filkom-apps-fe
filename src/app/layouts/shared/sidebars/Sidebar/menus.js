@@ -245,6 +245,12 @@ export const mahasiswaMenus = [
     type: "section",
     children: [
       {
+        label: "Daftar Judul Skripsi",
+        type: "nav-item",
+        icon: <PersonIcon sx={{ fontSize: 20 }} />,
+        uri: "/sistem-informasi-skripsi/daftar-judul-skrisi-fakultas-ilmu-komputer",
+      },
+      {
         label: "Daftar Pengajuan",
         type: "nav-item",
         icon: <PersonIcon sx={{ fontSize: 20 }} />,
@@ -388,6 +394,12 @@ export const dekanMenus = [
     label: "Sistem Informasi Skripsi",
     type: "section",
     children: [
+      {
+        label: "Daftar Judul Skripsi",
+        type: "nav-item",
+        icon: <PersonIcon sx={{ fontSize: 20 }} />,
+        uri: "/sistem-informasi-skripsi/daftar-judul-skrisi-fakultas-ilmu-komputer",
+      },
       {
         uri: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dekan",
         label: "Pengajuan Judul",
@@ -647,6 +659,12 @@ export const dosenMenus = [
     type: "section",
     children: [
       {
+        label: "Daftar Judul Skripsi",
+        type: "nav-item",
+        icon: <PersonIcon sx={{ fontSize: 20 }} />,
+        uri: "/sistem-informasi-skripsi/daftar-judul-skrisi-fakultas-ilmu-komputer",
+      },
+      {
         uri: "/sistem-informasi-skripsi/daftar-komite-judul-dosen",
         label: "Komite Judul",
         type: "nav-item",
@@ -761,6 +779,12 @@ export const dosenMKMenus = [
     label: "Sistem Informasi Skripsi",
     type: "section",
     children: [
+      {
+        label: "Daftar Judul Skripsi",
+        type: "nav-item",
+        icon: <PersonIcon sx={{ fontSize: 20 }} />,
+        uri: "/sistem-informasi-skripsi/daftar-judul-skrisi-fakultas-ilmu-komputer",
+      },
       {
         label: "Pengajuan",
         type: "collapsible",
@@ -1042,6 +1066,12 @@ export const kaprodiMenus = [
     label: "Sistem Informasi Skripsi",
     type: "section",
     children: [
+      {
+        label: "Daftar Judul Skripsi",
+        type: "nav-item",
+        icon: <PersonIcon sx={{ fontSize: 20 }} />,
+        uri: "/sistem-informasi-skripsi/daftar-judul-skrisi-fakultas-ilmu-komputer",
+      },
       {
         uri: "/sistem-informasi-skripsi/daftar-pengajuan-judul-kaprodi",
         label: "Pengajuan Judul",

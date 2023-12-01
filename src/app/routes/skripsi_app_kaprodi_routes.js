@@ -12,8 +12,13 @@ import BeritaAcaraSkripsi from "app/pages/ThesisApps/Dosen/BeritaAcaraSkripsi";
 import DokumenRevisiProposal from "app/pages/ThesisApps/Dosen/DokumenRevisiProposal";
 import DokumenSkripsi from "app/pages/ThesisApps/Dosen/DokumenSkripsi";
 import DokumenRevisiSkripsi from "app/pages/ThesisApps/Dosen/DokumenRevisiSkripsi";
+import DaftarSkripsiFILKOM from "app/pages/ThesisApps/Global/DaftarSkripsiFILKOM";
 
 const kaprodiRoutes = [
+  {
+    path: "/sistem-informasi-skripsi/daftar-judul-skrisi-fakultas-ilmu-komputer",
+    element: <Page component={DaftarSkripsiFILKOM} />,
+  },
   // JUDUL
   {
     path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-kaprodi",
