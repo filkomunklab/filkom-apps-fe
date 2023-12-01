@@ -16,12 +16,15 @@ import {
   Autocomplete,
   Checkbox,
   Modal,
+  Alert,
 } from "@mui/material";
 import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const requiredStyle = {
   color: "red",
@@ -103,6 +106,54 @@ const AddActivity = () => {
       clearTimeout(timer);
     };
   }, [handleOpenSecondModal]);
+
+  // const getStudentList = async()=>{
+  //   try{
+  //     const headers = {
+  //         'Content-Type': 'multipart/form-data',
+  //         Authorization: `Bearer token_apa`,
+  //       };
+
+  //     let response;
+  //     if('Pilih mahasiswa bimbingan'){
+  //       response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+  //     }else if('Pilih mahasiswa fakultas'){
+  //       response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+  //     }
+  //     const {status, message, data, code} = response.data
+  //     console.log('ini data getStudentList', response)
+  //     if(code=== '200') {//string tergantung status dari backend
+  //       //simpan dalam usestate contoh:
+  //       //setStudentList = data
+  //     }else{
+  //       console.log(response)//buat handler sendiri misalkan alert
+  //     }
+
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
+
+  // const handleSubmit = async() =>{
+  //   try{
+  //     //format header tergantung backend
+  //     const headers = {
+  //         'Content-Type': 'multipart/form-data',
+  //         Authorization: `Bearer token_apa`,
+  //       };
+  //     const response = await axios.post(`${BASE_URL_API}/bla/bla/bla`,
+  //       {title: valueTitle,
+  //       descriptions: inputDescription,
+  //       due_date: valueDueDate,
+  //       form_attendance: valueAttendance
+  //       },
+  //       {headers}
+  //     )
+  //     console.log(response)
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+  // }
 
   useEffect(() => {
     if (valueStudent === "MahasiswaBimbingan") {
@@ -266,20 +317,22 @@ const AddActivity = () => {
       </Grid>
 
       <Grid container paddingTop={3}>
-        <Grid item xs={6} md={3}>
-          <FormGroup sx={{ paddingLeft: "9px" }}>
+        <Grid item xs={12} md={6} xl={4}>
+          <FormGroup sx={{ paddingLeft: { xs: 1, md: 3 } }}>
             <FormControlLabel
               control={<Switch size="small" color="primary" />}
               label="Add Grade Submission Page"
+              sx={{ whiteSpace: "nowrap", gap: 2 }}
             />
           </FormGroup>
         </Grid>
 
-        <Grid item xs={6} md={3}>
-          <FormGroup sx={{ paddingLeft: "12px" }}>
+        <Grid item xs={12} md={6} xl={4}>
+          <FormGroup sx={{ paddingLeft: { xs: 1, md: 3 } }}>
             <FormControlLabel
               control={<Switch size="small" color="primary" />}
               label="Add Pre-Registration Page"
+              sx={{ whiteSpace: "nowrap", gap: 2 }}
             />
           </FormGroup>
         </Grid>
