@@ -1,280 +1,179 @@
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  FormHelperText,
-  Grid,
-  InputAdornment,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Typography,
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Paper,
+  Chip,
 } from "@mui/material";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import PrintBeritaAcara from "./PrintBeritaAcara";
+import { useReactToPrint } from "react-to-print";
 
 const DaftarRiwayatSkripsi = () => {
+  // Fungsi untuk mengonversi jam ke dalam format teks
+  const convertHourToText = (hour, minute) => {
+    const digit = [
+      "",
+      "satu",
+      "dua",
+      "tiga",
+      "empat",
+      "lima",
+      "enam",
+      "tujuh",
+      "delapan",
+      "sembilan",
+    ];
+
+    // Menentukan puluhan dan satuan pada jam
+    const tenHour = Math.floor(hour / 10);
+    const unitHour = hour % 10;
+
+    // Menentukan puluhan dan satuan pada menit
+    const tenMinute = Math.floor(minute / 10);
+    const unitMinute = minute % 10;
+
+    // Menentukan periode waktu (pagi, siang, sore, malam)
+    let periodText = "";
+    if (hour < 11) {
+      periodText = "pagi";
+    } else if (hour < 15) {
+      periodText = "siang";
+    } else if (hour < 18) {
+      periodText = "sore";
+    } else {
+      periodText = "malam";
+    }
+
+    // Menggabungkan teks jam dan menit
+    let hourText = "";
+    if (hour === 10) {
+      hourText = "sepuluh";
+    } else if (hour === 11 || (hour > 11 && hour < 20)) {
+      hourText = hour === 11 ? "sebelas" : `${digit[unitHour]} belas`;
+    } else if (hour === 20) {
+      hourText = "dua puluh";
+    } else if (hour > 20 && hour < 24) {
+      hourText = `dua puluh ${digit[unitHour]}`;
+    } else {
+      hourText = digit[hour];
+    }
+
+    let minuteText = "";
+    if (minute === 0) {
+      minuteText = "sejuta";
+    } else if (minute === 10) {
+      minuteText = "sepuluh";
+    } else if (minute > 0 && minute < 10) {
+      minuteText = digit[minute];
+    } else if (minute >= 10 && minute < 20) {
+      minuteText = `${digit[minute - 10]} belas`;
+    } else {
+      minuteText = tenMinute ? `${digit[tenMinute]} puluh` : "";
+      const unitMinuteText = unitMinute ? ` ${digit[unitMinute]}` : "";
+      minuteText += unitMinuteText;
+    }
+
+    return `${hourText}${
+      minuteText === "sejuta" ? "" : " " + minuteText
+    } ${periodText}`;
+  };
+
+  const [selectedTime, setSelectedTime] = useState();
+  const [convertedTime, setConvertedTime] = useState();
+
+  // state - menyimpan hasil request
+  const [timPanelis, setTimPanelis] = useState([]);
+
+  // state - menyimpan data yang dipilih
+  const [semesterIndex, setSemesterIndex] = useState();
+
+  // state - menyimpan data yang dipilih
+  const [selectedSemester, setSelectedSemester] = useState();
+  const [selectedSchedule, setSelectedSchedule] = useState();
+
   // State untuk melacak panel accordion yang terbuka
   const [expanded, setExpanded] = useState(false);
 
   // Fungsi untuk menangani perubahan pada state accordion yang terbuka
-  const handleChange = (panel) => (event, isExpanded) => {
-    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
+  const handleChange = (panel, index, semester) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
+    setSelectedSemester(isExpanded ? semester : null);
   };
-
-  // state - daftar jadwal
-  const [daftarJadwal, setDaftarJadwal] = useState([]);
-  // state - daftar dosen
-  const [daftarDosen, setDaftarDosen] = useState([]);
-  // state - menyimpan data yang dipilih
-  const [jadwalIndex, setJadwalIndex] = useState();
-  const [semesterIndex, setSemesterIndex] = useState();
-  const [selectedSkripsiId, setSelectedSkripsiId] = useState();
-  const [selectedAdvisor, setSelectedAdvisor] = useState();
-  const [selectedKetuaPenelis, setSelectedKetuaPenelis] = useState(""); // State untuk ketua penelis
-  const [selectedAnggotaPenelis, setSelectedAnggotaPenelis] = useState(""); // State untuk anggota penelis
-  const [mulaiWaktu, setMulaiWaktu] = useState(""); // State untuk mulai waktu
-  const [selesaiWaktu, setSelesaiWaktu] = useState(""); // State untuk selesai waktu
-  const [mulaiTanggal, setMulaiTanggal] = useState(""); // State untuk mulai tanggal
-  const [ruangan, setRuangan] = useState(""); // State untuk ruangan
-  // state lainnya
-  const [openDialog, setOpenDialog] = useState(false);
-  const [konfirmasiDialog, setKonfirmasiDialog] = useState(false); // State untuk dialog konfirmasi
-  // const [jadwal, setJadwal] = useState([]);
 
   // fungsi untuk mendapatkan data token JWT
   const token = localStorage.getItem("token");
   // console.log("token", token);
 
-  useEffect(() => {
-    const fetchDaftarJadwalSkripsi = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/skripsi/schedule",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // Atur state 'setDaftarJadwal' dengan data dari respons
-        setDaftarJadwal(response.data.data);
-        console.log("Request Daftar Jadwal Skripsi", response.data.data);
-      } catch (error) {
-        console.error("Terjadi kesalahan saat mengambil daftar jadwal:", error);
-      }
-    };
-    const fetchDaftarDosen = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/group/dosen-list",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // Atur state 'setDaftarDosen' dengan data dari respons
-        setDaftarDosen(response.data.data);
-        console.log("Request Daftar Dosen", response.data.data);
-      } catch (error) {
-        console.error("Terjadi kesalahan saat mengambil daftar jadwal:", error);
-      }
-    };
-    fetchDaftarJadwalSkripsi(); // Panggil fungsi fetchData saat komponen dimuat
-    fetchDaftarDosen();
-  }, [token]);
-
-  const handleUpdateClick = (scheduleIndex, jadwalIndex) => {
-    setOpenDialog(true);
-
-    // Set jadwalIndex dan semesterIndex sesuai dengan yang dipilih
-    setJadwalIndex(jadwalIndex);
-    setSemesterIndex(scheduleIndex);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setSelectedSkripsiId("");
-    setSelectedAdvisor("");
-    setSelectedKetuaPenelis("");
-    setSelectedAnggotaPenelis("");
-    setMulaiWaktu("");
-    setSelesaiWaktu("");
-    setMulaiTanggal("");
-    setRuangan("");
-  };
-
-  const [errorMessages, setErrorMessages] = useState({
-    mulaiWaktu: "",
-    selesaiWaktu: "",
-    mulaiTanggal: "",
-    selectedKetuaPenelis: "",
-    selectedAnggotaPenelis: "",
-    ruangan: "",
-    selectedAdvisor: "",
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    // pageStyle: `
+    // @page {
+    //   size: A4;
+    // }`,
   });
 
-  const handlePerbarui = () => {
-    let hasError = false;
-    const newErrorMessages = {};
-
-    // Validasi input waktu
-    if (!mulaiWaktu) {
-      newErrorMessages.mulaiWaktu = "Mulai Waktu harus diisi";
-      hasError = true;
-    }
-
-    if (!selesaiWaktu) {
-      newErrorMessages.selesaiWaktu = "Selesai Waktu harus diisi";
-      hasError = true;
-    }
-
-    // Validasi input tanggal
-    if (!mulaiTanggal) {
-      newErrorMessages.mulaiTanggal = "Mulai Tanggal harus diisi";
-      hasError = true;
-    }
-
-    // Validasi ketua panelis
-    if (!selectedKetuaPenelis) {
-      newErrorMessages.selectedKetuaPenelis = "Ketua panelis harus dipilih";
-      hasError = true;
-    }
-
-    // Validasi anggota panelis
-    if (!selectedAnggotaPenelis) {
-      newErrorMessages.selectedAnggotaPenelis = "Anggota panelis harus dipilih";
-      hasError = true;
-    }
-
-    // Validasi input ruangan
-    if (!ruangan) {
-      newErrorMessages.ruangan = "Ruangan harus diisi";
-      hasError = true;
-    }
-
-    // Validasi jika Ketua Panelis dan Anggota Panelis sama
-    if (selectedKetuaPenelis === selectedAnggotaPenelis) {
-      newErrorMessages.selectedKetuaPenelis =
-        "Ketua Panelis dan Anggota Panelis tidak boleh sama";
-      newErrorMessages.selectedAnggotaPenelis =
-        "Ketua Panelis dan Anggota Panelis tidak boleh sama";
-      hasError = true;
-    }
-
-    // Validasi jika Ketua Panelis dan Advisor sama
-    if (selectedKetuaPenelis === selectedAdvisor) {
-      newErrorMessages.selectedKetuaPenelis =
-        "Ketua Panelis tidak boleh sama dengan Advisor";
-      newErrorMessages.selectedAdvisor =
-        "Ketua Panelis tidak boleh sama dengan Advisor";
-      hasError = true;
-    }
-
-    // Validasi jika Anggota Panelis dan Advisor sama
-    if (selectedAnggotaPenelis === selectedAdvisor) {
-      newErrorMessages.selectedAnggotaPenelis =
-        "Anggota Panelis tidak boleh sama dengan Advisor";
-      newErrorMessages.selectedAdvisor =
-        "Anggota Panelis tidak boleh sama dengan Advisor";
-      hasError = true;
-    }
-
-    if (hasError) {
-      setErrorMessages(newErrorMessages);
-      // Tampilkan pesan kesalahan
-    } else {
-      setKonfirmasiDialog(true);
-    }
-  };
-
-  const handlePerbaruiJadwal = () => {
-    // Buat objek jadwal baru
-    const jadwalBaru = {
-      panelist_chairman_id: selectedKetuaPenelis || null,
-      panelist_member_id: selectedAnggotaPenelis || null,
-      start_defence: mulaiWaktu || null,
-      end_defence: selesaiWaktu || null,
-      defence_room: ruangan || null,
-      defence_date: mulaiTanggal || null,
-    };
-    console.log("skripsi_id: ", selectedSkripsiId);
-    axios
-      .put(
-        `http://localhost:2000/api/v1/skripsi/schedule/${selectedSkripsiId}`,
-        jadwalBaru,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Berhasil memperbarui jadwal:", response.data);
-        // Setelah berhasil perbarui data, tampilkan dialog konfirmasi
-        // setKonfirmasiDialog(true);
-        handleKonfirmasiDialogClose();
-        setOpenDialog(false);
-
-        // Reset semua state input
-        setSelectedSkripsiId("");
-        setSelectedAdvisor("");
-        setSelectedKetuaPenelis("");
-        setSelectedAnggotaPenelis("");
-        setMulaiWaktu("");
-        setSelesaiWaktu("");
-        setMulaiTanggal("");
-        setRuangan("");
-
-        // request data
-        const fetchDaftarJadwalSkripsi = async () => {
-          try {
-            const response = await axios.get(
-              "http://localhost:2000/api/v1/skripsi/schedule",
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-            // Atur state 'setDaftarJadwal' dengan data dari respons
-            setDaftarJadwal(response.data.data);
-            console.log("Request Daftar Jadwal Skripsi", response.data.data);
-          } catch (error) {
-            console.error(
-              "Terjadi kesalahan saat mengambil daftar jadwal:",
-              error
-            );
+  useEffect(() => {
+    const fetchTimPanelisData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:2000/api/v1/group/skripsi-history-list-sekretaris",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        };
-        fetchDaftarJadwalSkripsi();
-      })
-      .catch((error) => {
-        console.error("Terjadi kesalahan:", error);
-      });
-  };
+        );
+        setTimPanelis(response.data.data);
+        console.log("Request daftar tim panelis", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil daftar tim :", error);
+      }
+    };
+    fetchTimPanelisData(); // Panggil fungsi fetchData saat komponen dimuat
+  }, [token]);
 
-  const handleKonfirmasiDialogClose = () => {
-    // Setelah menutup dialog konfirmasi, reset semua state
-    setKonfirmasiDialog(false);
-  };
+  useEffect(() => {
+    if (selectedTime) {
+      //  jam
+      const waktu = selectedTime;
+      console.log("selectedTime: ", selectedTime);
+
+      // Memisahkan jam dan menit dari selectedSchedule
+      const [jam, menit] = waktu?.split(":").map(Number);
+      console.log("jam: ", jam);
+      console.log("menit: ", menit);
+
+      const convertedHour = convertHourToText(jam, menit);
+
+      setConvertedTime(convertedHour);
+    }
+  }, [selectedTime]);
+
+  useEffect(() => {
+    if (selectedSchedule && convertedTime) {
+      handlePrint();
+    }
+    return () => {
+      setSelectedSchedule();
+    };
+  }, [selectedSchedule, convertedTime]);
 
   return (
     <Div>
@@ -358,12 +257,16 @@ const DaftarRiwayatSkripsi = () => {
             borderRadius: "8px",
           }}
         >
-          {daftarJadwal &&
-            daftarJadwal.map((scheduleData, scheduleIndex) => (
+          {timPanelis &&
+            timPanelis.map((panelis, index) => (
               <Accordion
-                key={scheduleIndex}
+                key={index}
                 expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
-                onChange={handleChange(`panel${semesterIndex}`)} // Menangani perubahan state accordion
+                onChange={handleChange(
+                  `panel${semesterIndex}`,
+                  index,
+                  panelis.semester
+                )} // Menangani perubahan state accordion
                 sx={{
                   width: "100%",
                   padding: "1px",
@@ -384,7 +287,7 @@ const DaftarRiwayatSkripsi = () => {
                       marginTop: "6px",
                     }}
                   >
-                    {scheduleData.semester}
+                    {panelis.semester}
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -396,16 +299,19 @@ const DaftarRiwayatSkripsi = () => {
                             Nomor
                           </TableCell>
                           <TableCell sx={{ fontSize: "13px" }}>
-                            Advisor
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
                             Ketua Panelis
                           </TableCell>
                           <TableCell sx={{ fontSize: "13px" }}>
                             Anggota Panelis
                           </TableCell>
                           <TableCell sx={{ fontSize: "13px" }}>
+                            Advisor
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
                             Tanggal
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "13px" }}>
+                            Status
                           </TableCell>
                           <TableCell sx={{ fontSize: "13px" }}>
                             Action
@@ -413,24 +319,41 @@ const DaftarRiwayatSkripsi = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {scheduleData.schedules.map((jadwal, index) => (
+                        {panelis.schedules.map((jadwal, index) => (
                           <TableRow key={index}>
                             <TableCell sx={{ fontSize: "13px" }}>
                               {index + 1}
                             </TableCell>
                             <TableCell>
-                              <Typography>{jadwal.advisor}</Typography>
-                            </TableCell>
-                            <TableCell>
                               <Typography>
-                                {jadwal.panelist_chairman}
+                                {jadwal.panelis_chairman.name}
                               </Typography>
                             </TableCell>
                             <TableCell>
-                              <Typography>{jadwal.panelist_member}</Typography>
+                              <Typography>
+                                {jadwal.panelis_member.name}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography>{jadwal.advisor.name}</Typography>
                             </TableCell>
                             <TableCell>
                               <Typography>{jadwal.defence_date}</Typography>
+                            </TableCell>
+                            {/* harus di ubah statusnya*/}
+                            <TableCell>
+                              {jadwal.is_pass === "Pass" ||
+                              jadwal.is_pass === "Rejected" ? (
+                                <Chip
+                                  label={"Sudah"}
+                                  sx={{
+                                    background: "rgba(21, 131, 67, 0.10)",
+                                    color: "#0A7637",
+                                  }}
+                                />
+                              ) : (
+                                <Chip label={"Belum"} />
+                              )}
                             </TableCell>
                             <TableCell>
                               <Div sx={{ display: "flex" }}>
@@ -439,6 +362,11 @@ const DaftarRiwayatSkripsi = () => {
                                     textDecoration: "none",
                                     cursor: "pointer",
                                     color: "blue",
+                                  }}
+                                  onClick={() => {
+                                    console.log("trigger");
+                                    setSelectedSchedule(jadwal);
+                                    setSelectedTime(jadwal.start_defence);
                                   }}
                                 >
                                   Print
@@ -454,8 +382,13 @@ const DaftarRiwayatSkripsi = () => {
               </Accordion>
             ))}
         </Div>
+        <PrintBeritaAcara
+          selectedSemester={selectedSemester}
+          selectedSchedule={selectedSchedule}
+          convertedTime={convertedTime}
+          ref={componentRef}
+        />
       </Div>
-      {/* Table Master End */}
     </Div>
   );
 };
