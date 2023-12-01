@@ -34,10 +34,19 @@ const ReviewCertificate = () => {
   return (
     <Div>
       <Div>
-        <Typography variant="h1" sx={{ mb: 3 }}>
+        <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
           Review Certificate
         </Typography>
-        <Typography variant="h6" sx={{ mb: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            paddingBottom: "25px",
+            fontSize: "15px",
+            fontWeight: 400,
+            color: "rgba(27, 43, 65, 0.69)",
+            textAlign: "justify",
+          }}
+        >
           This page contains information related to the collection of
           certificates from your students. You can use filters to sort the list
           of students to get the information you are looking for.
@@ -45,9 +54,11 @@ const ReviewCertificate = () => {
         <Typography
           variant="h6"
           sx={{
-            paddingBottom: "12px",
+            paddingBottom: "25px",
+            fontSize: "15px",
             fontWeight: 400,
             color: "rgba(27, 43, 65, 0.69)",
+            textAlign: "justify",
           }}
         >
           You Can Specify a List of Mentored Students or All Faculty Students.

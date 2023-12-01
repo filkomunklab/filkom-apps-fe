@@ -10,6 +10,8 @@ import {
   MenuItem,
   TableControl,
   TextField,
+  Grid,
+  Paper,
 } from "@mui/material";
 import Div from "@jumbo/shared/Div";
 import React, { useState } from "react";
@@ -57,6 +59,7 @@ const StudentConsultation = () => {
         `/bimbingan-akademik/kaprodi/review-activities/consultation/${item.student_name}`
       );
     };
+
     return (
       <TableRow
         sx={{
@@ -78,46 +81,74 @@ const StudentConsultation = () => {
 
   return (
     <Div>
-      <Typography variant="h1" sx={{ mb: 3 }}>
+      <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
         Student Consultation
       </Typography>
-      <Typography variant="h6" sx={{ mb: 5 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          paddingBottom: "25px",
+          fontSize: "15px",
+          fontWeight: 400,
+          color: "rgba(27, 43, 65, 0.69)",
+          textAlign: "justify",
+        }}
+      >
         You are now on the Consultations submitted by students page. This will
         show you a list of students who have submitted a consultation with you.
       </Typography>
-      <TableContainer>
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
-            <TableRow>
-              <TableCell size="small" sx={{ width: "30px" }}>
-                Number
-              </TableCell>
-              <TableCell size="small" sx={{ width: "60px" }}>
-                Submission Date
-              </TableCell>
-              <TableCell size="small" sx={{ width: "130px" }}>
-                Student Name
-              </TableCell>
-              <TableCell size="small" sx={{ width: "40px" }}>
-                Topic
-              </TableCell>
-              <TableCell size="small" sx={{ width: "300px" }}>
-                Message
-              </TableCell>
-              <TableCell size="small" sx={{ width: "30px" }}>
-                Status
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((item, index) => (
-                <TableItem item={item} index={index} key={index} />
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Grid item xs={12}>
+        <TableContainer
+          sx={{
+            maxHeight: 440,
+          }}
+          component={Paper}
+        >
+          <Table stickyHeader>
+            <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+              <TableRow>
+                <TableCell size="small" sx={{ width: "30px" }}>
+                  Number
+                </TableCell>
+                <TableCell size="small" sx={{ width: "60px" }}>
+                  Submission Date
+                </TableCell>
+                <TableCell size="small" sx={{ width: "130px" }}>
+                  Student Name
+                </TableCell>
+                <TableCell size="small" sx={{ width: "40px" }}>
+                  Topic
+                </TableCell>
+                <TableCell size="small" sx={{ width: "300px" }}>
+                  Message
+                </TableCell>
+                <TableCell size="small" sx={{ width: "30px" }}>
+                  Status
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((item, index) => {
+                  const maxWords = 12;
+                  const messageWords = item.message.split(" ");
+
+                  const truncatedMessage =
+                    messageWords.length > maxWords
+                      ? messageWords.slice(0, maxWords).join(" ") + "..."
+                      : item.message;
+
+                  const truncatedItem = { ...item, message: truncatedMessage };
+
+                  return (
+                    <TableItem item={truncatedItem} index={index} key={index} />
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
     </Div>
   );
 };
