@@ -138,89 +138,92 @@ const PreRegistrationRejected = () => {
       >
         Courses Pre-registration
       </Typography>
-      <Grid container>
-        <Grid item id="detail-item">
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
           <Grid container>
-            <Grid item md={"auto"}>
-              <Stack>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Student Name
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Supervisor Name
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Submission Date
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Approval Date
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Status
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Category
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Descriptions
-                </Typography>
-              </Stack>
+            <Grid item xs={4} md={3} xl={2}>
+              <Typography variant="h5">Student Name</Typography>
             </Grid>
-            <Grid item md={"auto"}>
-              <Stack paddingX={1}>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  :
-                </Typography>
-              </Stack>
+            <Grid item xs={1} xl={"auto"}>
+              <Typography variant="h5">:</Typography>
             </Grid>
-            <Grid item md={10}>
-              <Stack>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Awuy, Diany Mariska
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Adzanu, Shaliha Alifyaa
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  10 May 2000
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  11 May 2000
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2, color: "red" }}>
-                  Rejected
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Seminar
-                </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2 }}>
-                  Saya ingin mengambil kembali mata kuliah “Pengantar Basisdata/
-                  Introduction to Database” karena tidak pass di pengambilan
-                  sebelumnya
-                </Typography>
-              </Stack>
+            <Grid item xs={7} paddingLeft={1}>
+              <Typography variant="h5">Awuy, Diany Mariska</Typography>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>{" "}
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={4} md={3} xl={2}>
+              <Typography variant="h5">Supervisor Name</Typography>
+            </Grid>
+            <Grid item xs={1} xl={"auto"}>
+              <Typography variant="h5">:</Typography>
+            </Grid>
+            <Grid item xs={7} paddingLeft={1}>
+              <Typography variant="h5">Dengah, Mesakh Leonardo</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={4} md={3} xl={2}>
+              <Typography variant="h5">Submission Date</Typography>
+            </Grid>
+            <Grid item xs={1} xl={"auto"}>
+              <Typography variant="h5">:</Typography>
+            </Grid>
+            <Grid item xs={7} paddingLeft={1}>
+              <Typography variant="h5">November 14, 2023</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={4} md={3} xl={2}>
+              <Typography variant="h5">Approval Date</Typography>
+            </Grid>
+            <Grid item xs={1} xl={"auto"}>
+              <Typography variant="h5">:</Typography>
+            </Grid>
+            <Grid item xs={7} paddingLeft={1}>
+              <Typography variant="h5">November 16, 2023</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={4} md={3} xl={2}>
+              <Typography variant="h5">Status</Typography>
+            </Grid>
+            <Grid item xs={1} xl={"auto"}>
+              <Typography variant="h5">:</Typography>
+            </Grid>
+            <Grid item xs={7} paddingLeft={1}>
+              <Typography variant="h5" sx={{ color: "red" }}>
+                Rejected
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={4} md={3} xl={2}>
+              <Typography variant="h5">Descriptions</Typography>
+            </Grid>
+            <Grid item xs={1} xl={"auto"}>
+              <Typography variant="h5">:</Typography>
+            </Grid>
+            <Grid item xs={7} paddingLeft={1}>
+              <Typography variant="h5">
+                Saya ingin mengambil kembali mata kuliah “Pengantar Basisdata/
+                Introduction to Database” karena tidak pass di pengambilan
+                sebelumnya
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
       <Stack spacing={2} sx={{ marginTop: 3, paddingBottom: 2 }}>
         <Typography variant="h5" sx={{ fontWeight: 600 }}>
           Comments from Supervisor
