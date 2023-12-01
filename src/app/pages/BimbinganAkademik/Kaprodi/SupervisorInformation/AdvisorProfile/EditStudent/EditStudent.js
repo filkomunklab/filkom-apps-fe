@@ -6,19 +6,18 @@ import {
   Table,
   TableHead,
   TableBody,
-  TablePagination,
   TableRow,
   TableCell,
   TableContainer,
+  Paper,
   Checkbox,
   Breadcrumbs,
   experimentalStyled as styled,
   Button,
-  Paper,
 } from "@mui/material";
 import SearchLocal from "app/shared/SearchLocal";
 import Div from "@jumbo/shared/Div";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -31,8 +30,8 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 const data = Array.from(Array(15).keys()).map((item, index) => ({
   nim: `105022010000`,
-  name: `Awuy, Diany Mariska`,
-  prodi: `Sistem Informasi`,
+  name: `Singal, Aldo Aldi`,
+  prodi: `Informatika`,
   year: `2020`,
   status: `Active`,
   dospem: `-`,
@@ -40,13 +39,15 @@ const data = Array.from(Array(15).keys()).map((item, index) => ({
 
 const CountStudent = ({ selected, totalStudents }) => {
   return (
-    <Typography sx={{ fontSize: "16px" }}>
+    <Typography sx={{ fontSize: { xs: "14px", md: "16px", xl: "16px" } }}>
       You have selected {selected.length} out of {totalStudents} students
     </Typography>
   );
 };
 
-const InformationTechnology = () => {
+const EditStudent = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selected, setSelected] = useState([]);
@@ -99,12 +100,20 @@ const InformationTechnology = () => {
           <StyledLink to="/bimbingan-akademik/kaprodi/supervisor-information/">
             Supervisor Information
           </StyledLink>
-          <StyledLink to="/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor">
-            Add Supervisor
+          <StyledLink
+            state={location.state}
+            // onClick={() => {
+            //   console.log("masokkk");
+            //   navigate(
+            //     `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${location.state}`,
+            //     { state: location.state }
+            //   );
+            // }}
+            to={`/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${location.state}`}
+          >
+            Advisor Profile
           </StyledLink>
-          <Typography color="text.primary">
-            Information Technology Student
-          </Typography>
+          <Typography color="text.primary">Edit Student</Typography>
         </Breadcrumbs>
       </Div>
       <Div sx={{ paddingTop: 4, paddingBottom: 2 }}>
@@ -117,7 +126,7 @@ const InformationTechnology = () => {
         >
           <Grid item md={6}>
             <Typography variant="h4" sx={{ fontWeight: 600 }}>
-              List of Students Majoring in Information Technology
+              List of Students Majoring in Informatics
             </Typography>
           </Grid>
           <Grid item xs={12} sm={8} md={5}>
@@ -133,7 +142,12 @@ const InformationTechnology = () => {
         </Grid>
       </Div>
       <Grid item xs={12}>
-        <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
+        <TableContainer
+          sx={{
+            maxHeight: 640,
+          }}
+          component={Paper}
+        >
           <Table stickyHeader>
             <TableHead>
               <TableRow>
@@ -169,45 +183,38 @@ const InformationTechnology = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
       </Grid>
-      <Grid display="flex" alignItems="center" gap={4}>
-        <Grid item md={4}>
+      <Grid display="flex" alignItems="center" paddingTop={2} gap={4}>
+        <Grid item xs={12} md={4} xl={4}>
           <Div sx={{ alignItems: "center" }}>
             <CountStudent selected={selected} totalStudents={data.length} />
           </Div>
         </Grid>
-        <Grid item md={4}>
-          <Link
-            to={`/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor`}
-          >
-            <Button
-              sx={{
-                backgroundColor: "#006AF5",
-                borderRadius: "24px",
-                color: "white",
-                whiteSpace: "nowrap",
-                minWidth: "132px",
-                fontSize: "12px",
-                padding: "10px",
-                alignItems: "center",
+        <Grid item xs={12} md={4} xl={4}>
+          <Button
+            onClick={() => {
+              navigate(
+                `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${location.state}`,
+                { state: location.state }
+              );
+            }}
+            sx={{
+              backgroundColor: "#006AF5",
+              borderRadius: "24px",
+              color: "white",
+              whiteSpace: "nowrap",
+              minWidth: "132px",
+              fontSize: { xs: "10px", md: "12px", xl: "16px" },
+              padding: "10px",
+              alignItems: "center",
 
-                "&:hover": {
-                  backgroundColor: "#025ED8",
-                },
-              }}
-            >
-              Save
-            </Button>
-          </Link>
+              "&:hover": {
+                backgroundColor: "#025ED8",
+              },
+            }}
+          >
+            Save
+          </Button>
         </Grid>
       </Grid>
     </Div>
@@ -242,4 +249,4 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
   );
 };
 
-export default InformationTechnology;
+export default EditStudent;

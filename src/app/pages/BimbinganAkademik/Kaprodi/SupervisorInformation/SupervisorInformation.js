@@ -4,10 +4,12 @@ import {
   Chip,
   FormControl,
   Grid,
+  Paper,
   InputLabel,
   ListSubheader,
   MenuItem,
   Select,
+  TableContainer,
   Table,
   TableBody,
   TableCell,
@@ -71,7 +73,7 @@ const prodiList = [
 ];
 
 const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nidn: `105022010000`,
+  nidn: `022407712`,
   name: `Yuhu, Christopher Darell`,
   prodi: `Informatika`,
   year: `2021`,
@@ -96,132 +98,50 @@ const SupervisorInformation = () => {
   return (
     <Div>
       <Div>
-        <Typography variant="h1" sx={{ mb: 3 }}>
+        <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
           Supervisor Information
         </Typography>
-        <Typography variant="h6" sx={{ mb: 3 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            paddingBottom: "25px",
+            fontSize: "15px",
+            fontWeight: 400,
+            color: "rgba(27, 43, 65, 0.69)",
+            textAlign: "justify",
+          }}
+        >
           Currently, you are on the Academic Supervisor Information page, here
           you can easily see all information about academic supervisors in your
           department, along with their students.
         </Typography>
       </Div>
-      <Grid container spacing={2} sx={{ mb: 5, mt: 2 }}>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/kaprodi/supervisor-information/informatics"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Informatics Supervisor " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`11 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/kaprodi/supervisor-information/information-system"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Information System Supervisor" />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`12 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={12} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/kaprodi/supervisor-information/information-technology"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Information Technology Supervisor " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {`8 people`}
-                  </Typography>
-                  <Typography variant="caption">
-                    {`last updated: 11 September 2023`}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-      </Grid>
       <Grid container spacing={2}>
-        <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">List of Academic Supervisors</Typography>
+        <Grid display={"flex"} alignItems={"flex-end"} item md={5.5} xl={5}>
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: "justify",
+              "@media (max-width: 390px)": {
+                fontSize: "16px",
+                fontWeight: 500,
+              },
+            }}
+          >
+            List of Academic Supervisors
+          </Typography>
         </Grid>
-        <Grid item md={4}>
-          <SearchGlobal sx={{ height: "100%", width: "100%" }} />
+        <Grid item xs={12} sm={8} md={4} xl={5}>
+          <SearchGlobal
+            sx={{
+              height: "100%",
+              "@media (max-width: 390px)": {
+                height: "40px",
+              },
+            }}
+          />
         </Grid>
-        <Grid
-          item
-          md={2}
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-end",
-          }}
-        >
+        <Grid item xs={12} sm={4} md={1}>
           <Link
             style={{ textDecoration: "none", color: "white" }}
             to="/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor"
@@ -233,6 +153,7 @@ const SupervisorInformation = () => {
                 color: "white",
                 whiteSpace: "nowrap",
                 minWidth: "132px",
+                width: "100%",
                 fontSize: "12px",
                 padding: "10px",
                 gap: "6px",
@@ -247,23 +168,32 @@ const SupervisorInformation = () => {
             </Button>
           </Link>
         </Grid>
-
         <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
+          <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
           <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
             rowsPerPageOptions={[10, 25, 50, 100]}
-            component={"div"}
+            component="div"
             count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
@@ -277,7 +207,10 @@ const SupervisorInformation = () => {
 };
 
 const TableHeading = ({ index }) => {
-  const style = { fontWeight: 400 };
+  const style = {
+    fontWeight: 400,
+    "@media (max-width: 650px)": { fontSize: "13px" },
+  };
   return (
     <TableRow sx={{ backgroundColor: "#1A38601A" }}>
       <TableCell sx={[style]}>No</TableCell>
@@ -298,40 +231,53 @@ const TableItem = ({ item, index }) => {
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${item.nidn}`
+          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${item.nidn}`,
+          { state: item.nidn }
         );
         break;
       case "history":
-        navigate(`/bimbingan-akademik/kaprodi/supervisor-information/history`);
-
+        navigate(
+          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/${item.nidn}`,
+          { state: item.nidn }
+        );
         break;
 
       default:
         console.log("Path not found");
     }
   };
+
+  const rowStyle = {
+    "@media (max-width: 650px)": { fontSize: "11px" },
+  };
   return (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{`022407712`}</TableCell>
+      <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
+      <TableCell sx={[rowStyle]}>{`022407712`}</TableCell>
       <TableCell>
         <Button
           name="profile"
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            textTransform: "capitalize",
+            "@media (max-width: 650px)": { fontSize: "11px" },
+          }}
           onClick={handleButtonNavigate}
         >{`Yuhu, Christopher Darell`}</Button>
       </TableCell>
-      <TableCell>{`Informatika`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`Informatika`}</TableCell>
       <TableCell>
         <Button
           name="history"
           onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
         >
           View History
         </Button>
       </TableCell>
-      <TableCell>{`25`}</TableCell>
+      <TableCell sx={[rowStyle]}>{`25`}</TableCell>
     </TableRow>
   );
 };

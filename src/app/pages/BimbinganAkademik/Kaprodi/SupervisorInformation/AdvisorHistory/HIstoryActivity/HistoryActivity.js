@@ -17,19 +17,24 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const ViewActivity = () => {
+const Activity = () => {
   const navigate = useNavigate();
 
-  const handleClick = (event) => {
+  const handleClick = (event, step) => {
     event.preventDefault();
-    navigate(-1);
+    navigate(step);
   };
 
   return (
     <div>
-      <div role="presentation" onClick={handleClick}>
+      <div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Back</StyledLink>
+          <StyledLink onClick={(event) => handleClick(event, -2)}>
+            Supervisor Information
+          </StyledLink>
+          <StyledLink onClick={(event) => handleClick(event, -1)}>
+            History
+          </StyledLink>
           <Typography color="text.primary">Activity</Typography>
         </Breadcrumbs>
       </div>
@@ -40,22 +45,22 @@ const ViewActivity = () => {
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Stack spacing={2} sx={{ paddingTop: 1 }}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
+          <Stack spacing={2} sx={{ paddingTop: 3 }}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Title</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 1 }}>
-                Pengumpulan Krtu Rencana Studi Semester Ganjil Tahun Ajaran
-                2022/2023 Gelombang 1
+                PENGUMPULAN KARTU RENCANA STUDI SEMESTER GANJIL TAHUN 2022/2023
+                GELOMBANG 1
               </Typography>
             </Paper>
           </Stack>
         </Grid>
         <Grid item xs={12}>
           <Stack spacing={2}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Descriptions</Typography>
             </Grid>
 
@@ -74,9 +79,9 @@ const ViewActivity = () => {
           </Stack>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={6}>
           <Stack spacing={2}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Due Date</Typography>
             </Grid>
 
@@ -88,9 +93,9 @@ const ViewActivity = () => {
           </Stack>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={6}>
           <Stack spacing={2}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Clock (optional)</Typography>
             </Grid>
 
@@ -101,51 +106,9 @@ const ViewActivity = () => {
             </Paper>
           </Stack>
         </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Stack spacing={2}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
-              <Typography>Form Attendance</Typography>
-            </Grid>
-
-            <Paper elevation={0} variant="outlined" fullWidth>
-              <Typography variant="body1" sx={{ p: 2 }}>
-                No
-              </Typography>
-            </Paper>
-          </Stack>
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <Stack spacing={2}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
-              <Typography>For</Typography>
-            </Grid>
-
-            <Paper elevation={0} variant="outlined" fullWidth>
-              <Typography variant="body1" sx={{ p: 2 }}>
-                Mahasiswa Fakultas
-              </Typography>
-            </Paper>
-          </Stack>
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <Stack spacing={2}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
-              <Typography>Student</Typography>
-            </Grid>
-
-            <Paper elevation={0} variant="outlined" fullWidth>
-              <Typography variant="body1" sx={{ p: 2 }}>
-                All Student
-              </Typography>
-            </Paper>
-          </Stack>
-        </Grid>
       </Grid>
     </div>
   );
 };
 
-export default ViewActivity;
+export default Activity;
