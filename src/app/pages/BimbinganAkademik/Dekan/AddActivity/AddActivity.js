@@ -125,7 +125,7 @@ const AddActivity = () => {
   //     }else{
   //       console.log(response)//buat handler sendiri misalkan alert
   //     }
-        
+
   //   }catch(error){
   //     console.log(error)
   //   }
@@ -174,7 +174,6 @@ const AddActivity = () => {
 
       <Stack spacing={2} sx={{ paddingBottom: 3 }}>
         <RTypography>Title</RTypography>
-        div
         <TextField
           id="outlined-basic-1"
           variant="outlined"

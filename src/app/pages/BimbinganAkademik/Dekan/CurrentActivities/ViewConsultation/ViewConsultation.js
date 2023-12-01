@@ -73,7 +73,7 @@ const ViewConsultation = () => {
   //         'Content-Type': 'multipart/form-data',
   //         Authorization: `Bearer token_apa`,
   //       };
-      
+
   //     const response = await axios.post(`${BASE_URL_API}/bla/bla/bla`,{message: 'Helo bang'}, {headers})
 
   //     //jika tidak akan melakukan handle terhadap response maka hapus saja "const response =", jadi sisa await dst...
@@ -82,8 +82,6 @@ const ViewConsultation = () => {
   //     console.log(error)
   //   }
   // }
-
-  
 
   const handleIconClick = () => {
     handleSubmit();
@@ -94,7 +92,7 @@ const ViewConsultation = () => {
   };
 
   const handleSubmitFirstModal = () => {
-    setOpenFirstModal(false)
+    setOpenFirstModal(false);
   };
 
   const handleKeyPress = (e) => {
@@ -116,7 +114,7 @@ const ViewConsultation = () => {
     <div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Back</StyledLink>
+          <StyledLink>Current Activities</StyledLink>
           <Typography color="text.primary">Consultation</Typography>
         </Breadcrumbs>
       </div>
@@ -329,7 +327,7 @@ const ViewConsultation = () => {
                   />
                   <Grid container spacing={1} justifyContent="flex-end">
                     <Button
-                      onClick={()=>setOpenFirstModal(true)}
+                      onClick={() => setOpenFirstModal(true)}
                       sx={{
                         backgroundColor: "#006AF5",
                         borderRadius: "5px",
@@ -345,7 +343,7 @@ const ViewConsultation = () => {
                     </Button>
                     <Modal
                       open={openFirstModal}
-                      onClose={()=>setOpenFirstModal(false)}
+                      onClose={() => setOpenFirstModal(false)}
                       aria-labelledby="modal-modal-title"
                       aria-describedby="modal-modal-description"
                     >
@@ -370,7 +368,7 @@ const ViewConsultation = () => {
                         <Grid container spacing={1} justifyContent="flex-end">
                           <Grid item>
                             <Button
-                              onClick={()=>setOpenFirstModal(false)}
+                              onClick={() => setOpenFirstModal(false)}
                               sx={{
                                 backgroundColor: "white",
                                 borderRadius: "5px",

@@ -14,6 +14,8 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TableContainer,
+  Paper,
   Typography,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
@@ -113,6 +115,7 @@ const ReviewPreRegistrationFaculty = () => {
         `/bimbingan-akademik/kaprodi/review-activities/pre-registration/${item.nim}`
       );
     };
+
     return (
       <TableRow
         sx={{
@@ -136,17 +139,38 @@ const ReviewPreRegistrationFaculty = () => {
   };
 
   return (
-    <Div sx={{ padding: 2 }}>
+    <Div sx={{ paddingTop: 2 }}>
       <Grid container spacing={2}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography variant="h2">
+          <Typography
+            variant="h2"
+            sx={{
+              textAlign: "justify",
+              paddingTop: 2,
+              "@media (max-width: 390px)": {
+                fontSize: "15px",
+                fontWeight: 500,
+              },
+              "@media (min-width: 768px)": {
+                fontSize: "17px",
+                fontWeight: 500,
+              },
+            }}
+          >
             Review Student Faculty Pre-Registration
           </Typography>
         </Grid>
-        <Grid item md={3}>
-          <SearchGlobal sx={{ height: "100%" }} />
+        <Grid item xs={12} sm={8} md={8} xl={3}>
+          <SearchGlobal
+            sx={{
+              height: "100%",
+              "@media (max-width: 390px)": {
+                height: "40px",
+              },
+            }}
+          />
         </Grid>
-        <Grid item md={3}>
+        <Grid item xs={12} sm={4} md={4} xl={3}>
           <FormControl
             sx={{
               width: "100%",
@@ -154,7 +178,12 @@ const ReviewPreRegistrationFaculty = () => {
           >
             <InputLabel htmlFor="grouped-select">Filter</InputLabel>
             <Select
-              sx={{ borderRadius: 50 }}
+              sx={{
+                borderRadius: 50,
+                "@media (max-width: 390px)": {
+                  height: "45px",
+                },
+              }}
               multiple
               value={filter}
               label="Grouping"
@@ -207,18 +236,25 @@ const ReviewPreRegistrationFaculty = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Table>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
+          <TableContainer
+            sx={{
+              maxHeight: 640,
+            }}
+            component={Paper}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading />
+              </TableHead>
+              <TableBody>
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <TablePagination
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
