@@ -6,8 +6,8 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Chip,
   Paper,
+  Chip,
   Table,
   TableBody,
   TableCell,
@@ -15,13 +15,21 @@ import {
   TableHead,
   TableRow,
   Typography,
+  DialogActions,
+  Button,
+  DialogContent,
+  DialogTitle,
+  Dialog,
+  TextField,
+  InputAdornment,
+  IconButton,
   CircularProgress,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import SearchIcon from "@mui/icons-material/Search";
 
 const DaftarPengajuanProposalSekertaris = () => {
   // state - loading page
@@ -29,6 +37,12 @@ const DaftarPengajuanProposalSekertaris = () => {
 
   // State untuk melacak panel accordion yang terbuka
   const [expanded, setExpanded] = useState(false);
+
+  // state Pencarian
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   // Fungsi untuk menangani perubahan pada state accordion yang terbuka
   const handleChange = (panel) => (event, isExpanded) => {
@@ -49,6 +63,33 @@ const DaftarPengajuanProposalSekertaris = () => {
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
   console.log("token", token);
+
+  // Fungsi untuk menangani pencarian
+  const handleSearch = () => {
+    const results = daftarPengajuanProposal.semesterData.flatMap(
+      (semesterData) =>
+        semesterData.proposals.filter((proposal) => {
+          const studentNames = proposal.students.map((student) =>
+            student.fullName.toLowerCase()
+          );
+          return (
+            studentNames.some((name) =>
+              name.includes(searchKeyword.toLowerCase())
+            ) ||
+            proposal.title.toLowerCase().includes(searchKeyword.toLowerCase())
+          );
+        })
+    );
+
+    setSearchResults(results);
+    setSearchQuery(searchKeyword);
+    setIsSearchModalOpen(true);
+  };
+
+  // Fungsi untuk menutup modal pencarian
+  const handleCloseSearchModal = () => {
+    setIsSearchModalOpen(false);
+  };
 
   useEffect(() => {
     const fetchDaftarPengajuanProposalData = async () => {
@@ -371,8 +412,163 @@ const DaftarPengajuanProposalSekertaris = () => {
               flexShrink: 0,
             }}
           >
-            {/* <SearchGlobal></SearchGlobal> */}
+            {/* Search */}
+            <TextField
+              id="search-input"
+              variant="outlined"
+              placeholder="Cari Nama Mahasiswa atau Judul"
+              size="small"
+              sx={{
+                borderRadius: 25,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 25,
+                },
+              }}
+              fullWidth
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment>
+                    <IconButton onClick={handleSearch}>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
           </Div>
+          {/* popup Pencarian */}
+          <Dialog
+            open={isSearchModalOpen}
+            onClose={handleCloseSearchModal}
+            fullWidth
+            maxWidth="xl"
+          >
+            <DialogTitle sx={{ textAlign: "center" }}>
+              <Typography variant="h2" gutterBottom>
+                Hasil Pencarian
+              </Typography>
+            </DialogTitle>
+            <DialogContent>
+              <Typography sx={{ marginBottom: "20px" }}>
+                Pencarian Anda : {searchQuery}
+              </Typography>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ background: "#F5F5F5" }}>
+                      <TableCell sx={{ width: "25px", fontSize: "13px" }}>
+                        Nomor
+                      </TableCell>
+                      <TableCell sx={{ width: "200px", fontSize: "13px" }}>
+                        Mahasiswa
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Dokumen Proposal
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Pembayaran
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>
+                        Cek Plagiat
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {searchResults.map((proposal, proposalIndex) => (
+                      <TableRow key={proposalIndex}>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposalIndex + 1}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.students.map((student) => (
+                            <div key={student.id}>{student.fullName}</div>
+                          ))}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.title}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.proposal_status === false ? (
+                            <Chip label={"Belum"} />
+                          ) : proposal.proposal_status === true ? (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : (
+                            proposal.proposal_status
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.paymant_status === false ? (
+                            <Chip label={"Belum"} />
+                          ) : proposal.paymant_status === true ? (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : (
+                            proposal.paymant_status
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "13px" }}>
+                          {proposal.plagiarism === false ? (
+                            <Chip label={"Belum"} />
+                          ) : proposal.plagiarism === true ? (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          ) : (
+                            proposal.plagiarism
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            component={Link}
+                            to={`/sistem-informasi-skripsi/daftar-pengajuan-proposal/beranda/${proposal.group_id}/OPERATOR_FILKOM`}
+                            sx={{
+                              textDecoration: "none",
+                              color: "blue",
+                            }}
+                          >
+                            Detail
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </DialogContent>
+            <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+              <Button
+                onClick={handleCloseSearchModal}
+                color="primary"
+                sx={{
+                  background: "white",
+                  boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                  textTransform: "none",
+                  color: "black",
+                }}
+              >
+                Kembali
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Div>
         {/* Header End */}
         {daftarPengajuanProposal?.semesterData?.length > 0 ? (
