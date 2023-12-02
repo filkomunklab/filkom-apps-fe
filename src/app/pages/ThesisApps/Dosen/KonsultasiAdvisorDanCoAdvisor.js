@@ -147,15 +147,39 @@ const BuatKonsultasi = () => {
     }
   };
 
-  const getConsultationMessage = () => {
-    const targetConsultations = 4; // Change this to the total number of consultations needed
-    const consultationsCount = konsultasi?.consultation?.length;
+  const getProposalConsultationMessage = () => {
+    const targetConsultations = 4; // Ganti ini dengan total jumlah konsultasi yang dibutuhkan
+    const consultations = konsultasi?.consultation;
 
-    // Proposal
-    if (consultationsCount >= targetConsultations) {
-      return `Konsultasi Mahasiswa telah terpenuhi ${consultationsCount}/${targetConsultations}`;
+    if (!consultations) {
+      return "Tidak ada konsultasi yang tersedia.";
+    }
+
+    // Menghitung jumlah konsultasi dengan status "Proposal"
+    const proposalConsultations = consultations?.filter(
+      (consultation) => consultation.consultation_status === "Proposal"
+    ).length;
+
+    if (proposalConsultations >= targetConsultations) {
+      return `Konsultasi Proposal telah terpenuhi ${proposalConsultations}/${targetConsultations}`;
     } else {
-      return `Konsultasi Mahasiswa ${consultationsCount}/${targetConsultations}`;
+      return `Konsultasi Proposal ${proposalConsultations}/${targetConsultations}`;
+    }
+  };
+
+  const getSkripsiConsultationMessage = () => {
+    const targetConsultations = 4; // Ganti ini dengan total jumlah konsultasi yang dibutuhkan
+    const consultations = konsultasi?.consultation;
+
+    // Menghitung jumlah konsultasi dengan status "Skripsi"
+    const skripsiConsultations = consultations?.filter(
+      (consultation) => consultation.consultation_status === "Skripsi"
+    ).length;
+
+    if (skripsiConsultations >= targetConsultations) {
+      return `Konsultasi Skripsi telah terpenuhi ${skripsiConsultations}/${targetConsultations}`;
+    } else {
+      return `Konsultasi Skripsi ${skripsiConsultations}/${targetConsultations}`;
     }
   };
 
@@ -266,26 +290,87 @@ const BuatKonsultasi = () => {
                 gap: "50px",
               }}
             >
-              <Typography
-                sx={{
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  color: "#rgba(25, 36, 52, 0.94)",
-                }}
-              >
-                {getConsultationMessage()}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "14px",
-                  fontWeight: 400,
-                  color: "#rgba(25, 36, 52, 0.94)",
-                  marginBottom: "25px",
-                }}
-              >
-                Catatan: Mahasiswa wajib melakukan konsultasi bersama advisor
-                dan co-advisor (jika ada) minimal sebanyak 4x
-              </Typography>
+              {progress === "Proposal" && (
+                <>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: "#rgba(25, 36, 52, 0.94)",
+                    }}
+                  >
+                    {getProposalConsultationMessage()}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 400,
+                      color: "#rgba(25, 36, 52, 0.94)",
+                      marginBottom: "25px",
+                    }}
+                  >
+                    Catatan: Mahasiswa wajib melakukan konsultasi proposal
+                    bersama advisor dan co-advisor (jika ada) minimal sebanyak
+                    4x
+                  </Typography>
+                </>
+              )}
+              {progress === "Skripsi" && (
+                <>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: "#rgba(25, 36, 52, 0.94)",
+                    }}
+                  >
+                    {getProposalConsultationMessage()}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: "#rgba(25, 36, 52, 0.94)",
+                    }}
+                  >
+                    {getSkripsiConsultationMessage()}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 400,
+                      color: "#rgba(25, 36, 52, 0.94)",
+                      marginBottom: "25px",
+                    }}
+                  >
+                    Catatan: Mahasiswa wajib melakukan konsultasi skripsi
+                    bersama advisor dan co-advisor (jika ada) minimal sebanyak
+                    4x
+                  </Typography>
+                </>
+              )}
+              {progress === "Finished" && (
+                <>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: "#rgba(25, 36, 52, 0.94)",
+                    }}
+                  >
+                    {getProposalConsultationMessage()}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: "#rgba(25, 36, 52, 0.94)",
+                    }}
+                  >
+                    {getSkripsiConsultationMessage()}
+                  </Typography>
+                </>
+              )}
 
               {/* Table Konsultasi Start*/}
               <Container

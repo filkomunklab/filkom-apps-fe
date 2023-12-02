@@ -351,7 +351,9 @@ const DaftarRiwayatNilaiDosenSkripsi = () => {
                                     ? "Sistem Informasi"
                                     : ""}
                                 </TableCell>
-                                <TableCell>{dataMahasiswa?.value}</TableCell>
+                                <TableCell>
+                                  {dataMahasiswa?.assessment_conclution}
+                                </TableCell>
                               </TableRow>
                             )
                           )}

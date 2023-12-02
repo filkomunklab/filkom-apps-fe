@@ -293,7 +293,9 @@ const PrintBeritaAcaraSkripsi = React.forwardRef((props, ref) => {
                         {selectedSchedule?.panelis_chairman.name}
                       </td>
                       <td style={{ border: "1px solid black", padding: "8px" }}>
-                        {selectedSchedule?.is_sign_by_chairman.name}
+                        {selectedSchedule?.is_sign_by_chairman
+                          ? selectedSchedule?.panelist_chairman_report_approve_date
+                          : ""}
                       </td>
                     </tr>
                     <tr>
@@ -304,7 +306,9 @@ const PrintBeritaAcaraSkripsi = React.forwardRef((props, ref) => {
                         {selectedSchedule?.panelis_member.name}
                       </td>
                       <td style={{ border: "1px solid black", padding: "8px" }}>
-                        {selectedSchedule?.is_sign_by_member.name}
+                        {selectedSchedule?.is_sign_by_member
+                          ? selectedSchedule?.panelist_member_report_approve_date
+                          : ""}
                       </td>
                     </tr>
                     <tr>
@@ -315,7 +319,9 @@ const PrintBeritaAcaraSkripsi = React.forwardRef((props, ref) => {
                         {selectedSchedule?.advisor.name}
                       </td>
                       <td style={{ border: "1px solid black", padding: "8px" }}>
-                        {selectedSchedule?.is_sign_by_advisor.name}
+                        {selectedSchedule?.is_sign_by_advisor
+                          ? selectedSchedule?.advisor_report_approve_date
+                          : ""}
                       </td>
                     </tr>
                   </tbody>

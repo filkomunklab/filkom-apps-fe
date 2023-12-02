@@ -291,6 +291,15 @@ const Konsultasi = () => {
                         color: "#rgba(25, 36, 52, 0.94)",
                       }}
                     >
+                      {getProposalConsultationMessage()}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        color: "#rgba(25, 36, 52, 0.94)",
+                      }}
+                    >
                       {getSkripsiConsultationMessage()}
                     </Typography>
                     <Typography

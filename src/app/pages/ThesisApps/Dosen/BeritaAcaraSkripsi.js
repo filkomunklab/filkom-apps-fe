@@ -65,8 +65,6 @@ const BeritaAcara = () => {
   // state - menyimpan nilai kesimpulan
   const [nilaiMahasiswa, setNilaiMahasiswa] = useState([]);
 
-  console.log("nilai: ", nilaiMahasiswa);
-
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
@@ -120,6 +118,7 @@ const BeritaAcara = () => {
           student_id: mahasiswa.student_id,
           assessment_conclution: "",
         }));
+        console.log("nilai mahasiswa di fetch", newNilaiMahasiswa);
 
         // Mengatur nilaiMahasiswa dengan array baru yang dibuat
         setNilaiMahasiswa(newNilaiMahasiswa);
@@ -177,11 +176,31 @@ const BeritaAcara = () => {
         console.error("Terjadi kesalahan saat mengambil kesimpulan:", error);
       }
     };
+    const fetchNilaiKesimpulanData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion-value/${skripsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDataNilaiKesimpulan(response.data.data);
+        console.log("Request Get nilai kesimpulan: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil nilai kesimpulan:",
+          error
+        );
+      }
+    };
     fetchIsOpenData();
     fetchPenilaianData();
     fetchPerubahanData();
     fetchBeritaAcaraData();
     fetchKesimpulanData();
+    fetchNilaiKesimpulanData();
   }, [token, skripsiId]);
 
   // State untuk mengontrol tampilan popup
@@ -263,6 +282,7 @@ const BeritaAcara = () => {
   const handleSubmitData = () => {
     // Di sini Anda dapat menambahkan logika untuk mengirim data atau tindakan yang diperlukan
 
+    console.log("nilai mahasiswa: ", nilaiMahasiswa);
     for (const entry of nilaiMahasiswa) {
       const nilaiKesimpulan = {
         student_id: entry.student_id,
@@ -1873,7 +1893,14 @@ const BeritaAcara = () => {
 
               {/* Kesimpulan dari Pengujian Ketua penelis start */}
               {userRole === "KETUA_PANELIS" && isOpen?.is_open === true && (
-                <Div>
+                <Div
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                  }}
+                >
                   <Div
                     sx={{
                       display: "flex",
@@ -2875,7 +2902,7 @@ const BeritaAcara = () => {
               onChange={(e) => setBab4(e.target.value)}
             />
             <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-              Bab 3
+              Bab 5
             </DialogContentText>
             <TextareaAutosize
               aria-label="minimum height"
@@ -2943,7 +2970,9 @@ const BeritaAcara = () => {
       >
         <DialogTitle>Perubahan</DialogTitle>
         <DialogContent>
-          <Typography>Apakah Anda yakin ingin memberikan perubahan?</Typography>
+          <Typography>
+            Apakah Anda yakin ingin memberikan dataPerubahan?
+          </Typography>
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -3041,9 +3070,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Abstrak</Typography>
                     <Typography>
-                      {perubahan?.changes_by_chairman_abstrak
-                        ? perubahan?.changes_by_chairman_abstrak
-                        : "-"}
+                      {dataPerubahan?.changes_by_chairman_abstrak}
                     </Typography>
                   </Div>
                   <Div
@@ -3058,7 +3085,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 1</Typography>
                     <Typography>
-                      {perubahan?.changes_by_chairman_bab1}
+                      {dataPerubahan?.changes_by_chairman_bab1}
                     </Typography>
                   </Div>
                   <Div
@@ -3073,7 +3100,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 2</Typography>
                     <Typography>
-                      {perubahan?.changes_by_chairman_bab2}
+                      {dataPerubahan?.changes_by_chairman_bab2}
                     </Typography>
                   </Div>
                   <Div
@@ -3088,7 +3115,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 3</Typography>
                     <Typography>
-                      {perubahan?.changes_by_chairman_bab3}
+                      {dataPerubahan?.changes_by_chairman_bab3}
                     </Typography>
                   </Div>
                   <Div
@@ -3103,7 +3130,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 4</Typography>
                     <Typography>
-                      {perubahan?.changes_by_chairman_bab4}
+                      {dataPerubahan?.changes_by_chairman_bab4}
                     </Typography>
                   </Div>
                   <Div
@@ -3118,7 +3145,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 5</Typography>
                     <Typography>
-                      {perubahan?.changes_by_chairman_bab5}
+                      {dataPerubahan?.changes_by_chairman_bab5}
                     </Typography>
                   </Div>
                   <Div
@@ -3133,7 +3160,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Lainnya</Typography>
                     <Typography>
-                      {perubahan?.changes_by_chairman_other}
+                      {dataPerubahan?.changes_by_chairman_other}
                     </Typography>
                   </Div>
                 </AccordionDetails>
@@ -3160,7 +3187,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Abstrak</Typography>
                     <Typography>
-                      {perubahan?.changes_by_member_abstrak}
+                      {dataPerubahan?.changes_by_member_abstrak}
                     </Typography>
                   </Div>
                   <Div
@@ -3174,7 +3201,9 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 1</Typography>
-                    <Typography>{perubahan?.changes_by_member_bab1}</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_member_bab1}
+                    </Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3187,7 +3216,9 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 2</Typography>
-                    <Typography>{perubahan?.changes_by_member_bab2}</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_member_bab2}
+                    </Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3200,7 +3231,9 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 3</Typography>
-                    <Typography>{perubahan?.changes_by_member_bab3}</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_member_bab3}
+                    </Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3213,7 +3246,9 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 4</Typography>
-                    <Typography>{perubahan?.changes_by_member_bab4}</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_member_bab4}
+                    </Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3226,7 +3261,9 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 5</Typography>
-                    <Typography>{perubahan?.changes_by_member_bab5}</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_member_bab5}
+                    </Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3240,7 +3277,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Lainnya</Typography>
                     <Typography>
-                      {perubahan?.changes_by_member_other}
+                      {dataPerubahan?.changes_by_member_other}
                     </Typography>
                   </Div>
                 </AccordionDetails>
@@ -3267,7 +3304,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Abstrak</Typography>
                     <Typography>
-                      {perubahan?.changes_by_advisor_abstrak}
+                      {dataPerubahan?.changes_by_advisor_abstrak}
                     </Typography>
                   </Div>
                   <Div
@@ -3282,7 +3319,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 1</Typography>
                     <Typography>
-                      {perubahan?.changes_by_advisor_bab1}
+                      {dataPerubahan?.changes_by_advisor_bab1}
                     </Typography>
                   </Div>
                   <Div
@@ -3297,7 +3334,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 2</Typography>
                     <Typography>
-                      {perubahan?.changes_by_advisor_bab2}
+                      {dataPerubahan?.changes_by_advisor_bab2}
                     </Typography>
                   </Div>
                   <Div
@@ -3312,7 +3349,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 3</Typography>
                     <Typography>
-                      {perubahan?.changes_by_advisor_bab3}
+                      {dataPerubahan?.changes_by_advisor_bab3}
                     </Typography>
                   </Div>
                   <Div
@@ -3327,7 +3364,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 4</Typography>
                     <Typography>
-                      {perubahan?.changes_by_advisor_bab4}
+                      {dataPerubahan?.changes_by_advisor_bab4}
                     </Typography>
                   </Div>
                   <Div
@@ -3342,7 +3379,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Bab 5</Typography>
                     <Typography>
-                      {perubahan?.changes_by_advisor_bab5}
+                      {dataPerubahan?.changes_by_advisor_bab5}
                     </Typography>
                   </Div>
                   <Div
@@ -3357,7 +3394,7 @@ const BeritaAcara = () => {
                   >
                     <Typography>Lainnya</Typography>
                     <Typography>
-                      {perubahan?.changes_by_advisor_other}
+                      {dataPerubahan?.changes_by_advisor_other}
                     </Typography>
                   </Div>
                 </AccordionDetails>
@@ -3385,7 +3422,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Abstrak</Typography>
                       <Typography>
-                        {perubahan?.changes_by_co_advisor1_abstrak}
+                        {dataPerubahan?.changes_by_co_advisor1_abstrak}
                       </Typography>
                     </Div>
                     <Div
@@ -3400,7 +3437,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 1</Typography>
                       <Typography>
-                        {perubahan?.changes_by_co_advisor1_bab1}
+                        {dataPerubahan?.changes_by_co_advisor1_bab1}
                       </Typography>
                     </Div>
                     <Div
@@ -3415,7 +3452,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 2</Typography>
                       <Typography>
-                        {perubahan?.changes_by_co_advisor1_bab2}
+                        {dataPerubahan?.changes_by_co_advisor1_bab2}
                       </Typography>
                     </Div>
                     <Div
@@ -3430,7 +3467,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 3</Typography>
                       <Typography>
-                        {perubahan?.changes_by_co_advisor1_bab3}
+                        {dataPerubahan?.changes_by_co_advisor1_bab3}
                       </Typography>
                     </Div>
                     <Div
@@ -3445,7 +3482,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 4</Typography>
                       <Typography>
-                        {perubahan?.changes_by_co_advisor1_bab4}
+                        {dataPerubahan?.changes_by_co_advisor1_bab4}
                       </Typography>
                     </Div>
                     <Div
@@ -3460,7 +3497,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 5</Typography>
                       <Typography>
-                        {perubahan?.changes_by_co_advisor1_bab5}
+                        {dataPerubahan?.changes_by_co_advisor1_bab5}
                       </Typography>
                     </Div>
                     <Div
@@ -3475,7 +3512,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Lainnya</Typography>
                       <Typography>
-                        {perubahan?.changes_by_co_advisor1_other}
+                        {dataPerubahan?.changes_by_co_advisor1_other}
                       </Typography>
                     </Div>
                   </AccordionDetails>
@@ -3504,7 +3541,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Abstrak</Typography>
                       <Typography>
-                        {perubahan?.changes_by_co_advisor2_abstrak}
+                        {dataPerubahan?.changes_by_co_advisor2_abstrak}
                       </Typography>
                     </Div>
                     <Div
@@ -3519,7 +3556,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 1</Typography>
                       <Typography>
-                        {perubahan?.changes_by_co_advisor2_bab1}
+                        {dataPerubahan?.changes_by_co_advisor2_bab1}
                       </Typography>
                     </Div>
                     <Div
@@ -3534,7 +3571,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 2</Typography>
                       <Typography>
-                        {perubahan?.changes_by_co_advisor2_bab2}
+                        {dataPerubahan?.changes_by_co_advisor2_bab2}
                       </Typography>
                     </Div>
                     <Div
@@ -3549,7 +3586,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 3</Typography>
                       <Typography>
-                        {perubahan?.changes_by_co_advisor2_bab3}
+                        {dataPerubahan?.changes_by_co_advisor2_bab3}
                       </Typography>
                     </Div>
                     <Div
@@ -3564,7 +3601,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 4</Typography>
                       <Typography>
-                        {perubahan?.changes_by_co_advisor2_bab4}
+                        {dataPerubahan?.changes_by_co_advisor2_bab4}
                       </Typography>
                     </Div>
                     <Div
@@ -3579,7 +3616,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Bab 5</Typography>
                       <Typography>
-                        {perubahan?.changes_by_co_advisor2_bab5}
+                        {dataPerubahan?.changes_by_co_advisor2_bab5}
                       </Typography>
                     </Div>
                     <Div
@@ -3594,7 +3631,7 @@ const BeritaAcara = () => {
                     >
                       <Typography>Lainnya</Typography>
                       <Typography>
-                        {perubahan?.changes_by_co_advisor2_other}
+                        {dataPerubahan?.changes_by_co_advisor2_other}
                       </Typography>
                     </Div>
                   </AccordionDetails>
