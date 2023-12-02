@@ -1543,7 +1543,9 @@ const DokumenRevisiProposal = () => {
               <>
                 {userRole === "KETUA_PANELIS" &&
                   dokumenRevisi?.is_revision_approve_by_panelist_chairman !==
-                    "Approve" && (
+                    "Approve" &&
+                  dokumenRevisi?.panelist_chairman_revision_comment !==
+                    null && (
                     <>
                       <Typography
                         sx={{
@@ -1619,7 +1621,8 @@ const DokumenRevisiProposal = () => {
                   )}
                 {userRole === "ANGGOTA_PANELIS" &&
                   dokumenRevisi?.is_revision_approve_by_panelist_member !==
-                    "Approve" && (
+                    "Approve" &&
+                  dokumenRevisi?.panelist_member_revision_comment !== null && (
                     <>
                       <Typography
                         sx={{
@@ -1690,8 +1693,8 @@ const DokumenRevisiProposal = () => {
                     </>
                   )}
                 {userRole === "ADVISOR" &&
-                  dokumenRevisi?.is_revision_approve_by_advisor !==
-                    "Approve" && (
+                  dokumenRevisi?.is_revision_approve_by_advisor !== "Approve" &&
+                  dokumenRevisi?.advisor_revision_comment !== null && (
                     <>
                       <Typography
                         sx={{
