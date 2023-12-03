@@ -21,6 +21,7 @@ import {
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
+import AddIcon from "@mui/icons-material/Add";
 
 // View Document HKI
 const PDFViewerHKI = ({ HKI, isUploading }) => {
@@ -1195,8 +1196,18 @@ const ArsipDocument = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* Table Upload Source Code End*/}
-              {/* table upload link2 Start */}
+            </Div>
+            {/* Table Upload Source Code End*/}
+            {/* table upload link2 Start */}
+            <Div
+              sx={{
+                width: "100%",
+                padding: "0 25px",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "25px",
+              }}
+            >
               <Div
                 sx={{
                   display: "flex",
@@ -1217,127 +1228,129 @@ const ArsipDocument = () => {
                   }}
                   onClick={handleClickOpenUnggahLink}
                 >
-                  <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
-                  Unggah Link
+                  <AddIcon sx={{ fontSize: "14px", margin: "5px" }} />
+                  Tambah Link
                 </Button>
               </Div>
+            </Div>
 
-              {/* dialog unggah link */}
-              <Dialog
-                open={openUnggahLink}
-                onClose={handleCloseUnggahLink}
-                maxWidth="xs"
-                fullWidth
-              >
-                <DialogTitle>
-                  <Typography variant="h3">Unggah Link</Typography>
-                </DialogTitle>
-                <DialogContent>
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    id="nama"
-                    label="Nama Link"
-                    type="text"
-                    fullWidth
-                    value={newLinkName}
-                    onChange={(e) => setNewLinkName(e.target.value)}
-                  />
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    id="link"
-                    label="Link"
-                    type="text"
-                    fullWidth
-                    value={newLink}
-                    onChange={(e) => setNewLink(e.target.value)}
-                  />
-                </DialogContent>
-                <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                  <Button
-                    onClick={handleCloseUnggahLink}
-                    size="small"
-                    sx={{
-                      background: "white",
-                      boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-                      textTransform: "none",
-                      color: "black",
-                    }}
-                  >
-                    Batal
-                  </Button>
-                  <Button
-                    onClick={handleSubmitNewLink}
-                    size="small"
-                    variant="contained"
-                    sx={{ textTransform: "none" }}
-                    color="primary"
-                  >
-                    Submit
-                  </Button>
-                </DialogActions>
-              </Dialog>
+            {/* dialog unggah link */}
+            <Dialog
+              open={openUnggahLink}
+              onClose={handleCloseUnggahLink}
+              maxWidth="xs"
+              fullWidth
+            >
+              <DialogTitle>
+                <Typography variant="h3">Tambah Link</Typography>
+              </DialogTitle>
+              <DialogContent>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="nama"
+                  label="Nama Link"
+                  type="text"
+                  fullWidth
+                  value={newLinkName}
+                  onChange={(e) => setNewLinkName(e.target.value)}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="link"
+                  label="Link"
+                  type="text"
+                  fullWidth
+                  value={newLink}
+                  onChange={(e) => setNewLink(e.target.value)}
+                />
+              </DialogContent>
+              <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                <Button
+                  onClick={handleCloseUnggahLink}
+                  size="small"
+                  sx={{
+                    background: "white",
+                    boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                    textTransform: "none",
+                    color: "black",
+                  }}
+                >
+                  Batal
+                </Button>
+                <Button
+                  onClick={handleSubmitNewLink}
+                  size="small"
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                  color="primary"
+                >
+                  Submit
+                </Button>
+              </DialogActions>
+            </Dialog>
 
-              {/* dialog update link */}
-              <Dialog
-                open={openUpdateLink}
-                onClose={handleCloseUpdateLink}
-                maxWidth="xs"
-                fullWidth
-              >
-                <DialogTitle>
-                  <Typography variant="h3">Update Link</Typography>
-                </DialogTitle>
-                <DialogContent>
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    id="nama"
-                    label="Nama Link"
-                    type="text"
-                    fullWidth
-                    value={updateLinkName}
-                    onChange={(e) => setUpdateLinkName(e.target.value)}
-                  />
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    id="link"
-                    label="Link"
-                    type="text"
-                    fullWidth
-                    value={updateLink}
-                    onChange={(e) => setUpdateLink(e.target.value)}
-                  />
-                </DialogContent>
-                <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                  <Button
-                    onClick={handleCloseUpdateLink}
-                    size="small"
-                    sx={{
-                      background: "white",
-                      boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-                      textTransform: "none",
-                      color: "black",
-                    }}
-                  >
-                    Batal
-                  </Button>
-                  <Button
-                    onClick={handleSubmitUpdateLink}
-                    size="small"
-                    variant="contained"
-                    sx={{ textTransform: "none" }}
-                    color="primary"
-                  >
-                    Submit
-                  </Button>
-                </DialogActions>
-              </Dialog>
+            {/* dialog update link */}
+            <Dialog
+              open={openUpdateLink}
+              onClose={handleCloseUpdateLink}
+              maxWidth="xs"
+              fullWidth
+            >
+              <DialogTitle>
+                <Typography variant="h3">Update Link</Typography>
+              </DialogTitle>
+              <DialogContent>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="nama"
+                  label="Nama Link"
+                  type="text"
+                  fullWidth
+                  value={updateLinkName}
+                  onChange={(e) => setUpdateLinkName(e.target.value)}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="link"
+                  label="Link"
+                  type="text"
+                  fullWidth
+                  value={updateLink}
+                  onChange={(e) => setUpdateLink(e.target.value)}
+                />
+              </DialogContent>
+              <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                <Button
+                  onClick={handleCloseUpdateLink}
+                  size="small"
+                  sx={{
+                    background: "white",
+                    boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                    textTransform: "none",
+                    color: "black",
+                  }}
+                >
+                  Batal
+                </Button>
+                <Button
+                  onClick={handleSubmitUpdateLink}
+                  size="small"
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                  color="primary"
+                >
+                  Submit
+                </Button>
+              </DialogActions>
+            </Dialog>
 
-              {linkList?.map((linkdata, index) => (
-                <>
+            {linkList?.map((linkdata, index) => (
+              <>
+                <Div key={index} sx={{ width: "100%" }}>
                   <Typography
                     sx={{
                       width: "100%",
@@ -1354,107 +1367,117 @@ const ArsipDocument = () => {
                   >
                     {linkdata.name}
                   </Typography>
-                  <TableContainer component={Paper} style={{ marginTop: 20 }}>
-                    <Table>
-                      <TableHead sx={{ background: "#F5F5F5" }}>
-                        <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                          <TableCell
-                            sx={{
-                              fontSize: "12px",
-                              padding: "11px",
-                              width: "65%",
-                            }}
-                          >
-                            Link
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              fontSize: "12px",
-                              padding: "11px",
-                              width: "20%",
-                            }}
-                          >
-                            Tanggal
-                          </TableCell>
-                          <TableCell
-                            sx={{
-                              fontSize: "12px",
-                              padding: "11px",
-                              textAlign: "center",
-                              width: "12%",
-                            }}
-                          >
-                            Action
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow key={index}>
-                          <TableCell sx={{ fontSize: "12px" }}>
-                            <a
-                              href={linkdata.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{
-                                textDecoration: "underline",
-                                color: "blue",
+                  <Div
+                    sx={{
+                      width: "100%",
+                      padding: "0 25px",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      gap: "25px",
+                    }}
+                  >
+                    <TableContainer component={Paper} style={{ marginTop: 20 }}>
+                      <Table>
+                        <TableHead sx={{ background: "#F5F5F5" }}>
+                          <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                            <TableCell
+                              sx={{
+                                fontSize: "12px",
+                                padding: "11px",
+                                width: "65%",
                               }}
                             >
-                              {linkdata.link}
-                            </a>
-                          </TableCell>
-                          <TableCell>{linkdata.date}</TableCell>
-                          <TableCell>
-                            <Div sx={{ display: "flex" }}>
-                              <span
+                              Link
+                            </TableCell>
+                            <TableCell
+                              sx={{
+                                fontSize: "12px",
+                                padding: "11px",
+                                width: "20%",
+                              }}
+                            >
+                              Tanggal
+                            </TableCell>
+                            <TableCell
+                              sx={{
+                                fontSize: "12px",
+                                padding: "11px",
+                                textAlign: "center",
+                                width: "12%",
+                              }}
+                            >
+                              Action
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          <TableRow key={index}>
+                            <TableCell sx={{ fontSize: "12px" }}>
+                              <a
+                                href={linkdata.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
+                                  textDecoration: "underline",
                                   color: "blue",
-                                  fontSize: "12px",
-                                }}
-                                onClick={() => {
-                                  setSelectedLinkId(linkdata.id);
-                                  setUpdateLinkName(linkdata.name);
-                                  setUpdateLink(linkdata.link);
-                                  handleOpenUpdateLink();
                                 }}
                               >
-                                Update
-                              </span>
-                              <Div
-                                style={{
-                                  margin: "0 5px",
-                                  color: "#E0E0E0",
-                                }}
-                              >
-                                |
+                                {linkdata.link}
+                              </a>
+                            </TableCell>
+                            <TableCell>{linkdata.date}</TableCell>
+                            <TableCell>
+                              <Div sx={{ display: "flex" }}>
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor: "pointer",
+                                    color: "blue",
+                                    fontSize: "12px",
+                                  }}
+                                  onClick={() => {
+                                    setSelectedLinkId(linkdata.id);
+                                    setUpdateLinkName(linkdata.name);
+                                    setUpdateLink(linkdata.link);
+                                    handleOpenUpdateLink();
+                                  }}
+                                >
+                                  Update
+                                </span>
+                                <Div
+                                  style={{
+                                    margin: "0 5px",
+                                    color: "#E0E0E0",
+                                  }}
+                                >
+                                  |
+                                </Div>
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor: isSubmittingLink
+                                      ? "not-allowed"
+                                      : "pointer",
+                                    color: isSubmittingLink ? "#A0A0A0" : "red",
+                                    fontSize: "12px",
+                                  }}
+                                  onClick={() => {
+                                    setSelectedLinkId(linkdata.id);
+                                    handleDeleteLink(linkdata.id);
+                                  }}
+                                >
+                                  Hapus
+                                </span>
                               </Div>
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: isSubmittingLink
-                                    ? "not-allowed"
-                                    : "pointer",
-                                  color: isSubmittingLink ? "#A0A0A0" : "red",
-                                  fontSize: "12px",
-                                }}
-                                onClick={() => {
-                                  setSelectedLinkId(linkdata.id);
-                                  handleDeleteLink(linkdata.id);
-                                }}
-                              >
-                                Hapus
-                              </span>
-                            </Div>
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </>
-              ))}
-            </Div>
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Div>
+                </Div>
+              </>
+            ))}
             {/* Table 3 End */}
           </Div>
           {/* Element 2 End */}

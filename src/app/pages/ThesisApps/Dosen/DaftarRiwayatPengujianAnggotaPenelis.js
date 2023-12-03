@@ -386,10 +386,7 @@ const RiwayatPengujianAnggota = () => {
                             <TableCell>{index + 1}</TableCell>
                             <TableCell>{student.fullName}</TableCell>
                             <TableCell>{skripsi.title}</TableCell>
-                            {/* Tambahkan tanggal diterima jika tersedia */}
-                            <TableCell>
-                              {/* Tambahkan tanggal diterima di sini */}
-                            </TableCell>
+                            <TableCell>{skripsi.approve_date}</TableCell>
                             <TableCell>
                               <Link
                                 to={`/sistem-informasi-skripsi/daftar-riwayat-pengujian-anggota/beranda/${skripsi.group_id}/ANGGOTA_PANELIS`}

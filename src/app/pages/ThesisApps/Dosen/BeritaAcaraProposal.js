@@ -2042,7 +2042,7 @@ const BeritaAcara = () => {
                     {dataPenilaian?.map((mahasiswa, index) => (
                       <Div key={index}>
                         <Typography variant="subtitle2">
-                          Nilai Akhir: {mahasiswa.fullName}
+                          Kesimpulan Nilai {mahasiswa.fullName}
                         </Typography>
                         <Div>
                           <FormControl component="fieldset">
@@ -2270,7 +2270,7 @@ const BeritaAcara = () => {
                     {dataPenilaian?.map((mahasiswa, index) => (
                       <Div key={index}>
                         <Typography variant="subtitle2">
-                          Nilai Kesimpulan: {mahasiswa.fullName}
+                          Kesimpulan Nilai {mahasiswa.fullName}
                         </Typography>
                         <Typography>{mahasiswa.value_conclusion}</Typography>
                       </Div>
