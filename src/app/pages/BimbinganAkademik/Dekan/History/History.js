@@ -386,7 +386,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="pre-registration-rejected"
+                to="pre-registration"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -426,7 +426,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="pre-registration-approved"
+                to="pre-registration"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -466,7 +466,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="pre-registration-rejected"
+                to="pre-registration"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -506,7 +506,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="pre-registration-approved"
+                to="pre-registration"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -560,7 +560,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="pre-registration-rejected"
+                to="pre-registration"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -600,7 +600,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="pre-registration-approved"
+                to="pre-registration"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -640,7 +640,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="pre-registration-approved"
+                to="pre-registration"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -680,7 +680,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="pre-registration-rejected"
+                to="pre-registration"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -758,7 +758,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="certificate-approved"
+                to="certificate"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -812,7 +812,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="certificate-approved"
+                to="certificate"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -852,7 +852,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="certificate-rejected"
+                to="certificate"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -892,7 +892,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="certificate-approved"
+                to="certificate"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -970,7 +970,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="grade-rejected"
+                to="grade"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText
@@ -1025,7 +1025,7 @@ const History = (props) => {
               <ListItem
                 button
                 component={Link}
-                to="grade-approved"
+                to="grade"
                 sx={{ paddingLeft: "50px", paddingRight: "50px" }}
               >
                 <ListItemText

@@ -36,12 +36,9 @@ import StudentConsultation from "app/pages/BimbinganAkademik/Dekan/ReviewActivit
 import ReplyConsultation from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/StudentConsultation/ReplyConsultation/Consultation";
 import History from "app/pages/BimbinganAkademik/Dekan/History";
 import HistoryActivity from "app/pages/BimbinganAkademik/Dekan/History/HistoryActivity/HistoryActivity";
-import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/Dekan/History/HistoryPreRegis/PreRegistrationApproved";
-import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/Dekan/History/HistoryPreRegis/PreRegistrationRejected";
-import HistoryCertificateApproved from "app/pages/BimbinganAkademik/Dekan/History/HistoryCertificate/CertificateApproved";
-import HistoryCertificateRejected from "app/pages/BimbinganAkademik/Dekan/History/HistoryCertificate/CertificateRejected";
-import HistoryGradeApproved from "app/pages/BimbinganAkademik/Dekan/History/HistoryGrade/ApprovedHistoryGrade";
-import HistoryGradeRejected from "app/pages/BimbinganAkademik/Dekan/History/HistoryGrade/RejectedHistoryGrade";
+import HistoryPreRegistration from "app/pages/BimbinganAkademik/Dekan/History/HistoryPreRegis/PreRegistration";
+import HistoryCertificate from "app/pages/BimbinganAkademik/Dekan/History/HistoryCertificate/Certificate";
+import HistoryGrade from "app/pages/BimbinganAkademik/Dekan/History/HistoryGrade/HistoryGrade";
 import HistoryConsultationComplete from "app/pages/BimbinganAkademik/Dekan/History/HistoryConsultation/ConsultationComplete";
 import CurrentActivities from "app/pages/BimbinganAkademik/Dekan/CurrentActivities";
 import ViewActivity from "app/pages/BimbinganAkademik/Dekan/CurrentActivities/ViewActivity/ViewActivity";
@@ -207,28 +204,16 @@ const dekanRoutes = [
     element: <Page component={HistoryActivity} />,
   },
   {
-    path: "/bimbingan-akademik/dekan/history/pre-registration-approved",
-    element: <Page component={HistoryPreRegistrationApproved} />,
+    path: "/bimbingan-akademik/dekan/history/pre-registration",
+    element: <Page component={HistoryPreRegistration} />,
   },
   {
-    path: "/bimbingan-akademik/dekan/history/pre-registration-rejected",
-    element: <Page component={HistoryPreRegistrationRejected} />,
+    path: "/bimbingan-akademik/dekan/history/certificate",
+    element: <Page component={HistoryCertificate} />,
   },
   {
-    path: "/bimbingan-akademik/dekan/history/certificate-approved",
-    element: <Page component={HistoryCertificateApproved} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/history/certificate-rejected",
-    element: <Page component={HistoryCertificateRejected} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/history/grade-approved",
-    element: <Page component={HistoryGradeApproved} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/history/grade-rejected",
-    element: <Page component={HistoryGradeRejected} />,
+    path: "/bimbingan-akademik/dekan/history/grade",
+    element: <Page component={HistoryGrade} />,
   },
   {
     path: "/bimbingan-akademik/dekan/history/consultation",
