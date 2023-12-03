@@ -64,8 +64,8 @@ import ReviewCertificate from "app/pages/BimbinganAkademik/Kaprodi/ReviewActivit
 import ReviewCertificateStudent from "app/pages/BimbinganAkademik/Kaprodi/ReviewActivities/ReviewCertificate/ReviewCertificateStudent";
 import ReviewGrade from "app/pages/BimbinganAkademik/Kaprodi/ReviewActivities/ReviewGrade";
 import ReviewGradeStudent from "app/pages/BimbinganAkademik/Kaprodi/ReviewActivities/ReviewGrade/ReviewGradeStudent";
-import StudentConsultation from "app/pages/BimbinganAkademik/Kaprodi/ReviewActivities/StudentConsultation";
-import ReplyConsultation from "app/pages/BimbinganAkademik/Kaprodi/ReviewActivities/StudentConsultation/ReplyConsultation/Consultation";
+import StudentConsultation from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/StudentConsultation";
+import ReplyConsultation from "app/pages/BimbinganAkademik/Dekan/ReviewActivities/StudentConsultation/ReplyConsultation/Consultation";
 import SupervisorStudentProfile from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/StudentProfile/StudentProfile";
 import SupervisorStudentGradeDashboard from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/StudentProfile/StudentGradeDashboard";
 import SupervisorStudentGrade from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/StudentProfile/StudentGradeDashboard/StudentGrade";
