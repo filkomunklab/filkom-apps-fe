@@ -13,6 +13,9 @@ import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const requiredStyle = {
   color: "red",
@@ -53,19 +56,41 @@ const style2 = {
 };
 
 const Consultation = () => {
+  const [supervisorData, setSupervisorData] = useState("");
+  const [kaprodiData, setKaprodiData] = useState("");
+  const [dekanData, setDekanData] = useState("");
+
   const [topic, setTopic] = useState("");
   const [receiver, setReceiver] = useState("");
-  const [message, setMessage] = useState("");
+  const [description, setDescription] = useState("");
+
   const [showLabel, setShowLabel] = useState(true);
   const [showLabel2, setShowLabel2] = useState(true);
 
   const [openFirstModal, setOpenFirstModal] = React.useState(false);
   const [openSecondModal, setOpenSecondModal] = React.useState(false);
+  const [isMounted, setIsMounted] = useState(true);
+  const [openErrorModal, setOpenErrorModal] = React.useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleOpenFirstModal = () => setOpenFirstModal(true);
+  const handleOpenErrorModal = () => setOpenErrorModal(true);
+  const handleCloseErrorModal = () => setOpenErrorModal(false);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
   const handleOpenSecondModal = () => setOpenSecondModal(true);
-  const handleCloseSecondModal = () => setOpenSecondModal(false);
+  const handleCloseSecondModal = () => {
+    if (isMounted) {
+      setOpenSecondModal(false);
+    }
+  };
+
+  useEffect(() => {
+    setIsMounted(true);
+
+    return () => {
+      setIsMounted(false);
+    };
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -77,20 +102,126 @@ const Consultation = () => {
     };
   }, [handleOpenSecondModal]);
 
-  const handleSubmitFirstModal = () => {
+  const handleSubmitFirstModal = async () => {
     handleCloseFirstModal();
+    setLoading(true);
 
-    setTopic("");
-    setReceiver("");
-    setShowLabel(true);
-    setShowLabel2(true);
-    setMessage("");
+    const arrayReceiver = receiver.split("|");
+    const receiver_nik = arrayReceiver[0];
+    const receiver_name = arrayReceiver[1];
 
-    handleOpenSecondModal();
+    const consultationData = {
+      topic,
+      receiver_name,
+      receiver_nik,
+      student_arrival_year: informationStudent.arrival_Year,
+      student_major: informationStudent.major,
+      student_name: `${informationStudent.firstName} ${informationStudent.lastName}`,
+      student_nim: informationStudent.nim,
+      supervisor_name: `${supervisorData.firstName} ${supervisorData.lastName}`,
+      description: description,
+    };
+    // console.log("consultationData: ", consultationData);
+
+    try {
+      const consultationResult = await axios.post(
+        `${BASE_URL_API}/academic-consultation`,
+        consultationData
+      );
+      // console.log("ini yang nanti di post: ", consultationResult);
+
+      if (consultationResult.data.status === "OK") {
+        handleOpenSecondModal();
+        setTopic("");
+        setReceiver("");
+        setShowLabel(true);
+        setShowLabel2(true);
+        setDescription("");
+
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log("ini error: ", error.consultationResult);
+      console.error("Error response:", error);
+      handleOpenErrorModal();
+      setLoading(false);
+    }
   };
+
+  const [informationStudent, setInformationStudent] = useState([]);
+
+  const getInformationStudent = async () => {
+    try {
+      const result = await axios.get(
+        `${BASE_URL_API}/student/${
+          JSON.parse(localStorage.getItem("user")).nim
+        }`
+      );
+      // console.log("ini data by nim", result);
+
+      if (result.data.status === "OK") {
+        const response1 = await axios.get(
+          `${BASE_URL_API}/employee/profile/${result.data.data.employeeId}` //employeeId itu nik dosen
+        );
+        // console.log("ini response1.data", response1.data);
+        const response2 = await axios.get(
+          `${BASE_URL_API}/employee/head/${result.data.data.major}`
+        );
+        // console.log("ini response2.data:", response2.data);
+
+        if (response1.data.status === "OK") {
+          const supervisorData = response1.data.data;
+          setSupervisorData(supervisorData);
+        } else {
+          console.log(response1);
+        }
+
+        if (response2.data.status === "OK") {
+          const kaprodiData = response2.data.data.find(
+            (item) => item.role === "kaprodi"
+          );
+          setKaprodiData(kaprodiData);
+          const dekanData = response2.data.data.find(
+            (item) => item.role === "dekan"
+          );
+          setDekanData(dekanData);
+        } else {
+          console.log(response2);
+        }
+        setInformationStudent(result.data.data);
+      } else {
+        console.log(result);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      console.error("Error response:", error.response);
+    }
+  };
+
+  useEffect(() => {
+    getInformationStudent();
+  }, []);
 
   return (
     <div>
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(34, 34, 34, 0.7)",
+            zIndex: 2003,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )}
       <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
         Consultation
       </Typography>
@@ -101,9 +232,9 @@ const Consultation = () => {
               <RTypography>Student Name</RTypography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Siregar, Marchelino Feraldy
+                {informationStudent.lastName}, {informationStudent.firstName}
               </Typography>
             </Paper>
           </Stack>
@@ -115,9 +246,11 @@ const Consultation = () => {
               <RTypography>Supervisor Name</RTypography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Poluan, Jeremy Kenny, S.Kom, MBA
+                {supervisorData
+                  ? `${supervisorData.lastName}, ${supervisorData.firstName}`
+                  : "-"}
               </Typography>
             </Paper>
           </Stack>
@@ -129,9 +262,15 @@ const Consultation = () => {
               <RTypography>Major</RTypography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Informatics
+                {informationStudent.major === "IF"
+                  ? "Informatika"
+                  : informationStudent.major === "SI"
+                  ? "Sistem Informasi"
+                  : informationStudent.major === "DKV"
+                  ? "Teknologi Informasi"
+                  : informationStudent.major}
               </Typography>
             </Paper>
           </Stack>
@@ -143,9 +282,9 @@ const Consultation = () => {
               <RTypography>Arrival Year</RTypography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                2020
+                {informationStudent.arrival_Year}
               </Typography>
             </Paper>
           </Stack>
@@ -192,20 +331,44 @@ const Consultation = () => {
                 shrink: false,
               }}
             >
-              <MenuItem value="dospem">
-                Dosen Pembimbing (Di isi Otomatis)
+              {supervisorData ? (
+                (supervisorData.firstName === kaprodiData.firstName &&
+                  supervisorData.lastName === kaprodiData.lastName) ||
+                (supervisorData.firstName === dekanData.firstName &&
+                  supervisorData.lastName === dekanData.lastName) ? (
+                  ""
+                ) : (
+                  <MenuItem
+                    value={`${supervisorData.nik}|${supervisorData.lastName}, ${supervisorData.firstName}`}
+                  >
+                    {`${supervisorData.lastName}, ${supervisorData.firstName}`}
+                  </MenuItem>
+                )
+              ) : (
+                ""
+              )}
+              {/* <MenuItem value="dospem">
+                {supervisorData
+                  ? `${supervisorData.lastName}, ${supervisorData.firstName}`
+                  : "-"}
+              </MenuItem> */}
+              <MenuItem
+                value={`${kaprodiData.nik}|${kaprodiData.lastName}, ${kaprodiData.firstName}`}
+              >
+                {kaprodiData.lastName}, {kaprodiData.firstName}
               </MenuItem>
-              <MenuItem value="kaprodi">
-                Kepala Program Study (Di isi Otomatis)
+              <MenuItem
+                value={`${dekanData.nik}|${dekanData.lastName}, ${dekanData.firstName}`}
+              >
+                {dekanData.lastName}, {dekanData.firstName}
               </MenuItem>
-              <MenuItem value="dekan">Dekan (Di isi Otomatis)</MenuItem>
             </TextField>
           </Stack>
         </Grid>
 
         <Grid item xs={12}>
           <Stack spacing={2}>
-            <Typography>Message</Typography>
+            <Typography>Description</Typography>
             <TextField
               sx={{ backgroundColor: "white" }}
               id="outlined-basic"
@@ -213,9 +376,9 @@ const Consultation = () => {
               placeholder="Enter message ..."
               fullWidth
               multiline
-              value={message}
+              value={description}
               onChange={(event) => {
-                setMessage(event.target.value);
+                setDescription(event.target.value);
               }}
             />
           </Stack>
@@ -233,30 +396,6 @@ const Consultation = () => {
                 marginTop: "20px",
               }}
             >
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="/bimbingan-akademik/consultation/"
-              >
-                <Button
-                  sx={{
-                    backgroundColor: "darkgrey",
-                    borderRadius: "24px",
-                    color: "black",
-                    whiteSpace: "nowrap",
-                    minWidth: "132px",
-                    fontSize: "12px",
-                    padding: "10px",
-                    marginRight: "24px",
-
-                    "&:hover": {
-                      backgroundColor: "grey",
-                    },
-                  }}
-                >
-                  Cancel
-                </Button>
-              </Link>
-
               <Button
                 onClick={handleOpenFirstModal}
                 sx={{
@@ -268,7 +407,6 @@ const Consultation = () => {
                   fontSize: "12px",
                   padding: "10px",
                   gap: "6px",
-
                   "&:hover": {
                     backgroundColor: "#025ED8",
                   },
@@ -373,6 +511,43 @@ const Consultation = () => {
                     style={{ marginTop: "16px", marginBottom: "20px" }}
                   >
                     You have successfully made a consultation request.
+                  </Typography>
+                </div>
+              </Modal>
+              <Modal
+                open={openErrorModal}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <div style={style2}>
+                  <IconButton
+                    edge="end"
+                    color="#D9D9D9"
+                    onClick={handleCloseErrorModal}
+                    aria-label="close"
+                    sx={{
+                      position: "absolute",
+                      top: "10px",
+                      right: "20px",
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                  <Typography
+                    id="modal-modal-title"
+                    variant="h4"
+                    component="h2"
+                    sx={{
+                      fontWeight: 600,
+                    }}
+                  >
+                    Error Submission!
+                  </Typography>
+                  <Typography
+                    id="modal-modal-description"
+                    style={{ marginTop: "16px", marginBottom: "20px" }}
+                  >
+                    Error: Failed to create Consultation. Please try again.
                   </Typography>
                 </div>
               </Modal>
