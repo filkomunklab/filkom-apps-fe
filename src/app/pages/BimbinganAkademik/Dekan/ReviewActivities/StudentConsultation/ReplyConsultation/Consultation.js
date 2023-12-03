@@ -11,11 +11,12 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import Div from "@jumbo/shared/Div";
 import SendIcon from "@mui/icons-material/Send";
 import { format } from "date-fns";
+import { to } from "react-spring";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -54,15 +55,24 @@ const style = {
 };
 
 const Consultation = () => {
-  const [topic, setTopic] = useState("");
-  const [receiver, setReceiver] = useState("");
-  const [message, setMessage] = useState("");
-  const [showLabel, setShowLabel] = useState(true);
-  const [showLabel2, setShowLabel2] = useState(true);
   const [status, setStatus] = useState("Waiting");
 
   const [openFirstModal, setOpenFirstModal] = React.useState(false);
   const [openSecondModal, setOpenSecondModal] = React.useState(false);
+
+  const { state } = useLocation();
+  const consultationDetails = state ? state.consultationDetails : {};
+  const {
+    studentName,
+    supervisorName,
+    studentMajor,
+    studentArrivalYear,
+    topic,
+    receiverName,
+    description,
+  } = consultationDetails;
+
+  console.log("ini", consultationDetails);
 
   const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
@@ -102,13 +112,6 @@ const Consultation = () => {
   const handleSubmitFirstModal = () => {
     handleCloseFirstModal();
     setStatus("Complete");
-
-    setTopic("");
-    setReceiver("");
-    setShowLabel(true);
-    setShowLabel2(true);
-    setMessage("");
-
     handleOpenSecondModal();
   };
 
@@ -130,9 +133,9 @@ const Consultation = () => {
               <RTypography>Student Name</RTypography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Dengah, Julio Franco
+                {studentName}
               </Typography>
             </Paper>
           </Stack>
@@ -143,9 +146,9 @@ const Consultation = () => {
               <RTypography>Supervisor Name</RTypography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Poluan, Jeremy Kenny
+                {supervisorName}
               </Typography>
             </Paper>
           </Stack>
@@ -153,12 +156,12 @@ const Consultation = () => {
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <RTypography>Major</RTypography>
+              <RTypography>student_major</RTypography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Informatics
+                {studentMajor}
               </Typography>
             </Paper>
           </Stack>
@@ -169,9 +172,9 @@ const Consultation = () => {
               <RTypography>Arrival Year</RTypography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                2020
+                {studentArrivalYear}
               </Typography>
             </Paper>
           </Stack>
@@ -182,9 +185,9 @@ const Consultation = () => {
               <RTypography>Topic of Discussion</RTypography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Academic
+                {topic}
               </Typography>
             </Paper>
           </Stack>
@@ -195,9 +198,9 @@ const Consultation = () => {
               <RTypography>Consultation Receiver</RTypography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Poluan, Jeremy Kenny
+                {receiverName}
               </Typography>
             </Paper>
           </Stack>
@@ -205,24 +208,19 @@ const Consultation = () => {
         <Grid item xs={12}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <RTypography>Message</RTypography>
+              <RTypography> Description</RTypography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Syalom sir, mohon maaf mengganggu, saya ingin melakukan
-                konsultasi terkait perkuliahan saya. Saya mengalami krisis dalam
-                hal keuangan. orang tua saya di PHK dan saya rasa saya tidak
-                busa melanjutkan perkuliahan saya. Saya ingin membicarakan hal
-                ini secara langsung dengan sir, selaku dosen pembimbing saya.
-                Apakah sir punya waktu luang? Terima kasih sebelumnya.
+                {description}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
       </Grid>
       <Grid item xs={12}>
-        <Stack spacing={2} sx={{ paddingTop: 8, marginTop: 5 }}>
+        <Stack spacing={2} sx={{ paddingTop: 6 }}>
           <Grid sx={{ display: "flex", direction: "row" }}>
             <Typography variant="h5" sx={{ fontWeight: 600 }}>
               Status:
@@ -258,7 +256,6 @@ const Consultation = () => {
                   <Paper
                     elevation={0}
                     variant="outlined"
-                    fullWidth
                     sx={{
                       borderColor: "#005FDB",
                       padding: "12px",
@@ -272,6 +269,7 @@ const Consultation = () => {
                 )}
 
                 <TextField
+                  size="small"
                   id="outlined-basic"
                   variant="outlined"
                   placeholder="Enter Message..."

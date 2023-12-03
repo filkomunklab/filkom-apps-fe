@@ -16,18 +16,33 @@ import {
 import Div from "@jumbo/shared/Div";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const data = Array.from(Array(1).keys()).map((item, index) => ({
-  submission_date: `Sep 23, 2022`,
-  student_name: `Dengah, Julio Franco`,
-  topic: `Akademic`,
-  message: `Syalom sir, mohon maaf mengganggu, saya ingin melakukan konsultasi terkait perkuliahan saya. Saya mengalami krisis dalam hal keuangan`,
-  status: `Waiting`,
-}));
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
+import { Link } from "react-router-dom";
 
 const StudentConsultation = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [dataWaiting, setDataWaiting] = useState([]);
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    getDataWaiting();
+  }, []);
+
+  const getDataWaiting = async () => {
+    try {
+      const result = await axios.get(
+        `${BASE_URL_API}/academic-consultation/employee/${
+          JSON.parse(localStorage.getItem("user")).nik
+        }`
+      );
+      console.log("ini isi result.data", result.data);
+      setDataWaiting(result.data.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -38,44 +53,35 @@ const StudentConsultation = () => {
     setPage(0);
   };
 
-  const TableHeading = ({ index }) => {
-    const style = { fontWeight: 400 };
-    return (
-      <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-        <TableCell sx={[style]}>Number</TableCell>
-        <TableCell sx={[style]}>Submission Date</TableCell>
-        <TableCell sx={[style]}>Student Name</TableCell>
-        <TableCell sx={[style]}>Topic</TableCell>
-        <TableCell sx={[style]}>Message</TableCell>
-        <TableCell sx={[style]}>Status</TableCell>
-      </TableRow>
-    );
-  };
-
-  const TableItem = ({ item, index }) => {
-    const navigate = useNavigate();
-    const handleButtonNavigate = () => {
-      navigate(
-        `/bimbingan-akademik/dekan/review-activities/consultation/${item.student_name}`
+  const handleNavigate = async (value) => {
+    try {
+      // Assuming you have an endpoint to fetch the details of a specific consultation
+      const consultationDetailsResult = await axios.get(
+        `${BASE_URL_API}/academic-consultation/detail/${value.id}`
       );
-    };
-    return (
-      <TableRow
-        sx={{
-          ":hover": {
-            backgroundColor: "#E5F0FF",
+      // console.log("hao ", consultationDetailsResult);
+
+      navigate(
+        `/bimbingan-akademik/dekan/review-activities/consultation/${value.id}`,
+        {
+          state: {
+            consultationDetails: {
+              studentName: consultationDetailsResult.data.data.student_name,
+              supervisorName:
+                consultationDetailsResult.data.data.supervisor_name,
+              studentMajor: consultationDetailsResult.data.data.student_major,
+              studentArrivalYear:
+                consultationDetailsResult.data.data.student_arrival_year,
+              topic: consultationDetailsResult.data.data.topic,
+              receiverName: consultationDetailsResult.data.data.receiver_name,
+              description: consultationDetailsResult.data.data.description,
+            },
           },
-        }}
-        onClick={handleButtonNavigate}
-      >
-        <TableCell>{index + 1}</TableCell>
-        <TableCell>{item.submission_date}</TableCell>
-        <TableCell>{item.student_name}</TableCell>
-        <TableCell>{item.topic}</TableCell>
-        <TableCell>{item.message}</TableCell>
-        <TableCell>{item.status}</TableCell>
-      </TableRow>
-    );
+        }
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
@@ -103,47 +109,77 @@ const StudentConsultation = () => {
           }}
           component={Paper}
         >
-          <Table stickyHeader>
-            <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+          <Table>
+            <TableHead
+              sx={{
+                position: "-webkit-sticky",
+                position: "sticky",
+                top: 0,
+                backgroundColor: "rgba(26, 56, 96, 0.1)",
+              }}
+            >
               <TableRow>
-                <TableCell size="small" sx={{ width: "30px" }}>
-                  Number
-                </TableCell>
-                <TableCell size="small" sx={{ width: "60px" }}>
-                  Submission Date
-                </TableCell>
-                <TableCell size="small" sx={{ width: "130px" }}>
-                  Student Name
-                </TableCell>
-                <TableCell size="small" sx={{ width: "40px" }}>
-                  Topic
-                </TableCell>
-                <TableCell size="small" sx={{ width: "300px" }}>
-                  Message
-                </TableCell>
-                <TableCell size="small" sx={{ width: "30px" }}>
-                  Status
-                </TableCell>
+                <TableCell>Number</TableCell>
+                <TableCell>Submission Date</TableCell>
+                <TableCell>Student Name</TableCell>
+                <TableCell>Topic</TableCell>
+                <TableCell>Message</TableCell>
+                <TableCell>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => {
-                  const maxWords = 12;
-                  const messageWords = item.message.split(" ");
-
-                  const truncatedMessage =
-                    messageWords.length > maxWords
-                      ? messageWords.slice(0, maxWords).join(" ") + "..."
-                      : item.message;
-
-                  const truncatedItem = { ...item, message: truncatedMessage };
-
-                  return (
-                    <TableItem item={truncatedItem} index={index} key={index} />
-                  );
-                })}
+              {dataWaiting &&
+                dataWaiting.map((value, index) =>
+                  value.status === "Waiting" ? (
+                    <TableRow
+                      key={value.id}
+                      onClick={() => handleNavigate(value)}
+                      sx={{
+                        ":hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#338CFF21",
+                          transition: "0.3s",
+                          transitionTimingFunction: "ease-in-out",
+                          transitionDelay: "0s",
+                          transitionProperty: "all",
+                        },
+                      }}
+                    >
+                      <TableCell align="right" sx={{ width: "80px" }}>
+                        {index + 1}
+                      </TableCell>
+                      <TableCell align="right" sx={{ width: "145px" }}>
+                        {new Date(value.createdAt).toLocaleDateString("en-US", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </TableCell>
+                      <TableCell sx={{ width: "250px" }}>
+                        {value.student_name}
+                      </TableCell>
+                      <TableCell sx={{ width: "160px" }}>
+                        {value.topic}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          maxWidth: "300px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {value.description}
+                      </TableCell>
+                      <TableCell
+                        sx={{ color: "#FFCC00", width: "100px", align: "left" }}
+                      >
+                        {value.status}
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    ""
+                  )
+                )}
             </TableBody>
           </Table>
         </TableContainer>
