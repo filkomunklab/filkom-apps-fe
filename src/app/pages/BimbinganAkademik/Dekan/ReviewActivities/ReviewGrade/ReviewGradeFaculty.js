@@ -1,3 +1,4 @@
+import { BASE_URL_API } from "@jumbo/config/env";
 import Div from "@jumbo/shared/Div";
 import {
   FormControl,
@@ -17,6 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
+import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -81,6 +83,30 @@ const ReviewGradeFaculty = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const getGradeList = async() =>{
+    try{
+      const headers = {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer token_apa`,
+      }
+
+      const response = await axios(`${BASE_URL_API}/bla/bla/bla`,{headers})
+
+      const {status, message, data, code} = response.data;
+
+      if(status === 'OK'){ //isi status atau code tergantung API
+        //simpan dalam usestate contoh:
+        //setGradeList = data
+        //tambahkan handle lain jika perlu
+      }else{
+        //tambah handler jika respon lain, kalau tidak perlu hapus saja
+        console.log(response)
+      }
+    }catch(error){
+      console.log(error)
+    }
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

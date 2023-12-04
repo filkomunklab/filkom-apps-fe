@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
+import { BASE_URL_API } from "@jumbo/config/env";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -39,6 +41,58 @@ const CertificateStudent = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isReject, setIsReject] = useState(false);
   const [isApprove, setIsApprove] = useState(false);
+
+  const getCertificate = async() =>{
+    try{
+      const headers = {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer token_apa`,
+      }
+
+      const response = await axios(`${BASE_URL_API}/bla/bla/bla`,{headers})
+
+      const {status, message, data, code} = response.data;
+
+      if(status === 'OK'){ //isi status atau code tergantung API
+        //simpan dalam usestate contoh:
+        //setCertificate = data
+        //tambahkan handle lain jika perlu
+      }else{
+        //tambah handler jika respon lain, kalau tidak perlu hapus saja
+        console.log(response)
+      }
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  const certificationAction = async()=>{
+    try{
+      const headers = {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer token_apa`,
+      }
+      let response;
+
+      if('approve'){
+        response = await axios.post(`${BASE_URL_API}/bla/bla/bla`,{
+          message: 'message-data',
+          etc: 'etc'
+        }, {headers})
+      }else if('reject'){
+        response = await axios.post(`${BASE_URL_API}/bla/bla/bla`,{
+          message: 'message-data',
+          etc: 'etc'
+        }, {headers})
+      }
+
+      // jika tidak akan melakukan handle terhadap response maka hapus saja "const response =", jadi sisa await dst...
+      console.log(response)
+
+    }catch(error){
+      console.log(error)
+    }
+  }
 
   const handleSubmit = () => {
     setIsModalVisible(!isModalVisible);

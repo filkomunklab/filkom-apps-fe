@@ -7,8 +7,10 @@ import {
   experimentalStyled as styled,
   Paper,
 } from "@mui/material";
-import { format } from "date-fns";
 import { Link, useNavigate } from "react-router-dom";
+import { BASE_URL_API } from "@jumbo/config/env";
+import axios from "axios";
+import { format } from "date-fns";
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -20,31 +22,36 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 const ConsultationComplete = () => {
   const navigate = useNavigate();
+  const currentDate = format(new Date(), "dd/MM/yyyy HH:mm");
+
+  const getConsultation = async() =>{
+    try{
+      const headers = {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer token_apa`,
+      }
+
+      const response = await axios(`${BASE_URL_API}/bla/bla/bla`,{headers})
+
+      const {status, message, data, code} = response.data;
+
+      if(status === 'OK'){ //isi status atau code tergantung API
+        //simpan dalam usestate contoh:
+        //setConsultation = data
+        //tambahkan handle lain jika perlu
+      }else{
+        //tambah handler jika respon lain, kalau tidak perlu hapus saja
+        console.log(response)
+      }
+    }catch(error){
+      console.log(error)
+    }
+  }
 
   const handleClick = (event) => {
     event.preventDefault();
     navigate(-1);
   };
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedFileName, setSelectedFileName] = useState("");
-
-  const [openFirstModal, setOpenFirstModal] = React.useState(false);
-  const [openSecondModal, setOpenSecondModal] = React.useState(false);
-
-  const handleOpenSecondModal = () => setOpenSecondModal(true);
-  const handleCloseSecondModal = () => setOpenSecondModal(false);
-
-  const currentDate = format(new Date(), "dd/MM/yyyy HH:mm");
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleCloseSecondModal();
-    }, 5000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [handleOpenSecondModal]);
 
   return (
     <div>
