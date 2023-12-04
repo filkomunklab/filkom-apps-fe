@@ -220,7 +220,7 @@ const PreRegistrationApproved = () => {
               <Typography variant="h5">:</Typography>
             </Grid>
             <Grid item xs={7} paddingLeft={1}>
-              <Typography variant="h5">
+              <Typography variant="h5" textAlign={"justify"}>
                 Saya ingin mengambil kembali mata kuliah “Pengantar Basisdata/
                 Introduction to Database” karena tidak pass di pengambilan
                 sebelumnya
@@ -229,19 +229,6 @@ const PreRegistrationApproved = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Stack spacing={2} sx={{ marginTop: 3, paddingBottom: 2 }}>
-        <Typography variant="h5" sx={{ fontWeight: 600 }}>
-          Comments from Supervisor
-        </Typography>
-        <Paper elevation={0} variant="outlined" fullWidth>
-          <Typography variant="body1" sx={{ p: 2 }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            commodo nunc in ligula tempus, sed feugiat justo vestibulum. Etiam
-            pellentesque, odio vel facilisis posuere, urna velit gravida est, eu
-            pharetra massa tortor eget quam.
-          </Typography>
-        </Paper>
-      </Stack>
       <Grid item xs={12}>
         <TableContainer
           sx={{
@@ -263,6 +250,19 @@ const PreRegistrationApproved = () => {
           </Table>
         </TableContainer>
       </Grid>
+      <Stack spacing={2} sx={{ marginTop: 3, paddingBottom: 2 }}>
+        <Typography variant="h5" sx={{ fontWeight: 600 }}>
+          Comments from Supervisor
+        </Typography>
+        <Paper elevation={0} variant="outlined" fullWidth>
+          <Typography variant="body1" sx={{ p: 2 }}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+            commodo nunc in ligula tempus, sed feugiat justo vestibulum. Etiam
+            pellentesque, odio vel facilisis posuere, urna velit gravida est, eu
+            pharetra massa tortor eget quam.
+          </Typography>
+        </Paper>
+      </Stack>
     </div>
   );
 };
