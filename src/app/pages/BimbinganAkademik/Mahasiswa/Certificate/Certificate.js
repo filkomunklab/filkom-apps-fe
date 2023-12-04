@@ -196,7 +196,7 @@ const Certificate = () => {
       )}
       <Typography
         sx={{
-          fontSize: "24px",
+          fontSize: { xs: "20px", md: "24px" },
           fontWeight: 500,
           paddingBottom: "15px",
         }}
