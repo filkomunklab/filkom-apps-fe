@@ -143,11 +143,25 @@ const ViewConsultation = () => {
     handleOpenSecondModal();
   };
 
+  const handleBreadcrumbsClick = () => {
+    const { role } = JSON.parse(localStorage.getItem("user"));
+    let path = "";
+
+    if (role.includes("DEKAN")) {
+      path = "/bimbingan-akademik/dekan/current-activities";
+    } else if (role.includes("KAPRODI")) {
+      path = "/bimbingan-akademik/kaprodi/current-activities";
+    } else {
+      path = "/bimbingan-akademik/dosen-pembimbing/current-activities";
+    }
+    window.location.href = path;
+  };
+
   return (
     <Div>
       <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
-        <StyledLink to="/bimbingan-akademik/kaprodi/review-activities/consultation/">
-          Student Consultation
+        <StyledLink onClick={handleBreadcrumbsClick}>
+          Current Activities
         </StyledLink>
         <Typography color="text.primary">View Consultation</Typography>
       </Breadcrumbs>

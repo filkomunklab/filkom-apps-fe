@@ -1,7 +1,27 @@
+import React, { useEffect, useState } from "react";
 import Div from "@jumbo/shared/Div";
 import { Typography, Paper, Grid } from "@mui/material";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const Profile = () => {
+  const [dataProfile, setDataProfile] = useState([]);
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  const getProfile = async () => {
+    try {
+      const { nik } = JSON.parse(localStorage.getItem("user"));
+      const result = await axios.get(`${BASE_URL_API}/employee/profile/${nik}`);
+      console.log("ini isi result.data", result.data.data);
+      setDataProfile(result.data.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <Div>
       <Paper elevation={1} sx={{ mb: 5 }}>
@@ -19,31 +39,31 @@ const Profile = () => {
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Full Name</Typography>
             <Typography variant="h6" sx={textSyle}>
-              Sean Andreaz
+              {`${dataProfile.lastName}, ${dataProfile.firstName}`}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">NIDN</Typography>
             <Typography variant="h6" sx={textSyle}>
-              302919290000
+              {dataProfile.nidn}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Email</Typography>
             <Typography variant="h6" sx={textSyle}>
-              iamsean910@gmail.com
+              {dataProfile.email}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Phone</Typography>
             <Typography variant="h6" sx={textSyle}>
-              082919912400
+              {dataProfile.phoneNum}
             </Typography>
           </Grid>
           <Grid item xs={12} md={12}>
             <Typography variant="h6">Address</Typography>
             <Typography variant="h6" sx={textSyle}>
-              Perum Agape griya blok K/10, Tumaluntung, Kabupaten Minahasa Utara
+              {dataProfile.Address}
             </Typography>
           </Grid>
         </Grid>

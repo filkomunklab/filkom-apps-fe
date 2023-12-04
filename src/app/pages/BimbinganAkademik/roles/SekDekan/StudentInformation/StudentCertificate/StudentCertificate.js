@@ -20,7 +20,7 @@ import SearchLocal from "app/shared/SearchLocal";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL_API } from "../../../../../../@jumbo/config/env";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",

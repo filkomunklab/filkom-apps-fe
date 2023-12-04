@@ -16,7 +16,7 @@ import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
-import { BASE_URL_API } from "../../../../../@jumbo/config/env";
+import { BASE_URL_API } from "@jumbo/config/env";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const requiredStyle = {
