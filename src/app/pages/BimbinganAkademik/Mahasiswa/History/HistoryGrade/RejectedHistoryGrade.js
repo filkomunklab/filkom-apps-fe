@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Table,
@@ -6,6 +6,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
   Breadcrumbs,
   experimentalStyled as styled,
@@ -13,6 +14,7 @@ import {
   Container,
   Stack,
   Paper,
+  Grid,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -25,77 +27,55 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const tableData1 = [
-  {
-    number: 1,
-    name: "[MATH000] Matematika/ Mathematics",
-    parallel: "A",
-    lecturer: "Sandag, Green A",
-    grade: "A (95)",
-    retrieval: 1,
-  },
-  {
-    number: 2,
-    name: "[IF1112] Dasar Aljabar Linear/ Aljabar Linear Fundamental",
-    parallel: "F",
-    lecturer: "Sondakh, Debby Erce",
-    grade: "A- (87)",
-    retrieval: 1,
-  },
-  {
-    number: 3,
-    name: "[MATH000] Matematika/ Mathematics",
-    parallel: "A",
-    lecturer: "Sengkey, Virginia",
-    grade: "A (95)",
-    retrieval: 1,
-  },
-  {
-    number: 4,
-    name: "[IF1112] Dasar Aljabar Linear/ Aljabar Linear Fundamental",
-    parallel: "C",
-    lecturer: "Sandag, Green A",
-    grade: "B (70)",
-    retrieval: 2,
-  },
-  {
-    number: 5,
-    name: "[MATH000] Matematika/ Mathematics",
-    parallel: "B",
-    lecturer: "Adam, Stenly",
-    grade: "A (95)",
-    retrieval: 1,
-  },
-  {
-    number: 6,
-    name: "[IF1112] Dasar Aljabar Linear/ Aljabar Linear Fundamental",
-    parallel: "A",
-    lecturer: "Sandag, Green A",
-    grade: "A- (87)",
-    retrieval: 1,
-  },
-  {
-    number: 7,
-    name: "[FILG182] Teladan Kehidupan II/ The Exemplary Living II",
-    parallel: "C",
-    lecturer: "Sandag, Green A",
-    grade: "B (70)",
-    retrieval: 2,
-  },
-];
+const data = Array.from(Array(8).keys()).map((item, index) => ({
+  subject_name: `Keterampilan Komputer Dasar/ Basic Computer Skill`,
+  parallel: `C`,
+  lecturer: `Sompie, Dimitry Virgy`,
+  grade: `94`,
+  grade_in_alphabet: `A`,
+  retrieval_to: `1`,
+}));
 
-const TableItem = ({ data }) => (
-  <TableRow>
-    <TableCell>{data.number}</TableCell>
-    <TableCell>{data.name}</TableCell>
-    <TableCell>{data.parallel}</TableCell>
-    <TableCell>{data.lecturer}</TableCell>
-    <TableCell>{data.grade}</TableCell>
-    <TableCell>{data.retrieval}</TableCell>
-  </TableRow>
-);
+const TableHeading = ({ index }) => {
+  const style = { fontWeight: 400 };
+  return (
+    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
+      <TableCell sx={[style]}>Number</TableCell>
+      <TableCell sx={[style]}>Subject Name</TableCell>
+      <TableCell sx={[style]}>Parallel</TableCell>
+      <TableCell sx={[style]}>Lecturer</TableCell>
+      <TableCell sx={[style]}>Grade</TableCell>
+      <TableCell sx={[style]}>Retrieval to-</TableCell>
+    </TableRow>
+  );
+};
 
-const RejectedHistoryGrade = () => {
+const TableItem = ({ item, index }) => {
+  return (
+    <TableRow>
+      <TableCell>{index + 1}</TableCell>
+      <TableCell>{item.subject_name}</TableCell>
+      <TableCell>{item.parallel}</TableCell>
+      <TableCell>{item.lecturer}</TableCell>
+      <TableCell>{item.grade}</TableCell>
+      <TableCell>{item.retrieval_to}</TableCell>
+    </TableRow>
+  );
+};
+
+const ApprovedHistoryGrade = () => {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
   const handleClick = (event) => {
     event.preventDefault();
   };
@@ -109,89 +89,157 @@ const RejectedHistoryGrade = () => {
         </Breadcrumbs>
       </div>
       <Typography
-        sx={{ fontSize: "24px", fontWeight: 500, paddingTop: "20px" }}
+        fontSize={"24px"}
+        fontWeight="500"
+        sx={{ marginBottom: 2, paddingTop: "20px" }}
       >
         Student Grades
       </Typography>
-
-      <Container sx={{ display: "flex", alignItems: "center" }}>
-        <Box sx={{ flex: 0.4 }}>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Student Name
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Supervisor Name
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Semester
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Submission Date
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Status
-          </Typography>
-        </Box>
-        <Box sx={{ flex: 0.04 }}>
-          <Typography variant="h3" fontWeight="500" sx={{ marginBottom: 2 }}>
-            :
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            :
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            :
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            :
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            :
-          </Typography>
-        </Box>
-        <Box sx={{ flex: 1 }}>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Awuy, Diany Mariska
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            Adzanu, Shaliha Alifyaa
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            1
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2 }}>
-            10 May 2000
-          </Typography>
-          <Typography variant="h5" sx={{ marginBottom: 2, color: "red" }}>
-            Rejected
-          </Typography>
-        </Box>
-      </Container>
-      <TableContainer
-        sx={{
-          overflow: "auto",
-          backgroundColor: "white",
-          borderRadius: "6px",
-        }}
-      >
-        <Table>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
-            <TableRow>
-              <TableCell sx={{ width: "80px" }}>Number</TableCell>
-              <TableCell sx={{ width: "380px" }}>Subject Name</TableCell>
-              <TableCell sx={{ width: "80px" }}>Parallel</TableCell>
-              <TableCell sx={{ width: "200px" }}>Lecturer</TableCell>
-              <TableCell sx={{ width: "120px" }}>Grade</TableCell>
-              <TableCell sx={{ width: "110px" }}>Retrieval</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tableData1.map((data, index) => (
-              <TableItem key={index} data={data} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Grid container spacing={2}>
+        <Grid item md={12} xl={12} id="detail-item">
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Title</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5" fontWeight={500}>
+                  Menang Lomba Desan Prototype
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Student Name</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">Awuy, Diany Mariska</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Supervisor Name</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">Dengah, Mesakh Leonardo</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Submission Date</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">November 14, 2023</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Approval Date</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">-</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Category</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5">Local</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Status</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5" sx={{ color: "#CA150C" }}>
+                  Rejected
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={3} xl={3}>
+                <Typography variant="h5">Descriptions</Typography>
+              </Grid>
+              <Grid item xs={1} xl={"auto"}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} paddingLeft={1}>
+                <Typography variant="h5" sx={{ textAlign: "justify" }}>
+                  Saya mengikuti lomba desain prototype website kampus yang
+                  diselenggarakan oleh Fakultas Ilmu Komputer.
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid item xs={12} paddingTop={2}>
+        <TableContainer
+          sx={{
+            maxHeight: 640,
+          }}
+          component={Paper}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableHeading />
+            </TableHead>
+            <TableBody>
+              {data
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((item, index) => (
+                  <TableItem item={item} index={index} key={index} />
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 50, 100]}
+          component={"div"}
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Grid>
       <Stack spacing={2} sx={{ marginTop: 4, paddingBottom: "80px" }}>
         <Typography variant="h5" sx={{ fontWeight: 600, paddingLeft: "2px" }}>
           Comments from Supervisor
@@ -216,4 +264,4 @@ const RejectedHistoryGrade = () => {
   );
 };
 
-export default RejectedHistoryGrade;
+export default ApprovedHistoryGrade;

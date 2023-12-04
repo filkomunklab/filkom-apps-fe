@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Stack,
@@ -6,9 +6,14 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
   Paper,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  Switch,
 } from "@mui/material";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -21,6 +26,35 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 const Activity = () => {
   const navigate = useNavigate();
+  const [isPreRegistration, setIsPreRegistration] = useState(false);
+  const [isGradeSubmission, setIsGradeSubmission] = useState(true);
+
+  const getActivity = async () => {
+    try {
+      const headers = {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer token_apa`,
+      };
+
+      const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`, {
+        headers,
+      });
+
+      const { status, message, data, code } = response.data;
+
+      if (status === "OK") {
+        //isi status atau code tergantung API
+        //simpan dalam usestate contoh:
+        //setActivity = data
+        //tambahkan handle lain jika perlu (grade, attendance, dll)
+      } else {
+        //tambah handler jika respon lain, kalau tidak perlu hapus saja
+        console.log(response);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -31,7 +65,7 @@ const Activity = () => {
     <div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Back</StyledLink>
+          <StyledLink>History</StyledLink>
           <Typography color="text.primary">Activity</Typography>
         </Breadcrumbs>
       </div>
@@ -102,6 +136,44 @@ const Activity = () => {
               </Typography>
             </Paper>
           </Stack>
+        </Grid>
+        <Grid container paddingTop={4} paddingLeft={2} gap={3}>
+          {/* <Grid item xs={12} md={6} xl={4}> */}
+          {isPreRegistration && (
+            <FormGroup sx={{ paddingLeft: "9px" }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    defaultChecked
+                    size="small"
+                    color="primary"
+                    disabled
+                  />
+                }
+                label="Add Pre-registration Page"
+                sx={{ whiteSpace: "nowrap", gap: 2 }}
+              />
+            </FormGroup>
+          )}
+          {/* </Grid> */}
+          {/* <Grid item xs={12} md={6} xl={4}> */}
+          {isGradeSubmission && (
+            <FormGroup sx={{ paddingLeft: "9px" }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    defaultChecked
+                    size="small"
+                    color="primary"
+                    disabled
+                  />
+                }
+                label="Add Grade Submission Page"
+                sx={{ whiteSpace: "nowrap", gap: 2 }}
+              />
+            </FormGroup>
+          )}
+          {/* </Grid> */}
         </Grid>
       </Grid>
     </div>
