@@ -218,13 +218,17 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
                 sx={{
                   color: "white",
                   backgroundColor: "#006AF5",
+                  "@media (max-width: 650px)": { fontSize: "8px" },
 
                   "&:hover": {
                     backgroundColor: "#025ED8",
                   },
                 }}
               >
-                See Preview <ArrowRightAltIcon />
+                See Preview
+                <ArrowRightAltIcon
+                  sx={{ "@media (max-width: 650px)": { fontSize: "0px" } }}
+                />
               </Button>
             </div>
             <PreviewPopup
@@ -1380,11 +1384,11 @@ const PreRegistration = () => {
       <div sx={{ paddingTop: "2" }}>
         <TableContainer
           sx={{
-            overflow: "auto",
-            backgroundColor: "white",
+            maxHeight: 640,
           }}
+          component={Paper}
         >
-          <Table>
+          <Table stickyHeader>
             <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
               <TableRow>
                 <TableCell sx={{ width: "50px" }}> </TableCell>
@@ -1422,7 +1426,7 @@ const PreRegistration = () => {
               </div>
             </TableBody>
           </Table>
-          <Table>
+          <Table stickyHeader>
             <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
               <TableRow>
                 <TableCell sx={{ width: "50px" }}> </TableCell>
@@ -1457,7 +1461,7 @@ const PreRegistration = () => {
               </Typography>
             </div>
           </Table>
-          <Table>
+          <Table stickyHeader>
             <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
               <TableRow>
                 <TableCell sx={{ width: "50px" }}> </TableCell>
@@ -1492,7 +1496,7 @@ const PreRegistration = () => {
               </Typography>
             </div>
           </Table>
-          <Table>
+          <Table stickyHeader>
             <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
               <TableRow>
                 <TableCell sx={{ width: "50px" }}> </TableCell>
@@ -1527,7 +1531,7 @@ const PreRegistration = () => {
               </Typography>
             </div>
           </Table>
-          <Table>
+          <Table stickyHeader>
             <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
               <TableRow>
                 <TableCell sx={{ width: "50px" }}> </TableCell>
@@ -1562,7 +1566,7 @@ const PreRegistration = () => {
               </Typography>
             </div>
           </Table>
-          <Table>
+          <Table stickyHeader>
             <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
               <TableRow>
                 <TableCell sx={{ width: "50px" }}> </TableCell>
@@ -1597,7 +1601,7 @@ const PreRegistration = () => {
               </Typography>
             </div>
           </Table>
-          <Table>
+          <Table stickyHeader>
             <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
               <TableRow>
                 <TableCell sx={{ width: "50px" }}> </TableCell>
@@ -1632,7 +1636,7 @@ const PreRegistration = () => {
               </Typography>
             </div>
           </Table>
-          <Table>
+          <Table stickyHeader>
             <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
               <TableRow>
                 <TableCell sx={{ width: "50px" }}> </TableCell>
@@ -1667,7 +1671,7 @@ const PreRegistration = () => {
               </Typography>
             </div>
           </Table>
-          <Table>
+          <Table stickyHeader>
             <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
               <TableRow>
                 <TableCell sx={{ width: "50px" }}> </TableCell>
@@ -1702,7 +1706,7 @@ const PreRegistration = () => {
               </Typography>
             </div>
           </Table>
-          <Table>
+          <Table stickyHeader>
             <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
               <TableRow>
                 <TableCell sx={{ width: "50px" }}> </TableCell>

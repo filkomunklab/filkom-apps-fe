@@ -1,22 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import {
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Breadcrumbs,
-  experimentalStyled as styled,
-  Box,
-  Container,
+  Grid,
   Stack,
   Paper,
-  Grid,
+  Typography,
+  Box,
+  Breadcrumbs,
+  experimentalStyled as styled,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -27,91 +19,36 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const data = Array.from(Array(8).keys()).map((item, index) => ({
-  subject_name: `Keterampilan Komputer Dasar/ Basic Computer Skill`,
-  parallel: `C`,
-  lecturer: `Sompie, Dimitry Virgy`,
-  grade: `94`,
-  grade_in_alphabet: `A`,
-  retrieval_to: `1`,
-}));
-
-const TableHeading = ({ index }) => {
-  const style = { fontWeight: 400 };
-  return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={[style]}>Number</TableCell>
-      <TableCell sx={[style]}>Subject Name</TableCell>
-      <TableCell sx={[style]}>Parallel</TableCell>
-      <TableCell sx={[style]}>Lecturer</TableCell>
-      <TableCell sx={[style]}>Grade</TableCell>
-      <TableCell sx={[style]}>Retrieval to-</TableCell>
-    </TableRow>
-  );
-};
-
-const TableItem = ({ item, index }) => {
-  return (
-    <TableRow>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{item.subject_name}</TableCell>
-      <TableCell>{item.parallel}</TableCell>
-      <TableCell>{item.lecturer}</TableCell>
-      <TableCell>{item.grade}</TableCell>
-      <TableCell>{item.retrieval_to}</TableCell>
-    </TableRow>
-  );
-};
-
-const ApprovedHistoryGrade = () => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+const CertificateWaiting = () => {
+  const navigate = useNavigate();
 
   const handleClick = (event) => {
     event.preventDefault();
+    navigate(-1);
   };
+  const imageUrl =
+    "https://i.pinimg.com/originals/fc/fa/29/fcfa2911e796d71f1bf6aa25ee1d8d89.jpg";
 
   return (
     <div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/history">History</StyledLink>
-          <Typography color="text.primary">Grade</Typography>
+          <StyledLink>Current Activities</StyledLink>
+          <Typography color="text.primary">Certificate</Typography>
         </Breadcrumbs>
       </div>
       <Typography
-        fontSize={"24px"}
-        fontWeight="500"
-        sx={{ marginBottom: 2, paddingTop: "20px" }}
+        sx={{
+          fontWeight: 500,
+          fontSize: { xs: "20px", md: "24px" },
+          marginBottom: 2,
+          paddingTop: "20px",
+        }}
       >
-        Student Grades
+        Certificate
       </Typography>
       <Grid container spacing={2}>
-        <Grid item md={12} xl={12} id="detail-item">
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Title</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5" fontWeight={500}>
-                  Menang Lomba Desan Prototype
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
+        <Grid item md={8} id="detail-item">
           <Grid item xs={12}>
             <Grid container>
               <Grid item xs={4} md={3} xl={3}>
@@ -186,8 +123,8 @@ const ApprovedHistoryGrade = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5" sx={{ color: "#CA150C" }}>
-                  Rejected
+                <Typography variant="h5" sx={{ color: "#FFCC00" }}>
+                  Waiting
                 </Typography>
               </Grid>
             </Grid>
@@ -209,54 +146,23 @@ const ApprovedHistoryGrade = () => {
             </Grid>
           </Grid>
         </Grid>
+        <Grid item md={4} id="certificate-item">
+          <Box sx={{ flex: 1 }}>
+            <img
+              src={imageUrl}
+              alt="Certificate-pic"
+              style={{ maxWidth: "100%", scale: "0.8" }}
+            />
+          </Box>
+        </Grid>
       </Grid>
-      <Grid item xs={12} paddingTop={2}>
-        <TableContainer
-          sx={{
-            maxHeight: 640,
-          }}
-          component={Paper}
-        >
-          <Table stickyHeader>
-            <TableHead>
-              <TableHeading />
-            </TableHead>
-            <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          component={"div"}
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Grid>
-      <Stack spacing={2} sx={{ marginTop: 4, paddingBottom: "80px" }}>
-        <Typography variant="h5" sx={{ fontWeight: 600, paddingLeft: "2px" }}>
+      <Stack spacing={2} sx={{ padding: 3, marginTop: 4 }}>
+        <Typography variant="h5" sx={{ fontWeight: 600 }}>
           Comments from Supervisor
         </Typography>
-        <Paper
-          sx={{
-            borderRadius: "8px",
-          }}
-          elevation={0}
-          variant="outlined"
-          fullWidth
-        >
+        <Paper elevation={0} variant="outlined" fullWidth>
           <Typography variant="body1" sx={{ p: 2 }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            commodo nunc in ligula tempus, sed feugiat justo vestibulum. Etiam
-            pellentesque, odio vel facilisis posuere, urna velit gravida est, eu
-            pharetra massa tortor eget quam.
+            none
           </Typography>
         </Paper>
       </Stack>
@@ -264,4 +170,4 @@ const ApprovedHistoryGrade = () => {
   );
 };
 
-export default ApprovedHistoryGrade;
+export default CertificateWaiting;
