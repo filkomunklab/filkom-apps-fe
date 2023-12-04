@@ -147,16 +147,19 @@ const GradeSubmission = () => {
 
   return (
     <div>
-      <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
+      <Typography
+        sx={{ fontSize: { xs: "20px", md: "24px" }, fontWeight: 500 }}
+      >
         Grade Submission
       </Typography>
       <Typography
         sx={{
           paddingTop: "22px",
-          paddingBottom: "28px",
-          fontSize: "15px",
+          paddingBottom: "32px",
+          fontSize: { xs: "14px", md: "15px" },
           fontWeight: 400,
           color: "rgba(27, 43, 65, 0.69)",
+          textAlign: "justify",
         }}
       >
         Every student is allowed to input grades for courses completed in the
@@ -222,7 +225,7 @@ const GradeSubmission = () => {
       </Grid>
 
       <TableContainer>
-        <Table>
+        <Table stickyHeader>
           <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
             <TableRow>
               <TableCell size="small" sx={{ width: "60px" }}>
@@ -447,7 +450,6 @@ const GradeSubmission = () => {
                 fontSize: "12px",
                 padding: "10px",
                 gap: "6px",
-                marginRight: "24px",
                 "&:hover": {
                   backgroundColor:
                     !subjectName.every(Boolean) ||
@@ -478,7 +480,7 @@ const GradeSubmission = () => {
                     fontWeight: 600,
                   }}
                 >
-                  Send Certificate?
+                  Send Grades?
                 </Typography>
                 <Typography
                   id="modal-modal-description"
@@ -559,7 +561,7 @@ const GradeSubmission = () => {
                   id="modal-modal-description"
                   style={{ marginTop: "16px", marginBottom: "20px" }}
                 >
-                  You have successfully preregistered for the course.
+                  You have successfully submit your grades.
                 </Typography>
                 {/* Tambahkan tautan dan elemen lain yang diperlukan di sini */}
               </div>

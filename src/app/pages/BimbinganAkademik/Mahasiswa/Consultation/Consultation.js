@@ -222,7 +222,9 @@ const Consultation = () => {
           <CircularProgress />
         </div>
       )}
-      <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
+      <Typography
+        sx={{ fontSize: { xs: "20px", md: "24px" }, fontWeight: 500 }}
+      >
         Consultation
       </Typography>
       <Grid container spacing={2}>

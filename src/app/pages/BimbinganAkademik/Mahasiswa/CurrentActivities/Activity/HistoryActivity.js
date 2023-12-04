@@ -6,10 +6,10 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
   Paper,
+  Switch,
   FormControl,
   FormControlLabel,
   FormGroup,
-  Switch,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -26,8 +26,8 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 const Activity = () => {
   const navigate = useNavigate();
-  const [isPreRegistration, setIsPreRegistration] = useState(false);
-  const [isGradeSubmission, setIsGradeSubmission] = useState(true);
+  const [isPreRegistration, setIsPreRegistration] = useState(true);
+  const [isGradeSubmission, setIsGradeSubmission] = useState(false);
 
   const getActivity = async () => {
     try {
@@ -65,12 +65,16 @@ const Activity = () => {
     <div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>History</StyledLink>
+          <StyledLink>Current Activities</StyledLink>
           <Typography color="text.primary">Activity</Typography>
         </Breadcrumbs>
       </div>
       <Typography
-        sx={{ fontSize: "24px", fontWeight: 500, paddingTop: "20px" }}
+        sx={{
+          fontSize: { xs: "20px", md: "24px" },
+          fontWeight: 500,
+          paddingTop: "20px",
+        }}
       >
         Activity
       </Typography>
@@ -137,6 +141,7 @@ const Activity = () => {
             </Paper>
           </Stack>
         </Grid>
+
         <Grid container paddingTop={4} paddingLeft={2} gap={3}>
           {/* <Grid item xs={12} md={6} xl={4}> */}
           {isPreRegistration && (

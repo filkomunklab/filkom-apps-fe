@@ -14,8 +14,6 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -106,6 +104,22 @@ const tableData1 = [
   },
 ];
 
+const TableHeading = ({ index }) => {
+  const style = { fontWeight: 400 };
+  return (
+    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
+      <TableCell sx={[style]}>Number</TableCell>
+      <TableCell sx={[style]}>Code</TableCell>
+      <TableCell sx={[style]}>Subject Name</TableCell>
+      <TableCell sx={[style]}>Credit(s)</TableCell>
+      <TableCell sx={[style]}>Grade</TableCell>
+      <TableCell sx={[style]}>Type</TableCell>
+      <TableCell sx={[style]}>Prerequisite</TableCell>
+      <TableCell sx={[style]}>Status</TableCell>
+    </TableRow>
+  );
+};
+
 const TableItem = ({ data }) => (
   <TableRow>
     <TableCell>{data.number}</TableCell>
@@ -119,47 +133,19 @@ const TableItem = ({ data }) => (
   </TableRow>
 );
 
-const PreRegistration = () => {
-  const navigate = useNavigate();
-  const [isApproved, setIsApproved] = useState(false)
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(7);
-
-  const getPreRegis = async()=>{
-    try{
-      const headers = {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer token_apa`,
-      }
-
-      const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
-
-      const {status, message, data, code} = response.data;
-
-      if(status === 'OK'){ //isi status atau code tergantung API
-        //simpan dalam usestate contoh:
-        //setPreRegistration = data
-        //tambahkan handle lain jika perlu (Approved pre-regis, dll)
-      }else{
-        //tambah handler jika respon lain, kalau tidak perlu hapus saja
-        console.log(response)
-      }
-    }catch(error){
-      console.log(error)
-    }
-  }
-
+const PreRegistrationRejected = () => {
   const handleClick = (event) => {
     event.preventDefault();
-    navigate(-1);
   };
 
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(7);
 
   return (
     <div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>History</StyledLink>
+          <StyledLink to="/bimbingan-akademik/history">History</StyledLink>
           <Typography color="text.primary">Pre-registration</Typography>
         </Breadcrumbs>
       </div>
@@ -232,8 +218,8 @@ const PreRegistration = () => {
               <Typography variant="h5">:</Typography>
             </Grid>
             <Grid item xs={7} paddingLeft={1}>
-              <Typography variant="h5" sx={{ color: isApproved ? "#005fdb" :"#ca150c" }}>
-                {isApproved ? "Approved": "Rejected"}
+              <Typography variant="h5" sx={{ color: "red" }}>
+                Rejected
               </Typography>
             </Grid>
           </Grid>
@@ -256,7 +242,7 @@ const PreRegistration = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} pt={2} pb={2}>
         <TableContainer
           sx={{
             maxHeight: 640,
@@ -294,20 +280,4 @@ const PreRegistration = () => {
   );
 };
 
-const TableHeading = ({ index }) => {
-  const style = { fontWeight: 400 };
-  return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={[style]}>Number</TableCell>
-      <TableCell sx={[style]}>Code</TableCell>
-      <TableCell sx={[style]}>Subject Name</TableCell>
-      <TableCell sx={[style]}>Credit(s)</TableCell>
-      <TableCell sx={[style]}>Grade</TableCell>
-      <TableCell sx={[style]}>Type</TableCell>
-      <TableCell sx={[style]}>Prerequisite</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
-    </TableRow>
-  );
-};
-
-export default PreRegistration;
+export default PreRegistrationRejected;
