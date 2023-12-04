@@ -91,7 +91,9 @@ const Consultation = () => {
 
   return (
     <div>
-      <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
+      <Typography
+        sx={{ fontSize: { xs: "20px", md: "24px" }, fontWeight: 500 }}
+      >
         Consultation
       </Typography>
       <Grid container spacing={2}>
@@ -233,30 +235,6 @@ const Consultation = () => {
                 marginTop: "20px",
               }}
             >
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to="/bimbingan-akademik/consultation/"
-              >
-                <Button
-                  sx={{
-                    backgroundColor: "darkgrey",
-                    borderRadius: "24px",
-                    color: "black",
-                    whiteSpace: "nowrap",
-                    minWidth: "132px",
-                    fontSize: "12px",
-                    padding: "10px",
-                    marginRight: "24px",
-
-                    "&:hover": {
-                      backgroundColor: "grey",
-                    },
-                  }}
-                >
-                  Cancel
-                </Button>
-              </Link>
-
               <Button
                 onClick={handleOpenFirstModal}
                 sx={{
