@@ -14,7 +14,7 @@ import {
   Paper,
 } from "@mui/material";
 import Div from "@jumbo/shared/Div";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
@@ -26,7 +26,7 @@ const StudentConsultation = () => {
   const [dataWaiting, setDataWaiting] = useState([]);
   const navigate = useNavigate();
 
-  React.useEffect(() => {
+  useEffect(() => {
     getDataWaiting();
   }, []);
 
