@@ -247,25 +247,27 @@ const PreRegistrationApproved = () => {
           </Typography>
         </Paper>
       </Stack>
-      <TableContainer
-        sx={{
-          maxHeight: 640,
-        }}
-        component={Paper}
-      >
-        <Table stickyHeader>
-          <TableHead>
-            <TableHeading />
-          </TableHead>
-          <TableBody>
-            {tableData1
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((data, index) => (
-                <TableItem data={data} index={index} key={index} />
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Grid item xs={12}>
+        <TableContainer
+          sx={{
+            maxHeight: 640,
+          }}
+          component={Paper}
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableHeading />
+            </TableHead>
+            <TableBody>
+              {tableData1
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((data, index) => (
+                  <TableItem data={data} index={index} key={index} />
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
     </div>
   );
 };

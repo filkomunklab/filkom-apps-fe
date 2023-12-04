@@ -11,6 +11,7 @@ import {
   Divider,
   Breadcrumbs,
   experimentalStyled as styled,
+  Grid,
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -106,7 +107,20 @@ const History = (props) => {
         approved will be displayed on this page.
       </Typography>
 
-      <SearchLocal />
+      <Grid container>
+        <Grid item xs={12} sm={12} md={12} lg={12} sx={{ paddingBottom: 4 }}>
+          <SearchLocal
+            sx={{
+              width: "40%",
+              "@media (max-width: 600px)": {
+                height: "40px",
+                width: "100%",
+              },
+            }}
+          />
+        </Grid>
+      </Grid>
+
       <div sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}
