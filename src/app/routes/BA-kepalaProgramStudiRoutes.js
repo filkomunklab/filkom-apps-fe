@@ -48,9 +48,6 @@ import CurrentActivities from "app/pages/BimbinganAkademik/Kaprodi/RecentActivit
 import ViewActivity from "app/pages/BimbinganAkademik/Kaprodi/RecentActivities/ViewActivity/ViewActivity";
 import ViewConsultation from "app/pages/BimbinganAkademik/Kaprodi/RecentActivities/ViewConsultation/ViewConsultation";
 import HistoryActivity from "app/pages/BimbinganAkademik/Kaprodi/History/HIstoryActivity/HistoryActivity";
-import HistoryActivity1 from "app/pages/BimbinganAkademik/Kaprodi/History/HIstoryActivity/HistoryActivity1";
-import HistoryActivity2 from "app/pages/BimbinganAkademik/Kaprodi/History/HIstoryActivity/HistoryActivity2";
-import HistoryActivity3 from "app/pages/BimbinganAkademik/Kaprodi/History/HIstoryActivity/HistoryActivity3";
 import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/Kaprodi/History/HistoryPreRegis/PreRegistrationApproved";
 import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/Kaprodi/History/HistoryPreRegis/PreRegistrationRejected";
 import HistoryCertificateApproved from "app/pages/BimbinganAkademik/Kaprodi/History/HistoryCertificate/CertificateApproved";
@@ -159,18 +156,6 @@ const kepalaProgramStudiRoutes = [
   {
     path: "/bimbingan-akademik/kaprodi/history/activity",
     element: <Page component={HistoryActivity} />,
-  },
-  {
-    path: "/bimbingan-akademik/kaprodi/history/activity1",
-    element: <Page component={HistoryActivity1} />,
-  },
-  {
-    path: "/bimbingan-akademik/kaprodi/history/activity2",
-    element: <Page component={HistoryActivity2} />,
-  },
-  {
-    path: "/bimbingan-akademik/kaprodi/history/activity3",
-    element: <Page component={HistoryActivity3} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/history/pre-registration-approved",

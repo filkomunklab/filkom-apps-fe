@@ -186,13 +186,19 @@ export const mahasiswaMenus = [
         label: "Grades",
         type: "nav-item",
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/grades",
+        uri: "/bimbingan-akademik/student-grade",
       },
       {
         label: "Certificates",
         type: "nav-item",
         icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
         uri: "/bimbingan-akademik/certificates",
+      },
+      {
+        label: "Current Activities",
+        type: "nav-item",
+        icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/current-activities",
       },
       {
         label: "History",
