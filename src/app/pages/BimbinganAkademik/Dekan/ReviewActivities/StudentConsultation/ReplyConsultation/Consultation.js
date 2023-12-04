@@ -17,6 +17,8 @@ import Div from "@jumbo/shared/Div";
 import SendIcon from "@mui/icons-material/Send";
 import { format } from "date-fns";
 import { to } from "react-spring";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -26,20 +28,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: "underline",
   },
 }));
-
-const requiredStyle = {
-  color: "red",
-  marginLeft: "4px",
-};
-
-function RTypography({ children, sx }) {
-  return (
-    <Typography variant="body1" sx={sx}>
-      {children}
-      <span style={requiredStyle}>*</span>
-    </Typography>
-  );
-}
 
 const style = {
   position: "absolute",
@@ -55,8 +43,8 @@ const style = {
 };
 
 const Consultation = () => {
-  const [status, setStatus] = useState("Waiting");
-
+  const [status, setStatus] = useState("");
+  const [messages, setMessages] = useState([]);
   const [openFirstModal, setOpenFirstModal] = React.useState(false);
   const [openSecondModal, setOpenSecondModal] = React.useState(false);
 
@@ -70,9 +58,10 @@ const Consultation = () => {
     topic,
     receiverName,
     description,
-  } = consultationDetails;
+    id,
+  } = consultationDetails; //ini salah logic kah?
 
-  console.log("ini", consultationDetails);
+  // console.log("ini", consultationDetails); // ini kypa ta triger turus ato kt yg sala ?
 
   const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
@@ -90,14 +79,16 @@ const Consultation = () => {
   const handleIconClick = () => {
     handleSubmit();
   };
+
   const handleSubmit = () => {
-    if (inputValue.trim() !== "") {
-      setSubmittedValue(inputValue);
+    const trimmedValue = inputValue.trim();
+    if (trimmedValue !== "") {
+      postMessage(trimmedValue);
       setInputValue("");
-      setStatus("On-Process");
+    } else {
+      alert("Input tidak valid. Mohon masukkan pesan yang valid.");
     }
   };
-  const currentDate = format(new Date(), "dd/MM/yyyy HH:mm");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -108,6 +99,43 @@ const Consultation = () => {
       clearTimeout(timer);
     };
   }, [handleOpenSecondModal]);
+
+  useEffect(() => {
+    getCurrentStatus();
+    getMessage();
+  }, [messages]);
+
+  const getCurrentStatus = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL_API}/academic-consultation/detail/${id}`
+      );
+      setStatus(response.data.data.status);
+    } catch (error) {
+      console.log(error); // ini nnti ubah jadi alert ato apah tesrera
+    }
+  };
+
+  const getMessage = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL_API}/message/${id}`);
+      setMessages(response.data.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const postMessage = async (content) => {
+    try {
+      const response = await axios.post(`${BASE_URL_API}/message`, {
+        academic_consultation_id: id,
+        content,
+        sender_name: `${JSON.parse(localStorage.getItem("user")).name}`,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const handleSubmitFirstModal = () => {
     handleCloseFirstModal();
@@ -130,7 +158,7 @@ const Consultation = () => {
         <Grid item xs={12} md={6}>
           <Stack spacing={2} sx={{ paddingTop: 3 }}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <RTypography>Student Name</RTypography>
+              <Typography>Student Name</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined">
@@ -143,7 +171,7 @@ const Consultation = () => {
         <Grid item xs={12} md={6}>
           <Stack spacing={2} sx={{ paddingTop: 3 }}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <RTypography>Supervisor Name</RTypography>
+              <Typography>Supervisor Name</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined">
@@ -156,12 +184,18 @@ const Consultation = () => {
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <RTypography>student_major</RTypography>
+              <Typography>student_major</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                {studentMajor}
+                {studentMajor === "IF"
+                  ? "Informatika"
+                  : studentMajor === "SI"
+                  ? "Sistem Informasi"
+                  : studentMajor === "DKV"
+                  ? "Teknologi Informasi"
+                  : studentMajor}
               </Typography>
             </Paper>
           </Stack>
@@ -169,7 +203,7 @@ const Consultation = () => {
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <RTypography>Arrival Year</RTypography>
+              <Typography>Arrival Year</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined">
@@ -182,7 +216,7 @@ const Consultation = () => {
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <RTypography>Topic of Discussion</RTypography>
+              <Typography>Topic of Discussion</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined">
@@ -195,7 +229,7 @@ const Consultation = () => {
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <RTypography>Consultation Receiver</RTypography>
+              <Typography>Consultation Receiver</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined">
@@ -208,7 +242,7 @@ const Consultation = () => {
         <Grid item xs={12}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <RTypography> Description</RTypography>
+              <Typography> Description</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined">
@@ -252,7 +286,7 @@ const Consultation = () => {
                   gap: 20,
                 }}
               >
-                {submittedValue && (
+                {/* {submittedValue && (
                   <Paper
                     elevation={0}
                     variant="outlined"
@@ -265,9 +299,47 @@ const Consultation = () => {
                     }}
                   >
                     <Typography variant="body1">{submittedValue}</Typography>
+                    
                   </Paper>
-                )}
-
+                )} */}
+                {messages &&
+                  messages.map((value) => (
+                    <Paper
+                      elevation={0}
+                      variant="outlined"
+                      sx={{
+                        borderColor: "#005FDB",
+                        padding: "12px",
+                        borderRadius: "4px",
+                        backgroundColor: "#FFFFFF",
+                        color: "#000000",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: 600,
+                          }}
+                        >
+                          {value.sender_name}
+                        </Typography>
+                        <Typography variant="caption">
+                          {format(
+                            new Date(value.createdAt),
+                            "dd/MM/yyyy HH:mm"
+                          )}
+                        </Typography>
+                      </div>
+                      <Typography variant="body1">{value.content}</Typography>
+                    </Paper>
+                  ))}
                 <TextField
                   size="small"
                   id="outlined-basic"
@@ -286,6 +358,7 @@ const Consultation = () => {
                   }}
                   onKeyPress={handleKeyPress}
                 />
+
                 <Grid container spacing={1} justifyContent="flex-end">
                   <Button
                     onClick={handleOpenFirstModal}

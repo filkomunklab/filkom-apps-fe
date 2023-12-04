@@ -4,18 +4,22 @@ import {
   TextField,
   Stack,
   Grid,
+  Box,
   Button,
   IconButton,
   Paper,
   Breadcrumbs,
   experimentalStyled as styled,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Modal from "@mui/material/Modal";
+import Div from "@jumbo/shared/Div";
 import SendIcon from "@mui/icons-material/Send";
 import { format } from "date-fns";
+import { to } from "react-spring";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
+
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -39,88 +43,115 @@ const style = {
 };
 
 const ViewConsultation = () => {
-  const navigate = useNavigate();
-  const [openFirstModal, setOpenFirstModal] = useState(false);
+  const [status, setStatus] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [openFirstModal, setOpenFirstModal] = React.useState(false);
+  const [openSecondModal, setOpenSecondModal] = React.useState(false);
+
+  const { state } = useLocation();
+  const consultationDetails = state ? state.consultationDetails : {};
+  const {
+    studentName,
+    supervisorName,
+    studentMajor,
+    studentArrivalYear,
+    topic,
+    receiverName,
+    description,
+    id,
+  } = consultationDetails; //ini salah logic kah?
+
+  // console.log("ini", consultationDetails); // ini kypa ta triger turus ato kt yg sala ?
+
+  const handleOpenFirstModal = () => setOpenFirstModal(true);
+  const handleCloseFirstModal = () => setOpenFirstModal(false);
+  const handleOpenSecondModal = () => setOpenSecondModal(true);
+  const handleCloseSecondModal = () => setOpenSecondModal(false);
+
   const [inputValue, setInputValue] = useState("");
   const [submittedValue, setSubmittedValue] = useState("");
-
-  // const getConsultation = async()=>{
-  //   try{
-  //     const headers = {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer token_apa`,
-  //       };
-
-  //   const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
-
-  //   const {status, message, code, data} = response.data
-  //   if(status === 'OK'){ //isi status atau code tergantung API
-  //     //simpan dalam usestate contoh:
-  //     //setConsultation = data
-  //     //tambahkan handle lain jika perlu
-  //   }else{
-  //     //tambah handler jika respon lain, kalau tidak perlu hapus saja
-  //     console.log(response)
-  //   }
-  //   }catch(error){
-  //     console.log(error)
-  //   }
-  // }
-
-  // const postMessage = async () =>{
-  //   try{
-  //     const headers = {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer token_apa`,
-  //       };
-
-  //     const response = await axios.post(`${BASE_URL_API}/bla/bla/bla`,{message: 'Helo bang'}, {headers})
-
-  //     //jika tidak akan melakukan handle terhadap response maka hapus saja "const response =", jadi sisa await dst...
-  //     console.log(response)
-  //   }catch(error){
-  //     console.log(error)
-  //   }
-  // }
-
-  const handleIconClick = () => {
-    handleSubmit();
-  };
-  const handleClick = (event) => {
-    event.preventDefault();
-    navigate(-1);
-  };
-
-  const handleSubmitFirstModal = () => {
-    setOpenFirstModal(false);
-  };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSubmit();
     }
   };
+  const handleIconClick = () => {
+    handleSubmit();
+  };
 
   const handleSubmit = () => {
-    if (inputValue.trim() !== "") {
-      setSubmittedValue(inputValue);
+    const trimmedValue = inputValue.trim();
+    if (trimmedValue !== "") {
+      postMessage(trimmedValue);
       setInputValue("");
+    } else {
+      alert("Input tidak valid. Mohon masukkan pesan yang valid.");
     }
   };
 
-  const currentDate = format(new Date(), "dd/MM/yyyy HH:mm");
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handleCloseSecondModal();
+    }, 5000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [handleOpenSecondModal]);
+
+  useEffect(() => {
+    getCurrentStatus();
+    getMessage();
+  }, [messages]);
+
+  const getCurrentStatus = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL_API}/academic-consultation/detail/${id}`
+      );
+      setStatus(response.data.data.status);
+    } catch (error) {
+      console.log(error); // ini nnti ubah jadi alert ato apah tesrera
+    }
+  };
+
+  const getMessage = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL_API}/message/${id}`);
+      setMessages(response.data.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const postMessage = async (content) => {
+    try {
+      const response = await axios.post(`${BASE_URL_API}/message`, {
+        academic_consultation_id: id,
+        content,
+        sender_name: `${JSON.parse(localStorage.getItem("user")).name}`,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleSubmitFirstModal = () => {
+    handleCloseFirstModal();
+    setStatus("Complete");
+    handleOpenSecondModal();
+  };
 
   return (
-    <div>
-      <div role="presentation" onClick={handleClick}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Current Activities</StyledLink>
-          <Typography color="text.primary">Consultation</Typography>
-        </Breadcrumbs>
-      </div>
-      <Typography
-        sx={{ fontSize: "24px", fontWeight: 500, paddingTop: "20px" }}
-      >
+    <Div>
+      <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
+        <StyledLink to="/bimbingan-akademik/kaprodi/review-activities/consultation/">
+          Student Consultation
+        </StyledLink>
+        <Typography color="text.primary">View Consultation</Typography>
+      </Breadcrumbs>
+      <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
         Consultation
       </Typography>
       <Grid container spacing={2}>
@@ -130,293 +161,294 @@ const ViewConsultation = () => {
               <Typography>Student Name</Typography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Siregar, Marchelino Feraldy
+                {studentName}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
-
         <Grid item xs={12} md={6}>
           <Stack spacing={2} sx={{ paddingTop: 3 }}>
             <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Supervisor Name</Typography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Poluan, Jeremy Kenny, S.Kom, MBA
+                {supervisorName}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
-
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <Typography>Major</Typography>
+              <Typography>student_major</Typography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Informatics
+                {studentMajor === "IF"
+                  ? "Informatika"
+                  : studentMajor === "SI"
+                  ? "Sistem Informasi"
+                  : studentMajor === "DKV"
+                  ? "Teknologi Informasi"
+                  : studentMajor}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
-
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Arrival Year</Typography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                2020
+                {studentArrivalYear}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
-
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Topic of Discussion</Typography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Academic
+                {topic}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
-
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Consultation Receiver</Typography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Poluan, Jeremy Kenny, S.Kom, MBA
+                {receiverName}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
-
         <Grid item xs={12}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <Typography>Message</Typography>
+              <Typography> Description</Typography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Syalom sir, mohon maaf mengganggu, saya ingin melakukan
-                konsultasi terkait perkuliahan saya. Saya mengalami krisis dalam
-                hal keuangan. orang tua saya di PHK dan saya rasa saya tidak
-                busa melanjutkan perkuliahan saya. Saya ingin membicarakan hal
-                ini secara langsung dengan sir, selaku dosen pembimbing saya.
-                Apakah sir punya waktu luang? Terima kasih sebelumnya.
+                {description}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
-        <Grid item xs={12}>
-          <Stack spacing={2} sx={{ paddingTop: 8, marginTop: 5 }}>
-            <Grid sx={{ display: "flex", direction: "row" }}>
-              <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                Status:
-              </Typography>
-              <Typography
-                variant="h5"
-                sx={{
-                  fontWeight: 600,
-                  color: "#0A7637",
-                  marginLeft: 1,
-                }}
-              >
-                On-Process
-              </Typography>
-            </Grid>
-
-            <Paper
-              elevation={0}
-              variant="outlined"
-              fullWidth
-              sx={{ borderColor: "#005FDB" }}
+      </Grid>
+      <Grid item xs={12}>
+        <Stack spacing={2} sx={{ paddingTop: 6 }}>
+          <Grid sx={{ display: "flex", direction: "row" }}>
+            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+              Status:
+            </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 600,
+                color:
+                  status === "Waiting"
+                    ? "#FFCC00"
+                    : status === "On-Process"
+                    ? "#0A7637"
+                    : status === "Complete"
+                    ? "blue"
+                    : "#005FDB",
+                marginLeft: 1,
+              }}
             >
+              {status}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Stack spacing={2} sx={{ paddingBottom: 3 }}>
               <div
                 style={{
                   display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
+                  flexDirection: "column",
+                  gap: 20,
                 }}
               >
-                <Typography
-                  variant="h6"
-                  sx={{
-                    padding: "8px",
-                    fontWeight: 600,
-                  }}
-                >
-                  Poluan, Jeremy Kenny
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    padding: "8px",
-                  }}
-                >
-                  {currentDate}
-                </Typography>
-              </div>
-
-              <Typography variant="body1" sx={{ padding: "8px" }}>
-                Saya sedang tidak berada di daerah kampus. Lagi healing di
-                Jerman. Nanti kita atur pertemuan lagi.
-              </Typography>
-            </Paper>
-
-            <Grid item xs={12}>
-              <Stack spacing={2} sx={{ paddingBottom: 3 }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 20,
-                  }}
-                >
-                  {submittedValue && (
+                {/* {submittedValue && (
+                  <Paper
+                    elevation={0}
+                    variant="outlined"
+                    sx={{
+                      borderColor: "#005FDB",
+                      padding: "12px",
+                      borderRadius: "4px",
+                      backgroundColor: "#FFFFFF",
+                      color: "#000000",
+                    }}
+                  >
+                    <Typography variant="body1">{submittedValue}</Typography>
+                    
+                  </Paper>
+                )} */}
+                {messages &&
+                  messages.map((value) => (
                     <Paper
                       elevation={0}
                       variant="outlined"
-                      fullWidth
                       sx={{
-                        borderColor: "#192434",
+                        borderColor: "#005FDB",
                         padding: "12px",
                         borderRadius: "4px",
                         backgroundColor: "#FFFFFF",
                         color: "#000000",
                       }}
                     >
-                      <Typography variant="body1">{submittedValue}</Typography>
-                    </Paper>
-                  )}
-
-                  <TextField
-                    id="outlined-basic"
-                    variant="outlined"
-                    placeholder="Enter Message..."
-                    fullWidth
-                    multiline
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton onClick={handleIconClick}>
-                          <SendIcon style={{ color: "#9E9E9E" }} />
-                        </IconButton>
-                      ),
-                    }}
-                    onKeyPress={handleKeyPress}
-                  />
-                  <Grid container spacing={1} justifyContent="flex-end">
-                    <Button
-                      onClick={() => setOpenFirstModal(true)}
-                      sx={{
-                        backgroundColor: "#006AF5",
-                        borderRadius: "5px",
-                        boxShadow: 4,
-                        color: "white",
-                        whiteSpace: "nowrap",
-                        "&:hover": {
-                          backgroundColor: "#025ED8",
-                        },
-                      }}
-                    >
-                      End Conversation
-                    </Button>
-                    <Modal
-                      open={openFirstModal}
-                      onClose={() => setOpenFirstModal(false)}
-                      aria-labelledby="modal-modal-title"
-                      aria-describedby="modal-modal-description"
-                    >
-                      <div style={style}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
                         <Typography
-                          id="modal-modal-title"
-                          variant="h4"
-                          component="h2"
+                          variant="h6"
                           sx={{
                             fontWeight: 600,
                           }}
                         >
-                          End Session?
+                          {value.sender_name}
                         </Typography>
-                        <Typography
-                          id="modal-modal-description"
-                          style={{ marginTop: "16px", marginBottom: "20px" }}
-                        >
-                          Are you sure you want to end the Conversation?
+                        <Typography variant="caption">
+                          {format(
+                            new Date(value.createdAt),
+                            "dd/MM/yyyy HH:mm"
+                          )}
                         </Typography>
-
-                        <Grid container spacing={1} justifyContent="flex-end">
-                          <Grid item>
-                            <Button
-                              onClick={() => setOpenFirstModal(false)}
-                              sx={{
-                                backgroundColor: "white",
-                                borderRadius: "5px",
-                                boxShadow: 4,
-                                color: "black",
-                                whiteSpace: "nowrap",
-                                "&:hover": {
-                                  backgroundColor: "lightgrey",
-                                },
-                              }}
-                            >
-                              Cancel
-                            </Button>
-                          </Grid>
-                          <Grid item>
-                            <Link
-                              style={{ textDecoration: "none", color: "white" }}
-                              to="/bimbingan-akademik/history/consultationComplete"
-                            >
-                              <Button
-                                onClick={handleSubmitFirstModal}
-                                sx={{
-                                  backgroundColor: "#006AF5",
-                                  borderRadius: "5px",
-                                  boxShadow: 4,
-                                  color: "white",
-                                  whiteSpace: "nowrap",
-                                  "&:hover": {
-                                    backgroundColor: "#025ED8",
-                                  },
-                                }}
-                              >
-                                Yes
-                              </Button>
-                            </Link>
-                            .
-                          </Grid>
-                        </Grid>
                       </div>
-                    </Modal>
-                  </Grid>
-                </div>
-              </Stack>
-            </Grid>
-          </Stack>
-        </Grid>
+                      <Typography variant="body1">{value.content}</Typography>
+                    </Paper>
+                  ))}
+                <TextField
+                  size="small"
+                  id="outlined-basic"
+                  variant="outlined"
+                  placeholder="Enter Message..."
+                  fullWidth
+                  multiline
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton onClick={handleIconClick}>
+                        <SendIcon style={{ color: "#9E9E9E" }} />
+                      </IconButton>
+                    ),
+                  }}
+                  onKeyPress={handleKeyPress}
+                />
+
+                <Grid container spacing={1} justifyContent="flex-end">
+                  <Button
+                    onClick={handleOpenFirstModal}
+                    sx={{
+                      backgroundColor: "#006AF5",
+                      borderRadius: "5px",
+                      boxShadow: 4,
+                      color: "white",
+                      whiteSpace: "nowrap",
+                      "&:hover": {
+                        backgroundColor: "#025ED8",
+                      },
+                    }}
+                  >
+                    End Conversation
+                  </Button>
+                  <Modal
+                    open={openFirstModal}
+                    onClose={handleCloseFirstModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <div style={style}>
+                      <Typography
+                        id="modal-modal-title"
+                        variant="h4"
+                        component="h2"
+                        sx={{
+                          fontWeight: 600,
+                        }}
+                      >
+                        End Session?
+                      </Typography>
+                      <Typography
+                        id="modal-modal-description"
+                        style={{ marginTop: "16px", marginBottom: "20px" }}
+                      >
+                        Are you sure you want to end the Conversation?
+                      </Typography>
+
+                      <Grid container spacing={1} justifyContent="flex-end">
+                        <Grid item>
+                          <Button
+                            onClick={handleCloseFirstModal}
+                            sx={{
+                              backgroundColor: "white",
+                              borderRadius: "5px",
+                              boxShadow: 4,
+                              color: "black",
+                              whiteSpace: "nowrap",
+                              "&:hover": {
+                                backgroundColor: "lightgrey",
+                              },
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </Grid>
+                        <Grid item>
+                          {/* <Link
+                            style={{ textDecoration: "none", color: "white" }}
+                            to="/bimbingan-akademik/consultation/"
+                          > */}
+                          <Button
+                            onClick={handleSubmitFirstModal}
+                            sx={{
+                              backgroundColor: "#006AF5",
+                              borderRadius: "5px",
+                              boxShadow: 4,
+                              color: "white",
+                              whiteSpace: "nowrap",
+                              "&:hover": {
+                                backgroundColor: "#025ED8",
+                              },
+                            }}
+                          >
+                            Yes
+                          </Button>
+                          {/* </Link> */}
+                        </Grid>
+                      </Grid>
+                    </div>
+                  </Modal>
+                </Grid>
+              </div>
+            </Stack>
+          </Grid>
+        </Stack>
       </Grid>
-    </div>
+    </Div>
   );
 };
 

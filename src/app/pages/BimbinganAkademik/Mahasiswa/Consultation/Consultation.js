@@ -103,6 +103,10 @@ const Consultation = () => {
   }, [handleOpenSecondModal]);
 
   const handleSubmitFirstModal = async () => {
+    if (!topic || !receiver || !description) {
+      alert("Please fill in all required fields.");
+      return;
+    }
     handleCloseFirstModal();
     setLoading(true);
 

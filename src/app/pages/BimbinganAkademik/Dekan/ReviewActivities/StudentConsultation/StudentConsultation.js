@@ -6,10 +6,6 @@ import {
   TableRow,
   TableCell,
   TableContainer,
-  Select,
-  MenuItem,
-  TableControl,
-  TextField,
   Grid,
   Paper,
 } from "@mui/material";
@@ -18,7 +14,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
-import { Link } from "react-router-dom";
 
 const StudentConsultation = () => {
   const [page, setPage] = useState(0);
@@ -32,10 +27,9 @@ const StudentConsultation = () => {
 
   const getDataWaiting = async () => {
     try {
+      const { nik } = JSON.parse(localStorage.getItem("user"));
       const result = await axios.get(
-        `${BASE_URL_API}/academic-consultation/employee/${
-          JSON.parse(localStorage.getItem("user")).nik
-        }`
+        `${BASE_URL_API}/academic-consultation/employee/${nik}`
       );
       console.log("ini isi result.data", result.data);
       setDataWaiting(result.data.data);
@@ -55,30 +49,37 @@ const StudentConsultation = () => {
 
   const handleNavigate = async (value) => {
     try {
-      // Assuming you have an endpoint to fetch the details of a specific consultation
       const consultationDetailsResult = await axios.get(
         `${BASE_URL_API}/academic-consultation/detail/${value.id}`
       );
-      // console.log("hao ", consultationDetailsResult);
+      // console.log("ini detail Consutation result:", consultationDetailsResult);
+      const { role } = JSON.parse(localStorage.getItem("user"));
+      let path = "";
+      console.log("hai ini role", role.includes === "KAPRODI");
+      if (role.includes("DEKAN")) {
+        path = "/bimbingan-akademik/dekan/review-activities/consultation/";
+      } else if (role.includes("KAPRODI")) {
+        path = "/bimbingan-akademik/kaprodi/review-activities/consultation/";
+      } else {
+        path =
+          "/bimbingan-akademik/dosen-pembimbing/review-activities/consultation/";
+      }
 
-      navigate(
-        `/bimbingan-akademik/dekan/review-activities/consultation/${value.id}`,
-        {
-          state: {
-            consultationDetails: {
-              studentName: consultationDetailsResult.data.data.student_name,
-              supervisorName:
-                consultationDetailsResult.data.data.supervisor_name,
-              studentMajor: consultationDetailsResult.data.data.student_major,
-              studentArrivalYear:
-                consultationDetailsResult.data.data.student_arrival_year,
-              topic: consultationDetailsResult.data.data.topic,
-              receiverName: consultationDetailsResult.data.data.receiver_name,
-              description: consultationDetailsResult.data.data.description,
-            },
+      navigate(`${path}${value.id}`, {
+        state: {
+          consultationDetails: {
+            studentName: consultationDetailsResult.data.data.student_name,
+            supervisorName: consultationDetailsResult.data.data.supervisor_name,
+            studentMajor: consultationDetailsResult.data.data.student_major,
+            studentArrivalYear:
+              consultationDetailsResult.data.data.student_arrival_year,
+            topic: consultationDetailsResult.data.data.topic,
+            receiverName: consultationDetailsResult.data.data.receiver_name,
+            description: consultationDetailsResult.data.data.description,
+            id: consultationDetailsResult.data.data.id,
           },
-        }
-      );
+        },
+      });
     } catch (error) {
       console.log(error.message);
     }
@@ -123,7 +124,7 @@ const StudentConsultation = () => {
                 <TableCell>Submission Date</TableCell>
                 <TableCell>Student Name</TableCell>
                 <TableCell>Topic</TableCell>
-                <TableCell>Message</TableCell>
+                <TableCell>Description</TableCell>
                 <TableCell>Status</TableCell>
               </TableRow>
             </TableHead>
@@ -145,20 +146,23 @@ const StudentConsultation = () => {
                         },
                       }}
                     >
-                      <TableCell align="right" sx={{ width: "80px" }}>
+                      <TableCell
+                        align="right"
+                        sx={{ width: "80px", paddingRight: "17px" }}
+                      >
                         {index + 1}
                       </TableCell>
-                      <TableCell align="right" sx={{ width: "145px" }}>
+                      <TableCell sx={{ width: "145px", paddingLeft: "17px" }}>
                         {new Date(value.createdAt).toLocaleDateString("en-US", {
                           day: "numeric",
                           month: "short",
                           year: "numeric",
                         })}
                       </TableCell>
-                      <TableCell sx={{ width: "250px" }}>
+                      <TableCell sx={{ width: "245px" }}>
                         {value.student_name}
                       </TableCell>
-                      <TableCell sx={{ width: "160px" }}>
+                      <TableCell sx={{ width: "140px" }}>
                         {value.topic}
                       </TableCell>
                       <TableCell
@@ -166,10 +170,12 @@ const StudentConsultation = () => {
                           maxWidth: "300px",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         {value.description}
                       </TableCell>
+
                       <TableCell
                         sx={{ color: "#FFCC00", width: "100px", align: "left" }}
                       >

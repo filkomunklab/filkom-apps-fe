@@ -44,9 +44,9 @@ import HistoryPreRegistrationAdvisor from "app/pages/BimbinganAkademik/Kaprodi/S
 import HistoryCertificateAdvisor from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/AdvisorHistory/HistoryCertificate";
 import HistoryConsultationAdvisor from "app/pages/BimbinganAkademik/Kaprodi/SupervisorInformation/AdvisorHistory/HistoryConsultation";
 
-import CurrentActivities from "app/pages/BimbinganAkademik/Kaprodi/RecentActivities";
+import CurrentActivities from "app/pages/BimbinganAkademik/Dekan/CurrentActivities/RecentActivities";
 import ViewActivity from "app/pages/BimbinganAkademik/Kaprodi/RecentActivities/ViewActivity/ViewActivity";
-import ViewConsultation from "app/pages/BimbinganAkademik/Kaprodi/RecentActivities/ViewConsultation/ViewConsultation";
+import ViewConsultation from "app/pages/BimbinganAkademik/Dekan/CurrentActivities/ViewConsultation/ViewConsultation";
 import HistoryActivity from "app/pages/BimbinganAkademik/Kaprodi/History/HIstoryActivity/HistoryActivity";
 import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/Kaprodi/History/HistoryPreRegis/PreRegistrationApproved";
 import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/Kaprodi/History/HistoryPreRegis/PreRegistrationRejected";
@@ -286,7 +286,7 @@ const kepalaProgramStudiRoutes = [
     element: <Page component={ViewActivity} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/current-activities/view-consultation",
+    path: "/bimbingan-akademik/kaprodi/current-activities/view-consultation/:id",
     element: <Page component={ViewConsultation} />,
   },
 

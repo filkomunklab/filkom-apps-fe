@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   List,
@@ -8,35 +8,118 @@ import {
   Divider,
   experimentalStyled as styled,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BASE_URL_API } from "@jumbo/config/env";
 import axios from "axios";
 
 const CurrentActivities = () => {
+  const navigate = useNavigate();
+  const [dataConsultation, setDataConsultation] = useState([]);
+  // const [certificateData, setCertificateData] = useState([]);
+  // const dataActivities = [...dataConsultation, ...certificateData];
 
-  // const getActivities = async()=>{
-  //   try{
-  //     //content-type dan Authorization liat di dokumentasi API atau postman
-  //     const headers = {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer token_apa`,
-  //       };
+  const getConsultation = async () => {
+    try {
+      //content-type dan Authorization liat di dokumentasi API atau postman
+      // const headers = {
+      //     'Content-Type': 'multipart/form-data',
+      //     Authorization: `Bearer token_apa`,
+      //   };
 
-  //   const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
-
-  //   const {status, message, code, data} = response.data
-  //   if(status === 'OK'){ //isi status atau code tergantung API
-  //     //simpan dalam usestate contoh:
-  //     //setActivityList = data
-  //     //tambahkan handle lain jika perlu
-  //   }else{
-  //     //handle jika respon lain, kalau tidak ada hapus saja
-  //     console.log(response)
+      const { nik } = JSON.parse(localStorage.getItem("user"));
+      const result = await axios.get(
+        `${BASE_URL_API}/academic-consultation/employee/${nik}`
+        // {  headers,}
+      );
+      const { status } = result.data;
+      if (status === "OK") {
+        console.log("ini isi result.data dalam status ok", result.data.data);
+        setDataConsultation(result.data.data);
+      } else {
+        console.log(result);
+        console.log(result.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // const getCertificateData = async () => {
+  //   try {
+  //     const { nik } = JSON.parse(localStorage.getItem("user"));
+  //     const result = await axios.get(
+  //       `${BASE_URL_API}/certificate/student/${nik}`
+  //     );
+  //     const { status } = result.data;
+  //     if (status === "OK") {
+  //       console.log("Certificate data:", result.data.data);
+  //       setCertificateData(result.data.data);
+  //     } else {
+  //       console.log(result);
+  //       console.log(result.data);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
   //   }
-  //   }catch(error){
-  //     console.log(error)
-  //   }
-  // }
+  // };
+
+  useEffect(() => {
+    getConsultation();
+    // getCertificateData();
+  }, []);
+
+  const groupedData = {};
+  dataConsultation.forEach((value) => {
+    const date = new Date(value.createdAt).toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    if (!groupedData[date]) {
+      groupedData[date] = [];
+    }
+    groupedData[date].push(value);
+  });
+
+  const handleNavigate = async (value) => {
+    try {
+      const consultationDetailsResult = await axios.get(
+        `${BASE_URL_API}/academic-consultation/detail/${value.id}`
+      );
+      // console.log("ini detail Consutation result:", consultationDetailsResult);
+      const { role } = JSON.parse(localStorage.getItem("user"));
+      let path = "";
+      console.log("hai ini role", role.includes === "KAPRODI");
+      if (role.includes("DEKAN")) {
+        path =
+          "/bimbingan-akademik/dekan/current-activities/view-consultation/";
+      } else if (role.includes("KAPRODI")) {
+        path =
+          "/bimbingan-akademik/kaprodi/current-activities/view-consultation/";
+      } else {
+        path =
+          "/bimbingan-akademik/dosen-pembimbing/current-activities/view-consultation/";
+      }
+
+      navigate(`${path}${value.id}`, {
+        state: {
+          consultationDetails: {
+            studentName: consultationDetailsResult.data.data.student_name,
+            supervisorName: consultationDetailsResult.data.data.supervisor_name,
+            studentMajor: consultationDetailsResult.data.data.student_major,
+            studentArrivalYear:
+              consultationDetailsResult.data.data.student_arrival_year,
+            topic: consultationDetailsResult.data.data.topic,
+            receiverName: consultationDetailsResult.data.data.receiver_name,
+            description: consultationDetailsResult.data.data.description,
+            id: consultationDetailsResult.data.data.id,
+          },
+        },
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div>
@@ -59,212 +142,106 @@ const CurrentActivities = () => {
         review the activities you've created, take attendance for students, and
         respond to ongoing consultations.
       </Typography>
-      <List
-        sx={{
-          width: "100%",
-          maxWidth: 2000,
-          bgcolor: "background.paper",
-          paddingTop: "0px",
-          paddingBottom: "0px",
-        }}
-      >
-        <Box
-          sx={{
-            height: "50px",
-            backgroundColor: "rgba(235, 235, 235, 1)",
-            display: "flex",
-            alignItems: "center",
-            paddingLeft: "10px",
-          }}
-        >
-          <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-            Tuesday, Feb 2, 2024
-          </Typography>
-        </Box>
 
-        <ListItem component={Link} button to="view-consultation">
-          <ListItemText
-            primary={
-              <Typography
-                variant="body1"
-                sx={{
-                  fontSize: { xs: "12px", md: "14px" },
-                  "&:hover": {
-                    textDecorationLine: ["none"],
-                  },
-                }}
-              >
-                Consultation - Adzana, Shaliha Gracia
-              </Typography>
-            }
-            secondary={
-              <Typography
-                sx={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  color: "rgba(27, 43, 65, 0.69)",
-                  fontSize: { xs: "12px", md: "14px" },
-                }}
-              >
-                Syalom sir, mohon maaf mengganggu, saya ingin melakukan
-                konsultasi terkait perkuliahan saya. Saya mengalami krisis dalam
-                hal keuangan. orang tua saya di PHK dan saya rasa saya tidak
-                bisa melanjutkan perkuliahan saya. Saya ingin membicarakan hal
-                ini secara langsung dengan sir, selaku dosen pembimbing saya.
-                Apakah sir punya waktu luang? Terima kasih sebelumnya.
-              </Typography>
-            }
-          />
+      {Object.entries(groupedData).map(([date, dataConsultation]) => (
+        <div key={date}>
           <Box
             sx={{
-              marginLeft: { xs: "auto", md: 0 },
-              width: { xs: "100%", md: "45%" },
-              textAlign: "right",
+              height: "55px",
+              backgroundColor: "rgba(235, 235, 235, 1)",
+              display: "flex",
+              alignItems: "center",
+              paddingLeft: "10px",
             }}
           >
-            <ListItemText
-              secondary={
-                <Typography
+            <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>{date}</Typography>
+          </Box>
+          {dataConsultation &&
+            dataConsultation.map((value, index) =>
+              value.status === "OnProcess" ? (
+                <List
                   sx={{
-                    fontSize: { xs: "10px", md: "14px" },
-                    color: "rgba(27, 43, 65, 0.69)",
+                    width: "100%",
+                    maxWidth: 2000,
+                    bgcolor: "background.paper",
+                    paddingTop: "0px",
+                    paddingBottom: "0px",
+                    ":hover": {
+                      cursor: "pointer",
+                      backgroundColor: "#338CFF21",
+                      transition: "0.3s",
+                      transitionTimingFunction: "ease-in-out",
+                      transitionDelay: "0s",
+                      transitionProperty: "all",
+                    },
                   }}
                 >
-                  02:00 PM
-                </Typography>
-              }
-            />
-          </Box>
-        </ListItem>
-        <Divider component="li" variant="inset" />
+                  <ListItem onClick={() => handleNavigate(value)}>
+                    <ListItemText
+                      primary={
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontSize: { xs: "12px", md: "14px" },
+                            "&:hover": {
+                              textDecorationLine: ["none"],
+                            },
+                          }}
+                        >
+                          {value.student_name}
+                        </Typography>
+                      }
+                      secondary={
+                        <Typography
+                          sx={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            color: "rgba(27, 43, 65, 0.69)",
+                            fontSize: { xs: "12px", md: "14px" },
+                          }}
+                        >
+                          {value.description}
+                        </Typography>
+                      }
+                    />
 
-        <Box
-          sx={{
-            height: "50px",
-            backgroundColor: "rgba(235, 235, 235, 1)",
-            display: "flex",
-            alignItems: "center",
-            paddingLeft: "10px",
-          }}
-        >
-          <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-            Friday, Jan 29, 2024
-          </Typography>
-        </Box>
-        <ListItem component={Link} button to="view-activity">
-          <ListItemText
-            primary={
-              <Typography
-                variant="body1"
-                sx={{
-                  fontSize: { xs: "12px", md: "14px" },
-                  "&:hover": {
-                    textDecorationLine: ["none"],
-                  },
-                }}
-              >
-                Pengumpulan Kartu Rencana Studi Semester ganjil tahun 2022/2023
-                Gelombang 1
-              </Typography>
-            }
-            secondary={
-              <Typography
-                sx={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  color: "rgba(27, 43, 65, 0.69)",
-                  fontSize: { xs: "12px", md: "14px" },
-                }}
-              >
-                Diinfokan untuk semua mahasiswa yang akan mendaftar kuliah
-                semester depan semester I 2023/2024 *wajib* untuk mengisi
-                PreRegistration segera. Mohon memperhatikan tahun kurikulum anda
-                agar dapat mengisi pada form yang benar. Perhatikan due-date
-                yang ada. Note: Jika tidak mengisi, maka anda tidak bisa untuk
-                kontrak mata kuliah di semester yang akan datang. Terima Kasih.{" "}
-              </Typography>
-            }
-          />
-          <Box
-            sx={{
-              marginLeft: { xs: "auto", md: 0 },
-              width: { xs: "100%", md: "45%" },
-              textAlign: "right",
-            }}
-          >
-            <ListItemText
-              secondary={
-                <Typography
-                  sx={{
-                    fontSize: { xs: "10px", md: "14px" },
-                    color: "rgba(27, 43, 65, 0.69)",
-                  }}
-                >
-                  08:00 PM
-                </Typography>
-              }
-            />
-          </Box>
-        </ListItem>
-        <Divider component="li" />
-
-        <ListItem component={Link} button to="view-activity">
-          <ListItemText
-            primary={
-              <Typography
-                variant="body1"
-                sx={{
-                  fontSize: { xs: "12px", md: "14px" },
-                  "&:hover": {
-                    textDecorationLine: ["none"],
-                  },
-                }}
-              >
-                Akan Diadakan Pertemuan pada 10 Februari 2024
-              </Typography>
-            }
-            secondary={
-              <Typography
-                sx={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  color: "rgba(27, 43, 65, 0.69)",
-                  fontSize: { xs: "12px", md: "14px" },
-                }}
-              >
-                Harap untuk memakai pakaian yang sesuai dengan standar UNKLAB,
-                dan jangan lupa untuk membawa ID Card dan Tumblr. Mohon untuk
-                datang tepat waktu karena pengambilan absen akan dilaksanakan di
-                awal kegiatan. Terima Kasih.
-              </Typography>
-            }
-          />
-          <Box
-            sx={{
-              marginLeft: { xs: "auto", md: 0 },
-              width: { xs: "100%", md: "45%" },
-              textAlign: "right",
-            }}
-          >
-            <ListItemText
-              secondary={
-                <Typography
-                  sx={{
-                    fontSize: { xs: "10px", md: "14px" },
-                    color: "rgba(27, 43, 65, 0.69)",
-                  }}
-                >
-                  06:00 AM
-                </Typography>
-              }
-            />
-          </Box>
-        </ListItem>
-        <Divider component="li" />
-      </List>
+                    <Box
+                      sx={{
+                        marginLeft: { xs: "auto", md: 0 },
+                        marginRight: "-72px",
+                        textAlign: "right",
+                      }}
+                    >
+                      <ListItemText
+                        secondary={
+                          <Typography
+                            sx={{
+                              fontSize: { xs: "10px", md: "14px" },
+                              color: "rgba(27, 43, 65, 0.69)",
+                            }}
+                          >
+                            {new Date(value.createdAt).toLocaleTimeString(
+                              "en-US",
+                              {
+                                hour: "numeric",
+                                minute: "numeric",
+                                hour12: true,
+                              }
+                            )}
+                          </Typography>
+                        }
+                      />
+                    </Box>
+                    <Divider component="li" variant="inset" />
+                  </ListItem>
+                </List>
+              ) : (
+                ""
+              )
+            )}
+        </div>
+      ))}
     </div>
   );
 };
