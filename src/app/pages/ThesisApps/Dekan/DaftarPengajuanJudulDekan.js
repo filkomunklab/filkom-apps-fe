@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import MuiAlert from "@mui/material/Alert";
 import {
@@ -35,7 +34,6 @@ import {
   DownloadDone,
   ExpandMore,
   Search,
-  Error,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
