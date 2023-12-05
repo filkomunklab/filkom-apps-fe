@@ -43,6 +43,7 @@ const DaftarPengajuanJudulDekan = () => {
   // mengatur loading page
   const [loading, setLoading] = useState(true);
   // console.log("loading", loading);
+
   // menyimpan hasil request daftar pengajuan judul
   const [daftarPengajuanJudul, setDaftarPengajuanJudul] = useState({
     dashboard: {
@@ -54,6 +55,7 @@ const DaftarPengajuanJudulDekan = () => {
     },
     semesterData: [],
   });
+
   // mengatur notif error
   const [openAlert, setOpenAlert] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState("success");
