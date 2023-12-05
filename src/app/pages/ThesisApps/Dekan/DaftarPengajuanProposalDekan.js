@@ -29,17 +29,14 @@ import {
 import {
   ExpandMore,
   People,
-  Edit,
-  ArrowUpward,
-  Search,
   Gavel,
   DateRange,
   Done,
   Restore,
   Close,
+  Search,
 } from "@mui/icons-material";
-import { Link } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
+import { Link, useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const DaftarPengajuanProposalDekan = () => {
@@ -64,6 +61,7 @@ const DaftarPengajuanProposalDekan = () => {
   // mengatur notif error
   const [openAlert, setOpenAlert] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState("success");
+  const [alertTitle, setAlertTitle] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
 
   // membuka / menutup semester yang dipilih (Accordion)
@@ -79,6 +77,8 @@ const DaftarPengajuanProposalDekan = () => {
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
   // console.log("token", token);
+
+  const navigate = useNavigate();
 
   const fetchDaftarPengajuanProposalData = async () => {
     jwtAuthAxios
@@ -96,13 +96,21 @@ const DaftarPengajuanProposalDekan = () => {
         // console.log("loading", loading);
       })
       .catch((error) => {
-        setAlertSeverity("error");
-        setAlertMessage("Tidak dapat menampilkan data.");
-        setOpenAlert(true);
-        console.error(
-          "Terjadi kesalahan saat mengambil daftar pengajuan:",
-          error
-        );
+        if (
+          error.response.data.data.error ===
+          "You don't have permission to perform this action"
+        ) {
+          navigate(`/`);
+        } else {
+          setAlertSeverity("error");
+          setAlertTitle("Terjadi Kesalahan!");
+          setAlertMessage("Tidak dapat menampilkan data.");
+          setOpenAlert(true);
+          // console.error(
+          //   "Terjadi kesalahan saat mengambil daftar pengajuan:",
+          //   error
+          // );
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -488,7 +496,7 @@ const DaftarPengajuanProposalDekan = () => {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton onClick={handleSearch}>
-                      <SearchIcon />
+                      <Search />
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -795,7 +803,7 @@ const DaftarPengajuanProposalDekan = () => {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
         <Alert onClose={() => setOpenAlert(false)} severity={alertSeverity}>
-          <AlertTitle>Terjadi Kesalahan!</AlertTitle>
+          <AlertTitle>{alertTitle}</AlertTitle>
           {alertMessage}
         </Alert>
       </Snackbar>

@@ -35,7 +35,7 @@ import {
   ExpandMore,
   Search,
 } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const DaftarPengajuanJudulDekan = () => {
@@ -59,6 +59,7 @@ const DaftarPengajuanJudulDekan = () => {
   // mengatur notif error
   const [openAlert, setOpenAlert] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState("success");
+  const [alertTitle, setAlertTitle] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
 
   // membuka / menutup semester yang dipilih (Accordion)
@@ -74,6 +75,8 @@ const DaftarPengajuanJudulDekan = () => {
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
   // console.log("token", token);
+
+  const navigate = useNavigate();
 
   // fungsi request daftar pengajuan judul
   const fetchDaftarPengajuanJudulData = async () => {
@@ -92,10 +95,19 @@ const DaftarPengajuanJudulDekan = () => {
         // console.log("loading", loading);
       })
       .catch((error) => {
-        setAlertSeverity("error");
-        setAlertMessage("Tidak dapat menampilkan data.");
-        setOpenAlert(true);
-        // console.error("Terjadi kesalahan saat mengambil daftar judul", error);
+        // redirect ke home
+        if (
+          error.response.data.data.error ===
+          "You don't have permission to perform this action"
+        ) {
+          navigate(`/`);
+        } else {
+          setAlertSeverity("error");
+          setAlertTitle("Terjadi Kesalahan!");
+          setAlertMessage("Tidak dapat menampilkan data.");
+          setOpenAlert(true);
+          // console.error("Terjadi kesalahan saat mengambil daftar judul", error);
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -822,7 +834,7 @@ const DaftarPengajuanJudulDekan = () => {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
         <Alert onClose={() => setOpenAlert(false)} severity={alertSeverity}>
-          <AlertTitle>Terjadi Kesalahan!</AlertTitle>
+          <AlertTitle>{alertTitle}</AlertTitle>
           {alertMessage}
         </Alert>
       </Snackbar>
