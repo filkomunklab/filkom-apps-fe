@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Div from "@jumbo/shared/Div";
-import PeopleIcon from "@mui/icons-material/People";
-// import EmailIcon from "@mui/icons-material/Email";
-import DraftsIcon from "@mui/icons-material/Drafts";
-import ClearIcon from "@mui/icons-material/Clear";
+import MuiAlert from "@mui/material/Alert";
 import {
   Accordion,
   AccordionDetails,
@@ -26,40 +23,29 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  CircularProgress,
+  Snackbar,
+  AlertTitle,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-// import EditIcon from "@mui/icons-material/Edit";
-// import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-// import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-// import StarBorderIcon from "@mui/icons-material/StarBorder";
-// import SearchGlobal from "app/shared/SearchGlobal";
-import { Link } from "react-router-dom";
-// import DateRangeIcon from "@mui/icons-material/DateRange";
-// import GavelIcon from "@mui/icons-material/Gavel";
-import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
-// import BorderColorIcon from "@mui/icons-material/BorderColor";
 import {
-  // DownloadDone,
   Mail,
+  People,
+  Drafts,
+  Clear,
+  DownloadDone,
+  ExpandMore,
+  Search,
+  Error,
 } from "@mui/icons-material";
-import SearchIcon from "@mui/icons-material/Search";
+import { Link } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const DaftarPengajuanJudulDekan = () => {
-  // State untuk melacak panel accordion yang terbuka
-  const [expanded, setExpanded] = useState(false);
-
-  // state Pencarian
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-
-  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
-  const handleChange = (panel) => (event, isExpanded) => {
-    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
-    setExpanded(isExpanded ? panel : false);
-  };
-
+  // ======================== STATE ===========================
+  // mengatur loading page
+  const [loading, setLoading] = useState(true);
+  // console.log("loading", loading);
+  // menyimpan hasil request daftar pengajuan judul
   const [daftarPengajuanJudul, setDaftarPengajuanJudul] = useState({
     dashboard: {
       total_group: 0,
@@ -70,10 +56,67 @@ const DaftarPengajuanJudulDekan = () => {
     },
     semesterData: [],
   });
+  // mengatur notif error
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState("success");
+  const [alertMessage, setAlertMessage] = useState("");
 
+  // membuka / menutup semester yang dipilih (Accordion)
+  const [expanded, setExpanded] = useState(false);
+
+  // state Pencarian
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
+  // ======================== FUNCTION ===========================
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
-  console.log("token", token);
+  // console.log("token", token);
+
+  // fungsi request daftar pengajuan judul
+  const fetchDaftarPengajuanJudulData = async () => {
+    jwtAuthAxios
+      .get("/group/submission-list-dekan", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // menyimpan hasil request
+        setDaftarPengajuanJudul(response.data.data);
+        // console.log("Request get daftar judul: ", response.data.data);
+        // menonaktifkan loading page
+        setLoading(false);
+        // console.log("loading", loading);
+      })
+      .catch((error) => {
+        setAlertSeverity("error");
+        setAlertMessage("Tidak dapat menampilkan data.");
+        setOpenAlert(true);
+        // console.error("Terjadi kesalahan saat mengambil daftar judul", error);
+      })
+      .finally(() => {
+        setLoading(false);
+        // console.log("loading", loading);
+      });
+  };
+
+  useEffect(() => {
+    fetchDaftarPengajuanJudulData();
+  }, [token]);
+
+  // mengatur notif error
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
+  const handleChange = (panel) => (event, isExpanded) => {
+    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
+    setExpanded(isExpanded ? panel : false);
+  };
 
   // Fungsi untuk menangani pencarian
   const handleSearch = () => {
@@ -100,29 +143,21 @@ const DaftarPengajuanJudulDekan = () => {
     setIsSearchModalOpen(false);
   };
 
-  useEffect(() => {
-    const fetchDaftarPengajuanJudulData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/group/submission-list-dekan",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // Atur state 'setDaftarPengajuanJudul' dengan data dari respons
-        setDaftarPengajuanJudul(response.data.data);
-        console.log("Request get daftar judul: ", response.data.data);
-      } catch (error) {
-        console.error(
-          "Terjadi kesalahan saat mengambil daftar pengajuan:",
-          error
-        );
-      }
-    };
-    fetchDaftarPengajuanJudulData();
-  }, [token]);
+  // Menampilkan ikon loading jika data masih dalam proses fetching
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <Div>
@@ -149,9 +184,7 @@ const DaftarPengajuanJudulDekan = () => {
             textItem: "center",
           }}
         >
-          <PeopleIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <People sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -227,9 +260,7 @@ const DaftarPengajuanJudulDekan = () => {
             textItem: "center",
           }}
         >
-          <DraftsIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <Drafts sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -267,7 +298,7 @@ const DaftarPengajuanJudulDekan = () => {
             textItem: "center",
           }}
         >
-          <DownloadDoneIcon
+          <DownloadDone
             sx={{ width: "35px", height: "35px", color: "#006AF5" }}
           />
           <Div>
@@ -307,7 +338,7 @@ const DaftarPengajuanJudulDekan = () => {
             textItem: "center",
           }}
         >
-          <ClearIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
+          <Clear sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -355,6 +386,7 @@ const DaftarPengajuanJudulDekan = () => {
             gap: "12px",
           }}
         >
+          {/* Nama Page */}
           <Typography
             sx={{
               display: "flex",
@@ -401,7 +433,7 @@ const DaftarPengajuanJudulDekan = () => {
                 endAdornment: (
                   <InputAdornment>
                     <IconButton onClick={handleSearch}>
-                      <SearchIcon />
+                      <Search />
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -558,8 +590,8 @@ const DaftarPengajuanJudulDekan = () => {
           </Dialog>
         </Div>
         {/* Header End */}
-        {/* Semester and Table Mahasiswa Proposal Start */}
 
+        {/* Semester and Table Mahasiswa Proposal Start */}
         {daftarPengajuanJudul?.semesterData?.length > 0 ? (
           <Div
             sx={{
@@ -591,7 +623,7 @@ const DaftarPengajuanJudulDekan = () => {
                   }}
                 >
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={<ExpandMore />}
                     aria-controls={`panel${semesterIndex}bh-content`}
                     id={`panel${semesterIndex}bh-header`}
                   >
@@ -645,37 +677,36 @@ const DaftarPengajuanJudulDekan = () => {
                         </TableHead>
                         <TableBody>
                           {semesterData.submissions.map(
-                            (submission, submissionIndex) => (
+                            (submissionData, submissionIndex) => (
                               <TableRow key={submissionIndex}>
                                 <TableCell sx={{ fontSize: "13px" }}>
                                   {submissionIndex + 1}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {submission.students.map((student) => (
+                                  {submissionData.students.map((student) => (
                                     <div key={student.id}>
                                       {student.fullName}
                                     </div>
                                   ))}
                                 </TableCell>
-
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {submission.title}
+                                  {submissionData.title}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {submission.proposed_advisor}
+                                  {submissionData.proposed_advisor}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {submission.proposed_co_advisor1
-                                    ? submission.proposed_co_advisor1
+                                  {submissionData.proposed_co_advisor1
+                                    ? submissionData.proposed_co_advisor1
                                     : "-"}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {submission.proposed_co_advisor2
-                                    ? submission.proposed_co_advisor2
+                                  {submissionData.proposed_co_advisor2
+                                    ? submissionData.proposed_co_advisor2
                                     : "-"}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {submission.is_consultation ? (
+                                  {submissionData.is_consultation ? (
                                     <Chip
                                       label={"Sudah"}
                                       sx={{
@@ -694,7 +725,7 @@ const DaftarPengajuanJudulDekan = () => {
                                   )}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {submission.is_approve === "Waiting" ? (
+                                  {submissionData.is_approve === "Waiting" ? (
                                     <Chip
                                       label={"Mengunggu"}
                                       sx={{
@@ -702,7 +733,8 @@ const DaftarPengajuanJudulDekan = () => {
                                         color: "#985211",
                                       }}
                                     />
-                                  ) : submission.is_approve === "Approve" ? (
+                                  ) : submissionData.is_approve ===
+                                    "Approve" ? (
                                     <Chip
                                       label={"Diterima"}
                                       sx={{
@@ -710,7 +742,8 @@ const DaftarPengajuanJudulDekan = () => {
                                         color: "#0A7637",
                                       }}
                                     />
-                                  ) : submission.is_approve === "Rejected" ? (
+                                  ) : submissionData.is_approve ===
+                                    "Rejected" ? (
                                     <Chip
                                       label={"Ditolak"}
                                       sx={{
@@ -719,13 +752,13 @@ const DaftarPengajuanJudulDekan = () => {
                                       }}
                                     />
                                   ) : (
-                                    submission.is_approve
+                                    <Chip label={"Belum"} />
                                   )}
                                 </TableCell>
                                 <TableCell>
                                   <Typography
                                     component={Link}
-                                    to={`/sistem-informasi-skripsi/daftar-pengajuan-judul-dekan/beranda/${submission.group_id}/DEKAN`}
+                                    to={`/sistem-informasi-skripsi/daftar-pengajuan-judul-dekan/beranda/${submissionData.group_id}/DEKAN`}
                                     sx={{
                                       textDecoration: "none",
                                       color: "blue",
@@ -778,9 +811,21 @@ const DaftarPengajuanJudulDekan = () => {
             </Typography>
           </Div>
         )}
-        {/* Table Mahasiswa Proposal End */}
+        {/* Semester and Table Mahasiswa Proposal End */}
       </Div>
       {/* Table Master End */}
+
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={() => setOpenAlert(false)} severity={alertSeverity}>
+          <AlertTitle>Terjadi Kesalahan!</AlertTitle>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </Div>
   );
 };
