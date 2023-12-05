@@ -174,6 +174,16 @@ const Login = () => {
                       Create an account
                     </Button>
                   </Grid>
+                  <Grid item alignSelf={"center"}>
+                    <a href="http://localhost:3000/">
+                      <Button
+                        sx={{ textTransform: "capitalize" }}
+                        variant="text"
+                      >
+                        Daftar Judul Skripsi
+                      </Button>
+                    </a>
+                  </Grid>
                 </Grid>
               </Stack>
             </Form>

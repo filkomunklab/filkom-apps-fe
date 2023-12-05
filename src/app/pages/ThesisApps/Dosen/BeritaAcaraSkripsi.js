@@ -43,7 +43,6 @@ const BeritaAcara = () => {
   const [dataBeritaAcara, setDataBeritaAcara] = useState();
   const [dataKesimpulan, setDataKesimpulan] = useState();
   const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
-  const [dataNilaiKesimpulan, setDataNilaiKesimpulan] = useState();
 
   const [selectedStudentId, setSelectedStudentId] = useState();
   const [selectedName, setSelectedName] = useState();
@@ -218,18 +217,6 @@ const BeritaAcara = () => {
 
   const handleStatusChange = (event) => {
     setStatus(event.target.value); // Mengubah status saat radio button berubah
-  };
-
-  const handleNilaiChange = (event) => {
-    setNilai(event.target.value); // Mengubah nilai saat radio button berubah
-  };
-
-  const handlePerubahanChange = (event) => {
-    setPerubahan(event.target.value); // Mengubah jenis perubahan saat radio button berubah
-  };
-
-  const handleDeskripsiChange = (event) => {
-    setDeskripsi(event.target.value); // Ubah nama state saat radio button berubah
   };
 
   const [

@@ -5,10 +5,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  FormControl,
-  MenuItem,
   Paper,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -17,7 +14,6 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
@@ -61,46 +57,6 @@ const RiwayatSkripsiKaprodi = () => {
     };
     fetchDaftarRiwayat();
   }, [token]);
-
-  const [selectedValue, setSelectedValue] = useState("Kelas"); // Tentukan teks default di sini
-
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
-
-  //--------------------------------------
-  const [showTable, setShowTable] = useState(false);
-  const [showTable2, setShowTable2] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isTransitioning2, setIsTransitioning2] = useState(false);
-
-  const tableVisibleStyle = {
-    opacity: 1,
-    maxHeight: "200px", // Sesuaikan tinggi maksimal sesuai kebutuhan
-    transition: "opacity 0.3s ease-in-out, max-height 0.3s ease-in-out",
-  };
-
-  const tableHiddenStyle = {
-    opacity: 0,
-    maxHeight: "0",
-    transition: "opacity 0.3s ease-in-out, max-height 0.3s ease-in-out",
-  };
-
-  const handleSemesterClick = () => {
-    setIsTransitioning(true); // Mulai animasi
-    setTimeout(() => {
-      setShowTable(!showTable); // Toggle visibilitas tabel setelah animasi selesai
-      setIsTransitioning(false); // Selesaikan animasi
-    }, 300); // Waktu animasi dalam milidetik (0.3 detik)
-  };
-
-  const handleSemesterClick2 = () => {
-    setIsTransitioning2(true); // Mulai animasi
-    setTimeout(() => {
-      setShowTable2(!showTable2); // Toggle visibilitas tabel setelah animasi selesai
-      setIsTransitioning2(false); // Selesaikan animasi
-    }, 300); // Waktu animasi dalam milidetik (0.3 detik)
-  };
 
   return (
     <Div
@@ -147,27 +103,7 @@ const RiwayatSkripsiKaprodi = () => {
             gap: "16px",
             flexShrink: 0,
           }}
-        >
-          {/* <FormControl>
-            <Select
-              size="small"
-              labelId="dropdown-label"
-              id="dropdown"
-              value={selectedValue}
-              onChange={handleChange}
-              sx={{
-                height: "30px",
-                width: "250px",
-                boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-              }}
-            >
-              <MenuItem value="Kelas">Kelas</MenuItem>{" "}
-              <MenuItem value="option1">Opsi 1</MenuItem>
-              <MenuItem value="option2">Opsi 2</MenuItem>
-              <MenuItem value="option3">Opsi 3</MenuItem>
-            </Select>
-          </FormControl> */}
-        </Div>
+        ></Div>
         <Div
           sx={{
             flexDirection: "row",
@@ -315,107 +251,6 @@ const RiwayatSkripsiKaprodi = () => {
           </Typography>
         </Div>
       )}
-
-      {/* {daftarRiwayat.map((riwayat) => (
-        <Div
-          key={riwayat.semester}
-          sx={{
-            display: "inline-flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: "25px",
-            width: "100%",
-          }}
-        >
-          <Div
-            sx={{
-              display: "flex",
-              width: "100%",
-              padding: "24px",
-              alignItems: "center",
-              gap: "10px",
-              background: "rgba(26, 56, 96, 0.10)",
-              borderRadius: "6px",
-              cursor: "pointer",
-            }}
-            onClick={handleSemesterClick}
-          >
-            <Typography variant="subtitle2" sx={{ width: "100%" }}>
-              {riwayat.semester}
-            </Typography>
-            <ExpandMoreIcon />
-          </Div>
-          {showTable || isTransitioning ? (
-            <TableContainer
-              style={{
-                ...tableVisibleStyle,
-                display: isTransitioning ? "block" : "table",
-              }}
-            >
-              <Table>
-                <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                  <TableRow>
-                    <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                    <TableCell sx={{ width: "30%" }}>
-                      Nama Lengkap Mahasiswa
-                    </TableCell>
-                    <TableCell sx={{ width: "45%" }}>Judul</TableCell>
-                    <TableCell sx={{ width: "10%" }}>
-                      Tanggal Diterima
-                    </TableCell>
-                    <TableCell sx={{ width: "10%" }}>Action</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {riwayat.skripsis.map((skripsi) =>
-                    skripsi.students.map((student, index) => (
-                      <TableRow key={skripsi.group_id + index}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{student.fullName}</TableCell>
-                        <TableCell>{skripsi.title}</TableCell>
-                        {/* Tambahkan tanggal diterima jika tersedia 
-                        <TableCell>
-                          {/* Tambahkan tanggal diterima di sini 
-                        </TableCell>
-                        <TableCell>
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
-                            }}
-                          >
-                            Detail
-                          </span>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          ) : (
-            <TableContainer style={tableHiddenStyle}>
-              <Table>
-                <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                  <TableRow>
-                    <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                    <TableCell sx={{ width: "30%" }}>
-                      Nama Lengkap Mahasiswa
-                    </TableCell>
-                    <TableCell sx={{ width: "45%" }}>Judul</TableCell>
-                    <TableCell sx={{ width: "10%" }}>
-                      Tanggal Diterima
-                    </TableCell>
-                    <TableCell sx={{ width: "10%" }}>Action</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody></TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        </Div>
-      ))} */}
     </Div>
   );
 };

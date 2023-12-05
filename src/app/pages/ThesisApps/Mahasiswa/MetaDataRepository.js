@@ -11,15 +11,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   TextareaAutosize,
   Typography,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 
@@ -81,19 +76,10 @@ const MetaDataRepository = () => {
   }, [token, groupId]);
 
   const [openDialog, setOpenDialog] = useState(false);
-  const [penulisCount, setPenulisCount] = useState(1); // Awalnya satu input select
   const [selectedKeywords, setSelectedKeywords] = useState([]);
   const [abstrak, setAbstrak] = useState("");
   const [referensi, setReferensi] = useState("");
   const [errorMessages, setErrorMessages] = useState({
-    keywords: "",
-    abstrak: "",
-    referensi: "",
-  });
-
-  const currentDate = new Date();
-
-  const [submittedData, setSubmittedData] = useState({
     keywords: "",
     abstrak: "",
     referensi: "",

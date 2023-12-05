@@ -102,15 +102,6 @@ const DaftarPengajuanProposalDosenSkripsi = () => {
           }
         );
 
-        // Memperoleh data dari respons
-        const data = response.data.data;
-
-        // Membalik urutan data
-        const reversedData = {
-          dashboard: data.dashboard,
-          semesterData: data.semesterData.reverse(),
-        };
-
         // Atur state 'setDaftarPengajuanProposal' dengan data dari respons
         setDaftarPengajuanProposal(response.data.data);
         console.log("Request get daftar proposal: ", response.data.data);

@@ -23,7 +23,7 @@ import {
   AccordionDetails,
   Paper,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
+
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";

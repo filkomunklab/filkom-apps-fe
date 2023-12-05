@@ -21,6 +21,7 @@ import {
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
+import AddIcon from "@mui/icons-material/Add";
 
 // View Document HKI
 const PDFViewerHKI = ({ HKI, isUploading }) => {
@@ -769,6 +770,91 @@ const ArsipDocument = () => {
     window.open(url, "_blank"); // Membuka tautan dalam tab atau jendela baru
   };
 
+  //------------------------------Unggah link2 -------------------------------------------
+  const [open, setOpen] = useState(false);
+  const [linkGroups, setLinkGroups] = useState([]);
+  const [newLink2, setNewLink2] = useState({ name: "", url: "" });
+  const [editGroupIndex, setEditGroupIndex] = useState(null);
+  const [editLinkIndex, setEditLinkIndex] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState({
+    open: false,
+    groupIndex: null,
+    linkIndex: null,
+  });
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setEditGroupIndex(null);
+    setEditLinkIndex(null);
+    setNewLink2({ name: "", url: "" });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewLink2((prevLink) => ({ ...prevLink, [name]: value }));
+  };
+
+  const handleAddLink = () => {
+    const updatedGroups = [...linkGroups];
+
+    if (editGroupIndex !== null && editLinkIndex !== null) {
+      // Editing existing link
+      updatedGroups[editGroupIndex].title = newLink2.name;
+      updatedGroups[editGroupIndex].links[editLinkIndex] = {
+        url: newLink2.url,
+        date: new Date().toLocaleDateString("id-ID"),
+      };
+    } else {
+      // Adding new link
+      const newLink2Group = {
+        title: newLink2.name,
+        links: [
+          {
+            url: newLink2.url,
+            date: new Date().toLocaleDateString("id-ID"),
+          },
+        ],
+      };
+      updatedGroups.push(newLink2Group);
+    }
+
+    setLinkGroups(updatedGroups);
+    handleClose();
+  };
+
+  const handleEdit = (groupIndex, linkIndex) => {
+    const editedLink = linkGroups[groupIndex].links[linkIndex];
+    setEditGroupIndex(groupIndex);
+    setEditLinkIndex(linkIndex);
+    setNewLink2({ name: linkGroups[groupIndex].title, url: editedLink.url });
+    setOpen(true);
+  };
+
+  const handleDeleteConfirm = (groupIndex, linkIndex) => {
+    if (confirmDelete.linkIndex !== null) {
+      // Deleting link
+      setLinkGroups((prevGroups) => {
+        const updatedGroups = [...prevGroups];
+        updatedGroups[confirmDelete.groupIndex].links.splice(linkIndex, 1);
+        return updatedGroups;
+      });
+    } else {
+      // Deleting entire group
+      setLinkGroups((prevGroups) => {
+        const updatedGroups = [...prevGroups];
+        updatedGroups.splice(groupIndex, 1);
+        return updatedGroups;
+      });
+    }
+
+    setConfirmDelete({ open: false, groupIndex: null, linkIndex: null });
+    handleClose();
+  };
+
   return (
     <Div>
       <Div
@@ -1454,7 +1540,212 @@ const ArsipDocument = () => {
                   </TableContainer>
                 </>
               ))}
+
+              {/* ----------------------Unggah Link2 Start ------------------------ */}
+              <Div
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginTop: "20px",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  component="label"
+                  sx={{
+                    textTransform: "none",
+                    color: "white",
+                    fontSize: "12px",
+                    borderRadius: "6px",
+                    width: "150px",
+                    height: "30px",
+                  }}
+                  onClick={handleClickOpen}
+                >
+                  <AddIcon
+                    sx={{ fontSize: "14px", margin: "5px" }}
+                    onClick={handleClickOpen}
+                  />
+                  Tambah Link
+                </Button>
+              </Div>
+              {/* popup untuk tambah dan edit link Start */}
+              <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+                <DialogTitle>
+                  {editGroupIndex !== null && editLinkIndex !== null
+                    ? "Perubahan Link"
+                    : "Tambah Link"}
+                </DialogTitle>
+                <DialogContent>
+                  <TextField
+                    label="Nama Link"
+                    name="name"
+                    value={newLink2.name}
+                    onChange={handleInputChange}
+                    fullWidth
+                    margin="normal"
+                  />
+                  <TextField
+                    label="URL Link"
+                    name="url"
+                    value={newLink2.url}
+                    onChange={handleInputChange}
+                    fullWidth
+                    margin="normal"
+                  />
+                </DialogContent>
+                <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                  <Button
+                    size="small"
+                    sx={{
+                      background: "white",
+                      boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                      textTransform: "none",
+                      color: "black",
+                    }}
+                    onClick={handleClose}
+                  >
+                    Batal
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    sx={{ textTransform: "none" }}
+                    color="primary"
+                    onClick={handleAddLink}
+                  >
+                    {editGroupIndex !== null && editLinkIndex !== null
+                      ? "Simpan"
+                      : "Tambah"}
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              {/* popup untuk tambah dan edit link End */}
             </Div>
+
+            {linkGroups.map((group, groupIndex) => (
+              <Div key={groupIndex} sx={{ width: "100%" }}>
+                <Typography
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    padding: "24px",
+                    alignItems: "center",
+                    gap: "10px",
+                    color: "#192434",
+                    background: "rgba(26, 56, 96, 0.10)",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                  }}
+                >
+                  {group.title}
+                </Typography>
+                <Div
+                  sx={{
+                    width: "100%",
+                    padding: "0 25px",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    gap: "25px",
+                  }}
+                >
+                  <TableContainer component={Paper} style={{ marginTop: 20 }}>
+                    <Table>
+                      <TableHead sx={{ background: "#F5F5F5" }}>
+                        <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "65%",
+                            }}
+                          >
+                            Link
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              width: "20%",
+                            }}
+                          >
+                            Tanggal
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              fontSize: "12px",
+                              padding: "11px",
+                              textAlign: "center",
+                              width: "12%",
+                            }}
+                          >
+                            Action
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {group.links.map((link, linkIndex) => (
+                          <TableRow>
+                            <TableCell sx={{ fontSize: "12px" }}>
+                              <a
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {link.url}
+                              </a>
+                            </TableCell>
+                            <TableCell>{link.date}</TableCell>
+                            <TableCell>
+                              <Div sx={{ display: "flex" }}>
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor: "pointer",
+                                    color: "blue",
+                                    fontSize: "12px",
+                                  }}
+                                  onClick={() =>
+                                    handleEdit(groupIndex, linkIndex)
+                                  }
+                                >
+                                  Update
+                                </span>
+                                <Div
+                                  style={{
+                                    margin: "0 5px",
+                                    color: "#E0E0E0",
+                                  }}
+                                >
+                                  |
+                                </Div>
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor: isSubmittingLink
+                                      ? "not-allowed"
+                                      : "pointer",
+                                    color: isSubmittingLink ? "#A0A0A0" : "red",
+                                    fontSize: "12px",
+                                  }}
+                                  onClick={() =>
+                                    handleDeleteConfirm(groupIndex, linkIndex)
+                                  }
+                                >
+                                  Hapus
+                                </span>
+                              </Div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Div>
+              </Div>
+            ))}
+            {/* ----------------------Unggah Link2 End ------------------------ */}
             {/* Table 3 End */}
           </Div>
           {/* Element 2 End */}
