@@ -107,48 +107,55 @@ const Consultation = () => {
       alert("Please fill in all required fields.");
       return;
     }
-    handleCloseFirstModal();
-    setLoading(true);
 
-    const arrayReceiver = receiver.split("|");
-    const receiver_nik = arrayReceiver[0];
-    const receiver_name = arrayReceiver[1];
+    const trimmedValue = description.trim();
 
-    const consultationData = {
-      topic,
-      receiver_name,
-      receiver_nik,
-      student_arrival_year: informationStudent.arrival_Year,
-      student_major: informationStudent.major,
-      student_name: `${informationStudent.firstName} ${informationStudent.lastName}`,
-      student_nim: informationStudent.nim,
-      supervisor_name: `${supervisorData.firstName} ${supervisorData.lastName}`,
-      description: description,
-    };
-    // console.log("consultationData: ", consultationData);
+    if (trimmedValue !== "") {
+      handleCloseFirstModal();
+      setLoading(true);
 
-    try {
-      const consultationResult = await axios.post(
-        `${BASE_URL_API}/academic-consultation`,
-        consultationData
-      );
-      // console.log("ini yang nanti di post: ", consultationResult);
+      const arrayReceiver = receiver.split("|");
+      const receiver_nik = arrayReceiver[0];
+      const receiver_name = arrayReceiver[1];
 
-      if (consultationResult.data.status === "OK") {
-        handleOpenSecondModal();
-        setTopic("");
-        setReceiver("");
-        setShowLabel(true);
-        setShowLabel2(true);
-        setDescription("");
+      const consultationData = {
+        topic,
+        receiver_name,
+        receiver_nik,
+        student_arrival_year: informationStudent.arrival_Year,
+        student_major: informationStudent.major,
+        student_name: `${informationStudent.firstName} ${informationStudent.lastName}`,
+        student_nim: informationStudent.nim,
+        supervisor_name: `${supervisorData.firstName} ${supervisorData.lastName}`,
+        description: trimmedValue,
+      };
+      // console.log("consultationData: ", consultationData);
 
+      try {
+        const consultationResult = await axios.post(
+          `${BASE_URL_API}/academic-consultation`,
+          consultationData
+        );
+        // console.log("ini yang nanti di post: ", consultationResult);
+
+        if (consultationResult.data.status === "OK") {
+          handleOpenSecondModal();
+          setTopic("");
+          setReceiver("");
+          setShowLabel(true);
+          setShowLabel2(true);
+          setDescription("");
+
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log("ini error: ", error.consultationResult);
+        console.error("Error response:", error);
+        handleOpenErrorModal();
         setLoading(false);
       }
-    } catch (error) {
-      console.log("ini error: ", error.consultationResult);
-      console.error("Error response:", error);
-      handleOpenErrorModal();
-      setLoading(false);
+    } else {
+      alert("Input tidak valid. Mohon masukkan pesan yang valid.");
     }
   };
 

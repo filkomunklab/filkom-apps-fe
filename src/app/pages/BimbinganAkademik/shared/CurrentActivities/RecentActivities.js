@@ -89,7 +89,6 @@ const CurrentActivities = () => {
       // console.log("ini detail Consutation result:", consultationDetailsResult);
       const { role } = JSON.parse(localStorage.getItem("user"));
       let path = "";
-      console.log("hai ini role", role.includes === "KAPRODI");
       if (role.includes("DEKAN")) {
         path =
           "/bimbingan-akademik/dekan/current-activities/view-consultation/";
@@ -208,9 +207,15 @@ const CurrentActivities = () => {
 
                     <Box
                       sx={{
-                        marginLeft: { xs: "auto", md: 0 },
                         marginRight: "-72px",
                         textAlign: "right",
+                        width: "90px",
+                        "@media (max-width: 560px)": {
+                          width: "150px",
+                        },
+                        "@media (max-width: 400px)": {
+                          width: "200px",
+                        },
                       }}
                     >
                       <ListItemText

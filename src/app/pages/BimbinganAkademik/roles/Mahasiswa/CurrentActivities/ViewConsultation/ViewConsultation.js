@@ -40,7 +40,7 @@ const style = {
   borderRadius: 10,
 };
 
-const Consultation = () => {
+const ViewConsultation = () => {
   const [status, setStatus] = useState("");
   const [messages, setMessages] = useState([]);
   const [openFirstModal, setOpenFirstModal] = React.useState(false);
@@ -144,25 +144,14 @@ const Consultation = () => {
       console.error("ini error complete status:", error);
     }
   };
-  const handleBreadcrumbsClick = () => {
-    const { role } = JSON.parse(localStorage.getItem("user"));
-    let path = "";
-
-    if (role.includes("DEKAN")) {
-      path = "/bimbingan-akademik/dekan/history/consultation/";
-    } else if (role.includes("KAPRODI")) {
-      path = "/bimbingan-akademik/kaprodi/history/consultation/";
-    } else {
-      path = "/bimbingan-akademik/dosen-pembimbing/history/consultation/";
-    }
-    return <StyledLink to={path}>History</StyledLink>;
-  };
 
   return (
     <Div>
       <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
-        {handleBreadcrumbsClick()}
-        <Typography color="text.primary">Consultation</Typography>
+        <StyledLink to="/bimbingan-akademik/current-activities">
+          Current Activities
+        </StyledLink>
+        ;<Typography color="text.primary">View Consultation</Typography>
       </Breadcrumbs>
       <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
         Consultation
@@ -363,8 +352,8 @@ const Consultation = () => {
                     />
                     <Grid
                       container
-                      spacing={1}
                       sx={{ paddingTop: "20px" }}
+                      spacing={1}
                       justifyContent="flex-end"
                     >
                       <Button
@@ -425,10 +414,6 @@ const Consultation = () => {
                               </Button>
                             </Grid>
                             <Grid item>
-                              {/* <Link
-                            style={{ textDecoration: "none", color: "white" }}
-                            to="/bimbingan-akademik/consultation/"
-                          > */}
                               <Button
                                 onClick={handleSubmitFirstModal}
                                 sx={{
@@ -444,7 +429,6 @@ const Consultation = () => {
                               >
                                 Yes
                               </Button>
-                              {/* </Link> */}
                             </Grid>
                           </Grid>
                         </div>
@@ -472,4 +456,4 @@ const Consultation = () => {
   );
 };
 
-export default Consultation;
+export default ViewConsultation;

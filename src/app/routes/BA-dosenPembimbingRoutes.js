@@ -138,7 +138,7 @@ const dosenPembimbingRoutes = [
     element: <Page component={HistoryCertificateRejected} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/history/consultation",
+    path: "/bimbingan-akademik/dosen-pembimbing/history/consultation/:id",
     element: <Page component={HistoryConsultationComplete} />,
   },
   {
@@ -146,7 +146,7 @@ const dosenPembimbingRoutes = [
     element: <Page component={ViewActivity} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/current-activities/view-consultation",
+    path: "/bimbingan-akademik/dosen-pembimbing/current-activities/view-consultation/:id",
     element: <Page component={ViewConsultation} />,
   },
   {

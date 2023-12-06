@@ -4,7 +4,7 @@ import VisionMisionGoals from "app/pages/BimbinganAkademik/shared/VisionMisionGo
 import Curriculum from "app/pages/BimbinganAkademik/shared/Curriculum/Curriculum";
 import AddActivity from "app/pages/BimbinganAkademik/roles/Kaprodi/AddActivity";
 import Dashboard from "app/pages/BimbinganAkademik/roles/Kaprodi/Dashboard/Dashboard.";
-import History from "app/pages/BimbinganAkademik/roles/Kaprodi/History";
+import History from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History";
 
 import StudentCertificate from "app/pages/BimbinganAkademik/roles/Kaprodi/StudentInformation/StudentInformationMentored/StudentCertificate/StudentCertificate";
 import CertificateDetail from "app/pages/BimbinganAkademik/roles/Kaprodi/StudentInformation/StudentInformationMentored/StudentCertificate/CertificateDetail/CertificateDetail";
@@ -54,7 +54,7 @@ import HistoryCertificateApproved from "app/pages/BimbinganAkademik/roles/Kaprod
 import HistoryCertificateRejected from "app/pages/BimbinganAkademik/roles/Kaprodi/History/HistoryCertificate/CertificateRejected";
 import HistoryGradeApproved from "app/pages/BimbinganAkademik/roles/Kaprodi/History/HistoryGrade/ApprovedHistoryGrade";
 import HistoryGradeRejected from "app/pages/BimbinganAkademik/roles/Kaprodi/History/HistoryGrade/RejectedHistoryGrade";
-import HistoryConsultationComplete from "app/pages/BimbinganAkademik/roles/Kaprodi/History/HistoryConsultation/ConsultationComplete";
+import HistoryConsultationComplete from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HistoryConsultation/ConsultationComplete";
 import ReviewPreRegistration from "app/pages/BimbinganAkademik/roles/Kaprodi/ReviewActivities/ReviewPreRegistration";
 import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/roles/Kaprodi/ReviewActivities/ReviewPreRegistration/ReviewPreRegistrationStudent";
 import ReviewCertificate from "app/pages/BimbinganAkademik/roles/Kaprodi/ReviewActivities/ReviewCertificate/ReviewCertificate";
@@ -182,7 +182,7 @@ const kepalaProgramStudiRoutes = [
     element: <Page component={HistoryGradeRejected} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/history/consultation",
+    path: "/bimbingan-akademik/kaprodi/history/consultation/:id",
     element: <Page component={HistoryConsultationComplete} />,
   },
   {

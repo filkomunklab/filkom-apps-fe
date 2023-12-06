@@ -34,12 +34,12 @@ import ReviewGrade from "app/pages/BimbinganAkademik/roles/Dekan/ReviewActivitie
 import ReviewGradeStudent from "app/pages/BimbinganAkademik/roles/Dekan/ReviewActivities/ReviewGrade/ReviewGradeStudent";
 import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/StudentConsultation";
 import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReplyConsultation/Consultation";
-import History from "app/pages/BimbinganAkademik/roles/Dekan/History";
+import History from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History";
 import HistoryActivity from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/HistoryActivity";
 import HistoryPreRegistration from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryPreRegis/PreRegistration";
 import HistoryCertificate from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryCertificate/Certificate";
 import HistoryGrade from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryGrade/HistoryGrade";
-import HistoryConsultationComplete from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryConsultation/ConsultationComplete";
+import HistoryConsultationComplete from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HistoryConsultation/ConsultationComplete";
 import CurrentActivities from "app/pages/BimbinganAkademik/shared/CurrentActivities";
 import ViewActivity from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewActivity/ViewActivity";
 import ViewConsultation from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewConsultation/ViewConsultation";
@@ -216,7 +216,7 @@ const dekanRoutes = [
     element: <Page component={HistoryGrade} />,
   },
   {
-    path: "/bimbingan-akademik/dekan/history/consultation",
+    path: "/bimbingan-akademik/dekan/history/consultation/:id",
     element: <Page component={HistoryConsultationComplete} />,
   },
   {

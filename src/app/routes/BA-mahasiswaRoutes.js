@@ -9,7 +9,7 @@ import ConsultationOnProcess from "app/pages/BimbinganAkademik/roles/Mahasiswa/H
 import ConsultationComplete from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryConsultation/ConsultationComplete";
 import CurrentActivities from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities";
 import CurrentActivitiesActivity from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Activity";
-import CurrentActivitiesConsultation from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Consultation";
+import CurrentActivitiesConsultation from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/ViewConsultation/ViewConsultation";
 import CurrentActivitiesPreRegis from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Pre-registration";
 import CurrentActivitiesCertificate from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Certificate/CertificateWaiting";
 import CurrentActivitiesGrade from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Grade";
@@ -98,7 +98,7 @@ const mahasiswaRoutes = [
     element: <Page component={CurrentActivitiesGrade} />,
   },
   {
-    path: "/bimbingan-akademik/current-activities/consultation",
+    path: "/bimbingan-akademik/current-activities/consultation/:id",
     element: <Page component={CurrentActivitiesConsultation} />,
   },
   {
