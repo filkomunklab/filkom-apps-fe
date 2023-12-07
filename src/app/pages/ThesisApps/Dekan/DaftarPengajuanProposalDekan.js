@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Div from "@jumbo/shared/Div";
-import PeopleIcon from "@mui/icons-material/People";
+import MuiAlert from "@mui/material/Alert";
 import {
   Accordion,
   AccordionDetails,
@@ -23,32 +22,30 @@ import {
   TextField,
   InputAdornment,
   IconButton,
+  CircularProgress,
+  Snackbar,
+  AlertTitle,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import EditIcon from "@mui/icons-material/Edit";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-// import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-// import StarBorderIcon from "@mui/icons-material/StarBorder";
-// import SearchGlobal from "app/shared/SearchGlobal";
-import { Link } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
+import {
+  ExpandMore,
+  People,
+  Gavel,
+  DateRange,
+  Done,
+  Restore,
+  Close,
+  Search,
+} from "@mui/icons-material";
+import { Link, useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const DaftarPengajuanProposalDekan = () => {
-  // State untuk melacak panel accordion yang terbuka
-  const [expanded, setExpanded] = useState(false);
+  // ======================== STATE ===========================
+  // mengatur loading page
+  const [loading, setLoading] = useState(true);
+  // console.log("loading", loading);
 
-  // state Pencarian
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-
-  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
-  const handleChange = (panel) => (event, isExpanded) => {
-    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
-    setExpanded(isExpanded ? panel : false);
-  };
-
+  // menyimpan hasil request daftar pengajuan proposal
   const [daftarPengajuanProposal, setDaftarPengajuanProposal] = useState({
     dashboard: {
       total_group: 0,
@@ -61,9 +58,80 @@ const DaftarPengajuanProposalDekan = () => {
     semesterData: [],
   });
 
+  // mengatur notif error
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState("success");
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+
+  // membuka / menutup semester yang dipilih (Accordion)
+  const [expanded, setExpanded] = useState(false);
+
+  // state Pencarian
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
+  // ======================== FUNCTION ===========================
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
-  console.log("token", token);
+  // console.log("token", token);
+
+  const navigate = useNavigate();
+
+  const fetchDaftarPengajuanProposalData = async () => {
+    jwtAuthAxios
+      .get("/group/proposal-list-dekan", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // menyimpan hasil request
+        setDaftarPengajuanProposal(response.data.data);
+        // console.log("Request get daftar proposal: ", response.data.data);
+        // menonaktifkan loading page
+        setLoading(false);
+        // console.log("loading", loading);
+      })
+      .catch((error) => {
+        if (
+          error.response.data.data.error ===
+          "You don't have permission to perform this action"
+        ) {
+          navigate(`/`);
+        } else {
+          setAlertSeverity("error");
+          setAlertTitle("Terjadi Kesalahan!");
+          setAlertMessage("Tidak dapat menampilkan data.");
+          setOpenAlert(true);
+          // console.error(
+          //   "Terjadi kesalahan saat mengambil daftar pengajuan:",
+          //   error
+          // );
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+        // console.log("loading", loading);
+      });
+  };
+
+  useEffect(() => {
+    fetchDaftarPengajuanProposalData();
+  }, [token]);
+
+  // mengatur notif error
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
+  const handleChange = (panel) => (event, isExpanded) => {
+    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
+    setExpanded(isExpanded ? panel : false);
+  };
 
   // Fungsi untuk menangani pencarian
   const handleSearch = () => {
@@ -92,29 +160,21 @@ const DaftarPengajuanProposalDekan = () => {
     setIsSearchModalOpen(false);
   };
 
-  useEffect(() => {
-    const fetchDaftarPengajuanProposalData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/group/proposal-list-dekan",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // Atur state 'setDaftarPengajuanProposal' dengan data dari respons
-        setDaftarPengajuanProposal(response.data.data);
-        console.log("Request get daftar proposal: ", response.data.data);
-      } catch (error) {
-        console.error(
-          "Terjadi kesalahan saat mengambil daftar pengajuan:",
-          error
-        );
-      }
-    };
-    fetchDaftarPengajuanProposalData();
-  }, [token]);
+  // Menampilkan ikon loading jika data masih dalam proses fetching
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <Div>
@@ -141,9 +201,7 @@ const DaftarPengajuanProposalDekan = () => {
             textItem: "center",
           }}
         >
-          <PeopleIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <People sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -164,7 +222,7 @@ const DaftarPengajuanProposalDekan = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.total_group} Kelompok
+              {daftarPengajuanProposal?.dashboard.total_group} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -181,7 +239,7 @@ const DaftarPengajuanProposalDekan = () => {
             textItem: "center",
           }}
         >
-          <EditIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
+          <DateRange sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -202,7 +260,7 @@ const DaftarPengajuanProposalDekan = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.not_defence} Kelompok
+              {daftarPengajuanProposal?.dashboard.not_defence} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -219,9 +277,7 @@ const DaftarPengajuanProposalDekan = () => {
             textItem: "center",
           }}
         >
-          <ArrowUpwardIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <Gavel sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -242,7 +298,7 @@ const DaftarPengajuanProposalDekan = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.has_defence} Kelompok
+              {daftarPengajuanProposal?.dashboard.has_defence} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -271,9 +327,7 @@ const DaftarPengajuanProposalDekan = () => {
             textItem: "center",
           }}
         >
-          <PeopleIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <Done sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -294,7 +348,7 @@ const DaftarPengajuanProposalDekan = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.pass} Kelompok
+              {daftarPengajuanProposal?.dashboard.pass} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -311,7 +365,7 @@ const DaftarPengajuanProposalDekan = () => {
             textItem: "center",
           }}
         >
-          <EditIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
+          <Restore sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -332,7 +386,7 @@ const DaftarPengajuanProposalDekan = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.repeat} Kelompok
+              {daftarPengajuanProposal?.dashboard.repeat} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -349,9 +403,7 @@ const DaftarPengajuanProposalDekan = () => {
             textItem: "center",
           }}
         >
-          <ArrowUpwardIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <Close sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -372,7 +424,7 @@ const DaftarPengajuanProposalDekan = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanProposal.dashboard.not_pass} Kelompok
+              {daftarPengajuanProposal?.dashboard.not_pass} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -442,9 +494,9 @@ const DaftarPengajuanProposalDekan = () => {
               onChange={(e) => setSearchKeyword(e.target.value)}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment>
+                  <InputAdornment position="end">
                     <IconButton onClick={handleSearch}>
-                      <SearchIcon />
+                      <Search />
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -483,7 +535,7 @@ const DaftarPengajuanProposalDekan = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {searchResults.map((proposal, proposalIndex) => (
+                    {searchResults?.map((proposal, proposalIndex) => (
                       <TableRow key={proposalIndex}>
                         <TableCell sx={{ fontSize: "13px" }}>
                           {proposalIndex + 1}
@@ -580,7 +632,7 @@ const DaftarPengajuanProposalDekan = () => {
               borderRadius: "8px",
             }}
           >
-            {daftarPengajuanProposal.semesterData.map(
+            {daftarPengajuanProposal?.semesterData.map(
               (semesterData, semesterIndex) => (
                 <Accordion
                   key={semesterIndex}
@@ -595,7 +647,7 @@ const DaftarPengajuanProposalDekan = () => {
                   }}
                 >
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={<ExpandMore />}
                     aria-controls={`panel${semesterIndex}bh-content`}
                     id={`panel${semesterIndex}bh-header`}
                   >
@@ -743,6 +795,18 @@ const DaftarPengajuanProposalDekan = () => {
         {/* Table Mahasiswa Proposal End */}
       </Div>
       {/* Table Master End */}
+
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={() => setOpenAlert(false)} severity={alertSeverity}>
+          <AlertTitle>{alertTitle}</AlertTitle>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </Div>
   );
 };

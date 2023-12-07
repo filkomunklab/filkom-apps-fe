@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Div from "@jumbo/shared/Div";
-import PeopleIcon from "@mui/icons-material/People";
+import MuiAlert from "@mui/material/Alert";
 import {
   Accordion,
   AccordionDetails,
@@ -23,32 +22,30 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  Snackbar,
+  AlertTitle,
+  CircularProgress,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import EditIcon from "@mui/icons-material/Edit";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-// import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-// import StarBorderIcon from "@mui/icons-material/StarBorder";
-// import SearchGlobal from "app/shared/SearchGlobal";
-import { Link } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
+import {
+  Close,
+  DateRange,
+  Done,
+  ExpandMore,
+  Gavel,
+  People,
+  Restore,
+  Search,
+} from "@mui/icons-material";
+import { Link, useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const DaftarPengajuanSkripsiDekan = () => {
-  // State untuk melacak panel accordion yang terbuka
-  const [expanded, setExpanded] = useState(false);
+  // ======================== STATE ===========================
+  // mengatur loading page
+  const [loading, setLoading] = useState(true);
+  // console.log("loading", loading);
 
-  // state Pencarian
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-
-  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
-  const handleChange = (panel) => (event, isExpanded) => {
-    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
-    setExpanded(isExpanded ? panel : false);
-  };
-
+  // menyimpan hasil request daftar pengajuan proposal
   const [daftarPengajuanSkripsi, setDaftarPengajuanSkripsi] = useState({
     dashboard: {
       total_group: 0,
@@ -61,9 +58,81 @@ const DaftarPengajuanSkripsiDekan = () => {
     semesterData: [],
   });
 
+  // mengatur notif error
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState("success");
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+
+  // membuka / menutup semester yang dipilih (Accordion)
+  const [expanded, setExpanded] = useState(false);
+
+  // state Pencarian
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
+  // ======================== FUNCTION ===========================
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
-  console.log("token", token);
+  // console.log("token", token);
+
+  const navigate = useNavigate();
+
+  const fetchDaftarPengajuanSkripsiData = async () => {
+    jwtAuthAxios
+      .get("/group/skripsi-list-dekan", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // menyimpan hasil request
+        setDaftarPengajuanSkripsi(response.data.data);
+        // console.log("Request get daftar skripsi: ", response.data.data);
+        // menonaktifkan loading page
+        setLoading(false);
+        // console.log("loading", loading);
+      })
+      .catch((error) => {
+        // redirect ke home
+        if (
+          error.response.data.data.error ===
+          "You don't have permission to perform this action"
+        ) {
+          navigate(`/`);
+        } else {
+          setAlertSeverity("error");
+          setAlertTitle("Terjadi Kesalahan!");
+          setAlertMessage("Tidak dapat menampilkan data.");
+          setOpenAlert(true);
+          // console.error(
+          //   "Terjadi kesalahan saat mengambil daftar pengajuan:",
+          //   error
+          // );
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+        // console.log("loading", loading);
+      });
+  };
+
+  useEffect(() => {
+    fetchDaftarPengajuanSkripsiData();
+  }, [token]);
+
+  // mengatur notif error
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
+  const handleChange = (panel) => (event, isExpanded) => {
+    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
+    setExpanded(isExpanded ? panel : false);
+  };
 
   // Fungsi untuk menangani pencarian
   const handleSearch = () => {
@@ -92,29 +161,21 @@ const DaftarPengajuanSkripsiDekan = () => {
     setIsSearchModalOpen(false);
   };
 
-  useEffect(() => {
-    const fetchDaftarPengajuanSkripsiData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/group/skripsi-list-dekan",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // Atur state 'setDaftarPengajuanSkripsi' dengan data dari respons
-        setDaftarPengajuanSkripsi(response.data.data);
-        console.log("Request get daftar skripsi: ", response.data.data);
-      } catch (error) {
-        console.error(
-          "Terjadi kesalahan saat mengambil daftar pengajuan:",
-          error
-        );
-      }
-    };
-    fetchDaftarPengajuanSkripsiData();
-  }, [token]);
+  // Menampilkan ikon loading jika data masih dalam proses fetching
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <Div>
@@ -141,9 +202,7 @@ const DaftarPengajuanSkripsiDekan = () => {
             textItem: "center",
           }}
         >
-          <PeopleIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <People sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -181,7 +240,7 @@ const DaftarPengajuanSkripsiDekan = () => {
             textItem: "center",
           }}
         >
-          <EditIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
+          <DateRange sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -219,9 +278,7 @@ const DaftarPengajuanSkripsiDekan = () => {
             textItem: "center",
           }}
         >
-          <ArrowUpwardIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <Gavel sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -271,9 +328,7 @@ const DaftarPengajuanSkripsiDekan = () => {
             textItem: "center",
           }}
         >
-          <PeopleIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <Done sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -311,7 +366,7 @@ const DaftarPengajuanSkripsiDekan = () => {
             textItem: "center",
           }}
         >
-          <EditIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
+          <Restore sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -349,9 +404,7 @@ const DaftarPengajuanSkripsiDekan = () => {
             textItem: "center",
           }}
         >
-          <ArrowUpwardIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <Close sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -443,9 +496,9 @@ const DaftarPengajuanSkripsiDekan = () => {
               onChange={(e) => setSearchKeyword(e.target.value)}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment>
+                  <InputAdornment position="end">
                     <IconButton onClick={handleSearch}>
-                      <SearchIcon />
+                      <Search />
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -484,7 +537,7 @@ const DaftarPengajuanSkripsiDekan = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {searchResults.map((skripsi, skripsiIndex) => (
+                    {searchResults?.map((skripsi, skripsiIndex) => (
                       <TableRow key={skripsiIndex}>
                         <TableCell sx={{ fontSize: "13px" }}>
                           {skripsiIndex + 1}
@@ -596,7 +649,7 @@ const DaftarPengajuanSkripsiDekan = () => {
                   }}
                 >
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={<ExpandMore />}
                     aria-controls={`panel${semesterIndex}bh-content`}
                     id={`panel${semesterIndex}bh-header`}
                   >
@@ -744,6 +797,18 @@ const DaftarPengajuanSkripsiDekan = () => {
         {/* Table Mahasiswa Skripsi End */}
       </Div>
       {/* Table Master End */}
+
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={() => setOpenAlert(false)} severity={alertSeverity}>
+          <AlertTitle>{alertTitle}</AlertTitle>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </Div>
   );
 };

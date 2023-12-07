@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
+import MuiAlert from "@mui/material/Alert";
 import {
-  FormControl,
-  MenuItem,
-  Select,
   Typography,
   Table,
   TableBody,
@@ -17,13 +13,85 @@ import {
   Paper,
   AccordionSummary,
   Accordion,
+  CircularProgress,
+  Snackbar,
+  AlertTitle,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
+import { Link, useNavigate } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const RiwayatSkripsiDekan = () => {
-  // State untuk melacak panel accordion yang terbuka
+  // ======================== STATE ===========================
+  // mengatur loading page
+  const [loading, setLoading] = useState(true);
+  // console.log("loading", loading);
+
+  // menyimpan hasil request daftar riwayat
+  const [daftarRiwayat, setDaftarRiwayat] = useState([]);
+
+  // mengatur notif error
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState("success");
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+
+  // membuka / menutup semester yang dipilih (Accordion)
   const [expanded, setExpanded] = useState(false);
+
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  // console.log("token", token);
+
+  const navigate = useNavigate();
+
+  const fetchDaftarRiwayat = async () => {
+    jwtAuthAxios
+      .get("http://localhost:2000/api/v1/group/history-list-dekan", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // menyimpan hasil request
+        setDaftarRiwayat(response.data.data);
+        // console.log("Request get daftar proposal: ", response.data.data);
+        // menonaktifkan loading page
+        setLoading(false);
+        // console.log("loading", loading);
+      })
+      .catch((error) => {
+        // redirect ke home
+        if (
+          error.response.data.data.error ===
+          "You don't have permission to perform this action"
+        ) {
+          navigate(`/`);
+        } else {
+          setAlertSeverity("error");
+          setAlertTitle("Terjadi Kesalahan!");
+          setAlertMessage("Tidak dapat menampilkan data.");
+          setOpenAlert(true);
+          // console.error(
+          //   "Terjadi kesalahan saat mengambil daftar pengujian proposal:",
+          //   error
+          // );
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+        // console.log("loading", loading);
+      });
+  };
+
+  useEffect(() => {
+    fetchDaftarRiwayat();
+  }, [token]);
+
+  // mengatur notif error
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
 
   // Fungsi untuk menangani perubahan pada state accordion yang terbuka
   const handleChangee = (panel) => (event, isExpanded) => {
@@ -31,76 +99,21 @@ const RiwayatSkripsiDekan = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  // state - riwayat
-  const [daftarRiwayat, setDaftarRiwayat] = useState([]);
-
-  // fungsi untuk mendapatkan token JWT
-  const token = localStorage.getItem("token");
-  // console.log("token", token);
-
-  useEffect(() => {
-    const fetchDaftarRiwayat = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/group/history-list-dekan",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // Atur state 'setDaftarRiwayat' dengan data dari respons
-        setDaftarRiwayat(response.data.data);
-        console.log("Request get daftar proposal: ", response.data.data);
-      } catch (error) {
-        console.error(
-          "Terjadi kesalahan saat mengambil daftar pengujian proposal:",
-          error
-        );
-      }
-    };
-    fetchDaftarRiwayat();
-  }, [token]);
-
-  const [selectedValue, setSelectedValue] = useState("Kelas"); // Tentukan teks default di sini
-
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
-
-  //--------------------------------------
-  const [showTable, setShowTable] = useState(false);
-  const [showTable2, setShowTable2] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isTransitioning2, setIsTransitioning2] = useState(false);
-
-  const tableVisibleStyle = {
-    opacity: 1,
-    maxHeight: "200px", // Sesuaikan tinggi maksimal sesuai kebutuhan
-    transition: "opacity 0.3s ease-in-out, max-height 0.3s ease-in-out",
-  };
-
-  const tableHiddenStyle = {
-    opacity: 0,
-    maxHeight: "0",
-    transition: "opacity 0.3s ease-in-out, max-height 0.3s ease-in-out",
-  };
-
-  const handleSemesterClick = () => {
-    setIsTransitioning(true); // Mulai animasi
-    setTimeout(() => {
-      setShowTable(!showTable); // Toggle visibilitas tabel setelah animasi selesai
-      setIsTransitioning(false); // Selesaikan animasi
-    }, 300); // Waktu animasi dalam milidetik (0.3 detik)
-  };
-
-  const handleSemesterClick2 = () => {
-    setIsTransitioning2(true); // Mulai animasi
-    setTimeout(() => {
-      setShowTable2(!showTable2); // Toggle visibilitas tabel setelah animasi selesai
-      setIsTransitioning2(false); // Selesaikan animasi
-    }, 300); // Waktu animasi dalam milidetik (0.3 detik)
-  };
+  // Menampilkan ikon loading jika data masih dalam proses fetching
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <Div
@@ -199,7 +212,7 @@ const RiwayatSkripsiDekan = () => {
             borderRadius: "8px",
           }}
         >
-          {daftarRiwayat.map((riwayat, semesterIndex) => (
+          {daftarRiwayat?.map((riwayat, semesterIndex) => (
             <Accordion
               key={semesterIndex}
               expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
@@ -305,103 +318,17 @@ const RiwayatSkripsiDekan = () => {
         </Div>
       )}
 
-      {/* {daftarRiwayat.map((riwayat) => (
-        <Div
-          key={riwayat.semester}
-          sx={{
-            display: "inline-flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: "25px",
-            width: "100%",
-          }}
-        >
-          <Div
-            sx={{
-              display: "flex",
-              width: "100%",
-              padding: "24px",
-              alignItems: "center",
-              gap: "10px",
-              background: "rgba(26, 56, 96, 0.10)",
-              borderRadius: "6px",
-              cursor: "pointer",
-            }}
-            onClick={handleSemesterClick}
-          >
-            <Typography variant="subtitle2" sx={{ width: "100%" }}>
-              {riwayat.semester}
-            </Typography>
-            <ExpandMoreIcon />
-          </Div>
-          {showTable || isTransitioning ? (
-            <TableContainer
-              style={{
-                ...tableVisibleStyle,
-                display: isTransitioning ? "block" : "table",
-              }}
-            >
-              <Table>
-                <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                  <TableRow>
-                    <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                    <TableCell sx={{ width: "30%" }}>
-                      Nama Lengkap Mahasiswa
-                    </TableCell>
-                    <TableCell sx={{ width: "45%" }}>Judul</TableCell>
-                    <TableCell sx={{ width: "10%" }}>
-                      Tanggal Diterima
-                    </TableCell>
-                    <TableCell sx={{ width: "10%" }}>Action</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {riwayat.skripsis.map((skripsi) =>
-                    skripsi.students.map((student, index) => (
-                      <TableRow key={skripsi.group_id + index}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{student.fullName}</TableCell>
-                        <TableCell>{skripsi.title}</TableCell>
-                        {/* Tambahkan tanggal diterima jika tersedia *
-                        <TableCell>
-                          {/* Tambahkan tanggal diterima di sini *
-                        </TableCell>
-                        <TableCell>
-                          <Link
-                            to={`/sistem-informasi-skripsi/daftar-riwayat-skripsi-dekan/beranda/${skripsi.group_id}/DEKAN`}
-                            style={{ textDecoration: "none", color: "blue" }}
-                          >
-                            Detail
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          ) : (
-            <TableContainer style={tableHiddenStyle}>
-              <Table>
-                <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                  <TableRow>
-                    <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                    <TableCell sx={{ width: "30%" }}>
-                      Nama Lengkap Mahasiswa
-                    </TableCell>
-                    <TableCell sx={{ width: "45%" }}>Judul</TableCell>
-                    <TableCell sx={{ width: "10%" }}>
-                      Tanggal Diterima
-                    </TableCell>
-                    <TableCell sx={{ width: "10%" }}>Action</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody></TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        </Div>
-      ))} */}
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={() => setOpenAlert(false)} severity={alertSeverity}>
+          <AlertTitle>{alertTitle}</AlertTitle>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </Div>
   );
 };

@@ -226,168 +226,221 @@ const DaftarRiwayatProposal = () => {
             }}
           >
             {/* <SearchGlobal></SearchGlobal> */}
-            <Button
-              color="primary"
-              variant="contained"
-              sx={{
-                borderRadius: "50px",
-                textTransform: "none",
-              }}
-            >
-              <Typography sx={{ fontSize: "14px", padding: "4px" }}>
-                Print Berita Acara
-              </Typography>
-            </Button>
+            {/* {timPanelis?.length > 0 && (
+              <Button
+                color="primary"
+                variant="contained"
+                sx={{
+                  borderRadius: "50px",
+                  textTransform: "none",
+                }}
+              >
+                <Typography sx={{ fontSize: "14px", padding: "4px" }}>
+                  Print Berita Acara
+                </Typography>
+              </Button>
+            )} */}
           </Div>
         </Div>
         {/* Header End */}
         {/* Semester Start */}
-        <Div
-          sx={{
-            display: "inline-flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: "25px",
-            width: "100%",
-            height: "460px",
-            overflowY: "auto",
-            background: "#FFF",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-            padding: "8px",
-            borderRadius: "8px",
-          }}
-        >
-          {timPanelis &&
-            timPanelis.map((panelis, index) => (
-              <Accordion
-                key={index}
-                expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
-                onChange={handleChange(
-                  `panel${semesterIndex}`,
-                  index,
-                  panelis.semester
-                )} // Menangani perubahan state accordion
-                sx={{
-                  width: "100%",
-                  padding: "1px",
-                  background: "rgba(26, 56, 96, 0.10)",
-                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls={`panel${semesterIndex}bh-content`}
-                  id={`panel${semesterIndex}bh-header`}
-                >
-                  <Typography
-                    variant="h2"
+        {timPanelis?.length > 0 ? (
+          <>
+            <Div
+              sx={{
+                display: "inline-flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "25px",
+                width: "100%",
+                height: "460px",
+                overflowY: "auto",
+                background: "#FFF",
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                padding: "8px",
+                borderRadius: "8px",
+              }}
+            >
+              {timPanelis &&
+                timPanelis.map((panelis, index) => (
+                  <Accordion
+                    key={index}
+                    expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
+                    onChange={handleChange(
+                      `panel${semesterIndex}`,
+                      index,
+                      panelis.semester
+                    )} // Menangani perubahan state accordion
                     sx={{
-                      fontSize: "16px",
-                      fontWeight: 500,
-                      marginTop: "6px",
+                      width: "100%",
+                      padding: "1px",
+                      background: "rgba(26, 56, 96, 0.10)",
+                      boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
                     }}
                   >
-                    {panelis.semester}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <TableContainer component={Paper}>
-                    <Table>
-                      <TableHead>
-                        <TableRow sx={{ background: "#F5F5F5" }}>
-                          <TableCell sx={{ width: "25px", fontSize: "13px" }}>
-                            Nomor
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            Ketua Panelis
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            Anggota Panelis
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            Advisor
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            Tanggal
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            Status
-                          </TableCell>
-                          <TableCell sx={{ fontSize: "13px" }}>
-                            Action
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {panelis.schedules.map((jadwal, index) => (
-                          <TableRow key={index}>
-                            <TableCell sx={{ fontSize: "13px" }}>
-                              {index + 1}
-                            </TableCell>
-                            <TableCell>
-                              <Typography>
-                                {jadwal.panelis_chairman.name}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography>
-                                {jadwal.panelis_member.name}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography>{jadwal.advisor.name}</Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography>{jadwal.defence_date}</Typography>
-                            </TableCell>
-                            {/* harus di ubah statusnya*/}
-                            <TableCell>
-                              {jadwal.is_pass === "Pass" ||
-                              jadwal.is_pass === "Rejected" ? (
-                                <Chip
-                                  label={"Sudah"}
-                                  sx={{
-                                    background: "rgba(21, 131, 67, 0.10)",
-                                    color: "#0A7637",
-                                  }}
-                                />
-                              ) : (
-                                <Chip label={"Belum"} />
-                              )}
-                            </TableCell>
-                            <TableCell>
-                              <Div sx={{ display: "flex" }}>
-                                <span
-                                  style={{
-                                    textDecoration: "none",
-                                    cursor: "pointer",
-                                    color: "blue",
-                                  }}
-                                  onClick={() => {
-                                    console.log("trigger");
-                                    setSelectedSchedule(jadwal);
-                                    setSelectedTime(jadwal.start_defence);
-                                  }}
-                                >
-                                  Print
-                                </span>
-                              </Div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-        </Div>
-        <PrintBeritaAcaraProposal
-          selectedSemester={selectedSemester}
-          selectedSchedule={selectedSchedule}
-          convertedTime={convertedTime}
-          ref={componentRef}
-        />
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls={`panel${semesterIndex}bh-content`}
+                      id={`panel${semesterIndex}bh-header`}
+                    >
+                      <Typography
+                        variant="h2"
+                        sx={{
+                          fontSize: "16px",
+                          fontWeight: 500,
+                          marginTop: "6px",
+                        }}
+                      >
+                        {panelis.semester}
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <TableContainer component={Paper}>
+                        <Table>
+                          <TableHead>
+                            <TableRow sx={{ background: "#F5F5F5" }}>
+                              <TableCell
+                                sx={{ width: "25px", fontSize: "13px" }}
+                              >
+                                Nomor
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                Ketua Panelis
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                Anggota Panelis
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                Advisor
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                Tanggal
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                Status
+                              </TableCell>
+                              <TableCell sx={{ fontSize: "13px" }}>
+                                Action
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {panelis.schedules.map((jadwal, index) => (
+                              <TableRow key={index}>
+                                <TableCell sx={{ fontSize: "13px" }}>
+                                  {index + 1}
+                                </TableCell>
+                                <TableCell>
+                                  <Typography>
+                                    {jadwal.panelis_chairman.name}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <Typography>
+                                    {jadwal.panelis_member.name}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <Typography>{jadwal.advisor.name}</Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <Typography>{jadwal.defence_date}</Typography>
+                                </TableCell>
+                                {/* harus di ubah statusnya*/}
+                                <TableCell>
+                                  {jadwal.is_pass === "Pass" ||
+                                  jadwal.is_pass === "Rejected" ? (
+                                    <Chip
+                                      label={"Sudah"}
+                                      sx={{
+                                        background: "rgba(21, 131, 67, 0.10)",
+                                        color: "#0A7637",
+                                      }}
+                                    />
+                                  ) : (
+                                    <Chip label={"Belum"} />
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  <Div sx={{ display: "flex" }}>
+                                    <span
+                                      style={{
+                                        textDecoration: "none",
+                                        cursor:
+                                          jadwal.is_pass === "Pass" ||
+                                          jadwal.is_pass === "Rejected"
+                                            ? "pointer"
+                                            : "not-allowed",
+                                        color:
+                                          jadwal.is_pass === "Pass" ||
+                                          jadwal.is_pass === "Rejected"
+                                            ? "blue"
+                                            : "gray",
+                                      }}
+                                      onClick={() => {
+                                        if (
+                                          jadwal.is_pass === "Pass" ||
+                                          jadwal.is_pass === "Rejected"
+                                        ) {
+                                          console.log("trigger");
+                                          setSelectedSchedule(jadwal);
+                                          setSelectedTime(jadwal.start_defence);
+                                        }
+                                      }}
+                                    >
+                                      Print
+                                    </span>
+                                  </Div>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
+            </Div>
+            <PrintBeritaAcaraProposal
+              selectedSemester={selectedSemester}
+              selectedSchedule={selectedSchedule}
+              convertedTime={convertedTime}
+              ref={componentRef}
+            />
+          </>
+        ) : (
+          <Div
+            sx={{
+              display: "flex",
+              padding: "29px 42px",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: 2,
+              alignSelf: "stretch",
+              borderRadius: "8px",
+              border: "1px solid #E0E0E0",
+              background: "#FFF",
+              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+            }}
+          >
+            <Typography
+              sx={{
+                width: "100%",
+                display: "flex",
+                padding: "24px",
+                alignItems: "center",
+                gap: "10px",
+                color: "#CA150C",
+                background: "rgba(226, 29, 18, 0.50)",
+                borderRadius: "6px",
+                fontSize: "12px",
+                fontWeight: 600,
+              }}
+            >
+              Belum ada tim panelis.
+            </Typography>
+          </Div>
+        )}
       </Div>
     </Div>
   );
