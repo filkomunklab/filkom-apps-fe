@@ -550,9 +550,7 @@ const DaftarPengajuanProposalDekan = () => {
                           {proposal.title}
                         </TableCell>
                         <TableCell sx={{ fontSize: "13px" }}>
-                          {proposal.is_pass === null ? (
-                            <Chip label={"Belum"} />
-                          ) : proposal.is_pass === "Repeat" ? (
+                          {proposal.is_pass === "Repeat" ? (
                             <Chip
                               label={"Mengulang"}
                               sx={{
@@ -577,7 +575,7 @@ const DaftarPengajuanProposalDekan = () => {
                               }}
                             />
                           ) : (
-                            proposal.is_pass
+                            <Chip label={"Belum"} />
                           )}
                         </TableCell>
                         <TableCell>
@@ -706,9 +704,7 @@ const DaftarPengajuanProposalDekan = () => {
                                   {proposal.title}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {proposal.is_pass === null ? (
-                                    <Chip label={"Belum"} />
-                                  ) : proposal.is_pass === "Repeat" ? (
+                                  {proposal.is_pass === "Repeat" ? (
                                     <Chip
                                       label={"Mengulang"}
                                       sx={{
@@ -733,7 +729,7 @@ const DaftarPengajuanProposalDekan = () => {
                                       }}
                                     />
                                   ) : (
-                                    proposal.is_pass
+                                    <Chip label={"Belum"} />
                                   )}
                                 </TableCell>
                                 <TableCell>

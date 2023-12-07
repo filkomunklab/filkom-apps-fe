@@ -552,9 +552,7 @@ const DaftarPengajuanSkripsiDekan = () => {
                           {skripsi.title}
                         </TableCell>
                         <TableCell sx={{ fontSize: "13px" }}>
-                          {skripsi.is_pass === null ? (
-                            <Chip label={"Belum"} />
-                          ) : skripsi.is_pass === "Repeat" ? (
+                          {skripsi.is_pass === "Repeat" ? (
                             <Chip
                               label={"Mengulang"}
                               sx={{
@@ -579,7 +577,7 @@ const DaftarPengajuanSkripsiDekan = () => {
                               }}
                             />
                           ) : (
-                            skripsi.is_pass
+                            <Chip label={"Belum"} />
                           )}
                         </TableCell>
                         <TableCell>
@@ -708,9 +706,7 @@ const DaftarPengajuanSkripsiDekan = () => {
                                   {skripsi.title}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {skripsi.is_pass === null ? (
-                                    <Chip label={"Belum"} />
-                                  ) : skripsi.is_pass === "Repeat" ? (
+                                  {skripsi.is_pass === "Repeat" ? (
                                     <Chip
                                       label={"Mengulang"}
                                       sx={{
@@ -735,7 +731,7 @@ const DaftarPengajuanSkripsiDekan = () => {
                                       }}
                                     />
                                   ) : (
-                                    skripsi.is_pass
+                                    <Chip label={"Belum"} />
                                   )}
                                 </TableCell>
                                 <TableCell>

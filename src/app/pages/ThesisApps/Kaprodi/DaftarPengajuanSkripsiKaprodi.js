@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Div from "@jumbo/shared/Div";
-import PeopleIcon from "@mui/icons-material/People";
+import MuiAlert from "@mui/material/Alert";
 import {
   Accordion,
   AccordionDetails,
@@ -23,31 +22,28 @@ import {
   TableRow,
   TextField,
   Typography,
+  Snackbar,
+  AlertTitle,
+  CircularProgress,
 } from "@mui/material";
-import RestoreIcon from "@mui/icons-material/Restore";
-import { Link } from "react-router-dom";
-import DoneIcon from "@mui/icons-material/Done";
-import DateRangeIcon from "@mui/icons-material/DateRange";
-import GavelIcon from "@mui/icons-material/Gavel";
-import CloseIcon from "@mui/icons-material/Close";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import SearchIcon from "@mui/icons-material/Search";
+import {
+  Close,
+  DateRange,
+  Done,
+  ExpandMore,
+  Gavel,
+  People,
+  Restore,
+  Search,
+} from "@mui/icons-material";
+import { Link, useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const DaftarPengajuanSkripsiKaprodi = () => {
-  // State untuk melacak panel accordion yang terbuka
-  const [expanded, setExpanded] = useState(false);
-
-  // state Pencarian
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-
-  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
-  const handleChange = (panel) => (event, isExpanded) => {
-    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
-    setExpanded(isExpanded ? panel : false);
-  };
+  // ======================== STATE ===========================
+  // mengatur loading page
+  const [loading, setLoading] = useState(true);
+  // console.log("loading", loading);
 
   const [daftarPengajuanSkripsi, setDaftarPengajuanSkripsi] = useState({
     dashboard: {
@@ -61,9 +57,81 @@ const DaftarPengajuanSkripsiKaprodi = () => {
     semesterData: [],
   });
 
+  // mengatur notif error
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState("success");
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+
+  // membuka / menutup semester yang dipilih (Accordion)
+  const [expanded, setExpanded] = useState(false);
+
+  // state Pencarian
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
+  // ======================== FUNCTION ===========================
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
-  console.log("token", token);
+  // console.log("token", token);
+
+  const navigate = useNavigate();
+
+  const fetchDaftarPengajuanSkripsiData = async () => {
+    jwtAuthAxios
+      .get("/group/skripsi-list-kaprodi", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // menyimpan hasil request
+        setDaftarPengajuanSkripsi(response.data.data);
+        // console.log("Request get daftar skripsi: ", response.data.data);
+        // menonaktifkan loading page
+        setLoading(false);
+        // console.log("loading", loading);
+      })
+      .catch((error) => {
+        // redirect ke home
+        if (
+          error.response.data.data.error ===
+          "You don't have permission to perform this action"
+        ) {
+          navigate(`/`);
+        } else {
+          setAlertSeverity("error");
+          setAlertTitle("Terjadi Kesalahan!");
+          setAlertMessage("Tidak dapat menampilkan data.");
+          setOpenAlert(true);
+          // console.error(
+          //   "Terjadi kesalahan saat mengambil daftar pengajuan:",
+          //   error
+          // );
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+        // console.log("loading", loading);
+      });
+  };
+
+  useEffect(() => {
+    fetchDaftarPengajuanSkripsiData();
+  }, [token]);
+
+  // mengatur notif error
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
+  const handleChange = (panel) => (event, isExpanded) => {
+    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
+    setExpanded(isExpanded ? panel : false);
+  };
 
   // Fungsi untuk menangani pencarian
   const handleSearch = () => {
@@ -92,29 +160,21 @@ const DaftarPengajuanSkripsiKaprodi = () => {
     setIsSearchModalOpen(false);
   };
 
-  useEffect(() => {
-    const fetchDaftarPengajuanSkripsiData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/group/skripsi-list-kaprodi",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // Atur state 'setDaftarPengajuanSkripsi' dengan data dari respons
-        setDaftarPengajuanSkripsi(response.data.data);
-        console.log("Request get daftar skripsi: ", response.data.data);
-      } catch (error) {
-        console.error(
-          "Terjadi kesalahan saat mengambil daftar pengajuan:",
-          error
-        );
-      }
-    };
-    fetchDaftarPengajuanSkripsiData();
-  }, [token]);
+  // Menampilkan ikon loading jika data masih dalam proses fetching
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <Div>
@@ -141,9 +201,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
             textItem: "center",
           }}
         >
-          <PeopleIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <People sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -164,7 +222,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanSkripsi.dashboard.total_group} Kelompok
+              {daftarPengajuanSkripsi?.dashboard.total_group} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -181,9 +239,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
             textItem: "center",
           }}
         >
-          <DateRangeIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <DateRange sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -204,7 +260,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanSkripsi.dashboard.not_defence} Kelompok
+              {daftarPengajuanSkripsi?.dashboard.not_defence} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -221,7 +277,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
             textItem: "center",
           }}
         >
-          <GavelIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
+          <Gavel sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -242,7 +298,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanSkripsi.dashboard.has_defence} Kelompok
+              {daftarPengajuanSkripsi?.dashboard.has_defence} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -271,7 +327,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
             textItem: "center",
           }}
         >
-          <DoneIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
+          <Done sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -292,7 +348,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanSkripsi.dashboard.pass} Kelompok
+              {daftarPengajuanSkripsi?.dashboard.pass} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -309,9 +365,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
             textItem: "center",
           }}
         >
-          <RestoreIcon
-            sx={{ width: "35px", height: "35px", color: "#006AF5" }}
-          />
+          <Restore sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -332,7 +386,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanSkripsi.dashboard.repeat} Kelompok
+              {daftarPengajuanSkripsi?.dashboard.repeat} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -349,7 +403,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
             textItem: "center",
           }}
         >
-          <CloseIcon sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
+          <Close sx={{ width: "35px", height: "35px", color: "#006AF5" }} />
           <Div>
             <Typography
               sx={{
@@ -370,7 +424,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
                 lineHeight: "32px",
               }}
             >
-              {daftarPengajuanSkripsi.dashboard.not_pass} Kelompok
+              {daftarPengajuanSkripsi?.dashboard.not_pass} Kelompok
             </Typography>
           </Div>
         </Div>
@@ -441,9 +495,9 @@ const DaftarPengajuanSkripsiKaprodi = () => {
               onChange={(e) => setSearchKeyword(e.target.value)}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment>
+                  <InputAdornment position="end">
                     <IconButton onClick={handleSearch}>
-                      <SearchIcon />
+                      <Search />
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -482,7 +536,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {searchResults.map((skripsi, skripsiIndex) => (
+                    {searchResults?.map((skripsi, skripsiIndex) => (
                       <TableRow key={skripsiIndex}>
                         <TableCell sx={{ fontSize: "13px" }}>
                           {skripsiIndex + 1}
@@ -497,9 +551,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
                           {skripsi.title}
                         </TableCell>
                         <TableCell sx={{ fontSize: "13px" }}>
-                          {skripsi.is_pass === null ? (
-                            <Chip label={"Belum"} />
-                          ) : skripsi.is_pass === "Repeat" ? (
+                          {skripsi.is_pass === "Repeat" ? (
                             <Chip
                               label={"Mengulang"}
                               sx={{
@@ -524,7 +576,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
                               }}
                             />
                           ) : (
-                            skripsi.is_pass
+                            <Chip label={"Belum"} />
                           )}
                         </TableCell>
                         <TableCell>
@@ -580,7 +632,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
               borderRadius: "8px",
             }}
           >
-            {daftarPengajuanSkripsi.semesterData.map(
+            {daftarPengajuanSkripsi?.semesterData.map(
               (semesterData, semesterIndex) => (
                 <Accordion
                   key={semesterIndex}
@@ -594,7 +646,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
                   }}
                 >
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={<ExpandMore />}
                     aria-controls={`panel${semesterIndex}bh-content`}
                     id={`panel${semesterIndex}bh-header`}
                   >
@@ -647,14 +699,11 @@ const DaftarPengajuanSkripsiKaprodi = () => {
                                     </div>
                                   ))}
                                 </TableCell>
-
                                 <TableCell sx={{ fontSize: "13px" }}>
                                   {skripsi.title}
                                 </TableCell>
                                 <TableCell sx={{ fontSize: "13px" }}>
-                                  {skripsi.is_pass === null ? (
-                                    <Chip label={"Belum"} />
-                                  ) : skripsi.is_pass === "Repeat" ? (
+                                  {skripsi.is_pass === "Repeat" ? (
                                     <Chip
                                       label={"Mengulang"}
                                       sx={{
@@ -679,7 +728,7 @@ const DaftarPengajuanSkripsiKaprodi = () => {
                                       }}
                                     />
                                   ) : (
-                                    skripsi.is_pass
+                                    <Chip label={"Belum"} />
                                   )}
                                 </TableCell>
                                 <TableCell>
@@ -738,119 +787,21 @@ const DaftarPengajuanSkripsiKaprodi = () => {
             </Typography>
           </Div>
         )}
-
-        {/* {daftarPengajuanSkripsi.semesterData.map(
-          (semesterData, semesterIndex) => (
-            <div key={semesterIndex} style={{ width: "100%" }}>
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "100%",
-                  padding: "24px",
-                  alignItems: "center",
-                  gap: "10px",
-                  borderRadius: "6px",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "16px",
-                    fontStyle: "normal",
-                    fontWeight: 500,
-                    lineHeight: "24px",
-                    color: "#192434",
-                  }}
-                >
-                  {semesterData.semester}
-                </Typography>
-              </Div>
-              {/* Semester End */}
-        {/* Table Mahasiswa Skripsi Start *
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell sx={{ width: "25px", fontSize: "13px" }}>
-                        Nomor
-                      </TableCell>
-                      <TableCell sx={{ width: "200px", fontSize: "13px" }}>
-                        Mahasiswa
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Status</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {semesterData.skripsis.map((skripsi, skripsiIndex) => (
-                      <TableRow key={skripsiIndex}>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {skripsiIndex + 1}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {skripsi.students.map((student) => (
-                            <div key={student.id}>{student.fullName}</div>
-                          ))}
-                        </TableCell>
-
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {skripsi.title}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {skripsi.is_pass === null ? (
-                            <Chip label={"Belum"} />
-                          ) : skripsi.is_pass === "Repeat" ? (
-                            <Chip
-                              label={"Mengulang"}
-                              sx={{
-                                background: "rgba(255, 204, 0, 0.10)",
-                                color: "#985211",
-                              }}
-                            />
-                          ) : skripsi.is_pass === "Pass" ? (
-                            <Chip
-                              label={"Lulus"}
-                              sx={{
-                                background: "rgba(21, 131, 67, 0.10)",
-                                color: "#0A7637",
-                              }}
-                            />
-                          ) : skripsi.is_pass === "Fail" ? (
-                            <Chip
-                              label={"Ditolak"}
-                              sx={{
-                                background: "rgba(226, 29, 18, 0.10)",
-                                color: "#CA150C",
-                              }}
-                            />
-                          ) : (
-                            skripsi.is_pass
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <Typography
-                            component={Link}
-                            to="/halaman-berikutnya"
-                            sx={{
-                              textDecoration: "none",
-                              color: "blue",
-                            }}
-                          >
-                            Detail
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div>
-          )
-        )} */}
         {/* Table Mahasiswa Skripsi End */}
       </Div>
       {/* Table Master End */}
+
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={() => setOpenAlert(false)} severity={alertSeverity}>
+          <AlertTitle>{alertTitle}</AlertTitle>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </Div>
   );
 };

@@ -47,7 +47,7 @@ const RiwayatSkripsiDekan = () => {
 
   const fetchDaftarRiwayat = async () => {
     jwtAuthAxios
-      .get("http://localhost:2000/api/v1/group/history-list-dekan", {
+      .get("/group/history-list-dekan", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
