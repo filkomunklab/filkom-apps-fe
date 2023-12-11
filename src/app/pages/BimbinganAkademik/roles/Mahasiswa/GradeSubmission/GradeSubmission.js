@@ -55,8 +55,8 @@ const style2 = {
 };
 
 const GradeSubmission = () => {
-  const [openFirstModal, setOpenFirstModal] = React.useState(false);
-  const [openSecondModal, setOpenSecondModal] = React.useState(false);
+  const [openFirstModal, setOpenFirstModal] = useState(false);
+  const [openSecondModal, setOpenSecondModal] = useState(false);
 
   const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
@@ -420,29 +420,44 @@ const GradeSubmission = () => {
           >
             <Button
               disabled={
-                !subjectName.every(Boolean) ||
-                !parallel.every(Boolean) ||
-                !lecturer.every(Boolean) ||
-                !grade.every(Boolean) ||
-                !retrieval.every(Boolean)
+                row !== subjectName.length ||
+                row !== parallel.length ||
+                row !== lecturer.length ||
+                row !== grade.length ||
+                row !== retrieval.length
+                // !subjectName.every(Boolean) ||
+                // !parallel.every(Boolean) ||
+                // !lecturer.every(Boolean) ||
+                // !grade.every(Boolean) ||
+                // !retrieval.every(Boolean)
               }
               onClick={handleOpenFirstModal}
               sx={{
                 backgroundColor:
-                  !subjectName.every(Boolean) ||
-                  !parallel.every(Boolean) ||
-                  !lecturer.every(Boolean) ||
-                  !grade.every(Boolean) ||
-                  !retrieval.every(Boolean)
+                  row !== subjectName.length ||
+                  row !== parallel.length ||
+                  row !== lecturer.length ||
+                  row !== grade.length ||
+                  row !== retrieval.length
+                  // !subjectName.every(Boolean) ||
+                  // !parallel.every(Boolean) ||
+                  // !lecturer.every(Boolean) ||
+                  // !grade.every(Boolean) ||
+                  // !retrieval.every(Boolean)
                     ? "#1A38601A"
                     : "#006AF5",
                 borderRadius: "24px",
                 color:
-                  !subjectName.every(Boolean) ||
-                  !parallel.every(Boolean) ||
-                  !lecturer.every(Boolean) ||
-                  !grade.every(Boolean) ||
-                  !retrieval.every(Boolean)
+                  row !== subjectName.length ||
+                  row !== parallel.length ||
+                  row !== lecturer.length ||
+                  row !== grade.length ||
+                  row !== retrieval.length
+                  // !subjectName.every(Boolean) ||
+                  // !parallel.every(Boolean) ||
+                  // !lecturer.every(Boolean) ||
+                  // !grade.every(Boolean) ||
+                  // !retrieval.every(Boolean)
                     ? "black"
                     : "white",
                 whiteSpace: "nowrap",
@@ -452,11 +467,16 @@ const GradeSubmission = () => {
                 gap: "6px",
                 "&:hover": {
                   backgroundColor:
-                    !subjectName.every(Boolean) ||
-                    !parallel.every(Boolean) ||
-                    !lecturer.every(Boolean) ||
-                    !grade.every(Boolean) ||
-                    !retrieval.every(Boolean)
+                    row !== subjectName.length ||
+                    row !== parallel.length ||
+                    row !== lecturer.length ||
+                    row !== grade.length ||
+                    row !== retrieval.length
+                    // !subjectName.every(Boolean) ||
+                    // !parallel.every(Boolean) ||
+                    // !lecturer.every(Boolean) ||
+                    // !grade.every(Boolean) ||
+                    // !retrieval.every(Boolean)
                       ? "grey"
                       : "#025ED8",
                 },
