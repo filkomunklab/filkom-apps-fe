@@ -22,7 +22,9 @@ import {
   CardContent,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate, Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -72,19 +74,12 @@ const prodiList = [
   },
 ];
 
-const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nidn: `022407712`,
-  name: `Yuhu, Christopher Darell`,
-  prodi: `Informatika`,
-  year: `2021`,
-  status: `Active`,
-}));
-
 const SupervisorInformation = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const navigate = useNavigate();
+  const [dataSupervisor, setDataSupervisor] = useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -94,6 +89,30 @@ const SupervisorInformation = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const getDataSupervisor = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const result = await axios.get(`${BASE_URL_API}/employee`, { headers });
+      const { status } = result.data;
+
+      if (status === "OK") {
+        console.log("ini isi supervisor: ", result.data.data);
+        setDataSupervisor(result.data.data);
+      } else {
+        console.error("error, ini data result: ", result);
+        console.error("Error, ini data result.data: ", result.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
+  useEffect(() => {
+    getDataSupervisor();
+  }, []);
 
   return (
     <Div>
@@ -175,11 +194,12 @@ const SupervisorInformation = () => {
                 <TableHeading />
               </TableHead>
               <TableBody>
-                {data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((item, index) => (
-                    <TableItem item={item} index={index} key={index} />
-                  ))}
+                {dataSupervisor &&
+                  dataSupervisor
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((item, index) => (
+                      <TableItem item={item} index={index} key={index} />
+                    ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -194,7 +214,7 @@ const SupervisorInformation = () => {
             }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component="div"
-            count={data.length}
+            count={dataSupervisor.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -213,12 +233,12 @@ const TableHeading = ({ index }) => {
   };
   return (
     <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={[style]}>No</TableCell>
-      <TableCell sx={[style]}>NIDN</TableCell>
-      <TableCell sx={[style]}>Name</TableCell>
-      <TableCell sx={[style]}>Faculty</TableCell>
-      <TableCell sx={[style]}>History</TableCell>
-      <TableCell sx={[style]}>Number of Student</TableCell>
+      <TableCell sx={{ ...style, width: "80px" }}>No</TableCell>
+      <TableCell sx={{ ...style, width: "140px" }}>NIDN</TableCell>
+      <TableCell sx={{ ...style, width: "245px" }}>Name</TableCell>
+      <TableCell sx={{ ...style, width: "140px" }}>Faculty</TableCell>
+      <TableCell sx={{ ...style, width: "140px" }}>History</TableCell>
+      <TableCell sx={{ ...style, width: "80px" }}>Number of Student</TableCell>
     </TableRow>
   );
 };
@@ -231,14 +251,14 @@ const TableItem = ({ item, index }) => {
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${item.nidn}`,
-          { state: item.nidn }
+          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${item.nik}`,
+          { state: { nik: item.nik } }
         );
         break;
       case "history":
         navigate(
-          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/${item.nidn}`,
-          { state: item.nidn }
+          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/${item.nik}`,
+          { state: item.nik }
         );
         break;
 
@@ -253,7 +273,7 @@ const TableItem = ({ item, index }) => {
   return (
     <TableRow>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{`022407712`}</TableCell>
+      <TableCell sx={[rowStyle]}>{item.nidn}</TableCell>
       <TableCell>
         <Button
           name="profile"
@@ -262,9 +282,11 @@ const TableItem = ({ item, index }) => {
             "@media (max-width: 650px)": { fontSize: "11px" },
           }}
           onClick={handleButtonNavigate}
-        >{`Yuhu, Christopher Darell`}</Button>
+        >
+          {item.lastName}, {item.firstName}
+        </Button>
       </TableCell>
-      <TableCell sx={[rowStyle]}>{`Informatika`}</TableCell>
+      <TableCell sx={[rowStyle]}></TableCell>
       <TableCell>
         <Button
           name="history"

@@ -22,7 +22,9 @@ import {
   Paper,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
 
 const yearList = [
@@ -71,19 +73,12 @@ const prodiList = [
   },
 ];
 
-const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nim: `105022010000`,
-  name: `Yuhu, Christopher Darell`,
-  prodi: `Informatika`,
-  year: `2021`,
-  status: `Active`,
-}));
-
 const StudentInformationFaculty = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const navigate = useNavigate();
+  const [dataStudent, setDataStudent] = useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -93,6 +88,27 @@ const StudentInformationFaculty = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const getDataStudent = async () => {
+    try {
+      const result = await axios.get(`${BASE_URL_API}/Student`);
+      const { status } = result.data;
+
+      if (status === "OK") {
+        console.log("ini isi result.data dalam status ok", result.data.data);
+        setDataStudent(result.data.data);
+      } else {
+        console.error("error, ini data result: ", result);
+        console.error("Error, ini data result.data: ", result.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
+  useEffect(() => {
+    getDataStudent();
+  }, []);
 
   return (
     <Div>
@@ -301,21 +317,25 @@ const StudentInformationFaculty = () => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12}>
-          <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
+        <Grid sx={{ marginTop: "15px" }} item xs={12}>
+          <TableContainer sx={{ maxHeight: 480 }} component={Paper}>
             <Table stickyHeader>
               <TableHead>
                 <TableHeading />
               </TableHead>
               <TableBody>
-                {data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((item, index) => (
-                    <TableItem item={item} index={index} key={index} />
-                  ))}
+                {dataStudent &&
+                  dataStudent
+                    .filter((item) => item.status !== "GRADUATE")
+                    .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+                    .map((item, index) => (
+                      <TableItem item={item} index={index} key={index} />
+                    ))}
               </TableBody>
             </Table>
           </TableContainer>
+        </Grid>
+        <Grid item xs={12}>
           <TablePagination
             sx={{
               width: "100%",
@@ -326,7 +346,9 @@ const StudentInformationFaculty = () => {
             }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
-            count={data.length}
+            count={
+              dataStudent.filter((item) => item.status !== "GRADUATE").length
+            }
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -342,14 +364,14 @@ const TableHeading = ({ index }) => {
   const style = { fontWeight: 400 };
   return (
     <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={[style]}>No</TableCell>
-      <TableCell sx={[style]}>NIM</TableCell>
-      <TableCell sx={[style]}>Student Name</TableCell>
-      <TableCell sx={[style]}>Program Studi</TableCell>
-      <TableCell sx={[style]}>Tahun Masuk</TableCell>
-      <TableCell sx={[style]}>Nilai</TableCell>
-      <TableCell sx={[style]}>Sertifikat</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
+      <TableCell sx={{ ...style, width: "80px" }}>No</TableCell>
+      <TableCell sx={{ ...style, width: "140px" }}>NIM</TableCell>
+      <TableCell sx={{ ...style, width: "245px" }}>Student Name</TableCell>
+      <TableCell sx={{ ...style, width: "140px" }}>Program Studi</TableCell>
+      <TableCell sx={{ ...style, width: "90px" }}>Tahun Masuk</TableCell>
+      <TableCell sx={{ ...style, width: "140px" }}>Nilai</TableCell>
+      <TableCell sx={{ ...style, width: "140px" }}>Sertifikat</TableCell>
+      <TableCell sx={{ ...style, width: "140px" }}>Status</TableCell>
     </TableRow>
   );
 };
@@ -388,7 +410,7 @@ const TableItem = ({ item, index }) => {
   return (
     <TableRow>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{`105022010000`}</TableCell>
+      <TableCell sx={[rowStyle]}>{item.nim}</TableCell>
       <TableCell>
         <Button
           name="profile"
@@ -397,11 +419,12 @@ const TableItem = ({ item, index }) => {
             textTransform: "capitalize",
           }}
           onClick={handleButtonNavigate}
-        >{`Yuhu, Christopher Darell`}</Button>
+        >
+          {item.lastName}, {item.firstName}
+        </Button>
       </TableCell>
-      <TableCell sx={[rowStyle]}>{`Informatika`}</TableCell>
-      <TableCell sx={[rowStyle]}>{`2021`}</TableCell>
-
+      <TableCell sx={[rowStyle]}>{item.major}</TableCell>
+      <TableCell sx={[rowStyle]}>{item.arrival_Year}</TableCell>
       <TableCell>
         <Button
           name="grade"
@@ -427,7 +450,11 @@ const TableItem = ({ item, index }) => {
         </Button>
       </TableCell>
       <TableCell sx={[rowStyle]}>
-        <Chip label={"Active"} variant="filled" color={"success"} />
+        <Chip
+          label={item.status}
+          variant="filled"
+          color={item.status === "ACTIVE" ? "success" : "default"}
+        />
       </TableCell>
     </TableRow>
   );

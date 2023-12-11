@@ -19,8 +19,10 @@ import {
   Typography,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const yearList = [
   {
@@ -68,18 +70,11 @@ const prodiList = [
   },
 ];
 
-const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nim: `105022010000`,
-  name: `Yuhu, Christopher Darell`,
-  prodi: `Informatika`,
-  year: `2021`,
-  status: `Active`,
-}));
-
 const StudentInformationMentored = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [dataStudent, setDataStudent] = useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -89,6 +84,31 @@ const StudentInformationMentored = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const getDataStudent = async () => {
+    try {
+      const { nik } = JSON.parse(localStorage.getItem("user"));
+      const result = await axios.get(`${BASE_URL_API}/student/dosen/${nik}`);
+      const { status } = result.data;
+
+      if (status === "OK") {
+        console.log(
+          "ini isi result.data dalam status ok mentored",
+          result.data.data
+        );
+        setDataStudent(result.data.data);
+      } else {
+        console.error("error, ini data result: ", result);
+        console.error("Error, ini data result.data: ", result.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
+  useEffect(() => {
+    getDataStudent();
+  }, []);
 
   return (
     <Div>
@@ -203,11 +223,12 @@ const StudentInformationMentored = () => {
                 <TableHeading />
               </TableHead>
               <TableBody>
-                {data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((item, index) => (
-                    <TableItem item={item} index={index} key={index} />
-                  ))}
+                {dataStudent.length > 0 &&
+                  dataStudent
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((item, index) => (
+                      <TableItem item={item} index={index} key={index} />
+                    ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -221,7 +242,7 @@ const StudentInformationMentored = () => {
             }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
-            count={data.length}
+            count={dataStudent.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -286,7 +307,7 @@ const TableItem = ({ item, index }) => {
   return (
     <TableRow>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{`105022010000`}</TableCell>
+      <TableCell sx={[rowStyle]}>{item.nim}</TableCell>
       <TableCell>
         <Button
           name="profile"
@@ -295,10 +316,12 @@ const TableItem = ({ item, index }) => {
             textTransform: "capitalize",
           }}
           onClick={handleButtonNavigate}
-        >{`Yuhu, Christopher Darell`}</Button>
+        >
+          {item.lastName}, {item.firstName}
+        </Button>
       </TableCell>
-      <TableCell sx={[rowStyle]}>{`Informatika`}</TableCell>
-      <TableCell sx={[rowStyle]}>{`2021`}</TableCell>
+      <TableCell sx={[rowStyle]}>{item.major}</TableCell>
+      <TableCell sx={[rowStyle]}>{item.arrival_Year}</TableCell>
 
       <TableCell>
         <Button
@@ -325,7 +348,7 @@ const TableItem = ({ item, index }) => {
         </Button>
       </TableCell>
       <TableCell sx={[rowStyle]}>
-        <Chip label={"Active"} variant="filled" color={"success"} />
+        <Chip label={item.status} variant="filled" color={"success"} />
       </TableCell>
     </TableRow>
   );
