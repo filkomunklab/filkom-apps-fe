@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Typography,
   TextField,
@@ -70,7 +70,9 @@ const style2 = {
 };
 
 const AddActivity = () => {
+  const prevSelectedStudentRef = useRef();
   const [studentOptions, setStudentOptions] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState([])
   const [valueDueDate, setValueDueDate] = useState(null);
   const [valueTimePicker, setValueTimePicker] = useState(null);
   const [valueAttendance, setValueAttendance] = useState("");
@@ -104,6 +106,11 @@ const AddActivity = () => {
     };
   }, [openSecondModal === true]);
 
+  useEffect(() => {
+    prevSelectedStudentRef.current = selectedStudent;
+    console.log('prev nilai', prevSelectedStudentRef.current)
+  }, [selectedStudent]);
+
   // const getStudentList = async()=>{
   //   try{
   //     const headers = {
@@ -131,34 +138,41 @@ const AddActivity = () => {
   //   }
   // }
 
-  // const handleSubmit = async() =>{
-  //   try{
-  //     //format header tergantung backend
-  //     const headers = {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer token_apa`,
-  //       };
-  //     const response = await axios.post(`${BASE_URL_API}/bla/bla/bla`,
-  //       {title: valueTitle,
-  //       descriptions: inputDescription,
-  //       due_date: valueDueDate,
-  //       form_attendance: valueAttendance
-  //       },
-  //       {headers}
-  //     )
-  //     console.log(response)
-  //   }catch(error){
-  //     console.log(error)
-  //   }
-  // }
+  const handleSubmit = async() =>{
+    try{
+      //format header tergantung backend
+      const headers = {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        };
+      const response = await axios.post(`${BASE_URL_API}/activity/${JSON.parse(localStorage.getItem("user")).nik}`,
+        {
+          title: "Ehem",
+          description: "Hello World!",
+          date: "2023-12-06T18:00:00Z",
+          time: "18.05",
+          employeeId: '1003',
+          grades_access: false,
+          // form_attendance: valueAttendance
+        },
+        // {headers}
+      )
+      console.log('ini itu',response, JSON.parse(localStorage.getItem("user")).nik, localStorage.getItem("token"))
+    }catch(error){
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
+    setSelectedStudent([])
     if (valueStudent === "MahasiswaBimbingan") {
-      setStudentOptions([...Array(10).keys()].map((i) => `Student ${i + 1}`));
+      setStudentOptions([...Array(10).keys()].map((i) => (i === 0 ? `All students`:`Student ${i}`)));
     } else if (valueStudent === "MahasiswaFakultas") {
-      setStudentOptions([...Array(10).keys()].map((i) => `Student ${i + 11}`));
+      setStudentOptions([...Array(10).keys()].map((i) => (i === 0 ? `All students`:`Student ${i+10}`)));
     }
   }, [valueStudent]);
+
+  useEffect(()=>{console.log('ini selected student', selectedStudent)},[selectedStudent])
 
   return (
     <div>
@@ -287,6 +301,24 @@ const AddActivity = () => {
           <Autocomplete
             sx={{ backgroundColor: "white" }}
             multiple
+            value={selectedStudent}
+            onChange={(event, newValue)=>{
+              console.log('yaho', newValue)
+              const wasAllSelected = prevSelectedStudentRef.current.includes("All students")
+              if (newValue.includes('All students')) {
+                if(newValue.length === studentOptions.length-1){
+                  setSelectedStudent(wasAllSelected ? newValue.filter((student)=>student !== "All students") : studentOptions)
+                }else{
+                  setSelectedStudent(studentOptions);
+                }
+              }else{
+                if(newValue.length >= studentOptions.length-1){
+                  setSelectedStudent(wasAllSelected ? [] : studentOptions)
+                }else{
+                  setSelectedStudent(newValue)
+                }
+              }
+            }}
             id="checkboxes-tags-demo"
             options={studentOptions}
             disableCloseOnSelect
@@ -302,13 +334,16 @@ const AddActivity = () => {
                 {option}
               </li>
             )}
-            renderInput={(params) => (
+            renderInput={(params) => {
+              params.InputProps.startAdornment = params.InputProps.startAdornment?.filter(adornment => !adornment.props.label.includes('All students'));
+              return (
               <TextField
                 {...params}
-                label="All Student"
+                label="Students"
                 placeholder="Add Student"
               />
-            )}
+              )
+            }}
           />
         </Grid>
       </Grid>
@@ -408,7 +443,10 @@ const AddActivity = () => {
             </Grid>
             <Grid item>
               <Button
-                onClick={handleSubmitFirstModal}
+                onClick={()=>{
+                  // handleSubmit();
+                  handleSubmitFirstModal();
+                }}
                 sx={{
                   backgroundColor: "#006AF5",
                   borderRadius: "5px",
