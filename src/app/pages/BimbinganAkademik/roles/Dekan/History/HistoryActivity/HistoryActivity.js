@@ -21,12 +21,14 @@ import {
   FormGroup,
   FormControlLabel,
   Switch,
+  Button,
 } from "@mui/material";
 import Div from "@jumbo/shared/Div";
 import { Link, useNavigate } from "react-router-dom";
 import SearchGlobal from "app/shared/SearchGlobal";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
+
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -97,6 +99,7 @@ const ViewActivity = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isAttendance, setIsAttendance] = useState(false);
   const [isGradeSubmission, setIsGradeSubmission] = useState(false);
+  const [isPreRegistration, setIsPreRegistration] = useState(false);
 
   const getActivity = async () => {
     try {
@@ -258,27 +261,152 @@ const ViewActivity = () => {
             </Paper>
           </Stack>
         </Grid>
-        {isGradeSubmission && (
-          <Grid container paddingTop={4} paddingLeft={2}>
-            <Grid item xs={6} md={3}>
-              <FormGroup sx={{ paddingLeft: "9px" }}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      defaultChecked
-                      size="small"
-                      color="primary"
-                      disabled
-                    />
-                  }
-                  label="Add Grade Submission Page"
-                  sx={{ whiteSpace: "nowrap", gap: 2 }}
-                />
-              </FormGroup>
-            </Grid>
-          </Grid>
-        )}
+        <Grid
+          container
+          paddingTop={4}
+          paddingLeft={2}
+          gap={3}
+          paddingBottom={4}
+        >
+          {/* <Grid item xs={12} md={6} xl={4}> */}
+          {isPreRegistration && (
+            <FormGroup sx={{ paddingLeft: "9px" }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    defaultChecked
+                    size="small"
+                    color="primary"
+                    disabled
+                  />
+                }
+                label="Add Pre-registration Page"
+                sx={{ whiteSpace: "nowrap", gap: 2 }}
+              />
+            </FormGroup>
+          )}
+          {/* </Grid> */}
+          {/* <Grid item xs={12} md={6} xl={4}> */}
+          {isGradeSubmission && (
+            <FormGroup sx={{ paddingLeft: "9px" }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    defaultChecked
+                    size="small"
+                    color="primary"
+                    disabled
+                  />
+                }
+                label="Add Grade Submission Page"
+                sx={{ whiteSpace: "nowrap", gap: 2 }}
+              />
+            </FormGroup>
+          )}
+          {/* </Grid> */}
+        </Grid>
       </Grid>
+
+      <Div>
+        {isPreRegistration && (
+          <Link to="/bimbingan-akademik/dekan/history/activity/list-courses">
+            <Button
+              // onClick={()=>setOpenFirstModal(true)}
+              sx={{
+                backgroundColor: "#006AF5",
+                borderRadius: "10px",
+                color: "white",
+                whiteSpace: "nowrap",
+                minWidth: "132px",
+                fontSize: "12px",
+                padding: "10px",
+                gap: "6px",
+                marginRight: "20px",
+
+                "&:hover": {
+                  backgroundColor: "#025ED8",
+                },
+              }}
+            >
+              See Courses List
+            </Button>
+          </Link>
+        )}
+
+        {isPreRegistration && (
+          <Link to="/bimbingan-akademik/dekan/history/activity/list-student-not-preregistration">
+            <Button
+              // onClick={()=>setOpenFirstModal(true)}
+              sx={{
+                backgroundColor: "#006AF5",
+                borderRadius: "10px",
+                color: "white",
+                whiteSpace: "nowrap",
+                minWidth: "132px",
+                fontSize: "12px",
+                padding: "10px",
+                gap: "6px",
+
+                "&:hover": {
+                  backgroundColor: "#025ED8",
+                },
+              }}
+            >
+              See List of Students Who Have Not Pre-registered
+            </Button>
+          </Link>
+        )}
+      </Div>
+
+      {/* {isPreRegistration && (
+        <Grid item xs={12}>
+          <Typography
+            sx={{
+              fontSize: { xs: "16px", md: "18px" },
+              fontWeight: 500,
+              paddingTop: "20px",
+              paddingBottom: "20px",
+            }}
+          >
+            List of Pre-registered Courses
+          </Typography>
+          <TableContainer
+            sx={{
+              maxHeight: 440,
+            }}
+            component={Paper}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableHeading2 />
+              </TableHead>
+              <TableBody>
+                {data2
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem2 item={item} index={index} key={index} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
+            rowsPerPageOptions={[10, 25, 50, 100]}
+            component="div"
+            count={data.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Grid>
+      )} */}
 
       {isAttendance && (
         <Grid container spacing={2} marginTop={6}>

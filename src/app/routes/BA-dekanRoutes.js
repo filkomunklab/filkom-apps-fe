@@ -36,6 +36,10 @@ import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivi
 import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReplyConsultation/Consultation";
 import History from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History";
 import HistoryActivity from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/HistoryActivity";
+import ListCourses from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses";
+import ListStudent from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses/ListStudent";
+import StudentPreRegis from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses/ListStudent/StudentPreRegis";
+import ListStudentNotPreRegis from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListStudentNotPreRegis";
 import HistoryPreRegistration from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryPreRegis/PreRegistration";
 import HistoryCertificate from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryCertificate/Certificate";
 import HistoryGrade from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryGrade/HistoryGrade";
@@ -202,6 +206,22 @@ const dekanRoutes = [
   {
     path: "/bimbingan-akademik/dekan/history/activity",
     element: <Page component={HistoryActivity} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/history/activity/list-courses/",
+    element: <Page component={ListCourses} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/history/activity/list-courses/list-student/:id",
+    element: <Page component={ListStudent} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/history/activity/list-courses/list-student/:id/student-preregistration",
+    element: <Page component={StudentPreRegis} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/history/activity/list-student-not-preregistration",
+    element: <Page component={ListStudentNotPreRegis} />,
   },
   {
     path: "/bimbingan-akademik/dekan/history/pre-registration",
