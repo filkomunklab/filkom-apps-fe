@@ -26,7 +26,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
-import { BASE_URL_API } from "../../../../../@jumbo/config/env";
+import { BASE_URL_API } from "@jumbo/config/env";
 import * as XLSX from "xlsx";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { EXCEL_FILE_BASE64 } from "./constants";
@@ -358,6 +358,64 @@ const Curriculum = () => {
     FileSaver.saveAs(new Blob([blob], {}), "templateCurriculum.xlsx");
   };
 
+  const renderRows = () => {
+    const rows = [];
+    let currentSemester = null;
+
+    listSubject.forEach((value, index) => {
+      if (value.semester !== currentSemester) {
+        rows.push(
+          <TableRow key={`semester-${value.semester}`}>
+            <TableCell
+              colSpan={6}
+              sx={{
+                lign: "left",
+                fontWeight: 500,
+                fontSize: "15px",
+                color: "black",
+              }}
+            >
+              {value.semester === 0
+                ? "Pre-Requisite"
+                : value.semester === 9
+                ? "Elective"
+                : `Semester ${value.semester}`}
+            </TableCell>
+          </TableRow>
+        );
+        currentSemester = value.semester;
+      }
+
+      rows.push(
+        <TableRow key={value.id}>
+          <TableCell>{value.code}</TableCell>
+          <TableCell>{value.name}</TableCell>
+          <TableCell sx={{ width: "80px", textAlign: "right" }}>
+            {value.credits}
+          </TableCell>
+          <TableCell>{value.type}</TableCell>
+          <TableCell sx={{ width: "400px" }}>
+            {value.prerequisite === null || value.prerequisite === ""
+              ? "-"
+              : value.prerequisite
+                  .split(/(?<=\])\s-\s|\n/)
+                  .map((prereq, index) => (
+                    <React.Fragment key={index}>
+                      {index > 0 && (
+                        <>
+                          <br /> <br />
+                        </>
+                      )}
+                      {prereq}
+                    </React.Fragment>
+                  ))}
+          </TableCell>
+        </TableRow>
+      );
+    });
+    return rows;
+  };
+
   return (
     <div>
       {loading && (
@@ -380,7 +438,7 @@ const Curriculum = () => {
       )}
       <div>
         <Typography
-          sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "10px" }}
+          sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "6px" }}
         >
           Curriculum
         </Typography>
@@ -391,7 +449,7 @@ const Curriculum = () => {
                 fontSize: "15px",
                 fontWeight: 400,
                 color: "rgba(27, 43, 65, 0.69)",
-                paddingTop: "6px",
+                paddingBottom: "6px",
               }}
             >
               You can choose the curriculum
@@ -863,7 +921,7 @@ const Curriculum = () => {
         </Modal>
       </div>
 
-      <Grid container pt={4}>
+      <Grid container pt={3}>
         {curriculum === "selectCurriculum" ? (
           ""
         ) : (
@@ -878,38 +936,16 @@ const Curriculum = () => {
                 }}
               >
                 <TableRow>
-                  <TableCell sx={{ width: "80px" }}>Semester</TableCell>
                   <TableCell sx={{ width: "80px" }}>Code</TableCell>
                   <TableCell sx={{ width: "400px" }}>Name</TableCell>
-                  <TableCell sx={{ width: "80px" }}>Credit(s)</TableCell>
-                  <TableCell sx={{ width: "80px" }}>Type</TableCell>
+                  <TableCell sx={{ width: "80px", textAlign: "right" }}>
+                    Credit(s)
+                  </TableCell>
+                  <TableCell sx={{ width: "130px" }}>Type</TableCell>
                   <TableCell sx={{ width: "400px" }}>Prerequisite</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {listSubject &&
-                  listSubject.map((value, index) => (
-                    <TableRow key={value.id}>
-                      <TableCell>
-                        {value.semester === 0
-                          ? "Pre-Requisite"
-                          : value.semester === 9
-                          ? "Elective"
-                          : value.semester}
-                      </TableCell>
-                      <TableCell>{value.code}</TableCell>
-                      <TableCell>{value.name}</TableCell>
-                      <TableCell>{value.credits}</TableCell>
-                      <TableCell>{value.type}</TableCell>
-                      <TableCell>
-                        {value.prerequisite === null ||
-                        value.prerequisite === ""
-                          ? "-"
-                          : value.prerequisite}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
+              <TableBody>{renderRows()}</TableBody>
             </Table>
           </TableContainer>
         )}
