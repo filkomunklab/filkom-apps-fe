@@ -2,8 +2,6 @@ import {
   Paper,
   Typography,
   Grid,
-  TextField,
-  Stack,
   MenuItem,
   Select,
   FormControl,
@@ -22,7 +20,9 @@ import {
   TableContainer,
 } from "@mui/material";
 import Div from "@jumbo/shared/Div";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 import SearchLocal from "app/shared/SearchLocal";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
@@ -33,14 +33,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
   "&:hover": {
     textDecoration: "underline",
   },
-}));
-
-const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nim: `022407712`,
-  name: `Yuhu, Christopher Darell`,
-  prodi: `Informatika`,
-  year: `2021`,
-  status: `Active`,
 }));
 
 const yearList = [
@@ -92,10 +84,58 @@ const prodiList = [
 const AdvisorProfile = () => {
   const [showLabel, setShowLabel] = useState(true);
   const [pilihJurusan, setPilihJurusan] = useState("");
-
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const [dataStudent, setDataStudent] = useState([]);
+  const [dataProfile, setDataProfile] = useState([]);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const getProfile = async () => {
+    try {
+      const { nik } = location.state;
+      const response = await axios.get(
+        `${BASE_URL_API}/employee/profile/${nik}`
+      );
+      console.log("ini isi result.data", response.data.data);
+      setDataProfile(response.data.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const getDataStudent = async () => {
+    try {
+      const { nik } = location.state;
+      const result = await axios.get(`${BASE_URL_API}/student/dosen/${nik}`);
+      const { status } = result.data;
+
+      if (status === "OK") {
+        console.log(
+          "ini isi result.data dalam status ok mentored",
+          result.data.data
+        );
+        const filteredData = result.data.data.filter(
+          (item) => item.status !== "GRADUATE"
+        );
+
+        setDataStudent(result.data.data);
+      } else {
+        console.error("error, ini data result: ", result);
+        console.error("Error, ini data result.data: ", result.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+    getDataStudent();
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -105,9 +145,6 @@ const AdvisorProfile = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -138,7 +175,7 @@ const AdvisorProfile = () => {
         </Breadcrumbs>
       </Div>
       <Div>
-        <Typography variant="h1" fontWeight={500} sx={{ mb: 3 }}>
+        <Typography variant="h1" fontWeight={500} sx={{ marginBottom: "25px" }}>
           Advisor Profile
         </Typography>
         <Typography
@@ -171,37 +208,37 @@ const AdvisorProfile = () => {
           <Grid item xs={12} md={12}>
             <Typography variant="h6">Full Name</Typography>
             <Typography variant="h6" sx={textStyle}>
-              Adzana Shaliha
+              {`${dataProfile.lastName}, ${dataProfile.firstName}`}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">NIDN</Typography>
             <Typography variant="h6" sx={textStyle}>
-              319288918900
+              {dataProfile.nidn}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Email</Typography>
             <Typography variant="h6" sx={textStyle}>
-              AdzanaShaliha123@gmail.com
+              {dataProfile.email}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Phone</Typography>
             <Typography variant="h6" sx={textStyle}>
-              082919912400
+              {dataProfile.phoneNum}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Major</Typography>
             <Typography variant="h6" sx={textStyle}>
-              Informatics
+              {dataProfile.major}
             </Typography>
           </Grid>
           <Grid item xs={12} md={12}>
             <Typography variant="h6">Address</Typography>
             <Typography variant="h6" sx={textStyle}>
-              Perum Agape griya blok K/10, Tumaluntung, Kabupaten Minahasa Utara
+              {dataProfile.Address}
             </Typography>
           </Grid>
         </Grid>
@@ -368,11 +405,18 @@ const AdvisorProfile = () => {
                 <TableHeading />
               </TableHead>
               <TableBody>
-                {data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((item, index) => (
-                    <TableItem item={item} index={index} key={index} />
-                  ))}
+                {Array.isArray(dataStudent) && dataStudent.length > 0 ? (
+                  dataStudent
+                    .filter((item) => item.status !== "GRADUATE")
+                    .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+                    .map((item, index) => (
+                      <TableItem item={item} index={index} key={index} />
+                    ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={8}>No data available</TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -386,7 +430,9 @@ const AdvisorProfile = () => {
             }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
-            count={data.length}
+            count={
+              dataStudent.filter((item) => item.status !== "GRADUATE").length
+            }
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -448,25 +494,36 @@ const TableItem = ({ item, index }) => {
         console.log("Path not found");
     }
   };
+  const rowStyle = {
+    "@media (max-width: 650px)": { fontSize: "11px" },
+  };
   return (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{`022407712`}</TableCell>
+      <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
+      <TableCell sx={[rowStyle]}>{item.nim}</TableCell>
       <TableCell>
         <Button
           name="profile"
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
           onClick={handleButtonNavigate}
-        >{`Yuhu, Christopher Darell`}</Button>
+        >
+          {item.lastName}, {item.firstName}
+        </Button>
       </TableCell>
-      <TableCell>{`Informatika`}</TableCell>
-      <TableCell>{`2021`}</TableCell>
+      <TableCell sx={[rowStyle]}>{item.major}</TableCell>
+      <TableCell sx={[rowStyle]}>{item.arrival_Year}</TableCell>
 
       <TableCell>
         <Button
           name="grade"
           onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
         >
           View Grades
         </Button>
@@ -475,13 +532,16 @@ const TableItem = ({ item, index }) => {
         <Button
           name="certificate"
           onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+          sx={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+          }}
         >
           View Certificates
         </Button>
       </TableCell>
-      <TableCell>
-        <Chip label={"Active"} variant="filled" color={"success"} />
+      <TableCell sx={[rowStyle]}>
+        <Chip label={item.status} variant="filled" color={"success"} />
       </TableCell>
     </TableRow>
   );
