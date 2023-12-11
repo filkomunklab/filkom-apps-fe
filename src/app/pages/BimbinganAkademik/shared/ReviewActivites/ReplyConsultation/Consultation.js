@@ -260,7 +260,14 @@ const Consultation = () => {
             </Grid>
 
             <Paper elevation={0} variant="outlined">
-              <Typography variant="body1" sx={{ p: 2 }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  p: 2,
+                  overflowWrap: "break-word",
+                  wordWrap: "break-word",
+                }}
+              >
                 {description}
               </Typography>
             </Paper>
@@ -306,6 +313,8 @@ const Consultation = () => {
                       elevation={0}
                       variant="outlined"
                       sx={{
+                        overflowWrap: "break-word",
+                        wordWrap: "break-word",
                         borderColor:
                           value.sender_name === studentName
                             ? "#000000"
@@ -426,10 +435,6 @@ const Consultation = () => {
                               </Button>
                             </Grid>
                             <Grid item>
-                              {/* <Link
-                            style={{ textDecoration: "none", color: "white" }}
-                            to="/bimbingan-akademik/consultation/"
-                          > */}
                               <Button
                                 onClick={handleSubmitFirstModal}
                                 sx={{
@@ -445,7 +450,6 @@ const Consultation = () => {
                               >
                                 Yes
                               </Button>
-                              {/* </Link> */}
                             </Grid>
                           </Grid>
                         </div>

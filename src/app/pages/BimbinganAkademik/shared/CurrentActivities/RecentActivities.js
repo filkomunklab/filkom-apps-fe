@@ -209,12 +209,12 @@ const CurrentActivities = () => {
                       sx={{
                         marginRight: "-72px",
                         textAlign: "right",
-                        width: "90px",
-                        "@media (max-width: 560px)": {
-                          width: "150px",
+                        width: "300px",
+                        "@media (max-width: 630px)": {
+                          width: "400px",
                         },
                         "@media (max-width: 400px)": {
-                          width: "200px",
+                          width: "600px",
                         },
                       }}
                     >

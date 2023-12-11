@@ -248,7 +248,14 @@ const ViewConsultation = () => {
             </Grid>
 
             <Paper elevation={0} variant="outlined">
-              <Typography variant="body1" sx={{ p: 2 }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  p: 2,
+                  overflowWrap: "break-word",
+                  wordWrap: "break-word",
+                }}
+              >
                 {description}
               </Typography>
             </Paper>
@@ -258,7 +265,10 @@ const ViewConsultation = () => {
       <Grid item xs={12}>
         <Stack spacing={2} sx={{ paddingTop: 6 }}>
           <Grid sx={{ display: "flex", direction: "row" }}>
-            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: 600, marginLeft: "2px" }}
+            >
               Status:
             </Typography>
             <Typography
@@ -294,6 +304,8 @@ const ViewConsultation = () => {
                       elevation={0}
                       variant="outlined"
                       sx={{
+                        overflowWrap: "break-word",
+                        wordWrap: "break-word",
                         borderColor:
                           value.sender_name === studentName
                             ? "#000000"
@@ -330,7 +342,7 @@ const ViewConsultation = () => {
                     </Paper>
                   ))}
 
-                {status !== "Complete" && (
+                {status !== "Waiting" && (
                   <>
                     <TextField
                       size="small"
@@ -435,6 +447,21 @@ const ViewConsultation = () => {
                       </Modal>
                     </Grid>
                   </>
+                )}
+
+                {status === "Waiting" && (
+                  <Paper
+                    elevation={0}
+                    variant="outlined"
+                    sx={{ marginBottom: "30px", marginTop: "10px" }}
+                  >
+                    <Typography
+                      variant="body1"
+                      sx={{ p: 2, color: "darkgray" }}
+                    >
+                      Please wait for a response from the consultation recipient
+                    </Typography>
+                  </Paper>
                 )}
 
                 {status === "Complete" && (

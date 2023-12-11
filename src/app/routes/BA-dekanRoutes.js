@@ -228,7 +228,7 @@ const dekanRoutes = [
     element: <Page component={ViewActivity} />,
   },
   {
-    path: "/bimbingan-akademik/dekan/current-activities/view-consultation",
+    path: "/bimbingan-akademik/dekan/current-activities/view-consultation/:id",
     element: <Page component={ViewConsultation} />,
   },
   {

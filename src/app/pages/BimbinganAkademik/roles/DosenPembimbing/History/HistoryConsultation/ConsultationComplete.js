@@ -149,11 +149,11 @@ const Consultation = () => {
     let path = "";
 
     if (role.includes("DEKAN")) {
-      path = "/bimbingan-akademik/dekan/history/consultation/";
+      path = "/bimbingan-akademik/dekan/history/";
     } else if (role.includes("KAPRODI")) {
-      path = "/bimbingan-akademik/kaprodi/history/consultation/";
+      path = "/bimbingan-akademik/kaprodi/history/";
     } else {
-      path = "/bimbingan-akademik/dosen-pembimbing/history/consultation/";
+      path = "/bimbingan-akademik/dosen-pembimbing/history/";
     }
     return <StyledLink to={path}>History</StyledLink>;
   };
@@ -425,10 +425,6 @@ const Consultation = () => {
                               </Button>
                             </Grid>
                             <Grid item>
-                              {/* <Link
-                            style={{ textDecoration: "none", color: "white" }}
-                            to="/bimbingan-akademik/consultation/"
-                          > */}
                               <Button
                                 onClick={handleSubmitFirstModal}
                                 sx={{
@@ -444,7 +440,6 @@ const Consultation = () => {
                               >
                                 Yes
                               </Button>
-                              {/* </Link> */}
                             </Grid>
                           </Grid>
                         </div>

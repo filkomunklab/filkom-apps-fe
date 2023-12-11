@@ -172,7 +172,7 @@ const Consultation = () => {
 
       if (result.data.status === "OK") {
         const response1 = await axios.get(
-          `${BASE_URL_API}/employee/profile/${result.data.data.employeeId}` //employeeId itu nik dosen
+          `${BASE_URL_API}/employee/profile/${result.data.data.employeeNik}` //employeeId itu nik dosen
         );
         // console.log("ini response1.data", response1.data);
         const response2 = await axios.get(
@@ -381,7 +381,7 @@ const Consultation = () => {
 
         <Grid item xs={12}>
           <Stack spacing={2}>
-            <Typography>Description</Typography>
+            <RTypography>Description</RTypography>
             <TextField
               sx={{ backgroundColor: "white" }}
               id="outlined-basic"
