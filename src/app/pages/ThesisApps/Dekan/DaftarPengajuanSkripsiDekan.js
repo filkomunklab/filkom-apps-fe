@@ -45,7 +45,7 @@ const DaftarPengajuanSkripsiDekan = () => {
   const [loading, setLoading] = useState(true);
   // console.log("loading", loading);
 
-  // menyimpan hasil request daftar pengajuan proposal
+  // menyimpan hasil request daftar pengajuan skripsi
   const [daftarPengajuanSkripsi, setDaftarPengajuanSkripsi] = useState({
     dashboard: {
       total_group: 0,
