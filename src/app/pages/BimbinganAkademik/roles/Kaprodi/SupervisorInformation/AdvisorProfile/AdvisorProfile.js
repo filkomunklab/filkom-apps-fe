@@ -82,91 +82,36 @@ const prodiList = [
 ];
 
 const AdvisorProfile = () => {
-  const [showLabel, setShowLabel] = useState(true);
-  const [pilihJurusan, setPilihJurusan] = useState("");
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const [dataStudent, setDataStudent] = useState([]);
   const [dataProfile, setDataProfile] = useState([]);
-
   const navigate = useNavigate();
   const location = useLocation();
+  const { nik } = location.state;
+  const source = axios.CancelToken.source();
 
   const getProfile = async () => {
     try {
-      const { nik } = location.state;
       const response = await axios.get(
-        `${BASE_URL_API}/employee/profile/${nik}`
+        `${BASE_URL_API}/employee/profile/${nik}`,
+        { cancelToken: source.token }
       );
-      console.log("ini isi result.data", response.data.data);
+      console.log("ini isi result.data", response.data);
       setDataProfile(response.data.data);
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  const getDataStudent = async () => {
-    try {
-      const { nik } = location.state;
-      const result = await axios.get(`${BASE_URL_API}/student/dosen/${nik}`);
-      const { status } = result.data;
-
-      if (status === "OK") {
-        console.log(
-          "ini isi result.data dalam status ok mentored",
-          result.data.data
-        );
-        const filteredData = result.data.data.filter(
-          (item) => item.status !== "GRADUATE"
-        );
-
-        setDataStudent(result.data.data);
-      } else {
-        console.error("error, ini data result: ", result);
-        console.error("Error, ini data result.data: ", result.data);
-      }
-    } catch (error) {
-      console.error("Error fetching data: ", error);
-    }
-  };
-
   useEffect(() => {
     getProfile();
-    getDataStudent();
+    return () => source.cancel("request dibatalkan");
   }, []);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  const handleClick = (event) => {
-    event.preventDefault();
-    navigate(-2);
-  };
-  const handleUbahJurusan = (event) => {
-    setPilihJurusan(event.target.value);
-  };
-
-  const handleUbahJurusanDanKlik = (event) => {
-    handleUbahJurusan(event);
-    handleClick(event);
-    setShowLabel(false);
-  };
 
   return (
     <Div>
-      <Div
-        role="presentation"
-        onClick={handleClick}
-        sx={{ paddingBottom: "15px" }}
-      >
+      <Div role="presentation" sx={{ paddingBottom: "15px" }}>
         <Breadcrumbs aria-label="breadcrumb">
           <StyledLink to="/bimbingan-akademik/kaprodi/supervisor-information/">
             Supervisor Information
@@ -367,11 +312,10 @@ const AdvisorProfile = () => {
           display="flex"
           alignItems="center"
         >
-          {/* <Link to={`/add-supervisor/informatics`}> */}
           <Button
             onClick={() =>
               navigate(
-                `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${location.state}/edit-student`,
+                `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}/edit-student`,
                 { state: location.state }
               )
             }
@@ -391,7 +335,6 @@ const AdvisorProfile = () => {
           >
             Edit Student
           </Button>
-          {/* </Link> */}
         </Grid>
         <Grid item xs={12}>
           <TableContainer
@@ -405,8 +348,20 @@ const AdvisorProfile = () => {
                 <TableHeading />
               </TableHead>
               <TableBody>
-                {Array.isArray(dataStudent) && dataStudent.length > 0 ? (
+                {/* {Array.isArray(dataStudent) && dataStudent.length > 0 ? (
                   dataStudent
+                    .filter((item) => item.status !== "GRADUATE")
+                    .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+                    .map((item, index) => (
+                      <TableItem item={item} index={index} key={index} />
+                    ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={8}>No data available</TableCell>
+                  </TableRow>
+                )} */}
+                {dataProfile.student?.length > 0 ? (
+                  dataProfile.student
                     .filter((item) => item.status !== "GRADUATE")
                     .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
                     .map((item, index) => (
@@ -431,12 +386,19 @@ const AdvisorProfile = () => {
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
             count={
-              dataStudent.filter((item) => item.status !== "GRADUATE").length
+              dataProfile.student
+                ? dataProfile.student.filter(
+                    (item) => item.status !== "GRADUATE"
+                  ).length
+                : 0
             }
             rowsPerPage={rowsPerPage}
             page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+            onPageChange={(_, newPage) => setPage(newPage)}
+            onRowsPerPageChange={(event) => {
+              setRowsPerPage(+event.target.value);
+              setPage(0);
+            }}
           />
         </Grid>
       </Grid>
@@ -444,7 +406,7 @@ const AdvisorProfile = () => {
   );
 };
 
-const TableHeading = ({ index }) => {
+const TableHeading = () => {
   const style = { fontWeight: 400 };
   return (
     <TableRow sx={{ backgroundColor: "#1A38601A" }}>

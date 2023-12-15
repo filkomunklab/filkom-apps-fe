@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Grid,
@@ -18,6 +18,8 @@ import {
 import SearchLocal from "app/shared/SearchLocal";
 import Div from "@jumbo/shared/Div";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -48,9 +50,40 @@ const CountStudent = ({ selected, totalStudents }) => {
 const EditStudent = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const source = axios.CancelToken.source();
+  const { students } = location.state;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [studentOptions, setStudentOptions] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState(
+    students?.map((data) => data.nim) || []
+  );
   const [selected, setSelected] = useState([]);
+
+  const getStudent = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL_API}/students-without-supervisor`,
+        { cancelToken: source.token }
+      );
+
+      const { status, data } = response.data;
+      console.log("inii response :", response);
+      if (status === "OK") {
+        setStudentOptions(data);
+      } else {
+        console.log("ini response :", response);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getStudent();
+    console.log("ini location :", location?.state);
+    return () => source.cancel("request dibatalkan");
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

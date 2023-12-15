@@ -34,9 +34,9 @@ import SupervisorInformatics from "app/pages/BimbinganAkademik/roles/Kaprodi/Sup
 import SupervisorInformationSystem from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/InformationSystem";
 import SupervisorInformationTechnology from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/InformationTechnology";
 import AddSupervisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor";
-import InformaticsLS from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor/Informatics";
+import StudentList from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor/AddStudent";
 import InformationSytemLS from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor/InformationSystem";
-import InformationTechnologyLS from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor/InformationTechnology";
+import InformationTechnologyLS from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor/AddStudent";
 import AdvisorHistory from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory";
 import HistoryActivityAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HIstoryActivity";
 import HistoryGradeAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HistoryGrade";
@@ -266,17 +266,17 @@ const kepalaProgramStudiRoutes = [
     element: <Page component={HistoryConsultationAdvisor} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor/informatics",
-    element: <Page component={InformaticsLS} />,
+    path: "/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor/student-list",
+    element: <Page component={StudentList} />,
   },
-  {
-    path: "/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor/information-system",
-    element: <Page component={InformationSytemLS} />,
-  },
-  {
-    path: "/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor/information-technology",
-    element: <Page component={InformationTechnologyLS} />,
-  },
+  // {
+  //   path: "/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor/information-system",
+  //   element: <Page component={InformationSytemLS} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor/information-technology",
+  //   element: <Page component={InformationTechnologyLS} />,
+  // },
   {
     path: "/bimbingan-akademik/kaprodi/current-activities",
     element: <Page component={CurrentActivities} />,
