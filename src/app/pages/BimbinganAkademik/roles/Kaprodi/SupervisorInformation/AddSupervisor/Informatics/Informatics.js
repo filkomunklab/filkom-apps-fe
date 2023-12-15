@@ -32,7 +32,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const data = Array.from(Array(15).keys()).map((item, index) => ({
   nim: `105022010000`,
   name: `Singal, Aldo Aldi`,
-  prodi: `Informatika`,
+  prodi: `Teknik Informatika`,
   year: `2020`,
   status: `Active`,
   dospem: `-`,

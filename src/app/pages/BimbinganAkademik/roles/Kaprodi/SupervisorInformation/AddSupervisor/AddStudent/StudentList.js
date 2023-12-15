@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Grid,
@@ -18,7 +18,9 @@ import {
 } from "@mui/material";
 import SearchLocal from "app/shared/SearchLocal";
 import Div from "@jumbo/shared/Div";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -32,7 +34,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const data = Array.from(Array(15).keys()).map((item, index) => ({
   nim: `105022010000`,
   name: `Awuy, Diany Mariska`,
-  prodi: `Sistem Informasi`,
+  prodi: `Teknologi Informasi`,
   year: `2020`,
   status: `Active`,
   dospem: `-`,
@@ -46,65 +48,65 @@ const CountStudent = ({ selected, totalStudents }) => {
   );
 };
 
-const InformationTechnology = () => {
+const StudentList = () => {
+  const location = useLocation();
+  const { students, supervisor } = location.state;
+  const source = axios.CancelToken.source();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selected, setSelected] = useState([]);
+  const [studentOptions, setStudentOptions] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState(
+    students?.map((data) => data.nim) || []
+  );
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const getStudent = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL_API}/students-without-supervisor`,
+        { cancelToken: source.token }
+      );
+
+      const { status, data } = response.data;
+      console.log("inii response :", response);
+      if (status === "OK") {
+        setStudentOptions(data);
+      } else {
+        console.log("ini response :", response);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  useEffect(() => {
+    getStudent();
+    console.log("ini di studentlist :", location?.state);
+    return () => source.cancel("request dibatalkan");
+  }, []);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = data.map((item, index) => index);
-      setSelected(newSelected);
+      const newSelected = studentOptions.map((item) => item.nim);
+      setSelectedStudent(newSelected);
     } else {
-      setSelected([]);
+      setSelectedStudent([]);
     }
   };
-
-  const handleClick = (event, index) => {
-    const selectedIndex = selected.indexOf(index);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, index);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, selected.length - 1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selected.length - 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
-  const isItemSelected = (index) => selected.indexOf(index) !== -1;
-  const isAllSelected = selected.length === data.length;
 
   return (
     <Div>
-      <Div role="presentation" onClick={handleClick}>
+      <Div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
           <StyledLink to="/bimbingan-akademik/kaprodi/supervisor-information/">
             Supervisor Information
           </StyledLink>
-          <StyledLink to="/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor">
+          <StyledLink
+            state={{ supervisor: supervisor }}
+            to="/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor"
+          >
             Add Supervisor
           </StyledLink>
-          <Typography color="text.primary">
-            Information Technology Student
-          </Typography>
+          <Typography color="text.primary">Student List</Typography>
         </Breadcrumbs>
       </Div>
       <Div sx={{ paddingTop: 4, paddingBottom: 2 }}>
@@ -140,9 +142,10 @@ const InformationTechnology = () => {
                 <TableCell padding="checkbox">
                   <Checkbox
                     indeterminate={
-                      selected.length > 0 && selected.length < data.length
+                      selectedStudent.length > 0 &&
+                      selectedStudent.length < studentOptions.length
                     }
-                    checked={isAllSelected}
+                    checked={selectedStudent.length === studentOptions.length}
                     onChange={handleSelectAllClick}
                   />
                 </TableCell>
@@ -155,15 +158,21 @@ const InformationTechnology = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data
+              {studentOptions
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((item, index) => (
                   <TableItem
                     item={item}
                     index={index}
-                    key={index}
-                    isSelected={isItemSelected(index)}
-                    handleClick={handleClick}
+                    key={item.id}
+                    isSelected={selectedStudent.includes(item.nim)}
+                    handleClick={(i) =>
+                      setSelectedStudent(
+                        selectedStudent.includes(i.nim)
+                          ? selectedStudent.filter((nim) => nim !== i.nim)
+                          : [...selectedStudent, i.nim]
+                      )
+                    }
                   />
                 ))}
             </TableBody>
@@ -172,21 +181,33 @@ const InformationTechnology = () => {
         <TablePagination
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"
-          count={data.length}
+          count={studentOptions.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
+          onPageChange={(_, newPage) => setPage(newPage)}
+          onRowsPerPageChange={(event) => {
+            setRowsPerPage(+event.target.value);
+            setPage(0);
+          }}
         />
       </Grid>
       <Grid display="flex" alignItems="center" gap={4}>
         <Grid item md={4}>
           <Div sx={{ alignItems: "center" }}>
-            <CountStudent selected={selected} totalStudents={data.length} />
+            <CountStudent
+              selected={selectedStudent}
+              totalStudents={studentOptions.length}
+            />
           </Div>
         </Grid>
         <Grid item md={4}>
           <Link
+            state={{
+              students: studentOptions.filter((student) =>
+                selectedStudent.includes(student.nim)
+              ),
+              supervisor: supervisor,
+            }}
             to={`/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor`}
           >
             <Button
@@ -217,24 +238,28 @@ const InformationTechnology = () => {
 const TableItem = ({ item, index, isSelected, handleClick }) => {
   return (
     <TableRow
-      onClick={(event) => handleClick(event, index)}
+      onClick={() => handleClick(item)}
       role="checkbox"
       aria-checked={isSelected}
-      selected={isSelected}
     >
       <TableCell padding="checkbox">
-        {/* {data[index].dospem === `-` ? (
-          <Checkbox checked={!isSelected} />
-        ) : (
-          <Checkbox checked={isSelected} />
-        )} */}
         <Checkbox checked={isSelected} />
       </TableCell>
       <TableCell>{index + 1}</TableCell>
       <TableCell>{item.nim}</TableCell>
-      <TableCell>{item.name}</TableCell>
-      <TableCell>{item.prodi}</TableCell>
-      <TableCell>{item.year}</TableCell>
+      <TableCell>
+        {item.lastName}, {item.firstName}
+      </TableCell>
+      <TableCell>
+        {item.major === "IF"
+          ? "Informatics"
+          : item.major === "SI"
+          ? "Information System"
+          : item.major === "DKV"
+          ? "Information Technology"
+          : "-"}
+      </TableCell>
+      <TableCell>{item.arrival_Year}</TableCell>
       <TableCell>
         <Chip label={item.status} variant="filled" color="success" />
       </TableCell>
@@ -242,4 +267,4 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
   );
 };
 
-export default InformationTechnology;
+export default StudentList;

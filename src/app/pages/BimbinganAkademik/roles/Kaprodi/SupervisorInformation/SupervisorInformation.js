@@ -78,41 +78,44 @@ const SupervisorInformation = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
   const [dataSupervisor, setDataSupervisor] = useState([]);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  const source = axios.CancelToken.source();
 
   const getDataSupervisor = async () => {
     try {
       const token = localStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
 
-      const result = await axios.get(`${BASE_URL_API}/employee`, { headers });
-      const { status } = result.data;
+      const response = await axios.get(
+        `${BASE_URL_API}/supervisor/has-student`,
+        {
+          cancelToken: source.token,
+        }
+      );
+      const { status, data } = response.data;
 
       if (status === "OK") {
-        console.log("ini isi supervisor: ", result.data.data);
-        setDataSupervisor(result.data.data);
+        console.log("ini isi supervisor: ", response.data.data);
+        setDataSupervisor(data);
       } else {
-        console.error("error, ini data result: ", result);
-        console.error("Error, ini data result.data: ", result.data);
+        console.log("ini data response: ", response);
       }
     } catch (error) {
-      console.error("Error fetching data: ", error);
+      console.log("Error fetching data: ", error);
     }
   };
 
   useEffect(() => {
     getDataSupervisor();
+    return () => {
+      source.cancel("request dibatalkan");
+    };
   }, []);
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
   return (
     <Div>
@@ -217,7 +220,7 @@ const SupervisorInformation = () => {
             count={dataSupervisor.length}
             rowsPerPage={rowsPerPage}
             page={page}
-            onPageChange={handleChangePage}
+            onPageChange={(_, newPage) => setPage(newPage)}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Grid>
@@ -226,7 +229,7 @@ const SupervisorInformation = () => {
   );
 };
 
-const TableHeading = ({ index }) => {
+const TableHeading = () => {
   const style = {
     fontWeight: 400,
     "@media (max-width: 650px)": { fontSize: "13px" },
@@ -286,7 +289,15 @@ const TableItem = ({ item, index }) => {
           {item.lastName}, {item.firstName}
         </Button>
       </TableCell>
-      <TableCell sx={[rowStyle]}></TableCell>
+      <TableCell sx={[rowStyle]}>
+        {item.major === "IF"
+          ? "Informatics"
+          : item.major === "SI"
+          ? "Information System"
+          : item.major === "DKV"
+          ? "Information Technology"
+          : "-"}
+      </TableCell>
       <TableCell>
         <Button
           name="history"
@@ -294,12 +305,14 @@ const TableItem = ({ item, index }) => {
           sx={{
             "@media (max-width: 650px)": { fontSize: "11px" },
             textTransform: "capitalize",
+            paddingX: 0,
+            width: "64px",
           }}
         >
           View History
         </Button>
       </TableCell>
-      <TableCell sx={[rowStyle]}>{`25`}</TableCell>
+      <TableCell sx={[rowStyle]}>{item.numberOfStudent}</TableCell>
     </TableRow>
   );
 };

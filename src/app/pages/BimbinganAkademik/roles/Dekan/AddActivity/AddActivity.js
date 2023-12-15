@@ -72,7 +72,7 @@ const style2 = {
 const AddActivity = () => {
   const prevSelectedStudentRef = useRef();
   const [studentOptions, setStudentOptions] = useState([]);
-  const [selectedStudent, setSelectedStudent] = useState([])
+  const [selectedStudent, setSelectedStudent] = useState([]);
   const [valueDueDate, setValueDueDate] = useState(null);
   const [valueTimePicker, setValueTimePicker] = useState(null);
   const [valueAttendance, setValueAttendance] = useState("");
@@ -82,34 +82,32 @@ const AddActivity = () => {
   const [openFirstModal, setOpenFirstModal] = useState(false);
   const [openSecondModal, setOpenSecondModal] = useState(false);
 
+  prevSelectedStudentRef.current = selectedStudent;
+
   const handleStudentChange = (event) => {
     setValueStudent(event.target.value);
     setShowLabel2(false);
   };
-  
+
   const handleAttendanceChange = (event) => {
     setValueAttendance(event.target.value);
     setShowLabel(false);
   };
-  
+
   const handleSubmitFirstModal = () => {
-    setOpenFirstModal(false)
-    setOpenSecondModal(true)
+    setOpenFirstModal(false);
+    setOpenSecondModal(true);
   };
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      setOpenSecondModal(false)
+      setOpenSecondModal(false);
     }, 5000);
 
     return () => {
       clearTimeout(timer);
     };
   }, [openSecondModal === true]);
-
-  useEffect(() => {
-    prevSelectedStudentRef.current = selectedStudent;
-    console.log('prev nilai', prevSelectedStudentRef.current)
-  }, [selectedStudent]);
 
   // const getStudentList = async()=>{
   //   try{
@@ -138,41 +136,82 @@ const AddActivity = () => {
   //   }
   // }
 
-  const handleSubmit = async() =>{
-    try{
+  const handleSubmit = async () => {
+    try {
       //format header tergantung backend
       const headers = {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        };
-      const response = await axios.post(`${BASE_URL_API}/activity/${JSON.parse(localStorage.getItem("user")).nik}`,
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      };
+      const response = await axios.post(
+        `${BASE_URL_API}/activity/${
+          JSON.parse(localStorage.getItem("user")).nik
+        }`,
         {
           title: "Ehem",
           description: "Hello World!",
           date: "2023-12-06T18:00:00Z",
           time: "18.05",
-          employeeId: '1003',
+          employeeId: "1003",
           grades_access: false,
           // form_attendance: valueAttendance
-        },
+        }
         // {headers}
-      )
-      console.log('ini itu',response, JSON.parse(localStorage.getItem("user")).nik, localStorage.getItem("token"))
-    }catch(error){
-      console.log(error)
+      );
+      console.log(
+        "ini itu",
+        response,
+        JSON.parse(localStorage.getItem("user")).nik,
+        localStorage.getItem("token")
+      );
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
-    setSelectedStudent([])
+    setSelectedStudent([]);
     if (valueStudent === "MahasiswaBimbingan") {
-      setStudentOptions([...Array(10).keys()].map((i) => (i === 0 ? `All students`:`Student ${i}`)));
+      setStudentOptions(
+        [...Array(10).keys()].map((i) =>
+          i === 0 ? `All students` : `Student ${i}`
+        )
+      );
     } else if (valueStudent === "MahasiswaFakultas") {
-      setStudentOptions([...Array(10).keys()].map((i) => (i === 0 ? `All students`:`Student ${i+10}`)));
+      setStudentOptions(
+        [...Array(10).keys()].map((i) =>
+          i === 0 ? `All students` : `Student ${i + 10}`
+        )
+      );
     }
   }, [valueStudent]);
 
-  useEffect(()=>{console.log('ini selected student', selectedStudent)},[selectedStudent])
+  useEffect(() => {
+    console.log("ini selected student", selectedStudent);
+  }, [selectedStudent]);
+
+  const handleSelectStudent = (_, newValue) => {
+    console.log("yaho", newValue);
+    const wasAllSelected =
+      prevSelectedStudentRef.current.includes("All students");
+    if (newValue.includes("All students")) {
+      if (newValue.length === studentOptions.length - 1) {
+        setSelectedStudent(
+          wasAllSelected
+            ? newValue.filter((student) => student !== "All students")
+            : studentOptions
+        );
+      } else {
+        setSelectedStudent(studentOptions);
+      }
+    } else {
+      if (newValue.length >= studentOptions.length - 1) {
+        setSelectedStudent(wasAllSelected ? [] : studentOptions);
+      } else {
+        setSelectedStudent(newValue);
+      }
+    }
+  };
 
   return (
     <div>
@@ -222,7 +261,7 @@ const AddActivity = () => {
               label={valueDueDate ? "" : "No Due Date"}
               inputFormat="MM/dd/yyyy"
               value={valueDueDate}
-              onChange={(event, newValue) => setValueDueDate(newValue)}
+              onChange={(_, newValue) => setValueDueDate(newValue)}
               renderInput={(params) => <TextField {...params} />}
             />
           </LocalizationProvider>
@@ -302,23 +341,7 @@ const AddActivity = () => {
             sx={{ backgroundColor: "white" }}
             multiple
             value={selectedStudent}
-            onChange={(event, newValue)=>{
-              console.log('yaho', newValue)
-              const wasAllSelected = prevSelectedStudentRef.current.includes("All students")
-              if (newValue.includes('All students')) {
-                if(newValue.length === studentOptions.length-1){
-                  setSelectedStudent(wasAllSelected ? newValue.filter((student)=>student !== "All students") : studentOptions)
-                }else{
-                  setSelectedStudent(studentOptions);
-                }
-              }else{
-                if(newValue.length >= studentOptions.length-1){
-                  setSelectedStudent(wasAllSelected ? [] : studentOptions)
-                }else{
-                  setSelectedStudent(newValue)
-                }
-              }
-            }}
+            onChange={handleSelectStudent}
             id="checkboxes-tags-demo"
             options={studentOptions}
             disableCloseOnSelect
@@ -335,14 +358,17 @@ const AddActivity = () => {
               </li>
             )}
             renderInput={(params) => {
-              params.InputProps.startAdornment = params.InputProps.startAdornment?.filter(adornment => !adornment.props.label.includes('All students'));
+              params.InputProps.startAdornment =
+                params.InputProps.startAdornment?.filter(
+                  (adornment) => !adornment.props.label.includes("All students")
+                );
               return (
-              <TextField
-                {...params}
-                label="Students"
-                placeholder="Add Student"
-              />
-              )
+                <TextField
+                  {...params}
+                  label="Students"
+                  placeholder="Add Student"
+                />
+              );
             }}
           />
         </Grid>
@@ -379,7 +405,7 @@ const AddActivity = () => {
         }}
       >
         <Button
-          onClick={()=>setOpenFirstModal(true)}
+          onClick={() => setOpenFirstModal(true)}
           sx={{
             backgroundColor: "#006AF5",
             borderRadius: "24px",
@@ -401,7 +427,7 @@ const AddActivity = () => {
 
       <Modal
         open={openFirstModal}
-        onClose={()=>setOpenFirstModal(false)}
+        onClose={() => setOpenFirstModal(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -427,7 +453,7 @@ const AddActivity = () => {
           <Grid container spacing={1} justifyContent="flex-end">
             <Grid item>
               <Button
-                onClick={()=>setOpenFirstModal(false)}
+                onClick={() => setOpenFirstModal(false)}
                 sx={{
                   backgroundColor: "white",
                   borderRadius: "5px",
@@ -443,7 +469,7 @@ const AddActivity = () => {
             </Grid>
             <Grid item>
               <Button
-                onClick={()=>{
+                onClick={() => {
                   // handleSubmit();
                   handleSubmitFirstModal();
                 }}
@@ -472,7 +498,7 @@ const AddActivity = () => {
           <IconButton
             edge="end"
             color="#D9D9D9"
-            onClick={()=>setOpenSecondModal(false)}
+            onClick={() => setOpenSecondModal(false)}
             aria-label="close"
             sx={{
               position: "absolute",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Breadcrumbs,
@@ -16,9 +16,13 @@ import {
   MenuItem,
   Chip,
   TableContainer,
+  Select,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
+import { width } from "@mui/system";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -38,28 +42,76 @@ const data = Array.from(Array(15).keys()).map((item, index) => ({
 }));
 
 const AddSupervisor = () => {
-  const [showLabel, setShowLabel] = useState(true);
-  const [pilihJurusan, setPilihJurusan] = useState("");
-  const [pilihMahasiswa, setPilihMahasiswa] = useState([]);
-
+  const location = useLocation();
+  const { students, supervisor } = location.state || [];
+  const navigate = useNavigate();
+  const [SupervisorOptions, setSupervisorOptions] = useState([]);
+  const [supervisorNik, setSupervisorNik] = useState("");
+  const [selectedSupervisor, setSelectedSupervisor] = useState(
+    supervisor || undefined
+  );
+  const [showLabel, setShowLabel] = useState(!selectedSupervisor);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const source = axios.CancelToken.source();
+
+  const getSupervisor = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const response = await axios.get(
+        `${BASE_URL_API}/supervisor/no-student`,
+        { cancelToken: source.token }
+      );
+
+      const { status, data } = response.data;
+
+      if (status === "OK") {
+        setSupervisorOptions(data);
+        console.log("ini data", data);
+      } else {
+        console.log("ini response :", response);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.patch(
+        `${BASE_URL_API}/supervisor/${supervisor.nik}/student`,
+        {
+          nims: students.map((item) => item.nim),
+        },
+        {
+          cancelToken: source.token,
+        }
+      );
+      const { status } = response.data;
+      console.log("wkwkwk", response);
+      if (status === "OK") {
+        navigate(`/bimbingan-akademik/kaprodi/supervisor-information/`);
+      } else {
+        console.log(response);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getSupervisor();
+    console.log("ini location :", location.state);
+    return () => {
+      source.cancel("request dibatalkan");
+    };
+  }, []);
 
   const handleClick = (event) => {
     event.preventDefault();
   };
-
-  const handleUbahJurusan = (event) => {
-    setPilihJurusan(event.target.value);
-  };
-
-  const handleUbahJurusanDanKlik = (event) => {
-    handleUbahJurusan(event);
-    handleClick(event);
-    setShowLabel(false);
-  };
-
-  const isMajorDisabled = pilihJurusan !== "";
 
   return (
     <div>
@@ -92,91 +144,76 @@ const AddSupervisor = () => {
         <Grid container spacing={3} sx={{ padding: 2 }}>
           <Grid item xs={12} md={12}>
             <Typography variant="h6">Full Name</Typography>
-            <TextField
-              size="small"
-              sx={{ backgroundColor: "white" }}
-              id="outlined-basic"
-              variant="outlined"
-              placeholder="Enter Full Name"
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6">NIDN</Typography>
-            <TextField
-              size="small"
-              sx={{ backgroundColor: "white" }}
-              id="outlined-basic"
-              variant="outlined"
-              placeholder="Enter NIDN"
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6">Email</Typography>
-            <TextField
-              size="small"
-              sx={{ backgroundColor: "white" }}
-              id="outlined-basic"
-              variant="outlined"
-              placeholder="Enter Email"
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6">Phone</Typography>
-            <TextField
-              size="small"
-              sx={{ backgroundColor: "white" }}
-              id="outlined-basic"
-              variant="outlined"
-              placeholder="Enter Phone Number"
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6">Major</Typography>
-            {/* <TextField
-              size="small"
-              sx={{ backgroundColor: "white" }}
-              id="outlined-basic"
-              variant="outlined"
-              placeholder="Select Major"
-              fullWidth
-            /> */}
-            <Stack sx={{ paddingBottom: 3 }}>
+            <Stack>
               <TextField
                 size="small"
-                sx={{ width: "100%", backgroundColor: "white" }}
                 id="outlined-select-major"
                 select
-                label={showLabel ? "Select Major" : ""}
-                onChange={handleUbahJurusanDanKlik}
+                label={showLabel && "Select"}
+                onChange={(e) => {
+                  setSupervisorNik(e.target.value);
+                  setSelectedSupervisor(
+                    SupervisorOptions.find(
+                      (supervisor) => supervisor.nik === e.target.value
+                    )
+                  );
+                  setShowLabel(false);
+                  console.log("ini e", e.target.value);
+                }}
+                value={
+                  supervisorNik ||
+                  (SupervisorOptions.length > 0 && supervisor?.nik) ||
+                  ""
+                }
                 InputLabelProps={{
                   shrink: false,
                 }}
               >
-                <MenuItem value="informatics">Informatics</MenuItem>
-                <MenuItem value="information-system">
-                  Information System
-                </MenuItem>
-                <MenuItem value="information-technology">
-                  Information Technology
-                </MenuItem>
+                {SupervisorOptions?.sort((a, b) =>
+                  a.lastName.localeCompare(b.lastName)
+                ).map((item) => (
+                  <MenuItem value={item.nik || ""} key={item.id}>
+                    {item.lastName}, {item.firstName}
+                  </MenuItem>
+                ))}
               </TextField>
             </Stack>
           </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">NIDN</Typography>
+            <Paper variant="outlined" sx={{ padding: 1 }}>
+              {selectedSupervisor?.nidn || "-"}
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Email</Typography>
+            <Paper variant="outlined" sx={{ padding: 1 }}>
+              {selectedSupervisor?.email || "-"}
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Phone</Typography>
+            <Paper variant="outlined" sx={{ padding: 1 }}>
+              {selectedSupervisor?.phoneNum || "-"}
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Major</Typography>
+            <Paper variant="outlined" sx={{ padding: 1 }}>
+              {selectedSupervisor?.major === "IF"
+                ? "Informatics"
+                : selectedSupervisor?.major === "SI"
+                ? "Information System"
+                : selectedSupervisor?.major === "DKV"
+                ? "Information Technology"
+                : "-"}
+            </Paper>
+          </Grid>
           <Grid item xs={12} md={12}>
             <Typography variant="h6">Address</Typography>
-            <TextField
-              size="small"
-              sx={{ backgroundColor: "white" }}
-              id="outlined-basic"
-              variant="outlined"
-              placeholder="Enter Address"
-              fullWidth
-              multiline
-            />
+            <Paper variant="outlined" sx={{ padding: 1 }}>
+              {selectedSupervisor?.Address || "-"}
+            </Paper>
           </Grid>
         </Grid>
       </Paper>
@@ -203,12 +240,25 @@ const AddSupervisor = () => {
           }}
         >
           <Link
+            state={{
+              supervisor: selectedSupervisor,
+              students: students,
+            }}
             style={{ textDecoration: "none", color: "white" }}
-            to={`${pilihJurusan}`}
+            // to={`${
+            //   selectedSupervisor?.major === "IF"
+            //     ? "informatics"
+            //     : selectedSupervisor?.major === "SI"
+            //     ? "information-system"
+            //     : selectedSupervisor?.major === "DKV"
+            //     ? "information-technology"
+            //     : undefined
+            // }`}
+            to="student-list"
           >
             <Button
               sx={{
-                backgroundColor: isMajorDisabled ? "#006AF5" : "gray",
+                backgroundColor: selectedSupervisor ? "#006AF5" : "gray",
                 borderRadius: "24px",
                 color: "white",
                 whiteSpace: "nowrap",
@@ -216,13 +266,13 @@ const AddSupervisor = () => {
                 fontSize: "12px",
                 padding: "10px",
                 gap: "6px",
-                cursor: isMajorDisabled ? "pointer" : "not-allowed",
+                cursor: selectedSupervisor ? "pointer" : "not-allowed",
 
                 "&:hover": {
-                  backgroundColor: isMajorDisabled ? "#025ED8" : "gray",
+                  backgroundColor: selectedSupervisor ? "#025ED8" : "gray",
                 },
               }}
-              onClick={isMajorDisabled ? null : handleClick}
+              onClick={selectedSupervisor ? null : handleClick}
             >
               <AddIcon sx={{ fontSize: "14px" }} />
               Add Student
@@ -237,52 +287,43 @@ const AddSupervisor = () => {
                 <TableHeading />
               </TableHead>
               <TableBody>
-                {data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                {students
+                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => (
-                    <TableItem item={item} index={index} key={index} />
+                    <TableItem item={item} index={index} key={item.id} />
                   ))}
               </TableBody>
             </Table>
           </TableContainer>
-          {/* <TablePagination
-            rowsPerPageOptions={[10, 25, 50, 100]}
-            component={"div"}
-            count={data.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          /> */}
         </Grid>
       </Grid>
       <Grid>
-        <Link to={`/bimbingan-akademik/kaprodi/supervisor-information/`}>
-          <Button
-            sx={{
-              backgroundColor: "#006AF5",
-              borderRadius: "24px",
-              color: "white",
-              whiteSpace: "nowrap",
-              minWidth: "132px",
-              fontSize: "12px",
-              padding: "10px",
-              margin: "20px",
+        <Button
+          sx={{
+            backgroundColor: "#006AF5",
+            borderRadius: "24px",
+            color: "white",
+            whiteSpace: "nowrap",
+            minWidth: "132px",
+            fontSize: "12px",
+            padding: "10px",
+            margin: "20px",
 
-              "&:hover": {
-                backgroundColor: "#025ED8",
-              },
-            }}
-          >
-            Submit
-          </Button>
-        </Link>
+            "&:hover": {
+              backgroundColor: "#025ED8",
+            },
+          }}
+          onClick={handleSubmit}
+        >
+          Submit
+        </Button>
+        {/* </Link> */}
       </Grid>
     </div>
   );
 };
 
-const TableHeading = ({ index }) => {
+const TableHeading = () => {
   const style = { fontWeight: 400 };
   return (
     <TableRow sx={{ backgroundColor: "#1A38601A" }}>
@@ -300,13 +341,23 @@ const TableItem = ({ item, index }) => {
   return (
     <TableRow>
       <TableCell>{index + 1}</TableCell>
-      <TableCell>{`105022010000`}</TableCell>
-      <TableCell>{`Yuhu, Christopher Darell`}</TableCell>
-      <TableCell>{`Informatika`}</TableCell>
-      <TableCell>{`2021`}</TableCell>
+      <TableCell>{item.nim}</TableCell>
+      <TableCell>
+        {item.lastName}, {item.firstName}
+      </TableCell>
+      <TableCell>
+        {item.major === "IF"
+          ? "Informatics"
+          : item.major === "SI"
+          ? "Information System"
+          : item.major === "DKV"
+          ? "Information Technology"
+          : "-"}
+      </TableCell>
+      <TableCell>{item.arrival_Year}</TableCell>
 
       <TableCell>
-        <Chip label={"Active"} variant="filled" color={"success"} />
+        <Chip label={item.status} variant="filled" color={"success"} />
       </TableCell>
     </TableRow>
   );
