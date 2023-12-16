@@ -3,6 +3,7 @@ import AcademicGuide from "app/pages/BimbinganAkademik/shared/AcademicGuide/Acad
 import VisionMisionGoals from "app/pages/BimbinganAkademik/shared/VisionMisionGoals/VisionMissionGoals";
 import Curriculum from "app/pages/BimbinganAkademik/shared/Curriculum/Curriculum";
 import AddActivity from "app/pages/BimbinganAkademik/roles/Kaprodi/AddActivity";
+import Manage from "app/pages/BimbinganAkademik/shared/Manage/Manage";
 import Dashboard from "app/pages/BimbinganAkademik/roles/Kaprodi/Dashboard/Dashboard.";
 import History from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History";
 
@@ -188,6 +189,11 @@ const kepalaProgramStudiRoutes = [
   {
     path: "/bimbingan-akademik/kaprodi/add-activity",
     element: <Page component={AddActivity} />,
+  },
+
+  {
+    path: "/bimbingan-akademik/kaprodi/manage",
+    element: <Page component={Manage} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/supervisor-information",

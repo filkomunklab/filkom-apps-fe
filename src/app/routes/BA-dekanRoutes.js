@@ -48,6 +48,8 @@ import CurrentActivities from "app/pages/BimbinganAkademik/shared/CurrentActivit
 import ViewActivity from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewActivity/ViewActivity";
 import ViewConsultation from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewConsultation/ViewConsultation";
 import AddActivity from "app/pages/BimbinganAkademik/roles/Dekan/AddActivity";
+import Manage from "app/pages/BimbinganAkademik/shared/Manage/Manage";
+
 import Profile from "app/pages/BimbinganAkademik/shared/Profile/Profile";
 
 const { default: Page } = require("@jumbo/shared/Page");
@@ -254,6 +256,10 @@ const dekanRoutes = [
   {
     path: "/bimbingan-akademik/dekan/add-activity",
     element: <Page component={AddActivity} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/manage",
+    element: <Page component={Manage} />,
   },
   {
     path: "/bimbingan-akademik/dekan/profile",

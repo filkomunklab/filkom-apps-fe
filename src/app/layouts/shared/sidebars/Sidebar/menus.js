@@ -5,6 +5,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
+import PaddingIcon from "@mui/icons-material/Padding";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import PeopleIcon from "@mui/icons-material/People";
@@ -308,6 +309,18 @@ export const dekanMenus = [
         uri: "/bimbingan-akademik/dekan/supervisor-information",
       },
       {
+        label: "Add Activity",
+        type: "nav-item",
+        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dekan/add-activity",
+      },
+      {
+        label: "Manage Pre-regis and Grades",
+        type: "nav-item",
+        icon: <PaddingIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dekan/manage",
+      },
+      {
         label: "Review Activities",
         type: "collapsible",
         icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
@@ -345,12 +358,6 @@ export const dekanMenus = [
         type: "nav-item",
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
         uri: "/bimbingan-akademik/dekan/history",
-      },
-      {
-        label: "Add Activity",
-        type: "nav-item",
-        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/dekan/add-activity",
       },
       {
         label: "Profile",
@@ -920,6 +927,18 @@ export const kaprodiMenus = [
         uri: "/bimbingan-akademik/kaprodi/supervisor-information",
       },
       {
+        label: "Add Activity",
+        type: "nav-item",
+        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/add-activity",
+      },
+      {
+        label: "Manage Pre-regis and Grades",
+        type: "nav-item",
+        icon: <PaddingIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/manage",
+      },
+      {
         label: "Review Activities",
         type: "collapsible",
         icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
@@ -957,12 +976,6 @@ export const kaprodiMenus = [
         type: "nav-item",
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
         uri: "/bimbingan-akademik/kaprodi/history",
-      },
-      {
-        label: "Add Activity",
-        type: "nav-item",
-        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/kaprodi/add-activity",
       },
       {
         label: "Profile",
