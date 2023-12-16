@@ -113,7 +113,7 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">-</Typography>
+                <Typography variant="h5">25 Desember 2023</Typography>
               </Grid>
             </Grid>
           </Grid>

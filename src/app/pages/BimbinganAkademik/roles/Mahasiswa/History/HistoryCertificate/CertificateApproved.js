@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Container,
   Typography,
@@ -10,48 +10,17 @@ import {
   Grid,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { viewAllStudentCertificate } from "../../Certificate/CertificateGetData";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
+
   "&:hover": {
     textDecoration: "underline",
   },
 }));
 
 const CertificateWaiting = () => {
-  const [certificateData, setCertificateData] = useState({
-    title: "No title available",
-    Student: {
-      firstName: "No",
-      lastName: "student name available",
-    },
-    Employee: {
-      firstName: "No",
-      lastName: "supervisor name available",
-    },
-    category: "No category available",
-    submitDate: "No submission date available",
-    approvalDate: "No approval date available",
-    status: "No status available",
-    description: "No description available.",
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await viewAllStudentCertificate("kse maso dsni"); // Tanyakan pada pa alden ID dospem
-        console.log("Certificate Data:", data);
-        setCertificateData(data);
-      } catch (error) {
-        console.error("Error fetching certificate data:", error.message);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   const handleClick = (event) => {
     event.preventDefault();
   };
@@ -91,7 +60,7 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
                 <Typography variant="h5" fontWeight={500}>
-                  {certificateData.title}
+                  Menang Student Programmer Competition
                 </Typography>
               </Grid>
             </Grid>
@@ -105,7 +74,7 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">{`${certificateData.Student.firstName} ${certificateData.Student.lastName}`}</Typography>
+                <Typography variant="h5">Awuy, Diany Mariska</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -118,7 +87,7 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">{`${certificateData.Employee.firstName} ${certificateData.Employee.lastName}`}</Typography>
+                <Typography variant="h5">Dengah, Mesakh Leonardo</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -131,9 +100,7 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">
-                  {certificateData.submitDate}
-                </Typography>
+                <Typography variant="h5">November 14, 2023</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -146,9 +113,7 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">
-                  {certificateData.approvalDate}
-                </Typography>
+                <Typography variant="h5">25 Desember 2023</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -161,7 +126,7 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">{certificateData.category}</Typography>
+                <Typography variant="h5">Local</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -174,8 +139,8 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5" sx={{ color: "#005FDB" }}>
-                  {certificateData.status}
+                <Typography variant="h5" sx={{ color: "blue" }}>
+                  Approved
                 </Typography>
               </Grid>
             </Grid>
@@ -190,7 +155,8 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
                 <Typography variant="h5" sx={{ textAlign: "justify" }}>
-                  {certificateData.description}
+                  Saya mengikuti lomba desain prototype website kampus yang
+                  diselenggarakan oleh Fakultas Ilmu Komputer.
                 </Typography>
               </Grid>
             </Grid>
@@ -206,7 +172,8 @@ const CertificateWaiting = () => {
           </Box>
         </Grid>
       </Grid>
-      <Stack spacing={2} sx={{ padding: 3, marginTop: 4 }}>
+
+      <Stack spacing={2} sx={{ padding: 3, marginTop: 2 }}>
         <Typography variant="h5" sx={{ fontWeight: 600 }}>
           Comments from Supervisor
         </Typography>
