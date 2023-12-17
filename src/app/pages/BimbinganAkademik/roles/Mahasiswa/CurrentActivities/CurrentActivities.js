@@ -161,12 +161,12 @@ const CurrentActivities = () => {
     }
   };
 
-  const handleNavigate = async (value) => {
+  const handleNavigateConsultation = async (value) => {
     try {
       const consultationDetailsResult = await axios.get(
         `${BASE_URL_API}/academic-consultation/detail/${value.id}`
       );
-      // console.log("ini detail Consutation result:", consultationDetailsResult);
+      console.log("ini detail Consutation result:", consultationDetailsResult);
       let path = "/bimbingan-akademik/current-activities/consultation/";
 
       navigate(`${path}${value.id}`, {
@@ -181,6 +181,43 @@ const CurrentActivities = () => {
             receiverName: consultationDetailsResult.data.data.receiver_name,
             description: consultationDetailsResult.data.data.description,
             id: consultationDetailsResult.data.data.id,
+          },
+        },
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleNavigateCertificate = async (value) => {
+    try {
+      const certificateDetailsResult = await axios.get(
+        `${BASE_URL_API}/certificate/student/${value.certificateId}`
+      );
+      let path = "/bimbingan-akademik/current-activities/certificate/";
+
+      const {
+        transaction,
+        submitDate,
+        pathFile,
+        category,
+        description,
+        approval_status,
+        id,
+      } = certificateDetailsResult.data.data;
+      navigate(`${path}${value.certificateId}`, {
+        state: {
+          certificateDetails: {
+            firstName: transaction[0].Student.firstName,
+            lastName: transaction[0].Student.lastName,
+            SupervisorFirstName: transaction[0].Employee.firstName,
+            SupervisorLastName: transaction[0].Employee.lastName,
+            submissionDate: submitDate,
+            pathFile: pathFile,
+            category: category,
+            description: description,
+            status: approval_status,
+            id: id,
           },
         },
       });
@@ -492,7 +529,6 @@ const CurrentActivities = () => {
       <TabPanel value={value} index={1}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
-
           {Object.entries(groupedDataCertificate).map(
             ([date, dataCertificate]) => (
               <div key={date}>
@@ -532,7 +568,10 @@ const CurrentActivities = () => {
                     >
                       <ListItem
                         sx={{ padding: "10px 50px" }}
-                        onClick={() => handleNavigate(value)}
+                        onClick={() => {
+                          handleNavigateCertificate(value);
+                          // console.log("ini isi dari value certi: ", value);
+                        }}
                       >
                         <ListItemText
                           primary={
@@ -555,7 +594,7 @@ const CurrentActivities = () => {
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
                               >
-                                {value.Student.lastName},{" "}
+                                {value.Student.lastName},
                                 {value.Student.firstName}
                               </Typography>
                               <Typography
@@ -786,8 +825,14 @@ const CurrentActivities = () => {
       <TabPanel value={value} index={3}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
-          {Object.entries(groupedDataConsultation).map(
-            ([date, dataConsultation]) => (
+          {Object.entries(groupedDataConsultation)
+            .filter(([date, dataConsultation]) =>
+              dataConsultation.some(
+                (value) =>
+                  value.status === "Waiting" || value.status === "OnProcess"
+              )
+            )
+            .map(([date, dataConsultation]) => (
               <div key={date}>
                 <Box
                   sx={{
@@ -827,7 +872,10 @@ const CurrentActivities = () => {
                       >
                         <ListItem
                           sx={{ padding: "10px 50px" }}
-                          onClick={() => handleNavigate(value)}
+                          onClick={() => {
+                            handleNavigateConsultation(value);
+                            // console.log("ini isi dari value: ", value);
+                          }}
                         >
                           <ListItemText
                             primary={
@@ -901,8 +949,7 @@ const CurrentActivities = () => {
                     )
                   )}
               </div>
-            )
-          )}
+            ))}
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>
       </TabPanel>

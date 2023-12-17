@@ -11,7 +11,7 @@ import CurrentActivities from "app/pages/BimbinganAkademik/roles/Mahasiswa/Curre
 import CurrentActivitiesActivity from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Activity";
 import CurrentActivitiesConsultation from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/ViewConsultation/ViewConsultation";
 import CurrentActivitiesPreRegis from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Pre-registration";
-import CurrentActivitiesCertificate from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Certificate/CertificateWaiting";
+import CurrentActivitiesCertificate from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Certificate/ViewCertificate";
 import CurrentActivitiesGrade from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Grade";
 import Curriculum from "app/pages/BimbinganAkademik/roles/Mahasiswa/Curriculum";
 import Grades from "app/pages/BimbinganAkademik/roles/Mahasiswa/Grades";
@@ -90,7 +90,7 @@ const mahasiswaRoutes = [
     element: <Page component={CurrentActivitiesPreRegis} />,
   },
   {
-    path: "/bimbingan-akademik/current-activities/certificate",
+    path: "/bimbingan-akademik/current-activities/certificate/:id",
     element: <Page component={CurrentActivitiesCertificate} />,
   },
   {

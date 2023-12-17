@@ -8,7 +8,10 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { format } from "date-fns";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -21,6 +24,20 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 const CertificateWaiting = () => {
   const navigate = useNavigate();
+  const { state } = useLocation();
+  const certificateDetails = state ? state.certificateDetails : {};
+  const {
+    firstName,
+    lastName,
+    SupervisorFirstName,
+    SupervisorLastName,
+    submissionDate,
+    pathFile,
+    category,
+    description,
+    status,
+    id,
+  } = certificateDetails;
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -58,7 +75,9 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">Awuy, Diany Mariska</Typography>
+                <Typography variant="h5">
+                  {lastName}, {firstName}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -71,7 +90,9 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">Dengah, Mesakh Leonardo</Typography>
+                <Typography variant="h5">
+                  {SupervisorLastName}, {SupervisorFirstName}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -84,7 +105,7 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">November 14, 2023</Typography>
+                <Typography variant="h5">{submissionDate}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -110,7 +131,7 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">Local</Typography>
+                <Typography variant="h5">{category}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -124,7 +145,7 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
                 <Typography variant="h5" sx={{ color: "#FFCC00" }}>
-                  Waiting
+                  {status}
                 </Typography>
               </Grid>
             </Grid>
@@ -139,8 +160,7 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} paddingLeft={1}>
                 <Typography variant="h5" sx={{ textAlign: "justify" }}>
-                  Saya mengikuti lomba desain prototype website kampus yang
-                  diselenggarakan oleh Fakultas Ilmu Komputer.
+                  {description}
                 </Typography>
               </Grid>
             </Grid>
@@ -149,7 +169,7 @@ const CertificateWaiting = () => {
         <Grid item md={4} id="certificate-item">
           <Box sx={{ flex: 1 }}>
             <img
-              src={imageUrl}
+              src={pathFile}
               alt="Certificate-pic"
               style={{ maxWidth: "100%", scale: "0.8" }}
             />
@@ -160,7 +180,7 @@ const CertificateWaiting = () => {
         <Typography variant="h5" sx={{ fontWeight: 600 }}>
           Comments from Supervisor
         </Typography>
-        <Paper elevation={0} variant="outlined" fullWidth>
+        <Paper elevation={0} variant="outlined" fullwidth>
           <Typography variant="body1" sx={{ p: 2 }}>
             none
           </Typography>
