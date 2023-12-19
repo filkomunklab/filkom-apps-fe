@@ -1,7 +1,5 @@
 import Div from "@jumbo/shared/Div";
 import {
-  Button,
-  Chip,
   FormControl,
   Grid,
   InputLabel,
@@ -19,8 +17,10 @@ import {
   Typography,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const yearList = [
   {
@@ -68,20 +68,28 @@ const prodiList = [
   },
 ];
 
-const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nim: `105022010000`,
-  submission_date: `Jan 29, 2022`,
-  name: `Yuhu, Christopher Darell`,
-  title: `Sertifikat Kejuaraan Panco`,
-  category: `National`,
-  supervisor_name: `Budianto Nurmala Faizal`,
-  status: `Waiting`,
-}));
-
 const ReviewCertificateMentored = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [dataWaiting, setDataWaiting] = useState([]);
+  const navigate = useNavigate();
+
+  const getDataWaiting = async () => {
+    try {
+      const { nik } = JSON.parse(localStorage.getItem("user"));
+      const result = await axios.get(
+        `${BASE_URL_API}/certificate/waitingList/dosen/${nik}`
+      );
+      console.log("ini isi result.data", result.data);
+      setDataWaiting(result.data.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  useEffect(() => {
+    getDataWaiting();
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -92,46 +100,42 @@ const ReviewCertificateMentored = () => {
     setPage(0);
   };
 
-  const TableHeading = ({ index }) => {
-    const style = { fontWeight: 400 };
-    return (
-      <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-        <TableCell sx={[style]}>No</TableCell>
-        <TableCell sx={[style]}>Submission Date</TableCell>
-        <TableCell sx={[style]}>Student Name</TableCell>
-        <TableCell sx={[style]}>Title</TableCell>
-        <TableCell sx={[style]}>Category</TableCell>
-        <TableCell sx={[style]}>Supervisor Name</TableCell>
-        <TableCell sx={[style]}>Status </TableCell>
-      </TableRow>
-    );
-  };
-
-  const TableItem = ({ item, index }) => {
-    const navigate = useNavigate();
-    const handleButtonNavigate = () => {
-      navigate(
-        `/bimbingan-akademik/kaprodi/review-activities/certificate/${item.nim}`
+  const handleNavigate = async (value) => {
+    try {
+      const consultationDetailsResult = await axios.get(
+        `${BASE_URL_API}/academic-consultation/detail/${value.id}`
       );
-    };
-    return (
-      <TableRow
-        sx={{
-          ":hover": {
-            backgroundColor: "#E5F0FF",
+      // console.log("ini detail Consutation result:", consultationDetailsResult);
+      const { role } = JSON.parse(localStorage.getItem("user"));
+      let path = "";
+      console.log("hai ini role", role.includes === "KAPRODI");
+      if (role.includes("DEKAN")) {
+        path = "/bimbingan-akademik/dekan/review-activities/consultation/";
+      } else if (role.includes("KAPRODI")) {
+        path = "/bimbingan-akademik/kaprodi/review-activities/consultation/";
+      } else {
+        path =
+          "/bimbingan-akademik/dosen-pembimbing/review-activities/consultation/";
+      }
+
+      navigate(`${path}${value.id}`, {
+        state: {
+          consultationDetails: {
+            studentName: consultationDetailsResult.data.data.student_name,
+            supervisorName: consultationDetailsResult.data.data.supervisor_name,
+            studentMajor: consultationDetailsResult.data.data.student_major,
+            studentArrivalYear:
+              consultationDetailsResult.data.data.student_arrival_year,
+            topic: consultationDetailsResult.data.data.topic,
+            receiverName: consultationDetailsResult.data.data.receiver_name,
+            description: consultationDetailsResult.data.data.description,
+            id: consultationDetailsResult.data.data.id,
           },
-        }}
-        onClick={handleButtonNavigate}
-      >
-        <TableCell>{index + 1}</TableCell>
-        <TableCell>{item.submission_date}</TableCell>
-        <TableCell>{item.name}</TableCell>
-        <TableCell>{item.title}</TableCell>
-        <TableCell>{item.category}</TableCell>
-        <TableCell>{item.supervisor_name}</TableCell>
-        <TableCell sx={{ color: "#FFCC00" }}>{item.status}</TableCell>
-      </TableRow>
-    );
+        },
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
@@ -234,30 +238,107 @@ const ReviewCertificateMentored = () => {
         <Grid item xs={12}>
           <TableContainer
             sx={{
-              maxHeight: 540,
+              maxHeight: 440,
             }}
             component={Paper}
           >
-            <Table stickyHeader>
-              <TableHead>
-                <TableHeading />
+            <Table>
+              <TableHead
+                sx={{
+                  position: "-webkit-sticky",
+                  position: "sticky",
+                  top: 0,
+                  backgroundColor: "rgba(26, 56, 96, 0.1)",
+                }}
+              >
+                <TableRow>
+                  <TableCell>Number</TableCell>
+                  <TableCell>Submission Date</TableCell>
+                  <TableCell>Student Name</TableCell>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Category</TableCell>
+                  <TableCell>Status </TableCell>
+                </TableRow>
               </TableHead>
               <TableBody>
-                {data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((item, index) => (
-                    <TableItem item={item} index={index} key={index} />
+                {dataWaiting &&
+                  dataWaiting.map((value, index) => (
+                    <TableRow
+                      key={value.id}
+                      onClick={() => handleNavigate(value)}
+                      sx={{
+                        ":hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#338CFF21",
+                          transition: "0.3s",
+                          transitionTimingFunction: "ease-in-out",
+                          transitionDelay: "0s",
+                          transitionProperty: "all",
+                        },
+                      }}
+                    >
+                      <TableCell
+                        align="right"
+                        sx={{ width: "80px", paddingRight: "17px" }}
+                      >
+                        {index + 1}
+                      </TableCell>
+                      <TableCell sx={{ width: "145px", paddingLeft: "17px" }}>
+                        {new Date(
+                          value.Certificate.submitDate
+                        ).toLocaleDateString("en-US", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </TableCell>
+                      <TableCell sx={{ width: "245px" }}>
+                        {value.Student.lastName}, {value.Student.firstName}
+                      </TableCell>
+                      <TableCell sx={{ width: "140px" }}>
+                        {value.Certificate.title}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          maxWidth: "300px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {value.Certificate.category}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          color: "#FFCC00",
+                          width: "100px",
+                          align: "left",
+                        }}
+                      >
+                        {value.Certificate.approval_status.charAt(0) +
+                          value.Certificate.approval_status
+                            .slice(1)
+                            .toLowerCase()}
+                      </TableCell>
+                    </TableRow>
                   ))}
               </TableBody>
             </Table>
           </TableContainer>
           <TablePagination
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            }}
             rowsPerPageOptions={[10, 25, 50, 100]}
-            component={"div"}
-            count={data.length}
+            component="div"
+            count={dataWaiting.length}
             rowsPerPage={rowsPerPage}
             page={page}
-            onPageChange={handleChangePage}
+            onPageChange={(_, newPage) => setPage(newPage)}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Grid>

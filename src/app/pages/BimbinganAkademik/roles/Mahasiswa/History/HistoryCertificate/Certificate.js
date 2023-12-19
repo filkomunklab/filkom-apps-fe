@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
-  Stack,
-  Paper,
   Typography,
   Box,
   Breadcrumbs,
+  Paper,
   experimentalStyled as styled,
+  TextField,
 } from "@mui/material";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { format } from "date-fns";
+import { Link, useLocation } from "react-router-dom";
+import { comment } from "stylis";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -20,8 +20,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const CertificateWaiting = () => {
-  const navigate = useNavigate();
+const HistoryCertificate = () => {
   const { state } = useLocation();
   const certificateDetails = state ? state.certificateDetails : {};
   const {
@@ -34,25 +33,25 @@ const CertificateWaiting = () => {
     category,
     description,
     status,
-    id,
     title,
+    comments,
+    approvalDate,
+    id,
   } = certificateDetails;
   const pdfURL = pathFile;
-  console.log("ini pdf url", pdfURL);
 
-  const handleClick = (event) => {
-    navigate("/bimbingan-akademik/current-activities");
+  const handleBreadcrumbsClick = () => {
+    let path = "/bimbingan-akademik/history";
+    return <StyledLink to={path}>History</StyledLink>;
   };
 
   return (
     <Grid container spacing={2}>
       <Grid item md={6} id="detail-item">
-        <Stack role="presentation" onClick={handleClick}>
-          <Breadcrumbs aria-label="breadcrumb">
-            <StyledLink>Current Activities</StyledLink>
-            <Typography color="text.primary">Certificate</Typography>
-          </Breadcrumbs>
-        </Stack>
+        <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
+          {handleBreadcrumbsClick()}
+          <Typography color="text.primary">Certificate</Typography>
+        </Breadcrumbs>
         <Grid item>
           <Typography
             sx={{
@@ -118,7 +117,32 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
-                <Typography variant="h5">{submissionDate}</Typography>
+                <Typography variant="h5">
+                  {new Date(submissionDate).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    day: "numeric",
+                    month: "long",
+                  })}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={4} xl={3} pb={1}>
+                <Typography variant="h5">Approval Date</Typography>
+              </Grid>
+              <Grid item xs={1} xl={0.5}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                <Typography variant="h5">
+                  {new Date(approvalDate).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    day: "numeric",
+                    month: "long",
+                  })}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -146,7 +170,17 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
-                <Typography variant="h5" sx={{ color: "#FFCC00" }}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    color:
+                      status === "REJECTED"
+                        ? "error"
+                        : status === "APPROVED"
+                        ? "blue"
+                        : "#005FDB",
+                  }}
+                >
                   {status.charAt(0) + status.slice(1).toLowerCase()}
                 </Typography>
               </Grid>
@@ -160,20 +194,35 @@ const CertificateWaiting = () => {
               <Grid item xs={1} xl={0.5}>
                 <Typography variant="h5">:</Typography>
               </Grid>
-              <Grid
-                item
-                xs={7}
-                md={7}
-                xl={8.5}
-                sx={{ paddingRight: { xs: 0, sm: 1.5 }, paddingLeft: "1" }}
-              >
+              <Grid item xs={7} md={6.5} xl={8} paddingLeft={1}>
                 <Typography variant="h5" sx={{ textAlign: "justify" }}>
-                  {description.charAt(0).toUpperCase() + description.slice(1)}
+                  {description
+                    ? description.charAt(0).toUpperCase() + description.slice(1)
+                    : "-"}
                 </Typography>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
+        {comments !== null && comments.trim() !== "" && (
+          <Grid item xs={12} md={11.5} xl={11.5} paddingTop={2}>
+            <Box component="form" noValidate autoComplete="off">
+              <Typography variant="h5" sx={{ fontWeight: 500 }}>
+                Comment from Supervisor
+              </Typography>
+              <Paper
+                elevation={0}
+                variant="outlined"
+                fullWidth
+                sx={{ backgroundColor: "background.default" }}
+              >
+                <Typography variant="body1" sx={{ p: 2 }}>
+                  {comments}
+                </Typography>
+              </Paper>
+            </Box>
+          </Grid>
+        )}
       </Grid>
       <Grid item xs={12} md={6}>
         <iframe
@@ -186,4 +235,4 @@ const CertificateWaiting = () => {
   );
 };
 
-export default CertificateWaiting;
+export default HistoryCertificate;

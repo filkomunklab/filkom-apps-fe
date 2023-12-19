@@ -99,16 +99,22 @@ const Certificate = () => {
 
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
-    setSelectedFile(file);
+    if (!file) {
+      return;
+    }
 
+    if (file.type !== "application/pdf") {
+      alert("Your certificate must be in PDF format.");
+      event.target.value = null;
+      return;
+    }
+    setSelectedFile(file);
+    setBuffer("");
     const reader = new FileReader();
 
     reader.onload = function (event) {
-      const base64Data = event.target.result;
-
-      let splitArray = base64Data.split(",");
-      let base64Part = splitArray[1].trim();
-      setBuffer(base64Part);
+      const base64Data = event.target.result.split(",")[1].trim();
+      setBuffer(base64Data);
     };
 
     reader.readAsDataURL(file);
@@ -118,11 +124,7 @@ const Certificate = () => {
       labelElement.style.border = "0.5px solid #BCBCBC";
     }
 
-    if (file) {
-      setSelectedFileName(file.name);
-    } else {
-      setSelectedFileName("");
-    }
+    setSelectedFileName(file.name);
   };
 
   const handleValidation = () => {
@@ -312,7 +314,7 @@ const Certificate = () => {
                 id="certificate-label"
               >
                 <span style={{ color: selectedFileName ? "black" : "#9E9E9E" }}>
-                  {selectedFileName || "Import Photo (Maximum Size 2MB)"}
+                  {selectedFileName || "Import PDF"}
                 </span>
                 <SaveAltIcon style={{ color: "#9E9E9E" }} />
               </label>

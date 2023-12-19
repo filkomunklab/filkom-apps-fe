@@ -115,30 +115,57 @@ const CurrentActivities = () => {
   const groupedDataCertificate = {};
 
   dataConsultation.forEach((value) => {
-    const date = new Date(value.createdAt).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-    if (!groupedDataConsultation[date]) {
-      groupedDataConsultation[date] = [];
+    const dateConsultation = new Date(value.createdAt).toLocaleDateString(
+      "en-US",
+      {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }
+    );
+    if (!groupedDataConsultation[dateConsultation]) {
+      groupedDataConsultation[dateConsultation] = [];
     }
-    groupedDataConsultation[date].push(value);
+    groupedDataConsultation[dateConsultation].push(value);
   });
 
   dataCertificate.forEach((value) => {
-    const date = new Date(value.createdAt).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+    const date = new Date(value.Certificate.submitDate).toLocaleDateString(
+      "en-US",
+      {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }
+    );
     if (!groupedDataCertificate[date]) {
       groupedDataCertificate[date] = [];
     }
     groupedDataCertificate[date].push(value);
   });
+
+  const formatDateConsultation = (dateConsultation) => {
+    const currentDate = new Date();
+    const formattedDate = new Date(dateConsultation);
+
+    if (formattedDate.toDateString() === currentDate.toDateString()) {
+      return "Today";
+    } else if (
+      formattedDate.toDateString() ===
+      new Date(currentDate - 1 * 24 * 60 * 60 * 1000).toDateString()
+    ) {
+      return "Yesterday";
+    } else {
+      return formattedDate.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+  };
 
   const formatDate = (date) => {
     const currentDate = new Date();
@@ -194,33 +221,39 @@ const CurrentActivities = () => {
       const certificateDetailsResult = await axios.get(
         `${BASE_URL_API}/certificate/student/${value.certificateId}`
       );
-      let path = "/bimbingan-akademik/current-activities/certificate/";
+      let pathh = "/bimbingan-akademik/current-activities/certificate/";
 
       const {
         transaction,
         submitDate,
-        pathFile,
+        path,
         category,
         description,
         approval_status,
+        title,
         id,
       } = certificateDetailsResult.data.data;
-      navigate(`${path}${value.certificateId}`, {
-        state: {
-          certificateDetails: {
-            firstName: transaction[0].Student.firstName,
-            lastName: transaction[0].Student.lastName,
-            SupervisorFirstName: transaction[0].Employee.firstName,
-            SupervisorLastName: transaction[0].Employee.lastName,
-            submissionDate: submitDate,
-            pathFile: pathFile,
-            category: category,
-            description: description,
-            status: approval_status,
-            id: id,
+      navigate(
+        `${pathh}${value.certificateId}`,
+        {
+          state: {
+            certificateDetails: {
+              firstName: transaction[0].Student.firstName,
+              lastName: transaction[0].Student.lastName,
+              SupervisorFirstName: transaction[0].Employee.firstName,
+              SupervisorLastName: transaction[0].Employee.lastName,
+              submissionDate: submitDate,
+              pathFile: path,
+              category: category,
+              description: description,
+              status: approval_status,
+              title: title,
+              id: id,
+            },
           },
         },
-      });
+        console.log("ini pathFile", path)
+      );
     } catch (error) {
       console.log(error.message);
     }
@@ -529,6 +562,7 @@ const CurrentActivities = () => {
       <TabPanel value={value} index={1}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
+
           {Object.entries(groupedDataCertificate).map(
             ([date, dataCertificate]) => (
               <div key={date}>
@@ -622,14 +656,13 @@ const CurrentActivities = () => {
                                   color: "rgba(27, 43, 65, 0.69)",
                                 }}
                               >
-                                {new Date(value.createdAt).toLocaleTimeString(
-                                  "en-US",
-                                  {
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                    hour12: true,
-                                  }
-                                )}
+                                {new Date(
+                                  value.Certificate.submitDate
+                                ).toLocaleTimeString("en-US", {
+                                  hour: "numeric",
+                                  minute: "numeric",
+                                  hour12: true,
+                                })}
                               </Typography>
                             }
                           />
@@ -826,14 +859,14 @@ const CurrentActivities = () => {
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
           {Object.entries(groupedDataConsultation)
-            .filter(([date, dataConsultation]) =>
+            .filter(([dateConsultation, dataConsultation]) =>
               dataConsultation.some(
                 (value) =>
                   value.status === "Waiting" || value.status === "OnProcess"
               )
             )
-            .map(([date, dataConsultation]) => (
-              <div key={date}>
+            .map(([dateConsultation, dataConsultation]) => (
+              <div key={dateConsultation}>
                 <Box
                   sx={{
                     height: "50px",
@@ -846,7 +879,7 @@ const CurrentActivities = () => {
                   <Typography
                     sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
                   >
-                    {formatDate(date)}
+                    {formatDateConsultation(dateConsultation)}
                   </Typography>
                 </Box>
                 {dataConsultation &&

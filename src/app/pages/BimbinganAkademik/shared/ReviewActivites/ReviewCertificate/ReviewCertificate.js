@@ -23,51 +23,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
-const yearList = [
-  {
-    value: "2017",
-    label: "2017",
-  },
-  {
-    value: "2018",
-    label: "2018",
-  },
-  {
-    value: "2019",
-    label: "2019",
-  },
-  {
-    value: "2020",
-    label: "2020",
-  },
-  {
-    value: "2021",
-    label: "2021",
-  },
-  {
-    value: "2022",
-    label: "2022",
-  },
-  {
-    value: "2023",
-    label: "2023",
-  },
-];
-
-const prodiList = [
-  {
-    value: "informatika",
-    label: "Informatika",
-  },
-  {
-    value: "dkv",
-    label: "DKV",
-  },
-  {
-    value: "si",
-    label: "SI",
-  },
-];
 
 const ReviewCertificate = () => {
   const [filter, setFilter] = useState([]);
@@ -76,21 +31,28 @@ const ReviewCertificate = () => {
   const [dataWaiting, setDataWaiting] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
+
   const getDataWaiting = async () => {
     try {
       const { nik } = JSON.parse(localStorage.getItem("user"));
       const result = await axios.get(
         `${BASE_URL_API}/certificate/waitingList/dosen/${nik}`
       );
-      console.log("ini isi result.data", result.data);
-      setDataWaiting(result.data.data);
+      const filteredData = result.data.data.filter((item) => {
+        const studentFullName = `${item.Student?.lastName}, ${item.Student?.firstName}`;
+        return studentFullName
+          .toLowerCase()
+          .includes(searchValue.toLowerCase());
+      });
+
+      setDataWaiting(filteredData);
     } catch (error) {
       console.log(error.message);
     }
   };
   useEffect(() => {
     getDataWaiting();
-  }, []);
+  }, [searchValue]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -106,10 +68,10 @@ const ReviewCertificate = () => {
       const certificateDetailsResult = await axios.get(
         `${BASE_URL_API}/certificate/student/${value.certificateId}`
       );
-      // console.log("ini detail Consutation result:", consultationDetailsResult);
+      console.log("ini detail certi result:", certificateDetailsResult);
       const { role } = JSON.parse(localStorage.getItem("user"));
-      const pathh = "";
-      console.log("hai ini role", role.includes === "KAPRODI");
+      let pathh;
+      console.log("hai ini role", role.includes("KAPRODI"));
       if (role.includes("DEKAN")) {
         pathh = "/bimbingan-akademik/dekan/review-activities/certificate/";
       } else if (role.includes("KAPRODI")) {
@@ -126,6 +88,7 @@ const ReviewCertificate = () => {
         category,
         description,
         approval_status,
+        title,
         id,
       } = certificateDetailsResult.data.data;
       navigate(
@@ -142,6 +105,7 @@ const ReviewCertificate = () => {
               category: category,
               description: description,
               status: approval_status,
+              title: title,
               id: id,
             },
           },
@@ -162,7 +126,6 @@ const ReviewCertificate = () => {
         <Typography
           variant="h6"
           sx={{
-            paddingBottom: "20px",
             fontSize: "15px",
             fontWeight: 400,
             color: "rgba(27, 43, 65, 0.69)",
@@ -175,14 +138,22 @@ const ReviewCertificate = () => {
         </Typography>
       </Div>
       <Grid container mb={3}>
-        <Grid item xs={12} sm={4} md={8} xl={4} mr={2}>
+        <Grid
+          item
+          xs={12}
+          sm={3}
+          md={3}
+          xl={3}
+          sx={{ marginRight: { xs: 0, sm: 2 } }}
+        >
           <TextField
-            label="Search by Name or NIM"
+            label="Search by Name"
             variant="outlined"
             size="small"
             sx={{
               width: "100%",
               height: "100%",
+              marginTop: "20px",
             }}
             onChange={(e) => setSearchValue(e.target.value)}
             InputProps={{
@@ -196,7 +167,10 @@ const ReviewCertificate = () => {
           />
         </Grid>
         <Grid item xs={12} sm={4} md={4} xl={3}>
-          <FormControl sx={{ width: "100%", height: "100%" }} size="small">
+          <FormControl
+            sx={{ width: "100%", height: "100%", marginTop: "20px" }}
+            size="small"
+          >
             <InputLabel htmlFor="grouped-select">Filter</InputLabel>
             <Select
               style={{ borderRadius: "25px" }}
@@ -215,60 +189,13 @@ const ReviewCertificate = () => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
+
               <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Status
+                Category
               </ListSubheader>
-              <MenuItem
-                sx={{
-                  backgroundColor: "#FAFAFA",
-                  borderRadius: "5px",
-                }}
-                value={"activeStudent"}
-              >
-                Active
-              </MenuItem>
-              <MenuItem
-                sx={{
-                  backgroundColor: "#FAFAFA",
-                  borderRadius: "5px",
-                }}
-                value={"nonactiveStudent"}
-              >
-                Nonactive
-              </MenuItem>
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Tahun Masuk
-              </ListSubheader>
-              {yearList.map((item) => (
-                <MenuItem
-                  key={item.value}
-                  value={item.value}
-                  sx={{
-                    backgroundColor: "#FAFAFA",
-                    borderRadius: "5px",
-                  }}
-                >
-                  {item.label}
-                </MenuItem>
-              ))}
-              <Div>
-                <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                  Prodi
-                </ListSubheader>
-                {prodiList.map((item) => (
-                  <MenuItem
-                    key={item.value}
-                    onChange={(event) => console.log(event.currentTarget.value)}
-                    value={item.value}
-                    sx={{
-                      backgroundColor: "#FAFAFA",
-                      borderRadius: "5px",
-                    }}
-                  >
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Div>
+              <MenuItem value={"local"}>Local</MenuItem>
+              <MenuItem value={"national"}>National</MenuItem>
+              <MenuItem value={"international"}>International</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -290,12 +217,12 @@ const ReviewCertificate = () => {
               }}
             >
               <TableRow>
-                <TableCell>Number</TableCell>
-                <TableCell>Submission Date</TableCell>
-                <TableCell sx={{ width: "240px" }}>Student Name</TableCell>
-                <TableCell sx={{ width: "240px" }}>Title</TableCell>
+                <TableCell sx={{ width: "80px" }}>Number</TableCell>
+                <TableCell sx={{ width: "145px" }}>Submission Date</TableCell>
+                <TableCell sx={{ width: "245px" }}>Student Name</TableCell>
+                <TableCell sx={{ width: "140px" }}>Title</TableCell>
                 <TableCell sx={{ width: "100px" }}>Category</TableCell>
-                <TableCell>Status </TableCell>
+                <TableCell sx={{ width: "100px" }}>Status </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -334,23 +261,25 @@ const ReviewCertificate = () => {
                       {value.Student.lastName}, {value.Student.firstName}
                     </TableCell>
                     <TableCell sx={{ width: "140px" }}>
-                      {value.Certificate.title}
+                      {value.Certificate.title.charAt(0).toUpperCase() +
+                        value.Certificate.title.slice(1)}
                     </TableCell>
                     <TableCell
                       sx={{
-                        maxWidth: "300px",
+                        width: "100px",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
                       }}
                     >
-                      {value.Certificate.category}
+                      {value.Certificate.category.charAt(0).toUpperCase() +
+                        value.Certificate.category.slice(1)}
                     </TableCell>
                     <TableCell
                       sx={{
                         color: "#FFCC00",
-                        width: "100px",
                         align: "left",
+                        width: "100px",
                       }}
                     >
                       {value.Certificate.approval_status.charAt(0) +

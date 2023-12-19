@@ -6,10 +6,13 @@ import {
   TableRow,
   TableCell,
   TableContainer,
+  TablePagination,
   Grid,
   Paper,
+  TextField,
+  IconButton,
 } from "@mui/material";
-import Div from "@jumbo/shared/Div";
+import SearchIcon from "@mui/icons-material/Search";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -19,11 +22,8 @@ const StudentConsultation = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dataWaiting, setDataWaiting] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    getDataWaiting();
-  }, []);
 
   const getDataWaiting = async () => {
     try {
@@ -31,12 +31,25 @@ const StudentConsultation = () => {
       const result = await axios.get(
         `${BASE_URL_API}/academic-consultation/employee/${nik}`
       );
-      console.log("ini isi result.data", result.data);
-      setDataWaiting(result.data.data);
+      console.log("API Response:", result.data);
+
+      const filteredData = result.data.data.filter((item) => {
+        const studentFullName = `${item.studentName}`;
+        return studentFullName
+          .toLowerCase()
+          .includes(searchValue.toLowerCase());
+      });
+
+      console.log("Filtered data:", filteredData);
+      setDataWaiting(filteredData);
     } catch (error) {
       console.log(error.message);
     }
   };
+
+  useEffect(() => {
+    getDataWaiting();
+  }, [searchValue]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -86,14 +99,13 @@ const StudentConsultation = () => {
   };
 
   return (
-    <Div>
+    <div>
       <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
         Student Consultation
       </Typography>
       <Typography
         variant="h6"
         sx={{
-          paddingBottom: "25px",
           fontSize: "15px",
           fontWeight: 400,
           color: "rgba(27, 43, 65, 0.69)",
@@ -103,6 +115,36 @@ const StudentConsultation = () => {
         You are now on the Consultations submitted by students page. This will
         show you a list of students who have submitted a consultation with you.
       </Typography>
+      <Grid container mb={4}>
+        <Grid
+          item
+          xs={12}
+          sm={3}
+          md={3}
+          xl={3}
+          sx={{ marginRight: { xs: 0, sm: 2 } }}
+        >
+          <TextField
+            label="Search by Name"
+            variant="outlined"
+            size="small"
+            sx={{
+              width: "100%",
+              height: "100%",
+              marginTop: "20px",
+            }}
+            onChange={(e) => setSearchValue(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <IconButton edge="end">
+                  <SearchIcon />
+                </IconButton>
+              ),
+              style: { borderRadius: "25px" },
+            }}
+          />
+        </Grid>
+      </Grid>
       <Grid item xs={12}>
         <TableContainer
           sx={{
@@ -177,7 +219,11 @@ const StudentConsultation = () => {
                       </TableCell>
 
                       <TableCell
-                        sx={{ color: "#FFCC00", width: "100px", align: "left" }}
+                        sx={{
+                          color: "#FFCC00",
+                          width: "100px",
+                          align: "left",
+                        }}
                       >
                         {value.status}
                       </TableCell>
@@ -189,8 +235,24 @@ const StudentConsultation = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <TablePagination
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+          }}
+          rowsPerPageOptions={[10, 25, 50, 100]}
+          component="div"
+          count={dataWaiting.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={(_, newPage) => setPage(newPage)}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </Grid>
-    </Div>
+    </div>
   );
 };
 

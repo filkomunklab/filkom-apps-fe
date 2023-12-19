@@ -22,8 +22,8 @@ import HistoryCertificateApproved from "app/pages/BimbinganAkademik/roles/DosenP
 import HistoryCertificateRejected from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HistoryCertificate/CertificateRejected";
 import HistoryConsultationComplete from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HistoryConsultation/ConsultationComplete";
 import CertificateDetail from "app/pages/BimbinganAkademik/roles/DosenPembimbing/StudentInformation/StudentCertificate/CertificateDetail";
-import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/StudentConsultation";
-import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReplyConsultation/Consultation";
+import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/StudentConsultation";
+import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/ReplyConsultation/Consultation";
 import CurrentActivities from "app/pages/BimbinganAkademik/shared/CurrentActivities";
 import ViewActivity from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewActivity/ViewActivity";
 import ViewConsultation from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewConsultation/ViewConsultation";

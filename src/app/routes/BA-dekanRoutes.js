@@ -32,8 +32,8 @@ import ReviewCertificate from "app/pages/BimbinganAkademik/roles/Dekan/ReviewAct
 import ReviewCertificateStudent from "app/pages/BimbinganAkademik/roles/Dekan/ReviewActivities/ReviewCertificate/ReviewCertificateStudent";
 import ReviewGrade from "app/pages/BimbinganAkademik/roles/Dekan/ReviewActivities/ReviewGrade";
 import ReviewGradeStudent from "app/pages/BimbinganAkademik/roles/Dekan/ReviewActivities/ReviewGrade/ReviewGradeStudent";
-import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/StudentConsultation";
-import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReplyConsultation/Consultation";
+import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/StudentConsultation";
+import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/ReplyConsultation/Consultation";
 import History from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History";
 import HistoryActivity from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/HistoryActivity";
 import ListCourses from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses";

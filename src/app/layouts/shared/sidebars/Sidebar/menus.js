@@ -5,7 +5,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
-import PaddingIcon from "@mui/icons-material/Padding";
+import BallotIcon from "@mui/icons-material/Ballot";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import PeopleIcon from "@mui/icons-material/People";
@@ -317,7 +317,7 @@ export const dekanMenus = [
       {
         label: "Manage Pre-regis and Grades",
         type: "nav-item",
-        icon: <PaddingIcon sx={{ fontSize: 20 }} />,
+        icon: <BallotIcon sx={{ fontSize: 20 }} />,
         uri: "/bimbingan-akademik/dekan/manage",
       },
       {
@@ -935,7 +935,7 @@ export const kaprodiMenus = [
       {
         label: "Manage Pre-regis and Grades",
         type: "nav-item",
-        icon: <PaddingIcon sx={{ fontSize: 20 }} />,
+        icon: <BallotIcon sx={{ fontSize: 20 }} />,
         uri: "/bimbingan-akademik/kaprodi/manage",
       },
       {

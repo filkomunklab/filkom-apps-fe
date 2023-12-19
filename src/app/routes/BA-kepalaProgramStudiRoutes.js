@@ -58,12 +58,12 @@ import HistoryGradeRejected from "app/pages/BimbinganAkademik/roles/Kaprodi/Hist
 import HistoryConsultationComplete from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HistoryConsultation/ConsultationComplete";
 import ReviewPreRegistration from "app/pages/BimbinganAkademik/roles/Kaprodi/ReviewActivities/ReviewPreRegistration";
 import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/roles/Kaprodi/ReviewActivities/ReviewPreRegistration/ReviewPreRegistrationStudent";
-import ReviewCertificate from "app/pages/BimbinganAkademik/roles/Kaprodi/ReviewActivities/ReviewCertificate/ReviewCertificate";
-import ReviewCertificateStudent from "app/pages/BimbinganAkademik/roles/Kaprodi/ReviewActivities/ReviewCertificate/ReviewCertificateStudent";
+import ReviewCertificate from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/ReviewCertificate";
+import ReviewCertificateStudent from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/DetailCertificate/ViewCertificate";
 import ReviewGrade from "app/pages/BimbinganAkademik/roles/Kaprodi/ReviewActivities/ReviewGrade";
 import ReviewGradeStudent from "app/pages/BimbinganAkademik/roles/Kaprodi/ReviewActivities/ReviewGrade/ReviewGradeStudent";
-import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/StudentConsultation";
-import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReplyConsultation/Consultation";
+import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/StudentConsultation";
+import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/ReplyConsultation/Consultation";
 import SupervisorStudentProfile from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/StudentProfile/StudentProfile";
 import SupervisorStudentGradeDashboard from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/StudentProfile/StudentGradeDashboard";
 import SupervisorStudentGrade from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/StudentProfile/StudentGradeDashboard/StudentGrade";

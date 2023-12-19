@@ -65,7 +65,6 @@ const ViewConsultation = () => {
   const handleCloseSecondModal = () => setOpenSecondModal(false);
 
   const [inputValue, setInputValue] = useState("");
-  const [submittedValue, setSubmittedValue] = useState("");
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -145,13 +144,25 @@ const ViewConsultation = () => {
     }
   };
 
+  const handleBreadcrumbsClick = () => {
+    const { role } = JSON.parse(localStorage.getItem("user"));
+    let path = "";
+
+    if (role.includes("DEKAN")) {
+      path = "/bimbingan-akademik/dekan/current-activities";
+    } else if (role.includes("KAPRODI")) {
+      path = "/bimbingan-akademik/kaprodi/current-activities";
+    } else {
+      path = "/bimbingan-akademik/dosen-pembimbing/current-activities";
+    }
+    return <StyledLink to={path}>Current Activities</StyledLink>;
+  };
+
   return (
     <Div>
       <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
-        <StyledLink to="/bimbingan-akademik/current-activities">
-          Current Activities
-        </StyledLink>
-        ;<Typography color="text.primary">View Consultation</Typography>
+        {handleBreadcrumbsClick()}
+        <Typography color="text.primary">View Consultation</Typography>
       </Breadcrumbs>
       <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
         Consultation
@@ -342,7 +353,7 @@ const ViewConsultation = () => {
                     </Paper>
                   ))}
 
-                {status !== "Waiting" && (
+                {status !== "Complete" && (
                   <>
                     <TextField
                       size="small"
@@ -426,6 +437,10 @@ const ViewConsultation = () => {
                               </Button>
                             </Grid>
                             <Grid item>
+                              {/* <Link
+                            style={{ textDecoration: "none", color: "white" }}
+                            to="/bimbingan-akademik/consultation/"
+                          > */}
                               <Button
                                 onClick={handleSubmitFirstModal}
                                 sx={{
@@ -441,27 +456,13 @@ const ViewConsultation = () => {
                               >
                                 Yes
                               </Button>
+                              {/* </Link> */}
                             </Grid>
                           </Grid>
                         </div>
                       </Modal>
                     </Grid>
                   </>
-                )}
-
-                {status === "Waiting" && (
-                  <Paper
-                    elevation={0}
-                    variant="outlined"
-                    sx={{ marginBottom: "30px", marginTop: "10px" }}
-                  >
-                    <Typography
-                      variant="body1"
-                      sx={{ p: 2, color: "darkgray" }}
-                    >
-                      Please wait for a response from the consultation recipient
-                    </Typography>
-                  </Paper>
                 )}
 
                 {status === "Complete" && (

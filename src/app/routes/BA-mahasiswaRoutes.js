@@ -2,10 +2,7 @@ import Page from "@jumbo/shared/Page";
 import AcademicGuide from "app/pages/BimbinganAkademik/shared/AcademicGuide/AcademicGuide";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/shared/VisionMisionGoals/VisionMissionGoals";
 import Certificate from "app/pages/BimbinganAkademik/roles/Mahasiswa/Certificate";
-import AddNewCertificate from "app/pages/BimbinganAkademik/roles/Mahasiswa/Certificate/";
 import Consultation from "app/pages/BimbinganAkademik/roles/Mahasiswa/Consultation";
-import ConsultationWaiting from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryConsultation/ConsultationWaiting";
-import ConsultationOnProcess from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryConsultation/ConsultationOnProcess";
 import ConsultationComplete from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryConsultation/ConsultationComplete";
 import CurrentActivities from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities";
 import CurrentActivitiesActivity from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Activity";
@@ -23,8 +20,7 @@ import HistoryGradeApproved from "app/pages/BimbinganAkademik/roles/Mahasiswa/Hi
 import HistoryGradeRejected from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryGrade/RejectedHistoryGrade";
 import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryPreRegis/PreRegistrationRejected";
 import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryPreRegis/PreRegistrationApproved";
-import HistoryCertificateApproved from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryCertificate/CertificateApproved";
-import HistoryCertificateRejected from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryCertificate/CertificateRejected";
+import HistoryCertificate from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryCertificate/Certificate";
 import PreRegistration from "app/pages/BimbinganAkademik/roles/Mahasiswa/PreRegistration";
 import PreRegistrationClosedCase from "app/pages/BimbinganAkademik/roles/Mahasiswa/PreRegistration/PreRegistrationClosedCase";
 import PreRegistrationSubmitted from "app/pages/BimbinganAkademik/roles/Mahasiswa/PreRegistration/PreRegistrationSubmitted";
@@ -47,10 +43,6 @@ const mahasiswaRoutes = [
   {
     path: "/bimbingan-akademik/certificates",
     element: <Page component={Certificate} />,
-  },
-  {
-    path: "/bimbingan-akademik/certificates/add-new-certificate",
-    element: <Page component={AddNewCertificate} />,
   },
   {
     path: "/bimbingan-akademik/consultation",
@@ -126,23 +118,11 @@ const mahasiswaRoutes = [
     element: <Page component={HistoryActivity} />,
   },
   {
-    path: "/bimbingan-akademik/history/student-certificate-approved",
-    element: <Page component={HistoryCertificateApproved} />,
+    path: "/bimbingan-akademik/history/certificate/:id",
+    element: <Page component={HistoryCertificate} />,
   },
   {
-    path: "/bimbingan-akademik/history/student-certificate-rejected",
-    element: <Page component={HistoryCertificateRejected} />,
-  },
-  {
-    path: "/bimbingan-akademik/history/consultationWaiting",
-    element: <Page component={ConsultationWaiting} />,
-  },
-  {
-    path: "/bimbingan-akademik/history/consultationOnProcess",
-    element: <Page component={ConsultationOnProcess} />,
-  },
-  {
-    path: "/bimbingan-akademik/history/consultationComplete",
+    path: "/bimbingan-akademik/history/consultation/:id",
     element: <Page component={ConsultationComplete} />,
   },
   {
