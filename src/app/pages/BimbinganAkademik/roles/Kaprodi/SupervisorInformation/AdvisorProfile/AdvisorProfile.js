@@ -94,8 +94,10 @@ const AdvisorProfile = () => {
   const getProfile = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL_API}/employee/profile/${nik}`,
-        { cancelToken: source.token }
+        `${BASE_URL_API}/supervisor/nik/${nik}`,
+        {
+          cancelToken: source.token,
+        }
       );
       console.log("ini isi result.data", response.data);
       setDataProfile(response.data.data);
@@ -106,6 +108,7 @@ const AdvisorProfile = () => {
 
   useEffect(() => {
     getProfile();
+    console.log("ini di profile :", location.state);
     return () => source.cancel("request dibatalkan");
   }, []);
 
@@ -316,7 +319,7 @@ const AdvisorProfile = () => {
             onClick={() =>
               navigate(
                 `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}/edit-student`,
-                { state: location.state }
+                { state: { nik: nik, students: dataProfile?.student } }
               )
             }
             sx={{
