@@ -14,6 +14,7 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
   Button,
+  TablePagination,
 } from "@mui/material";
 import SearchLocal from "app/shared/SearchLocal";
 import Div from "@jumbo/shared/Div";
@@ -50,13 +51,13 @@ const CountStudent = ({ selected, totalStudents }) => {
 const EditStudent = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { nik, students } = location.state;
   const source = axios.CancelToken.source();
-  const { students } = location.state;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [studentOptions, setStudentOptions] = useState([]);
+  const [studentOptions, setStudentOptions] = useState(students || []);
   const [selectedStudent, setSelectedStudent] = useState(
-    students?.map((data) => data.nim) || []
+    studentOptions?.map((students) => students.nim) || []
   );
   const [selected, setSelected] = useState([]);
 
@@ -70,9 +71,29 @@ const EditStudent = () => {
       const { status, data } = response.data;
       console.log("inii response :", response);
       if (status === "OK") {
-        setStudentOptions(data);
+        setStudentOptions([...studentOptions, ...data]);
       } else {
         console.log("ini response :", response);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.patch(
+        `${BASE_URL_API}/supervisor/${nik}/student/update`,
+        { nims: selectedStudent },
+        { cancelToken: source.token }
+      );
+      console.log("ahahaha :", response);
+      const { status, data } = response.data;
+      if (status === "OK") {
+        navigate(
+          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}`,
+          { state: { nik: nik } }
+        );
       }
     } catch (error) {
       console.log(error);
@@ -85,50 +106,37 @@ const EditStudent = () => {
     return () => source.cancel("request dibatalkan");
   }, []);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  useEffect(() => {
+    console.log("hayoyo", studentOptions);
+  }, [studentOptions]);
+  useEffect(() => {
+    console.log("hayiyi", selectedStudent);
+  }, [selectedStudent]);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = data.map((item, index) => index);
-      setSelected(newSelected);
+      const newSelected = studentOptions.map((item) => item.nim);
+      setSelectedStudent(newSelected);
     } else {
-      setSelected([]);
+      setSelectedStudent([]);
     }
   };
 
-  const handleClick = (event, index) => {
-    const selectedIndex = selected.indexOf(index);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, index);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, selected.length - 1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selected.length - 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
+  // const handleClick = (_, index) => {
+  //   (i) =>
+  //     setSelectedStudent(
+  //       selectedStudent.includes(i.nim)
+  //         ? selectedStudent.filter((nim) => nim !== i.nim)
+  //         : [...selectedStudent, i.nim]
+  //     );
+  // };
 
   const isItemSelected = (index) => selected.indexOf(index) !== -1;
   const isAllSelected = selected.length === data.length;
 
   return (
     <Div>
-      <Div role="presentation" onClick={handleClick}>
+      <Div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
           <StyledLink to="/bimbingan-akademik/kaprodi/supervisor-information/">
             Supervisor Information
@@ -187,9 +195,10 @@ const EditStudent = () => {
                 <TableCell padding="checkbox">
                   <Checkbox
                     indeterminate={
-                      selected.length > 0 && selected.length < data.length
+                      selectedStudent.length > 0 &&
+                      selectedStudent.length < studentOptions.length
                     }
-                    checked={isAllSelected}
+                    checked={selectedStudent.length === studentOptions.length}
                     onChange={handleSelectAllClick}
                   />
                 </TableCell>
@@ -202,34 +211,58 @@ const EditStudent = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              {studentOptions
+                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((item, index) => (
                   <TableItem
                     item={item}
                     index={index}
-                    key={index}
-                    isSelected={isItemSelected(index)}
-                    handleClick={handleClick}
+                    key={item.id}
+                    isSelected={selectedStudent.includes(
+                      item.nim || item.employeeNik
+                    )}
+                    handleClick={(i) =>
+                      setSelectedStudent(
+                        selectedStudent.includes(i.nim)
+                          ? selectedStudent.filter((nim) => nim !== i.nim)
+                          : [...selectedStudent, i.nim]
+                      )
+                    }
                   />
                 ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 50, 100]}
+          component="div"
+          count={studentOptions.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={(_, newPage) => setPage(newPage)}
+          onRowsPerPageChange={(event) => {
+            setRowsPerPage(+event.target.value);
+            setPage(0);
+          }}
+        />
       </Grid>
       <Grid display="flex" alignItems="center" paddingTop={2} gap={4}>
         <Grid item xs={12} md={4} xl={4}>
           <Div sx={{ alignItems: "center" }}>
-            <CountStudent selected={selected} totalStudents={data.length} />
+            <CountStudent
+              selected={selectedStudent}
+              totalStudents={studentOptions.length}
+            />
           </Div>
         </Grid>
         <Grid item xs={12} md={4} xl={4}>
           <Button
             onClick={() => {
-              navigate(
-                `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${location.state}`,
-                { state: location.state }
-              );
+              // navigate(
+              //   `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${location.state}`,
+              //   { state: location.state }
+              // );
+              handleSubmit();
             }}
             sx={{
               backgroundColor: "#006AF5",
@@ -257,24 +290,29 @@ const EditStudent = () => {
 const TableItem = ({ item, index, isSelected, handleClick }) => {
   return (
     <TableRow
-      onClick={(event) => handleClick(event, index)}
+      onClick={() => handleClick(item)}
       role="checkbox"
       aria-checked={isSelected}
       selected={isSelected}
     >
       <TableCell padding="checkbox">
-        {/* {data[index].dospem === `-` ? (
-          <Checkbox checked={!isSelected} />
-        ) : (
-          <Checkbox checked={isSelected} />
-        )} */}
         <Checkbox checked={isSelected} />
       </TableCell>
       <TableCell>{index + 1}</TableCell>
       <TableCell>{item.nim}</TableCell>
-      <TableCell>{item.name}</TableCell>
-      <TableCell>{item.prodi}</TableCell>
-      <TableCell>{item.year}</TableCell>
+      <TableCell>
+        {item.lastName}, {item.firstName}
+      </TableCell>
+      <TableCell>
+        {item.major === "IF"
+          ? "Informatics"
+          : item.major === "SI"
+          ? "Information System"
+          : item.major === "DKV"
+          ? "Information Technology"
+          : "-"}
+      </TableCell>
+      <TableCell>{item.arrival_Year}</TableCell>
       <TableCell>
         <Chip label={item.status} variant="filled" color="success" />
       </TableCell>
