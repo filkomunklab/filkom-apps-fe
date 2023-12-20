@@ -23,8 +23,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 402,
-  bgcolor: "background.paper",
-  border: "1px solid #000",
+  bgcolor: "white",
   borderRadius: 2,
   boxShadow: 24,
   overflow: "hidden",
@@ -137,7 +136,7 @@ const CertificateWaiting = () => {
         </div>
       )}
       <Grid item md={6} id="detail-item">
-        <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
+        <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 1 }}>
           {handleBreadcrumbsClick()}
           <Typography color="text.primary">Certificate</Typography>
         </Breadcrumbs>
@@ -206,7 +205,13 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
-                <Typography variant="h5">{submissionDate}</Typography>
+                <Typography variant="h5">
+                  {new Date(submissionDate).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    day: "numeric",
+                    month: "long",
+                  })}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -250,22 +255,24 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} md={6.5} xl={8} paddingLeft={1}>
                 <Typography variant="h5" sx={{ textAlign: "justify" }}>
-                  {description.charAt(0).toUpperCase() + description.slice(1)}
+                  {description
+                    ? description.charAt(0).toUpperCase() + description.slice(1)
+                    : "-"}
                 </Typography>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} md={11.5} xl={11.5}>
+          <Grid item xs={12} md={11.5} xl={11.5} pt={1}>
             <Box component="form" noValidate autoComplete="off">
               <Typography pb={1} variant="h5">
-                Comments
+                Comment
               </Typography>
               <TextField
                 id="outlined-multiline-static"
                 placeholder="Add comment here"
                 multiline
                 fullWidth
-                minRows={4}
+                minRows={3}
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
               />
@@ -280,7 +287,6 @@ const CertificateWaiting = () => {
               }}
             >
               <Button
-                loading
                 variant="contained"
                 color="error"
                 sx={{
@@ -288,14 +294,12 @@ const CertificateWaiting = () => {
                   textTransform: "capitalize",
                   width: "152px",
                 }}
-                onClick={handleApprove}
+                onClick={handleReject}
               >
                 Reject
               </Button>
               <Button
-                loading
                 variant="contained"
-                //   color="success"
                 sx={{
                   borderRadius: 50,
                   textTransform: "capitalize",
@@ -342,13 +346,21 @@ const CertificateWaiting = () => {
                         color: "#0A0A0A",
                         textTransform: "capitalize",
                       }}
-                      onClick={() => setIsReject(false)}
+                      onClick={() => {
+                        setIsReject(false);
+                        // Comment text remains after cancel
+                      }}
                     >
                       Cancel
                     </Button>
                     <Button
                       variant="contained"
+                      color="error"
                       sx={{ textTransform: "capitalize" }}
+                      onClick={() => {
+                        handleSubmitCertificate();
+                        setIsReject(false);
+                      }}
                     >
                       Submit
                     </Button>

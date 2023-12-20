@@ -75,10 +75,7 @@ const StudentInformationMentored = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dataStudent, setDataStudent] = useState([]);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+  const source = axios.CancelToken.source();
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -88,18 +85,16 @@ const StudentInformationMentored = () => {
   const getDataStudent = async () => {
     try {
       const { nik } = JSON.parse(localStorage.getItem("user"));
-      const result = await axios.get(`${BASE_URL_API}/student/dosen/${nik}`);
-      const { status } = result.data;
+      const result = await axios.get(`${BASE_URL_API}/student/dosen/${nik}`, {
+        cancelToken: source.token,
+      });
+      const { status, data } = result.data;
 
       if (status === "OK") {
-        console.log(
-          "ini isi result.data dalam status ok mentored",
-          result.data.data
-        );
-        setDataStudent(result.data.data);
+        console.log("ini isi result.data dalam status ok mentored", result);
+        setDataStudent(data);
       } else {
         console.error("error, ini data result: ", result);
-        console.error("Error, ini data result.data: ", result.data);
       }
     } catch (error) {
       console.error("Error fetching data: ", error);
@@ -242,10 +237,10 @@ const StudentInformationMentored = () => {
             }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
-            count={dataStudent.length}
+            count={dataStudent.length || 0}
             rowsPerPage={rowsPerPage}
             page={page}
-            onPageChange={handleChangePage}
+            onPageChange={(_, newPage) => setPage(newPage)}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Grid>
@@ -320,7 +315,15 @@ const TableItem = ({ item, index }) => {
           {item.lastName}, {item.firstName}
         </Button>
       </TableCell>
-      <TableCell sx={[rowStyle]}>{item.major}</TableCell>
+      <TableCell sx={[rowStyle]}>
+        {item.major === "IF"
+          ? "Informatics"
+          : item.major === "SI"
+          ? "Information System"
+          : item.major === "DKV"
+          ? "Information Technology"
+          : "-"}
+      </TableCell>
       <TableCell sx={[rowStyle]}>{item.arrival_Year}</TableCell>
 
       <TableCell>

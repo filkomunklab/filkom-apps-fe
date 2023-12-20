@@ -17,6 +17,7 @@ import {
   Chip,
   TableContainer,
   Select,
+  TablePagination,
 } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
@@ -295,6 +296,18 @@ const AddSupervisor = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50, 100]}
+            component="div"
+            count={students?.length || 0}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={(_, newPage) => setPage(newPage)}
+            onRowsPerPageChange={(event) => {
+              setRowsPerPage(+event.target.value);
+              setPage(0);
+            }}
+          />
         </Grid>
       </Grid>
       <Grid>

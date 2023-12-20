@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import { Link } from "react-router-dom";
-import SearchGlobal from "app/shared/SearchGlobal";
+// import SearchGlobal from "app/shared/SearchGlobal";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
@@ -49,6 +49,7 @@ const History = (props) => {
   const navigate = useNavigate();
   const [value, setValue] = useState(0);
   const [dataConsultation, setDataConsultation] = useState([]);
+  const [dataCertificate, setDataCertificate] = useState([]);
 
   useEffect(() => {
     const storedValue = localStorage.getItem("historyTabValue");
@@ -61,19 +62,36 @@ const History = (props) => {
     localStorage.setItem("historyTabValue", value);
   }, [value]);
 
-  const getConsultation = async () => {
+  const getHistory = async () => {
     try {
       const { nik } = JSON.parse(localStorage.getItem("user"));
-      const result = await axios.get(
+      const resultConsultation = await axios.get(
         `${BASE_URL_API}/academic-consultation/employee/${nik}`
       );
-      const { status } = result.data;
-      if (status === "OK") {
-        console.log("ini isi result.data dalam status ok", result.data.data);
-        setDataConsultation(result.data.data);
+
+      const resultCertificate = await axios.get(
+        `${BASE_URL_API}/certificate/dosen/${nik}`
+      );
+
+      const { status: consultationStatus, data: consultationData } =
+        resultConsultation.data;
+      const { status: certificateStatus, data: certificateData } =
+        resultCertificate.data;
+
+      if (consultationStatus === "OK") {
+        console.log("ini isi result.data dalam status ok", consultationData);
+        setDataConsultation(consultationData);
       } else {
-        console.log(result);
-        console.log(result.data);
+        console.log(resultConsultation);
+        console.log(resultConsultation.data);
+      }
+
+      if (certificateStatus === "OK") {
+        console.log("ini isi response.data dalam status ok", certificateData);
+        setDataCertificate(certificateData);
+      } else {
+        console.log(resultCertificate);
+        console.log(resultCertificate.data);
       }
     } catch (error) {
       console.log(error);
@@ -81,21 +99,42 @@ const History = (props) => {
   };
 
   useEffect(() => {
-    getConsultation();
+    getHistory();
   }, []);
 
-  const groupedData = {};
+  const groupedDataConsultation = {};
+  const groupedDataCertificate = {};
+
   dataConsultation.forEach((value) => {
-    const date = new Date(value.createdAt).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-    if (!groupedData[date]) {
-      groupedData[date] = [];
+    const dateConsultation = new Date(value.createdAt).toLocaleDateString(
+      "en-US",
+      {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }
+    );
+    if (!groupedDataConsultation[dateConsultation]) {
+      groupedDataConsultation[dateConsultation] = [];
     }
-    groupedData[date].push(value);
+    groupedDataConsultation[dateConsultation].push(value);
+  });
+
+  dataCertificate.forEach((value) => {
+    const date = new Date(value.Certificate.approvalDate).toLocaleDateString(
+      "en-US",
+      {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }
+    );
+    if (!groupedDataCertificate[date]) {
+      groupedDataCertificate[date] = [];
+    }
+    groupedDataCertificate[date].push(value);
   });
 
   const formatDate = (date) => {
@@ -119,13 +158,22 @@ const History = (props) => {
     }
   };
 
-  const handleNavigate = async (value) => {
+  const handleNavigateConsultation = async (value) => {
     try {
       const consultationDetailsResult = await axios.get(
         `${BASE_URL_API}/academic-consultation/detail/${value.id}`
       );
       // console.log("ini detail Consutation result:", consultationDetailsResult);
-      let path = "/bimbingan-akademik/dosen-pembimbing/history/consultation/";
+
+      const { role } = JSON.parse(localStorage.getItem("user"));
+      let path = "";
+      if (role.includes("DEKAN")) {
+        path = "/bimbingan-akademik/dekan/history/consultation/";
+      } else if (role.includes("KAPRODI")) {
+        path = "/bimbingan-akademik/kaprodi/history/consultation/";
+      } else {
+        path = "/bimbingan-akademik/dosen-pembimbing/history/consultation/";
+      }
 
       navigate(`${path}${value.id}`, {
         state: {
@@ -142,6 +190,61 @@ const History = (props) => {
           },
         },
       });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleNavigateCertificate = async (value) => {
+    try {
+      const certificateDetailsResult = await axios.get(
+        `${BASE_URL_API}/certificate/student/${value.certificateId}`
+      );
+      const { role } = JSON.parse(localStorage.getItem("user"));
+      let pathh = "";
+      if (role.includes("DEKAN")) {
+        pathh = "/bimbingan-akademik/dekan/history/certificate/";
+      } else if (role.includes("KAPRODI")) {
+        pathh = "/bimbingan-akademik/kaprodi/history/certificate/";
+      } else {
+        pathh = "/bimbingan-akademik/dosen-pembimbing/history/certificate/";
+      }
+
+      const {
+        transaction,
+        submitDate,
+        path,
+        category,
+        description,
+        approval_status,
+        title,
+        comments,
+        approvalDate,
+        id,
+      } = certificateDetailsResult.data.data;
+      navigate(
+        `${pathh}${value.certificateId}`,
+        {
+          state: {
+            certificateDetails: {
+              firstName: transaction[0].Student.firstName,
+              lastName: transaction[0].Student.lastName,
+              SupervisorFirstName: transaction[0].Employee.firstName,
+              SupervisorLastName: transaction[0].Employee.lastName,
+              submissionDate: submitDate,
+              pathFile: path,
+              category: category,
+              description: description,
+              status: approval_status,
+              title: title,
+              comments: comments,
+              approvalDate: approvalDate,
+              id: id,
+            },
+          },
+        },
+        console.log("ini pathFile", path)
+      );
     } catch (error) {
       console.log(error.message);
     }
@@ -168,7 +271,7 @@ const History = (props) => {
         approved will be displayed on this page.
       </Typography>
 
-      <Grid container>
+      {/* <Grid container>
         <Grid item xs={12} sm={12} md={12} lg={12} sx={{ paddingBottom: 4 }}>
           <SearchGlobal
             sx={{
@@ -180,7 +283,7 @@ const History = (props) => {
             }}
           />
         </Grid>
-      </Grid>
+      </Grid> */}
 
       <div sx={{ borderBottom: 1, borderColor: "divider", paddingTop: "16px" }}>
         <Tabs
@@ -1055,327 +1158,27 @@ const History = (props) => {
       <TabPanel value={value} index={2}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
-          <Stack
-            direction={"row"}
-            flexWrap={"wrap"}
-            justifyContent={"flex-start"}
-          >
-            <List
-              sx={{
-                width: "100%",
-                maxWidth: 2000,
-                bgcolor: "background.paper",
-                paddingTop: "0px",
-                paddingBottom: "0px",
-              }}
-            >
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Today
-                </Typography>
-              </Box>
 
-              <Divider component="li" />
-              <ListItem
-                button
-                component={Link}
-                to="certificate-approved"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Certificate"}
-                      sx={{
-                        backgroundColor: "rgba(255, 204, 0, 0.1)",
-                        color: "rgba(152, 82, 17, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Adzana, Shaliha Gracia
-                      </Typography>
-                      <Typography
-                        sx={{
-                          paddingLeft: "8px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Seminar "Apa itu IT"
-                      </Typography>
-                    </>
-                  }
-                />
+          {Object.entries(groupedDataCertificate).map(
+            ([date, dataCertificate]) => (
+              <div key={date}>
                 <Box
                   sx={{
-                    marginLeft: { xs: "auto", md: 0 },
-                    width: { xs: "100%", md: "45%" },
-                    textAlign: "right",
+                    height: "50px",
+                    backgroundColor: "rgba(235, 235, 235, 1)",
+                    display: "flex",
+                    alignItems: "center",
+                    paddingLeft: "10px",
                   }}
                 >
-                  <ListItemText
-                    secondary={
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "10px", md: "12px" },
-                          color: "rgba(27, 43, 65, 0.69)",
-                        }}
-                      >
-                        02:00 PM
-                      </Typography>
-                    }
-                  />
+                  <Typography
+                    sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+                  >
+                    {formatDate(date)}
+                  </Typography>
                 </Box>
-              </ListItem>
-              <Divider component="li" />
-
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Tuesday, Feb 2, 2024
-                </Typography>
-              </Box>
-              <ListItem
-                button
-                component={Link}
-                to="certificate-approved"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Certificate"}
-                      sx={{
-                        backgroundColor: "rgba(255, 204, 0, 0.1)",
-                        color: "rgba(152, 82, 17, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Banner, Tony Stark
-                      </Typography>
-                      <Typography
-                        sx={{
-                          paddingLeft: "8px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Juara 2 saat mengikuti lomba melukis
-                      </Typography>
-                    </>
-                  }
-                />
-                <Box
-                  sx={{
-                    marginLeft: { xs: "auto", md: 0 },
-                    width: { xs: "100%", md: "45%" },
-                    textAlign: "right",
-                  }}
-                >
-                  <ListItemText
-                    secondary={
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "10px", md: "12px" },
-                          color: "rgba(27, 43, 65, 0.69)",
-                        }}
-                      >
-                        02:00 PM
-                      </Typography>
-                    }
-                  />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-              <ListItem
-                button
-                component={Link}
-                to="certificate-rejected"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Certificate"}
-                      sx={{
-                        backgroundColor: "rgba(255, 204, 0, 0.1)",
-                        color: "rgba(152, 82, 17, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Adzana, Shaliha Gracia
-                      </Typography>
-                      <Typography
-                        sx={{
-                          paddingLeft: "8px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Menang lomba desain prototype
-                      </Typography>
-                    </>
-                  }
-                />
-                <Box
-                  sx={{
-                    marginLeft: { xs: "auto", md: 0 },
-                    width: { xs: "100%", md: "45%" },
-                    textAlign: "right",
-                  }}
-                >
-                  <ListItemText
-                    secondary={
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "10px", md: "12px" },
-                          color: "rgba(27, 43, 65, 0.69)",
-                        }}
-                      >
-                        02:00 PM
-                      </Typography>
-                    }
-                  />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-              <ListItem
-                button
-                component={Link}
-                to="certificate-approved"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Certificate"}
-                      sx={{
-                        backgroundColor: "rgba(255, 204, 0, 0.1)",
-                        color: "rgba(152, 82, 17, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Banner, Tony Stark
-                      </Typography>
-                      <Typography
-                        sx={{
-                          paddingLeft: "8px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Juara 2 saat mengikuti lomba melukis
-                      </Typography>
-                    </>
-                  }
-                />
-                <Box
-                  sx={{
-                    marginLeft: { xs: "auto", md: 0 },
-                    width: { xs: "100%", md: "45%" },
-                    textAlign: "right",
-                  }}
-                >
-                  <ListItemText
-                    secondary={
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "10px", md: "12px" },
-                          color: "rgba(27, 43, 65, 0.69)",
-                        }}
-                      >
-                        02:00 PM
-                      </Typography>
-                    }
-                  />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-            </List>
-          </Stack>
-          <Typography sx={{ padding: "20px" }}></Typography>
-        </div>
-      </TabPanel>
-
-      <TabPanel value={value} index={3}>
-        <div>
-          <Typography sx={{ padding: "10px" }}></Typography>
-
-          {Object.entries(groupedData).map(([date, dataConsultation]) => (
-            <div key={date}>
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "10px",
-                }}
-              >
-                <Typography
-                  sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
-                >
-                  {formatDate(date)}
-                </Typography>
-              </Box>
-              {dataConsultation &&
-                dataConsultation.map((value, index) =>
-                  value.status === "Complete" ? (
+                {dataCertificate &&
+                  dataCertificate.map((value, index) => (
                     <List
                       sx={{
                         width: "100%",
@@ -1395,16 +1198,19 @@ const History = (props) => {
                     >
                       <ListItem
                         sx={{ padding: "10px 50px" }}
-                        onClick={() => handleNavigate(value)}
+                        onClick={() => {
+                          handleNavigateCertificate(value);
+                          // console.log("ini isi dari value certi: ", value);
+                        }}
                       >
                         <ListItemText
                           primary={
                             <Chip
                               size={"small"}
-                              label={"Consultation"}
+                              label={"Certificate"}
                               sx={{
-                                backgroundColor: "rgba(223, 11, 146, 0.1)",
-                                color: "rgba(223, 11, 146, 1)",
+                                backgroundColor: "rgba(255, 204, 0, 0.1)",
+                                color: "rgba(152, 82, 17, 1)",
                               }}
                             />
                           }
@@ -1418,7 +1224,8 @@ const History = (props) => {
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
                               >
-                                To {value.receiver_name}
+                                {value.Student.lastName},
+                                {value.Student.firstName}
                               </Typography>
                               <Typography
                                 sx={{
@@ -1426,10 +1233,7 @@ const History = (props) => {
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
                               >
-                                {value.topic === "others" && "Others"}
-                                {value.topic === "academic" && "Academic"}
-                                {value.topic === "non-academic" &&
-                                  "Non-Academic"}
+                                {value.Certificate.title}
                               </Typography>
                             </>
                           }
@@ -1448,14 +1252,13 @@ const History = (props) => {
                                   color: "rgba(27, 43, 65, 0.69)",
                                 }}
                               >
-                                {new Date(value.createdAt).toLocaleTimeString(
-                                  "en-US",
-                                  {
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                    hour12: true,
-                                  }
-                                )}
+                                {new Date(
+                                  value.Certificate.approvalDate
+                                ).toLocaleTimeString("en-US", {
+                                  hour: "numeric",
+                                  minute: "numeric",
+                                  hour12: true,
+                                })}
                               </Typography>
                             }
                           />
@@ -1463,12 +1266,135 @@ const History = (props) => {
                       </ListItem>
                       <Divider component="li" />
                     </List>
-                  ) : (
-                    ""
-                  )
-                )}
-            </div>
-          ))}
+                  ))}
+              </div>
+            )
+          )}
+          <Typography sx={{ padding: "20px" }}></Typography>
+        </div>
+      </TabPanel>
+
+      <TabPanel value={value} index={3}>
+        <div>
+          <Typography sx={{ padding: "10px" }}></Typography>
+
+          {Object.entries(groupedDataConsultation)
+            .filter(([date, dataConsultation]) =>
+              dataConsultation.some((value) => value.status === "Complete")
+            )
+            .map(([date, dataConsultation]) => (
+              <div key={date}>
+                <Box
+                  sx={{
+                    height: "50px",
+                    backgroundColor: "rgba(235, 235, 235, 1)",
+                    display: "flex",
+                    alignItems: "center",
+                    paddingLeft: "10px",
+                  }}
+                >
+                  <Typography
+                    sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+                  >
+                    {formatDate(date)}
+                  </Typography>
+                </Box>
+                {dataConsultation &&
+                  dataConsultation.map((value, index) =>
+                    value.status === "Complete" ? (
+                      <List
+                        sx={{
+                          width: "100%",
+                          maxWidth: 2000,
+                          bgcolor: "background.paper",
+                          paddingTop: "0px",
+                          paddingBottom: "0px",
+                          ":hover": {
+                            cursor: "pointer",
+                            backgroundColor: "#338CFF21",
+                            transition: "0.3s",
+                            transitionTimingFunction: "ease-in-out",
+                            transitionDelay: "0s",
+                            transitionProperty: "all",
+                          },
+                        }}
+                      >
+                        <ListItem
+                          sx={{ padding: "10px 50px" }}
+                          onClick={() => handleNavigateConsultation(value)}
+                        >
+                          <ListItemText
+                            primary={
+                              <Chip
+                                size={"small"}
+                                label={"Consultation"}
+                                sx={{
+                                  backgroundColor: "rgba(223, 11, 146, 0.1)",
+                                  color: "rgba(223, 11, 146, 1)",
+                                }}
+                              />
+                            }
+                            secondary={
+                              <>
+                                <Typography
+                                  sx={{
+                                    color: "rgba(0, 0, 0, 1)",
+                                    paddingLeft: "8px",
+                                    paddingTop: "5px",
+                                    fontSize: { xs: "12px", md: "14px" },
+                                  }}
+                                >
+                                  To {value.receiver_name}
+                                </Typography>
+                                <Typography
+                                  sx={{
+                                    paddingLeft: "8px",
+                                    fontSize: { xs: "12px", md: "14px" },
+                                  }}
+                                >
+                                  {value.topic === "others" && "Others"}
+                                  {value.topic === "academic" && "Academic"}
+                                  {value.topic === "non-academic" &&
+                                    "Non-Academic"}
+                                </Typography>
+                              </>
+                            }
+                          />
+                          <Box
+                            sx={{
+                              marginLeft: { xs: "auto", md: 0 },
+                              textAlign: "right",
+                            }}
+                          >
+                            <ListItemText
+                              secondary={
+                                <Typography
+                                  sx={{
+                                    fontSize: { xs: "10px", md: "14px" },
+                                    color: "rgba(27, 43, 65, 0.69)",
+                                  }}
+                                >
+                                  {new Date(value.createdAt).toLocaleTimeString(
+                                    "en-US",
+                                    {
+                                      hour: "numeric",
+                                      minute: "numeric",
+                                      hour12: true,
+                                    }
+                                  )}
+                                </Typography>
+                              }
+                            />
+                          </Box>
+                        </ListItem>
+                        <Divider component="li" />
+                      </List>
+                    ) : (
+                      ""
+                    )
+                  )}
+              </div>
+            ))}
 
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>

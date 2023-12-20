@@ -41,7 +41,16 @@ const HistoryCertificate = () => {
   const pdfURL = pathFile;
 
   const handleBreadcrumbsClick = () => {
-    let path = "/bimbingan-akademik/history";
+    const { role } = JSON.parse(localStorage.getItem("user"));
+    let path = "";
+
+    if (role.includes("DEKAN")) {
+      path = "/bimbingan-akademik/dekan/history";
+    } else if (role.includes("KAPRODI")) {
+      path = "/bimbingan-akademik/kaprodi/history";
+    } else {
+      path = "/bimbingan-akademik/dosen-pembimbing/history";
+    }
     return <StyledLink to={path}>History</StyledLink>;
   };
 
