@@ -222,7 +222,7 @@ const Certificate = () => {
           paddingBottom: "25px",
         }}
       >
-        Add New Certificate
+        Add Certificate
       </Typography>
 
       <Grid container spacing={2}>

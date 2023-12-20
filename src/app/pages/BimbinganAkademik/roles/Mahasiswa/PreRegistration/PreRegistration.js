@@ -191,12 +191,12 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
             left: "50%",
             transform: "translateX(-50%)",
             backgroundColor: "white",
-            padding: "10px",
-            boxShadow: "20",
+            padding: "15px",
+            boxShadow: "0 0 20px rgba(0, 0, 0, 0.1)", // Perbaikan pada properti boxShadow
             zIndex: 999,
           }}
         >
-          <div open={open} onClose={onClose}>
+          <div>
             <div
               style={{
                 display: "flex",
@@ -206,7 +206,7 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
                 gap: "15px",
               }}
             >
-              <div>
+              <div style={{ paddingLeft: "20px" }}>
                 {selectedRows.length} courses selected, {totalCredits} credits.
               </div>
               <Button
@@ -219,7 +219,6 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
                   color: "white",
                   backgroundColor: "#006AF5",
                   "@media (max-width: 650px)": { fontSize: "8px" },
-
                   "&:hover": {
                     backgroundColor: "#025ED8",
                   },

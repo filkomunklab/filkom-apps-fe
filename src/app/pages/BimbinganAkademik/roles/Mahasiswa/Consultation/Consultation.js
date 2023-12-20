@@ -278,11 +278,11 @@ const Consultation = () => {
             <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
                 {informationStudent.major === "IF"
-                  ? "Informatika"
+                  ? "Informatics"
                   : informationStudent.major === "SI"
-                  ? "Sistem Informasi"
+                  ? "Information System"
                   : informationStudent.major === "DKV"
-                  ? "Teknologi Informasi"
+                  ? "Information Technology"
                   : informationStudent.major}
               </Typography>
             </Paper>
