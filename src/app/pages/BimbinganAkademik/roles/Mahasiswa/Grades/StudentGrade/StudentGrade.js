@@ -42,7 +42,7 @@ const StudentGrade = () => {
       <Stack gap={3} paddingTop={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography variant="h1" fontWeight={500}>
-            Student Grade
+            Grade
           </Typography>
         </Stack>
         <Typography variant="h5">Semester 1</Typography>
@@ -95,9 +95,9 @@ const TableHeading = () => {
   return (
     <TableRow sx={{ backgroundColor: "#1A38601A" }}>
       <TableCell sx={[style]}>No</TableCell>
-      <TableCell sx={[style]}>Subject</TableCell>
+      <TableCell sx={[style]}>Subject Name</TableCell>
       <TableCell sx={[style]}>Parallel</TableCell>
-      <TableCell sx={[style]}>Teacher</TableCell>
+      <TableCell sx={[style]}>Lecturer</TableCell>
       <TableCell sx={[style]}>Grade</TableCell>
       <TableCell sx={[style]}>The -th Enrollment</TableCell>
     </TableRow>

@@ -162,7 +162,7 @@ const ViewConsultation = () => {
     <Div>
       <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
         {handleBreadcrumbsClick()}
-        <Typography color="text.primary">View Consultation</Typography>
+        <Typography color="text.primary">Consultation</Typography>
       </Breadcrumbs>
       <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
         Consultation
@@ -197,7 +197,7 @@ const ViewConsultation = () => {
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <Typography>student_major</Typography>
+              <Typography>Major</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined">
