@@ -14,7 +14,6 @@ import {
   Grid,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import SearchGlobal from "app/shared/SearchGlobal";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
@@ -53,14 +52,14 @@ const CurrentActivities = () => {
   const [dataCertificate, setDataCertificate] = useState([]);
 
   useEffect(() => {
-    const storedValue = localStorage.getItem("historyTabValue");
+    const storedValue = localStorage.getItem("currentTabValue");
     if (storedValue !== null) {
       setValue(parseInt(storedValue));
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("historyTabValue", value);
+    localStorage.setItem("currentTabValue", value);
   }, [value]);
 
   const getCurrentActivities = async () => {
@@ -145,27 +144,6 @@ const CurrentActivities = () => {
     }
     groupedDataCertificate[date].push(value);
   });
-
-  const formatDateConsultation = (dateConsultation) => {
-    const currentDate = new Date();
-    const formattedDate = new Date(dateConsultation);
-
-    if (formattedDate.toDateString() === currentDate.toDateString()) {
-      return "Today";
-    } else if (
-      formattedDate.toDateString() ===
-      new Date(currentDate - 1 * 24 * 60 * 60 * 1000).toDateString()
-    ) {
-      return "Yesterday";
-    } else {
-      return formattedDate.toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-    }
-  };
 
   const formatDate = (date) => {
     const currentDate = new Date();
@@ -281,20 +259,6 @@ const CurrentActivities = () => {
         Consultations that you have created which are still ongoing or awaiting
         approval.
       </Typography>
-
-      <Grid container>
-        <Grid item xs={12} sm={12} md={12} lg={12} sx={{ paddingBottom: 4 }}>
-          <SearchGlobal
-            sx={{
-              width: "40%",
-              "@media (max-width: 600px)": {
-                height: "40px",
-                width: "100%",
-              },
-            }}
-          />
-        </Grid>
-      </Grid>
 
       <div sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
@@ -879,7 +843,7 @@ const CurrentActivities = () => {
                   <Typography
                     sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
                   >
-                    {formatDateConsultation(dateConsultation)}
+                    {formatDate(dateConsultation)}
                   </Typography>
                 </Box>
                 {dataConsultation &&

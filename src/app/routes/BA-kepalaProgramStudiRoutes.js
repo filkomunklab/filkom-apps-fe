@@ -5,7 +5,7 @@ import Curriculum from "app/pages/BimbinganAkademik/shared/Curriculum/Curriculum
 import AddActivity from "app/pages/BimbinganAkademik/roles/Kaprodi/AddActivity";
 import Manage from "app/pages/BimbinganAkademik/shared/Manage/Manage";
 import Dashboard from "app/pages/BimbinganAkademik/roles/Kaprodi/Dashboard/Dashboard.";
-import History from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History";
+import History from "app/pages/BimbinganAkademik/shared/History";
 
 import StudentCertificate from "app/pages/BimbinganAkademik/roles/Kaprodi/StudentInformation/StudentInformationMentored/StudentCertificate/StudentCertificate";
 import CertificateDetail from "app/pages/BimbinganAkademik/roles/Kaprodi/StudentInformation/StudentInformationMentored/StudentCertificate/CertificateDetail/CertificateDetail";
@@ -51,11 +51,10 @@ import ViewConsultation from "app/pages/BimbinganAkademik/shared/CurrentActiviti
 import HistoryActivity from "app/pages/BimbinganAkademik/roles/Kaprodi/History/HIstoryActivity/HistoryActivity";
 import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/roles/Kaprodi/History/HistoryPreRegis/PreRegistrationApproved";
 import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/roles/Kaprodi/History/HistoryPreRegis/PreRegistrationRejected";
-import HistoryCertificateApproved from "app/pages/BimbinganAkademik/roles/Kaprodi/History/HistoryCertificate/CertificateApproved";
-import HistoryCertificateRejected from "app/pages/BimbinganAkademik/roles/Kaprodi/History/HistoryCertificate/CertificateRejected";
+import HistoryCertificate from "app/pages/BimbinganAkademik/shared/History/HistoryCertificate/Certificate";
 import HistoryGradeApproved from "app/pages/BimbinganAkademik/roles/Kaprodi/History/HistoryGrade/ApprovedHistoryGrade";
 import HistoryGradeRejected from "app/pages/BimbinganAkademik/roles/Kaprodi/History/HistoryGrade/RejectedHistoryGrade";
-import HistoryConsultationComplete from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HistoryConsultation/ConsultationComplete";
+import HistoryConsultationComplete from "app/pages/BimbinganAkademik/shared/History/HistoryConsultation/ConsultationComplete";
 import ReviewPreRegistration from "app/pages/BimbinganAkademik/roles/Kaprodi/ReviewActivities/ReviewPreRegistration";
 import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/roles/Kaprodi/ReviewActivities/ReviewPreRegistration/ReviewPreRegistrationStudent";
 import ReviewCertificate from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/ReviewCertificate";
@@ -167,12 +166,8 @@ const kepalaProgramStudiRoutes = [
     element: <Page component={HistoryPreRegistrationRejected} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/history/certificate-approved",
-    element: <Page component={HistoryCertificateApproved} />,
-  },
-  {
-    path: "/bimbingan-akademik/kaprodi/history/certificate-rejected",
-    element: <Page component={HistoryCertificateRejected} />,
+    path: "/bimbingan-akademik/kaprodi/history/certificate/:id",
+    element: <Page component={HistoryCertificate} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/history/grade-approved",

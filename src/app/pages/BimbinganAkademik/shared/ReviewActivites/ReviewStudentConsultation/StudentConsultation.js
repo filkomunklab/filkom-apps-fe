@@ -34,10 +34,11 @@ const StudentConsultation = () => {
       console.log("API Response:", result.data);
 
       const filteredData = result.data.data.filter((item) => {
-        const studentFullName = `${item.studentName}`;
-        return studentFullName
-          .toLowerCase()
-          .includes(searchValue.toLowerCase());
+        const studentFullName = `${item.student_name}`.toLowerCase();
+        const includesSearch = studentFullName.includes(
+          searchValue.toLowerCase()
+        );
+        return includesSearch;
       });
 
       console.log("Filtered data:", filteredData);
@@ -146,12 +147,7 @@ const StudentConsultation = () => {
         </Grid>
       </Grid>
       <Grid item xs={12}>
-        <TableContainer
-          sx={{
-            maxHeight: 440,
-          }}
-          component={Paper}
-        >
+        <TableContainer component={Paper}>
           <Table>
             <TableHead
               sx={{
@@ -171,7 +167,7 @@ const StudentConsultation = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataWaiting &&
+              {dataWaiting && dataWaiting.length > 0 ? (
                 dataWaiting.map((value, index) =>
                   value.status === "Waiting" ? (
                     <TableRow
@@ -194,10 +190,10 @@ const StudentConsultation = () => {
                       >
                         {index + 1}
                       </TableCell>
-                      <TableCell sx={{ width: "145px", paddingLeft: "17px" }}>
+                      <TableCell sx={{ width: "180px", paddingLeft: "17px" }}>
                         {new Date(value.createdAt).toLocaleDateString("en-US", {
                           day: "numeric",
-                          month: "short",
+                          month: "long",
                           year: "numeric",
                         })}
                       </TableCell>
@@ -209,7 +205,7 @@ const StudentConsultation = () => {
                       </TableCell>
                       <TableCell
                         sx={{
-                          maxWidth: "300px",
+                          maxWidth: "150px",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                           whiteSpace: "nowrap",
@@ -217,7 +213,6 @@ const StudentConsultation = () => {
                       >
                         {value.description}
                       </TableCell>
-
                       <TableCell
                         sx={{
                           color: "#FFCC00",
@@ -228,10 +223,13 @@ const StudentConsultation = () => {
                         {value.status}
                       </TableCell>
                     </TableRow>
-                  ) : (
-                    ""
-                  )
-                )}
+                  ) : null
+                )
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={6}>No data available</TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>

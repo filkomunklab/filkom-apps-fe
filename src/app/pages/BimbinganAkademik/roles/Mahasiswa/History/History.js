@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import { Link } from "react-router-dom";
-import SearchGlobal from "app/shared/SearchGlobal";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
@@ -130,7 +129,7 @@ const History = () => {
   });
 
   dataCertificate.forEach((value) => {
-    const date = new Date(value.Certificate.submitDate).toLocaleDateString(
+    const date = new Date(value.Certificate.approvalDate).toLocaleDateString(
       "en-US",
       {
         weekday: "long",
@@ -144,27 +143,6 @@ const History = () => {
     }
     groupedDataCertificate[date].push(value);
   });
-
-  const formatDateConsultation = (dateConsultation) => {
-    const currentDate = new Date();
-    const formattedDate = new Date(dateConsultation);
-
-    if (formattedDate.toDateString() === currentDate.toDateString()) {
-      return "Today";
-    } else if (
-      formattedDate.toDateString() ===
-      new Date(currentDate - 1 * 24 * 60 * 60 * 1000).toDateString()
-    ) {
-      return "Yesterday";
-    } else {
-      return formattedDate.toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-    }
-  };
 
   const formatDate = (date) => {
     const currentDate = new Date();
@@ -284,20 +262,6 @@ const History = () => {
         certificate approval, student study result card, everything you have
         approved will be displayed on this page.
       </Typography>
-
-      <Grid container>
-        <Grid item xs={12} sm={12} md={12} lg={12} sx={{ paddingBottom: 4 }}>
-          <SearchGlobal
-            sx={{
-              width: "40%",
-              "@media (max-width: 600px)": {
-                height: "40px",
-                width: "100%",
-              },
-            }}
-          />
-        </Grid>
-      </Grid>
 
       <div sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
@@ -965,7 +929,7 @@ const History = () => {
                                 }}
                               >
                                 {new Date(
-                                  value.Certificate.submitDate
+                                  value.Certificate.approvalDate
                                 ).toLocaleTimeString("en-US", {
                                   hour: "numeric",
                                   minute: "numeric",
@@ -1184,7 +1148,7 @@ const History = () => {
                   <Typography
                     sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
                   >
-                    {formatDateConsultation(dateConsultation)}
+                    {formatDate(dateConsultation)}
                   </Typography>
                 </Box>
                 {dataConsultation &&
@@ -1211,7 +1175,6 @@ const History = () => {
                           sx={{ padding: "10px 50px" }}
                           onClick={() => {
                             handleNavigateConsultation(value);
-                            // console.log("ini isi dari value: ", value);
                           }}
                         >
                           <ListItemText

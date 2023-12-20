@@ -9,18 +9,17 @@ import StudentGrade from "app/pages/BimbinganAkademik/roles/DosenPembimbing/Stud
 import StudentCertificate from "app/pages/BimbinganAkademik/roles/DosenPembimbing/StudentInformation/StudentCertificate";
 import ReviewPreRegistration from "app/pages/BimbinganAkademik/roles/DosenPembimbing/ReviewActivities/ReviewPreRegistration";
 import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/roles/DosenPembimbing/ReviewActivities/ReviewPreRegistration/ReviewPreRegistrationStudent";
-import ReviewCertificate from "app/pages/BimbinganAkademik/roles/DosenPembimbing/ReviewActivities/ReviewCertificate/ReviewCertificate";
-import ReviewCertificateStudent from "app/pages/BimbinganAkademik/roles/DosenPembimbing/ReviewActivities/ReviewCertificate/ReviewCertificateStudent";
-import History from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History";
-import HistoryActivity from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HIstoryActivity/HistoryActivity";
-import HistoryActivity1 from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HIstoryActivity/HistoryActivity1";
-import HistoryActivity2 from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HIstoryActivity/HistoryActivity2";
-import HistoryActivity3 from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HIstoryActivity/HistoryActivity3";
-import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HistoryPreRegis/PreRegistrationApproved";
-import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HistoryPreRegis/PreRegistrationRejected";
-import HistoryCertificateApproved from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HistoryCertificate/CertificateApproved";
-import HistoryCertificateRejected from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HistoryCertificate/CertificateRejected";
-import HistoryConsultationComplete from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HistoryConsultation/ConsultationComplete";
+import ReviewCertificate from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/ReviewCertificate";
+import ReviewCertificateStudent from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/DetailCertificate/ViewCertificate";
+import History from "app/pages/BimbinganAkademik/shared/History";
+import HistoryActivity from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity";
+import HistoryActivity1 from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity1";
+import HistoryActivity2 from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity2";
+import HistoryActivity3 from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity3";
+import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/shared/History/HistoryPreRegis/PreRegistrationApproved";
+import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/shared/History/HistoryPreRegis/PreRegistrationRejected";
+import HistoryCertificate from "app/pages/BimbinganAkademik/shared/History/HistoryCertificate/Certificate";
+import HistoryConsultationComplete from "app/pages/BimbinganAkademik/shared/History/HistoryConsultation/ConsultationComplete";
 import CertificateDetail from "app/pages/BimbinganAkademik/roles/DosenPembimbing/StudentInformation/StudentCertificate/CertificateDetail";
 import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/StudentConsultation";
 import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/ReplyConsultation/Consultation";
@@ -130,12 +129,8 @@ const dosenPembimbingRoutes = [
     element: <Page component={HistoryPreRegistrationRejected} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/history/certificate-approved",
-    element: <Page component={HistoryCertificateApproved} />,
-  },
-  {
-    path: "/bimbingan-akademik/dosen-pembimbing/history/certificate-rejected",
-    element: <Page component={HistoryCertificateRejected} />,
+    path: "/bimbingan-akademik/dosen-pembimbing/history/certificate/:id",
+    element: <Page component={HistoryCertificate} />,
   },
   {
     path: "/bimbingan-akademik/dosen-pembimbing/history/consultation/:id",

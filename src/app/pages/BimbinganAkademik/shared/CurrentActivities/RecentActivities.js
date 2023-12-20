@@ -142,23 +142,29 @@ const CurrentActivities = () => {
         respond to ongoing consultations.
       </Typography>
 
-      {Object.entries(groupedData).map(([date, dataConsultation]) => (
-        <div key={date}>
-          <Box
-            sx={{
-              height: "55px",
-              backgroundColor: "rgba(235, 235, 235, 1)",
-              display: "flex",
-              alignItems: "center",
-              paddingLeft: "10px",
-            }}
-          >
-            <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>{date}</Typography>
-          </Box>
-          {dataConsultation &&
-            dataConsultation.map((value, index) =>
-              value.status === "OnProcess" ? (
+      {Object.entries(groupedData)
+        .filter(([date, dataConsultation]) =>
+          dataConsultation.some((value) => value.status === "OnProcess")
+        )
+        .map(([date, dataConsultation]) => (
+          <div key={date}>
+            <Box
+              sx={{
+                height: "50px",
+                backgroundColor: "rgba(235, 235, 235, 1)",
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "10px",
+              }}
+            >
+              <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>{date}</Typography>
+            </Box>
+
+            {dataConsultation
+              .filter((value) => value.status === "OnProcess")
+              .map((value, index) => (
                 <List
+                  key={index}
                   sx={{
                     width: "100%",
                     maxWidth: 2000,
@@ -241,12 +247,9 @@ const CurrentActivities = () => {
                     <Divider component="li" variant="inset" />
                   </ListItem>
                 </List>
-              ) : (
-                ""
-              )
-            )}
-        </div>
-      ))}
+              ))}
+          </div>
+        ))}
     </div>
   );
 };

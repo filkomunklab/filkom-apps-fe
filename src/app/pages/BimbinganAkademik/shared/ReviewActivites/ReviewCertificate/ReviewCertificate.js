@@ -166,7 +166,7 @@ const ReviewCertificate = () => {
             }}
           />
         </Grid>
-        <Grid item xs={12} sm={4} md={4} xl={3}>
+        {/* <Grid item xs={12} sm={4} md={4} xl={3}>
           <FormControl
             sx={{ width: "100%", height: "100%", marginTop: "20px" }}
             size="small"
@@ -198,18 +198,13 @@ const ReviewCertificate = () => {
               <MenuItem value={"international"}>International</MenuItem>
             </Select>
           </FormControl>
-        </Grid>
+        </Grid> */}
       </Grid>
       <Grid item xs={12}>
-        <TableContainer
-          sx={{
-            maxHeight: 440,
-          }}
-          component={Paper}
-        >
+        <TableContainer component={Paper}>
           <Table>
             <TableHead
-              sx={{
+              style={{
                 position: "-webkit-sticky",
                 position: "sticky",
                 top: 0,
@@ -217,16 +212,16 @@ const ReviewCertificate = () => {
               }}
             >
               <TableRow>
-                <TableCell sx={{ width: "80px" }}>Number</TableCell>
-                <TableCell sx={{ width: "145px" }}>Submission Date</TableCell>
-                <TableCell sx={{ width: "245px" }}>Student Name</TableCell>
-                <TableCell sx={{ width: "140px" }}>Title</TableCell>
-                <TableCell sx={{ width: "100px" }}>Category</TableCell>
-                <TableCell sx={{ width: "100px" }}>Status </TableCell>
+                <TableCell>Number</TableCell>
+                <TableCell>Submission Date</TableCell>
+                <TableCell>Student Name</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell>Status </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataWaiting &&
+              {dataWaiting && dataWaiting.length > 0 ? (
                 dataWaiting.map((value, index) => (
                   <TableRow
                     key={value.id}
@@ -244,34 +239,33 @@ const ReviewCertificate = () => {
                   >
                     <TableCell
                       align="right"
-                      sx={{ width: "80px", paddingRight: "17px" }}
+                      sx={{ width: "80px", paddingRight: "40px" }}
                     >
                       {index + 1}
                     </TableCell>
-                    <TableCell sx={{ width: "145px", paddingLeft: "17px" }}>
+                    <TableCell sx={{ width: "180px", paddingLeft: "17px" }}>
                       {new Date(
                         value.Certificate.submitDate
                       ).toLocaleDateString("en-US", {
                         day: "numeric",
-                        month: "short",
+                        month: "long",
                         year: "numeric",
                       })}
                     </TableCell>
-                    <TableCell sx={{ width: "245px" }}>
+                    <TableCell sx={{ width: "200px" }}>
                       {value.Student.lastName}, {value.Student.firstName}
-                    </TableCell>
-                    <TableCell sx={{ width: "140px" }}>
-                      {value.Certificate.title.charAt(0).toUpperCase() +
-                        value.Certificate.title.slice(1)}
                     </TableCell>
                     <TableCell
                       sx={{
-                        width: "100px",
+                        maxWidth: "240px",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
                       }}
                     >
+                      {value.Certificate.title}
+                    </TableCell>
+                    <TableCell>
                       {value.Certificate.category.charAt(0).toUpperCase() +
                         value.Certificate.category.slice(1)}
                     </TableCell>
@@ -288,7 +282,12 @@ const ReviewCertificate = () => {
                           .toLowerCase()}
                     </TableCell>
                   </TableRow>
-                ))}
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={8}>No data available</TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>

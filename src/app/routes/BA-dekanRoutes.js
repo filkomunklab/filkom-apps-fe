@@ -28,22 +28,22 @@ import HistoryCertificateAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/S
 import HistoryConsultationAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HistoryConsultation";
 import ReviewPreRegistration from "app/pages/BimbinganAkademik/roles/Dekan/ReviewActivities/ReviewPreRegistration";
 import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/roles/Dekan/ReviewActivities/ReviewPreRegistration/ReviewPreRegistrationStudent";
-import ReviewCertificate from "app/pages/BimbinganAkademik/roles/Dekan/ReviewActivities/ReviewCertificate/ReviewCertificate";
-import ReviewCertificateStudent from "app/pages/BimbinganAkademik/roles/Dekan/ReviewActivities/ReviewCertificate/ReviewCertificateStudent";
+import ReviewCertificate from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/ReviewCertificate";
+import ReviewCertificateStudent from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/DetailCertificate/ViewCertificate";
 import ReviewGrade from "app/pages/BimbinganAkademik/roles/Dekan/ReviewActivities/ReviewGrade";
 import ReviewGradeStudent from "app/pages/BimbinganAkademik/roles/Dekan/ReviewActivities/ReviewGrade/ReviewGradeStudent";
 import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/StudentConsultation";
 import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/ReplyConsultation/Consultation";
-import History from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History";
+import History from "app/pages/BimbinganAkademik/shared/History";
 import HistoryActivity from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/HistoryActivity";
 import ListCourses from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses";
 import ListStudent from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses/ListStudent";
 import StudentPreRegis from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses/ListStudent/StudentPreRegis";
 import ListStudentNotPreRegis from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListStudentNotPreRegis";
 import HistoryPreRegistration from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryPreRegis/PreRegistration";
-import HistoryCertificate from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryCertificate/Certificate";
+import HistoryCertificate from "app/pages/BimbinganAkademik/shared/History/HistoryCertificate/Certificate";
 import HistoryGrade from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryGrade/HistoryGrade";
-import HistoryConsultationComplete from "app/pages/BimbinganAkademik/roles/DosenPembimbing/History/HistoryConsultation/ConsultationComplete";
+import HistoryConsultationComplete from "app/pages/BimbinganAkademik/shared/History/HistoryConsultation/ConsultationComplete";
 import CurrentActivities from "app/pages/BimbinganAkademik/shared/CurrentActivities";
 import ViewActivity from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewActivity/ViewActivity";
 import ViewConsultation from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewConsultation/ViewConsultation";
@@ -230,7 +230,7 @@ const dekanRoutes = [
     element: <Page component={HistoryPreRegistration} />,
   },
   {
-    path: "/bimbingan-akademik/dekan/history/certificate",
+    path: "/bimbingan-akademik/dekan/history/certificate/:id",
     element: <Page component={HistoryCertificate} />,
   },
   {
