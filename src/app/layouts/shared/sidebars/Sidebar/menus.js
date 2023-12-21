@@ -20,8 +20,8 @@ import MailIcon from "@mui/icons-material/Mail";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import ChecklistIcon from "@mui/icons-material/Checklist";
+import AccountBoxSharpIcon from "@mui/icons-material/AccountBoxSharp";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 export const sekretarisMenus = [
   {
@@ -1253,9 +1253,15 @@ export const adminMenus = [
     type: "section",
     children: [
       {
-        label: "Account Management",
+        label: "Employee Management",
         type: "nav-item",
-        icon: <ManageAccountsIcon sx={{ fontSize: 20 }} />,
+        icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
+        uri: "/employee-management",
+      },
+      {
+        label: "Student Management",
+        type: "nav-item",
+        icon: <AccountBoxSharpIcon sx={{ fontSize: 20 }} />,
         uri: "/account-management",
       },
     ],
