@@ -196,7 +196,7 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
                 gap: "15px",
               }}
             >
-              <div>
+              <div style={{ paddingLeft: "20px" }}>
                 {selectedRows.length} courses selected, {totalCredits} credits.
               </div>
               <Button
