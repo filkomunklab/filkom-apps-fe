@@ -36,6 +36,7 @@ import {
   DialogTitle,
   Input,
   IconButton,
+  Chip,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -47,7 +48,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
 import axios from "axios";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // const rows = [
 //     { id: 1, name: 'Row 1', mk: 'Robotics', sks: '3', keterangan: 'Summer 2023' },
@@ -225,7 +226,6 @@ const PengisianSPT = () => {
     setSelectedDate(formattedDate);
   };
 
-
   // PDF FILE UPLOAD & CONVERT TO BASE64 STRING
   const [pdfFile, setPdfFile] = useState("");
   const [pdfBase64, setPdfBase64] = useState(null);
@@ -239,7 +239,7 @@ const PengisianSPT = () => {
 
       reader.onloadend = () => {
         setPdfFile(file);
-        setPdfBase64(reader.result.split(',')[1]); // Extract base64 string
+        setPdfBase64(reader.result.split(",")[1]); // Extract base64 string
       };
 
       reader.readAsDataURL(file);
@@ -270,18 +270,38 @@ const PengisianSPT = () => {
     setPdfFile(null);
   };
 
+  const requiredFields = [
+    "nama",
+    /* 'field2', 'field3', ... */
+  ];
+
+  const handleSubmitForm = () => {
+    // Check if all required fields are filled
+    const allFieldsFilled = requiredFields.every(
+      (field) => dataSPT[field].trim() !== ""
+    );
+
+    if (allFieldsFilled) {
+      // Perform your submission logic here
+      setOpen(true);
+    } else {
+      // Show an error message or handle the empty case as needed
+      alert("Please fill in all required fields before submitting.");
+    }
+  };
+
   // submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    navigate("/klabat-bridge/home-calon-tamatan", { 
-      state: { 
-        buttonColor: '#B1FFA5', 
+    navigate("/klabat-bridge/home-calon-tamatan", {
+      state: {
+        buttonColor: "#B1FFA5",
         formSubmitted: true,
-        buttonText: 'Anda telah mengisi form SPT',
-      } 
+        buttonText: "Anda telah mengisi form SPT",
+      },
     });
-    
+
     const normalized = {
       full_name: dataSPT.nama,
       reg_num: dataSPT.noRegis,
@@ -306,12 +326,16 @@ const PengisianSPT = () => {
     };
     console.log(normalized);
     try {
-      console.log("trigger")
-      const res = await jwtAuthAxios.post("/spt", normalized);
+      console.log("trigger");
+      const res = await jwtAuthAxios.post("/spt", normalized, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       console.log("success");
     } catch (e) {
       console.log(e);
-      console.log('error')
+      console.log("error");
     }
   };
 
@@ -340,7 +364,7 @@ const PengisianSPT = () => {
               // type="number"
               variant="outlined"
               size="small"
-              placeholder="semester 1 2022/2023"
+              placeholder="semester I 2022/2023"
               sx={{ width: "180px", ml: "10px", marginRight: "10px" }}
               name="rencanaTamat"
               value={dataSPT.rencanaTamat}
@@ -349,7 +373,7 @@ const PengisianSPT = () => {
           </span>
           dengan sisa SKS yang harus diambil
           <span style={{ display: "inline-block", minWidth: "30px" }}>
-            <TextField
+            {/* <TextField
               type="number"
               variant="outlined"
               size="small"
@@ -358,6 +382,11 @@ const PengisianSPT = () => {
               name="sisaSKS"
               value={totalSKS}
               onChange={handleDataSPT}
+            /> */}
+            <Chip
+              label={totalSKS}
+              variant={"outlined"}
+              sx={{ marginX: "5px", borderRadius: "5px" }}
             />
           </span>
           sks.
@@ -714,9 +743,9 @@ const PengisianSPT = () => {
                 position: "relative",
                 fontSize: "15px",
                 whiteSpace: "nowrap",
-                marginTop: "10px", 
-                marginBottom: "0", 
-                paddingBottom: "0", 
+                marginTop: "10px",
+                marginBottom: "0",
+                paddingBottom: "0",
               }}
             >
               <a
@@ -730,7 +759,7 @@ const PengisianSPT = () => {
                   alignItems: "center",
                   textDecoration: "none",
                   color: "blue",
-                  margin: "0", 
+                  margin: "0",
                   padding: "0", // Remove padding
                 }}
               >
@@ -759,7 +788,6 @@ const PengisianSPT = () => {
           <pre>{pdfBase64}</pre>
         </Div> */}
 
-
         <Divider sx={{ marginY: 3 }} />
         <Grid container justifyContent="space-between" alignItems="end">
           <Grid item xs={9}>
@@ -779,7 +807,7 @@ const PengisianSPT = () => {
               </Button> */}
               {/* alert dialog */}
               <Div>
-                <Button variant="contained" onClick={() => setOpen(true)}>
+                <Button variant="contained" onClick={handleSubmitForm}>
                   Submit
                 </Button>
 

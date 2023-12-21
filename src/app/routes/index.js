@@ -17,6 +17,7 @@ import skripsiAppSekretarisRoutes from "./skripsi_app_sekretaris_routes";
 import skripsiAppMahasiswaRoutes from "./skripsi_app_mahasiswa_routes";
 import skripsiAppAdminRoutes from "./skripsi_app_admin_routes";
 import SkripsiFakultasIlmuKomputer from "app/pages/ThesisApps/Mahasiswa/SkripsiFakultasIlmuKomputer";
+import adminRoutes from "./adminRoutes";
 /**
  routes which you want to make accessible to both authenticated and anonymous users
  **/
@@ -46,6 +47,7 @@ const routesForAuthenticatedOnly = [
   ...skripsiAppSekretarisRoutes,
   ...skripsiAppMahasiswaRoutes,
   ...skripsiAppAdminRoutes,
+  ...adminRoutes,
 ];
 
 /**

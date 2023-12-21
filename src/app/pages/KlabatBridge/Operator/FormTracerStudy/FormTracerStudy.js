@@ -42,7 +42,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import axios from "axios";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const FormTracerStudy = () => {
   const navigate = useNavigate();
@@ -438,12 +438,12 @@ const FormTracerStudy = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    navigate("/klabat-bridge/home-alumni", { 
-      state: { 
-        buttonColor: '#B1FFA5', 
+    navigate("/klabat-bridge/home-alumni", {
+      state: {
+        buttonColor: "#B1FFA5",
         formSubmitted: true,
-        buttonText: 'Anda telah mengisi form Tracer Study',
-      } 
+        buttonText: "Anda telah mengisi form Tracer Study",
+      },
     });
 
     const normalized = {
@@ -539,7 +539,11 @@ const FormTracerStudy = () => {
     };
     console.log(normalized);
     try {
-      const res = await jwtAuthAxios.post("/tracer-study/", normalized);
+      const res = await jwtAuthAxios.post("/tracer-study/", normalized, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       console.log("success", res.data.data);
     } catch (e) {
       console.log(e);
@@ -765,7 +769,7 @@ const FormTracerStudy = () => {
               hidden={
                 questionnaireData.f8 === "4" ||
                 questionnaireData.f8 === "2" ||
-                questionnaireData.f8 === "5" 
+                questionnaireData.f8 === "5"
                   ? true
                   : false
               }
@@ -788,7 +792,7 @@ const FormTracerStudy = () => {
               hidden={
                 questionnaireData.f8 === "4" ||
                 questionnaireData.f8 === "2" ||
-                questionnaireData.f8 === "5" 
+                questionnaireData.f8 === "5"
                   ? true
                   : false
               }

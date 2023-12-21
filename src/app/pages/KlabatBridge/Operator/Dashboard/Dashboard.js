@@ -148,87 +148,110 @@ const Dashboard = () => {
   const [indoDistribution, setIndoDistribution] = useState([]);
 
   const getData = async () => {
-    await jwtAuthAxios.get("/dashboard/statistic").then((response) => {
-      console.log(response.data.data);
-      // setData(response.data.data);
+    await jwtAuthAxios
+      .get("/dashboard/statistic", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data.data);
+        // setData(response.data.data);
 
-      const apiData = response.data.data.distribusiAlumni;
-      const apiData1 = response.data.data.totalTS;
+        const apiData = response.data.data.distribusiAlumni;
+        const apiData1 = response.data.data.totalTS;
 
-      // Format the API response data for alumni distribution bar chart
-      const formattedData = apiData.map((item) => {
-        const year = item.graduateYear;
-        const siCount =
-          item.major.find((major) => major.name === "SI")?.count || 0;
-        const ifCount =
-          item.major.find((major) => major.name === "IF")?.count || 1;
+        // Format the API response data for alumni distribution bar chart
+        const formattedData = apiData.map((item) => {
+          const year = item.graduateYear;
+          const siCount =
+            item.major.find((major) => major.name === "SI")?.count || 0;
+          const ifCount =
+            item.major.find((major) => major.name === "IF")?.count || 1;
 
-        return {
-          year: year,
-          SI: siCount,
-          IF: ifCount,
+          return {
+            year: year,
+            SI: siCount,
+            IF: ifCount,
+          };
+        });
+
+        // formated data for total alumni pie chart
+        const formattedData1 = apiData1.map((item) => ({
+          name: item.major,
+          value: item.count,
+        }));
+
+        // formatted data for bar chart  -- alumni emplyed within 12 months
+        const alumniEmployedIn12Months = response.data.data.dataByMonth.map(
+          (item) => ({
+            month: `${item.f502} month`, // assuming f502 is the month
+            sum: item._count,
+          })
+        );
+
+        // sort month
+        alumniEmployedIn12Months.sort(
+          (a, b) => parseInt(a.month) - parseInt(b.month)
+        );
+
+        // Filter the data to include only the first 12 months
+        const filteredAlumniEmployedIn12Months = alumniEmployedIn12Months.slice(
+          0,
+          12
+        );
+
+        const totalAlumniEmployedIn12Months = alumniEmployedIn12Months.reduce(
+          (total, item) => total + item.sum,
+          0
+        );
+
+        console.log("Total Item Count:", totalAlumniEmployedIn12Months);
+
+        // bar chart --- company category
+        const categoryMapping = {
+          1: "Instansi Pemerintahan",
+          6: "BUMN/BUMD",
+          7: "Organisasi Multilateral",
+          2: "LSM",
+          3: "Perusahaan Swasta",
+          4: "Wiraswasta",
+          5: "Lainnya",
         };
+
+        const formattedCompanyCategories =
+          response.data.data.countCategories.map((item, index) => ({
+            organization: categoryMapping[item.f1101],
+            value: item._count,
+            fill: getColorBasedOnValue(index),
+          }));
+
+        function getColorBasedOnValue(index) {
+          const colors = [
+            "#6200EE",
+            "#FFF735",
+            "#6BFAD7",
+            "#128DFF",
+            "#001AFF",
+            "#C317FF",
+            "#FC76DE",
+          ];
+          return colors[index % colors.length];
+        }
+
+        setData(response.data.data);
+        setDistribusiAlumni(formattedData);
+        setTotalITS(formattedData1);
+        setAlumni12Month(filteredAlumniEmployedIn12Months);
+        setTotalAlumni12month(totalAlumniEmployedIn12Months);
+        setCompanyCategory(formattedCompanyCategories);
+        setIndoDistribution(response.data.data.countDataForPeta);
       });
-
-      // formated data for total alumni pie chart
-      const formattedData1 = apiData1.map((item) => ({
-        name: item.major,
-        value: item.count,
-      }));
-
-      // formatted data for bar chart  -- alumni emplyed within 12 months
-      const alumniEmployedIn12Months = response.data.data.dataByMonth.map(item => ({
-        month: `${item.f502} month`, // assuming f502 is the month
-        sum: item._count,
-      }));
-      
-      // sort month
-      alumniEmployedIn12Months.sort((a, b) => parseInt(a.month) - parseInt(b.month));
-
-      // Filter the data to include only the first 12 months
-      const filteredAlumniEmployedIn12Months = alumniEmployedIn12Months.slice(0, 12);
-
-      const totalAlumniEmployedIn12Months = alumniEmployedIn12Months.reduce((total, item) => total + item.sum, 0);
-
-      console.log('Total Item Count:', totalAlumniEmployedIn12Months);
-
-      // bar chart --- company category
-      const categoryMapping = {
-        "1": "Instansi Pemerintahan",
-        "2": "BUMN/BUMD",
-        "3": "Organisasi Multilateral",
-        "4": "LSM",
-        "5": "Perusahaan Swasta",
-        "6": "Wiraswasta",
-        "7": "Lainnya",
-      };
-      
-      const formattedCompanyCategories = response.data.data.countCategories.map((item, index) => ({
-        organization: categoryMapping[item.f1101],
-        value: item._count,
-        fill: getColorBasedOnValue(index),
-      }));
-
-      function getColorBasedOnValue(index) {
-        const colors = ["#6200EE", "#FFF735", "#6BFAD7", "#128DFF", "#001AFF", "#C317FF", "#FC76DE"];
-        return colors[index % colors.length];
-      }
-
-      setData(response.data.data);
-      setDistribusiAlumni(formattedData);
-      setTotalITS(formattedData1);
-      setAlumni12Month(filteredAlumniEmployedIn12Months);
-      setTotalAlumni12month(totalAlumniEmployedIn12Months);
-      setCompanyCategory(formattedCompanyCategories);
-      setIndoDistribution(response.data.data.countDataForPeta);
-    });
   };
 
   React.useEffect(() => {
     getData();
   }, []);
-
-  
 
   // React.useEffect(() => {
   //   const data1 = [
@@ -457,12 +480,14 @@ const Dashboard = () => {
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip />
-                <Legend/> 
+                <Legend />
                 <Bar dataKey="sum" fill="#006AF5" />
               </BarChart>
             </ResponsiveContainer>
             <Typography ml={5}>
-              <span style={{ fontSize: "1.2em" }}>{totalAlumni12month} students </span>
+              <span style={{ fontSize: "1.2em" }}>
+                {totalAlumni12month} students{" "}
+              </span>
               obtained jobs within 12 months
             </Typography>
           </Card>

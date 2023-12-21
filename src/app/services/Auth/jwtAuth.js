@@ -2,14 +2,13 @@ import { BASE_URL_API } from "@jumbo/config/env";
 import axios from "axios";
 
 export const getAuthToken = () => {
-  return sessionStorage.getItem("token");
+  return localStorage.getItem("token");
 };
 
 const jwtAuthAxios = axios.create({
   baseURL: BASE_URL_API,
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${getAuthToken()}`,
   },
 });
 

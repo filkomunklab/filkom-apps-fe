@@ -38,7 +38,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import MarkunreadIcon from "@mui/icons-material/Markunread";
 import axios from "axios";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
-import {Document } from 'react-pdf'
+import { Document } from "react-pdf";
 import SearchIcon from "@mui/icons-material/Search";
 
 const style = {
@@ -136,19 +136,35 @@ const DaftarCalonTamatan = () => {
 
   const handleCloseModal = () => {
     setSelectedData(null);
-    setModalOpen(false); 
+    setModalOpen(false);
   };
 
   const handleTolakButton = async (item) => {
     try {
-      await jwtAuthAxios.patch(`spt/fac-approval/${item.id}?status=REJECTED`);
+      await jwtAuthAxios.patch(
+        `spt/fac-approval/${item.id}?status=REJECTED`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
     } catch (error) {
       console.log(error);
     }
   };
   const handleTerimaButton = async (item) => {
     try {
-      await jwtAuthAxios.patch(`spt/fac-approval/${item.id}?status=APPROVED`);
+      await jwtAuthAxios.patch(
+        `spt/fac-approval/${item.id}?status=APPROVED`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
     } catch (error) {
       console.log(error);
     }
@@ -189,67 +205,67 @@ const DaftarCalonTamatan = () => {
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Nama Sesuai Ijazah</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.full_name}
+              {item?.full_name}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Nomor Registrasi</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.reg_num}
+              {item?.reg_num}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Tanggal Lahir</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.date_of_birth}
+              {item?.date_of_birth}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Jenis Kelamin</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.gender}
+              {item?.gender}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Nomor Induk Kependudukan (NIK)</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.nik}
+              {item?.nik}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Nomor Induk Mahasiswa (NIM)</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.nim}
+              {item?.nim}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Email</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.personal_email}
+              {item?.personal_email}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Program Studi</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.major}
+              {item?.major}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Minor/Konsentrasi</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.minor}
+              {item?.minor}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Nomor Telepon</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.phone_num}
+              {item?.phone_num}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Nama Ibu Kandung</Typography>
             <Typography variant="h6" sx={textSyle}>
-            {item?.birth_mother}
+              {item?.birth_mother}
             </Typography>
           </Grid>
         </Grid>
@@ -287,11 +303,16 @@ const DaftarCalonTamatan = () => {
           }}
         >
           {/* upload pdf sertifikat */}
-          
 
-           {console.log("PDF URL:", item?.certificateURL)}
+          {console.log("PDF URL:", item?.certificateURL)}
 
-           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
             <Box>
               <iframe
                 title="certificate"
@@ -305,15 +326,15 @@ const DaftarCalonTamatan = () => {
             <Button
               size="small"
               sx={{
-                textTransform: 'none',
+                textTransform: "none",
                 mt: 1,
-                alignSelf: 'flex-start', // Align the button to the left
+                alignSelf: "flex-start", // Align the button to the left
               }}
               onClick={() => {
                 const pdfURL = item?.certificateURL;
 
                 // Open the link in a new tab or window
-                window.open(pdfURL, '_blank');
+                window.open(pdfURL, "_blank");
               }}
             >
               Open Certificate
@@ -341,7 +362,6 @@ const DaftarCalonTamatan = () => {
           {/* <iframe src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"></iframe> */}
 
           {/* <Document file={`${item?.certificateURL}`} /> */}
-          
 
           {/* total sks */}
           <Typography variant="body1" sx={{ lineHeight: 2.5 }}>
@@ -434,48 +454,80 @@ const DaftarCalonTamatan = () => {
         {item?.major}
       </TableCell>
       <TableCell>{item?.graduate_plan}</TableCell>
-      <TableCell>{item?.approval_fac}</TableCell>
-      <TableCell>{item?.approval_reg}</TableCell>
+      <TableCell align="center">
+        <Chip
+          label={item?.approval_fac}
+          style={{
+            backgroundColor: getColorForApproval(item?.approval_fac),
+            color: "white",
+          }}
+        />
+      </TableCell>
+      <TableCell align="center">
+        <Chip
+          label={item?.approval_reg}
+          style={{
+            backgroundColor: getColorForApproval(item?.approval_reg),
+            color: "white",
+          }}
+        />
+      </TableCell>
     </TableRow>
   );
 
+  // colors for student's approval
+  const getColorForApproval = (approvalValue) => {
+    switch (approvalValue) {
+      case "APPROVED":
+        return "#5cb85c";
+      case "WAITING":
+        return "#f0ad4e";
+      case "REJECTED":
+        return "#d9534f";
+      default:
+        return "default";
+    }
+  };
+
   React.useEffect(() => {
     jwtAuthAxios
-      .get(`/spt?search_query=${searchValue}`)
+      .get(`/spt?search_query=${searchValue}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then((res) => {
-      // await axios.get("http://localhost:2000/api/v1/spt/").then((res) => {
-      console.log(res.data.data);
-      const formattedData = res.data.data.map((item) => {
-        const remaining_classes = JSON.parse(item.remaining_classes);
-        return { ...item, remaining_classes };
+        // await axios.get("http://localhost:2000/api/v1/spt/").then((res) => {
+        console.log(res.data.data);
+        const formattedData = res.data.data.map((item) => {
+          const remaining_classes = JSON.parse(item.remaining_classes);
+          return { ...item, remaining_classes };
+        });
+
+        console.log(formattedData);
+        // console.log(res.data.data);
+
+        setData(formattedData);
+
+        const uniqueStatusByFac = [
+          ...new Set(res.data.data.map((item) => item.approval_fac)),
+        ];
+        const uniqueStatusByReg = [
+          ...new Set(res.data.data.map((item) => item.approval_reg)),
+        ];
+        const uniqueGraduatePlan = [
+          ...new Set(res.data.data.map((item) => item.graduate_plan)),
+        ];
+
+        setStatusByFac(uniqueStatusByFac);
+        setStatusByRegister(uniqueStatusByReg);
+        setGraduatePlan(uniqueGraduatePlan);
+
+        // console.log(uniqueGraduatePlan);
       });
-
-      console.log(formattedData);
-      // console.log(res.data.data);
-
-      setData(formattedData);
-
-      const uniqueStatusByFac = [
-        ...new Set(res.data.data.map((item) => item.approval_fac)),
-      ];
-      const uniqueStatusByReg = [
-        ...new Set(res.data.data.map((item) => item.approval_reg)),
-      ];
-      const uniqueGraduatePlan = [
-        ...new Set(res.data.data.map((item) => item.graduate_plan)),
-      ];
-
-      setStatusByFac(uniqueStatusByFac);
-      setStatusByRegister(uniqueStatusByReg);
-      setGraduatePlan(uniqueGraduatePlan);
-
-      // console.log(uniqueGraduatePlan);
-    });
   }, [searchBtn]);
 
-  const getData = async () => {
-    
-  };
+  const getData = async () => {};
 
   function filterData() {
     // return data.filter(item => item["graduate_year"] === filterValue || item["major"] === filterValue);
@@ -588,8 +640,8 @@ const DaftarCalonTamatan = () => {
               : data
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => (
-                  <TableItem index={index} item={item} />
-                ))}
+                    <TableItem index={index} item={item} />
+                  ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -675,7 +727,7 @@ const textSyle = {
   paddingX: "24px",
   paddingY: "16px",
   borderRadius: "8px",
-  minHeight: "50px", 
+  minHeight: "50px",
 };
 
 export default DaftarCalonTamatan;

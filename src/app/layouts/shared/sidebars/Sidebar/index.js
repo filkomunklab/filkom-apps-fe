@@ -119,9 +119,23 @@ const SidebarHeader = () => {
   const name = JSON.parse(localStorage.getItem("user"))?.name;
   const role = JSON.parse(localStorage.getItem("user"))?.role;
 
+  console.log(role);
+
   const checkArrayRole = () =>
-    role?.find((role) => role === ROLES.DEKAN || role === ROLES.KAPRODI)
-      ? role?.find((role) => role === ROLES.DEKAN || role === ROLES.KAPRODI)
+    role?.find(
+      (role) =>
+        role === ROLES.DEKAN ||
+        role === ROLES.KAPRODI ||
+        role === ROLES.OPERATOR_LPMI ||
+        role === ROLES.OPERATOR_FAKULTAS
+    )
+      ? role?.find(
+          (role) =>
+            role === ROLES.DEKAN ||
+            role === ROLES.KAPRODI ||
+            role === ROLES.OPERATOR_LPMI ||
+            role === ROLES.OPERATOR_FAKULTAS
+        )
       : "DOSEN";
 
   const accessRole = typeof role === "string" ? role : checkArrayRole();
@@ -166,12 +180,12 @@ const SidebarFooter = () => {
     label: "Settings",
     type: "section",
     children: [
-      {
-        uri: "/change-password",
-        label: "Change Password",
-        type: "nav-item",
-        icon: <VpnKeyIcon sx={{ fontSize: 20 }} />,
-      },
+      // {
+      //   uri: "/change-password",
+      //   label: "Change Password",
+      //   type: "nav-item",
+      //   icon: <VpnKeyIcon sx={{ fontSize: 20 }} />,
+      // },
       {
         onClick: () => {
           localStorage.clear();
