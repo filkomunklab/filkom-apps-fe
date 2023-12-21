@@ -4,6 +4,10 @@ import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Paper,
   Table,
   TableBody,
@@ -11,17 +15,24 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
+import AddIcon from "@mui/icons-material/Add";
 
 // View Document HKI
-const PDFViewerHKI = ({ HKIFile }) => {
+const PDFViewerHKI = ({ HKI, isUploading }) => {
   const viewPDFHKI = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
-    const pdfURL = HKIFile.file_path_hki;
+    const pdfURL = HKI.file_path_hki;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -29,33 +40,27 @@ const PDFViewerHKI = ({ HKIFile }) => {
 
   return (
     <div>
-      <span sx={{ fontSize: "10px" }} onClick={viewPDFHKI}>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFHKI}
+      >
         Lihat
       </span>
     </div>
   );
 };
 
-// View Document Artikel Jurnal
-const PDFViewerArtikelJurnal = ({ jurnal }) => {
-  const viewPDFArtikelJurnal = () => {
-    // Buat URL objek untuk file PDF
-    const pdfURL = jurnal?.file_path_journal;
-
-    // Buka tautan dalam tab atau jendela baru
-    window.open(pdfURL, "_blank");
-  };
-
-  return (
-    <div>
-      <span onClick={viewPDFArtikelJurnal}>Lihat</span>
-    </div>
-  );
-};
-
 // View Document Source Code
-const PDFViewerSourceCode = ({ sourceCode }) => {
+const PDFViewerSourceCode = ({ sourceCode, isUploading }) => {
   const viewPDFSourceCode = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
     const pdfURL = sourceCode?.file_path_sourcecode;
 
@@ -65,17 +70,38 @@ const PDFViewerSourceCode = ({ sourceCode }) => {
 
   return (
     <div>
-      <span onClick={viewPDFSourceCode}>Lihat</span>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFSourceCode}
+      >
+        Lihat
+      </span>
     </div>
   );
+};
+
+const formatIndonesianDate = (date) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1; // Perhatikan bahwa bulan dimulai dari 0
+  const year = date.getFullYear();
+
+  const formattedDate = `${day}/${month}/${year}`;
+  return formattedDate;
 };
 
 const ArsipDocument = () => {
   // state - menyimpan request data
   const [HKI, setHKI] = useState();
-  const [jurnal, setJurnal] = useState();
   const [sourceCode, setSourceCode] = useState();
-  const [linkSourceCode, setLinkSourceCode] = useState();
+  const [linkList, setLinkList] = useState();
+
+  // state - disabled button
+  const [isSubmittingHKI, setSubmittionHKI] = useState(false);
+  const [isSubmittingSourceCode, setSubmittionSourceCode] = useState(false);
+  const [isSubmittingLink, setSubmittionLink] = useState(false);
 
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
@@ -106,22 +132,6 @@ const ArsipDocument = () => {
         console.error("Terjadi kesalahan saat mengambil HKI:", error);
       }
     };
-    const fetchJurnalData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
-            },
-          }
-        );
-        setJurnal(response.data.data);
-        console.log("Request Get jurnal: ", response.data.data);
-      } catch (error) {
-        console.error("Terjadi kesalahan saat mengambil jurnal:", error);
-      }
-    };
     const fetchSourceCodeData = async () => {
       try {
         const response = await axios.get(
@@ -138,40 +148,211 @@ const ArsipDocument = () => {
         console.error("Terjadi kesalahan saat mengambil source code:", error);
       }
     };
-    const fetchLinkSourceCodeData = async () => {
+    const fetchLinkData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/link-source-code/${skripsiId}`,
+          `http://localhost:2000/api/v1/group/skripsi/all-link/${groupId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
             },
           }
         );
-        setLinkSourceCode(response.data.data);
-        console.log("Request Get link source code: ", response.data.data);
+        setLinkList(response.data.data);
+        console.log("Request Get all link: ", response.data.data);
       } catch (error) {
-        console.error(
-          "Terjadi kesalahan saat mengambil link source code:",
-          error
-        );
+        console.error("Terjadi kesalahan saat mengambil semua ink:", error);
       }
     };
     fetchHKIData();
-    fetchJurnalData();
     fetchSourceCodeData();
-    fetchLinkSourceCodeData();
+    fetchLinkData();
   }, [token, skripsiId]);
+
+  const [openUnggahLink, setOpenUnggahLink] = useState(false);
+  const [openUpdateLink, setOpenUpdateLink] = useState(false);
+  const [newLink, setNewLink] = useState();
+  const [newLinkName, setNewLinkName] = useState();
+  const [updateLink, setUpdateLink] = useState();
+  const [updateLinkName, setUpdateLinkName] = useState();
+  const [selectedLinkId, setSelectedLinkId] = useState();
+  const [link, setLink] = useState("");
+  const [links, setLinks] = useState([]);
+
+  // Unggah Link
+  const handleClickOpenUnggahLink = () => {
+    setOpenUnggahLink(true);
+  };
+
+  const handleCloseUnggahLink = () => {
+    setOpenUnggahLink(false);
+  };
+
+  const handleSubmitNewLink = () => {
+    const linkData = {
+      group_id: groupId,
+      name: newLinkName,
+      link: newLink,
+    };
+    console.log("link yang akan diunggah: ", linkData);
+    axios
+      .post(`http://localhost:2000/api/v1/group/skripsi/link/`, linkData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // membersihkan kotak link
+        setNewLink();
+        setNewLinkName();
+
+        console.log("Berhasil unggah link: ", response.data.data);
+
+        // request data
+        const fetchLinkData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/group/skripsi/all-link/${groupId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setLinkList(response.data.data);
+            console.log("Request Get all link: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil semua ink:", error);
+          }
+        };
+        fetchLinkData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah link:",
+          error.response.data.message
+        );
+      });
+
+    handleCloseUnggahLink();
+  };
+
+  // Update Link
+  const handleOpenUpdateLink = () => {
+    setOpenUpdateLink(true);
+  };
+
+  const handleCloseUpdateLink = () => {
+    setOpenUpdateLink(false);
+  };
+
+  const handleSubmitUpdateLink = () => {
+    const linkData = {
+      name: updateLinkName,
+      link: updateLink,
+    };
+    console.log("link yang akan diperbarui: ", linkData);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/group/skripsi/link/${selectedLinkId}`,
+        linkData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        // membersihkan kotak link
+        setUpdateLink();
+        setUpdateLinkName();
+
+        console.log("Berhasil perbarui link: ", response.data.data);
+
+        // request data
+        const fetchLinkData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/group/skripsi/all-link/${groupId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setLinkList(response.data.data);
+            console.log("Request Get all link: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil semua ink:", error);
+          }
+        };
+        fetchLinkData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat perbarui link:",
+          error.response.data.message
+        );
+      });
+
+    handleCloseUpdateLink();
+  };
+
+  // Delete Link
+  const handleDeleteLink = (linkId) => {
+    console.log("link id yang akan dihapus: ", linkId);
+    axios
+      .delete(`http://localhost:2000/api/v1/group/skripsi/link/${linkId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Berhasil menghapus link: ", response.data.data);
+
+        // request data
+        const fetchLinkData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/group/skripsi/all-link/${groupId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setLinkList(response.data.data);
+            console.log("Request Get all link: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil semua ink:", error);
+          }
+        };
+        fetchLinkData();
+      })
+      .catch((error) => {
+        console.error("Terjadi kesalahan saat menghapus link:", error);
+      });
+  };
 
   // HKI
   const handleUnggahHKI = (event) => {
     const file = event.target.files[0];
 
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionHKI(true);
+
     // Validasi tipe file
     const allowedFileTypes = ["application/pdf"];
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionHKI(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -246,93 +427,9 @@ const ArsipDocument = () => {
           "Terjadi kesalahan saat mengunggah HKI:",
           error.response.data.message
         );
-      });
-  };
-
-  // Jurnal
-
-  const handleUnggahJurnal = (event) => {
-    const file = event.target.files[0];
-
-    // Validasi tipe file
-    const allowedFileTypes = ["application/pdf"];
-
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
-      return;
-    }
-
-    const reader = new FileReader();
-
-    // Menangani kesalahan FileReader
-    reader.onerror = (error) => {
-      console.error("Terjadi kesalahan saat membaca file:", error);
-    };
-
-    reader.onload = (e) => {
-      const dataURL = e.target.result;
-
-      // Mengonversi data URL ke base64
-      const base64String = dataURL.split(",")[1];
-
-      // Logika pengolahan file
-      const fileSizeInKB = file.size / 1024; // Konversi ke KB
-      const fileSizeString =
-        fileSizeInKB < 1024
-          ? fileSizeInKB.toFixed(2) + " KB"
-          : (fileSizeInKB / 1024).toFixed(2) + " MB";
-
-      // Logika pengolahan file
-      const data = {
-        journal_file: {
-          file_name_journal: file.name,
-          file_size_journal: fileSizeString,
-          buffer: base64String,
-        },
-      };
-
-      // Panggil fungsi untuk mengirim file ke server
-      sendJurnalToServer(data);
-    };
-
-    reader.readAsDataURL(file);
-  };
-
-  const sendJurnalToServer = (data) => {
-    console.log("Jurnal yang akan diunggah: ", data);
-    axios
-      .put(`http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       })
-      .then((response) => {
-        console.log("Berhasil unggah Jurnal: ", response.data.data);
-
-        // request data
-        const fetchJurnalData = async () => {
-          try {
-            const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
-                },
-              }
-            );
-            setJurnal(response.data.data);
-            console.log("Request Get jurnal: ", response.data.data);
-          } catch (error) {
-            console.error("Terjadi kesalahan saat mengambil jurnal:", error);
-          }
-        };
-        fetchJurnalData();
-      })
-      .catch((error) => {
-        console.error(
-          "Terjadi kesalahan saat mengunggah Jurnal:",
-          error.response.data.message
-        );
+      .finally(() => {
+        setSubmittionHKI(false);
       });
   };
 
@@ -340,11 +437,22 @@ const ArsipDocument = () => {
   const handleUnggahCode = (event) => {
     const file = event.target.files[0];
 
-    // Validasi tipe file
-    const allowedFileTypes = ["application/zip"];
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionSourceCode(true);
+
+    // Validasi ekstensi file
+    const allowedFileExtensions = ["zip"];
+
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+    if (!allowedFileExtensions.includes(fileExtension)) {
+      console.error("Ekstensi file tidak valid:", fileExtension);
+      setSubmittionSourceCode(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -426,6 +534,9 @@ const ArsipDocument = () => {
           "Terjadi kesalahan saat mengunggah Source Code:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        setSubmittionSourceCode(false);
       });
   };
 
@@ -434,6 +545,9 @@ const ArsipDocument = () => {
 
   const handleUngggahLink = () => {
     if (currentLink !== null) {
+      // Nonaktifkan tombol unggah
+      setSubmittionLink(true);
+
       const linkData = {
         link_soucecode: currentLink,
       };
@@ -464,7 +578,7 @@ const ArsipDocument = () => {
                   },
                 }
               );
-              setLinkSourceCode(response.data.data);
+              setLinkList(response.data.data);
               console.log("Request Get link source code: ", response.data.data);
             } catch (error) {
               console.error(
@@ -480,6 +594,9 @@ const ArsipDocument = () => {
             "Terjadi kesalahan saat mengunggah link:",
             error.response.data.message
           );
+        })
+        .finally(() => {
+          setSubmittionLink(false);
         });
     } else {
       // masukkan handle message error bahwa link harus di masukkan
@@ -487,6 +604,9 @@ const ArsipDocument = () => {
   };
 
   const handleHapusHKI = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionHKI(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/skripsi/hki/delete/${skripsiId}`,
@@ -524,51 +644,17 @@ const ArsipDocument = () => {
           "Terjadi kesalahan saat menghapus HKI:",
           error.response.data.message
         );
-      });
-  };
-
-  const handleHapusJurnal = () => {
-    axios
-      .put(
-        `http://localhost:2000/api/v1/skripsi/journal/delete/${skripsiId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Berhasil menghapus Jurnal: ", response.data.data);
-
-        // request data
-        const fetchJurnalData = async () => {
-          try {
-            const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
-                },
-              }
-            );
-            setJurnal(response.data.data);
-            console.log("Request Get jurnal: ", response.data.data);
-          } catch (error) {
-            console.error("Terjadi kesalahan saat mengambil jurnal:", error);
-          }
-        };
-        fetchJurnalData();
       })
-      .catch((error) => {
-        console.error(
-          "Terjadi kesalahan saat menghapus Jurnal:",
-          error.response.data.message
-        );
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionHKI(false);
       });
   };
 
   const handleHapusCode = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionSourceCode(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/skripsi/source-code/delete/${skripsiId}`,
@@ -609,10 +695,17 @@ const ArsipDocument = () => {
           "Terjadi kesalahan saat menghapus Source Code:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionSourceCode(false);
       });
   };
 
   const handleHapusLink = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionLink(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/skripsi/link-source-code/delete/${skripsiId}`,
@@ -640,7 +733,7 @@ const ArsipDocument = () => {
                 },
               }
             );
-            setLinkSourceCode(response.data.data);
+            setLinkList(response.data.data);
             console.log("Request Get link source code: ", response.data.data);
           } catch (error) {
             console.error(
@@ -656,6 +749,10 @@ const ArsipDocument = () => {
           "Terjadi kesalahan saat menghapus Link:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionLink(false);
       });
   };
 
@@ -802,14 +899,18 @@ const ArsipDocument = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingHKI ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
-                    padding: "6px 12px",
-                    width: "130px",
+                    width: "150px",
                     height: "30px",
+                    cursor: isSubmittingHKI ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingHKI ? "#A0A0A0" : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingHKI}
                 >
                   <input
                     type="file"
@@ -892,7 +993,10 @@ const ArsipDocument = () => {
                                   fontSize: "12px",
                                 }}
                               >
-                                {HKI && <PDFViewerHKI HKI={HKI} />}
+                                <PDFViewerHKI
+                                  HKI={HKI}
+                                  isUploading={isSubmittingHKI}
+                                />
                               </span>
                               <Div
                                 style={{
@@ -905,11 +1009,14 @@ const ArsipDocument = () => {
                               <span
                                 style={{
                                   textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
+                                  cursor: isSubmittingHKI
+                                    ? "not-allowed"
+                                    : "pointer",
+                                  color: isSubmittingHKI ? "#A0A0A0" : "red",
                                   fontSize: "12px",
                                 }}
                                 onClick={handleHapusHKI}
+                                disabled={isSubmittingHKI}
                               >
                                 Hapus
                               </span>
@@ -924,161 +1031,6 @@ const ArsipDocument = () => {
               {/* Table Upload HKI End */}
             </Div>
             {/* Table 1 End */}
-            <Typography
-              sx={{
-                width: "100%",
-                display: "flex",
-                padding: "24px",
-                alignItems: "center",
-                gap: "10px",
-                color: "#192434",
-                background: "rgba(26, 56, 96, 0.10)",
-                borderRadius: "6px",
-                fontSize: "12px",
-                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
-              }}
-            >
-              Unggah Artikel Jurnal
-            </Typography>
-
-            {/* Table 2 Start */}
-            <Div
-              sx={{
-                width: "100%",
-                padding: "0 25px",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "25px",
-              }}
-            >
-              {/* file upload for Artikel Jurnal */}
-              <Div
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginBottom: "20px",
-                }}
-                component={Paper}
-              >
-                <Button
-                  variant="contained"
-                  component="label"
-                  sx={{
-                    textTransform: "none",
-                    background: "#006AF5",
-                    color: "white",
-                    fontSize: "12px",
-                    borderRadius: "6px",
-                    padding: "6px 12px",
-                    width: "130px",
-                    height: "30px",
-                  }}
-                >
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleUnggahJurnal}
-                    style={{ display: "none" }}
-                  />
-                  <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
-                  Unggah file
-                </Button>
-              </Div>
-              {/* file upload end for Artikel Jurnal */}
-
-              {/* Table Upload Artikel Jurnal Start*/}
-              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
-                <Table>
-                  <TableHead sx={{ background: "#F5F5F5" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      {/* <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
-                      >
-                        Nomor
-                      </TableCell> */}
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
-                      >
-                        Nama File
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Tanggal
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Ukuran
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          fontSize: "12px",
-                          padding: "11px",
-                          textAlign: "center",
-                          width: "12%",
-                        }}
-                      >
-                        Action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {jurnal && (
-                      <TableRow key={jurnal?.id}>
-                        {/* <TableCell sx={{ fontSize: "12px" }}>1</TableCell> */}
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {jurnal?.file_name_journal}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {jurnal?.upload_date_journal}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {jurnal?.file_size_journal}
-                        </TableCell>
-                        <TableCell>
-                          {jurnal?.file_name_journal !== null && (
-                            <Div sx={{ display: "flex" }}>
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "blue",
-                                  fontSize: "12px",
-                                }}
-                              >
-                                <PDFViewerArtikelJurnal jurnal={jurnal} />
-                              </span>
-                              <Div
-                                style={{
-                                  margin: "0 5px",
-                                  color: "#E0E0E0",
-                                }}
-                              >
-                                |
-                              </Div>
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
-                                  fontSize: "12px",
-                                }}
-                                onClick={handleHapusJurnal}
-                              >
-                                Hapus
-                              </span>
-                            </Div>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Upload Artikel Jurnal End*/}
-            </Div>
-            {/* Table 2 End */}
 
             <Typography
               sx={{
@@ -1119,18 +1071,24 @@ const ArsipDocument = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingSourceCode ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
-                    padding: "6px 12px",
-                    width: "130px",
+                    width: "150px",
                     height: "30px",
+                    cursor: isSubmittingSourceCode ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingSourceCode
+                        ? "#A0A0A0"
+                        : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingSourceCode}
                 >
                   <input
                     type="file"
-                    accept=".pdf"
+                    accept=".zip"
                     onChange={handleUnggahCode}
                     style={{ display: "none" }}
                   />
@@ -1201,7 +1159,10 @@ const ArsipDocument = () => {
                                   fontSize: "12px",
                                 }}
                               >
-                                <PDFViewerSourceCode sourceCode={sourceCode} />
+                                <PDFViewerSourceCode
+                                  sourceCode={sourceCode}
+                                  isUploading={isSubmittingSourceCode}
+                                />
                               </span>
                               <Div
                                 style={{
@@ -1214,11 +1175,16 @@ const ArsipDocument = () => {
                               <span
                                 style={{
                                   textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
+                                  cursor: isSubmittingSourceCode
+                                    ? "not-allowed"
+                                    : "pointer",
+                                  color: isSubmittingSourceCode
+                                    ? "#A0A0A0"
+                                    : "red",
                                   fontSize: "12px",
                                 }}
                                 onClick={handleHapusCode}
+                                disabled={isSubmittingSourceCode}
                               >
                                 Hapus
                               </span>
@@ -1230,128 +1196,288 @@ const ArsipDocument = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* Table Upload Source Code End*/}
-              {/* file upload for Link Start */}
+            </Div>
+            {/* Table Upload Source Code End*/}
+            {/* table upload link2 Start */}
+            <Div
+              sx={{
+                width: "100%",
+                padding: "0 25px",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "25px",
+              }}
+            >
               <Div
                 sx={{
                   display: "flex",
                   justifyContent: "flex-end",
-                  marginBottom: "20px",
+                  marginTop: "20px",
                 }}
               >
-                <input
-                  style={{
-                    height: "30px",
-                    border: "1px solid #ccc",
-                    width: "430px",
-                    borderRadius: "6px",
-                    fontSize: "12px",
-                  }}
-                  type="text"
-                  placeholder="Masukkan link"
-                  value={currentLink}
-                  onChange={(e) => setCurrentLink(e.target.value)}
-                />
-                <div style={{ flex: 1 }}></div>
                 <Button
                   variant="contained"
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
-                    padding: "6px 12px",
-                    width: "130px",
+                    width: "150px",
                     height: "30px",
                   }}
-                  onClick={handleUngggahLink}
+                  onClick={handleClickOpenUnggahLink}
                 >
-                  <AttachmentIcon
-                    sx={{ fontSize: "14px", marginRight: "5px" }}
-                  />
-                  Unggah Link
+                  <AddIcon sx={{ fontSize: "14px", margin: "5px" }} />
+                  Tambah Link
                 </Button>
               </Div>
-              {/* file upload for Link End */}
-              {/* Table upload Link Start */}
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead sx={{ background: "#F5F5F5" }}>
-                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      {/* <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
-                      >
-                        No
-                      </TableCell> */}
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "65%" }}
-                      >
-                        Link
-                      </TableCell>
-                      <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                      >
-                        Tanggal
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          fontSize: "12px",
-                          padding: "11px",
-                          textAlign: "center",
-                          width: "12%",
-                        }}
-                      >
-                        Action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {linkSourceCode && (
-                      <TableRow>
-                        {/* <TableCell>1</TableCell> */}
-                        <TableCell>
-                          <span
-                            style={{
-                              textDecoration: "underline",
-                              cursor: "pointer",
-                              color: "blue",
-                              fontSize: "12px",
-                            }}
-                            onClick={() =>
-                              openLink(linkSourceCode?.link_soucecode)
-                            }
-                          >
-                            {breakLongLink(linkSourceCode?.link_soucecode)}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          {linkSourceCode?.upload_date_link_soucecode}
-                        </TableCell>
-                        <TableCell>
-                          {linkSourceCode?.link_soucecode !== null && (
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
-                                fontSize: "12px",
-                                textAlign: "center",
-                              }}
-                              onClick={handleHapusLink}
-                            >
-                              Hapus
-                            </span>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table upload Link End */}
             </Div>
+
+            {/* dialog unggah link */}
+            <Dialog
+              open={openUnggahLink}
+              onClose={handleCloseUnggahLink}
+              maxWidth="xs"
+              fullWidth
+            >
+              <DialogTitle>
+                <Typography variant="h3">Tambah Link</Typography>
+              </DialogTitle>
+              <DialogContent>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="nama"
+                  label="Nama Link"
+                  type="text"
+                  fullWidth
+                  value={newLinkName}
+                  onChange={(e) => setNewLinkName(e.target.value)}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="link"
+                  label="Link"
+                  type="text"
+                  fullWidth
+                  value={newLink}
+                  onChange={(e) => setNewLink(e.target.value)}
+                />
+              </DialogContent>
+              <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                <Button
+                  onClick={handleCloseUnggahLink}
+                  size="small"
+                  sx={{
+                    background: "white",
+                    boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                    textTransform: "none",
+                    color: "black",
+                  }}
+                >
+                  Batal
+                </Button>
+                <Button
+                  onClick={handleSubmitNewLink}
+                  size="small"
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                  color="primary"
+                >
+                  Submit
+                </Button>
+              </DialogActions>
+            </Dialog>
+
+            {/* dialog update link */}
+            <Dialog
+              open={openUpdateLink}
+              onClose={handleCloseUpdateLink}
+              maxWidth="xs"
+              fullWidth
+            >
+              <DialogTitle>
+                <Typography variant="h3">Update Link</Typography>
+              </DialogTitle>
+              <DialogContent>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="nama"
+                  label="Nama Link"
+                  type="text"
+                  fullWidth
+                  value={updateLinkName}
+                  onChange={(e) => setUpdateLinkName(e.target.value)}
+                />
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="link"
+                  label="Link"
+                  type="text"
+                  fullWidth
+                  value={updateLink}
+                  onChange={(e) => setUpdateLink(e.target.value)}
+                />
+              </DialogContent>
+              <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                <Button
+                  onClick={handleCloseUpdateLink}
+                  size="small"
+                  sx={{
+                    background: "white",
+                    boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
+                    textTransform: "none",
+                    color: "black",
+                  }}
+                >
+                  Batal
+                </Button>
+                <Button
+                  onClick={handleSubmitUpdateLink}
+                  size="small"
+                  variant="contained"
+                  sx={{ textTransform: "none" }}
+                  color="primary"
+                >
+                  Submit
+                </Button>
+              </DialogActions>
+            </Dialog>
+
+            {linkList?.map((linkdata, index) => (
+              <>
+                <Div key={index} sx={{ width: "100%" }}>
+                  <Typography
+                    sx={{
+                      width: "100%",
+                      display: "flex",
+                      padding: "24px",
+                      alignItems: "center",
+                      gap: "10px",
+                      color: "#192434",
+                      background: "rgba(26, 56, 96, 0.10)",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {linkdata.name}
+                  </Typography>
+                  <Div
+                    sx={{
+                      width: "100%",
+                      padding: "0 25px",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      gap: "25px",
+                    }}
+                  >
+                    <TableContainer component={Paper} style={{ marginTop: 20 }}>
+                      <Table>
+                        <TableHead sx={{ background: "#F5F5F5" }}>
+                          <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                            <TableCell
+                              sx={{
+                                fontSize: "12px",
+                                padding: "11px",
+                                width: "65%",
+                              }}
+                            >
+                              Link
+                            </TableCell>
+                            <TableCell
+                              sx={{
+                                fontSize: "12px",
+                                padding: "11px",
+                                width: "20%",
+                              }}
+                            >
+                              Tanggal
+                            </TableCell>
+                            <TableCell
+                              sx={{
+                                fontSize: "12px",
+                                padding: "11px",
+                                textAlign: "center",
+                                width: "12%",
+                              }}
+                            >
+                              Action
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          <TableRow key={index}>
+                            <TableCell sx={{ fontSize: "12px" }}>
+                              <a
+                                href={linkdata.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                  textDecoration: "underline",
+                                  color: "blue",
+                                }}
+                              >
+                                {linkdata.link}
+                              </a>
+                            </TableCell>
+                            <TableCell>{linkdata.date}</TableCell>
+                            <TableCell>
+                              <Div sx={{ display: "flex" }}>
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor: "pointer",
+                                    color: "blue",
+                                    fontSize: "12px",
+                                  }}
+                                  onClick={() => {
+                                    setSelectedLinkId(linkdata.id);
+                                    setUpdateLinkName(linkdata.name);
+                                    setUpdateLink(linkdata.link);
+                                    handleOpenUpdateLink();
+                                  }}
+                                >
+                                  Update
+                                </span>
+                                <Div
+                                  style={{
+                                    margin: "0 5px",
+                                    color: "#E0E0E0",
+                                  }}
+                                >
+                                  |
+                                </Div>
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor: isSubmittingLink
+                                      ? "not-allowed"
+                                      : "pointer",
+                                    color: isSubmittingLink ? "#A0A0A0" : "red",
+                                    fontSize: "12px",
+                                  }}
+                                  onClick={() => {
+                                    setSelectedLinkId(linkdata.id);
+                                    handleDeleteLink(linkdata.id);
+                                  }}
+                                >
+                                  Hapus
+                                </span>
+                              </Div>
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Div>
+                </Div>
+              </>
+            ))}
             {/* Table 3 End */}
           </Div>
           {/* Element 2 End */}

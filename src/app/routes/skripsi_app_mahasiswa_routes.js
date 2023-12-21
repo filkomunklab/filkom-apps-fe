@@ -9,8 +9,13 @@ import UnggahSkripsi from "app/pages/ThesisApps/Mahasiswa/UnggahSkripsi";
 import UnggahRevisiSkripsi from "app/pages/ThesisApps/Mahasiswa/UnggahRevisiSkripsi";
 import ArsipDokumen from "app/pages/ThesisApps/Mahasiswa/ArsipDokumen";
 import MetaDataRepository from "app/pages/ThesisApps/Mahasiswa/MetaDataRepository";
+import DaftarSkripsiFILKOM from "app/pages/ThesisApps/Global/DaftarSkripsiFILKOM";
 
 const mahasiswaRoutes = [
+  {
+    path: "/sistem-informasi-skripsi/daftar-judul-skrisi-fakultas-ilmu-komputer",
+    element: <Page component={DaftarSkripsiFILKOM} />,
+  },
   {
     path: "/sistem-informasi-skripsi/daftar-pengajuan",
     element: <Page component={DaftarPengajuan} />,

@@ -29,6 +29,7 @@ import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
 const BuatKonsultasi = () => {
   // state - simpan request konsultasi
   const [konsultasi, setKonsultasi] = useState();
+  const createdConsultations = konsultasi?.constultation || [];
 
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
@@ -114,7 +115,7 @@ const BuatKonsultasi = () => {
           },
         })
         .then((response) => {
-          console.log("Berhasil mencatat konsultasi ");
+          console.log("Berhasil mencatat konsultasi: ", response);
           setSelectedDate(""); // Mengatur ulang nilai tanggal menjadi kosong
           setDescription(""); // Mengatur ulang nilai deskripsi menjadi kosong
           handleDialogClose(); // Menutup dialog setelah mencatat konsultasi
@@ -141,8 +142,44 @@ const BuatKonsultasi = () => {
           fetchKonsultasiData();
         })
         .catch((error) => {
-          console.error("Terjadi kesalahan saat mengganti pembimbing:", error);
+          console.error("Terjadi kesalahan saat mengisi konsultasi:", error);
         });
+    }
+  };
+
+  const getProposalConsultationMessage = () => {
+    const targetConsultations = 4; // Ganti ini dengan total jumlah konsultasi yang dibutuhkan
+    const consultations = konsultasi?.consultation;
+
+    if (!consultations) {
+      return "Tidak ada konsultasi yang tersedia.";
+    }
+
+    // Menghitung jumlah konsultasi dengan status "Proposal"
+    const proposalConsultations = consultations?.filter(
+      (consultation) => consultation.consultation_status === "Proposal"
+    ).length;
+
+    if (proposalConsultations >= targetConsultations) {
+      return `Konsultasi Proposal telah terpenuhi ${proposalConsultations}/${targetConsultations}`;
+    } else {
+      return `Konsultasi Proposal ${proposalConsultations}/${targetConsultations}`;
+    }
+  };
+
+  const getSkripsiConsultationMessage = () => {
+    const targetConsultations = 4; // Ganti ini dengan total jumlah konsultasi yang dibutuhkan
+    const consultations = konsultasi?.consultation;
+
+    // Menghitung jumlah konsultasi dengan status "Skripsi"
+    const skripsiConsultations = consultations?.filter(
+      (consultation) => consultation.consultation_status === "Skripsi"
+    ).length;
+
+    if (skripsiConsultations >= targetConsultations) {
+      return `Konsultasi Skripsi telah terpenuhi ${skripsiConsultations}/${targetConsultations}`;
+    } else {
+      return `Konsultasi Skripsi ${skripsiConsultations}/${targetConsultations}`;
     }
   };
 
@@ -253,6 +290,88 @@ const BuatKonsultasi = () => {
                 gap: "50px",
               }}
             >
+              {progress === "Proposal" && (
+                <>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: "#rgba(25, 36, 52, 0.94)",
+                    }}
+                  >
+                    {getProposalConsultationMessage()}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 400,
+                      color: "#rgba(25, 36, 52, 0.94)",
+                      marginBottom: "25px",
+                    }}
+                  >
+                    Catatan: Mahasiswa wajib melakukan konsultasi proposal
+                    bersama advisor dan co-advisor (jika ada) minimal sebanyak
+                    4x
+                  </Typography>
+                </>
+              )}
+              {progress === "Skripsi" && (
+                <>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: "#rgba(25, 36, 52, 0.94)",
+                    }}
+                  >
+                    {getProposalConsultationMessage()}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: "#rgba(25, 36, 52, 0.94)",
+                    }}
+                  >
+                    {getSkripsiConsultationMessage()}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 400,
+                      color: "#rgba(25, 36, 52, 0.94)",
+                      marginBottom: "25px",
+                    }}
+                  >
+                    Catatan: Mahasiswa wajib melakukan konsultasi skripsi
+                    bersama advisor dan co-advisor (jika ada) minimal sebanyak
+                    4x
+                  </Typography>
+                </>
+              )}
+              {progress === "Finished" && (
+                <>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: "#rgba(25, 36, 52, 0.94)",
+                    }}
+                  >
+                    {getProposalConsultationMessage()}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: "#rgba(25, 36, 52, 0.94)",
+                    }}
+                  >
+                    {getSkripsiConsultationMessage()}
+                  </Typography>
+                </>
+              )}
+
               {/* Table Konsultasi Start*/}
               <Container
                 sx={{
@@ -374,19 +493,19 @@ const BuatKonsultasi = () => {
                   </DialogActions>
                 </Dialog>
               </Container>
-              {konsultasi?.constultation > 0 ? (
+              {konsultasi?.consultation?.length > 0 ? (
                 <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                   <Table>
                     <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                       <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                        <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                        <TableCell sx={{ width: "25%" }}>Deskripsi</TableCell>
-                        <TableCell sx={{ width: "25%" }}>Tanggal</TableCell>
-                        <TableCell sx={{ width: "25%" }}>Tertera</TableCell>
+                        <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
+                        <TableCell sx={{ width: "65%" }}>Deskripsi</TableCell>
+                        <TableCell sx={{ width: "10%" }}>Tanggal</TableCell>
+                        <TableCell sx={{ width: "20%" }}>Tertera</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {konsultasi?.constultation?.map((consultation, index) => (
+                      {konsultasi?.consultation?.map((consultation, index) => (
                         <TableRow key={index}>
                           <TableCell>{index + 1}</TableCell>
                           <TableCell>{consultation.description}</TableCell>

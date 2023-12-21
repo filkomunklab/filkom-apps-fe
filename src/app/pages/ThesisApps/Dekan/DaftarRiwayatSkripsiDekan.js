@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
+import MuiAlert from "@mui/material/Alert";
 import {
-  FormControl,
-  MenuItem,
-  Select,
   Typography,
   Table,
   TableBody,
@@ -13,81 +9,111 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  AccordionDetails,
+  Paper,
+  AccordionSummary,
+  Accordion,
+  CircularProgress,
+  Snackbar,
+  AlertTitle,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
+import { Link, useNavigate } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const RiwayatSkripsiDekan = () => {
-  // state - riwayat
+  // ======================== STATE ===========================
+  // mengatur loading page
+  const [loading, setLoading] = useState(true);
+  // console.log("loading", loading);
+
+  // menyimpan hasil request daftar riwayat
   const [daftarRiwayat, setDaftarRiwayat] = useState([]);
+
+  // mengatur notif error
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState("success");
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+
+  // membuka / menutup semester yang dipilih (Accordion)
+  const [expanded, setExpanded] = useState(false);
 
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
   // console.log("token", token);
 
-  useEffect(() => {
-    const fetchDaftarRiwayat = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/group/history-list-dekan",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // Atur state 'setDaftarRiwayat' dengan data dari respons
+  const navigate = useNavigate();
+
+  const fetchDaftarRiwayat = async () => {
+    jwtAuthAxios
+      .get("/group/history-list-dekan", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // menyimpan hasil request
         setDaftarRiwayat(response.data.data);
-        console.log("Request get daftar proposal: ", response.data.data);
-      } catch (error) {
-        console.error(
-          "Terjadi kesalahan saat mengambil daftar pengujian proposal:",
-          error
-        );
-      }
-    };
+        // console.log("Request get daftar proposal: ", response.data.data);
+        // menonaktifkan loading page
+        setLoading(false);
+        // console.log("loading", loading);
+      })
+      .catch((error) => {
+        // redirect ke home
+        if (
+          error.response.data.data.error ===
+          "You don't have permission to perform this action"
+        ) {
+          navigate(`/`);
+        } else {
+          setAlertSeverity("error");
+          setAlertTitle("Terjadi Kesalahan!");
+          setAlertMessage("Tidak dapat menampilkan data.");
+          setOpenAlert(true);
+          // console.error(
+          //   "Terjadi kesalahan saat mengambil daftar pengujian proposal:",
+          //   error
+          // );
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+        // console.log("loading", loading);
+      });
+  };
+
+  useEffect(() => {
     fetchDaftarRiwayat();
   }, [token]);
 
-  const [selectedValue, setSelectedValue] = useState("Kelas"); // Tentukan teks default di sini
+  // mengatur notif error
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
 
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
+  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
+  const handleChangee = (panel) => (event, isExpanded) => {
+    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
+    setExpanded(isExpanded ? panel : false);
   };
 
-  //--------------------------------------
-  const [showTable, setShowTable] = useState(false);
-  const [showTable2, setShowTable2] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isTransitioning2, setIsTransitioning2] = useState(false);
-
-  const tableVisibleStyle = {
-    opacity: 1,
-    maxHeight: "200px", // Sesuaikan tinggi maksimal sesuai kebutuhan
-    transition: "opacity 0.3s ease-in-out, max-height 0.3s ease-in-out",
-  };
-
-  const tableHiddenStyle = {
-    opacity: 0,
-    maxHeight: "0",
-    transition: "opacity 0.3s ease-in-out, max-height 0.3s ease-in-out",
-  };
-
-  const handleSemesterClick = () => {
-    setIsTransitioning(true); // Mulai animasi
-    setTimeout(() => {
-      setShowTable(!showTable); // Toggle visibilitas tabel setelah animasi selesai
-      setIsTransitioning(false); // Selesaikan animasi
-    }, 300); // Waktu animasi dalam milidetik (0.3 detik)
-  };
-
-  const handleSemesterClick2 = () => {
-    setIsTransitioning2(true); // Mulai animasi
-    setTimeout(() => {
-      setShowTable2(!showTable2); // Toggle visibilitas tabel setelah animasi selesai
-      setIsTransitioning2(false); // Selesaikan animasi
-    }, 300); // Waktu animasi dalam milidetik (0.3 detik)
-  };
+  // Menampilkan ikon loading jika data masih dalam proses fetching
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <Div
@@ -123,7 +149,7 @@ const RiwayatSkripsiDekan = () => {
             lineHeight: "32px",
           }}
         >
-          Daftar Riwayat Bimbingan Dekan
+          Daftar Riwayat Skripsi
         </Typography>
         <Div
           sx={{
@@ -135,7 +161,7 @@ const RiwayatSkripsiDekan = () => {
             flexShrink: 0,
           }}
         >
-          <FormControl>
+          {/* <FormControl>
             <Select
               size="small"
               labelId="dropdown-label"
@@ -149,12 +175,11 @@ const RiwayatSkripsiDekan = () => {
               }}
             >
               <MenuItem value="Kelas">Kelas</MenuItem>{" "}
-              {/* Tambahkan nilai default di sini */}
               <MenuItem value="option1">Opsi 1</MenuItem>
               <MenuItem value="option2">Opsi 2</MenuItem>
               <MenuItem value="option3">Opsi 3</MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
         </Div>
         <Div
           sx={{
@@ -167,107 +192,143 @@ const RiwayatSkripsiDekan = () => {
             flexShrink: 0,
           }}
         >
-          <SearchGlobal />
+          {/* <SearchGlobal /> */}
         </Div>
       </Div>
       {/* Riwayat Mahasiswa */}
-      {daftarRiwayat.map((riwayat) => (
+      {daftarRiwayat?.length > 0 ? (
         <Div
-          key={riwayat.semester}
           sx={{
             display: "inline-flex",
             flexDirection: "column",
             alignItems: "flex-start",
             gap: "25px",
             width: "100%",
+            height: "460px",
+            overflowY: "auto",
+            background: "#FFF",
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+            padding: "8px",
+            borderRadius: "8px",
           }}
         >
-          <Div
+          {daftarRiwayat?.map((riwayat, semesterIndex) => (
+            <Accordion
+              key={semesterIndex}
+              expanded={expanded === `panel${semesterIndex}`} // Memeriksa apakah accordion ini terbuka
+              onChange={handleChangee(`panel${semesterIndex}`)} // Menangani perubahan state accordion
+              sx={{
+                width: "100%",
+                padding: "1px",
+                background: "rgba(26, 56, 96, 0.10)",
+                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`panel${semesterIndex}bh-content`}
+                id={`panel${semesterIndex}bh-header`}
+              >
+                <Typography
+                  variant="h2"
+                  sx={{
+                    marginTop: "6px",
+                    fontSize: "16px",
+                    fontWeight: 500,
+                  }}
+                >
+                  {riwayat.semester}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow sx={{ background: "#F5F5F5" }}>
+                        <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
+                        <TableCell sx={{ width: "30%" }}>
+                          Nama Lengkap Mahasiswa
+                        </TableCell>
+                        <TableCell sx={{ width: "45%" }}>Judul</TableCell>
+                        <TableCell sx={{ width: "10%" }}>
+                          Tanggal Diterima
+                        </TableCell>
+                        <TableCell sx={{ width: "10%" }}>Action</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {riwayat.skripsis.map((skripsi, index) => (
+                        <TableRow key={skripsi.group_id + index}>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>
+                            {skripsi.students.map((student) => (
+                              <div key={student.id}>{student.fullName}</div>
+                            ))}
+                          </TableCell>
+                          <TableCell>{skripsi.title}</TableCell>
+                          <TableCell>{skripsi.approve_date}</TableCell>
+                          <TableCell>
+                            <Link
+                              to={`/sistem-informasi-skripsi/daftar-riwayat-skripsi-dekan/beranda/${skripsi.group_id}/DEKAN`}
+                              style={{ textDecoration: "none", color: "blue" }}
+                            >
+                              Detail
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </Div>
+      ) : (
+        <Div
+          sx={{
+            display: "flex",
+            padding: "29px 42px",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: 2,
+            alignSelf: "stretch",
+            borderRadius: "8px",
+            border: "1px solid #E0E0E0",
+            background: "#FFF",
+            boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+          }}
+        >
+          <Typography
             sx={{
-              display: "flex",
               width: "100%",
+              display: "flex",
               padding: "24px",
               alignItems: "center",
               gap: "10px",
-              background: "rgba(26, 56, 96, 0.10)",
+              color: "#CA150C",
+              background: "rgba(226, 29, 18, 0.50)",
               borderRadius: "6px",
-              cursor: "pointer",
+              fontSize: "12px",
+              fontWeight: 600,
             }}
-            onClick={handleSemesterClick}
           >
-            <Typography variant="subtitle2" sx={{ width: "100%" }}>
-              {riwayat.semester}
-            </Typography>
-            <ExpandMoreIcon />
-          </Div>
-          {showTable || isTransitioning ? (
-            <TableContainer
-              style={{
-                ...tableVisibleStyle,
-                display: isTransitioning ? "block" : "table",
-              }}
-            >
-              <Table>
-                <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                  <TableRow>
-                    <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                    <TableCell sx={{ width: "30%" }}>
-                      Nama Lengkap Mahasiswa
-                    </TableCell>
-                    <TableCell sx={{ width: "45%" }}>Judul</TableCell>
-                    <TableCell sx={{ width: "10%" }}>
-                      Tanggal Diterima
-                    </TableCell>
-                    <TableCell sx={{ width: "10%" }}>Action</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {riwayat.skripsis.map((skripsi) =>
-                    skripsi.students.map((student, index) => (
-                      <TableRow key={skripsi.group_id + index}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{student.fullName}</TableCell>
-                        <TableCell>{skripsi.title}</TableCell>
-                        {/* Tambahkan tanggal diterima jika tersedia */}
-                        <TableCell>
-                          {/* Tambahkan tanggal diterima di sini */}
-                        </TableCell>
-                        <TableCell>
-                          <Link
-                            to={`/sistem-informasi-skripsi/daftar-riwayat-skripsi-dekan/beranda/${skripsi.group_id}/DEKAN`}
-                            style={{ textDecoration: "none", color: "blue" }}
-                          >
-                            Detail
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          ) : (
-            <TableContainer style={tableHiddenStyle}>
-              <Table>
-                <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                  <TableRow>
-                    <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                    <TableCell sx={{ width: "30%" }}>
-                      Nama Lengkap Mahasiswa
-                    </TableCell>
-                    <TableCell sx={{ width: "45%" }}>Judul</TableCell>
-                    <TableCell sx={{ width: "10%" }}>
-                      Tanggal Diterima
-                    </TableCell>
-                    <TableCell sx={{ width: "10%" }}>Action</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody></TableBody>
-              </Table>
-            </TableContainer>
-          )}
+            Belum ada riwayat.
+          </Typography>
         </Div>
-      ))}
+      )}
+
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={() => setOpenAlert(false)} severity={alertSeverity}>
+          <AlertTitle>{alertTitle}</AlertTitle>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </Div>
   );
 };

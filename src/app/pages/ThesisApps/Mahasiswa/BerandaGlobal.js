@@ -218,7 +218,11 @@ const BerandaGlobal = () => {
             hidden={userRole === "MAHASISWA" ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
+            <MenuMahasiswa
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Beranda"}
+            />
           </Div>
           {/* Menu horizontal End */}
           <Div

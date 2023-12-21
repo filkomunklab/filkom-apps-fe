@@ -371,7 +371,7 @@ const ManajemenDosenSkripsi = () => {
               width: "30%",
             }}
           >
-            <SearchGlobal />
+            {/* <SearchGlobal /> */}
           </Div>
           <Div
             sx={{
@@ -455,7 +455,7 @@ const ManajemenDosenSkripsi = () => {
             marginBottom: "25px",
           }}
         >
-          Tambahkan Dosen Skripsi
+          Tambah Dosen Skripsi
         </DialogTitle>
         <DialogContent
           sx={{

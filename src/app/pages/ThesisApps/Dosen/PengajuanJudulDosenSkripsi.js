@@ -30,6 +30,22 @@ import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
 import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
 import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 
+const PDFViewerJudul = ({ pengajuanJudul }) => {
+  const viewPDFJudul = () => {
+    // Buat URL objek untuk file PDF
+    const pdfURL = pengajuanJudul?.file_path;
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span onClick={viewPDFJudul}>Lihat</span>
+    </div>
+  );
+};
+
 const PengajuanJudulDosenSkripsi = () => {
   // state - simpan request pengajuan judul
   const [pengajuanJudul, setPengajuanJudul] = useState();
@@ -609,10 +625,11 @@ const PengajuanJudulDosenSkripsi = () => {
                             cursor: "pointer",
                             color: "blue",
                             fontSize: "12px",
-                            padding: "5px 0",
                           }}
                         >
-                          Lihat
+                          {pengajuanJudul && (
+                            <PDFViewerJudul pengajuanJudul={pengajuanJudul} />
+                          )}
                         </span>
                       </TableCell>
                     </TableRow>
