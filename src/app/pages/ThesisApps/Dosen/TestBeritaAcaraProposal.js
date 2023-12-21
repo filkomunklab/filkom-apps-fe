@@ -22,20 +22,21 @@ import {
   FormControlLabel,
   DialogContentText,
   TextareaAutosize,
+  Paper,
   Accordion,
   AccordionSummary,
   AccordionDetails,
   TextField,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
 import MenuKetuaPanelis from "app/shared/MenuHorizontal/MenuKetuaPanelis";
 import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
 import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
 import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const BeritaAcara = () => {
+const TestBeritaAcaraProposal = () => {
   // state - menyimpan request data
   const [isOpen, setIsOpen] = useState();
   const [dataPenilaian, setDataPenilaian] = useState();
@@ -43,32 +44,31 @@ const BeritaAcara = () => {
   const [dataBeritaAcara, setDataBeritaAcara] = useState();
   const [dataKesimpulan, setDataKesimpulan] = useState();
   const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
-  const [dataNilaiKesimpulan, setDataNilaiKesimpulan] = useState();
 
   const [selectedStudentId, setSelectedStudentId] = useState();
   const [selectedName, setSelectedName] = useState();
   const [selectedNIM, setSelectedNIM] = useState();
   const [selectedProdi, setSelectedProdi] = useState();
 
-  // State - menyimpan Perubahan
-  const [abstrak, setAbstrak] = useState("");
+  const [submittedData, setSubmittedData] = useState({
+    judul: "",
+    bab1: "",
+    bab2: "",
+    bab3: "",
+    bab4: "",
+    bab5: "",
+  });
+
+  // State untuk menyimpan Perubahan
+  const [judul, setJudul] = useState("");
   const [bab1, setBab1] = useState("");
   const [bab2, setBab2] = useState("");
   const [bab3, setBab3] = useState("");
-  const [bab4, setBab4] = useState("");
-  const [bab5, setBab5] = useState("");
-  const [lainnya, setLainnya] = useState("");
-
-  // State - mengatur tanggal
-  const [selectedDate, setSelectedDate] = useState("");
-
-  // state - menyimpan nilai kesimpulan
-  const [nilaiMahasiswa, setNilaiMahasiswa] = useState([]);
 
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
-  const [skripsiId, setSkripsiId] = useState(null);
+  const [proposalId, setProposalId] = useState(null);
 
   const userRole = useParams().role;
   console.log("role user akses page: ", userRole);
@@ -85,7 +85,7 @@ const BeritaAcara = () => {
     const fetchIsOpenData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-report/open-access/${skripsiId}`,
+          `http://localhost:2000/api/v1/proposal/proposal-report/open-access/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -93,10 +93,10 @@ const BeritaAcara = () => {
           }
         );
         setIsOpen(response.data.data);
-        console.log("Request Get skripsi dibuka?: ", response.data.data);
+        console.log("Request Get proposal dibuka?: ", response.data.data);
       } catch (error) {
         console.error(
-          "Terjadi kesalahan saat mengambil skripsi dibuka?:",
+          "Terjadi kesalahan saat mengambil proposal dibuka?:",
           error
         );
       }
@@ -104,7 +104,7 @@ const BeritaAcara = () => {
     const fetchPenilaianData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
+          `http://localhost:2000/api/v1/proposal/proposal-assessment/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -112,17 +112,6 @@ const BeritaAcara = () => {
           }
         );
         setDataPenilaian(response.data.data);
-
-        // Membuat array objek baru untuk nilaiMahasiswa
-        const newNilaiMahasiswa = response.data.data.map((mahasiswa) => ({
-          student_id: mahasiswa.student_id,
-          assessment_conclution: "",
-        }));
-        console.log("nilai mahasiswa di fetch", newNilaiMahasiswa);
-
-        // Mengatur nilaiMahasiswa dengan array baru yang dibuat
-        setNilaiMahasiswa(newNilaiMahasiswa);
-
         console.log("Request Get penilaian: ", response.data.data);
       } catch (error) {
         console.error("Terjadi kesalahan saat mengambil penilaian:", error);
@@ -131,7 +120,7 @@ const BeritaAcara = () => {
     const fetchPerubahanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
+          `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -147,7 +136,7 @@ const BeritaAcara = () => {
     const fetchBeritaAcaraData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-report/${skripsiId}`,
+          `http://localhost:2000/api/v1/proposal/proposal-report/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -163,7 +152,7 @@ const BeritaAcara = () => {
     const fetchKesimpulanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion/${skripsiId}`,
+          `http://localhost:2000/api/v1/proposal/proposal-report/conclusion/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -176,32 +165,12 @@ const BeritaAcara = () => {
         console.error("Terjadi kesalahan saat mengambil kesimpulan:", error);
       }
     };
-    const fetchNilaiKesimpulanData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion-value/${skripsiId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
-            },
-          }
-        );
-        setDataNilaiKesimpulan(response.data.data);
-        console.log("Request Get nilai kesimpulan: ", response.data.data);
-      } catch (error) {
-        console.error(
-          "Terjadi kesalahan saat mengambil nilai kesimpulan:",
-          error
-        );
-      }
-    };
     fetchIsOpenData();
     fetchPenilaianData();
     fetchPerubahanData();
     fetchBeritaAcaraData();
     fetchKesimpulanData();
-    fetchNilaiKesimpulanData();
-  }, [token, skripsiId]);
+  }, [token, proposalId]);
 
   // State untuk mengontrol tampilan popup
   const [openScoreDialog, setOpenScoreDialog] = useState(false);
@@ -209,7 +178,6 @@ const BeritaAcara = () => {
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [viewedChanges, setViewedChanges] = useState("");
   const [status, setStatus] = useState(""); // State untuk menyimpan status
-  const [isRevisionEnabled, setIsRevisionEnabled] = useState(true);
   const [isScoreEnabled, setIsScoreEnabled] = useState(true);
   const [isSignInEnabled, setIsSignInEnabled] = useState(true);
   const [isSubmitButtonVisible, setIsSubmitButtonVisible] = useState(true);
@@ -221,11 +189,15 @@ const BeritaAcara = () => {
   const [errorMessagePenilaian, setErrorMessagePenilaian] = useState();
   const [openSignInConfirmationDialog, setOpenSignInConfirmationDialog] =
     useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [displayedDate, setDisplayedDate] = useState(null);
+  const [inputVisible, setInputVisible] = useState(true);
 
-  // mengatur tanggal
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
   };
+
+  const handleShowDate = () => {};
 
   const handleOpenSignInConfirmationDialog = () => {
     setOpenSignInConfirmationDialog(true);
@@ -258,16 +230,9 @@ const BeritaAcara = () => {
 
   const handleOpenConfirmationBeritaAcaraDialog = () => {
     if (!status || !perubahan || !deskripsi) {
-      for (const entry of nilaiMahasiswa) {
-        if (
-          entry?.assessment_conclution === null ||
-          entry?.assessment_conclution === ""
-        ) {
-          // Tampilkan pesan kesalahan jika salah satu opsi belum diisi
-          setErrorMessageKesimpulan("Harap isi semua opsi sebelum submit.");
-          return;
-        }
-      }
+      // Tampilkan pesan kesalahan jika salah satu opsi belum diisi
+      setErrorMessageKesimpulan("Harap isi semua opsi sebelum submit.");
+      return;
     }
     setOpenConfirmationBeritaAcaraDialog(true);
   };
@@ -282,70 +247,16 @@ const BeritaAcara = () => {
   const handleSubmitData = () => {
     // Di sini Anda dapat menambahkan logika untuk mengirim data atau tindakan yang diperlukan
 
-    console.log("nilai mahasiswa: ", nilaiMahasiswa);
-    for (const entry of nilaiMahasiswa) {
-      const nilaiKesimpulan = {
-        student_id: entry.student_id,
-        assessment_conclution: entry?.assessment_conclution,
-      };
-      console.log("Nilai kesimpulan yang akan dikirim: ", nilaiKesimpulan);
-      axios
-        .put(
-          `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion-value/${skripsiId}`,
-          nilaiKesimpulan,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((response) => {
-          console.log(
-            `Berhasil mengisi nilai kesimpulan ${entry.student_id}: `,
-            response.data
-          );
-        })
-        .catch((error) => {
-          console.error(
-            `Terjadi kesalahan saat mengisi nilai kesimpulan ${entry.student_id}: `,
-            error
-          );
-        });
-    }
-
-    const batasRevisi = {
-      submission_dateline: selectedDate,
-    };
-    console.log("Tanggal batas revisi yang akan dikirim: ", batasRevisi);
-    axios
-      .put(
-        `http://localhost:2000/api/v1/skripsi/submission-dateline/${skripsiId}`,
-        batasRevisi,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log(`Berhasil mengisi tanggal batas revisi: `, response.data);
-      })
-      .catch((error) => {
-        console.error(
-          `Terjadi kesalahan saat mengisi tanggal batas revisi: `,
-          error
-        );
-      });
-
     const kesimpulan = {
       exam_conclution: status,
       changes_conclusion: perubahan,
+      assessment_conclution: nilai,
       is_pass: deskripsi,
     };
     console.log("Kesimpulan yang akan dikirim: ", kesimpulan);
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion/${skripsiId}`,
+        `http://localhost:2000/api/v1/proposal/proposal-report/conclusion/${proposalId}`,
         kesimpulan,
         {
           headers: {
@@ -358,12 +269,15 @@ const BeritaAcara = () => {
 
         // Setelah tindakan selesai, tutup dialog konfirmasi
         handleCloseConfirmationBeritaAcaraDialog();
-
+        // Menampilkan tanggal yang dimasukkan oleh pengguna
+        setDisplayedDate(selectedDate);
+        // Menyembunyikan input tanggal
+        setInputVisible(false);
         // request data kesimpulan
         const fetchKesimpulanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion/${skripsiId}`,
+              `http://localhost:2000/api/v1/proposal/proposal-report/conclusion/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -382,7 +296,7 @@ const BeritaAcara = () => {
         const fetchIsOpenData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-report/open-access/${skripsiId}`,
+              `http://localhost:2000/api/v1/proposal/proposal-report/open-access/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -390,33 +304,16 @@ const BeritaAcara = () => {
               }
             );
             setIsOpen(response.data.data);
-            console.log("Request Get skripsi dibuka?: ", response.data.data);
+            console.log("Request Get proposal dibuka?: ", response.data.data);
           } catch (error) {
             console.error(
-              "Terjadi kesalahan saat mengambil skripsi dibuka?:",
+              "Terjadi kesalahan saat mengambil proposal dibuka?:",
               error
             );
           }
         };
-        const fetchPenilaianData = async () => {
-          try {
-            const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
-                },
-              }
-            );
-            setDataPenilaian(response.data.data);
-            console.log("Request Get penilaian: ", response.data.data);
-          } catch (error) {
-            console.error("Terjadi kesalahan saat mengambil penilaian:", error);
-          }
-        };
         fetchIsOpenData();
         fetchKesimpulanData();
-        fetchPenilaianData();
       })
       .catch((error) => {
         console.error("Terjadi kesalahan saat mengisi kesimpulan:", error);
@@ -436,7 +333,7 @@ const BeritaAcara = () => {
     if (!isSigned) {
       axios
         .put(
-          `http://localhost:2000/api/v1/skripsi/skripsi-report/${skripsiId}`,
+          `http://localhost:2000/api/v1/proposal/proposal-report/${proposalId}`,
           {},
           {
             headers: {
@@ -455,7 +352,7 @@ const BeritaAcara = () => {
           const fetchBeritaAcaraData = async () => {
             try {
               const response = await axios.get(
-                `http://localhost:2000/api/v1/skripsi/skripsi-report/${skripsiId}`,
+                `http://localhost:2000/api/v1/proposal/proposal-report/${proposalId}`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -495,7 +392,7 @@ const BeritaAcara = () => {
     const fetchPerubahanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
+          `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -552,9 +449,10 @@ const BeritaAcara = () => {
       student_id: selectedStudentId,
       value: total.toString(),
     };
+    console.log("nilai yang akan dikirim: ", nilai);
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
+        `http://localhost:2000/api/v1/proposal/proposal-assessment/${proposalId}`,
         nilai,
         {
           headers: {
@@ -591,7 +489,7 @@ const BeritaAcara = () => {
         const fetchPenilaianData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
+              `http://localhost:2000/api/v1/proposal/proposal-assessment/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -685,63 +583,35 @@ const BeritaAcara = () => {
 
   const [openRevisionDialog, setOpenRevisionDialog] = useState(false);
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+  const [revisionText, setRevisionText] = useState(""); // State untuk menyimpan teks revisi
 
   const handleOpenRevisionDialog = () => {
-    // ketika menekan "Komen" = mengambil data perubahan sesuai role
-    if (userRole === "KETUA_PANELIS") {
-      setAbstrak(dataPerubahan?.changes_by_chairman_abstrak);
-      setBab1(dataPerubahan?.changes_by_chairman_bab1);
-      setBab2(dataPerubahan?.changes_by_chairman_bab2);
-      setBab3(dataPerubahan?.changes_by_chairman_bab3);
-      setBab4(dataPerubahan?.changes_by_chairman_bab4);
-      setBab5(dataPerubahan?.changes_by_chairman_bab5);
-      setLainnya(dataPerubahan?.changes_by_chairman_other);
-    }
-    if (userRole === "ANGGOTA_PANELIS") {
-      setAbstrak(dataPerubahan?.changes_by_member_abstrak);
-      setBab1(dataPerubahan?.changes_by_member_bab1);
-      setBab2(dataPerubahan?.changes_by_member_bab2);
-      setBab3(dataPerubahan?.changes_by_member_bab3);
-      setBab4(dataPerubahan?.changes_by_member_bab4);
-      setBab5(dataPerubahan?.changes_by_member_bab5);
-      setLainnya(dataPerubahan?.changes_by_member_other);
-    }
-    if (userRole === "ADVISOR") {
-      setAbstrak(dataPerubahan?.changes_by_advisor_abstrak);
-      setBab1(dataPerubahan?.changes_by_advisor_bab1);
-      setBab2(dataPerubahan?.changes_by_advisor_bab2);
-      setBab3(dataPerubahan?.changes_by_advisor_bab3);
-      setBab4(dataPerubahan?.changes_by_advisor_bab4);
-      setBab5(dataPerubahan?.changes_by_advisor_bab5);
-      setLainnya(dataPerubahan?.changes_by_advisor_other);
-    }
     setOpenRevisionDialog(true);
   };
 
   const handleCloseRevisionDialog = () => {
-    setAbstrak();
-    setBab1();
-    setBab2();
-    setBab3();
-    setBab4();
-    setBab5();
-    setLainnya();
+    setRevisionText("");
     setOpenRevisionDialog(false);
   };
 
   const handleRevisionSubmit = () => {
+    // // Simpan teks revisi yang diisi oleh pengguna
+    // setViewedChanges(revisionText);
+
+    const submittedDataCopy = { ...submittedData };
+    submittedDataCopy.judul = judul;
+    submittedDataCopy.bab1 = bab1;
+    submittedDataCopy.bab2 = bab2;
+    submittedDataCopy.bab3 = bab3;
+
+    setSubmittedData(submittedDataCopy);
+
     const perubahan = {
-      abstrak: abstrak,
-      bab1: bab1,
-      bab2: bab2,
-      bab3: bab3,
-      bab4: bab4,
-      bab5: bab5,
-      other: lainnya,
+      changes: revisionText,
     };
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
+        `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
         perubahan,
         {
           headers: {
@@ -760,7 +630,7 @@ const BeritaAcara = () => {
         const fetchPerubahanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
+              `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -796,7 +666,7 @@ const BeritaAcara = () => {
   const handleBukaKonfirmasi = () => {
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-report/open-access/${skripsiId}`,
+        `http://localhost:2000/api/v1/proposal/proposal-report/open-access/${proposalId}`,
         {},
         {
           headers: {
@@ -813,7 +683,7 @@ const BeritaAcara = () => {
         const fetchIsOpenData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-report/open-access/${skripsiId}`,
+              `http://localhost:2000/api/v1/proposal/proposal-report/open-access/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -821,10 +691,10 @@ const BeritaAcara = () => {
               }
             );
             setIsOpen(response.data.data);
-            console.log("Request Get skripsi dibuka?: ", response.data.data);
+            console.log("Request Get proposal dibuka?: ", response.data.data);
           } catch (error) {
             console.error(
-              "Terjadi kesalahan saat mengambil skripsi dibuka?:",
+              "Terjadi kesalahan saat mengambil proposal dibuka?:",
               error
             );
           }
@@ -832,7 +702,7 @@ const BeritaAcara = () => {
         const fetchPenilaianData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
+              `http://localhost:2000/api/v1/proposal/proposal-assessment/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -848,7 +718,7 @@ const BeritaAcara = () => {
         const fetchPerubahanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
+              `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -864,7 +734,7 @@ const BeritaAcara = () => {
         const fetchBeritaAcaraData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-report/${skripsiId}`,
+              `http://localhost:2000/api/v1/proposal/proposal-report/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -883,7 +753,7 @@ const BeritaAcara = () => {
         const fetchKesimpulanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion/${skripsiId}`,
+              `http://localhost:2000/api/v1/proposal/proposal-report/conclusion/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -913,6 +783,42 @@ const BeritaAcara = () => {
       });
   };
 
+  // State untuk menyimpan informasi nilai kesimpulan masing-masing mahasiswa
+  // const [nilaiKesimpulan, setNilaiKesimpulan] = useState([
+  //   { nama: "Geovalga Fransiscus Lim", nilai: "A" },
+  //   { nama: "Frances Rully Yong", nilai: "A" },
+  //   { nama: "Claudio Surentu", nilai: "B+" },
+  //   { nama: "Geovani Dumais", nilai: "B-" },
+  // ]);
+
+  //  const averageValue =
+  //   dataPenilaian.reduce((sum, student) => {
+  //     return sum + (student.value_by_chairman + student.value_by_member + student.value_by_advisor);
+  //   }, 0) / (dataPenilaian.length * 3);
+
+  // // Convert averageValue to letter grade
+  // let letterGrade;
+
+  // if (averageValue >= 9) {
+  //   letterGrade = 'A+';
+  // } else if (averageValue >= 8.5) {
+  //   letterGrade = 'A';
+  // } else if (averageValue >= 8) {
+  //   letterGrade = 'B+';
+  // } else if (averageValue >= 7.5) {
+  //   letterGrade = 'B';
+  // } else if (averageValue >= 7) {
+  //   letterGrade = 'C+';
+  // } else if (averageValue >= 6.5) {
+  //   letterGrade = 'C';
+  // } else if (averageValue >= 6) {
+  //   letterGrade = 'D+';
+  // } else if (averageValue >= 5.5) {
+  //   letterGrade = 'D';
+  // } else {
+  //   letterGrade = 'E';
+  // }
+
   return (
     <Div>
       <Div
@@ -926,7 +832,7 @@ const BeritaAcara = () => {
         }}
       >
         <Typography sx={{ fontSize: "24px", fontWeight: 600 }}>
-          Berita Acara Skripsi
+          Berita Acara Proposal
         </Typography>
       </Div>
 
@@ -955,7 +861,7 @@ const BeritaAcara = () => {
             riwayatData={(data) => {
               if (data) {
                 setProgress(data.progress);
-                setSkripsiId(data.skripsi_id);
+                setProposalId(data.proposal_id);
                 setAdvisorAndCoAdvisor({
                   coAdvisor1: data.co_advisor1,
                   coAdvisor2: data.co_advisor2,
@@ -987,7 +893,7 @@ const BeritaAcara = () => {
             <MenuAdvisor
               dataGroupId={groupId}
               dataProgress={progress}
-              page={"Berita Acara Skripsi"}
+              page={"Berita Acara Proposal"}
             />
           </Div>
           {/* KETUA_PANELIS */}
@@ -998,7 +904,7 @@ const BeritaAcara = () => {
             <MenuKetuaPanelis
               dataGroupId={groupId}
               dataProgress={progress}
-              page={"Berita Acara Skripsi"}
+              page={"Berita Acara Proposal"}
             />
           </Div>
           {/* ANGGOTA_PANELIS */}
@@ -1009,7 +915,7 @@ const BeritaAcara = () => {
             <MenuAnggotaPanelis
               dataGroupId={groupId}
               dataProgress={progress}
-              page={"Berita Acara Skripsi"}
+              page={"Berita Acara Proposal"}
             />
           </Div>
           {/* DEKAN */}
@@ -1020,7 +926,7 @@ const BeritaAcara = () => {
             <MenuDekan
               dataGroupId={groupId}
               dataProgress={progress}
-              page={"Berita Acara Skripsi"}
+              page={"Berita Acara Proposal"}
             />
           </Div>
           {/* KAPRODI */}
@@ -1031,7 +937,7 @@ const BeritaAcara = () => {
             <MenuKaprodi
               dataGroupId={groupId}
               dataProgress={progress}
-              page={"Berita Acara Skripsi"}
+              page={"Berita Acara Proposal"}
             />
           </Div>
           {/* Menu horizontal End */}
@@ -1202,7 +1108,7 @@ const BeritaAcara = () => {
               </Typography>
               {/* Table Penilaian Start */}
 
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Typography
                   variant="subtitle2"
                   sx={{
@@ -1215,19 +1121,30 @@ const BeritaAcara = () => {
                   Penilaian
                 </Typography>
                 <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                  <TableHead
+                    sx={{
+                      background: "rgba(26, 56, 96, 0.10)",
+                      borderTop: "1px solid #ccc",
+                    }}
+                  >
                     <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
+                      <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
                       <TableCell sx={{ width: "25%" }}>Mahasiswa</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Ketua Penelis</TableCell>
-                      <TableCell sx={{ width: "25%" }}>
-                        Anggota Penelis
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Ketua Panelis
                       </TableCell>
-                      <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Anggota Panelis
+                      </TableCell>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Advisor
+                      </TableCell>
                       {(userRole === "KETUA_PANELIS" ||
                         userRole === "ANGGOTA_PANELIS" ||
                         userRole === "ADVISOR") && (
-                        <TableCell sx={{ width: "25%" }}>Action</TableCell>
+                        <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                          Action
+                        </TableCell>
                       )}
                     </TableRow>
                   </TableHead>
@@ -1298,14 +1215,16 @@ const BeritaAcara = () => {
                               style={{
                                 textDecoration: "none",
                                 cursor:
-                                  isOpen?.is_open === true
+                                  student.value_by_chairman === null
                                     ? "pointer"
                                     : "not-allowed",
                                 color:
-                                  isOpen?.is_open === true ? "blue" : "gray",
+                                  student.value_by_chairman === null
+                                    ? "blue"
+                                    : "gray",
                               }}
                               onClick={() => {
-                                if (isOpen?.is_open === true) {
+                                if (student.value_by_chairman === null) {
                                   handleOpenDialog();
                                   setSelectedStudentId(student.student_id);
                                   setSelectedName(student.fullName);
@@ -1330,14 +1249,16 @@ const BeritaAcara = () => {
                               style={{
                                 textDecoration: "none",
                                 cursor:
-                                  isOpen?.is_open === true
+                                  student.value_by_member === null
                                     ? "pointer"
                                     : "not-allowed",
                                 color:
-                                  isOpen?.is_open === true ? "blue" : "gray",
+                                  student.value_by_member === null
+                                    ? "blue"
+                                    : "gray",
                               }}
                               onClick={() => {
-                                if (isOpen?.is_open === true) {
+                                if (student.value_by_member === null) {
                                   handleOpenDialog();
                                   setSelectedStudentId(student.student_id);
                                   setSelectedName(student.fullName);
@@ -1362,14 +1283,16 @@ const BeritaAcara = () => {
                               style={{
                                 textDecoration: "none",
                                 cursor:
-                                  isOpen?.is_open === true
+                                  student.value_by_advisor === null
                                     ? "pointer"
                                     : "not-allowed",
                                 color:
-                                  isOpen?.is_open === true ? "blue" : "gray",
+                                  student.value_by_advisor === null
+                                    ? "blue"
+                                    : "gray",
                               }}
                               onClick={() => {
-                                if (isOpen?.is_open === true) {
+                                if (student.value_by_advisor === null) {
                                   handleOpenDialog();
                                   setSelectedStudentId(student.student_id);
                                   setSelectedName(student.fullName);
@@ -1396,7 +1319,7 @@ const BeritaAcara = () => {
               {/* Table Penilaian End */}
 
               {/* Table Perubahan Start */}
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Typography
                   variant="subtitle2"
                   sx={{
@@ -1409,25 +1332,35 @@ const BeritaAcara = () => {
                   Perubahan
                 </Typography>
                 <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                  <TableHead
+                    sx={{
+                      background: "rgba(26, 56, 96, 0.10)",
+                      borderTop: "1px solid #ccc",
+                    }}
+                  >
                     <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
                       <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
-                        Ketua Penelis
+                      <TableCell
+                        sx={{
+                          width: "20%",
+                          textAlign: "center",
+                        }}
+                      >
+                        Ketua Panelis
                       </TableCell>
-                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
-                        Anggota Penelis
+                      <TableCell sx={{ width: "20%", textAlign: "center" }}>
+                        Anggota Panelis
                       </TableCell>
-                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                      <TableCell sx={{ width: "15%", textAlign: "center" }}>
                         Advisor
                       </TableCell>
                       {advisorAndCoAdvisor?.coAdvisor1 && (
-                        <TableCell sx={{ width: "25%" }}>
+                        <TableCell sx={{ width: "20%", textAlign: "center" }}>
                           Co-Advisor 1
                         </TableCell>
                       )}
                       {advisorAndCoAdvisor?.coAdvisor2 && (
-                        <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        <TableCell sx={{ width: "20%", textAlign: "center" }}>
                           Co-Advisor 2
                         </TableCell>
                       )}
@@ -1440,7 +1373,7 @@ const BeritaAcara = () => {
                     <TableRow>
                       <TableCell>1</TableCell>
                       <TableCell sx={{ textAlign: "center" }}>
-                        {dataPerubahan?.changes_by_chairman_abstrak !== null ? (
+                        {dataPerubahan?.changes_by_chairman !== null ? (
                           <Chip
                             size="small"
                             label="Sudah"
@@ -1455,7 +1388,7 @@ const BeritaAcara = () => {
                         )}
                       </TableCell>
                       <TableCell sx={{ textAlign: "center" }}>
-                        {dataPerubahan?.changes_by_member_abstrak !== null ? (
+                        {dataPerubahan?.changes_by_member !== null ? (
                           <Chip
                             size="small"
                             label="Sudah"
@@ -1463,19 +1396,14 @@ const BeritaAcara = () => {
                               background: "rgba(0, 255, 0, 0.10)",
                               color: "#008000",
                               fontSize: "10px",
-                              textAlign: "center",
                             }}
                           />
                         ) : (
-                          <Chip
-                            size="small"
-                            label="Belum"
-                            sx={{ textAlign: "center" }}
-                          />
+                          <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
                       <TableCell sx={{ textAlign: "center" }}>
-                        {dataPerubahan?.changes_by_advisor_abstrak !== null ? (
+                        {dataPerubahan?.changes_by_advisor !== null ? (
                           <Chip
                             size="small"
                             label="Sudah"
@@ -1496,8 +1424,7 @@ const BeritaAcara = () => {
                       </TableCell>
                       {advisorAndCoAdvisor?.coAdvisor1 && (
                         <TableCell sx={{ textAlign: "center" }}>
-                          {dataPerubahan?.changes_by_co_advisor1_abstrak !==
-                          null ? (
+                          {dataPerubahan?.changes_by_co_advisor1 !== null ? (
                             <Chip
                               size="small"
                               label="Sudah"
@@ -1519,8 +1446,7 @@ const BeritaAcara = () => {
                       )}
                       {advisorAndCoAdvisor?.coAdvisor2 && (
                         <TableCell sx={{ textAlign: "center" }}>
-                          {dataPerubahan?.changes_by_co_advisor2_abstrak !==
-                          null ? (
+                          {dataPerubahan?.changes_by_co_advisor2 !== null ? (
                             <Chip
                               size="small"
                               label="Sudah"
@@ -1528,6 +1454,7 @@ const BeritaAcara = () => {
                                 background: "rgba(0, 255, 0, 0.10)",
                                 color: "#008000",
                                 fontSize: "10px",
+                                textAlign: "center",
                               }}
                             />
                           ) : (
@@ -1561,22 +1488,7 @@ const BeritaAcara = () => {
                             <Div sx={{ margin: "2px", color: "#E0E0E0" }}>
                               |
                             </Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor:
-                                  isOpen?.is_open === true
-                                    ? "pointer"
-                                    : "not-allowed", // Mengubah tampilan kursor
-                                color:
-                                  isOpen?.is_open === true ? "blue" : "gray", // Mengubah warna
-                              }}
-                              onClick={() => {
-                                if (isOpen?.is_open === true) {
-                                  handleOpenRevisionDialog();
-                                }
-                              }}
-                            >
+                            <span onClick={handleOpenRevisionDialog}>
                               Komen
                             </span>
                           </>
@@ -1590,14 +1502,16 @@ const BeritaAcara = () => {
                               style={{
                                 textDecoration: "none",
                                 cursor:
-                                  isOpen?.is_open === true
+                                  dataPerubahan?.changes_by_member === null
                                     ? "pointer"
                                     : "not-allowed", // Mengubah tampilan kursor
                                 color:
-                                  isOpen?.is_open === true ? "blue" : "gray", // Mengubah warna
+                                  dataPerubahan?.changes_by_member === null
+                                    ? "blue"
+                                    : "gray", // Mengubah warna
                               }}
                               onClick={() => {
-                                if (isOpen?.is_open === true) {
+                                if (dataPerubahan?.changes_by_member === null) {
                                   handleOpenRevisionDialog();
                                 }
                               }}
@@ -1615,14 +1529,18 @@ const BeritaAcara = () => {
                               style={{
                                 textDecoration: "none",
                                 cursor:
-                                  isOpen?.is_open === true
+                                  dataPerubahan?.changes_by_advisor === null
                                     ? "pointer"
                                     : "not-allowed", // Mengubah tampilan kursor
                                 color:
-                                  isOpen?.is_open === true ? "blue" : "gray", // Mengubah warna
+                                  dataPerubahan?.changes_by_advisor === null
+                                    ? "blue"
+                                    : "gray", // Mengubah warna
                               }}
                               onClick={() => {
-                                if (isOpen?.is_open === true) {
+                                if (
+                                  dataPerubahan?.changes_by_advisor === null
+                                ) {
                                   handleOpenRevisionDialog();
                                 }
                               }}
@@ -1639,7 +1557,7 @@ const BeritaAcara = () => {
               {/* Table Perubahan End */}
 
               {/* Table Berita Acara Start */}
-              <TableContainer sx={{ marginBottom: "50px" }}>
+              <TableContainer sx={{ marginBottom: "50px" }} component={Paper}>
                 <Typography
                   variant="subtitle2"
                   sx={{
@@ -1652,17 +1570,22 @@ const BeritaAcara = () => {
                   Berita Acara
                 </Typography>
                 <Table>
-                  <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
+                  <TableHead
+                    sx={{
+                      background: "rgba(26, 56, 96, 0.10)",
+                      borderTop: "1px solid #ccc",
+                    }}
+                  >
                     <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
                       <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
                       <TableCell sx={{ width: "12%", textAlign: "center" }}>
                         Dekan Fakultas
                       </TableCell>
                       <TableCell sx={{ width: "12%", textAlign: "center" }}>
-                        Ketua Penelis
+                        Ketua Panelis
                       </TableCell>
                       <TableCell sx={{ width: "12%", textAlign: "center" }}>
-                        Anggota Penelis
+                        Anggota Panelis
                       </TableCell>
                       <TableCell sx={{ width: "12%", textAlign: "center" }}>
                         Advisor
@@ -1793,7 +1716,7 @@ const BeritaAcara = () => {
                               }
                             }}
                           >
-                            Tandai
+                            Setujui
                           </span>
                         </TableCell>
                       )}
@@ -1822,7 +1745,7 @@ const BeritaAcara = () => {
                               }
                             }}
                           >
-                            Tandai
+                            Setujui
                           </span>
                         </TableCell>
                       )}
@@ -1851,7 +1774,7 @@ const BeritaAcara = () => {
                               }
                             }}
                           >
-                            Tandai
+                            Setujui
                           </span>
                         </TableCell>
                       )}
@@ -1880,7 +1803,7 @@ const BeritaAcara = () => {
                               }
                             }}
                           >
-                            Tandai
+                            Setujui
                           </span>
                         </TableCell>
                       )}
@@ -1891,7 +1814,7 @@ const BeritaAcara = () => {
               {/* Table Berita Acara End */}
               {/* Radio Button Penilaian Akhir Start */}
 
-              {/* Kesimpulan dari Pengujian Ketua penelis start */}
+              {/* Kesimpulan dari Pengujian Ketua panelis start */}
               {userRole === "KETUA_PANELIS" && isOpen?.is_open === true && (
                 <Div
                   sx={{
@@ -1911,7 +1834,7 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography variant="subtitle2">
-                      Kesimpulan Ujian Skripsi
+                      Kesimpulan Ujian Proposal
                     </Typography>
                     <Div>
                       <FormControl component="fieldset">
@@ -1985,84 +1908,15 @@ const BeritaAcara = () => {
                       alignSelf: "stretch",
                     }}
                   >
-                    {dataPenilaian?.map((mahasiswa, index) => (
+                    {/* {nilaiKesimpulan.map((mahasiswa, index) => (
                       <Div key={index}>
                         <Typography variant="subtitle2">
-                          Kesimpulan Nilai {mahasiswa.fullName}
+                          Nilai Kesimpulan: {mahasiswa.nama}
                         </Typography>
-                        <Div>
-                          <FormControl component="fieldset">
-                            <RadioGroup
-                              row
-                              aria-label="nilai"
-                              name="nilai"
-                              value={
-                                nilaiMahasiswa[index]?.assessment_conclution
-                              }
-                              onChange={(e) =>
-                                setNilaiMahasiswa((prevNilai) =>
-                                  prevNilai.map((item, i) =>
-                                    i === index
-                                      ? {
-                                          ...item,
-                                          assessment_conclution:
-                                            e.currentTarget.value,
-                                        }
-                                      : item
-                                  )
-                                )
-                              }
-                            >
-                              <FormControlLabel
-                                value="A"
-                                control={<Radio />}
-                                label="A"
-                              />
-                              <FormControlLabel
-                                value="A-"
-                                control={<Radio />}
-                                label="A-"
-                              />
-                              <FormControlLabel
-                                value="B+"
-                                control={<Radio />}
-                                label="B+"
-                              />
-                              <FormControlLabel
-                                value="B"
-                                control={<Radio />}
-                                label="B"
-                              />
-                              <FormControlLabel
-                                value="B-"
-                                control={<Radio />}
-                                label="B-"
-                              />
-                              <FormControlLabel
-                                value="C+"
-                                control={<Radio />}
-                                label="C+"
-                              />
-                              <FormControlLabel
-                                value="C"
-                                control={<Radio />}
-                                label="C"
-                              />
-                              <FormControlLabel
-                                value="C-"
-                                control={<Radio />}
-                                label="C-"
-                              />
-                              <FormControlLabel
-                                value="D+"
-                                control={<Radio />}
-                                label="D+"
-                              />
-                            </RadioGroup>
-                          </FormControl>
-                        </Div>
+                        
+                        <Typography>{mahasiswa.nilai}</Typography>
                       </Div>
-                    ))}
+                    ))} */}
                   </Div>
                   <Div
                     sx={{
@@ -2108,19 +1962,21 @@ const BeritaAcara = () => {
                         {errorMessageKesimpulan}
                       </Typography>
                     </Div>
-                    <TextField
-                      id="date"
-                      label="Batas pengumpulan revisi"
-                      type="date"
-                      fullWidth
-                      placeholder="dd/mm/yyyy"
-                      value={selectedDate}
-                      onChange={handleDateChange}
-                      sx={{ marginTop: "25px" }}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
+                    {inputVisible && (
+                      <TextField
+                        id="date"
+                        label="Batas pengumpulan revisi"
+                        type="date"
+                        fullWidth
+                        placeholder="dd/mm/yyyy"
+                        value={selectedDate}
+                        onChange={handleDateChange}
+                        sx={{ marginTop: "25px" }}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                    )}
                   </Div>
                   {/* Radio Button Penilaian Akhir End */}
                   <Div
@@ -2140,29 +1996,14 @@ const BeritaAcara = () => {
                       sx={{ textTransform: "none" }}
                       color="primary"
                       onClick={handleOpenConfirmationBeritaAcaraDialog}
-                      disabled={
-                        dataPenilaian?.some(
-                          (value) =>
-                            value.value_by_chairman === null ||
-                            value.value_by_member === null ||
-                            value.value_by_advisor === null
-                        ) ||
-                        dataPerubahan?.changes_by_chairman_abstrak === null ||
-                        dataPerubahan?.changes_by_member_abstrak === null ||
-                        dataPerubahan?.changes_by_advisor_abstrak === null ||
-                        dataBeritaAcara?.is_report_approve_by_panelist_chairman ===
-                          null ||
-                        dataBeritaAcara?.is_report_approve_by_panelist_member ===
-                          null ||
-                        dataBeritaAcara?.is_report_approve_by_advisor === null
-                      }
+                      // disabled={}
                     >
                       Submit
                     </Button>
                   </Div>
                 </Div>
               )}
-              {/* Kesimpulan dari Pengujian Ketua penelis start */}
+              {/* Kesimpulan dari Pengujian Ketua panelis start */}
               {isOpen?.is_open === false && (
                 <Div>
                   <Div
@@ -2175,7 +2016,7 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography variant="subtitle2">
-                      Kesimpulan Ujian Skripsi
+                      Kesimpulan Ujian Proposal
                     </Typography>
                     <Div>
                       <Typography variant="body1">
@@ -2203,7 +2044,6 @@ const BeritaAcara = () => {
                       </Typography>
                     </Div>
                   </Div>
-                  {/* Nilai Kesimpulan Mahasiswa */}
                   <Div
                     sx={{
                       display: "flex",
@@ -2213,14 +2053,14 @@ const BeritaAcara = () => {
                       alignSelf: "stretch",
                     }}
                   >
-                    {dataPenilaian?.map((mahasiswa, index) => (
-                      <Div key={index}>
-                        <Typography variant="subtitle2">
-                          Kesimpulan Nilai {mahasiswa.fullName}
-                        </Typography>
-                        <Typography>{mahasiswa.value_conclusion}</Typography>
-                      </Div>
-                    ))}
+                    <Div>
+                      <Typography variant="subtitle2">
+                        Nilai Kesimpulan Ujian Proposal
+                      </Typography>
+                      <Typography variant="body1">
+                        {dataKesimpulan?.assessment_conclution}
+                      </Typography>
+                    </Div>
                   </Div>
                   <Div
                     sx={{
@@ -2288,7 +2128,7 @@ const BeritaAcara = () => {
               alignSelf: "stretch",
             }}
           >
-            <Typography sx={{ width: "100px" }}>Judul Skripsi</Typography>
+            <Typography sx={{ width: "100px" }}>Judul Proposal</Typography>
             <Typography>:</Typography>
             <Typography>
               {isOpen && isOpen.title ? isOpen.title.toUpperCase() : ""}
@@ -2328,17 +2168,26 @@ const BeritaAcara = () => {
           >
             <Typography sx={{ width: "100px" }}>Program Studi</Typography>
             <Typography>:</Typography>
-            <Typography>{selectedProdi}</Typography>
+            <Typography>
+              {selectedProdi === "IF"
+                ? "Informatika"
+                : selectedProdi === "SI"
+                ? "Sistem Informasi"
+                : ""}
+            </Typography>
           </Div>
           {/* nilai */}
-          <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
+          <TableHead
+            sx={{ background: "#F5F5F5", width: "100%" }}
+            component={Paper}
+          >
             <TableRow>
               <TableCell sx={{ width: "5%" }}>No</TableCell>
               <TableCell sx={{ width: "35%" }}>Kriteria</TableCell>
               <TableCell sx={{ width: "60%" }}>Range Nilai</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody sx={{ width: "100%" }}>
+          <TableBody sx={{ width: "100%" }} component={Paper}>
             {/* Table Row Start*/}
             <TableRow>
               <TableCell sx={{ width: "5%" }}>1</TableCell>
@@ -2810,28 +2659,63 @@ const BeritaAcara = () => {
           <Div
             sx={{
               display: "flex",
+              alignItems: "flex-start",
+              gap: "15px",
+              alignSelf: "stretch",
+            }}
+          >
+            <Typography sx={{ width: "150px" }}>Judul Proposal</Typography>
+            <Typography>:</Typography>
+            <Typography>
+              {isOpen && isOpen.title ? isOpen.title.toUpperCase() : ""}
+            </Typography>
+          </Div>
+          <Div
+            sx={{
+              display: "flex",
               flexDirection: "column",
               alignItems: "flex-start",
               gap: "20px",
               alignSelf: "stretch",
             }}
           >
+            <TableContainer>
+              <Table>
+                <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
+                  <TableRow>
+                    <TableCell>No</TableCell>
+                    <TableCell>Nama Lengkap</TableCell>
+                    <TableCell>Nim</TableCell>
+                    <TableCell>Program Studi</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {dataPenilaian?.map((student, studentIndex) => (
+                    <TableRow>
+                      <TableCell>{studentIndex + 1}</TableCell>
+                      <TableCell>{student.fullName}</TableCell>
+                      <TableCell>{student.nim}</TableCell>
+                      <TableCell>{student.major}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
             <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-              Abstrak
+              Judul
             </DialogContentText>
             <TextareaAutosize
               aria-label="minimum height"
               minRows={3}
-              maxRows={10}
-              placeholder="Masukan Perubahan Abstrak"
+              placeholder="Masukan Perubahan Judul"
               style={{
                 width: "100%",
                 marginBottom: "25px",
 
                 resize: "vertical",
               }}
-              value={abstrak}
-              onChange={(e) => setAbstrak(e.target.value)}
+              value={judul}
+              onChange={(e) => setJudul(e.target.value)}
             />
             <DialogContentText sx={{ width: "100%", margin: "auto" }}>
               Bab 1
@@ -2839,7 +2723,6 @@ const BeritaAcara = () => {
             <TextareaAutosize
               aria-label="minimum height"
               minRows={3}
-              maxRows={10}
               placeholder="Masukan Perubahan Bab 1"
               style={{
                 width: "100%",
@@ -2856,7 +2739,6 @@ const BeritaAcara = () => {
             <TextareaAutosize
               aria-label="minimum height"
               minRows={3}
-              maxRows={10}
               placeholder="Masukkan Perubahan Bab 2"
               style={{
                 width: "100%",
@@ -2873,7 +2755,6 @@ const BeritaAcara = () => {
             <TextareaAutosize
               aria-label="minimum height"
               minRows={3}
-              maxRows={10}
               placeholder="Masukkan Perubahan Bab 3"
               style={{
                 width: "100%",
@@ -2883,57 +2764,6 @@ const BeritaAcara = () => {
               }}
               value={bab3}
               onChange={(e) => setBab3(e.target.value)}
-            />
-            <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-              Bab 4
-            </DialogContentText>
-            <TextareaAutosize
-              aria-label="minimum height"
-              minRows={3}
-              maxRows={10}
-              placeholder="Masukkan Perubahan Bab 4"
-              style={{
-                width: "100%",
-                marginBottom: "25px",
-
-                resize: "vertical",
-              }}
-              value={bab4}
-              onChange={(e) => setBab4(e.target.value)}
-            />
-            <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-              Bab 5
-            </DialogContentText>
-            <TextareaAutosize
-              aria-label="minimum height"
-              minRows={3}
-              maxRows={10}
-              placeholder="Masukkan Perubahan Bab 5"
-              style={{
-                width: "100%",
-                marginBottom: "25px",
-
-                resize: "vertical",
-              }}
-              value={bab5}
-              onChange={(e) => setBab5(e.target.value)}
-            />
-            <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-              Lainnya
-            </DialogContentText>
-            <TextareaAutosize
-              aria-label="minimum height"
-              minRows={3}
-              maxRows={10}
-              placeholder="Masukkan Perubahan Lainnya"
-              style={{
-                width: "100%",
-                marginBottom: "25px",
-
-                resize: "vertical",
-              }}
-              value={lainnya}
-              onChange={(e) => setLainnya(e.target.value)}
             />
           </Div>
         </DialogContent>
@@ -2970,9 +2800,7 @@ const BeritaAcara = () => {
       >
         <DialogTitle>Perubahan</DialogTitle>
         <DialogContent>
-          <Typography>
-            Apakah Anda yakin ingin memberikan dataPerubahan?
-          </Typography>
+          <Typography>Apakah Anda yakin ingin memberikan perubahan?</Typography>
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -2990,7 +2818,6 @@ const BeritaAcara = () => {
             onClick={() => {
               handleRevisionSubmit();
               handleSudmitClick();
-              setIsRevisionEnabled(false);
             }}
             variant="contained"
             sx={{ textTransform: "none" }}
@@ -3032,6 +2859,21 @@ const BeritaAcara = () => {
           <Div
             sx={{
               display: "flex",
+              alignItems: "flex-start",
+              gap: "10px",
+              alignSelf: "stretch",
+            }}
+          >
+            <Typography sx={{ width: "100px" }}>Judul Proposal</Typography>
+            <Typography>:</Typography>
+            <Typography>
+              {isOpen && isOpen.title ? isOpen.title.toUpperCase() : ""}
+            </Typography>
+          </Div>
+
+          <Div
+            sx={{
+              display: "flex",
               padding: "0px 50px",
               flexDirection: "column",
               alignItems: "flex-start",
@@ -3048,16 +2890,18 @@ const BeritaAcara = () => {
                 boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
               }}
             >
-              <Accordion sx={{ width: "100%" }}>
+              <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
-                  sx={{ background: "#F5F5F5" }}
                 >
                   <Typography>Ketua Panelis</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
+                  <Typography sx={{ whiteSpace: "pre-line" }}>
+                    {dataPerubahan?.changes_by_chairman}
+                  </Typography>
                   <Div
                     sx={{
                       display: "flex",
@@ -3068,10 +2912,8 @@ const BeritaAcara = () => {
                       alignSelf: "stretch",
                     }}
                   >
-                    <Typography>Abstrak</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_chairman_abstrak}
-                    </Typography>
+                    <Typography>Judul</Typography>
+                    <Typography>{submittedData.judul}</Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3084,9 +2926,7 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 1</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_chairman_bab1}
-                    </Typography>
+                    <Typography>{submittedData.bab1}</Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3099,9 +2939,7 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 2</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_chairman_bab2}
-                    </Typography>
+                    <Typography>{submittedData.bab2}</Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3114,63 +2952,15 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 3</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_chairman_bab3}
-                    </Typography>
-                  </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      padding: "14px 16px",
-                      flexDirection: "column",
-                      gap: "10px",
-                      flex: "1 0 0",
-                      alignSelf: "stretch",
-                    }}
-                  >
-                    <Typography>Bab 4</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_chairman_bab4}
-                    </Typography>
-                  </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      padding: "14px 16px",
-                      flexDirection: "column",
-                      gap: "10px",
-                      flex: "1 0 0",
-                      alignSelf: "stretch",
-                    }}
-                  >
-                    <Typography>Bab 5</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_chairman_bab5}
-                    </Typography>
-                  </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      padding: "14px 16px",
-                      flexDirection: "column",
-                      gap: "10px",
-                      flex: "1 0 0",
-                      alignSelf: "stretch",
-                    }}
-                  >
-                    <Typography>Lainnya</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_chairman_other}
-                    </Typography>
+                    <Typography>{submittedData.bab3}</Typography>
                   </Div>
                 </AccordionDetails>
               </Accordion>
-              <Accordion sx={{ width: "100%" }}>
+              <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
-                  sx={{ background: "#F5F5F5" }}
                 >
                   <Typography>Anggota Panelis</Typography>
                 </AccordionSummary>
@@ -3185,10 +2975,8 @@ const BeritaAcara = () => {
                       alignSelf: "stretch",
                     }}
                   >
-                    <Typography>Abstrak</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_member_abstrak}
-                    </Typography>
+                    <Typography>Judul</Typography>
+                    <Typography>{submittedData.judul}</Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3201,9 +2989,7 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 1</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_member_bab1}
-                    </Typography>
+                    <Typography>{submittedData.bab1}</Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3216,9 +3002,7 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 2</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_member_bab2}
-                    </Typography>
+                    <Typography>{submittedData.bab2}</Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3231,63 +3015,15 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 3</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_member_bab3}
-                    </Typography>
-                  </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      padding: "14px 16px",
-                      flexDirection: "column",
-                      gap: "10px",
-                      flex: "1 0 0",
-                      alignSelf: "stretch",
-                    }}
-                  >
-                    <Typography>Bab 4</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_member_bab4}
-                    </Typography>
-                  </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      padding: "14px 16px",
-                      flexDirection: "column",
-                      gap: "10px",
-                      flex: "1 0 0",
-                      alignSelf: "stretch",
-                    }}
-                  >
-                    <Typography>Bab 5</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_member_bab5}
-                    </Typography>
-                  </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      padding: "14px 16px",
-                      flexDirection: "column",
-                      gap: "10px",
-                      flex: "1 0 0",
-                      alignSelf: "stretch",
-                    }}
-                  >
-                    <Typography>Lainnya</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_member_other}
-                    </Typography>
+                    <Typography>{submittedData.bab3}</Typography>
                   </Div>
                 </AccordionDetails>
               </Accordion>
-              <Accordion sx={{ width: "100%" }}>
+              <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
-                  sx={{ background: "#F5F5F5" }}
                 >
                   <Typography>Advisor</Typography>
                 </AccordionSummary>
@@ -3302,10 +3038,8 @@ const BeritaAcara = () => {
                       alignSelf: "stretch",
                     }}
                   >
-                    <Typography>Abstrak</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_advisor_abstrak}
-                    </Typography>
+                    <Typography>Judul</Typography>
+                    <Typography>{submittedData.judul}</Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3318,9 +3052,7 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 1</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_advisor_bab1}
-                    </Typography>
+                    <Typography>{submittedData.bab1}</Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3333,9 +3065,7 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 2</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_advisor_bab2}
-                    </Typography>
+                    <Typography>{submittedData.bab2}</Typography>
                   </Div>
                   <Div
                     sx={{
@@ -3348,64 +3078,16 @@ const BeritaAcara = () => {
                     }}
                   >
                     <Typography>Bab 3</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_advisor_bab3}
-                    </Typography>
-                  </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      padding: "14px 16px",
-                      flexDirection: "column",
-                      gap: "10px",
-                      flex: "1 0 0",
-                      alignSelf: "stretch",
-                    }}
-                  >
-                    <Typography>Bab 4</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_advisor_bab4}
-                    </Typography>
-                  </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      padding: "14px 16px",
-                      flexDirection: "column",
-                      gap: "10px",
-                      flex: "1 0 0",
-                      alignSelf: "stretch",
-                    }}
-                  >
-                    <Typography>Bab 5</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_advisor_bab5}
-                    </Typography>
-                  </Div>
-                  <Div
-                    sx={{
-                      display: "flex",
-                      padding: "14px 16px",
-                      flexDirection: "column",
-                      gap: "10px",
-                      flex: "1 0 0",
-                      alignSelf: "stretch",
-                    }}
-                  >
-                    <Typography>Lainnya</Typography>
-                    <Typography>
-                      {dataPerubahan?.changes_by_advisor_other}
-                    </Typography>
+                    <Typography>{submittedData.bab3}</Typography>
                   </Div>
                 </AccordionDetails>
               </Accordion>
               {advisorAndCoAdvisor?.coAdvisor1 && (
-                <Accordion sx={{ width: "100%" }}>
+                <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
-                    sx={{ background: "#F5F5F5" }}
                   >
                     <Typography>Co-Advisor 1</Typography>
                   </AccordionSummary>
@@ -3420,10 +3102,8 @@ const BeritaAcara = () => {
                         alignSelf: "stretch",
                       }}
                     >
-                      <Typography>Abstrak</Typography>
-                      <Typography>
-                        {dataPerubahan?.changes_by_co_advisor1_abstrak}
-                      </Typography>
+                      <Typography>Judul</Typography>
+                      <Typography>{submittedData.judul}</Typography>
                     </Div>
                     <Div
                       sx={{
@@ -3436,9 +3116,7 @@ const BeritaAcara = () => {
                       }}
                     >
                       <Typography>Bab 1</Typography>
-                      <Typography>
-                        {dataPerubahan?.changes_by_co_advisor1_bab1}
-                      </Typography>
+                      <Typography>{submittedData.bab1}</Typography>
                     </Div>
                     <Div
                       sx={{
@@ -3451,9 +3129,7 @@ const BeritaAcara = () => {
                       }}
                     >
                       <Typography>Bab 2</Typography>
-                      <Typography>
-                        {dataPerubahan?.changes_by_co_advisor1_bab2}
-                      </Typography>
+                      <Typography>{submittedData.bab2}</Typography>
                     </Div>
                     <Div
                       sx={{
@@ -3466,65 +3142,17 @@ const BeritaAcara = () => {
                       }}
                     >
                       <Typography>Bab 3</Typography>
-                      <Typography>
-                        {dataPerubahan?.changes_by_co_advisor1_bab3}
-                      </Typography>
-                    </Div>
-                    <Div
-                      sx={{
-                        display: "flex",
-                        padding: "14px 16px",
-                        flexDirection: "column",
-                        gap: "10px",
-                        flex: "1 0 0",
-                        alignSelf: "stretch",
-                      }}
-                    >
-                      <Typography>Bab 4</Typography>
-                      <Typography>
-                        {dataPerubahan?.changes_by_co_advisor1_bab4}
-                      </Typography>
-                    </Div>
-                    <Div
-                      sx={{
-                        display: "flex",
-                        padding: "14px 16px",
-                        flexDirection: "column",
-                        gap: "10px",
-                        flex: "1 0 0",
-                        alignSelf: "stretch",
-                      }}
-                    >
-                      <Typography>Bab 5</Typography>
-                      <Typography>
-                        {dataPerubahan?.changes_by_co_advisor1_bab5}
-                      </Typography>
-                    </Div>
-                    <Div
-                      sx={{
-                        display: "flex",
-                        padding: "14px 16px",
-                        flexDirection: "column",
-                        gap: "10px",
-                        flex: "1 0 0",
-                        alignSelf: "stretch",
-                      }}
-                    >
-                      <Typography>Lainnya</Typography>
-                      <Typography>
-                        {dataPerubahan?.changes_by_co_advisor1_other}
-                      </Typography>
+                      <Typography>{submittedData.bab3}</Typography>
                     </Div>
                   </AccordionDetails>
                 </Accordion>
               )}
               {advisorAndCoAdvisor?.coAdvisor2 && (
-                <Accordion sx={{ width: "100%" }}>
+                <Accordion sx={{ width: "100%", background: "#F5F5F5" }}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
-                    sx={{ background: "#F5F5F5" }}
                   >
                     <Typography>Co-Advisor 2</Typography>
                   </AccordionSummary>
@@ -3539,10 +3167,8 @@ const BeritaAcara = () => {
                         alignSelf: "stretch",
                       }}
                     >
-                      <Typography>Abstrak</Typography>
-                      <Typography>
-                        {dataPerubahan?.changes_by_co_advisor2_abstrak}
-                      </Typography>
+                      <Typography>Judul</Typography>
+                      <Typography>{submittedData.judul}</Typography>
                     </Div>
                     <Div
                       sx={{
@@ -3555,9 +3181,7 @@ const BeritaAcara = () => {
                       }}
                     >
                       <Typography>Bab 1</Typography>
-                      <Typography>
-                        {dataPerubahan?.changes_by_co_advisor2_bab1}
-                      </Typography>
+                      <Typography>{submittedData.bab1}</Typography>
                     </Div>
                     <Div
                       sx={{
@@ -3570,9 +3194,7 @@ const BeritaAcara = () => {
                       }}
                     >
                       <Typography>Bab 2</Typography>
-                      <Typography>
-                        {dataPerubahan?.changes_by_co_advisor2_bab2}
-                      </Typography>
+                      <Typography>{submittedData.bab2}</Typography>
                     </Div>
                     <Div
                       sx={{
@@ -3585,54 +3207,7 @@ const BeritaAcara = () => {
                       }}
                     >
                       <Typography>Bab 3</Typography>
-                      <Typography>
-                        {dataPerubahan?.changes_by_co_advisor2_bab3}
-                      </Typography>
-                    </Div>
-                    <Div
-                      sx={{
-                        display: "flex",
-                        padding: "14px 16px",
-                        flexDirection: "column",
-                        gap: "10px",
-                        flex: "1 0 0",
-                        alignSelf: "stretch",
-                      }}
-                    >
-                      <Typography>Bab 4</Typography>
-                      <Typography>
-                        {dataPerubahan?.changes_by_co_advisor2_bab4}
-                      </Typography>
-                    </Div>
-                    <Div
-                      sx={{
-                        display: "flex",
-                        padding: "14px 16px",
-                        flexDirection: "column",
-                        gap: "10px",
-                        flex: "1 0 0",
-                        alignSelf: "stretch",
-                      }}
-                    >
-                      <Typography>Bab 5</Typography>
-                      <Typography>
-                        {dataPerubahan?.changes_by_co_advisor2_bab5}
-                      </Typography>
-                    </Div>
-                    <Div
-                      sx={{
-                        display: "flex",
-                        padding: "14px 16px",
-                        flexDirection: "column",
-                        gap: "10px",
-                        flex: "1 0 0",
-                        alignSelf: "stretch",
-                      }}
-                    >
-                      <Typography>Lainnya</Typography>
-                      <Typography>
-                        {dataPerubahan?.changes_by_co_advisor2_other}
-                      </Typography>
+                      <Typography>{submittedData.bab3}</Typography>
                     </Div>
                   </AccordionDetails>
                 </Accordion>
@@ -3656,14 +3231,14 @@ const BeritaAcara = () => {
       </Dialog>
       {/* Melihat Perubahan End */}
 
-      {/* Konfirmasi Sidang Skripsi Start*/}
+      {/* Konfirmasi Sidang Proposal Start*/}
       <Dialog
         open={openConfirmationBeritaAcaraDialog}
         onClose={handleCloseConfirmationBeritaAcaraDialog}
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>Sidang Skripsi</DialogTitle>
+        <DialogTitle>Sidang Proposal</DialogTitle>
         <DialogContent>
           <Typography>
             Apakah Anda yakin ingin menyetujui hasil sidang ini?
@@ -3691,7 +3266,7 @@ const BeritaAcara = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      {/* konfrimasi Sidang Skripsi End */}
+      {/* konfrimasi Sidang Proposal End */}
       <Dialog
         open={openSignInConfirmationDialog}
         onClose={handleCloseSignInConfirmationDialog}
@@ -3701,7 +3276,7 @@ const BeritaAcara = () => {
         <DialogTitle>Berita Acara</DialogTitle>
         <DialogContent>
           <Typography>
-            Apakah Anda yakin ingin menandatangani berita acara?
+            Apakah Anda yakin ingin menyetujui berita acara?
           </Typography>
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
@@ -3734,4 +3309,4 @@ const BeritaAcara = () => {
   );
 };
 
-export default BeritaAcara;
+export default TestBeritaAcaraProposal;

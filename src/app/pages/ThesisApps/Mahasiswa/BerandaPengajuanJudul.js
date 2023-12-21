@@ -101,10 +101,10 @@ const BerandaPengajuanJudul = ({ value: groupId }) => {
             <Table>
               <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                 <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                  <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                  <TableCell sx={{ width: "25%" }}>Nama Lengkap</TableCell>
-                  <TableCell sx={{ width: "25%" }}>NIM</TableCell>
-                  <TableCell sx={{ width: "25%" }}>Program Studi</TableCell>
+                  <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
+                  <TableCell sx={{ width: "55%" }}>Nama Lengkap</TableCell>
+                  <TableCell sx={{ width: "20%" }}>NIM</TableCell>
+                  <TableCell sx={{ width: "20%" }}>Program Studi</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -145,14 +145,14 @@ const BerandaPengajuanJudul = ({ value: groupId }) => {
             <Table>
               <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                 <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                  <TableCell sx={{ width: "50%" }}>Nomor</TableCell>
-                  <TableCell sx={{ width: "50%" }}>Dosen Skripsi</TableCell>
+                  <TableCell sx={{ width: "50%", textAlign: "center" }}>
+                    Dosen Skripsi
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 <TableRow>
-                  <TableCell>1</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
                     {details?.submission_status?.status === "Waiting" ? (
                       <Chip
                         label={"Menunggu"}

@@ -12,8 +12,13 @@ import DokumenSkripsi from "app/pages/ThesisApps/Dosen/DokumenSkripsi";
 import PengajuanJudulDosenSkripsi from "app/pages/ThesisApps/Dosen/PengajuanJudulDosenSkripsi";
 import BerandaGlobal from "app/pages/ThesisApps/Mahasiswa/BerandaGlobal";
 import Konsultasi from "app/pages/ThesisApps/Mahasiswa/Konsultasi";
+import DaftarSkripsiFILKOM from "app/pages/ThesisApps/Global/DaftarSkripsiFILKOM";
 
 const dekanRoutes = [
+  {
+    path: "/sistem-informasi-skripsi/daftar-judul-skrisi-fakultas-ilmu-komputer",
+    element: <Page component={DaftarSkripsiFILKOM} />,
+  },
   // pengajuan judul
   {
     path: "/sistem-informasi-skripsi/daftar-pengajuan-judul-dekan",

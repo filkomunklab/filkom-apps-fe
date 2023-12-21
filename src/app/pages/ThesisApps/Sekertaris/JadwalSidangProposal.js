@@ -53,6 +53,8 @@ const JadwalSidangProposal = () => {
   const [semesterIndex, setSemesterIndex] = useState();
   const [selectedProposalId, setSelectedProposalId] = useState();
   const [selectedAdvisor, setSelectedAdvisor] = useState();
+  const [selectedCoAdvisor1, setSelectedCoAdvisor1] = useState();
+  const [selectedCoAdvisor2, setSelectedCoAdvisor2] = useState();
   const [selectedKetuaPenelis, setSelectedKetuaPenelis] = useState(""); // State untuk ketua penelis
   const [selectedAnggotaPenelis, setSelectedAnggotaPenelis] = useState(""); // State untuk anggota penelis
   const [mulaiWaktu, setMulaiWaktu] = useState(""); // State untuk mulai waktu
@@ -71,7 +73,6 @@ const JadwalSidangProposal = () => {
   const formatDate = (date) => {
     const options = { year: "numeric", month: "numeric", day: "numeric" };
     return new Intl.DateTimeFormat("id-ID", options).format(date);
-    return date.toISOString().split("T")[0];
   };
 
   useEffect(() => {
@@ -125,6 +126,8 @@ const JadwalSidangProposal = () => {
     setOpenDialog(false);
     setSelectedProposalId("");
     setSelectedAdvisor("");
+    setSelectedCoAdvisor1("");
+    setSelectedCoAdvisor2("");
     setSelectedKetuaPenelis("");
     setSelectedAnggotaPenelis("");
     setMulaiWaktu("");
@@ -140,6 +143,7 @@ const JadwalSidangProposal = () => {
     selectedKetuaPenelis: "",
     selectedAnggotaPenelis: "",
     ruangan: "",
+    selectedAdvisor: "",
   });
 
   const handlePerbarui = () => {
@@ -178,6 +182,19 @@ const JadwalSidangProposal = () => {
     // Validasi input ruangan
     if (!ruangan) {
       newErrorMessages.ruangan = "Ruangan harus diisi";
+      hasError = true;
+    }
+
+    // Validasi jika Ketua Panelis dan Anggota Panelis sama (jika keduanya sudah dipilih)
+    if (
+      selectedKetuaPenelis &&
+      selectedAnggotaPenelis &&
+      selectedKetuaPenelis === selectedAnggotaPenelis
+    ) {
+      newErrorMessages.selectedKetuaPenelis =
+        "Ketua Panelis dan Anggota Panelis tidak boleh sama";
+      newErrorMessages.selectedAnggotaPenelis =
+        "Ketua Panelis dan Anggota Panelis tidak boleh sama";
       hasError = true;
     }
 
@@ -220,6 +237,8 @@ const JadwalSidangProposal = () => {
         // Reset semua state input
         setSelectedProposalId("");
         setSelectedAdvisor("");
+        setSelectedCoAdvisor1("");
+        setSelectedCoAdvisor2("");
         setSelectedKetuaPenelis("");
         setSelectedAnggotaPenelis("");
         setMulaiWaktu("");
@@ -470,6 +489,12 @@ const JadwalSidangProposal = () => {
                                     handleUpdateClick(scheduleIndex, index);
                                     setSelectedProposalId(jadwal.proposal_id);
                                     setSelectedAdvisor(jadwal.advisor_name);
+                                    setSelectedCoAdvisor1(
+                                      jadwal.co_advisor1_id
+                                    );
+                                    setSelectedCoAdvisor2(
+                                      jadwal.co_advisor2_id
+                                    );
                                     setSelectedKetuaPenelis(
                                       jadwal.panelist_chairman_id
                                     );
@@ -505,146 +530,6 @@ const JadwalSidangProposal = () => {
               </Accordion>
             ))}
         </Div>
-
-        {/* {daftarJadwal &&
-          daftarJadwal.map((scheduleData, scheduleIndex) => (
-            <div key={scheduleIndex} style={{ width: "100%" }}>
-              <Div
-                sx={{
-                  display: "flex",
-                  width: "100%",
-                  padding: "24px",
-                  alignItems: "center",
-                  gap: "10px",
-                  borderRadius: "6px",
-                  background: "rgba(26, 56, 96, 0.10)",
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: "16px",
-                    fontStyle: "normal",
-                    fontWeight: 500,
-                    lineHeight: "24px",
-                    color: "#192434",
-                  }}
-                >
-                  {scheduleData.semester}
-                </Typography>
-              </Div>
-              {/* Semester End */}
-        {/* Table Mahasiswa Proposal Start *
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell sx={{ width: "25px", fontSize: "13px" }}>
-                        Nomor
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Judul</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Advisor</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Ketua Panelis
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>
-                        Anggota Panelis
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Mulai</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Selesai</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Tanggal</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Ruangan</TableCell>
-                      <TableCell sx={{ fontSize: "13px" }}>Action</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {scheduleData.schedules.map((jadwal, index) => (
-                      <TableRow key={index}>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {index + 1}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "13px" }}>
-                          {jadwal.title}
-                        </TableCell>
-                        <TableCell>
-                          <Typography>{jadwal.advisor_name}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography>
-                            {jadwal.panelist_chairman_name}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography>{jadwal.panelist_member_name}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography>{jadwal.start_defence}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography>{jadwal.end_defence}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography>{jadwal.defence_date}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography>{jadwal.defence_room}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Div sx={{ display: "flex" }}>
-                            <Typography
-                              component={Link}
-                              to="/halaman-berikutnya"
-                              sx={{
-                                textDecoration: "none",
-                                color: "blue",
-                              }}
-                            >
-                              Detail
-                            </Typography>
-                            <Div sx={{ margin: "2px" }}>|</Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "blue",
-                              }}
-                              onClick={() => {
-                                handleUpdateClick(scheduleIndex, index);
-                                setSelectedProposalId(jadwal.proposal_id);
-                                setSelectedAdvisor(jadwal.advisor_name);
-                                setSelectedKetuaPenelis(
-                                  jadwal.panelist_chairman_id
-                                );
-                                setSelectedAnggotaPenelis(
-                                  jadwal.panelist_member_id
-                                );
-                                setMulaiWaktu(jadwal.start_defence);
-                                setSelesaiWaktu(jadwal.end_defence);
-                                setMulaiTanggal(jadwal.defence_date);
-                                setRuangan(jadwal.defence_room);
-                                console.log(
-                                  `Selected proposal id: ${jadwal.proposal_id}\n
-                                  Selected Advisor: ${jadwal.advisor_name}\n
-                                  Selected Chairman: ${jadwal.panelist_chairman_id}\n
-                                  Selected Member: ${jadwal.panelist_member_id}\n
-                                  Selected Start: ${jadwal.start_defence}\n
-                                  Selected End: ${jadwal.end_defence}\n
-                                  Date: ${jadwal.defence_date}\n
-                                  Room: ${jadwal.defence_room}`
-                                );
-                              }}
-                            >
-                              Perbarui
-                            </span>
-                          </Div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* Table Mahasiswa Proposal End *
-            </div>
-          ))} */}
       </Div>
       {/* Table Master End */}
       {/* popup pembuatan Jadwal start */}
@@ -797,13 +682,13 @@ const JadwalSidangProposal = () => {
                   error={!!errorMessages.selectedKetuaPenelis}
                 >
                   {daftarDosen
-                    ?.filter(
+                    .filter(
                       (dosen) =>
-                        dosen.id !== selectedKetuaPenelis &&
-                        dosen.id !== selectedAnggotaPenelis &&
-                        dosen.name !== selectedAdvisor
+                        dosen.name !== selectedAdvisor &&
+                        dosen.id !== selectedCoAdvisor1 &&
+                        dosen.id !== selectedCoAdvisor2
                     )
-                    ?.map((dosen) => (
+                    .map((dosen) => (
                       <MenuItem key={dosen.id} value={dosen.id}>
                         {dosen.name}
                       </MenuItem>
@@ -844,13 +729,13 @@ const JadwalSidangProposal = () => {
                   error={!!errorMessages.selectedAnggotaPenelis}
                 >
                   {daftarDosen
-                    ?.filter(
+                    .filter(
                       (dosen) =>
-                        dosen.id !== selectedKetuaPenelis &&
-                        dosen.id !== selectedAnggotaPenelis &&
-                        dosen.name !== selectedAdvisor
+                        dosen.name !== selectedAdvisor &&
+                        dosen.id !== selectedCoAdvisor1 &&
+                        dosen.id !== selectedCoAdvisor2
                     )
-                    ?.map((dosen) => (
+                    .map((dosen) => (
                       <MenuItem key={dosen.id} value={dosen.id}>
                         {dosen.name}
                       </MenuItem>
@@ -878,7 +763,12 @@ const JadwalSidangProposal = () => {
                     ),
                   }}
                   value={selectedAdvisor}
+                  onChange={(event) => setSelectedAdvisor(event.target.value)}
+                  error={!!errorMessages.selectedAdvisor}
                 />
+                <FormHelperText error={!!errorMessages.selectedAdvisor}>
+                  {errorMessages.selectedAdvisor}
+                </FormHelperText>
               </FormControl>
             </Div>
           </Div>
@@ -886,15 +776,20 @@ const JadwalSidangProposal = () => {
           <Typography
             sx={{
               display: "flex",
+              flexDirection: "column", // Mengubah orientasi menjadi kolom
               padding: "24px",
-              alignItems: "center",
+              alignItems: "flex-start", // Mengatur rata kiri
               gap: "10px",
               alignSelf: "stretch",
               background: "rgba(26, 56, 96, 0.10)",
               borderRadius: "6px",
             }}
           >
-            Jadwal Sidang
+            <div>Jadwal Sidang</div>
+            <div>
+              Catatan: Periksa kembali jadwal yang sudah ada supaya tidak
+              bertabrakan dengan jadwal yang akan dibuat!
+            </div>
           </Typography>
           <Container sx={{ marginTop: "10px" }}>
             <Grid container spacing={2}>

@@ -19,8 +19,13 @@ import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 
 // View Document Skripsi
-const PDFViewerSkripsi = ({ dokumenSkripsi }) => {
+const PDFViewerSkripsi = ({ dokumenSkripsi, isUploading }) => {
   const viewPDFSkripsi = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
     const pdfURL = dokumenSkripsi.file_path_skripsi;
 
@@ -30,7 +35,13 @@ const PDFViewerSkripsi = ({ dokumenSkripsi }) => {
 
   return (
     <div>
-      <span sx={{ fontSize: "10px" }} onClick={viewPDFSkripsi}>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFSkripsi}
+      >
         Lihat
       </span>
     </div>
@@ -38,10 +49,15 @@ const PDFViewerSkripsi = ({ dokumenSkripsi }) => {
 };
 
 // View Document Payment
-const PDFViewerPayment = ({ paymentFile }) => {
+const PDFViewerPayment = ({ buktiPembayaran, isUploading }) => {
   const viewPDFPayment = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
-    const pdfURL = paymentFile.file_path_payment;
+    const pdfURL = buktiPembayaran.file_path_payment;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -49,16 +65,29 @@ const PDFViewerPayment = ({ paymentFile }) => {
 
   return (
     <div>
-      <span onClick={viewPDFPayment}>Lihat</span>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFPayment}
+      >
+        Lihat
+      </span>
     </div>
   );
 };
 
 // View Document Cek Plagiat
-const PDFViewerCekPlagiat = ({ plagiarismFile }) => {
+const PDFViewerCekPlagiat = ({ hasilCekPlagiat, isUploading }) => {
   const viewPDFCekPlagiat = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
-    const pdfURL = plagiarismFile.file_path_plagiarismcheck;
+    const pdfURL = hasilCekPlagiat.file_path_plagiarismcheck;
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
@@ -66,7 +95,45 @@ const PDFViewerCekPlagiat = ({ plagiarismFile }) => {
 
   return (
     <div>
-      <span onClick={viewPDFCekPlagiat}>Lihat</span>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFCekPlagiat}
+      >
+        Lihat
+      </span>
+    </div>
+  );
+};
+
+// View Document Artikel Jurnal
+const PDFViewerArtikelJurnal = ({ jurnal, isUploading }) => {
+  const viewPDFArtikelJurnal = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
+    // Buat URL objek untuk file PDF
+    const pdfURL = jurnal?.file_path_journal;
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFArtikelJurnal}
+      >
+        Lihat
+      </span>
     </div>
   );
 };
@@ -76,6 +143,13 @@ const UploadSkipsi = () => {
   const [dokumenSkripsi, setDokumenSkripsi] = useState();
   const [buktiPembayaran, setBuktiPembayaran] = useState();
   const [hasilCekPlagiat, setHasilCekPlagiat] = useState();
+  const [jurnal, setJurnal] = useState();
+
+  // state - disabled button
+  const [isSubmittingSkripsi, setSubmittionSkripsi] = useState(false);
+  const [isSubmittingPayment, setSubmittionPayment] = useState(false);
+  const [isSubmittingPlagiat, setSubmittionPlagiat] = useState(false);
+  const [isSubmittingJurnal, setSubmittionJurnal] = useState(false);
 
   const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
 
@@ -152,19 +226,46 @@ const UploadSkipsi = () => {
         );
       }
     };
+    const fetchJurnalData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setJurnal(response.data.data);
+        console.log("Request Get jurnal: ", response.data.data);
+      } catch (error) {
+        console.error("Terjadi kesalahan saat mengambil jurnal:", error);
+      }
+    };
     fetchDokumenSkripsiData();
     fetchBuktiPembayaranData();
     fetchHasilCekPlagiatData();
+    fetchJurnalData();
   }, [token, skripsiId]);
 
   const handleUnggahDokumenProposal = (event) => {
     const file = event.target.files[0];
 
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionSkripsi(true);
+
     // Validasi tipe file
     const allowedFileTypes = ["application/pdf"];
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionSkripsi(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -246,17 +347,30 @@ const UploadSkipsi = () => {
           "Terjadi kesalahan saat mengunggah dokumen skripsi:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        setSubmittionSkripsi(false);
       });
   };
 
   const handleUnggahBuktiPembayaran = (event) => {
     const file = event.target.files[0];
 
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionPayment(true);
+
     // Validasi tipe file
     const allowedFileTypes = ["application/pdf"];
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionPayment(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -338,17 +452,30 @@ const UploadSkipsi = () => {
           "Terjadi kesalahan saat mengunggah bukti pembayaran:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        setSubmittionPayment(false);
       });
   };
 
   const handleUnggahPlagiat = (event) => {
     const file = event.target.files[0];
 
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionPlagiat(true);
+
     // Validasi tipe file
     const allowedFileTypes = ["application/pdf"];
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionPlagiat(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -430,10 +557,115 @@ const UploadSkipsi = () => {
           "Terjadi kesalahan saat mengunggah hasil cek plagiat:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        setSubmittionPlagiat(false);
+      });
+  };
+
+  // Jurnal
+  const handleUnggahJurnal = (event) => {
+    const file = event.target.files[0];
+
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionJurnal(true);
+
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
+
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionJurnal(false); // Aktifkan kembali tombol
+      return;
+    }
+
+    const reader = new FileReader();
+
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
+
+    reader.onload = (e) => {
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1];
+
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
+
+      // Logika pengolahan file
+      const data = {
+        journal_file: {
+          file_name_journal: file.name,
+          file_size_journal: fileSizeString,
+          buffer: base64String,
+        },
+      };
+
+      // Panggil fungsi untuk mengirim file ke server
+      sendJurnalToServer(data);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const sendJurnalToServer = (data) => {
+    console.log("Jurnal yang akan diunggah: ", data);
+    axios
+      .put(`http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Berhasil unggah Jurnal: ", response.data.data);
+
+        // request data
+        const fetchJurnalData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setJurnal(response.data.data);
+            console.log("Request Get jurnal: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil jurnal:", error);
+          }
+        };
+        fetchJurnalData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat mengunggah Jurnal:",
+          error.response.data.message
+        );
+      })
+      .finally(() => {
+        setSubmittionJurnal(false);
       });
   };
 
   const handleHapusDokumenSkripsi = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionSkripsi(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/skripsi/skripsi-document/delete/${skripsiId}`,
@@ -474,10 +706,17 @@ const UploadSkipsi = () => {
           "Terjadi kesalahan saat menghapus dokumen skripsi:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionSkripsi(false);
       });
   };
 
   const handleHapusBuktiPembayaran = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionPayment(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/skripsi/skripsi-payment/delete/${skripsiId}`,
@@ -521,10 +760,17 @@ const UploadSkipsi = () => {
           "Terjadi kesalahan saat menghapus bukti pembayaran:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionPayment(false);
       });
   };
 
   const handleHapusPlagiat = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionPlagiat(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/delete/${skripsiId}`,
@@ -568,6 +814,58 @@ const UploadSkipsi = () => {
           "Terjadi kesalahan saat menghapus hasil cek plagiat:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionPlagiat(false);
+      });
+  };
+
+  const handleHapusJurnal = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionJurnal(true);
+
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/journal/delete/${skripsiId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Berhasil menghapus Jurnal: ", response.data.data);
+
+        // request data
+        const fetchJurnalData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setJurnal(response.data.data);
+            console.log("Request Get jurnal: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil jurnal:", error);
+          }
+        };
+        fetchJurnalData();
+      })
+      .catch((error) => {
+        console.error(
+          "Terjadi kesalahan saat menghapus Jurnal:",
+          error.response.data.message
+        );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionJurnal(false);
       });
   };
 
@@ -704,13 +1002,18 @@ const UploadSkipsi = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingSkripsi ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
                     width: "150px",
                     height: "30px",
+                    cursor: isSubmittingSkripsi ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingSkripsi ? "#A0A0A0" : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingSkripsi}
                 >
                   <input
                     type="file"
@@ -815,114 +1118,126 @@ const UploadSkipsi = () => {
                       </TableCell>
                       {/* status Advisor */}
                       <TableCell>
-                        {dokumenSkripsi?.is_skripsi_approve_by_advisor ===
-                        "Waiting" ? (
-                          <Chip
-                            size="small"
-                            label={"Menunggu"}
-                            sx={{
-                              background: "rgba(255, 204, 0, 0.10)",
-                              color: "#985211",
-                            }}
-                          />
-                        ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
-                          "Approve" ? (
-                          <Chip
-                            size="small"
-                            label={"Disetujui"}
-                            sx={{
-                              background: "rgba(21, 131, 67, 0.10)",
-                              color: "#0A7637",
-                            }}
-                          />
-                        ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
-                          "Rejected" ? (
-                          <Chip
-                            size="small"
-                            label={"Ditolak"}
-                            sx={{
-                              background: "rgba(226, 29, 18, 0.10)",
-                              color: "#CA150C",
-                            }}
-                          />
-                        ) : (
-                          dokumenSkripsi?.is_skripsi_approve_by_advisor
+                        {dokumenSkripsi?.file_name_skripsi !== null && (
+                          <>
+                            {dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                            "Waiting" ? (
+                              <Chip
+                                size="small"
+                                label={"Menunggu"}
+                                sx={{
+                                  background: "rgba(255, 204, 0, 0.10)",
+                                  color: "#985211",
+                                }}
+                              />
+                            ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                              "Approve" ? (
+                              <Chip
+                                size="small"
+                                label={"Disetujui"}
+                                sx={{
+                                  background: "rgba(21, 131, 67, 0.10)",
+                                  color: "#0A7637",
+                                }}
+                              />
+                            ) : dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                              "Rejected" ? (
+                              <Chip
+                                size="small"
+                                label={"Ditolak"}
+                                sx={{
+                                  background: "rgba(226, 29, 18, 0.10)",
+                                  color: "#CA150C",
+                                }}
+                              />
+                            ) : (
+                              dokumenSkripsi?.is_skripsi_approve_by_advisor
+                            )}
+                          </>
                         )}
                       </TableCell>
                       {/* status CoAdvisor 1 */}
-                      {advisorAndCoAdvisor?.coAdvisor1 && (
+                      {advisorAndCoAdvisor?.coAdvisor1 !== null && (
                         <TableCell>
-                          {dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
-                          "Waiting" ? (
-                            <Chip
-                              size="small"
-                              label={"Menunggu"}
-                              sx={{
-                                background: "rgba(255, 204, 0, 0.10)",
-                                color: "#985211",
-                              }}
-                            />
-                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
-                            "Approve" ? (
-                            <Chip
-                              size="small"
-                              label={"Disetujui"}
-                              sx={{
-                                background: "rgba(21, 131, 67, 0.10)",
-                                color: "#0A7637",
-                              }}
-                            />
-                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
-                            "Rejected" ? (
-                            <Chip
-                              size="small"
-                              label={"Ditolak"}
-                              sx={{
-                                background: "rgba(226, 29, 18, 0.10)",
-                                color: "#CA150C",
-                              }}
-                            />
-                          ) : (
-                            dokumenSkripsi?.is_skripsi_approve_by_co_advisor1
+                          {dokumenSkripsi?.file_name_skripsi !== null && (
+                            <>
+                              {dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                              "Waiting" ? (
+                                <Chip
+                                  size="small"
+                                  label={"Menunggu"}
+                                  sx={{
+                                    background: "rgba(255, 204, 0, 0.10)",
+                                    color: "#985211",
+                                  }}
+                                />
+                              ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                "Approve" ? (
+                                <Chip
+                                  size="small"
+                                  label={"Disetujui"}
+                                  sx={{
+                                    background: "rgba(21, 131, 67, 0.10)",
+                                    color: "#0A7637",
+                                  }}
+                                />
+                              ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                "Rejected" ? (
+                                <Chip
+                                  size="small"
+                                  label={"Ditolak"}
+                                  sx={{
+                                    background: "rgba(226, 29, 18, 0.10)",
+                                    color: "#CA150C",
+                                  }}
+                                />
+                              ) : (
+                                dokumenSkripsi?.is_skripsi_approve_by_co_advisor1
+                              )}
+                            </>
                           )}
                         </TableCell>
                       )}
                       {/* status CoAdvisor 2 */}
-                      {advisorAndCoAdvisor?.coAdvisor2 && (
+                      {advisorAndCoAdvisor?.coAdvisor2 !== null && (
                         <TableCell>
-                          {dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
-                          "Waiting" ? (
-                            <Chip
-                              size="small"
-                              label={"Menunggu"}
-                              sx={{
-                                background: "rgba(255, 204, 0, 0.10)",
-                                color: "#985211",
-                              }}
-                            />
-                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
-                            "Approve" ? (
-                            <Chip
-                              size="small"
-                              label={"Disetujui"}
-                              sx={{
-                                background: "rgba(21, 131, 67, 0.10)",
-                                color: "#0A7637",
-                              }}
-                            />
-                          ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
-                            "Rejected" ? (
-                            <Chip
-                              size="small"
-                              label={"Ditolak"}
-                              sx={{
-                                background: "rgba(226, 29, 18, 0.10)",
-                                color: "#CA150C",
-                              }}
-                            />
-                          ) : (
-                            dokumenSkripsi?.is_skripsi_approve_by_co_advisor2
-                          )}
+                          {
+                            <>
+                              {dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                              "Waiting" ? (
+                                <Chip
+                                  size="small"
+                                  label={"Menunggu"}
+                                  sx={{
+                                    background: "rgba(255, 204, 0, 0.10)",
+                                    color: "#985211",
+                                  }}
+                                />
+                              ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                                "Approve" ? (
+                                <Chip
+                                  size="small"
+                                  label={"Disetujui"}
+                                  sx={{
+                                    background: "rgba(21, 131, 67, 0.10)",
+                                    color: "#0A7637",
+                                  }}
+                                />
+                              ) : dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                                "Rejected" ? (
+                                <Chip
+                                  size="small"
+                                  label={"Ditolak"}
+                                  sx={{
+                                    background: "rgba(226, 29, 18, 0.10)",
+                                    color: "#CA150C",
+                                  }}
+                                />
+                              ) : (
+                                dokumenSkripsi?.is_skripsi_approve_by_co_advisor2
+                              )}
+                            </>
+                          }
                         </TableCell>
                       )}
                       <TableCell>
@@ -938,6 +1253,7 @@ const UploadSkipsi = () => {
                             >
                               <PDFViewerSkripsi
                                 dokumenSkripsi={dokumenSkripsi}
+                                isUploading={isSubmittingSkripsi}
                               />
                             </span>
                             <Div
@@ -948,17 +1264,144 @@ const UploadSkipsi = () => {
                             >
                               |
                             </Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
-                                fontSize: "12px",
-                              }}
-                              onClick={handleHapusDokumenSkripsi}
-                            >
-                              Hapus
-                            </span>
+                            {/* tombol unggah proposal jika tidak ada co-advisor */}
+                            {advisorAndCoAdvisor?.coAdvisor1 === null &&
+                              advisorAndCoAdvisor?.coAdvisor2 === null && (
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor:
+                                      isSubmittingSkripsi ||
+                                      dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                        "Approve"
+                                        ? "not-allowed"
+                                        : "pointer",
+                                    color:
+                                      isSubmittingSkripsi ||
+                                      dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                        "Approve"
+                                        ? "#A0A0A0"
+                                        : "red",
+                                    fontSize: "12px",
+                                  }}
+                                  onClick={() => {
+                                    if (
+                                      !isSubmittingSkripsi &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_advisor !==
+                                        "Approve"
+                                    ) {
+                                      handleHapusDokumenSkripsi();
+                                    }
+                                  }}
+                                  disabled={
+                                    isSubmittingSkripsi ||
+                                    dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                      "Approve"
+                                  }
+                                >
+                                  Hapus
+                                </span>
+                              )}
+                            {/* tombol unggah proposal jika ada co-advisor 1 saja */}
+                            {advisorAndCoAdvisor?.coAdvisor1 &&
+                              advisorAndCoAdvisor?.coAdvisor2 === null && (
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor:
+                                      isSubmittingSkripsi ||
+                                      (dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                        "Approve" &&
+                                        dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                          "Approve")
+                                        ? "not-allowed"
+                                        : "pointer",
+                                    color:
+                                      isSubmittingSkripsi ||
+                                      (dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                        "Approve" &&
+                                        dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                          "Approve")
+                                        ? "#A0A0A0"
+                                        : "red",
+                                    fontSize: "12px",
+                                  }}
+                                  onClick={() => {
+                                    if (
+                                      !isSubmittingSkripsi &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_advisor !==
+                                        "Approve" &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 !==
+                                        "Approve"
+                                    ) {
+                                      handleHapusDokumenSkripsi();
+                                    }
+                                  }}
+                                  disabled={
+                                    isSubmittingSkripsi ||
+                                    (dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                      "Approve" &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                        "Approve")
+                                  }
+                                >
+                                  Hapus
+                                </span>
+                              )}
+                            {/* tombol unggah proposal jika ada co-advisor 1 dan 2 */}
+                            {advisorAndCoAdvisor?.coAdvisor1 &&
+                              advisorAndCoAdvisor?.coAdvisor2 && (
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor:
+                                      isSubmittingSkripsi ||
+                                      (dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                        "Approve" &&
+                                        dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                          "Approve" &&
+                                        dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                                          "Approve")
+                                        ? "not-allowed"
+                                        : "pointer",
+                                    color:
+                                      isSubmittingSkripsi ||
+                                      (dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                        "Approve" &&
+                                        dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                          "Approve" &&
+                                        dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                                          "Approve")
+                                        ? "#A0A0A0"
+                                        : "red",
+                                    fontSize: "12px",
+                                  }}
+                                  onClick={() => {
+                                    if (
+                                      !isSubmittingSkripsi &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_advisor !==
+                                        "Approve" &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 !==
+                                        "Approve" &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 !==
+                                        "Approve"
+                                    ) {
+                                      handleHapusDokumenSkripsi();
+                                    }
+                                  }}
+                                  disabled={
+                                    isSubmittingSkripsi ||
+                                    (dokumenSkripsi?.is_skripsi_approve_by_advisor ===
+                                      "Approve" &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_co_advisor1 ===
+                                        "Approve" &&
+                                      dokumenSkripsi?.is_skripsi_approve_by_co_advisor2 ===
+                                        "Approve")
+                                  }
+                                >
+                                  Hapus
+                                </span>
+                              )}
                           </Div>
                         )}
                       </TableCell>
@@ -1009,13 +1452,18 @@ const UploadSkipsi = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingPayment ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
                     width: "150px",
                     height: "30px",
+                    cursor: isSubmittingPayment ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingPayment ? "#A0A0A0" : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingPayment}
                 >
                   <input
                     type="file"
@@ -1091,7 +1539,10 @@ const UploadSkipsi = () => {
                                 fontSize: "12px",
                               }}
                             >
-                              <PDFViewerPayment paymentFile={buktiPembayaran} />
+                              <PDFViewerPayment
+                                paymentFile={buktiPembayaran}
+                                isUploading={isSubmittingPayment}
+                              />
                             </span>
                             <Div
                               style={{
@@ -1104,11 +1555,14 @@ const UploadSkipsi = () => {
                             <span
                               style={{
                                 textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
+                                cursor: isSubmittingPayment
+                                  ? "not-allowed"
+                                  : "pointer",
+                                color: isSubmittingPayment ? "#A0A0A0" : "red",
                                 fontSize: "12px",
                               }}
                               onClick={handleHapusBuktiPembayaran}
+                              disabled={isSubmittingPayment}
                             >
                               Hapus
                             </span>
@@ -1162,13 +1616,18 @@ const UploadSkipsi = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingPlagiat ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
                     width: "150px",
                     height: "30px",
+                    cursor: isSubmittingPlagiat ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingPlagiat ? "#A0A0A0" : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingPlagiat}
                 >
                   <input
                     type="file"
@@ -1247,6 +1706,7 @@ const UploadSkipsi = () => {
                             >
                               <PDFViewerCekPlagiat
                                 plagiarismFile={hasilCekPlagiat}
+                                isUploading={isSubmittingPlagiat}
                               />
                             </span>
                             <Div
@@ -1260,11 +1720,14 @@ const UploadSkipsi = () => {
                             <span
                               style={{
                                 textDecoration: "none",
-                                cursor: "pointer",
-                                color: "red",
+                                cursor: isSubmittingPlagiat
+                                  ? "not-allowed"
+                                  : "pointer",
+                                color: isSubmittingPlagiat ? "#A0A0A0" : "red",
                                 fontSize: "12px",
                               }}
                               onClick={handleHapusPlagiat}
+                              disabled={isSubmittingPlagiat}
                             >
                               Hapus
                             </span>
@@ -1278,6 +1741,171 @@ const UploadSkipsi = () => {
               {/* Table Upload Payment End*/}
             </Div>
             {/* Table 3 End */}
+
+            <Typography
+              sx={{
+                width: "100%",
+                display: "flex",
+                padding: "24px",
+                alignItems: "center",
+                gap: "10px",
+                color: "#192434",
+                background: "rgba(26, 56, 96, 0.10)",
+                borderRadius: "6px",
+                fontSize: "12px",
+                fontWeight: 600, // Membuat teks lebih tebal (nilai 600)
+              }}
+            >
+              Unggah Artikel Jurnal
+            </Typography>
+            {/* Table 4 Start */}
+            <Div
+              sx={{
+                width: "100%",
+                padding: "0 25px",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "25px",
+              }}
+            >
+              {/* file upload for Artikel Jurnal */}
+              <Div
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginBottom: "20px",
+                }}
+                component={Paper}
+              >
+                <Button
+                  variant="contained"
+                  component="label"
+                  sx={{
+                    textTransform: "none",
+                    background: isSubmittingJurnal ? "#A0A0A0" : "#006AF5",
+                    color: "white",
+                    fontSize: "12px",
+                    borderRadius: "6px",
+                    width: "150px",
+                    height: "30px",
+                    cursor: isSubmittingJurnal ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingJurnal ? "#A0A0A0" : "#006AF5",
+                    },
+                  }}
+                  disabled={isSubmittingJurnal}
+                >
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    onChange={handleUnggahJurnal}
+                    style={{ display: "none" }}
+                  />
+                  <AttachmentIcon sx={{ fontSize: "14px", margin: "5px" }} />
+                  Unggah file
+                </Button>
+              </Div>
+              {/* file upload end for Artikel Jurnal */}
+
+              {/* Table Upload Artikel Jurnal Start*/}
+              <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
+                <Table>
+                  <TableHead sx={{ background: "#F5F5F5" }}>
+                    <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
+                      {/* <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
+                      >
+                        Nomor
+                      </TableCell> */}
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
+                      >
+                        Nama File
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                      >
+                        Tanggal
+                      </TableCell>
+                      <TableCell
+                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                      >
+                        Ukuran
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          textAlign: "center",
+                          width: "12%",
+                        }}
+                      >
+                        Action
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {jurnal && (
+                      <TableRow key={jurnal?.id}>
+                        {/* <TableCell sx={{ fontSize: "12px" }}>1</TableCell> */}
+                        <TableCell sx={{ fontSize: "12px" }}>
+                          {jurnal?.file_name_journal}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "12px" }}>
+                          {jurnal?.upload_date_journal}
+                        </TableCell>
+                        <TableCell sx={{ fontSize: "12px" }}>
+                          {jurnal?.file_size_journal}
+                        </TableCell>
+                        <TableCell>
+                          {jurnal?.file_name_journal !== null && (
+                            <Div sx={{ display: "flex" }}>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                }}
+                              >
+                                <PDFViewerArtikelJurnal
+                                  jurnal={jurnal}
+                                  isUploading={isSubmittingJurnal}
+                                />
+                              </span>
+                              <Div
+                                style={{
+                                  margin: "0 5px",
+                                  color: "#E0E0E0",
+                                }}
+                              >
+                                |
+                              </Div>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: isSubmittingJurnal
+                                    ? "not-allowed"
+                                    : "pointer",
+                                  color: isSubmittingJurnal ? "#A0A0A0" : "red",
+                                  fontSize: "12px",
+                                }}
+                                onClick={handleHapusJurnal}
+                                disabled={isSubmittingJurnal}
+                              >
+                                Hapus
+                              </span>
+                            </Div>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* Table Upload Artikel Jurnal End*/}
+            </Div>
+            {/* Table 4 End */}
           </Div>
           {/* Element 2 End */}
         </Div>

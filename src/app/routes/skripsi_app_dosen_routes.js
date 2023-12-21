@@ -30,8 +30,13 @@ import PerubahanSkripsiCoAvisor from "app/pages/ThesisApps/Dosen/PerubahanSkrips
 import ManajemenKelasDosenSkripsi from "app/pages/ThesisApps/Dosen/ManajemenKelasDosenSkripsi";
 import DaftarRiwayatNilaiDosenSkripsi from "app/pages/ThesisApps/Dosen/DaftarRiwayatNilaiDosenSkripsi";
 import PengajuanJudulDosen from "app/pages/ThesisApps/Dosen/PengajuanJudulDosen";
+import DaftarSkripsiFILKOM from "app/pages/ThesisApps/Global/DaftarSkripsiFILKOM";
 
 const dosenRoutes = [
+  {
+    path: "/sistem-informasi-skripsi/daftar-judul-skrisi-fakultas-ilmu-komputer",
+    element: <Page component={DaftarSkripsiFILKOM} />,
+  },
   // KOMITE
   // ----------Dosen
   {
