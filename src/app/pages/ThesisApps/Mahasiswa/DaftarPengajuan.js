@@ -30,13 +30,25 @@ import {
   Alert,
   AlertTitle,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
-import { Add, Attachment, Clear } from "@mui/icons-material";
+import {
+  Add,
+  Attachment,
+  Clear,
+  CloudUpload,
+  InsertDriveFile,
+} from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { Box } from "@mui/system";
 
 // View Document pengajuan judul
-const PDFViewerPengajuanJudul = ({ pengajuanJudulFile }) => {
+const PDFViewerPengajuanJudul = ({
+  pengajuanJudulFile,
+  handleDeleteFile,
+  isFileUploaded,
+}) => {
   const viewPDFPengajuanJudul = () => {
     // Mengonversi base64 string ke binary
     const binaryString = window.atob(pengajuanJudulFile.buffer);
@@ -60,16 +72,55 @@ const PDFViewerPengajuanJudul = ({ pengajuanJudulFile }) => {
   };
 
   return (
-    <span
-      onClick={viewPDFPengajuanJudul}
-      style={{
-        fontSize: "14px",
-        cursor: "pointer",
-        color: "blue",
-      }}
-    >
-      Lihat
-    </span>
+    <Div>
+      <Box
+        sx={{
+          borderRadius: 1,
+          border: "1px solid #757575",
+          display: "inline-flex",
+          alignItems: "center",
+          p: 1,
+          height: "35px",
+          cursor: "pointer",
+        }}
+        onClick={viewPDFPengajuanJudul}
+      >
+        <InsertDriveFile
+          fontSize="small"
+          color="primary"
+          sx={{ marginRight: "5px" }}
+        ></InsertDriveFile>
+        <span
+          style={{
+            fontSize: "14px",
+            cursor: "pointer",
+            textDecoration: "none",
+            borderBottom: "1px solid transparent",
+            transition: "border-color 0.3s",
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.borderBottomColor = "initial";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.borderBottomColor = "transparent";
+          }}
+        >
+          {pengajuanJudulFile.name}
+        </span>
+        <IconButton
+          aria-label="clear"
+          onClick={(e) => {
+            e.stopPropagation(); // Menghentikan penyebaran klik
+            handleDeleteFile();
+          }}
+          size="small"
+          sx={{ marginLeft: "5px" }}
+          disabled={isFileUploaded}
+        >
+          <Clear fontSize="inherit" />
+        </IconButton>
+      </Box>
+    </Div>
   );
 };
 
@@ -125,7 +176,7 @@ function DaftarPengajuan() {
   const [isConfirmAjukanOpen, setIsConfirmAjukanOpen] = useState(false);
 
   // Tambahkan state untuk melacak apakah file telah diunggah
-  const [isFileUploaded, setFileUploaded] = useState(false);
+  const [isFileUploaded, setIsFileUploaded] = useState(false);
 
   // error message
   const [errorMessages, setErrorMessages] = useState({
@@ -197,7 +248,7 @@ function DaftarPengajuan() {
       .then((response) => {
         // menyimpan hasil request
         setDaftarKelas(response.data.data);
-        console.log("Request get daftar kelas: ", response.data.data);
+        // console.log("Request get daftar kelas: ", response.data.data);
       })
       .catch((error) => {
         // console.error("Terjadi kesalahan saat mengambil daftar kelas:", error);
@@ -306,7 +357,7 @@ function DaftarPengajuan() {
     setAddCoAdvisor([{ id: null, selectedCoAdvisorName: "" }]);
     setKonsultasi(null);
     // reset status menjadi false
-    setFileUploaded(false);
+    setIsFileUploaded(false);
     // close Mengajukan Judul
     setOpenMengajukanJudul(false);
   };
@@ -419,47 +470,76 @@ function DaftarPengajuan() {
   // unggah file
   const handleAddFile = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      // Bersihkan error
-      setErrorMessages((prevErrors) => ({
-        ...prevErrors,
-        file: "",
-      }));
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        // e.target.result berisi data URL dari file
-        const dataURL = e.target.result;
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
 
-        // Mengonversi data URL ke base64
-        const base64String = dataURL.split(",")[1].replace(/\s/g, ""); // Menghilangkan spasi yang mungkin muncul dalam base64
+    // Nonaktifkan tombol unggah pembayaran
+    setIsFileUploaded(true);
 
-        // Tambahkan data file baru ke state pengajuanJudulUploadedFiles
-        const newFileData = {
-          name: file.name,
-          size: file.size,
-          buffer: base64String,
-        };
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
 
-        setUnggahFile(newFileData);
-        // Set menjadi true
-        setFileUploaded(true);
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setIsFileUploaded(false); // Aktifkan kembali tombol
+      return;
+    }
+
+    // Bersihkan error
+    setErrorMessages((prevErrors) => ({
+      ...prevErrors,
+      file: "",
+    }));
+
+    const reader = new FileReader();
+
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
+
+    reader.onload = (e) => {
+      // e.target.result berisi data URL dari file
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1].replace(/\s/g, ""); // Menghilangkan spasi yang mungkin muncul dalam base64
+
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
+
+      const newFileData = {
+        name: file.name,
+        size: fileSizeString,
+        buffer: base64String,
       };
 
-      reader.readAsDataURL(file);
-    } else {
-      //  set error
-      setErrorMessages((prevErrors) => ({
-        ...prevErrors,
-        file: "Dibutuhkan",
-      }));
-    }
+      setUnggahFile(newFileData);
+
+      setIsFileUploaded(false);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   // hapus file
   const handleDeleteFile = () => {
+    // Nonaktifkan tombol
+    setIsFileUploaded(true);
+
     // hapus file
     setUnggahFile();
+
+    // Aktifkan tombol
+    setIsFileUploaded(false);
 
     //  set error
     setErrorMessages((prevErrors) => ({
@@ -536,7 +616,7 @@ function DaftarPengajuan() {
       classroom_id: selectedClassroomId,
       submission_file,
     };
-    console.log("data yang diajukan", pengajuanData);
+    // console.log("data yang diajukan", pengajuanData);
 
     jwtAuthAxios
       .post(`/submission`, pengajuanData, {
@@ -554,7 +634,7 @@ function DaftarPengajuan() {
         };
         addAlert(newAlert);
 
-        console.log("Berhasil menambahkan data:", response.data);
+        // console.log("Berhasil menambahkan data:", response.data);
         // clean error
         setErrorMessages((prevErrors) => ({
           ...prevErrors,
@@ -573,7 +653,7 @@ function DaftarPengajuan() {
         setAddCoAdvisor([{ id: null, selectedCoAdvisorName: "" }]);
         setKonsultasi(null);
         // reset status menjadi false
-        setFileUploaded(false);
+        setIsFileUploaded(false);
         // Tutup popup konfirmasi
         setIsConfirmAjukanOpen(false);
         // Tutup mengajukan judul
@@ -833,13 +913,13 @@ function DaftarPengajuan() {
             background: "rgba(26, 56, 96, 0.10)",
             width: "full",
             height: "75px",
-            marginBottom: "50px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            fontSize: "24px",
           }}
         >
-          Mengajukan Judul
+          MENGAJUKAN JUDUL
         </DialogTitle>
         {loadingForm ? (
           <Div
@@ -858,7 +938,8 @@ function DaftarPengajuan() {
               style={{
                 background: "rgba(26, 56, 96, 0.10)",
                 width: "100%",
-                height: "75px",
+                height: "50px",
+                marginTop: "25px",
                 marginBottom: "25px",
                 display: "flex",
                 justifyContent: "flex-start",
@@ -1032,9 +1113,14 @@ function DaftarPengajuan() {
                 }}
               >
                 <Button
-                  style={{ fontSize: "14px", marginBottom: "25px" }}
+                  style={{
+                    fontSize: "14px",
+                    marginBottom: "25px",
+                    textTransform: "none",
+                  }}
                   onClick={handleAddPartner}
                   disabled={!selectedClassroomId}
+                  TEX
                 >
                   <Add fontSize="small" />
                   Tambah Partner
@@ -1047,7 +1133,7 @@ function DaftarPengajuan() {
                 style={{
                   background: "rgba(26, 56, 96, 0.10)",
                   width: "100%",
-                  height: "75px",
+                  height: "50px",
                   marginBottom: "25px",
                   display: "flex",
                   justifyContent: "flex-start",
@@ -1083,130 +1169,56 @@ function DaftarPengajuan() {
                     Dokumen Mini Proposal{" "}
                     <span style={{ color: "red" }}>*</span>
                   </Typography>
-                  <Button
-                    variant="contained"
-                    component="label"
+                </Div>
+                {unggahFile ? (
+                  <PDFViewerPengajuanJudul
+                    pengajuanJudulFile={unggahFile}
+                    handleDeleteFile={handleDeleteFile}
+                    isFileUploaded={isFileUploaded}
+                  />
+                ) : (
+                  <Div
                     style={{
-                      textTransform: "none",
-                      background: errorMessages.file ? "#E60000" : "#006AF5",
-                      color: "white",
-                      fontSize: "12px",
-                      borderRadius: "6px",
-                      padding: "6px 12px",
-                      width: "130px",
-                      height: "30px",
+                      display: "flex",
+                      alignItems: "center",
                     }}
                   >
-                    <input
-                      type="file"
-                      accept=".pdf"
-                      onChange={handleAddFile}
-                      style={{ display: "none" }}
-                    />
-                    <Attachment style={{ fontSize: "16px", margin: "5px" }} />
-                    Unggah file
-                  </Button>
-                </Div>
-
-                {/* Table Upload Pengajuan Judul Start*/}
-                <TableContainer
-                  sx={{ marginBottom: !errorMessages.file ? "25px" : "" }}
-                  component={Paper}
-                >
-                  <Table>
-                    <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
-                      <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                        <TableCell
-                          sx={{
-                            fontSize: "12px",
-                            padding: "11px",
-                            width: "45%",
-                          }}
-                        >
-                          Nama File
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            fontSize: "12px",
-                            padding: "11px",
-                            width: "20%",
-                          }}
-                        >
-                          Ukuran
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            fontSize: "12px",
-                            padding: "11px",
-                            width: "12%",
-                          }}
-                        >
-                          Action
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {unggahFile
-                            ? unggahFile.name
-                            : "Belum ada file yang diunggah"}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {unggahFile ? unggahFile.size : ""}
-                        </TableCell>
-                        <TableCell sx={{ textAlign: "center" }}>
-                          {unggahFile ? (
-                            <Div
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "blue",
-                                  bottom: "0",
-                                }}
-                              >
-                                <PDFViewerPengajuanJudul
-                                  pengajuanJudulFile={unggahFile}
-                                />
-                              </span>
-                              <Div
-                                style={{
-                                  margin: "0 5px", // Margin di sekitar garis vertikal
-                                  color: "#E0E0E0",
-                                }}
-                              >
-                                |
-                              </Div>
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
-                                  fontSize: "14px",
-                                }}
-                                onClick={() => handleDeleteFile()}
-                              >
-                                Hapus
-                              </span>
-                            </Div>
-                          ) : (
-                            ""
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                {/* Table Upload Pengajuan Judul End*/}
+                    <Button
+                      component="label"
+                      variant="outlined"
+                      startIcon={<CloudUpload />}
+                      style={{
+                        textTransform: "none",
+                      }}
+                    >
+                      Unggah file
+                      <input
+                        type="file"
+                        accept=".pdf"
+                        onChange={handleAddFile}
+                        style={{
+                          clip: "rect(0 0 0 0)",
+                          clipPath: "inset(50%)",
+                          height: 1,
+                          overflow: "hidden",
+                          position: "absolute",
+                          bottom: 0,
+                          left: 0,
+                          whiteSpace: "nowrap",
+                          width: 1,
+                          background: isFileUploaded ? "#A0A0A0" : "#006AF5",
+                          cursor: isFileUploaded ? "not-allowed" : "pointer",
+                          "&:hover": {
+                            background: isFileUploaded ? "#A0A0A0" : "#006AF5",
+                          },
+                        }}
+                      />
+                    </Button>
+                  </Div>
+                )}
 
                 {errorMessages.file && (
-                  <Div sx={{ marginBottom: "25px" }}>
+                  <Div>
                     <Typography variant="caption" color="error">
                       {errorMessages.file}
                     </Typography>
@@ -1229,6 +1241,7 @@ function DaftarPengajuan() {
                   gutterBottom
                   component="div"
                   sx={{
+                    marginTop: "25px",
                     marginBottom: "10px",
                   }}
                 >
@@ -1431,7 +1444,11 @@ function DaftarPengajuan() {
                   }}
                 >
                   <Button
-                    style={{ fontSize: "14px", marginBottom: "25px" }}
+                    style={{
+                      fontSize: "14px",
+                      marginBottom: "25px",
+                      textTransform: "none",
+                    }}
                     onClick={handleAddCoAdvisor}
                     disabled={!selectedAdvisorId}
                   >
@@ -1452,8 +1469,8 @@ function DaftarPengajuan() {
                 }}
               >
                 <Typography variant="subtitle2" gutterBottom component="div">
-                  Apakah Anda sudah melakukan konsultasi dengan Advisor sebelum
-                  mengajukan judul? <span style={{ color: "red" }}>*</span>
+                  Apakah Anda sudah melakukan konsultasi dengan calon Advisor?{" "}
+                  <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <RadioGroup
                   sx={{
@@ -1588,7 +1605,6 @@ function DaftarPengajuan() {
         >
           <Alert
             onClose={() => {
-              console.log("close alert: ", alert.id);
               closeAlert(alert.id);
             }}
             severity={alert.severity}
