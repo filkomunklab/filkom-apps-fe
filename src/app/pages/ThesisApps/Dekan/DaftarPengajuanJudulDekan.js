@@ -443,7 +443,7 @@ const DaftarPengajuanJudulDekan = () => {
               onChange={(e) => setSearchKeyword(e.target.value)}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment>
+                  <InputAdornment position="end">
                     <IconButton onClick={handleSearch}>
                       <Search />
                     </IconButton>
@@ -564,7 +564,7 @@ const DaftarPengajuanJudulDekan = () => {
                               }}
                             />
                           ) : (
-                            submission.is_approve
+                            <Chip label={"Belum"} />
                           )}
                         </TableCell>
                         <TableCell>
