@@ -77,7 +77,6 @@ const History = (props) => {
         resultConsultation.data;
       const { status: certificateStatus, data: certificateData } =
         resultCertificate.data;
-
       if (consultationStatus === "OK") {
         console.log("ini isi result.data dalam status ok", consultationData);
         setDataConsultation(consultationData);
@@ -1180,6 +1179,7 @@ const History = (props) => {
                 {dataCertificate &&
                   dataCertificate.map((value, index) => (
                     <List
+                      key={index}
                       sx={{
                         width: "100%",
                         maxWidth: 2000,
@@ -1303,6 +1303,7 @@ const History = (props) => {
                   dataConsultation.map((value, index) =>
                     value.status === "Complete" ? (
                       <List
+                        key={index}
                         sx={{
                           width: "100%",
                           maxWidth: 2000,
@@ -1344,7 +1345,7 @@ const History = (props) => {
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
                                 >
-                                  To {value.receiver_name}
+                                  {value.student_name}
                                 </Typography>
                                 <Typography
                                   sx={{

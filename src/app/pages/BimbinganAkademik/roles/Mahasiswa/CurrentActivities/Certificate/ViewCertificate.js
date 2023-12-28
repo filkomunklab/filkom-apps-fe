@@ -118,7 +118,13 @@ const CertificateWaiting = () => {
                 <Typography variant="h5">:</Typography>
               </Grid>
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
-                <Typography variant="h5">{submissionDate}</Typography>
+                <Typography variant="h5">
+                  {new Date(submissionDate).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    day: "numeric",
+                    month: "long",
+                  })}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -179,7 +185,7 @@ const CertificateWaiting = () => {
         <iframe
           src={pdfURL}
           title="Certificate-pdf"
-          style={{ width: "100%", height: "80vh" }}
+          style={{ width: "100%", height: "55vh" }}
         />
       </Grid>
     </Grid>
