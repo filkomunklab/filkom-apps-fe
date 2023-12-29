@@ -1,15 +1,99 @@
-import { Stack, Typography, Button, Modal, styled } from "@mui/material";
+import {
+  Stack,
+  Typography,
+  Button,
+  Modal,
+  styled,
+  Alert,
+  IconButton,
+} from "@mui/material";
+import Collapse from "@mui/material/Collapse";
+import LoadingButton from "@mui/lab/LoadingButton";
+import CloseIcon from "@mui/icons-material/Close";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import { PASSWORD_DEFAULT } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import * as Yup from "yup";
 
-const AddEmployeeModal = ({ openModalAddEmployee, setOpenModalAddEmployee, setEmployees }) => {
+const roleValues = [
+  "ADMIN",
+  "SUPER_ADMIN",
+  "MAHASISWA",
+  "ADMIN_LPMI",
+  "OPERATOR_LPMI",
+  "ALUMNI",
+  "DEKAN",
+  "KAPRODI",
+  "DOSEN",
+  "DOSEN_MK",
+  "OPERATOR_FAKULTAS",
+  "SEKERTARIS",
+  "REGISTER",
+];
+
+const employeeArraySchema = Yup.array()
+  .of(
+    Yup.object().shape({
+      nik: Yup.string()
+        .trim("NIK cannot include leading and trailing spaces")
+        .strict(true)
+        .matches(/^\d+$/, "NIK must only contain digits")
+        .min(10, "must be at least 10 digits")
+        .max(13, "cannot be more than 13 digits")
+        .required(),
+      nidn: Yup.string()
+        .trim("NIK cannot include leading and trailing spaces")
+        .strict(true)
+        .matches(/^\d+$/, "nidn must only contain digits"),
+      firstName: Yup.string()
+        .trim("First Name cannot include leading and trailing spaces")
+        .strict(true)
+        .min(3, "must be at least 3 characters")
+        .max(50, "cannot be more than 50 characters")
+        .required(),
+      lastName: Yup.string()
+        .trim("Last Name cannot include leading and trailing spaces")
+        .strict(true)
+        .min(3, "must be at least 3 characters")
+        .max(50, "cannot be more than 50 characters")
+        .required(),
+      degree: Yup.string(),
+      major: Yup.string().oneOf(["IF", "SI", "DKV", "NONE"]),
+      Address: Yup.string(),
+      email: Yup.string()
+        .trim("Email cannot include leading and trailing spaces")
+        .strict(true)
+        .email(),
+      phoneNum: Yup.string()
+        .trim("Phone Number cannot include leading and trailing spaces")
+        .strict(true)
+        .matches(/^\d+$/, "phone number must only contain digits")
+        .min(10, "must be at least 10 digits")
+        .max(13, "cannot be more than 13 digits"),
+      role: Yup.array()
+        .of(Yup.string().oneOf(roleValues, "Invalid role"))
+        .min(1, "At least one role must be selected"),
+      password: Yup.string(),
+    })
+  )
+  .min(1, "Employee cannot be empty");
+
+const AddEmployeeModal = ({
+  openModalAddEmployee,
+  setOpenModalAddEmployee,
+  setEmployees,
+  setEmployeesFromApi,
+}) => {
   const [selectedFile, setSelectedFile] = useState("");
+  const [borderStyleEmptyFile, setBorderStyleEmptyFile] = useState("");
 
-  console.log("ini password default: ", PASSWORD_DEFAULT);
+  const [loading, setLoading] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [error, setError] = React.useState("");
+
   const styleModalAddEmployee = {
     position: "absolute",
     top: "50%",
@@ -61,53 +145,110 @@ const AddEmployeeModal = ({ openModalAddEmployee, setOpenModalAddEmployee, setEm
   };
 
   const handleSubmitFile = async () => {
-    console.log("ini selected file pas handle submit: ", selectedFile);
-    const file = selectedFile;
-    const reader = new FileReader();
+    setLoading(true);
+    if (selectedFile) {
+      const file = selectedFile;
+      const reader = new FileReader();
 
-    reader.onload = async (e) => {
-      const dataExcel = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(dataExcel, { type: "array" });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const options = {
-        header: ["nik", "nidn", "firstName", "lastName", "degree", "major", "Address", "email", "phoneNum", "role"],
-        raw: false,
-        range: 1,
-        defval: "",
-      };
-      const result = XLSX.utils.sheet_to_json(sheet, options);
-
-      console.log("ini data result excel to json: ", result);
-
-      const data = result.map((item) => {
-        return {
-          ...item,
-          password: PASSWORD_DEFAULT,
-          role: item.role.split(","),
+      reader.onload = async (e) => {
+        const dataExcel = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(dataExcel, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const options = {
+          header: [
+            "nik",
+            "nidn",
+            "firstName",
+            "lastName",
+            "degree",
+            "major",
+            "Address",
+            "email",
+            "phoneNum",
+            "role",
+          ],
+          raw: false,
+          range: 1,
+          defval: "",
         };
-      });
-      console.log("ini data yang sudah di maping loh: ", data);
+        const result = XLSX.utils.sheet_to_json(sheet, options);
 
-      try {
-        await jwtAuthAxios.post(`/employees`, {
-          data,
+        console.log("ini data result excel to json: ", result);
+
+        const data = result.map((item) => {
+          return {
+            ...item,
+            password: PASSWORD_DEFAULT,
+            role: item.role.split(","),
+          };
         });
+        console.log("ini data yang sudah di maping loh: ", data);
+        try {
+          await employeeArraySchema.validate(data, { abortEarly: false });
+        } catch (error) {
+          setLoading(false);
+          setOpen(true);
+          console.log("ini errornya: ", error.errors);
+          if (error.inner && error.inner.length > 0) {
+            console.error("Detail kesalahan pada field:");
+            const arrayError = error.inner.map((error) => {
+              const number =
+                parseInt(error.path.split(".")[0].slice(1, -1), 10) + 1;
+              const column = error.path.split(".")[1];
+              return `Row: ${number}, Column: ${column}, Message: ${error.message}. `;
+            });
+            setError(arrayError);
+          }
+          return;
+        }
 
-        const response = await jwtAuthAxios.get(`/employee`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        setSelectedFile(null);
-        setEmployees(response.data.data);
-        setOpenModalAddEmployee(false);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
+        try {
+          await jwtAuthAxios.post(
+            `/employees`,
+            {
+              data,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
 
-    reader.readAsArrayBuffer(file);
+          const response = await jwtAuthAxios.get(`/employee`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+          setSelectedFile(null);
+          setEmployees(response.data.data);
+          setEmployeesFromApi(response.data.data);
+          setOpenModalAddEmployee(false);
+          setBorderStyleEmptyFile("1px solid #E0E0E0");
+          setLoading(false);
+          setOpen(false);
+        } catch (error) {
+          console.log("error apa ini dia: ", error);
+          if (error.response) {
+            setError(error.response.data.data.error);
+          } else if (error.message) {
+            setError(error.message);
+          } else {
+            setError("Something Wrong!!");
+          }
+          setLoading(false);
+          setOpen(true);
+        }
+      };
+
+      reader.readAsArrayBuffer(file);
+    } else {
+      setLoading(false);
+      setError("Please Import Excel file");
+      setOpen(true);
+      setBorderStyleEmptyFile("1px solid red");
+    }
   };
 
   return (
@@ -116,31 +257,65 @@ const AddEmployeeModal = ({ openModalAddEmployee, setOpenModalAddEmployee, setEm
       onClose={() => {
         setSelectedFile(null);
         setOpenModalAddEmployee(false);
+        setBorderStyleEmptyFile("1px solid #E0E0E0");
+        setOpen(false);
       }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={styleModalAddEmployee}>
-        <Stack direction="row" justifyContent="space-between" columnGap="120px" alignItems="center">
-          <Typography id="modal-modal-title" variant="h2" component="h2" sx={{ fontWeight: "400", color: "#0A0A0A", fontSize: "24px" }}>
+      <Box sx={{ ...styleModalAddEmployee, width: "auto" }}>
+        <Collapse in={open} sx={{ width: "inherit", maxWidth: "400px" }}>
+          <Alert
+            severity="error"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setOpen(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+          >
+            {error}
+          </Alert>
+        </Collapse>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          columnGap="120px"
+          alignItems="center"
+        >
+          <Typography
+            id="modal-modal-title"
+            variant="h2"
+            component="h2"
+            sx={{ fontWeight: "400", color: "#0A0A0A", fontSize: "24px" }}
+          >
             Add Employee
           </Typography>
-          <Typography id="modal-modal-description" sx={{ fontSize: "12px", color: "#005FDB" }}>
+          <Typography
+            id="modal-modal-description"
+            sx={{ fontSize: "12px", color: "#005FDB" }}
+          >
             Template Excel
           </Typography>
         </Stack>
-
         <Button
           fullWidth
           component="label"
           variant="outlined"
           endIcon={<SaveAltIcon sx={{ color: "#1B2B41B0" }} />}
           sx={{
-            border: "1px solid #E0E0E0",
+            border: borderStyleEmptyFile
+              ? borderStyleEmptyFile
+              : "1px solid #E0E0E0",
             justifyContent: "space-between",
             textTransform: "capitalize",
             color: "#1B2B41B0",
-            borderColor: "#E0E0E0",
             paddingTop: "10px",
             paddingBottom: "10px",
           }}
@@ -172,13 +347,22 @@ const AddEmployeeModal = ({ openModalAddEmployee, setOpenModalAddEmployee, setEm
             onClick={() => {
               setSelectedFile(null);
               setOpenModalAddEmployee(false);
+              setBorderStyleEmptyFile("1px solid #E0E0E0");
+              setOpen(false);
             }}
           >
             Cancel
           </Button>
-          <Button variant="contained" sx={{ width: "79px", height: "32px" }} onClick={handleSubmitFile}>
-            Submit
-          </Button>
+          <LoadingButton
+            size="small"
+            onClick={handleSubmitFile}
+            loading={loading}
+            loadingIndicator="Loading…"
+            variant="contained"
+            sx={{ width: "79px", height: "32px" }}
+          >
+            <span>Submit</span>
+          </LoadingButton>
         </Stack>
       </Box>
     </Modal>
