@@ -86,12 +86,9 @@ const SupervisorInformation = () => {
       const token = localStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
 
-      const response = await axios.get(
-        `${BASE_URL_API}/supervisor/has-student`,
-        {
-          cancelToken: source.token,
-        }
-      );
+      const response = await axios.get(`${BASE_URL_API}/guidance-class`, {
+        cancelToken: source.token,
+      });
       const { status, data } = response.data;
 
       if (status === "OK") {
@@ -248,20 +245,21 @@ const TableHeading = () => {
 
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
+  const { firstName, lastName, nidn, nik } = item.teacher;
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
 
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${item.nik}`,
-          { state: { nik: item.nik } }
+          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}`,
+          { state: { nik: nik } }
         );
         break;
       case "history":
         navigate(
-          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/${item.nik}`,
-          { state: item.nik }
+          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/${nik}`,
+          { state: nik }
         );
         break;
 
@@ -276,7 +274,7 @@ const TableItem = ({ item, index }) => {
   return (
     <TableRow>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{item.nidn}</TableCell>
+      <TableCell sx={[rowStyle]}>{nidn}</TableCell>
       <TableCell>
         <Button
           name="profile"
@@ -286,7 +284,7 @@ const TableItem = ({ item, index }) => {
           }}
           onClick={handleButtonNavigate}
         >
-          {item.lastName}, {item.firstName}
+          {lastName}, {firstName}
         </Button>
       </TableCell>
       <TableCell sx={[rowStyle]}>

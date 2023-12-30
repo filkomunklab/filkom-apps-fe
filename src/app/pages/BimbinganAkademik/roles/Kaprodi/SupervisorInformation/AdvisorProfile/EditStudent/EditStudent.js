@@ -31,15 +31,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nim: `105022010000`,
-  name: `Singal, Aldo Aldi`,
-  prodi: `Informatika`,
-  year: `2020`,
-  status: `Active`,
-  dospem: `-`,
-}));
-
 const CountStudent = ({ selected, totalStudents }) => {
   return (
     <Typography sx={{ fontSize: { xs: "14px", md: "16px", xl: "16px" } }}>
@@ -55,23 +46,20 @@ const EditStudent = () => {
   const source = axios.CancelToken.source();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [studentOptions, setStudentOptions] = useState(students || []);
-  const [selectedStudent, setSelectedStudent] = useState(
-    studentOptions?.map((students) => students.nim) || []
-  );
-  const [selected, setSelected] = useState([]);
+  const [studentOptions, setStudentOptions] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState([]);
 
   const getStudent = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL_API}/students-without-supervisor`,
+        `${BASE_URL_API}/guidance-class/get-all-unassigned-student`,
         { cancelToken: source.token }
       );
 
       const { status, data } = response.data;
       console.log("inii response :", response);
       if (status === "OK") {
-        setStudentOptions([...studentOptions, ...data]);
+        setStudentOptions(data.filter((item) => item.status !== "GRADUATE"));
       } else {
         console.log("ini response :", response);
       }
@@ -82,13 +70,15 @@ const EditStudent = () => {
 
   const handleSubmit = async () => {
     try {
+      const studentNim = [...students, ...selectedStudent];
+
       const response = await axios.patch(
         `${BASE_URL_API}/supervisor/${nik}/student/update`,
-        { nims: selectedStudent },
+        { nims: studentNim },
         { cancelToken: source.token }
       );
       console.log("ahahaha :", response);
-      const { status, data } = response.data;
+      const { status } = response.data;
       if (status === "OK") {
         navigate(
           `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}`,
@@ -106,13 +96,6 @@ const EditStudent = () => {
     return () => source.cancel("request dibatalkan");
   }, []);
 
-  useEffect(() => {
-    console.log("hayoyo", studentOptions);
-  }, [studentOptions]);
-  useEffect(() => {
-    console.log("hayiyi", selectedStudent);
-  }, [selectedStudent]);
-
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelected = studentOptions.map((item) => item.nim);
@@ -121,18 +104,6 @@ const EditStudent = () => {
       setSelectedStudent([]);
     }
   };
-
-  // const handleClick = (_, index) => {
-  //   (i) =>
-  //     setSelectedStudent(
-  //       selectedStudent.includes(i.nim)
-  //         ? selectedStudent.filter((nim) => nim !== i.nim)
-  //         : [...selectedStudent, i.nim]
-  //     );
-  // };
-
-  const isItemSelected = (index) => selected.indexOf(index) !== -1;
-  const isAllSelected = selected.length === data.length;
 
   return (
     <Div>
@@ -143,14 +114,7 @@ const EditStudent = () => {
           </StyledLink>
           <StyledLink
             state={location.state}
-            // onClick={() => {
-            //   console.log("masokkk");
-            //   navigate(
-            //     `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${location.state}`,
-            //     { state: location.state }
-            //   );
-            // }}
-            to={`/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${location.state}`}
+            to={`/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}`}
           >
             Advisor Profile
           </StyledLink>
@@ -195,10 +159,13 @@ const EditStudent = () => {
                 <TableCell padding="checkbox">
                   <Checkbox
                     indeterminate={
-                      selectedStudent.length > 0 &&
+                      selectedStudent.length &&
                       selectedStudent.length < studentOptions.length
                     }
-                    checked={selectedStudent.length === studentOptions.length}
+                    checked={
+                      selectedStudent.length &&
+                      selectedStudent.length === studentOptions.length
+                    }
                     onChange={handleSelectAllClick}
                   />
                 </TableCell>
@@ -212,15 +179,13 @@ const EditStudent = () => {
             </TableHead>
             <TableBody>
               {studentOptions
-                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((item, index) => (
                   <TableItem
                     item={item}
                     index={index}
                     key={item.id}
-                    isSelected={selectedStudent.includes(
-                      item.nim || item.employeeNik
-                    )}
+                    isSelected={selectedStudent.includes(item.nim)}
                     handleClick={(i) =>
                       setSelectedStudent(
                         selectedStudent.includes(i.nim)
@@ -257,13 +222,7 @@ const EditStudent = () => {
         </Grid>
         <Grid item xs={12} md={4} xl={4}>
           <Button
-            onClick={() => {
-              // navigate(
-              //   `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${location.state}`,
-              //   { state: location.state }
-              // );
-              handleSubmit();
-            }}
+            onClick={() => handleSubmit()}
             sx={{
               backgroundColor: "#006AF5",
               borderRadius: "24px",
@@ -312,9 +271,13 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
           ? "Information Technology"
           : "-"}
       </TableCell>
-      <TableCell>{item.arrival_Year}</TableCell>
+      <TableCell>{item.arrivalYear}</TableCell>
       <TableCell>
-        <Chip label={item.status} variant="filled" color="success" />
+        <Chip
+          label={item.status}
+          variant="filled"
+          color={item.status === "ACTIVE" ? "success" : "default"}
+        />
       </TableCell>
     </TableRow>
   );
