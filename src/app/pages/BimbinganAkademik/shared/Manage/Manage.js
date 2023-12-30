@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Chip,
   Tab,
   Tabs,
   Typography,
@@ -23,17 +22,22 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
+import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
-import { useFormik } from "formik";
-import * as yup from "yup";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
 import CloseIcon from "@mui/icons-material/Close";
 import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import CircularProgress from "@mui/material/CircularProgress";
 
-const styleCurriculum = {
+const styleModal = {
   position: "absolute",
   top: "50%",
   left: "50%",
@@ -53,13 +57,15 @@ const styleCurriculum = {
   },
 };
 
-const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nim: `105022010000`,
-  name: `Yuhu, Christopher Darell`,
-  prodi: `Informatika`,
-  year: `2021`,
-  status: `Active`,
-}));
+const styleResponseModal = {
+  position: "fixed",
+  top: "15%",
+  right: "2%",
+  width: 420,
+  padding: 24,
+  backgroundColor: "white",
+  borderRadius: 10,
+};
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -88,66 +94,101 @@ function a11yProps(index) {
   };
 }
 
-const Manage = () => {
-  const handleAddPreregistration = () => {
-    alert("ini isi dari add preregis");
-  };
-  const [valueDueDate, setValueDueDate] = useState(null);
-  const formik = useFormik({
-    initialValues: {
-      selectedProdi: "",
-      selectedYear: "",
-      selectedFileName: "",
-      valuePick: null,
-    },
-    validationSchema: yup.object().shape({
-      selectedProdi: yup.string().required("Program Studi is required"),
-      selectedYear: yup.string().required("Tahun is required"),
-      selectedFileName: yup.string().required("File is required"),
-      valuePick: yup.date().required("Value Pick is required"),
-    }),
-    onSubmit: handleAddPreregistration,
-  });
+const preregisSchema = Yup.object({
+  semester: Yup.string("Select Semester").required("Semester is required"),
+  semesterPeriod: Yup.string()
+    .matches(
+      /^(19|20)\d{2}\/(19|20)\d{2}$/,
+      'Invalid format. Please use "YYYY/YYYY".'
+    )
+    .required("Semester Period is required"),
+  major: Yup.string("Select Major").required("Major is required"),
+  dueDate: Yup.date("Choose DueDate").required("DueDate is required"),
+});
 
-  const handleFormChange = (event) => {
-    const { target } = event;
-    if (target.name === "dueDate" || target.name === "valuePick") {
-      // Handle changes for due date and value pick
-      formik.setFieldValue(target.name, target.value);
-    } else {
-      // Handle changes for other form fields
-      formik.setFieldValue(target.name, target.value);
+const gradeSchema = Yup.object({
+  semester: Yup.string("Select Semester").required("Semester is required"),
+  semester_period: Yup.string()
+    .matches(
+      /^(19|20)\d{2}\/(19|20)\d{2}$/,
+      'Invalid format. Please use "YYYY/YYYY".'
+    )
+    .required("Semester Period is required"),
+  major: Yup.string("Select Major").required("Major is required"),
+  due_date: Yup.date("Choose DueDate").required("DueDate is required"),
+});
+const Manage = () => {
+  const [formType, setFormType] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [dataGrades, setDataGrades] = useState([]);
+  const [dataPreregis, setDataPreregis] = useState([]);
+  const [value, setValue] = useState(0);
+  const [searchValue, setSearchValue] = useState("");
+  const [preregisModalOpen, setPreregisModalOpen] = useState(false);
+  const [gradeModalOpen, setGradeModalOpen] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const navigate = useNavigate();
+  const [openSuccessModal, setOpenSuccessModal] = React.useState(false);
+  const [openErrorModal, setOpenErrorModal] = React.useState(false);
+  const handleOpenSuccessModal = () => setOpenSuccessModal(true);
+  const handleCloseSuccessModal = () => setOpenSuccessModal(false);
+  const handleOpenErrorModal = () => setOpenErrorModal(true);
+  const handleCloseErrorModal = () => setOpenErrorModal(false);
+
+  const { role } = JSON.parse(localStorage.getItem("user"));
+  const getRole = role.includes("KAPRODI");
+
+  const getDataGrades = async () => {
+    try {
+      const result = await axios.get(`${BASE_URL_API}/access/list/gradeAccess`);
+      const filteredData = result.data.data.filter((item) => {
+        const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
+        return employeeFullName
+          .toLowerCase()
+          .includes(searchValue.toLowerCase());
+      });
+      setDataGrades(filteredData);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const getDataPreregis = async () => {
+    try {
+      const result = await axios.get(`${BASE_URL_API}/pre-regist`);
+      const filteredData = result.data.data.filter((item) => {
+        const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
+        return employeeFullName
+          .toLowerCase()
+          .includes(searchValue.toLowerCase());
+      });
+      setDataPreregis(filteredData);
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
-  const [value, setValue] = useState(0);
-  const [searchValue, setSearchValue] = useState("");
-  const [isPreregisModalOpen, setPreregisModalOpen] = useState(false);
-  const [isGradeModalOpen, setGradeModalOpen] = useState(false);
+  useEffect(() => {
+    getDataGrades();
+    getDataPreregis();
+  }, [searchValue]);
 
   const handlePreregisModalOpen = () => {
     setPreregisModalOpen(true);
   };
-  const handlePreregisModalClose = () => {
+
+  const PreregisModalClose = () => {
     setPreregisModalOpen(false);
-  };
-  const closePreregisModal = () => {
-    handlePreregisModalClose();
   };
 
   const handleGradeModalOpen = () => {
     setGradeModalOpen(true);
   };
-  const handleGradeModalClose = () => {
+
+  const GradeModalClose = () => {
     setGradeModalOpen(false);
   };
-  const closeGradeModal = () => {
-    handleGradeModalClose();
-  };
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -162,6 +203,24 @@ const Manage = () => {
 
   return (
     <div>
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(34, 34, 34, 0.7)",
+            zIndex: 2003,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )}
       <Typography
         sx={{ fontSize: { xs: "20px", md: "24px" }, fontWeight: 500 }}
       >
@@ -198,21 +257,21 @@ const Manage = () => {
 
       <TabPanel value={value} index={0}>
         <div>
-          <Grid container sx={{ paddingTop: "23px" }}>
+          <Grid container pt={1} pb={2}>
             <Grid
               item
               xs={12}
-              sm={3}
-              md={3}
+              sm={6}
+              md={4}
               xl={3}
               sx={{
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: { xs: "center", sm: "flex-start" },
+                paddingTop: "23px",
               }}
             >
               <TextField
-                placeholder="Search by Name or NIM"
+                placeholder="Search by Name "
                 variant="outlined"
                 size="small"
                 sx={{
@@ -230,181 +289,332 @@ const Manage = () => {
                 }}
               />
             </Grid>
-
-            <Grid
-              item
-              xs={12}
-              sm={3}
-              md={3}
-              sx={{
-                padding: "1px",
-                paddingLeft: "10px",
-                paddingBottom: "15px",
-              }}
-            >
-              <Button
-                variant="outlined"
-                size="small"
+            {getRole && (
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
                 sx={{
-                  backgroundColor: "#006AF5",
-                  borderRadius: "24px",
-                  color: "white",
-                  fontSize: "12px",
-                  padding: "7px",
-                  paddingLeft: "9px",
-                  paddingRight: "13px",
-                  minWidth: "110px",
-                  gap: "5px",
-                  "&:hover": {
-                    backgroundColor: "#025ED8",
-                  },
+                  padding: "1px",
+                  paddingLeft: "10px",
+                  paddingBottom: "15px",
+                  paddingTop: "23px",
                 }}
-                onClick={handlePreregisModalOpen}
               >
-                <AddIcon sx={{ fontSize: "14px" }} />
-                Add Pre-regis Submission
-              </Button>
-              <Modal
-                open={isPreregisModalOpen}
-                onClose={handlePreregisModalClose}
-              >
-                <Box style={styleCurriculum}>
-                  <IconButton
-                    edge="end"
-                    color="#D9D9D9"
-                    onClick={closePreregisModal}
-                    aria-label="close"
-                    sx={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "20px",
-                    }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                  <Grid container paddingTop={2}>
-                    <Grid item md={8} xs={8}>
-                      <Typography
-                        id="modal-modal-title"
-                        variant="h4"
-                        component="h2"
-                        sx={{
-                          fontWeight: 600,
-                          paddingBottom: 3,
-                          "@media (max-width: 390px)": {
-                            fontSize: "15px",
-                          },
-                        }}
-                      >
-                        Add Pre-registration Submission
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <form onSubmit={formik.handleSubmit}>
-                    <FormControl
-                      fullWidth
-                      sx={{ margin: "0 0 10px 0" }}
-                      error={!!formik.errors.selectedProdi}
-                    >
-                      <InputLabel>Program Studi</InputLabel>
-                      <Select
-                        label="Program Studi"
-                        name="selectedProdi"
-                        value={formik.values.selectedProdi}
-                        onChange={handleFormChange}
-                      >
-                        <MenuItem value="Informatika">Informatika</MenuItem>
-                        <MenuItem value="Sistem Informasi">
-                          Sistem Informasi
-                        </MenuItem>
-                        <MenuItem value="Teknologi Informasi">
-                          Teknologi Informasi
-                        </MenuItem>
-                      </Select>
-                      {formik.errors.selectedProdi && (
-                        <Typography color="error">
-                          {formik.errors.selectedProdi}
-                        </Typography>
-                      )}
-                    </FormControl>
-                    <TextField
-                      sx={{ margin: "10px 0" }}
-                      fullWidth
-                      label="Tahun"
-                      type="text"
-                      name="selectedYear"
-                      value={formik.values.selectedYear}
-                      onChange={handleFormChange}
-                      error={!!formik.errors.selectedYear}
-                      helperText={formik.errors.selectedYear}
-                    />
-                    <TextField
-                      sx={{ margin: "10px 0" }}
-                      fullWidth
-                      label="File"
-                      type="text"
-                      name="selectedFileName"
-                      value={formik.values.selectedFileName}
-                      onChange={handleFormChange}
-                      error={!!formik.errors.selectedFileName}
-                      helperText={formik.errors.selectedFileName}
-                    />
-                    <Grid
-                      item
+                <Button
+                  variant="outlined"
+                  size="small"
+                  sx={{
+                    backgroundColor: "#006AF5",
+                    borderRadius: "24px",
+                    color: "white",
+                    fontSize: "12px",
+                    padding: "7px",
+                    paddingLeft: "9px",
+                    paddingRight: "13px",
+                    minWidth: "110px",
+                    gap: "5px",
+                    "&:hover": {
+                      backgroundColor: "#025ED8",
+                    },
+                  }}
+                  onClick={handlePreregisModalOpen}
+                >
+                  <AddIcon sx={{ fontSize: "14px" }} />
+                  Add Pre-regis Submission
+                </Button>
+                <Modal open={preregisModalOpen} onClose={PreregisModalClose}>
+                  <Box style={styleModal}>
+                    <IconButton
+                      edge="end"
+                      color="#D9D9D9"
+                      onClick={PreregisModalClose}
+                      aria-label="close"
                       sx={{
-                        display: "flex",
-                        justifyContent: "flex-end",
+                        position: "absolute",
+                        top: "10px",
+                        right: "20px",
                       }}
                     >
-                      <Button
-                        sx={{
-                          backgroundColor: "#006AF5",
-                          borderRadius: "24px",
-                          color: "white",
-                          fontSize: "12px",
-                          padding: "7px",
-                          paddingLeft: "20px",
-                          paddingRight: "20px",
-                          margin: "5px 0 0 0",
-                          gap: "5px",
-                          "&:hover": {
-                            backgroundColor: "#025ED8",
-                          },
-                        }}
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                      >
-                        Add Submission
-                      </Button>
+                      <CloseIcon />
+                    </IconButton>
+                    <Grid container paddingTop={2}>
+                      <Grid item md={8} xs={8}>
+                        <Typography
+                          id="modal-modal-title"
+                          variant="h4"
+                          component="h2"
+                          sx={{
+                            fontWeight: 600,
+                            paddingBottom: 3,
+                            "@media (max-width: 390px)": {
+                              fontSize: "15px",
+                            },
+                          }}
+                        >
+                          Add Pre-registration Submission
+                        </Typography>
+                      </Grid>
                     </Grid>
-                  </form>
-                </Box>
-              </Modal>
-            </Grid>
+                    <Formik
+                      initialValues={{
+                        semester: "",
+                        semesterPeriod: "",
+                        major: "",
+                        dueDate: null,
+                        employeeNik:
+                          JSON.parse(localStorage.getItem("user"))?.nik || "",
+                      }}
+                      validationSchema={preregisSchema}
+                      onSubmit={async (
+                        values,
+                        { resetForm, setSubmitting }
+                      ) => {
+                        const { nik } = JSON.parse(
+                          localStorage.getItem("user")
+                        );
+                        setLoading(true);
+                        console.log("Submitting form with data:", values);
+                        console.log("ini itu kaprodi pe:", nik);
+                        values.semester = values.semester;
+                        values.semesterPeriod = values.semesterPeriod;
+                        values.major = values.major;
+                        values.dueDate = values.dueDate;
+                        values.employeeNik = nik;
+                        try {
+                          const response = await axios.post(
+                            `${BASE_URL_API}/pre-regist/create`,
+                            values
+                          );
+                          console.log(
+                            "ini response.data di preregis: ",
+                            response.data
+                          );
+                          setLoading(false);
+                          resetForm();
+                          PreregisModalClose();
+                          handleOpenSuccessModal();
+                          setSubmitting(false);
+                          setFormType("preregistration");
+                        } catch (error) {
+                          console.log(error);
+                          setLoading(false);
+                          PreregisModalClose();
+                          handleOpenErrorModal();
+                          setSubmitting(false);
+                          setFormType("");
+                        }
+                      }}
+                    >
+                      {({
+                        isSubmitting,
+                        handleChange,
+                        handleSubmit,
+                        setFieldValue,
+                        values,
+                      }) => (
+                        <Form>
+                          <Grid container>
+                            <Grid xs={12} item>
+                              <JumboSelectField
+                                name="semester"
+                                label="Semester"
+                                sx={{ margin: "0 0 20px 0", width: "480px" }}
+                                options={[
+                                  { value: "", label: "None" },
+                                  { value: "Ganjil", label: "Ganjil" },
+                                  { value: "Genap", label: "Genap" },
+                                ]}
+                                onChange={(event) => {
+                                  setFieldValue("semester", event.target.value);
+                                }}
+                              />
+                            </Grid>
+                            <Grid xs={12} item>
+                              <JumboTextField
+                                name="semesterPeriod"
+                                variant="outlined"
+                                label="Semester Period (e.g., 2023/2024)"
+                                sx={{ margin: "0 0 20px 0" }}
+                                fullWidth
+                                onChange={handleChange}
+                              />
+                            </Grid>
+                            <Grid xs={12} item>
+                              <JumboSelectField
+                                name="major"
+                                label="Major"
+                                sx={{ margin: "0 0 20px 0", width: "480px" }}
+                                options={[
+                                  { value: "", label: "None" },
+                                  { value: "IF", label: "Informatics" },
+                                  { value: "SI", label: "Information System" },
+                                  {
+                                    value: "DKV",
+                                    label: "Information Technology",
+                                  },
+                                ]}
+                                onChange={(event) => {
+                                  setFieldValue("major", event.target.value);
+                                }}
+                              />
+                            </Grid>
+                            <Grid xs={12} item>
+                              <LocalizationProvider
+                                dateAdapter={AdapterDateFns}
+                              >
+                                <DesktopDatePicker
+                                  sx={{
+                                    backgroundColor: "white",
+                                    width: "100%",
+                                    margin: "0 0 20px 0",
+                                  }}
+                                  label="Choose Due Date"
+                                  value={values.dueDate || null}
+                                  onChange={(date) =>
+                                    setFieldValue("dueDate", date)
+                                  }
+                                  TextField={(params) => (
+                                    <TextField {...params} />
+                                  )}
+                                />
+                              </LocalizationProvider>
+                            </Grid>
+                            <Grid
+                              item
+                              sx={{
+                                display: "flex",
+                                justifyContent: "flex-end",
+                              }}
+                            >
+                              <LoadingButton
+                                loading={isSubmitting}
+                                type="submit"
+                                variant="contained"
+                                fullWidth
+                                sx={{
+                                  textTransform: "capitalize",
+                                  backgroundColor: "#006AF5",
+                                }}
+                                onClick={handleSubmit}
+                                // aria-disabled={isSubmitting}
+                              >
+                                Submit
+                              </LoadingButton>
+                            </Grid>
+                          </Grid>
+                        </Form>
+                      )}
+                    </Formik>
+                  </Box>
+                </Modal>
+              </Grid>
+            )}
           </Grid>
-
           <Grid container pt={1}>
             <Grid item xs={12}>
-              <TableContainer
-                sx={{
-                  maxHeight: 440,
-                }}
-                component={Paper}
-              >
-                <Table stickyHeader>
-                  <TableHead>
-                    <TableHeading />
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead
+                    style={{
+                      position: "-webkit-sticky",
+                      position: "sticky",
+                      top: 0,
+                      backgroundColor: "rgba(26, 56, 96, 0.1)",
+                    }}
+                  >
+                    <TableRow>
+                      <TableCell>Number</TableCell>
+                      <TableCell>Submitted Date</TableCell>
+                      <TableCell>Created By</TableCell>
+                      <TableCell>To Major</TableCell>
+                      <TableCell>Semester</TableCell>
+                      <TableCell>Year</TableCell>
+                      <TableCell>Due Date</TableCell>
+                    </TableRow>
                   </TableHead>
                   <TableBody>
-                    {data
-                      .slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                      .map((item, index) => (
-                        <TableItem item={item} index={index} key={index} />
-                      ))}
+                    {dataPreregis && dataPreregis.length > 0 ? (
+                      dataPreregis.map((value, index) => (
+                        <TableRow
+                          key={value.id}
+                          // onClick={() => handleNavigate(value)}
+                          sx={{
+                            ":hover": {
+                              cursor: "pointer",
+                              backgroundColor: "#338CFF21",
+                              transition: "0.3s",
+                              transitionTimingFunction: "ease-in-out",
+                              transitionDelay: "0s",
+                              transitionProperty: "all",
+                            },
+                          }}
+                        >
+                          <TableCell sx={{ width: "80px" }}>
+                            {index + 1}
+                          </TableCell>
+                          <TableCell sx={{ width: "200px" }}>
+                            {new Date(value.createdAt).toLocaleDateString(
+                              "en-US",
+                              {
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                              }
+                            )}
+                          </TableCell>
+                          <TableCell sx={{ width: "300px" }}>
+                            {value.Employee.firstName} {value.Employee.lastName}
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              width: "200px",
+                            }}
+                          >
+                            {value.major === "IF"
+                              ? "Informatics"
+                              : value.major === "SI"
+                              ? "Information System"
+                              : value.major === "DKV"
+                              ? "Information Technology"
+                              : value.major}
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              width: "130px",
+                            }}
+                          >
+                            {value.semester}
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              width: "170px",
+                            }}
+                          >
+                            {value.semesterPeriod}
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              width: "200px",
+                            }}
+                          >
+                            {new Date(value.dueDate).toLocaleDateString(
+                              "en-US",
+                              {
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                              }
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={8}>No data available</TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -418,10 +628,10 @@ const Manage = () => {
                 }}
                 rowsPerPageOptions={[10, 25, 50, 100]}
                 component="div"
-                count={data.length}
+                count={dataPreregis.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
-                onPageChange={handleChangePage}
+                onPageChange={(_, newPage) => setPage(newPage)}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
             </Grid>
@@ -430,23 +640,24 @@ const Manage = () => {
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>
       </TabPanel>
+
       <TabPanel value={value} index={1}>
         <div>
-          <Grid container sx={{ paddingTop: "23px" }}>
+          <Grid container pt={1} pb={2}>
             <Grid
               item
               xs={12}
-              sm={3}
-              md={3}
+              sm={6}
+              md={4}
               xl={3}
               sx={{
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: { xs: "center", sm: "flex-start" },
+                paddingTop: "23px",
               }}
             >
               <TextField
-                placeholder="Search by Name or NIM"
+                placeholder="Search by Name"
                 variant="outlined"
                 size="small"
                 sx={{
@@ -464,201 +675,328 @@ const Manage = () => {
                 }}
               />
             </Grid>
-
-            <Grid
-              item
-              xs={12}
-              sm={3}
-              md={3}
-              sx={{
-                padding: "1px",
-                paddingLeft: "10px",
-                paddingBottom: "15px",
-              }}
-            >
-              <Button
-                variant="outlined"
-                size="small"
+            {getRole && (
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
                 sx={{
-                  backgroundColor: "#006AF5",
-                  borderRadius: "24px",
-                  color: "white",
-                  fontSize: "12px",
-                  padding: "7px",
-                  paddingLeft: "9px",
-                  paddingRight: "13px",
-                  minWidth: "110px",
-                  gap: "5px",
-                  "&:hover": {
-                    backgroundColor: "#025ED8",
-                  },
+                  padding: "1px",
+                  paddingLeft: "10px",
+                  paddingBottom: "15px",
+                  paddingTop: "23px",
                 }}
-                onClick={handleGradeModalOpen}
               >
-                <AddIcon sx={{ fontSize: "14px" }} />
-                Add Grade Submission
-              </Button>
-              <Modal open={isGradeModalOpen} onClose={handleGradeModalClose}>
-                <Box style={styleCurriculum}>
-                  <IconButton
-                    edge="end"
-                    color="#D9D9D9"
-                    onClick={closeGradeModal}
-                    aria-label="close"
-                    sx={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "20px",
-                    }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                  <Grid container paddingTop={2}>
-                    <Grid item md={8} xs={8}>
-                      <Typography
-                        id="modal-modal-title"
-                        variant="h4"
-                        component="h2"
-                        sx={{
-                          fontWeight: 600,
-                          paddingBottom: 3,
-                          "@media (max-width: 390px)": {
-                            fontSize: "15px",
-                          },
-                        }}
-                      >
-                        Add Grade Submission
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <form onSubmit={formik.handleSubmit}>
-                    <FormControl
-                      fullWidth
-                      sx={{ margin: "0 0 10px 0" }}
-                      error={!!formik.errors.selectedProdi}
-                    >
-                      <InputLabel>Program Studi</InputLabel>
-                      <Select
-                        label="Program Studi"
-                        name="selectedProdi"
-                        value={formik.values.selectedProdi}
-                        onChange={handleFormChange}
-                      >
-                        <MenuItem value="Informatika">Informatika</MenuItem>
-                        <MenuItem value="Sistem Informasi">
-                          Sistem Informasi
-                        </MenuItem>
-                        <MenuItem value="Teknologi Informasi">
-                          Teknologi Informasi
-                        </MenuItem>
-                      </Select>
-                      {formik.errors.selectedProdi && (
-                        <Typography color="error">
-                          {formik.errors.selectedProdi}
-                        </Typography>
-                      )}
-                    </FormControl>
-                    <TextField
-                      sx={{ margin: "10px 0" }}
-                      fullWidth
-                      label="Tahun"
-                      type="text"
-                      name="selectedYear"
-                      value={formik.values.selectedYear}
-                      onChange={handleFormChange}
-                      error={!!formik.errors.selectedYear}
-                      helperText={formik.errors.selectedYear}
-                    />
-                    <TextField
-                      sx={{ margin: "10px 0" }}
-                      fullWidth
-                      label="File"
-                      type="text"
-                      name="selectedFileName"
-                      value={formik.values.selectedFileName}
-                      onChange={handleFormChange}
-                      error={!!formik.errors.selectedFileName}
-                      helperText={formik.errors.selectedFileName}
-                    />
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DesktopDatePicker
-                        sx={{ backgroundColor: "white", width: "100%" }}
-                        label={formik.values.dueDate ? "" : "No Due Date"}
-                        inputFormat="MM/dd/yyyy"
-                        value={formik.values.dueDate}
-                        onChange={(event, newValue) =>
-                          formik.setFieldValue("dueDate", newValue)
-                        }
-                        renderInput={(params) => <TextField {...params} />}
-                      />
-                    </LocalizationProvider>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DateTimePicker
-                        sx={{ backgroundColor: "white", width: "100%" }}
-                        label="Date&Time picker"
-                        value={formik.values.valuePick}
-                        onChange={(event, newValue) =>
-                          formik.setFieldValue("valuePick", newValue)
-                        }
-                        renderInput={(params) => <TextField {...params} />}
-                      />
-                    </LocalizationProvider>
-                    <Grid
-                      item
+                <Button
+                  variant="outlined"
+                  size="small"
+                  sx={{
+                    backgroundColor: "#006AF5",
+                    borderRadius: "24px",
+                    color: "white",
+                    fontSize: "12px",
+                    padding: "7px",
+                    paddingLeft: "9px",
+                    paddingRight: "13px",
+                    minWidth: "110px",
+                    gap: "5px",
+                    "&:hover": {
+                      backgroundColor: "#025ED8",
+                    },
+                  }}
+                  onClick={handleGradeModalOpen}
+                >
+                  <AddIcon sx={{ fontSize: "14px" }} />
+                  Add Grades Submission
+                </Button>
+                <Modal open={gradeModalOpen} onClose={GradeModalClose}>
+                  <Box style={styleModal}>
+                    <IconButton
+                      edge="end"
+                      color="#D9D9D9"
+                      onClick={GradeModalClose}
+                      aria-label="close"
                       sx={{
-                        display: "flex",
-                        justifyContent: "flex-end",
+                        position: "absolute",
+                        top: "10px",
+                        right: "20px",
                       }}
                     >
-                      <Button
-                        sx={{
-                          backgroundColor: "#006AF5",
-                          borderRadius: "24px",
-                          color: "white",
-                          fontSize: "12px",
-                          padding: "7px",
-                          paddingLeft: "20px",
-                          paddingRight: "20px",
-                          margin: "5px 0 0 0",
-                          gap: "5px",
-                          "&:hover": {
-                            backgroundColor: "#025ED8",
-                          },
-                        }}
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                      >
-                        Add Submission
-                      </Button>
+                      <CloseIcon />
+                    </IconButton>
+                    <Grid container paddingTop={2}>
+                      <Grid item md={8} xs={8}>
+                        <Typography
+                          id="modal-modal-title"
+                          variant="h4"
+                          component="h2"
+                          sx={{
+                            fontWeight: 600,
+                            paddingBottom: 3,
+                            "@media (max-width: 390px)": {
+                              fontSize: "15px",
+                            },
+                          }}
+                        >
+                          Add Grades Submission
+                        </Typography>
+                      </Grid>
                     </Grid>
-                  </form>
-                </Box>
-              </Modal>
-            </Grid>
+                    <Formik
+                      initialValues={{
+                        semester: "",
+                        semester_period: "",
+                        major: "",
+                        due_date: null,
+                        employeeNik:
+                          JSON.parse(localStorage.getItem("user"))?.nik || "",
+                      }}
+                      validationSchema={gradeSchema}
+                      onSubmit={async (
+                        values,
+                        { resetForm, setSubmitting }
+                      ) => {
+                        const { nik } = JSON.parse(
+                          localStorage.getItem("user")
+                        );
+                        setLoading(true);
+                        values.semester = values.semester;
+                        values.semester_period = values.semester_period;
+                        values.major = values.major;
+                        values.due_date = values.due_date;
+                        values.employeeNik = nik;
+                        try {
+                          const result = await axios.post(
+                            `${BASE_URL_API}/access/open/grades`,
+                            values
+                          );
+                          setLoading(false);
+
+                          resetForm();
+                          GradeModalClose();
+                          handleOpenSuccessModal();
+                          setSubmitting(false);
+                          setFormType("grade");
+                        } catch (error) {
+                          console.log(error);
+                          setLoading(false);
+                          GradeModalClose();
+                          handleOpenErrorModal();
+                          setSubmitting(false);
+                          setFormType("");
+                        }
+                      }}
+                    >
+                      {({
+                        isSubmitting,
+                        handleChange,
+                        handleSubmit,
+                        setFieldValue,
+                        values,
+                      }) => (
+                        <Form>
+                          <Grid container>
+                            <Grid xs={12} item>
+                              <JumboSelectField
+                                name="semester"
+                                label="Semester"
+                                sx={{ margin: "0 0 20px 0", width: "480px" }}
+                                options={[
+                                  { value: "", label: "None" },
+                                  { value: "Ganjil", label: "Ganjil" },
+                                  { value: "Genap", label: "Genap" },
+                                ]}
+                                onChange={(event) => {
+                                  setFieldValue("semester", event.target.value);
+                                }}
+                              />
+                            </Grid>
+                            <Grid xs={12} item>
+                              <JumboTextField
+                                name="semester_period"
+                                variant="outlined"
+                                label="Semester Period (e.g., 2023/2024)"
+                                sx={{ margin: "0 0 20px 0" }}
+                                fullWidth
+                                onChange={handleChange}
+                              />
+                            </Grid>
+                            <Grid xs={12} item>
+                              <JumboSelectField
+                                name="major"
+                                label="Major"
+                                sx={{ margin: "0 0 20px 0", width: "480px" }}
+                                options={[
+                                  { value: "", label: "None" },
+                                  { value: "IF", label: "Informatics" },
+                                  { value: "SI", label: "Information System" },
+                                  {
+                                    value: "DKV",
+                                    label: "Information Technology",
+                                  },
+                                ]}
+                                onChange={(event) => {
+                                  setFieldValue("major", event.target.value);
+                                }}
+                              />
+                            </Grid>
+                            <Grid xs={12} item>
+                              <LocalizationProvider
+                                dateAdapter={AdapterDateFns}
+                              >
+                                <DesktopDatePicker
+                                  sx={{
+                                    backgroundColor: "white",
+                                    width: "100%",
+                                    margin: "0 0 20px 0",
+                                  }}
+                                  label="Choose Due Date"
+                                  value={values.due_date || null}
+                                  onChange={(date) =>
+                                    setFieldValue("due_date", date)
+                                  }
+                                  TextField={(params) => (
+                                    <TextField {...params} />
+                                  )}
+                                />
+                              </LocalizationProvider>
+                            </Grid>
+                            <Grid
+                              item
+                              sx={{
+                                display: "flex",
+                                justifyContent: "flex-end",
+                              }}
+                            >
+                              <LoadingButton
+                                loading={isSubmitting}
+                                type="submit"
+                                variant="contained"
+                                fullWidth
+                                sx={{
+                                  textTransform: "capitalize",
+                                  backgroundColor: "#006AF5",
+                                }}
+                                onClick={() => {
+                                  console.log("Button clicked");
+                                  handleSubmit();
+                                }}
+                              >
+                                Submit
+                              </LoadingButton>
+                            </Grid>
+                          </Grid>
+                        </Form>
+                      )}
+                    </Formik>
+                  </Box>
+                </Modal>
+              </Grid>
+            )}
           </Grid>
 
           <Grid container pt={1}>
             <Grid item xs={12}>
-              <TableContainer
-                sx={{
-                  maxHeight: 440,
-                }}
-                component={Paper}
-              >
-                <Table stickyHeader>
-                  <TableHead>
-                    <TableHeading />
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead
+                    style={{
+                      position: "-webkit-sticky",
+                      position: "sticky",
+                      top: 0,
+                      backgroundColor: "rgba(26, 56, 96, 0.1)",
+                    }}
+                  >
+                    <TableRow>
+                      <TableCell>Number</TableCell>
+                      <TableCell>Submitted Date</TableCell>
+                      <TableCell>Created By</TableCell>
+                      <TableCell>To Major</TableCell>
+                      <TableCell>Semester</TableCell>
+                      <TableCell>Year</TableCell>
+                      <TableCell>Due Date</TableCell>
+                    </TableRow>
                   </TableHead>
                   <TableBody>
-                    {data
-                      .slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                      .map((item, index) => (
-                        <TableItem item={item} index={index} key={index} />
-                      ))}
+                    {dataGrades && dataGrades.length > 0 ? (
+                      dataGrades.map((value, index) => (
+                        <TableRow
+                          key={value.id}
+                          // onClick={() => handleNavigate(value)}
+                          sx={{
+                            ":hover": {
+                              cursor: "pointer",
+                              backgroundColor: "#338CFF21",
+                              transition: "0.3s",
+                              transitionTimingFunction: "ease-in-out",
+                              transitionDelay: "0s",
+                              transitionProperty: "all",
+                            },
+                          }}
+                        >
+                          <TableCell sx={{ width: "80px" }}>
+                            {index + 1}
+                          </TableCell>
+                          <TableCell sx={{ width: "200px" }}>
+                            {new Date(value.createdAt).toLocaleDateString(
+                              "en-US",
+                              {
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                              }
+                            )}
+                          </TableCell>
+                          <TableCell sx={{ width: "300px" }}></TableCell>
+                          <TableCell
+                            sx={{
+                              width: "200px",
+                            }}
+                          >
+                            {value.major === "IF"
+                              ? "Informatics"
+                              : value.major === "SI"
+                              ? "Information System"
+                              : value.major === "DKV"
+                              ? "Information Technology"
+                              : value.major}
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              width: "130px",
+                            }}
+                          >
+                            {value.semester}
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              width: "170px",
+                            }}
+                          >
+                            {value.semester_period}
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              width: "200px",
+                            }}
+                          >
+                            {new Date(value.due_date).toLocaleDateString(
+                              "en-US",
+                              {
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                              }
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={8}>No data available</TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -672,10 +1010,10 @@ const Manage = () => {
                 }}
                 rowsPerPageOptions={[10, 25, 50, 100]}
                 component="div"
-                count={data.length}
+                count={dataGrades.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
-                onPageChange={handleChangePage}
+                onPageChange={(_, newPage) => setPage(newPage)}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
             </Grid>
@@ -684,102 +1022,83 @@ const Manage = () => {
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>
       </TabPanel>
+
+      <Modal
+        open={openSuccessModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div style={styleResponseModal}>
+          <IconButton
+            edge="end"
+            color="#D9D9D9"
+            onClick={handleCloseSuccessModal}
+            aria-label="close"
+            sx={{
+              position: "absolute",
+              top: "10px",
+              right: "20px",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Typography
+            id="modal-modal-title"
+            variant="h4"
+            component="h2"
+            sx={{
+              fontWeight: 600,
+              color: "#006AF5",
+            }}
+          >
+            Success creating submission form!
+          </Typography>
+          <Typography
+            id="modal-modal-description"
+            style={{ marginTop: "16px", marginBottom: "20px" }}
+          >
+            You have successfully creating a form for {formType} submission.
+          </Typography>
+        </div>
+      </Modal>
+      <Modal
+        open={openErrorModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div style={styleResponseModal}>
+          <IconButton
+            edge="end"
+            color="#D9D9D9"
+            onClick={handleCloseErrorModal}
+            aria-label="close"
+            sx={{
+              position: "absolute",
+              top: "10px",
+              right: "20px",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Typography
+            id="modal-modal-title"
+            variant="h4"
+            component="h2"
+            sx={{
+              fontWeight: 600,
+            }}
+          >
+            Error Submission!
+          </Typography>
+          <Typography
+            id="modal-modal-description"
+            style={{ marginTop: "16px", marginBottom: "20px" }}
+          >
+            Error: Failed to creating form submission. Please try again.
+          </Typography>
+        </div>
+      </Modal>
     </div>
-  );
-};
-
-const TableHeading = ({ index }) => {
-  const style = { fontWeight: 400 };
-  return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={[style]}>No</TableCell>
-      <TableCell sx={[style]}>NIM</TableCell>
-      <TableCell sx={[style]}>Student Name</TableCell>
-      <TableCell sx={[style]}>Program Studi</TableCell>
-      <TableCell sx={[style]}>Tahun Masuk</TableCell>
-      <TableCell sx={[style]}>Nilai</TableCell>
-      <TableCell sx={[style]}>Sertifikat</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
-    </TableRow>
-  );
-};
-
-const TableItem = ({ item, index }) => {
-  const navigate = useNavigate();
-
-  const handleButtonNavigate = (event) => {
-    const { name } = event.currentTarget;
-    // navigate(`/bimbingan-akademik/sek-dekan/student-information/${item.nim}`);
-
-    switch (name) {
-      case "profile":
-        navigate(
-          `/bimbingan-akademik/sek-dekan/student-information/${item.nim}`
-        );
-        break;
-      case "grade":
-        navigate(
-          `/bimbingan-akademik/sek-dekan/student-information/${item.nim}/grade`
-        );
-        break;
-      case "certificate":
-        navigate(
-          `/bimbingan-akademik/sek-dekan/student-information/${item.nim}/certificate`
-        );
-        break;
-
-      default:
-        console.log("Path not found");
-    }
-  };
-  const rowStyle = {
-    "@media (max-width: 390px)": { fontSize: "11px" },
-  };
-  return (
-    <TableRow>
-      <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{`022407712`}</TableCell>
-      <TableCell>
-        <Button
-          name="profile"
-          sx={{
-            textTransform: "capitalize",
-            "@media (max-width: 390px)": { fontSize: "11px" },
-          }}
-          onClick={handleButtonNavigate}
-        >{`Yuhu, Christopher Darell`}</Button>
-      </TableCell>
-      <TableCell sx={[rowStyle]}>{`Informatika`}</TableCell>
-      <TableCell sx={[rowStyle]}>{`2021`}</TableCell>
-
-      <TableCell>
-        <Button
-          name="grade"
-          onClick={handleButtonNavigate}
-          sx={{
-            "@media (max-width: 390px)": { fontSize: "11px" },
-            textTransform: "capitalize",
-          }}
-        >
-          View Grades
-        </Button>
-      </TableCell>
-      <TableCell>
-        <Button
-          name="certificate"
-          onClick={handleButtonNavigate}
-          sx={{
-            "@media (max-width: 390px)": { fontSize: "11px" },
-            textTransform: "capitalize",
-          }}
-        >
-          View Certificates
-        </Button>
-      </TableCell>
-      <TableCell sx={[rowStyle]}>
-        <Chip label={"Active"} variant="filled" color={"success"} />
-      </TableCell>
-    </TableRow>
   );
 };
 

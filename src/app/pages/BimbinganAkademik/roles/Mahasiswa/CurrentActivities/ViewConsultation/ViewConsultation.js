@@ -145,16 +145,7 @@ const ViewConsultation = () => {
   };
 
   const handleBreadcrumbsClick = () => {
-    const { role } = JSON.parse(localStorage.getItem("user"));
-    let path = "";
-
-    if (role.includes("DEKAN")) {
-      path = "/bimbingan-akademik/dekan/current-activities";
-    } else if (role.includes("KAPRODI")) {
-      path = "/bimbingan-akademik/kaprodi/current-activities";
-    } else {
-      path = "/bimbingan-akademik/dosen-pembimbing/current-activities";
-    }
+    let path = "/bimbingan-akademik/current-activities";
     return <StyledLink to={path}>Current Activities</StyledLink>;
   };
 

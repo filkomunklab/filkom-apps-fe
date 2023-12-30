@@ -21,6 +21,9 @@ import {
 } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
+import CircularProgress from "@mui/material/CircularProgress";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const style = {
   position: "absolute",
@@ -73,9 +76,33 @@ const GradeSubmission = () => {
     };
   }, [handleOpenSecondModal]);
 
-  const handleSubmitFirstModal = () => {
-    handleCloseFirstModal();
-    handleOpenSecondModal();
+  const handleSubmitFirstModal = async () => {
+    try {
+      const { nim } = JSON.parse(localStorage.getItem("user"));
+      const requestBody = {
+        semester: semester,
+        employeeNik: nim,
+        data: tableData.map((rowData) => ({
+          grades: rowData.grade,
+          retrival_to: rowData.retrievalTo,
+          paralel: rowData.parallel,
+          subjectId: "taruSubjectId_disini",
+          subjectName: rowData.subjectName,
+        })),
+      };
+
+      const response = await axios.post(
+        `${BASE_URL_API}/transaction/grades/${nim}`,
+        requestBody
+      );
+
+      console.log("ini response.data: ", response.data);
+
+      handleCloseFirstModal();
+      handleOpenSecondModal();
+    } catch (error) {
+      console.error("Error submitting grades:", error);
+    }
   };
 
   const [semester, setSemester] = useState("");
@@ -439,12 +466,12 @@ const GradeSubmission = () => {
                   row !== lecturer.length ||
                   row !== grade.length ||
                   row !== retrieval.length
-                  // !subjectName.every(Boolean) ||
-                  // !parallel.every(Boolean) ||
-                  // !lecturer.every(Boolean) ||
-                  // !grade.every(Boolean) ||
-                  // !retrieval.every(Boolean)
-                    ? "#1A38601A"
+                    ? // !subjectName.every(Boolean) ||
+                      // !parallel.every(Boolean) ||
+                      // !lecturer.every(Boolean) ||
+                      // !grade.every(Boolean) ||
+                      // !retrieval.every(Boolean)
+                      "#1A38601A"
                     : "#006AF5",
                 borderRadius: "24px",
                 color:
@@ -453,12 +480,12 @@ const GradeSubmission = () => {
                   row !== lecturer.length ||
                   row !== grade.length ||
                   row !== retrieval.length
-                  // !subjectName.every(Boolean) ||
-                  // !parallel.every(Boolean) ||
-                  // !lecturer.every(Boolean) ||
-                  // !grade.every(Boolean) ||
-                  // !retrieval.every(Boolean)
-                    ? "black"
+                    ? // !subjectName.every(Boolean) ||
+                      // !parallel.every(Boolean) ||
+                      // !lecturer.every(Boolean) ||
+                      // !grade.every(Boolean) ||
+                      // !retrieval.every(Boolean)
+                      "black"
                     : "white",
                 whiteSpace: "nowrap",
                 minWidth: "132px",
@@ -472,12 +499,12 @@ const GradeSubmission = () => {
                     row !== lecturer.length ||
                     row !== grade.length ||
                     row !== retrieval.length
-                    // !subjectName.every(Boolean) ||
-                    // !parallel.every(Boolean) ||
-                    // !lecturer.every(Boolean) ||
-                    // !grade.every(Boolean) ||
-                    // !retrieval.every(Boolean)
-                      ? "grey"
+                      ? // !subjectName.every(Boolean) ||
+                        // !parallel.every(Boolean) ||
+                        // !lecturer.every(Boolean) ||
+                        // !grade.every(Boolean) ||
+                        // !retrieval.every(Boolean)
+                        "grey"
                       : "#025ED8",
                 },
               }}
@@ -583,7 +610,6 @@ const GradeSubmission = () => {
                 >
                   You have successfully submit your grades.
                 </Typography>
-                {/* Tambahkan tautan dan elemen lain yang diperlukan di sini */}
               </div>
             </Modal>
           </Box>
