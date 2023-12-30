@@ -62,14 +62,14 @@ const StudentList = () => {
   const getStudent = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL_API}/students-without-supervisor`,
+        `${BASE_URL_API}/guidance-class/get-all-unassigned-student`,
         { cancelToken: source.token }
       );
 
       const { status, data } = response.data;
       console.log("inii response :", response);
       if (status === "OK") {
-        setStudentOptions(data);
+        setStudentOptions(data.filter((item) => item.status !== "GRADUATE"));
       } else {
         console.log("ini response :", response);
       }
@@ -142,10 +142,13 @@ const StudentList = () => {
                 <TableCell padding="checkbox">
                   <Checkbox
                     indeterminate={
-                      selectedStudent.length > 0 &&
+                      selectedStudent.length &&
                       selectedStudent.length < studentOptions.length
                     }
-                    checked={selectedStudent.length === studentOptions.length}
+                    checked={
+                      selectedStudent.length &&
+                      selectedStudent.length === studentOptions.length
+                    }
                     onChange={handleSelectAllClick}
                   />
                 </TableCell>
@@ -164,7 +167,7 @@ const StudentList = () => {
                   <TableItem
                     item={item}
                     index={index}
-                    key={item.id}
+                    key={item.nim}
                     isSelected={selectedStudent.includes(item.nim)}
                     handleClick={(i) =>
                       setSelectedStudent(
@@ -259,7 +262,7 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
           ? "Information Technology"
           : "-"}
       </TableCell>
-      <TableCell>{item.arrival_Year}</TableCell>
+      <TableCell>{item.arrivalYear}</TableCell>
       <TableCell>
         <Chip label={item.status} variant="filled" color="success" />
       </TableCell>

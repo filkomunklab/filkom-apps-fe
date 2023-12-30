@@ -18,7 +18,9 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
   TableContainer,
+  Checkbox,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Div from "@jumbo/shared/Div";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -82,22 +84,23 @@ const prodiList = [
 ];
 
 const AdvisorProfile = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { nik } = location.state;
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dataProfile, setDataProfile] = useState([]);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { nik } = location.state;
+  const studentOptions =
+    dataProfile?.student.filter((item) => item.status !== "GRADUATE") || [];
+  const [selectedStudent, setSelectedStudent] = useState([]);
   const source = axios.CancelToken.source();
 
   const getProfile = async () => {
     try {
       const response = await axios.get(
         `${BASE_URL_API}/supervisor/nik/${nik}`,
-        {
-          cancelToken: source.token,
-        }
+        { cancelToken: source.token }
       );
       console.log("ini isi result.data", response.data);
       setDataProfile(response.data.data);
@@ -106,11 +109,26 @@ const AdvisorProfile = () => {
     }
   };
 
+  const handleSubmit = async () => {};
+
   useEffect(() => {
     getProfile();
     console.log("ini di profile :", location.state);
     return () => source.cancel("request dibatalkan");
   }, []);
+
+  useEffect(() => {
+    console.log("fsdfsd", selectedStudent);
+  }, [selectedStudent]);
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelected = studentOptions.map((item) => item.nim);
+      setSelectedStudent(newSelected);
+    } else {
+      setSelectedStudent([]);
+    }
+  };
 
   return (
     <Div>
@@ -192,7 +210,7 @@ const AdvisorProfile = () => {
         </Grid>
       </Paper>
       <Grid container spacing={2}>
-        <Grid display={"flex"} alignItems={"flex-end"} item md={6} xl={4}>
+        <Grid display={"flex"} alignItems={"flex-end"} item minWidth={"100%"}>
           <Typography
             variant="h2"
             sx={{
@@ -211,7 +229,7 @@ const AdvisorProfile = () => {
           xs={12}
           sm={8}
           md={12}
-          xl={3}
+          xl={6}
           display="flex"
           alignItems="center"
           justifyContent="center"
@@ -306,20 +324,17 @@ const AdvisorProfile = () => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid
-          item
-          lg={2}
-          md={3}
-          sm={4}
-          xs={6}
-          display="flex"
-          alignItems="center"
-        >
+        <Grid item display={"flex"} alignItems={"center"}>
           <Button
             onClick={() =>
               navigate(
                 `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}/edit-student`,
-                { state: { nik: nik, students: dataProfile?.student } }
+                {
+                  state: {
+                    nik: nik,
+                    // students: dataProfile?.student.map((item) => item.nim),
+                  },
+                }
               )
             }
             sx={{
@@ -336,9 +351,23 @@ const AdvisorProfile = () => {
               },
             }}
           >
-            Edit Student
+            Add Student
           </Button>
         </Grid>
+        {selectedStudent.length > 0 && (
+          <Grid item display={"flex"} alignItems={"center"}>
+            <DeleteIcon
+              sx={{
+                backgroundColor: "#CA150C",
+                fill: "white",
+                padding: 1,
+                height: 41,
+                width: 41,
+                borderRadius: 2,
+              }}
+            />
+          </Grid>
+        )}
         <Grid item xs={12}>
           <TableContainer
             sx={{
@@ -348,27 +377,50 @@ const AdvisorProfile = () => {
           >
             <Table stickyHeader>
               <TableHead>
-                <TableHeading />
+                {/* <TableHeading /> */}
+                <TableRow sx={{ backgroundColor: "#1A38601A" }}>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      indeterminate={
+                        selectedStudent.length &&
+                        selectedStudent.length < studentOptions.length
+                      }
+                      checked={
+                        selectedStudent.length &&
+                        selectedStudent.length === studentOptions.length
+                      }
+                      onChange={handleSelectAllClick}
+                    />
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 400 }}>No</TableCell>
+                  <TableCell sx={{ fontWeight: 400 }}>NIM</TableCell>
+                  <TableCell sx={{ fontWeight: 400 }}>Student Name</TableCell>
+                  <TableCell sx={{ fontWeight: 400 }}>Program Studi</TableCell>
+                  <TableCell sx={{ fontWeight: 400 }}>Tahun Masuk</TableCell>
+                  <TableCell sx={{ fontWeight: 400 }}>Nilai</TableCell>
+                  <TableCell sx={{ fontWeight: 400 }}>Sertifikat</TableCell>
+                  <TableCell sx={{ fontWeight: 400 }}>Status</TableCell>
+                </TableRow>
               </TableHead>
               <TableBody>
-                {/* {Array.isArray(dataStudent) && dataStudent.length > 0 ? (
-                  dataStudent
-                    .filter((item) => item.status !== "GRADUATE")
+                {studentOptions.length > 0 ? (
+                  studentOptions
+
                     .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
                     .map((item, index) => (
-                      <TableItem item={item} index={index} key={index} />
-                    ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={8}>No data available</TableCell>
-                  </TableRow>
-                )} */}
-                {dataProfile.student?.length > 0 ? (
-                  dataProfile.student
-                    .filter((item) => item.status !== "GRADUATE")
-                    .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
-                    .map((item, index) => (
-                      <TableItem item={item} index={index} key={index} />
+                      <TableItem
+                        item={item}
+                        index={index}
+                        key={item.id}
+                        isSelected={selectedStudent.includes(item.nim)}
+                        handleClick={(i) =>
+                          setSelectedStudent(
+                            selectedStudent.includes(i.nim)
+                              ? selectedStudent.filter((nim) => nim !== i.nim)
+                              : [...selectedStudent, i.nim]
+                          )
+                        }
+                      />
                     ))
                 ) : (
                   <TableRow>
@@ -434,8 +486,9 @@ const textStyle = {
   borderRadius: "8px",
 };
 
-const TableItem = ({ item, index }) => {
+const TableItem = ({ item, index, isSelected, handleClick }) => {
   const navigate = useNavigate();
+
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
     switch (name) {
@@ -463,7 +516,15 @@ const TableItem = ({ item, index }) => {
     "@media (max-width: 650px)": { fontSize: "11px" },
   };
   return (
-    <TableRow>
+    <TableRow
+      onClick={() => handleClick(item)}
+      role="checkbox"
+      aria-checked={isSelected}
+      selected={isSelected}
+    >
+      <TableCell padding="checkbox">
+        <Checkbox checked={isSelected} />
+      </TableCell>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
       <TableCell sx={[rowStyle]}>{item.nim}</TableCell>
       <TableCell>
@@ -478,7 +539,15 @@ const TableItem = ({ item, index }) => {
           {item.lastName}, {item.firstName}
         </Button>
       </TableCell>
-      <TableCell sx={[rowStyle]}>{item.major}</TableCell>
+      <TableCell sx={[rowStyle]}>
+        {item.major === "IF"
+          ? "Informatics"
+          : item.major === "SI"
+          ? "Information System"
+          : item.major === "DKV"
+          ? "Information Technology"
+          : "-"}
+      </TableCell>
       <TableCell sx={[rowStyle]}>{item.arrival_Year}</TableCell>
 
       <TableCell>
