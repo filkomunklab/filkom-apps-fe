@@ -19,6 +19,8 @@ import {
   experimentalStyled as styled,
   TableContainer,
   Checkbox,
+  CircularProgress,
+  Backdrop,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Div from "@jumbo/shared/Div";
@@ -27,6 +29,7 @@ import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import SearchLocal from "app/shared/SearchLocal";
 import { useNavigate, Link, useLocation } from "react-router-dom";
+import { display } from "@mui/system";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -86,44 +89,73 @@ const prodiList = [
 const AdvisorProfile = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { nik } = location.state;
+  const { classID, nik } = location.state;
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dataProfile, setDataProfile] = useState([]);
-  const studentOptions =
-    dataProfile?.student.filter((item) => item.status !== "GRADUATE") || [];
+  // const studentOptions =
+  //   // dataProfile?.student.filter((item) => item.status !== "GRADUATE") ||
+  //   [];
+  const [studentOptions, setStudentOptions] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState([]);
-  const source = axios.CancelToken.source();
+  const [isLoading, setIsLoading] = useState(false);
+  const controller = new AbortController();
+  const signal = controller.signal;
 
   const getProfile = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL_API}/supervisor/nik/${nik}`,
-        { cancelToken: source.token }
+        `${BASE_URL_API}/guidance-class/${classID}`,
+        { signal }
       );
       console.log("ini isi result.data", response.data);
-      setDataProfile(response.data.data);
+
+      const { status, data } = response.data;
+
+      if (status === "OK") {
+        setDataProfile(data.teacher);
+        setStudentOptions(data.GuidanceClassMember);
+      }
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  const handleSubmit = async () => {};
+  const handleDelete = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.delete(
+        `${BASE_URL_API}/guidance-class/delete-student`,
+        {
+          data: { studentList: selectedStudent },
+          signal,
+        }
+      );
+
+      console.log("res delete: ", response);
+      const { status } = response.data;
+      if (status === "OK") {
+        getProfile();
+        setSelectedStudent([]);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     getProfile();
     console.log("ini di profile :", location.state);
-    return () => source.cancel("request dibatalkan");
+    return () => controller.abort();
   }, []);
 
-  useEffect(() => {
-    console.log("fsdfsd", selectedStudent);
-  }, [selectedStudent]);
-
   const handleSelectAllClick = (event) => {
+    console.log(event);
     if (event.target.checked) {
-      const newSelected = studentOptions.map((item) => item.nim);
+      const newSelected = studentOptions.map((item) => item.studentNim);
       setSelectedStudent(newSelected);
     } else {
       setSelectedStudent([]);
@@ -132,6 +164,12 @@ const AdvisorProfile = () => {
 
   return (
     <Div>
+      <Backdrop
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress />
+      </Backdrop>
       <Div role="presentation" sx={{ paddingBottom: "15px" }}>
         <Breadcrumbs aria-label="breadcrumb">
           <StyledLink to="/bimbingan-akademik/kaprodi/supervisor-information/">
@@ -198,7 +236,13 @@ const AdvisorProfile = () => {
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Major</Typography>
             <Typography variant="h6" sx={textStyle}>
-              {dataProfile.major}
+              {dataProfile.major === "IF"
+                ? "Informatics"
+                : dataProfile.major === "SI"
+                ? "Information System"
+                : dataProfile.major === "DKV"
+                ? "Information Technology"
+                : "-"}
             </Typography>
           </Grid>
           <Grid item xs={12} md={12}>
@@ -332,6 +376,7 @@ const AdvisorProfile = () => {
                 {
                   state: {
                     nik: nik,
+                    classID: classID,
                     // students: dataProfile?.student.map((item) => item.nim),
                   },
                 }
@@ -365,6 +410,7 @@ const AdvisorProfile = () => {
                 width: 41,
                 borderRadius: 2,
               }}
+              onClick={() => handleDelete()}
             />
           </Grid>
         )}
@@ -382,11 +428,11 @@ const AdvisorProfile = () => {
                   <TableCell padding="checkbox">
                     <Checkbox
                       indeterminate={
-                        selectedStudent.length &&
+                        selectedStudent.length > 0 &&
                         selectedStudent.length < studentOptions.length
                       }
                       checked={
-                        selectedStudent.length &&
+                        selectedStudent.length > 0 &&
                         selectedStudent.length === studentOptions.length
                       }
                       onChange={handleSelectAllClick}
@@ -405,19 +451,18 @@ const AdvisorProfile = () => {
               <TableBody>
                 {studentOptions.length > 0 ? (
                   studentOptions
-
                     .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
                     .map((item, index) => (
                       <TableItem
                         item={item}
                         index={index}
-                        key={item.id}
-                        isSelected={selectedStudent.includes(item.nim)}
+                        key={item.studentNim}
+                        isSelected={selectedStudent.includes(item.studentNim)}
                         handleClick={(i) =>
                           setSelectedStudent(
-                            selectedStudent.includes(i.nim)
-                              ? selectedStudent.filter((nim) => nim !== i.nim)
-                              : [...selectedStudent, i.nim]
+                            selectedStudent.includes(i)
+                              ? selectedStudent.filter((nim) => nim !== i)
+                              : [...selectedStudent, i]
                           )
                         }
                       />
@@ -461,22 +506,6 @@ const AdvisorProfile = () => {
   );
 };
 
-const TableHeading = () => {
-  const style = { fontWeight: 400 };
-  return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={[style]}>No</TableCell>
-      <TableCell sx={[style]}>NIM</TableCell>
-      <TableCell sx={[style]}>Student Name</TableCell>
-      <TableCell sx={[style]}>Program Studi</TableCell>
-      <TableCell sx={[style]}>Tahun Masuk</TableCell>
-      <TableCell sx={[style]}>Nilai</TableCell>
-      <TableCell sx={[style]}>Sertifikat</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
-    </TableRow>
-  );
-};
-
 const textStyle = {
   borderWidth: 1,
   borderColor: "#00000029",
@@ -488,6 +517,8 @@ const textStyle = {
 
 const TableItem = ({ item, index, isSelected, handleClick }) => {
   const navigate = useNavigate();
+  const { arrivalYear, firstName, id, lastName, major, nim, status } =
+    item.student;
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
@@ -517,7 +548,7 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
   };
   return (
     <TableRow
-      onClick={() => handleClick(item)}
+      onClick={() => handleClick(nim)}
       role="checkbox"
       aria-checked={isSelected}
       selected={isSelected}
@@ -526,7 +557,7 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
         <Checkbox checked={isSelected} />
       </TableCell>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{item.nim}</TableCell>
+      <TableCell sx={[rowStyle]}>{nim}</TableCell>
       <TableCell>
         <Button
           name="profile"
@@ -536,19 +567,19 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
           }}
           onClick={handleButtonNavigate}
         >
-          {item.lastName}, {item.firstName}
+          {lastName}, {firstName}
         </Button>
       </TableCell>
       <TableCell sx={[rowStyle]}>
-        {item.major === "IF"
+        {major === "IF"
           ? "Informatics"
-          : item.major === "SI"
+          : major === "SI"
           ? "Information System"
-          : item.major === "DKV"
+          : major === "DKV"
           ? "Information Technology"
           : "-"}
       </TableCell>
-      <TableCell sx={[rowStyle]}>{item.arrival_Year}</TableCell>
+      <TableCell sx={[rowStyle]}>{arrivalYear}</TableCell>
 
       <TableCell>
         <Button
@@ -575,7 +606,7 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
         </Button>
       </TableCell>
       <TableCell sx={[rowStyle]}>
-        <Chip label={item.status} variant="filled" color={"success"} />
+        <Chip label={status} variant="filled" color={"success"} />
       </TableCell>
     </TableRow>
   );

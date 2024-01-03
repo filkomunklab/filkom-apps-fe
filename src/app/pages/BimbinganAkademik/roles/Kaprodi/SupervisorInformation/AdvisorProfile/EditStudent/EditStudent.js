@@ -15,6 +15,8 @@ import {
   experimentalStyled as styled,
   Button,
   TablePagination,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import SearchLocal from "app/shared/SearchLocal";
 import Div from "@jumbo/shared/Div";
@@ -42,18 +44,20 @@ const CountStudent = ({ selected, totalStudents }) => {
 const EditStudent = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { nik, students } = location.state;
-  const source = axios.CancelToken.source();
+  const { nik, classID } = location.state;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [studentOptions, setStudentOptions] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const controller = new AbortController();
+  const signal = controller.signal;
 
   const getStudent = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL_API}/guidance-class/get-all-unassigned-student`,
-        { cancelToken: source.token }
+        `${BASE_URL_API}/guidance-class/get-all-unassigned-student/list`,
+        { signal }
       );
 
       const { status, data } = response.data;
@@ -70,31 +74,39 @@ const EditStudent = () => {
 
   const handleSubmit = async () => {
     try {
-      const studentNim = [...students, ...selectedStudent];
+      setIsLoading(true);
+      const nimList = selectedStudent.map((nim) => ({ studentNim: nim }));
+      console.log("yaho", nimList);
 
-      const response = await axios.patch(
-        `${BASE_URL_API}/supervisor/${nik}/student/update`,
-        { nims: studentNim },
-        { cancelToken: source.token }
+      const response = await axios.post(
+        `${BASE_URL_API}/guidance-class/add-student/${classID}`,
+        { studentList: nimList },
+        { signal }
       );
       console.log("ahahaha :", response);
       const { status } = response.data;
+      setIsLoading(false);
       if (status === "OK") {
         navigate(
           `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}`,
-          { state: { nik: nik } }
+          { state: location.state }
         );
       }
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      console.log("nnn", error);
     }
   };
 
   useEffect(() => {
     getStudent();
     console.log("ini location :", location?.state);
-    return () => source.cancel("request dibatalkan");
+    return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    console.log("hadeh", selectedStudent);
+  }, [selectedStudent]);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -107,6 +119,12 @@ const EditStudent = () => {
 
   return (
     <Div>
+      <Backdrop
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress />
+      </Backdrop>
       <Div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
           <StyledLink to="/bimbingan-akademik/kaprodi/supervisor-information/">
@@ -159,11 +177,11 @@ const EditStudent = () => {
                 <TableCell padding="checkbox">
                   <Checkbox
                     indeterminate={
-                      selectedStudent.length &&
+                      selectedStudent.length > 0 &&
                       selectedStudent.length < studentOptions.length
                     }
                     checked={
-                      selectedStudent.length &&
+                      selectedStudent.length > 0 &&
                       selectedStudent.length === studentOptions.length
                     }
                     onChange={handleSelectAllClick}
@@ -184,7 +202,7 @@ const EditStudent = () => {
                   <TableItem
                     item={item}
                     index={index}
-                    key={item.id}
+                    key={item.nim}
                     isSelected={selectedStudent.includes(item.nim)}
                     handleClick={(i) =>
                       setSelectedStudent(
