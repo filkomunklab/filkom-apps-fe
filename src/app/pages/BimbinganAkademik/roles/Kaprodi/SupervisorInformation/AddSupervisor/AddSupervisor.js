@@ -62,7 +62,7 @@ const AddSupervisor = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       const response = await axios.get(
-        `${BASE_URL_API}/supervisor/no-student`,
+        `${BASE_URL_API}/guidance-class/get-all-unassigned-teacher`,
         { cancelToken: source.token }
       );
 
@@ -81,10 +81,15 @@ const AddSupervisor = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.patch(
-        `${BASE_URL_API}/supervisor/${supervisor.nik}/student`,
+      // const studentNim =
+
+      const response = await axios.post(
+        // `${BASE_URL_API}/supervisor/${supervisor.nik}/student`,
+        `${BASE_URL_API}/guidance-class/create-new/${supervisor.nik}`,
         {
-          nims: students.map((item) => item.nim),
+          studentList: students.map((item) => ({
+            studentNim: item.nim,
+          })),
         },
         {
           cancelToken: source.token,
@@ -163,7 +168,7 @@ const AddSupervisor = () => {
                 }}
                 value={
                   supervisorNik ||
-                  (SupervisorOptions.length > 0 && supervisor?.nik) ||
+                  (SupervisorOptions?.length && supervisor?.nik) ||
                   ""
                 }
                 InputLabelProps={{

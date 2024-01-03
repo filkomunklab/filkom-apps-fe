@@ -205,7 +205,10 @@ const PreRegistrationRejected = () => {
                 <Typography variant="h5" sx={{ marginBottom: 2 }}>
                   11 May 2000
                 </Typography>
-                <Typography variant="h5" sx={{ marginBottom: 2, color: "red" }}>
+                <Typography
+                  variant="h5"
+                  sx={{ marginBottom: 2, color: "#CA150C" }}
+                >
                   Rejected
                 </Typography>
                 <Typography variant="h5" sx={{ marginBottom: 2 }}>
