@@ -14,6 +14,7 @@ import {
   TextField,
   Grid,
   Stack,
+  Paper,
   Button,
   IconButton,
   Link,
@@ -23,6 +24,7 @@ import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { BASE_URL_API } from "@jumbo/config/env";
 
 const style = {
@@ -75,43 +77,61 @@ const GradeSubmission = () => {
       clearTimeout(timer);
     };
   }, [handleOpenSecondModal]);
-
-  const handleSubmitFirstModal = async () => {
+  const [dataPreregis, setDataPreregis] = useState([]);
+  const getDataPreregis = async () => {
     try {
-      const { nim } = JSON.parse(localStorage.getItem("user"));
-      const requestBody = {
-        semester: semester,
-        employeeNik: nim,
-        data: tableData.map((rowData) => ({
-          grades: rowData.grade,
-          retrival_to: rowData.retrievalTo,
-          paralel: rowData.parallel,
-          subjectId: "taruSubjectId_disini",
-          subjectName: rowData.subjectName,
-        })),
-      };
-
-      const response = await axios.post(
-        `${BASE_URL_API}/transaction/grades/${nim}`,
-        requestBody
+      const studentData = await axios.get(
+        `${BASE_URL_API}/student/${
+          JSON.parse(localStorage.getItem("user")).nim
+        }`
+      );
+      const major = studentData.data.data.major;
+      const result = await axios.get(
+        `${BASE_URL_API}/pre-regist/status/${major}`
       );
 
-      console.log("ini response.data: ", response.data);
-
-      handleCloseFirstModal();
-      handleOpenSecondModal();
+      setDataPreregis(result.data.data);
     } catch (error) {
-      console.error("Error submitting grades:", error);
+      console.log(error.message);
+      console.log("ini error: ", error);
     }
+  };
+
+  useEffect(() => {
+    getDataPreregis();
+  }, []);
+  const handleSubmitFirstModal = async () => {
+    // try {
+    //   const { nim } = JSON.parse(localStorage.getItem("user"));
+    //   const requestBody = {
+    //     semester: semester,
+    //     employeeNik: nim,
+    //     data: tableData.map((rowData) => ({
+    //       grades: rowData.grade,
+    //       retrival_to: rowData.retrievalTo,
+    //       paralel: rowData.parallel,
+    //       subjectId: "taruSubjectId_disini",
+    //       subjectName: rowData.subjectName,
+    //     })),
+    //   };
+    //   const response = await axios.post(
+    //     `${BASE_URL_API}/transaction/grades/${nim}`,
+    //     requestBody
+    //   );
+    //   console.log("ini response.data: ", response.data);
+    //   handleCloseFirstModal();
+    //   handleOpenSecondModal();
+    // } catch (error) {
+    //   console.error("Error submitting grades:", error);
+    // }
   };
 
   const [semester, setSemester] = useState("");
   const [row, setRow] = useState();
-  const [subjectName, setSubjectName] = useState(Array(row).fill(""));
-  const [parallel, setParallel] = useState(Array(row).fill(""));
-  const [lecturer, setLecturer] = useState(Array(row).fill(""));
-  const [grade, setGrade] = useState(Array(row).fill(""));
-  const [retrieval, setRetrieval] = useState(Array(row).fill(""));
+  const [subjectNames, setSubjectNames] = useState(Array(row).fill(""));
+  const [grades, setGrades] = useState(Array(row).fill(""));
+  const [lecturers, setLecturers] = useState(Array(row).fill(""));
+  const [descriptions, setDescriptions] = useState(Array(row).fill(""));
   const [showLabel, setShowLabel] = useState(true);
   const [showLabel2, setShowLabel2] = useState(true);
 
@@ -126,43 +146,38 @@ const GradeSubmission = () => {
   };
 
   const handleSubjectNameChange = (event, index) => {
-    const newSubjectName = [...subjectName];
-    newSubjectName[index] = event.target.value;
-    setSubjectName(newSubjectName);
-  };
-
-  const handleParallelChange = (event, index) => {
-    const newParallel = [...parallel];
-    newParallel[index] = event.target.value;
-    setParallel(newParallel);
-  };
-
-  const handleLecturerChange = (event, index) => {
-    const newLecturer = [...lecturer];
-    newLecturer[index] = event.target.value;
-    setLecturer(newLecturer);
+    const newSubjectNames = [...subjectNames];
+    newSubjectNames[index] = event.target.value;
+    setSubjectNames(newSubjectNames);
   };
 
   const handleGradeChange = (event, index) => {
-    const newGrade = [...grade];
-    newGrade[index] = event.target.value;
-    setGrade(newGrade);
+    const newGrades = [...grades];
+    const inputValue = event.target.value;
+    if (!isNaN(inputValue) && inputValue <= 100) {
+      newGrades[index] = inputValue;
+      setGrades(newGrades);
+    }
   };
 
-  const handleRetrievalChange = (event, index) => {
-    const newRetrieval = [...retrieval];
-    newRetrieval[index] = event.target.value;
-    setRetrieval(newRetrieval);
+  const handleLecturerChange = (event, index) => {
+    const newLecturers = [...lecturers];
+    newLecturers[index] = event.target.value;
+    setLecturers(newLecturers);
   };
 
+  const handleDescriptionChange = (event, index) => {
+    const newDescriptions = [...descriptions];
+    newDescriptions[index] = event.target.value;
+    setDescriptions(newDescriptions);
+  };
   const generateTableData = (rowCount) => {
     const dataTemplate = {
       number: 1,
       subjectName: "",
-      parallel: "",
-      lecturer: "",
       grade: "",
-      retrievalTo: "",
+      lecturer: "",
+      description: "",
     };
 
     return Array.from({ length: rowCount }, (_, index) => {
@@ -175,28 +190,66 @@ const GradeSubmission = () => {
   return (
     <div>
       <Typography
-        sx={{ fontSize: { xs: "20px", md: "24px" }, fontWeight: 500 }}
+        sx={{
+          fontSize: { xs: "20px", md: "24px" },
+          fontWeight: 500,
+          paddingBottom: 2,
+        }}
       >
         Grade Submission
       </Typography>
-      <Typography
+      <Paper
         sx={{
-          paddingTop: "22px",
-          paddingBottom: "32px",
-          fontSize: { xs: "14px", md: "15px" },
-          fontWeight: 400,
-          color: "rgba(27, 43, 65, 0.69)",
-          textAlign: "justify",
+          backgroundColor: "rgba(255, 204, 0, 0.1)",
+          padding: "15px",
+          borderRadius: "10px",
+          boxShadow: "50px",
+          marginBottom: "15px",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        Every student is allowed to input grades for courses completed in the
-        previous semester. Please input your grades honestly, and if any
-        dishonesty is detected (such as altering your own grades, etc.), the
-        individual involved must be prepared to face the consequences imposed by
-        the faculty.
-      </Typography>
-      <Grid container spacing={2} sx={{ paddingBottom: "28px" }}>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
+        <Typography variant="body1">
+          Not yet filled out Grade <br /> <br />
+          Date of Grade Filling:{" "}
+          {new Date(dataPreregis.createdAt).toLocaleDateString("en-US", {
+            month: "long",
+            day: "2-digit",
+            year: "numeric",
+          })}{" "}
+          -{" "}
+          {new Date(dataPreregis.dueDate).toLocaleDateString("en-US", {
+            month: "long",
+            day: "2-digit",
+            year: "numeric",
+          })}
+        </Typography>
+        <WarningAmberIcon sx={{ color: "#FFCC00", fontSize: "42px" }} />
+      </Paper>
+      <Paper
+        sx={{
+          backgroundColor: "rgba(0, 106, 245, 0.1)",
+          padding: "15px",
+          borderRadius: "10px",
+          boxShadow: "50px",
+          marginBottom: "30px",
+        }}
+      >
+        <Typography variant="body1">
+          Attention!
+          <br />
+          <br /> Every student is allowed to input grades for courses completed
+          in the previous semester. <br />
+          <br />
+          Please input your grades honestly, and if any dishonesty is detected
+          (such as altering your own grades, etc.), the individual involved must
+          be prepared to face the consequences imposed by the faculty.
+        </Typography>
+      </Paper>
+      <Grid container spacing={2} sx={{ paddingBottom: "20px" }}>
+        <Grid item xs={12} sm={6} md={2} lg={2}>
           <Stack spacing={2}>
             <FormControl size="small" sx={{ backgroundColor: "white" }}>
               <InputLabel shrink={false}>
@@ -223,7 +276,7 @@ const GradeSubmission = () => {
           </Stack>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4} lg={3}>
+        <Grid item xs={12} sm={6} md={2} lg={2}>
           <Stack spacing={2}>
             <FormControl size="small" sx={{ backgroundColor: "white" }}>
               <InputLabel shrink={false}>
@@ -253,172 +306,46 @@ const GradeSubmission = () => {
 
       <TableContainer>
         <Table stickyHeader>
-          <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
-            <TableRow>
-              <TableCell size="small" sx={{ width: "60px" }}>
-                Number
-              </TableCell>
-              <TableCell size="small" sx={{ width: "350px" }}>
-                Subject Name
-              </TableCell>
-              <TableCell size="small" sx={{ width: "130px" }}>
-                Parallel
-              </TableCell>
-              <TableCell size="small" sx={{ width: "200px" }}>
-                Lecturer
-              </TableCell>
-              <TableCell size="small" sx={{ width: "105px" }}>
-                Grade
-              </TableCell>
-              <TableCell size="small" sx={{ width: "105px" }}>
-                Retrieval to-
-              </TableCell>
-            </TableRow>
+          <TableHead>
+            <TableHeading />
           </TableHead>
           <TableBody sx={{ backgroundColor: "white" }}>
             {tableData.map((data, index) => (
               <TableRow key={data.number}>
                 <TableCell>{data.number}</TableCell>
                 <TableCell>
-                  <FormControl size="small" sx={{ minWidth: "100%" }}>
-                    <InputLabel
-                      sx={{
-                        display: {
-                          xs: "none",
-                          sm: "none",
-                          md: "block",
-                        },
-                      }}
-                      shrink={false}
-                    >
-                      {!subjectName[index] ? "Select Subject Name" : ""}
-                    </InputLabel>
-                    <Select
-                      value={subjectName[index]}
-                      onChange={(e) => handleSubjectNameChange(e, index)}
-                      MenuProps={{
-                        PaperProps: {
-                          style: {
-                            maxHeight: "37%",
-                          },
-                        },
-                      }}
-                    >
-                      <MenuItem value="Math">
-                        [BIU101] Pre-Elementary English
-                      </MenuItem>
-                      <MenuItem value="Physics">
-                        [IS1113] Computer Programming
-                      </MenuItem>
-                      <MenuItem value="Aljabar">
-                        [IF1112] Aljabar Linear Fundamental
-                      </MenuItem>
-                      <MenuItem value="Math1">
-                        [BIU101] Pre-Elementary English
-                      </MenuItem>
-                      <MenuItem value="Physics1">
-                        [IS1113] Computer Programming
-                      </MenuItem>
-                      <MenuItem value="Aljabar1">
-                        [IF1112] Aljabar Linear Fundamental
-                      </MenuItem>
-                      <MenuItem value="Math2">
-                        [BIU101] Pre-Elementary English
-                      </MenuItem>
-                      <MenuItem value="Physics2">
-                        [IS1113] Computer Programming
-                      </MenuItem>
-                      <MenuItem value="Aljabar2">
-                        [IF1112] Aljabar Linear Fundamental
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
+                  <TextField
+                    onChange={(e) => handleSubjectNameChange(e, index)}
+                    value={subjectNames[index]}
+                    size="small"
+                    fullWidth
+                  />
                 </TableCell>
-                <TableCell>
-                  <FormControl size="small" sx={{ minWidth: "100%" }}>
-                    <InputLabel
-                      sx={{
-                        display: {
-                          xs: "none",
-                          sm: "none",
-                          md: "block",
-                        },
-                      }}
-                      shrink={false}
-                    >
-                      {!parallel[index] ? "Parallel" : ""}
-                    </InputLabel>
-                    <Select
-                      value={parallel[index]}
-                      onChange={(e) => handleParallelChange(e, index)}
-                      MenuProps={{
-                        PaperProps: {
-                          style: {
-                            maxHeight: "37%",
-                          },
-                        },
-                      }}
-                    >
-                      <MenuItem value="A">A</MenuItem>
-                      <MenuItem value="B">B</MenuItem>
-                      <MenuItem value="C">C</MenuItem>
-                      <MenuItem value="D">D</MenuItem>
-                      <MenuItem value="E">E</MenuItem>
-                      <MenuItem value="F">F</MenuItem>
-                      <MenuItem value="G">G</MenuItem>
-                    </Select>
-                  </FormControl>
-                </TableCell>
-                <TableCell>
-                  <FormControl size="small" sx={{ minWidth: "100%" }}>
-                    <InputLabel
-                      sx={{
-                        display: {
-                          xs: "none",
-                          sm: "none",
-                          md: "block",
-                        },
-                      }}
-                      shrink={false}
-                    >
-                      {!lecturer[index] ? "Select Lecturer" : ""}
-                    </InputLabel>
-                    <Select
-                      value={lecturer[index]}
-                      onChange={(e) => handleLecturerChange(e, index)}
-                      MenuProps={{
-                        PaperProps: {
-                          style: {
-                            maxHeight: "37%",
-                          },
-                        },
-                      }}
-                    >
-                      <MenuItem value="Sandag, Green A">
-                        Sandag, Green A
-                      </MenuItem>
-                      <MenuItem value="Pungus, Stenly">Pungus, Stenly</MenuItem>
-                      <MenuItem value="Adam, Stenly">Adam, Stenly</MenuItem>
-                      <MenuItem value="Liem, Andrew T">Liem, Andrew T</MenuItem>
-                    </Select>
-                  </FormControl>
-                </TableCell>
+
                 <TableCell>
                   <TextField
                     onChange={(e) => handleGradeChange(e, index)}
-                    value={grade[index]}
+                    value={grades[index]}
                     size="small"
                     fullWidth
-                    type="number"
                   />
                 </TableCell>
+
                 <TableCell>
                   <TextField
-                    onChange={(e) => handleRetrievalChange(e, index)}
-                    value={retrieval[index]}
+                    onChange={(e) => handleLecturerChange(e, index)}
+                    value={lecturers[index]}
                     size="small"
                     fullWidth
-                    type="number"
+                  />
+                </TableCell>
+
+                <TableCell>
+                  <TextField
+                    onChange={(e) => handleDescriptionChange(e, index)}
+                    value={descriptions[index]}
+                    size="small"
+                    fullWidth
                   />
                 </TableCell>
               </TableRow>
@@ -447,45 +374,27 @@ const GradeSubmission = () => {
           >
             <Button
               disabled={
-                row !== subjectName.length ||
-                row !== parallel.length ||
-                row !== lecturer.length ||
-                row !== grade.length ||
-                row !== retrieval.length
-                // !subjectName.every(Boolean) ||
-                // !parallel.every(Boolean) ||
-                // !lecturer.every(Boolean) ||
-                // !grade.every(Boolean) ||
-                // !retrieval.every(Boolean)
+                row !== subjectNames.length ||
+                row !== lecturers.length ||
+                row !== grades.length ||
+                row !== descriptions.length
               }
               onClick={handleOpenFirstModal}
               sx={{
                 backgroundColor:
-                  row !== subjectName.length ||
-                  row !== parallel.length ||
-                  row !== lecturer.length ||
-                  row !== grade.length ||
-                  row !== retrieval.length
-                    ? // !subjectName.every(Boolean) ||
-                      // !parallel.every(Boolean) ||
-                      // !lecturer.every(Boolean) ||
-                      // !grade.every(Boolean) ||
-                      // !retrieval.every(Boolean)
-                      "#1A38601A"
+                  row !== subjectNames.length ||
+                  row !== lecturers.length ||
+                  row !== grades.length ||
+                  row !== descriptions.length
+                    ? "#1A38601A"
                     : "#006AF5",
                 borderRadius: "24px",
                 color:
-                  row !== subjectName.length ||
-                  row !== parallel.length ||
-                  row !== lecturer.length ||
-                  row !== grade.length ||
-                  row !== retrieval.length
-                    ? // !subjectName.every(Boolean) ||
-                      // !parallel.every(Boolean) ||
-                      // !lecturer.every(Boolean) ||
-                      // !grade.every(Boolean) ||
-                      // !retrieval.every(Boolean)
-                      "black"
+                  row !== subjectNames.length ||
+                  row !== lecturers.length ||
+                  row !== grades.length ||
+                  row !== descriptions.length
+                    ? "black"
                     : "white",
                 whiteSpace: "nowrap",
                 minWidth: "132px",
@@ -494,17 +403,11 @@ const GradeSubmission = () => {
                 gap: "6px",
                 "&:hover": {
                   backgroundColor:
-                    row !== subjectName.length ||
-                    row !== parallel.length ||
-                    row !== lecturer.length ||
-                    row !== grade.length ||
-                    row !== retrieval.length
-                      ? // !subjectName.every(Boolean) ||
-                        // !parallel.every(Boolean) ||
-                        // !lecturer.every(Boolean) ||
-                        // !grade.every(Boolean) ||
-                        // !retrieval.every(Boolean)
-                        "grey"
+                    row !== subjectNames.length ||
+                    row !== lecturers.length ||
+                    row !== grades.length ||
+                    row !== descriptions.length
+                      ? "grey"
                       : "#025ED8",
                 },
               }}
@@ -619,4 +522,16 @@ const GradeSubmission = () => {
   );
 };
 
+const TableHeading = () => {
+  const style = { fontWeight: 500 };
+  return (
+    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
+      <TableCell sx={[style]}>Number</TableCell>
+      <TableCell sx={[style]}>Subject Name</TableCell>
+      <TableCell sx={{ ...[style], width: "140px" }}>Grade</TableCell>
+      <TableCell sx={[style]}>Lecturer</TableCell>
+      <TableCell sx={[style]}>Description</TableCell>
+    </TableRow>
+  );
+};
 export default GradeSubmission;
