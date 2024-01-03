@@ -8,9 +8,7 @@ import PreRegistrationSubmitted from "./PreRegistrationSubmitted";
 
 const PreRegistration = () => {
   const [dataPreregis, setDataPreregis] = useState(null);
-  const [submissionStatus, setSubmissionStatus] = useState(
-    localStorage.getItem("submissionStatus") || null
-  );
+  const [submissionStatus, setSubmissionStatus] = useState("");
 
   const getDataPreregis = async () => {
     try {
@@ -19,12 +17,18 @@ const PreRegistration = () => {
           JSON.parse(localStorage.getItem("user")).nim
         }`
       );
+      console.log("isi student data", studentData);
       const major = studentData.data.data.major;
       const result = await axios.get(
-        `${BASE_URL_API}/pre-regist/status/${major}`
+        `${BASE_URL_API}/pre-regist/?major=${major}`
       );
 
-      setDataPreregis(result.data.data);
+      const preregisData = result.data.data;
+      setDataPreregis(preregisData);
+
+      if (preregisData && preregisData.preRegistrationData.length > 0) {
+        setSubmissionStatus("success");
+      }
     } catch (error) {
       console.log(error.message);
       console.log("ini error: ", error);
@@ -35,20 +39,14 @@ const PreRegistration = () => {
     getDataPreregis();
   }, []);
 
-  useEffect(() => {
-    if (submissionStatus === "success") {
-      localStorage.setItem("submissionStatus", "success");
-    }
-  }, [submissionStatus]);
-
   return (
     <div>
-      {dataPreregis === null ? (
+      {dataPreregis === null || dataPreregis.length === 0 ? (
         <PreRegistrationClosedCase />
       ) : submissionStatus === "success" ? (
         <PreRegistrationSubmitted />
       ) : (
-        <PreRegistrationSubmission submissionStatus={setSubmissionStatus} />
+        <PreRegistrationSubmission />
       )}
     </div>
   );

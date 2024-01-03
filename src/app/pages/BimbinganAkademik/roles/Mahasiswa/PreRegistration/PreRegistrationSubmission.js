@@ -759,7 +759,7 @@ const PreRegistrationSubmission = ({ submissionStatus }) => {
                 id="modal-modal-description"
                 style={{ marginTop: "16px", marginBottom: "20px" }}
               >
-                Error: Failed to add curriculum. Please try again.
+                Error: Failed to submit Pre-Registration. Please try again.
               </Typography>
             </div>
           </Modal>
