@@ -122,7 +122,7 @@ const Consultation = () => {
         topic,
         receiver_name,
         receiver_nik,
-        student_arrival_year: informationStudent.arrival_Year,
+        student_arrival_year: informationStudent.arrivalYear,
         student_major: informationStudent.major,
         student_name: `${informationStudent.firstName} ${informationStudent.lastName}`,
         student_nim: informationStudent.nim,
@@ -297,7 +297,7 @@ const Consultation = () => {
 
             <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                {informationStudent.arrival_Year}
+                {informationStudent.arrivalYear}
               </Typography>
             </Paper>
           </Stack>

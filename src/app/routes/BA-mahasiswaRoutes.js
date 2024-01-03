@@ -22,8 +22,6 @@ import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/roles/Ma
 import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryPreRegis/PreRegistrationApproved";
 import HistoryCertificate from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryCertificate/Certificate";
 import PreRegistration from "app/pages/BimbinganAkademik/roles/Mahasiswa/PreRegistration";
-import PreRegistrationClosedCase from "app/pages/BimbinganAkademik/roles/Mahasiswa/PreRegistration/PreRegistrationClosedCase";
-import PreRegistrationSubmitted from "app/pages/BimbinganAkademik/roles/Mahasiswa/PreRegistration/PreRegistrationSubmitted";
 import Profile from "app/pages/BimbinganAkademik/roles/Mahasiswa/Profile";
 import StudentGrade from "app/pages/BimbinganAkademik/roles/Mahasiswa/Grades/StudentGrade";
 
@@ -98,12 +96,8 @@ const mahasiswaRoutes = [
     element: <Page component={History} />,
   },
   {
-    path: "/bimbingan-akademik/pre-registration/pre-registrationClosedCase",
-    element: <Page component={PreRegistrationClosedCase} />,
-  },
-  {
-    path: "/bimbingan-akademik/pre-registration/pre-registrationSubmitted",
-    element: <Page component={PreRegistrationSubmitted} />,
+    path: "/bimbingan-akademik/pre-registration",
+    element: <Page component={PreRegistration} />,
   },
   {
     path: "/bimbingan-akademik/history/pre-registrationRejected",
@@ -132,10 +126,6 @@ const mahasiswaRoutes = [
   {
     path: "/bimbingan-akademik/history/grade-rejected",
     element: <Page component={HistoryGradeRejected} />,
-  },
-  {
-    path: "/bimbingan-akademik/pre-registration",
-    element: <Page component={PreRegistration} />,
   },
   {
     path: "/bimbingan-akademik/profile",

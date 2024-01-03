@@ -1,7 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, Paper } from "@mui/material";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const PreRegistrationSubmitted = () => {
+  const [dataPreregis, setDataPreregis] = useState([]);
+  const getDataPreregis = async () => {
+    try {
+      const studentData = await axios.get(
+        `${BASE_URL_API}/student/${
+          JSON.parse(localStorage.getItem("user")).nim
+        }`
+      );
+
+      const major = studentData.data.data.major;
+      console.log("ini major", major);
+
+      const result = await axios.get(
+        `${BASE_URL_API}/pre-regist/status/${major}`
+      );
+
+      setDataPreregis(result.data.data);
+      console.log("deil blg id preregis ambe dari result:", result);
+    } catch (error) {
+      console.log(error.message);
+      console.log("ini error: ", error);
+    }
+  };
+  useEffect(() => {
+    getDataPreregis();
+  }, []);
   return (
     <div>
       <Typography sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: 2 }}>
@@ -17,10 +45,21 @@ const PreRegistrationSubmitted = () => {
         }}
       >
         <Typography variant="body1">
-          Already filled in KRS
+          KRS has already been filled in.
           <br />
           <br />
-          Date of KRS Filling: September 09, 2023 - September 12, 2023, at 19.00
+          Date of KRS Filling:{" "}
+          {new Date(dataPreregis.createdAt).toLocaleDateString("en-US", {
+            month: "long",
+            day: "2-digit",
+            year: "numeric",
+          })}{" "}
+          -{" "}
+          {new Date(dataPreregis.dueDate).toLocaleDateString("en-US", {
+            month: "long",
+            day: "2-digit",
+            year: "numeric",
+          })}
         </Typography>
       </Paper>
       <Paper
@@ -39,7 +78,8 @@ const PreRegistrationSubmitted = () => {
           the Consultation page. <br />
           <br />
           If you want to see a list of pre-registration courses that you have
-          entered, then please go to the Activity History page.
+          entered, then please go to the Current Activities page or History
+          page.
         </Typography>
       </Paper>
     </div>
