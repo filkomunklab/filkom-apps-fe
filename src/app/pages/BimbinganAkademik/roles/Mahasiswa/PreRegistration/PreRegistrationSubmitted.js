@@ -7,21 +7,14 @@ const PreRegistrationSubmitted = () => {
   const [dataPreregis, setDataPreregis] = useState([]);
   const getDataPreregis = async () => {
     try {
-      const studentData = await axios.get(
-        `${BASE_URL_API}/student/${
-          JSON.parse(localStorage.getItem("user")).nim
-        }`
-      );
-
+      const nim = JSON.parse(localStorage.getItem("user")).nim;
+      const studentData = await axios.get(`${BASE_URL_API}/student/${nim}`);
       const major = studentData.data.data.major;
-      console.log("ini major", major);
-
       const result = await axios.get(
-        `${BASE_URL_API}/pre-regist/status/${major}`
+        `${BASE_URL_API}/pre-regist/status/${major}/${nim}`
       );
 
       setDataPreregis(result.data.data);
-      console.log("deil blg id preregis ambe dari result:", result);
     } catch (error) {
       console.log(error.message);
       console.log("ini error: ", error);

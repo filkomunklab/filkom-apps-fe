@@ -80,14 +80,11 @@ const GradeSubmission = () => {
   const [dataPreregis, setDataPreregis] = useState([]);
   const getDataPreregis = async () => {
     try {
-      const studentData = await axios.get(
-        `${BASE_URL_API}/student/${
-          JSON.parse(localStorage.getItem("user")).nim
-        }`
-      );
+      const nim = JSON.parse(localStorage.getItem("user")).nim;
+      const studentData = await axios.get(`${BASE_URL_API}/student/${nim}`);
       const major = studentData.data.data.major;
       const result = await axios.get(
-        `${BASE_URL_API}/pre-regist/status/${major}`
+        `${BASE_URL_API}/pre-regist/status/${major}/${nim}`
       );
 
       setDataPreregis(result.data.data);

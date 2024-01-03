@@ -264,14 +264,11 @@ const PreRegistrationSubmission = ({ submissionStatus }) => {
   const [dataPreregis, setDataPreregis] = useState([]);
   const getDataPreregis = async () => {
     try {
-      const studentData = await axios.get(
-        `${BASE_URL_API}/student/${
-          JSON.parse(localStorage.getItem("user")).nim
-        }`
-      );
+      const nim = JSON.parse(localStorage.getItem("user")).nim;
+      const studentData = await axios.get(`${BASE_URL_API}/student/${nim}`);
       const major = studentData.data.data.major;
       const result = await axios.get(
-        `${BASE_URL_API}/pre-regist/status/${major}`
+        `${BASE_URL_API}/pre-regist/status/${major}/${nim}`
       );
 
       setDataPreregis(result.data.data);
@@ -285,6 +282,7 @@ const PreRegistrationSubmission = ({ submissionStatus }) => {
     getCurriculumDetails();
     getDataPreregis();
   }, []);
+  console.log("ini data prereg", dataPreregis);
 
   const [listSubject, setListSubject] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -318,21 +316,21 @@ const PreRegistrationSubmission = ({ submissionStatus }) => {
   const handleSubmitFirstModal = async () => {
     handleCloseFirstModal();
     setLoading(true);
+    const user = JSON.parse(localStorage.getItem("user"));
+    const classId = await axios.get(
+      `${BASE_URL_API}/guidance-class/${user.guidanceClassId}`
+    );
+    const employeeId = classId.data.data.teacherId;
 
+    const listOfSubject = selectedRows.map((row) => ({ subjectId: row.id }));
+    const requestBody = {
+      studentId: user.nim,
+      employeeId: employeeId,
+      listOfSubject: listOfSubject,
+      description: "",
+      preRegistrationId: dataPreregis.id,
+    };
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const classId = await axios.get(
-        `${BASE_URL_API}/guidance-class/${user.guidanceClassId}`
-      );
-      const employeeId = classId.data.data.teacherId;
-      const listOfSubject = selectedRows.map((row) => ({ subjectId: row.id }));
-      const requestBody = {
-        studentId: user.nim,
-        employeeId: employeeId,
-        listOfSubject: listOfSubject,
-        description: "",
-        preRegistrationId: dataPreregis.id,
-      };
       const response = await axios.post(
         `${BASE_URL_API}/pre-regist/submit`,
         requestBody
@@ -344,9 +342,11 @@ const PreRegistrationSubmission = ({ submissionStatus }) => {
         handleOpenSuccessModal();
         setLoading(false);
         submissionStatus("success");
+        console.log("ini isi requestbody:", requestBody);
       }
     } catch (error) {
       console.log("Error submitting courses:", error.response);
+      console.log("ini isi requestbody:", requestBody);
       setSelectedRows([]);
       setTotalCredits(0);
       setShowPopup(true);
