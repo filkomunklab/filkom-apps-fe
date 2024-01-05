@@ -104,7 +104,7 @@ const AddSupervisor = () => {
       console.log("wkwkwk", response);
       setIsLoading(false);
       if (status === "OK") {
-        navigate(`/bimbingan-akademik/kaprodi/supervisor-information/`);
+        navigate(`/bimbingan-akademik/kaprodi/supervisor-information`);
       } else {
         console.log(response);
       }

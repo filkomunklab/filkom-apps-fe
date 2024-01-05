@@ -293,12 +293,12 @@ export const dekanMenus = [
           {
             label: "Mentored Student",
             type: "nav-item",
-            uri: "/bimbingan-akademik/dekan/student-information-mentored",
+            uri: "/bimbingan-akademik/dekan/student-information/mentored-student",
           },
           {
             label: "Faculty Student",
             type: "nav-item",
-            uri: "/bimbingan-akademik/dekan/student-information-faculty",
+            uri: "/bimbingan-akademik/dekan/student-information/faculty-student",
           },
         ],
       },

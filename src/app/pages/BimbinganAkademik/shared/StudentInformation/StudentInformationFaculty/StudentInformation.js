@@ -73,6 +73,8 @@ const prodiList = [
   },
 ];
 
+const role = JSON.parse(localStorage.getItem("user")).role;
+
 const StudentInformationFaculty = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
@@ -146,7 +148,8 @@ const StudentInformationFaculty = () => {
             }}
             onClick={() =>
               navigate(
-                "/bimbingan-akademik/kaprodi/student-information/faculty-student/informatics"
+                `/bimbingan-akademik/${getRole()}/student-information/faculty-student/informatics`,
+                { state: { major: "IF" } }
               )
             }
           >
@@ -161,7 +164,8 @@ const StudentInformationFaculty = () => {
                           student.major === "IF" &&
                           student.status !== "GRADUATE"
                       )
-                      .reduce((total) => total + 1, 0)}
+                      .reduce((total) => total + 1, 0)}{" "}
+                    People
                   </Typography>
                 </CardContent>
               </Grid>
@@ -182,7 +186,8 @@ const StudentInformationFaculty = () => {
             }}
             onClick={() =>
               navigate(
-                "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-system"
+                `/bimbingan-akademik/${getRole()}/student-information/faculty-student/information-system`,
+                { state: { major: "SI" } }
               )
             }
           >
@@ -197,7 +202,8 @@ const StudentInformationFaculty = () => {
                           student.major === "SI" &&
                           student.status !== "GRADUATE"
                       )
-                      .reduce((total) => total + 1, 0)}
+                      .reduce((total) => total + 1, 0)}{" "}
+                    People
                   </Typography>
                 </CardContent>
               </Grid>
@@ -218,7 +224,8 @@ const StudentInformationFaculty = () => {
             }}
             onClick={() =>
               navigate(
-                "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-technology"
+                `/bimbingan-akademik/${getRole()}/student-information/faculty-student/information-technology`,
+                { state: { major: "DKV" } }
               )
             }
           >
@@ -233,7 +240,8 @@ const StudentInformationFaculty = () => {
                           student.major === "DKV" &&
                           student.status !== "GRADUATE"
                       )
-                      .reduce((total) => total + 1, 0)}
+                      .reduce((total) => total + 1, 0)}{" "}
+                    People
                   </Typography>
                 </CardContent>
               </Grid>
@@ -242,18 +250,18 @@ const StudentInformationFaculty = () => {
         </Grid>
       </Grid>
       <Grid container spacing={2}>
-        <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
+        <Grid display={"flex"} alignItems={"flex-end"} item>
           <Typography
             variant="h2"
             sx={{
-              textAlign: "justify",
+              // textAlign: "justify",
               "@media (max-width: 390px)": {
                 fontSize: "16px",
                 fontWeight: 500,
               },
             }}
           >
-            Computer Sciences Faculty Students List
+            Computer Science Faculty Students List
           </Typography>
         </Grid>
         <Grid item xs={12} sm={8} md={8} xl={3}>
@@ -369,6 +377,16 @@ const StudentInformationFaculty = () => {
   );
 };
 
+const getRole = () => {
+  const filter = role.includes("KAPRODI")
+    ? "kaprodi"
+    : role.includes("DEKAN")
+    ? "dekan"
+    : "dosen-pembimbing";
+
+  return filter;
+};
+
 const TableHeading = ({ index }) => {
   const style = { fontWeight: 400 };
   return (
@@ -387,6 +405,8 @@ const TableHeading = ({ index }) => {
 
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
+  const { nim, firstName, lastName, major, arrivalYear, status } = item;
+  console.log("hehe", getRole());
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
@@ -395,17 +415,18 @@ const TableItem = ({ item, index }) => {
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}`
+          `/bimbingan-akademik/${getRole()}/student-information/${nim}`,
+          { state: { studentNim: nim } }
         );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}/grade`
+          `/bimbingan-akademik/${getRole()}/student-information/${nim}/grade`
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}/certificate`
+          `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${nim}/certificate`
         );
         break;
 
@@ -419,7 +440,7 @@ const TableItem = ({ item, index }) => {
   return (
     <TableRow>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{item.nim}</TableCell>
+      <TableCell sx={[rowStyle]}>{nim}</TableCell>
       <TableCell>
         <Button
           name="profile"
@@ -429,11 +450,19 @@ const TableItem = ({ item, index }) => {
           }}
           onClick={handleButtonNavigate}
         >
-          {item.lastName}, {item.firstName}
+          {lastName}, {firstName}
         </Button>
       </TableCell>
-      <TableCell sx={[rowStyle]}>{item.major}</TableCell>
-      <TableCell sx={[rowStyle]}>{item.arrivalYear}</TableCell>
+      <TableCell sx={[rowStyle]}>
+        {major === "IF"
+          ? "Informatics"
+          : major === "SI"
+          ? "Information System"
+          : major === "DKV"
+          ? "Information Technology"
+          : "-"}
+      </TableCell>
+      <TableCell sx={[rowStyle]}>{arrivalYear}</TableCell>
       <TableCell>
         <Button
           name="grade"
@@ -460,9 +489,9 @@ const TableItem = ({ item, index }) => {
       </TableCell>
       <TableCell sx={[rowStyle]}>
         <Chip
-          label={item.status}
+          label={status}
           variant="filled"
-          color={item.status === "ACTIVE" ? "success" : "default"}
+          color={status === "ACTIVE" ? "success" : "default"}
         />
       </TableCell>
     </TableRow>

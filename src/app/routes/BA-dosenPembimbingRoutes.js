@@ -3,8 +3,8 @@ import AcademicGuide from "app/pages/BimbinganAkademik/shared/AcademicGuide/Acad
 import VisionMisionGoals from "app/pages/BimbinganAkademik/shared/VisionMisionGoals/VisionMissionGoals";
 import Curriculum from "app/pages/BimbinganAkademik/shared/Curriculum/Curriculum";
 import StudentGradeDashboard from "app/pages/BimbinganAkademik/roles/DosenPembimbing/StudentInformation/StudentGradeDashboard";
-import StudentInformation from "../pages/BimbinganAkademik/roles/DosenPembimbing/StudentInformation";
-import StudentProfile from "../pages/BimbinganAkademik/roles/DosenPembimbing/StudentInformation/StudentProfile";
+import StudentInformation from "../pages/BimbinganAkademik/shared/StudentInformation/StudentInformationMentored";
+import StudentProfile from "../pages/BimbinganAkademik/shared/StudentInformation/StudentProfile";
 import StudentGrade from "app/pages/BimbinganAkademik/roles/DosenPembimbing/StudentInformation/StudentGradeDashboard/StudentGrade";
 import StudentCertificate from "app/pages/BimbinganAkademik/roles/DosenPembimbing/StudentInformation/StudentCertificate";
 import ReviewPreRegistration from "app/pages/BimbinganAkademik/roles/DosenPembimbing/ReviewActivities/ReviewPreRegistration";
@@ -26,7 +26,7 @@ import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivite
 import CurrentActivities from "app/pages/BimbinganAkademik/shared/CurrentActivities";
 import ViewActivity from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewActivity/ViewActivity";
 import ViewConsultation from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewConsultation/ViewConsultation";
-import AddActivity from "app/pages/BimbinganAkademik/roles/DosenPembimbing/AddActivity";
+import AddActivity from "app/pages/BimbinganAkademik/shared/AddActivity";
 import Profile from "app/pages/BimbinganAkademik/shared/Profile/Profile";
 
 const { default: Page } = require("@jumbo/shared/Page");
