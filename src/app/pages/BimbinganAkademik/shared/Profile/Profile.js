@@ -13,8 +13,12 @@ const Profile = () => {
 
   const getProfile = async () => {
     try {
-      const { nik } = JSON.parse(localStorage.getItem("user"));
-      const result = await axios.get(`${BASE_URL_API}/employee/profile/${nik}`);
+      const { id } = JSON.parse(localStorage.getItem("user"));
+      const result = await axios.get(`${BASE_URL_API}/employee/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       console.log("ini isi result.data", result.data.data);
       setDataProfile(result.data.data);
     } catch (error) {
@@ -39,31 +43,31 @@ const Profile = () => {
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Full Name</Typography>
             <Typography variant="h6" sx={textSyle}>
-              {`${dataProfile.lastName}, ${dataProfile.firstName}`}
+              {`${dataProfile?.lastName}, ${dataProfile?.firstName}`}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">NIDN</Typography>
             <Typography variant="h6" sx={textSyle}>
-              {dataProfile.nidn}
+              {dataProfile?.nidn}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Email</Typography>
             <Typography variant="h6" sx={textSyle}>
-              {dataProfile.email}
+              {dataProfile?.email}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Phone</Typography>
             <Typography variant="h6" sx={textSyle}>
-              {dataProfile.phoneNum}
+              {dataProfile?.phoneNum}
             </Typography>
           </Grid>
           <Grid item xs={12} md={12}>
             <Typography variant="h6">Address</Typography>
             <Typography variant="h6" sx={textSyle}>
-              {dataProfile.Address}
+              {dataProfile?.Address}
             </Typography>
           </Grid>
         </Grid>
