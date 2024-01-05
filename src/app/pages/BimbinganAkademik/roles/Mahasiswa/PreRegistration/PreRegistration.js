@@ -12,21 +12,21 @@ const PreRegistration = () => {
 
   const getDataPreregis = async () => {
     try {
-      const studentData = await axios.get(
-        `${BASE_URL_API}/student/${
-          JSON.parse(localStorage.getItem("user")).nim
-        }`
-      );
-      console.log("isi student data", studentData);
+      const nim = JSON.parse(localStorage.getItem("user")).nim;
+      const studentData = await axios.get(`${BASE_URL_API}/student/${nim}`);
       const major = studentData.data.data.major;
       const result = await axios.get(
-        `${BASE_URL_API}/pre-regist/?major=${major}`
+        `${BASE_URL_API}/pre-regist/status/${major}/${nim}`
       );
-
       const preregisData = result.data.data;
       setDataPreregis(preregisData);
 
-      if (preregisData && preregisData.preRegistrationData.length > 0) {
+      console.log("ini panjang preregisdata", preregisData.PreRegistrationData);
+      console.log("Data preregistration:", preregisData);
+      if (
+        Array.isArray(preregisData.PreRegistrationData) &&
+        preregisData.PreRegistrationData.length > 0
+      ) {
         setSubmissionStatus("success");
       }
     } catch (error) {
@@ -37,7 +37,7 @@ const PreRegistration = () => {
 
   useEffect(() => {
     getDataPreregis();
-  }, []);
+  }, [submissionStatus]);
 
   return (
     <div>

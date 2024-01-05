@@ -17,8 +17,8 @@ import {
   Paper,
   Button,
   IconButton,
-  Link,
   Box,
+  Autocomplete,
 } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
@@ -62,11 +62,17 @@ const style2 = {
 const GradeSubmission = () => {
   const [openFirstModal, setOpenFirstModal] = useState(false);
   const [openSecondModal, setOpenSecondModal] = useState(false);
+  const [openErrorModal, setOpenErrorModal] = React.useState(false);
+  const [dataGrade, setDataGrade] = useState([]);
+  const [curriculumData, setCurriculumData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
   const handleOpenSecondModal = () => setOpenSecondModal(true);
   const handleCloseSecondModal = () => setOpenSecondModal(false);
+  const handleOpenErrorModal = () => setOpenErrorModal(true);
+  const handleCloseErrorModal = () => setOpenErrorModal(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -77,50 +83,90 @@ const GradeSubmission = () => {
       clearTimeout(timer);
     };
   }, [handleOpenSecondModal]);
-  const [dataPreregis, setDataPreregis] = useState([]);
-  const getDataPreregis = async () => {
+  const getDataGrade = async () => {
     try {
       const nim = JSON.parse(localStorage.getItem("user")).nim;
       const studentData = await axios.get(`${BASE_URL_API}/student/${nim}`);
       const major = studentData.data.data.major;
       const result = await axios.get(
-        `${BASE_URL_API}/pre-regist/status/${major}/${nim}`
+        `${BASE_URL_API}/access/list/gradesAccess/${major}/`
       );
-
-      setDataPreregis(result.data.data);
+      const gradeData = result.data.data;
+      setDataGrade(gradeData);
     } catch (error) {
       console.log(error.message);
       console.log("ini error: ", error);
     }
   };
 
+  const getCurriculum = async () => {
+    try {
+      const curriculumId = JSON.parse(
+        localStorage.getItem("user")
+      ).curriculumId;
+      const curriculumResponse = await axios.get(
+        `${BASE_URL_API}/subject/${curriculumId}`
+      );
+      console.log("isi kurikulumrespon", curriculumResponse);
+      setCurriculumData(curriculumResponse.data.data);
+    } catch (error) {
+      console.error("Error fetching curriculum data:", error);
+    }
+  };
+
   useEffect(() => {
-    getDataPreregis();
+    getCurriculum();
+    getDataGrade();
   }, []);
+
   const handleSubmitFirstModal = async () => {
-    // try {
-    //   const { nim } = JSON.parse(localStorage.getItem("user"));
-    //   const requestBody = {
-    //     semester: semester,
-    //     employeeNik: nim,
-    //     data: tableData.map((rowData) => ({
-    //       grades: rowData.grade,
-    //       retrival_to: rowData.retrievalTo,
-    //       paralel: rowData.parallel,
-    //       subjectId: "taruSubjectId_disini",
-    //       subjectName: rowData.subjectName,
-    //     })),
-    //   };
-    //   const response = await axios.post(
-    //     `${BASE_URL_API}/transaction/grades/${nim}`,
-    //     requestBody
-    //   );
-    //   console.log("ini response.data: ", response.data);
-    //   handleCloseFirstModal();
-    //   handleOpenSecondModal();
-    // } catch (error) {
-    //   console.error("Error submitting grades:", error);
-    // }
+    try {
+      setLoading(true);
+      const { nim } = JSON.parse(localStorage.getItem("user"));
+      const requestBody = {
+        semester,
+        employeeNik: "1001",
+        data: tableData.map((data, index) => ({
+          grades: grades[index],
+          lecturer: lecturers[index],
+          description: descriptions[index],
+          subjectId: subjectNames[index].id,
+          subjectName: subjectNames[index].name,
+        })),
+      };
+
+      console.log("Request Body:", requestBody);
+
+      const response = await axios.post(
+        `${BASE_URL_API}/transaction/grades/${nim}`,
+        requestBody
+      );
+      if (response.data.status === "OK") {
+        handleCloseFirstModal();
+        handleOpenSecondModal();
+        setSemester("");
+        setRow();
+        setSubjectNames(Array(row).fill(""));
+        setGrades(Array(row).fill(""));
+        setLecturers(Array(row).fill(""));
+        setDescriptions(Array(row).fill(""));
+        setShowLabel(true);
+        setShowLabel2(true);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error submitting grades:", error);
+      handleOpenErrorModal();
+      setSemester("");
+      setRow();
+      setSubjectNames(Array(row).fill(""));
+      setGrades(Array(row).fill(""));
+      setLecturers(Array(row).fill(""));
+      setDescriptions(Array(row).fill(""));
+      setShowLabel(true);
+      setShowLabel2(true);
+      setLoading(false);
+    }
   };
 
   const [semester, setSemester] = useState("");
@@ -142,9 +188,10 @@ const GradeSubmission = () => {
     setShowLabel2(false);
   };
 
-  const handleSubjectNameChange = (event, index) => {
+  const handleSubjectNameChange = (event, index, value) => {
     const newSubjectNames = [...subjectNames];
-    newSubjectNames[index] = event.target.value;
+    const subjectId = value?.id || index;
+    newSubjectNames[index] = { ...value, subjectId };
     setSubjectNames(newSubjectNames);
   };
 
@@ -168,7 +215,7 @@ const GradeSubmission = () => {
     newDescriptions[index] = event.target.value;
     setDescriptions(newDescriptions);
   };
-  const generateTableData = (rowCount) => {
+  const generateTableData = () => {
     const dataTemplate = {
       number: 1,
       subjectName: "",
@@ -177,7 +224,7 @@ const GradeSubmission = () => {
       description: "",
     };
 
-    return Array.from({ length: rowCount }, (_, index) => {
+    return Array.from({ length: row }, (_, index) => {
       return { ...dataTemplate, number: index + 1 };
     });
   };
@@ -186,6 +233,24 @@ const GradeSubmission = () => {
 
   return (
     <div>
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(34, 34, 34, 0.7)",
+            zIndex: 2004,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )}
       <Typography
         sx={{
           fontSize: { xs: "20px", md: "24px" },
@@ -209,20 +274,30 @@ const GradeSubmission = () => {
         }}
       >
         <Typography variant="body1">
-          Not yet filled out Grade <br /> <br />
-          Date of Grade Filling:{" "}
-          {new Date(dataPreregis.createdAt).toLocaleDateString("en-US", {
-            month: "long",
-            day: "2-digit",
-            year: "numeric",
-          })}{" "}
-          -{" "}
-          {new Date(dataPreregis.dueDate).toLocaleDateString("en-US", {
-            month: "long",
-            day: "2-digit",
-            year: "numeric",
-          })}
+          {dataGrade.length === 0 ? (
+            <>
+              Not yet filled out Grade <br /> <br />
+              Date of Grade Filling: N/A - N/A
+            </>
+          ) : (
+            <>
+              Filled out Grade <br /> <br />
+              Date of Grade Filling:{" "}
+              {new Date(dataGrade[0].createdAt).toLocaleDateString("en-US", {
+                month: "long",
+                day: "2-digit",
+                year: "numeric",
+              })}{" "}
+              -{" "}
+              {new Date(dataGrade[0].due_date).toLocaleDateString("en-US", {
+                month: "long",
+                day: "2-digit",
+                year: "numeric",
+              })}
+            </>
+          )}
         </Typography>
+
         <WarningAmberIcon sx={{ color: "#FFCC00", fontSize: "42px" }} />
       </Paper>
       <Paper
@@ -311,11 +386,21 @@ const GradeSubmission = () => {
               <TableRow key={data.number}>
                 <TableCell>{data.number}</TableCell>
                 <TableCell>
-                  <TextField
-                    onChange={(e) => handleSubjectNameChange(e, index)}
-                    value={subjectNames[index]}
-                    size="small"
-                    fullWidth
+                  <Autocomplete
+                    disablePortal
+                    options={curriculumData}
+                    onChange={(event, value) =>
+                      handleSubjectNameChange(event, index, value)
+                    }
+                    getOptionLabel={(option) => option.name}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        key={subjectNames[index]?.subjectId || index}
+                        size="small"
+                        value={subjectNames[index]?.name || ""}
+                      />
+                    )}
                   />
                 </TableCell>
 
@@ -359,161 +444,181 @@ const GradeSubmission = () => {
           justifyContent: "flex-end",
         }}
       >
-        <Link
-          style={{ textDecoration: "none", color: "white" }}
-          to="/bimbingan-akademik/certificates/"
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
         >
-          <Box
+          <Button
+            onClick={() => {
+              if (
+                !semester ||
+                !row ||
+                subjectNames.some((name) => !name) ||
+                grades.some((grade) => !grade) ||
+                lecturers.some((lecturer) => !lecturer)
+              ) {
+                alert("Please fill all the fields first.");
+              } else {
+                handleOpenFirstModal();
+              }
+            }}
             sx={{
-              display: "flex",
-              justifyContent: "flex-end",
+              backgroundColor: "#006AF5",
+              borderRadius: "24px",
+              color: "white",
+              whiteSpace: "nowrap",
+              minWidth: "132px",
+              fontSize: "12px",
+              padding: "10px",
+              gap: "6px",
+              "&:hover": {
+                backgroundColor: "#025ED8",
+              },
             }}
           >
-            <Button
-              disabled={
-                row !== subjectNames.length ||
-                row !== lecturers.length ||
-                row !== grades.length ||
-                row !== descriptions.length
-              }
-              onClick={handleOpenFirstModal}
-              sx={{
-                backgroundColor:
-                  row !== subjectNames.length ||
-                  row !== lecturers.length ||
-                  row !== grades.length ||
-                  row !== descriptions.length
-                    ? "#1A38601A"
-                    : "#006AF5",
-                borderRadius: "24px",
-                color:
-                  row !== subjectNames.length ||
-                  row !== lecturers.length ||
-                  row !== grades.length ||
-                  row !== descriptions.length
-                    ? "black"
-                    : "white",
-                whiteSpace: "nowrap",
-                minWidth: "132px",
-                fontSize: "12px",
-                padding: "10px",
-                gap: "6px",
-                "&:hover": {
-                  backgroundColor:
-                    row !== subjectNames.length ||
-                    row !== lecturers.length ||
-                    row !== grades.length ||
-                    row !== descriptions.length
-                      ? "grey"
-                      : "#025ED8",
-                },
-              }}
-            >
-              Submit
-            </Button>
+            Submit
+          </Button>
 
-            <Modal
-              open={openFirstModal}
-              onClose={handleCloseFirstModal}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <div style={style}>
-                <Typography
-                  id="modal-modal-title"
-                  variant="h4"
-                  component="h2"
-                  sx={{
-                    fontWeight: 600,
-                  }}
-                >
-                  Send Grades?
-                </Typography>
-                <Typography
-                  id="modal-modal-description"
-                  style={{ marginTop: "16px", marginBottom: "20px" }}
-                >
-                  Are you sure you want to submit this? Forms that have been
-                  submitted cannot be edited again.
-                </Typography>
+          <Modal
+            open={openFirstModal}
+            onClose={handleCloseFirstModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <div style={style}>
+              <Typography
+                id="modal-modal-title"
+                variant="h4"
+                component="h2"
+                sx={{
+                  fontWeight: 600,
+                }}
+              >
+                Send Grades?
+              </Typography>
+              <Typography
+                id="modal-modal-description"
+                style={{ marginTop: "16px", marginBottom: "20px" }}
+              >
+                Are you sure you want to submit this? Forms that have been
+                submitted cannot be edited again.
+              </Typography>
 
-                <Grid container spacing={1} justifyContent="flex-end">
-                  <Grid item>
-                    <Button
-                      onClick={handleCloseFirstModal}
-                      sx={{
-                        backgroundColor: "white",
-                        borderRadius: "5px",
-                        boxShadow: 4,
-                        color: "black",
-                        whiteSpace: "nowrap",
-                        "&:hover": {
-                          backgroundColor: "lightgrey",
-                        },
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={handleSubmitFirstModal}
-                      sx={{
-                        backgroundColor: "#006AF5",
-                        borderRadius: "5px",
-                        boxShadow: 4,
-                        color: "white",
-                        whiteSpace: "nowrap",
-                        "&:hover": {
-                          backgroundColor: "#025ED8",
-                        },
-                      }}
-                    >
-                      Submit
-                    </Button>
-                  </Grid>
+              <Grid container spacing={1} justifyContent="flex-end">
+                <Grid item>
+                  <Button
+                    onClick={handleCloseFirstModal}
+                    sx={{
+                      backgroundColor: "white",
+                      borderRadius: "5px",
+                      boxShadow: 4,
+                      color: "black",
+                      whiteSpace: "nowrap",
+                      "&:hover": {
+                        backgroundColor: "lightgrey",
+                      },
+                    }}
+                  >
+                    Cancel
+                  </Button>
                 </Grid>
-              </div>
-            </Modal>
-            <Modal
-              open={openSecondModal}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <div style={style2}>
-                <IconButton
-                  edge="end"
-                  color="#D9D9D9"
-                  onClick={handleCloseSecondModal}
-                  aria-label="close"
-                  sx={{
-                    position: "absolute",
-                    top: "10px",
-                    right: "20px",
-                  }}
-                >
-                  <CloseIcon />
-                </IconButton>
-                <Typography
-                  id="modal-modal-title"
-                  variant="h4"
-                  component="h2"
-                  sx={{
-                    fontWeight: 600,
-                  }}
-                >
-                  Successful Submission!
-                </Typography>
-                <Typography
-                  id="modal-modal-description"
-                  style={{ marginTop: "16px", marginBottom: "20px" }}
-                >
-                  You have successfully submit your grades.
-                </Typography>
-              </div>
-            </Modal>
-          </Box>
-        </Link>
+                <Grid item>
+                  <Button
+                    onClick={handleSubmitFirstModal}
+                    sx={{
+                      backgroundColor: "#006AF5",
+                      borderRadius: "5px",
+                      boxShadow: 4,
+                      color: "white",
+                      whiteSpace: "nowrap",
+                      "&:hover": {
+                        backgroundColor: "#025ED8",
+                      },
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </Grid>
+              </Grid>
+            </div>
+          </Modal>
+          <Modal
+            open={openSecondModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <div style={style2}>
+              <IconButton
+                edge="end"
+                color="#D9D9D9"
+                onClick={handleCloseSecondModal}
+                aria-label="close"
+                sx={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "20px",
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+              <Typography
+                id="modal-modal-title"
+                variant="h4"
+                component="h2"
+                sx={{
+                  fontWeight: 600,
+                }}
+              >
+                Successful Submission!
+              </Typography>
+              <Typography
+                id="modal-modal-description"
+                style={{ marginTop: "16px", marginBottom: "20px" }}
+              >
+                You have successfully submit your grades.
+              </Typography>
+            </div>
+          </Modal>
+          <Modal
+            open={openErrorModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <div style={style2}>
+              <IconButton
+                edge="end"
+                color="#D9D9D9"
+                onClick={handleCloseErrorModal}
+                aria-label="close"
+                sx={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "20px",
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+              <Typography
+                id="modal-modal-title"
+                variant="h4"
+                component="h2"
+                sx={{
+                  fontWeight: 600,
+                }}
+              >
+                Error Submission!
+              </Typography>
+              <Typography
+                id="modal-modal-description"
+                style={{ marginTop: "16px", marginBottom: "20px" }}
+              >
+                Error: Failed to submit Pre-Registration. Please try again.
+              </Typography>
+            </div>
+          </Modal>
+        </Box>
       </Grid>
     </div>
   );
@@ -524,7 +629,7 @@ const TableHeading = () => {
   return (
     <TableRow sx={{ backgroundColor: "#1A38601A" }}>
       <TableCell sx={[style]}>Number</TableCell>
-      <TableCell sx={[style]}>Subject Name</TableCell>
+      <TableCell sx={{ ...[style], width: "400px" }}>Subject Name</TableCell>
       <TableCell sx={{ ...[style], width: "140px" }}>Grade</TableCell>
       <TableCell sx={[style]}>Lecturer</TableCell>
       <TableCell sx={[style]}>Description</TableCell>

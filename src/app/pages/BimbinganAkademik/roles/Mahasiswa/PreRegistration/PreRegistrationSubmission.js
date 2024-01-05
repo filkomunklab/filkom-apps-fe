@@ -24,6 +24,8 @@ import { BASE_URL_API } from "@jumbo/config/env";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import CloseIcon from "@mui/icons-material/Close";
+import PreRegistrationSubmitted from "./PreRegistrationSubmitted";
+import { useNavigate } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -256,7 +258,7 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
   );
 };
 
-const PreRegistrationSubmission = ({ submissionStatus }) => {
+const PreRegistrationSubmission = ({}) => {
   const [curriculumDetails, setCurriculumDetails] = useState({
     name: "",
     year: "",
@@ -270,8 +272,11 @@ const PreRegistrationSubmission = ({ submissionStatus }) => {
       const result = await axios.get(
         `${BASE_URL_API}/pre-regist/status/${major}/${nim}`
       );
+      const preregisData = result.data.data;
+      setDataPreregis(preregisData);
 
-      setDataPreregis(result.data.data);
+      console.log("ini panjang preregisdata", preregisData.PreRegistrationData);
+      console.log("Data preregistration:", preregisData);
     } catch (error) {
       console.log(error.message);
       console.log("ini error: ", error);
@@ -282,7 +287,6 @@ const PreRegistrationSubmission = ({ submissionStatus }) => {
     getCurriculumDetails();
     getDataPreregis();
   }, []);
-  console.log("ini data prereg", dataPreregis);
 
   const [listSubject, setListSubject] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -312,7 +316,7 @@ const PreRegistrationSubmission = ({ submissionStatus }) => {
       clearTimeout(timer);
     };
   }, [handleOpenSuccessModal]);
-
+  const navigate = useNavigate();
   const handleSubmitFirstModal = async () => {
     handleCloseFirstModal();
     setLoading(true);
@@ -336,13 +340,11 @@ const PreRegistrationSubmission = ({ submissionStatus }) => {
         requestBody
       );
       if (response.data.status === "OK") {
+        window.location.reload();
         setSelectedRows([]);
         setTotalCredits(0);
         setShowPopup(true);
-        handleOpenSuccessModal();
         setLoading(false);
-        submissionStatus("success");
-        console.log("ini isi requestbody:", requestBody);
       }
     } catch (error) {
       console.log("Error submitting courses:", error.response);
@@ -502,7 +504,6 @@ const PreRegistrationSubmission = ({ submissionStatus }) => {
           <CircularProgress />
         </div>
       )}
-
       <div>
         <Typography
           sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: 2 }}

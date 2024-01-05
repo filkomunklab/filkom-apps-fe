@@ -50,6 +50,8 @@ const CurrentActivities = () => {
   const [value, setValue] = useState(0);
   const [dataConsultation, setDataConsultation] = useState([]);
   const [dataCertificate, setDataCertificate] = useState([]);
+  const [dataPreregis, setDataPreregis] = useState([]);
+  const [dataGrade, setDataGrade] = useState([]);
 
   useEffect(() => {
     const storedValue = localStorage.getItem("currentTabValue");
@@ -81,10 +83,23 @@ const CurrentActivities = () => {
         // {  headers,}
       );
 
+      const resultPreregis = await axios.get(
+        `${BASE_URL_API}/pre-regist/list-for-student/${nim}`
+        // {  headers,}
+      );
+
+      const resultGrade = await axios.get(
+        `${BASE_URL_API}/transaction/student/currentGrades/${nim}`
+        // {  headers,}
+      );
+
       const { status: consultationStatus, data: consultationData } =
         resultConsultation.data;
       const { status: certificateStatus, data: certificateData } =
         resultCertificate.data;
+      const { status: preregisStatus, data: preregisData } =
+        resultPreregis.data;
+      const { status: gradeStatus, data: gradeData } = resultGrade.data;
 
       if (consultationStatus === "OK") {
         console.log("ini isi result.data dalam status ok", consultationData);
@@ -101,6 +116,22 @@ const CurrentActivities = () => {
         console.log(resultCertificate);
         console.log(resultCertificate.data);
       }
+
+      if (preregisStatus === "OK") {
+        console.log("ini isi response.data preregisData", preregisData);
+        setDataPreregis(preregisData);
+      } else {
+        console.log(resultPreregis);
+        console.log(resultPreregis.data);
+      }
+
+      if (gradeStatus === "OK") {
+        console.log("ini isi response.data gradeData", gradeData);
+        setDataGrade(gradeData);
+      } else {
+        console.log(resultGrade);
+        console.log(resultGrade.data);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -112,6 +143,8 @@ const CurrentActivities = () => {
 
   const groupedDataConsultation = {};
   const groupedDataCertificate = {};
+  const groupedDataPreregis = {};
+  const groupedDataGrade = {};
 
   dataConsultation.forEach((value) => {
     const dateConsultation = new Date(value.createdAt).toLocaleDateString(
@@ -143,6 +176,32 @@ const CurrentActivities = () => {
       groupedDataCertificate[date] = [];
     }
     groupedDataCertificate[date].push(value);
+  });
+
+  dataPreregis.forEach((value) => {
+    const date = new Date(value.submitDate).toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    if (!groupedDataPreregis[date]) {
+      groupedDataPreregis[date] = [];
+    }
+    groupedDataPreregis[date].push(value);
+  });
+
+  dataGrade.forEach((value) => {
+    const date = new Date(value.submitedDate).toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    if (!groupedDataGrade[date]) {
+      groupedDataGrade[date] = [];
+    }
+    groupedDataGrade[date].push(value);
   });
 
   const formatDate = (date) => {
@@ -197,12 +256,12 @@ const CurrentActivities = () => {
   const handleNavigateCertificate = async (value) => {
     try {
       const certificateDetailsResult = await axios.get(
-        `${BASE_URL_API}/certificate/student/${value.certificateId}`
+        `${BASE_URL_API}/certificate/student/${value.id}`
       );
       let pathh = "/bimbingan-akademik/current-activities/certificate/";
 
       const {
-        transaction,
+        student,
         submitDate,
         path,
         category,
@@ -212,14 +271,16 @@ const CurrentActivities = () => {
         id,
       } = certificateDetailsResult.data.data;
       navigate(
-        `${pathh}${value.certificateId}`,
+        `${pathh}${value.id}`,
         {
           state: {
             certificateDetails: {
-              firstName: transaction[0].Student.firstName,
-              lastName: transaction[0].Student.lastName,
-              SupervisorFirstName: transaction[0].Employee.firstName,
-              SupervisorLastName: transaction[0].Employee.lastName,
+              firstName: student.firstName,
+              lastName: student.lastName,
+              SupervisorFirstName:
+                student.GuidanceClassMember.gudianceClass.teacher.firstName,
+              SupervisorLastName:
+                student.GuidanceClassMember.gudianceClass.teacher.lastName,
               submissionDate: submitDate,
               pathFile: path,
               category: category,
@@ -232,6 +293,60 @@ const CurrentActivities = () => {
         },
         console.log("ini pathFile", path)
       );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleNavigatePreregis = async (value) => {
+    try {
+      const preregisDetailsResult = await axios.get(
+        `${BASE_URL_API}/pre-regist/details/${value.id}`
+      );
+      const detail = preregisDetailsResult.data.data;
+      let path = "/bimbingan-akademik/current-activities/pre-registration/";
+
+      navigate(`${path}${value.id}`, {
+        state: {
+          preregisDetails: {
+            id: detail.id,
+            studentName:
+              detail.Student.firstName + " " + detail.Student.lastName,
+            supervisorName:
+              detail.Employee.firstName + " " + detail.Employee.lastName,
+            submitDate: detail.submitDate,
+            status: detail.status,
+            listSubjectPreregis: detail.ListOfRequest,
+          },
+        },
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleNavigateGrade = async (value) => {
+    try {
+      const gradeDetailsResult = await axios.get(
+        `${BASE_URL_API}/transaction/submissionDetail/${value.id}`
+      );
+      const detail = gradeDetailsResult.data.data;
+      let path = "/bimbingan-akademik/current-activities/grade";
+      console.log("isi detail", detail);
+      navigate(`${path}`, {
+        state: {
+          gradeDetails: {
+            studentName:
+              detail.Student.firstName + " " + detail.Student.lastName,
+            supervisorName:
+              detail.Employee.firstName + " " + detail.Employee.lastName,
+            submitedDate: detail.submitDate,
+            status: detail.status,
+            semester: detail.semester,
+            grades: detail.Grades,
+          },
+        },
+      });
     } catch (error) {
       console.log(error.message);
     }
@@ -278,257 +393,12 @@ const CurrentActivities = () => {
       <TabPanel value={value} index={0}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
-          <Stack
-            direction={"row"}
-            flexWrap={"wrap"}
-            justifyContent={"flex-start"}
-          >
-            <List
-              sx={{
-                width: "100%",
-                maxWidth: 2000,
-                bgcolor: "background.paper",
-                paddingTop: "0px",
-                paddingBottom: "0px",
-              }}
-            >
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Yesterday
-                </Typography>
-              </Box>
-              <ListItem
-                button
-                component={Link}
-                to="/bimbingan-akademik/current-activities/pre-registration"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Pre-registration"}
-                      sx={{
-                        backgroundColor: "rgba(21, 131, 67, 0.1)",
-                        color: "rgba(21, 131, 67, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Adzana, Shaliha Gracia
-                      </Typography>
-                      <Typography
-                        sx={{
-                          paddingLeft: "8px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Preregistrasi semester II tahun ajaran 2023/2024
-                      </Typography>
-                    </>
-                  }
-                />
-                <Box
-                  sx={{
-                    marginLeft: { xs: "auto", md: 0 },
-                    width: { xs: "100%", md: "45%" },
-                    textAlign: "right",
-                  }}
-                >
-                  <ListItemText
-                    secondary={
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "10px", md: "14px" },
-                          color: "rgba(27, 43, 65, 0.69)",
-                        }}
-                      >
-                        02:00 PM
-                      </Typography>
-                    }
-                  />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Sunday, Aug 6, 2023
-                </Typography>
-              </Box>
-              <ListItem
-                button
-                component={Link}
-                to="/bimbingan-akademik/current-activities/pre-registration/"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Pre-registration"}
-                      sx={{
-                        backgroundColor: "rgba(21, 131, 67, 0.1)",
-                        color: "rgba(21, 131, 67, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Adzana, Shaliha Gracia
-                      </Typography>
-                      <Typography
-                        sx={{
-                          paddingLeft: "8px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Preregistrasi semester I tahun ajaran 2023/2024
-                      </Typography>
-                    </>
-                  }
-                />
-                <Box
-                  sx={{
-                    marginLeft: { xs: "auto", md: 0 },
-                    width: { xs: "100%", md: "45%" },
-                    textAlign: "right",
-                  }}
-                >
-                  <ListItemText
-                    secondary={
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "10px", md: "14px" },
-                          color: "rgba(27, 43, 65, 0.69)",
-                        }}
-                      >
-                        02:00 PM
-                      </Typography>
-                    }
-                  />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Sunday, Mar 12, 2023
-                </Typography>
-              </Box>
-              <ListItem
-                button
-                component={Link}
-                to="/bimbingan-akademik/current-activities/pre-registration/"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Pre-registration"}
-                      sx={{
-                        backgroundColor: "rgba(21, 131, 67, 0.1)",
-                        color: "rgba(21, 131, 67, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Adzana, Shaliha Gracia
-                      </Typography>
-                      <Typography
-                        sx={{
-                          paddingLeft: "8px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Preregistrasi semester II tahun ajaran 2022/2023
-                      </Typography>
-                    </>
-                  }
-                />
-                <Box
-                  sx={{
-                    marginLeft: { xs: "auto", md: 0 },
-                    width: { xs: "100%", md: "45%" },
-                    textAlign: "right",
-                  }}
-                >
-                  <ListItemText
-                    secondary={
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "10px", md: "14px" },
-                          color: "rgba(27, 43, 65, 0.69)",
-                        }}
-                      >
-                        02:00 PM
-                      </Typography>
-                    }
-                  />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-            </List>
-          </Stack>
-          <Typography sx={{ padding: "20px" }}></Typography>
-        </div>
-      </TabPanel>
 
-      <TabPanel value={value} index={1}>
-        <div>
-          <Typography sx={{ padding: "10px" }}></Typography>
-
-          {Object.entries(groupedDataCertificate).map(
-            ([date, dataCertificate]) => (
+          {Object.entries(groupedDataPreregis)
+            .filter(([date, dataPreregis]) =>
+              dataPreregis.some((value) => value.status === "WAITING")
+            )
+            .map(([date, dataPreregis]) => (
               <div key={date}>
                 <Box
                   sx={{
@@ -545,9 +415,10 @@ const CurrentActivities = () => {
                     {formatDate(date)}
                   </Typography>
                 </Box>
-                {dataCertificate &&
-                  dataCertificate.map((value, index) => (
+                {dataPreregis &&
+                  dataPreregis.map((value, index) => (
                     <List
+                      key={index}
                       sx={{
                         width: "100%",
                         maxWidth: 2000,
@@ -567,18 +438,18 @@ const CurrentActivities = () => {
                       <ListItem
                         sx={{ padding: "10px 50px" }}
                         onClick={() => {
-                          handleNavigateCertificate(value);
-                          // console.log("ini isi dari value certi: ", value);
+                          handleNavigatePreregis(value);
+                          // console.log("ini isi dari value preregis: ", value);
                         }}
                       >
                         <ListItemText
                           primary={
                             <Chip
                               size={"small"}
-                              label={"Certificate"}
+                              label={"Pre-registration"}
                               sx={{
-                                backgroundColor: "rgba(255, 204, 0, 0.1)",
-                                color: "rgba(152, 82, 17, 1)",
+                                backgroundColor: "rgba(21, 131, 67, 0.1)",
+                                color: "rgba(21, 131, 67, 1)",
                               }}
                             />
                           }
@@ -592,7 +463,7 @@ const CurrentActivities = () => {
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
                               >
-                                {value.Student.lastName},
+                                {value.Student.lastName},{" "}
                                 {value.Student.firstName}
                               </Typography>
                               <Typography
@@ -601,7 +472,8 @@ const CurrentActivities = () => {
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
                               >
-                                {value.Certificate.title}
+                                Preregistration Semester Genap/Ganjil tahun
+                                ajaran 2023/2024
                               </Typography>
                             </>
                           }
@@ -620,13 +492,14 @@ const CurrentActivities = () => {
                                   color: "rgba(27, 43, 65, 0.69)",
                                 }}
                               >
-                                {new Date(
-                                  value.Certificate.submitDate
-                                ).toLocaleTimeString("en-US", {
-                                  hour: "numeric",
-                                  minute: "numeric",
-                                  hour12: true,
-                                })}
+                                {new Date(value.submitDate).toLocaleTimeString(
+                                  "en-US",
+                                  {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    hour12: true,
+                                  }
+                                )}
                               </Typography>
                             }
                           />
@@ -636,8 +509,127 @@ const CurrentActivities = () => {
                     </List>
                   ))}
               </div>
-            )
-          )}
+            ))}
+          <Typography sx={{ padding: "20px" }}></Typography>
+        </div>
+      </TabPanel>
+
+      <TabPanel value={value} index={1}>
+        <div>
+          <Typography sx={{ padding: "10px" }}></Typography>
+
+          {groupedDataCertificate &&
+            Object.entries(groupedDataCertificate).map(
+              ([date, dataCertificate]) => (
+                <div key={date}>
+                  <Box
+                    sx={{
+                      height: "50px",
+                      backgroundColor: "rgba(235, 235, 235, 1)",
+                      display: "flex",
+                      alignItems: "center",
+                      paddingLeft: "10px",
+                    }}
+                  >
+                    <Typography
+                      sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+                    >
+                      {formatDate(date)}
+                    </Typography>
+                  </Box>
+                  {dataCertificate &&
+                    dataCertificate.map((value, index) => (
+                      <List
+                        sx={{
+                          width: "100%",
+                          maxWidth: 2000,
+                          bgcolor: "background.paper",
+                          paddingTop: "0px",
+                          paddingBottom: "0px",
+                          ":hover": {
+                            cursor: "pointer",
+                            backgroundColor: "#338CFF21",
+                            transition: "0.3s",
+                            transitionTimingFunction: "ease-in-out",
+                            transitionDelay: "0s",
+                            transitionProperty: "all",
+                          },
+                        }}
+                      >
+                        <ListItem
+                          sx={{ padding: "10px 50px" }}
+                          onClick={() => {
+                            handleNavigateCertificate(value);
+                            // console.log("ini isi dari value certi: ", value);
+                          }}
+                        >
+                          <ListItemText
+                            primary={
+                              <Chip
+                                size={"small"}
+                                label={"Certificate"}
+                                sx={{
+                                  backgroundColor: "rgba(255, 204, 0, 0.1)",
+                                  color: "rgba(152, 82, 17, 1)",
+                                }}
+                              />
+                            }
+                            secondary={
+                              <>
+                                <Typography
+                                  sx={{
+                                    color: "rgba(0, 0, 0, 1)",
+                                    paddingLeft: "8px",
+                                    paddingTop: "5px",
+                                    fontSize: { xs: "12px", md: "14px" },
+                                  }}
+                                >
+                                  {value.student.lastName},
+                                  {value.student.firstName}
+                                </Typography>
+                                <Typography
+                                  sx={{
+                                    paddingLeft: "8px",
+                                    fontSize: { xs: "12px", md: "14px" },
+                                  }}
+                                >
+                                  {value.Certificate.title}
+                                </Typography>
+                              </>
+                            }
+                          />
+                          <Box
+                            sx={{
+                              marginLeft: { xs: "auto", md: 0 },
+                              textAlign: "right",
+                            }}
+                          >
+                            <ListItemText
+                              secondary={
+                                <Typography
+                                  sx={{
+                                    fontSize: { xs: "10px", md: "14px" },
+                                    color: "rgba(27, 43, 65, 0.69)",
+                                  }}
+                                >
+                                  {new Date(
+                                    value.Certificate.submitDate
+                                  ).toLocaleTimeString("en-US", {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    hour12: true,
+                                  })}
+                                </Typography>
+                              }
+                            />
+                          </Box>
+                        </ListItem>
+                        <Divider component="li" />
+                      </List>
+                    ))}
+                </div>
+              )
+            )}
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>
       </TabPanel>
@@ -645,176 +637,115 @@ const CurrentActivities = () => {
       <TabPanel value={value} index={2}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
-          <Stack
-            direction={"row"}
-            flexWrap={"wrap"}
-            justifyContent={"flex-start"}
-          >
-            <List
-              sx={{
-                width: "100%",
-                maxWidth: 2000,
-                bgcolor: "background.paper",
-                paddingTop: "0px",
-                paddingBottom: "0px",
-              }}
-            >
+          {Object.entries(groupedDataGrade).map(([date, dataGrade]) => (
+            <div key={date}>
               <Box
                 sx={{
                   height: "50px",
                   backgroundColor: "rgba(235, 235, 235, 1)",
                   display: "flex",
                   alignItems: "center",
-                  paddingLeft: "35px",
+                  paddingLeft: "10px",
                 }}
               >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Yesterday
+                <Typography
+                  sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+                >
+                  {formatDate(date)}
                 </Typography>
               </Box>
-
-              <Divider component="li" />
-              <ListItem
-                button
-                component={Link}
-                to="/bimbingan-akademik/current-activities/grade"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Grade"}
-                      sx={{
-                        backgroundColor: "rgba(101, 10, 204, 0.1)",
-                        color: "rgba(101, 10, 204, 1)",
+              {dataGrade &&
+                dataGrade.map((value, index) => (
+                  <List
+                    sx={{
+                      width: "100%",
+                      maxWidth: 2000,
+                      bgcolor: "background.paper",
+                      paddingTop: "0px",
+                      paddingBottom: "0px",
+                      ":hover": {
+                        cursor: "pointer",
+                        backgroundColor: "#338CFF21",
+                        transition: "0.3s",
+                        transitionTimingFunction: "ease-in-out",
+                        transitionDelay: "0s",
+                        transitionProperty: "all",
+                      },
+                    }}
+                  >
+                    <ListItem
+                      sx={{ padding: "10px 50px" }}
+                      onClick={() => {
+                        handleNavigateGrade(value);
                       }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      <Typography
+                    >
+                      <ListItemText
+                        primary={
+                          <Chip
+                            size={"small"}
+                            label={"Grade"}
+                            sx={{
+                              backgroundColor: "rgba(101, 10, 204, 0.1)",
+                              color: "rgba(101, 10, 204, 1)",
+                            }}
+                          />
+                        }
+                        secondary={
+                          <>
+                            <Typography
+                              sx={{
+                                color: "rgba(0, 0, 0, 1)",
+                                paddingLeft: "8px",
+                                paddingTop: "5px",
+                                fontSize: { xs: "12px", md: "14px" },
+                              }}
+                            >
+                              {value.Student.lastName},{" "}
+                              {value.Student.firstName}{" "}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                paddingLeft: "8px",
+                                fontSize: { xs: "12px", md: "14px" },
+                              }}
+                            >
+                              {value.semester}
+                            </Typography>
+                          </>
+                        }
+                      />
+                      <Box
                         sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                          fontSize: { xs: "12px", md: "14px" },
+                          marginLeft: { xs: "auto", md: 0 },
+                          textAlign: "right",
                         }}
                       >
-                        Adzana, Shaliha Gracia
-                      </Typography>
-                      <Typography
-                        sx={{
-                          paddingLeft: "8px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Semester 4
-                      </Typography>
-                    </>
-                  }
-                />
-                <Box
-                  sx={{
-                    marginLeft: { xs: "auto", md: 0 },
-                    width: { xs: "100%", md: "45%" },
-                    textAlign: "right",
-                  }}
-                >
-                  <ListItemText
-                    secondary={
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "10px", md: "14px" },
-                          color: "rgba(27, 43, 65, 0.69)",
-                        }}
-                      >
-                        02:00 PM
-                      </Typography>
-                    }
-                  />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Tuesday, Aug 2, 2023
-                </Typography>
-              </Box>
-
-              <ListItem
-                button
-                component={Link}
-                to="/bimbingan-akademik/current-activities/grade"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Grade"}
-                      sx={{
-                        backgroundColor: "rgba(101, 10, 204, 0.1)",
-                        color: "rgba(101, 10, 204, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Adzana, Shaliha Gracia
-                      </Typography>
-                      <Typography
-                        sx={{
-                          paddingLeft: "8px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Semester 3
-                      </Typography>
-                    </>
-                  }
-                />
-                <Box
-                  sx={{
-                    marginLeft: { xs: "auto", md: 0 },
-                    width: { xs: "100%", md: "45%" },
-                    textAlign: "right",
-                  }}
-                >
-                  <ListItemText
-                    secondary={
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "10px", md: "14px" },
-                          color: "rgba(27, 43, 65, 0.69)",
-                        }}
-                      >
-                        02:00 PM
-                      </Typography>
-                    }
-                  />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-            </List>
-          </Stack>
+                        <ListItemText
+                          secondary={
+                            <Typography
+                              sx={{
+                                fontSize: { xs: "10px", md: "14px" },
+                                color: "rgba(27, 43, 65, 0.69)",
+                              }}
+                            >
+                              {new Date(value.submitedDate).toLocaleTimeString(
+                                "en-US",
+                                {
+                                  hour: "numeric",
+                                  minute: "numeric",
+                                  hour12: true,
+                                }
+                              )}
+                            </Typography>
+                          }
+                        />
+                      </Box>
+                    </ListItem>
+                    <Divider component="li" />
+                  </List>
+                ))}
+            </div>
+          ))}
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>
       </TabPanel>

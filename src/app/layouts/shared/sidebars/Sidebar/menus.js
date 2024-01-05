@@ -340,11 +340,6 @@ export const dekanMenus = [
             type: "nav-item",
             uri: "/bimbingan-akademik/dekan/review-activities/consultation",
           },
-          {
-            label: "Review Grades",
-            type: "nav-item",
-            uri: "/bimbingan-akademik/dekan/review-activities/grade",
-          },
         ],
       },
       {

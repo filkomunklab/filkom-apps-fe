@@ -7,19 +7,18 @@ import ConsultationComplete from "app/pages/BimbinganAkademik/roles/Mahasiswa/Hi
 import CurrentActivities from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities";
 import CurrentActivitiesActivity from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Activity";
 import CurrentActivitiesConsultation from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/ViewConsultation/ViewConsultation";
-import CurrentActivitiesPreRegis from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Pre-registration";
+import CurrentActivitiesPreRegis from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Pre-registration/PreRegistrationWaiting";
 import CurrentActivitiesCertificate from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Certificate/ViewCertificate";
 import CurrentActivitiesGrade from "app/pages/BimbinganAkademik/roles/Mahasiswa/CurrentActivities/Grade";
 import Curriculum from "app/pages/BimbinganAkademik/roles/Mahasiswa/Curriculum";
 import Grades from "app/pages/BimbinganAkademik/roles/Mahasiswa/Grades";
-import GradeSubmission from "app/pages/BimbinganAkademik/roles/Mahasiswa/GradeSubmission";
+import GradeSubmission from "app/pages/BimbinganAkademik/roles/Mahasiswa/GradeSubmission/Grade";
 import GradeSubmissionClosed from "app/pages/BimbinganAkademik/roles/Mahasiswa/GradeSubmission/GradeSubmissionClosed";
 import History from "app/pages/BimbinganAkademik/roles/Mahasiswa/History";
 import HistoryActivity from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HIstoryActivity/HistoryActivity";
 import HistoryGradeApproved from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryGrade/ApprovedHistoryGrade";
 import HistoryGradeRejected from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryGrade/RejectedHistoryGrade";
-import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryPreRegis/PreRegistrationRejected";
-import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryPreRegis/PreRegistrationApproved";
+import HistoryPreRegistration from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryPreRegis/ReviewPreRegistrationStudent";
 import HistoryCertificate from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryCertificate/Certificate";
 import PreRegistration from "app/pages/BimbinganAkademik/roles/Mahasiswa/PreRegistration";
 import Profile from "app/pages/BimbinganAkademik/roles/Mahasiswa/Profile";
@@ -76,7 +75,7 @@ const mahasiswaRoutes = [
     element: <Page component={CurrentActivitiesActivity} />,
   },
   {
-    path: "/bimbingan-akademik/current-activities/pre-registration",
+    path: "/bimbingan-akademik/current-activities/pre-registration/:id",
     element: <Page component={CurrentActivitiesPreRegis} />,
   },
   {
@@ -100,12 +99,8 @@ const mahasiswaRoutes = [
     element: <Page component={PreRegistration} />,
   },
   {
-    path: "/bimbingan-akademik/history/pre-registrationRejected",
-    element: <Page component={HistoryPreRegistrationRejected} />,
-  },
-  {
-    path: "/bimbingan-akademik/history/pre-registrationApproved",
-    element: <Page component={HistoryPreRegistrationApproved} />,
+    path: "/bimbingan-akademik/history/pre-registration/:id",
+    element: <Page component={HistoryPreRegistration} />,
   },
   {
     path: "/bimbingan-akademik/history/activity",
