@@ -51,7 +51,8 @@ const CountStudent = ({ selected, totalStudents }) => {
 const StudentList = () => {
   const location = useLocation();
   const { students, supervisor } = location.state;
-  const source = axios.CancelToken.source();
+  const controller = new AbortController();
+  const signal = controller.signal;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [studentOptions, setStudentOptions] = useState([]);
@@ -62,8 +63,8 @@ const StudentList = () => {
   const getStudent = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL_API}/guidance-class/get-all-unassigned-student`,
-        { cancelToken: source.token }
+        `${BASE_URL_API}/guidance-class/get-all-unassigned-student/list`,
+        { signal }
       );
 
       const { status, data } = response.data;
@@ -81,7 +82,7 @@ const StudentList = () => {
   useEffect(() => {
     getStudent();
     console.log("ini di studentlist :", location?.state);
-    return () => source.cancel("request dibatalkan");
+    return () => controller.abort();
   }, []);
 
   const handleSelectAllClick = (event) => {
@@ -119,7 +120,7 @@ const StudentList = () => {
         >
           <Grid item md={6}>
             <Typography variant="h4" sx={{ fontWeight: 600 }}>
-              List of Students Majoring in Information Technology
+              List of Students
             </Typography>
           </Grid>
           <Grid item xs={12} sm={8} md={5}>
@@ -142,11 +143,11 @@ const StudentList = () => {
                 <TableCell padding="checkbox">
                   <Checkbox
                     indeterminate={
-                      selectedStudent.length &&
+                      selectedStudent.length > 0 &&
                       selectedStudent.length < studentOptions.length
                     }
                     checked={
-                      selectedStudent.length &&
+                      selectedStudent.length > 0 &&
                       selectedStudent.length === studentOptions.length
                     }
                     onChange={handleSelectAllClick}

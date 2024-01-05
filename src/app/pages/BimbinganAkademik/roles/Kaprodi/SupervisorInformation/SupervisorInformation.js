@@ -13,6 +13,9 @@ import {
   Typography,
   TextField,
   IconButton,
+  Popover,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useEffect, useState } from "react";
@@ -20,13 +23,16 @@ import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate, Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
+import { MoreVert } from "@mui/icons-material";
 
 const SupervisorInformation = () => {
   const [searchValue, setSearchValue] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dataSupervisor, setDataSupervisor] = useState([]);
-  const source = axios.CancelToken.source();
+  const [isLoading, setIsLoading] = useState(false);
+  const controller = new AbortController();
+  const signal = controller.signal;
   const navigate = useNavigate();
 
   const getDataSupervisor = async () => {
@@ -35,7 +41,7 @@ const SupervisorInformation = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       const response = await axios.get(`${BASE_URL_API}/guidance-class`, {
-        cancelToken: source.token,
+        signal,
       });
       const { status, data } = response.data;
       const searchData = data.filter((item) => {
@@ -54,15 +60,36 @@ const SupervisorInformation = () => {
         console.log("ini data response: ", response);
       }
     } catch (error) {
-      console.log("Error fetching data: ", error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else {
+        console.log("Error fetching data: ", error);
+      }
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.delete(
+        `${BASE_URL_API}//guidance-class/${id}`
+      );
+      console.log("hehe", response.status);
+      getDataSupervisor();
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else {
+        console.log("Error fetching data: ", error);
+      }
     }
   };
 
   useEffect(() => {
     getDataSupervisor();
-    return () => {
-      source.cancel("request dibatalkan");
-    };
+    return () => controller.abort();
   }, [searchValue]);
 
   const handleChangeRowsPerPage = (event) => {
@@ -72,6 +99,12 @@ const SupervisorInformation = () => {
 
   return (
     <Div>
+      <Backdrop
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress />
+      </Backdrop>
       <Div>
         <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
           Supervisor Information
@@ -163,7 +196,12 @@ const SupervisorInformation = () => {
                 dataSupervisor
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => (
-                    <TableItem item={item} index={index} key={index} />
+                    <TableItem
+                      item={item}
+                      index={index}
+                      key={index}
+                      handleDelete={() => handleDelete(item.id)}
+                    />
                   ))}
             </TableBody>
           </Table>
@@ -203,22 +241,25 @@ const TableHeading = () => {
       <TableCell sx={{ ...style, width: "140px" }}>Faculty</TableCell>
       <TableCell sx={{ ...style, width: "120px" }}>History</TableCell>
       <TableCell sx={{ ...style, width: "140px" }}>Number of Student</TableCell>
+      <TableCell sx={{ ...style, width: "140px" }}>Action</TableCell>
     </TableRow>
   );
 };
 
-const TableItem = ({ item, index }) => {
+const TableItem = ({ item, index, handleDelete }) => {
   const navigate = useNavigate();
+  const [isActionVisible, setIsActionVisible] = useState(false);
+  const [anchorEl, setAnchorE1] = useState(null);
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+  const { firstName, lastName, major, nidn, nik } = item.teacher;
 
-  const { firstName, lastName, nidn, nik } = item.teacher;
-  const handleButtonNavigate = (event) => {
-    const { name } = event.currentTarget;
- 
+  const handleButtonNavigate = (_, name) => {
     switch (name) {
       case "profile":
         navigate(
           `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}`,
-          { state: { nik: nik } }
+          { state: { classID: item.id, nik: nik } }
         );
         break;
       case "history":
@@ -236,6 +277,7 @@ const TableItem = ({ item, index }) => {
   const rowStyle = {
     "@media (maxWidth: 650px)": { fontSize: "11px" },
   };
+
   return (
     <TableRow>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
@@ -250,16 +292,16 @@ const TableItem = ({ item, index }) => {
             textDecoration: "none",
             cursor: "pointer",
           }}
-        > 
+        >
           {lastName}, {firstName}
-        </Typography> 
+        </Typography>
       </TableCell>
       <TableCell sx={[rowStyle]}>
-        {item.major === "IF"
+        {major === "IF"
           ? "Informatics"
-          : item.major === "SI"
+          : major === "SI"
           ? "Information System"
-          : item.major === "DKV"
+          : major === "DKV"
           ? "Information Technology"
           : "-"}
       </TableCell>
@@ -278,7 +320,24 @@ const TableItem = ({ item, index }) => {
           View History
         </Typography>
       </TableCell>
-      <TableCell sx={[rowStyle]}>{item.numberOfStudent}</TableCell>
+      <TableCell sx={[rowStyle]}>{item._count.GuidanceClassMember}</TableCell>
+      <TableCell>
+        <MoreVert
+          aria-describedby={id}
+          onClick={(e) => setAnchorE1(e.currentTarget)}
+        />
+        <Popover
+          id={id}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={() => setAnchorE1(null)}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        >
+          <Button onClick={() => handleDelete()} sx={{ color: "#CA150C" }}>
+            Delete
+          </Button>
+        </Popover>
+      </TableCell>
     </TableRow>
   );
 };
