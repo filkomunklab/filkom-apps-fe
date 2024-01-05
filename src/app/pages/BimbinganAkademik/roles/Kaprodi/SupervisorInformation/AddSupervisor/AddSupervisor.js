@@ -18,6 +18,8 @@ import {
   TableContainer,
   Select,
   TablePagination,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
@@ -54,7 +56,9 @@ const AddSupervisor = () => {
   const [showLabel, setShowLabel] = useState(!selectedSupervisor);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const source = axios.CancelToken.source();
+  const [isLoading, setIsLoading] = useState(false);
+  const controller = new AbortController();
+  const signal = controller.signal;
 
   const getSupervisor = async () => {
     try {
@@ -62,8 +66,8 @@ const AddSupervisor = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       const response = await axios.get(
-        `${BASE_URL_API}/guidance-class/get-all-unassigned-teacher`,
-        { cancelToken: source.token }
+        `${BASE_URL_API}/guidance-class/get-all-unassigned-teacher/list`,
+        { signal }
       );
 
       const { status, data } = response.data;
@@ -75,14 +79,17 @@ const AddSupervisor = () => {
         console.log("ini response :", response);
       }
     } catch (error) {
-      console.log(error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else {
+        console.log(error);
+      }
     }
   };
 
   const handleSubmit = async () => {
     try {
-      // const studentNim =
-
+      setIsLoading(true);
       const response = await axios.post(
         // `${BASE_URL_API}/supervisor/${supervisor.nik}/student`,
         `${BASE_URL_API}/guidance-class/create-new/${supervisor.nik}`,
@@ -91,28 +98,29 @@ const AddSupervisor = () => {
             studentNim: item.nim,
           })),
         },
-        {
-          cancelToken: source.token,
-        }
+        { signal }
       );
       const { status } = response.data;
       console.log("wkwkwk", response);
+      setIsLoading(false);
       if (status === "OK") {
         navigate(`/bimbingan-akademik/kaprodi/supervisor-information/`);
       } else {
         console.log(response);
       }
     } catch (error) {
-      console.log(error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else {
+        console.log(error);
+      }
     }
   };
 
   useEffect(() => {
     getSupervisor();
     console.log("ini location :", location.state);
-    return () => {
-      source.cancel("request dibatalkan");
-    };
+    return () => controller.abort();
   }, []);
 
   const handleClick = (event) => {
@@ -121,6 +129,12 @@ const AddSupervisor = () => {
 
   return (
     <div>
+      <Backdrop
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress />
+      </Backdrop>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
           <StyledLink to="/bimbingan-akademik/kaprodi/supervisor-information/">
@@ -296,7 +310,7 @@ const AddSupervisor = () => {
                 {students
                   ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => (
-                    <TableItem item={item} index={index} key={item.id} />
+                    <TableItem item={item} index={index} key={item.nim} />
                   ))}
               </TableBody>
             </Table>

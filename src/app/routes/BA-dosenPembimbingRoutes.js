@@ -1,4 +1,3 @@
-import Dashboard from "../pages/BimbinganAkademik/roles/DosenPembimbing/Dashboard";
 import AcademicGuide from "app/pages/BimbinganAkademik/shared/AcademicGuide/AcademicGuide";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/shared/VisionMisionGoals/VisionMissionGoals";
 import Curriculum from "app/pages/BimbinganAkademik/shared/Curriculum/Curriculum";
@@ -31,10 +30,6 @@ import Profile from "app/pages/BimbinganAkademik/shared/Profile/Profile";
 const { default: Page } = require("@jumbo/shared/Page");
 
 const dosenPembimbingRoutes = [
-  {
-    path: "/bimbingan-akademik/dosen-pembimbing/dashboard",
-    element: <Page component={Dashboard} />,
-  },
   {
     path: "/bimbingan-akademik/dosen-pembimbing/academic-guide",
     element: <Page component={AcademicGuide} />,

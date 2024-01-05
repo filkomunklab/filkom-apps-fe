@@ -1,4 +1,4 @@
-import Dashboard from "../pages/BimbinganAkademik/roles/Dekan/Dashboard";
+import Dashboard from "app/pages/BimbinganAkademik/shared/Dashboard/Dashboard.";
 import AcademicGuide from "app/pages/BimbinganAkademik/shared/AcademicGuide/AcademicGuide";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/shared/VisionMisionGoals/VisionMissionGoals";
 import Curriculum from "app/pages/BimbinganAkademik/shared/Curriculum/Curriculum";
