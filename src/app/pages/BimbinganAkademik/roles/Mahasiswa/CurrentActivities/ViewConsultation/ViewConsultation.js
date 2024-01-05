@@ -344,7 +344,17 @@ const ViewConsultation = () => {
                     </Paper>
                   ))}
 
-                {status !== "Complete" && (
+                {status === "Waiting" && (
+                  <>
+                    <Paper elevation={0} variant="outlined" fullWidth>
+                      <Typography variant="body1" sx={{ p: 2 }}>
+                        Please wait for a response
+                      </Typography>
+                    </Paper>
+                  </>
+                )}
+
+                {status === "OnProcess" && (
                   <>
                     <TextField
                       size="small"

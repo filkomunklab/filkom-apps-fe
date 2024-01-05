@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Div from "@jumbo/shared/Div";
 import {
-  FormControl,
   Grid,
-  InputLabel,
-  ListSubheader,
-  MenuItem,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -34,9 +29,9 @@ const ReviewCertificate = () => {
 
   const getDataWaiting = async () => {
     try {
-      const { nik } = JSON.parse(localStorage.getItem("user"));
+      const { guidanceClassId } = JSON.parse(localStorage.getItem("user"));
       const result = await axios.get(
-        `${BASE_URL_API}/certificate/waitingList/dosen/${nik}`
+        `${BASE_URL_API}/certificate/waitingList/dosen/${guidanceClassId}`
       );
       const filteredData = result.data.data.filter((item) => {
         const studentFullName = `${item.Student?.lastName}, ${item.Student?.firstName}`;
@@ -66,7 +61,7 @@ const ReviewCertificate = () => {
   const handleNavigate = async (value) => {
     try {
       const certificateDetailsResult = await axios.get(
-        `${BASE_URL_API}/certificate/student/${value.certificateId}`
+        `${BASE_URL_API}/certificate/student/${value.id}`
       );
       console.log("ini detail certi result:", certificateDetailsResult);
       const { role } = JSON.parse(localStorage.getItem("user"));
@@ -82,7 +77,7 @@ const ReviewCertificate = () => {
       }
 
       const {
-        transaction,
+        student,
         submitDate,
         path,
         category,
@@ -96,10 +91,12 @@ const ReviewCertificate = () => {
         {
           state: {
             certificateDetails: {
-              firstName: transaction[0].Student.firstName,
-              lastName: transaction[0].Student.lastName,
-              SupervisorFirstName: transaction[0].Employee.firstName,
-              SupervisorLastName: transaction[0].Employee.lastName,
+              firstName: student.firstName,
+              lastName: student.lastName,
+              SupervisorFirstName:
+                student.GuidanceClassMember.gudianceClass.teacher.firstName,
+              SupervisorLastName:
+                student.GuidanceClassMember.gudianceClass.teacher.lastName,
               submissionDate: submitDate,
               pathFile: path,
               category: category,
@@ -244,16 +241,14 @@ const ReviewCertificate = () => {
                       {index + 1}
                     </TableCell>
                     <TableCell sx={{ width: "180px", paddingLeft: "17px" }}>
-                      {new Date(
-                        value.Certificate.submitDate
-                      ).toLocaleDateString("en-US", {
+                      {new Date(value.submitDate).toLocaleDateString("en-US", {
                         day: "numeric",
                         month: "long",
                         year: "numeric",
                       })}
                     </TableCell>
                     <TableCell sx={{ width: "200px" }}>
-                      {value.Student.lastName}, {value.Student.firstName}
+                      {value.student.lastName}, {value.student.firstName}
                     </TableCell>
                     <TableCell
                       sx={{
@@ -263,11 +258,11 @@ const ReviewCertificate = () => {
                         whiteSpace: "nowrap",
                       }}
                     >
-                      {value.Certificate.title}
+                      {value.title}
                     </TableCell>
                     <TableCell>
-                      {value.Certificate.category.charAt(0).toUpperCase() +
-                        value.Certificate.category.slice(1)}
+                      {value.category.charAt(0).toUpperCase() +
+                        value.category.slice(1)}
                     </TableCell>
                     <TableCell
                       sx={{
@@ -276,10 +271,8 @@ const ReviewCertificate = () => {
                         width: "100px",
                       }}
                     >
-                      {value.Certificate.approval_status.charAt(0) +
-                        value.Certificate.approval_status
-                          .slice(1)
-                          .toLowerCase()}
+                      {value.approval_status.charAt(0) +
+                        value.approval_status.slice(1).toLowerCase()}
                     </TableCell>
                   </TableRow>
                 ))

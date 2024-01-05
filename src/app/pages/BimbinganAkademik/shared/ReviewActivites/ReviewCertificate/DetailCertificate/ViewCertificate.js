@@ -348,7 +348,6 @@ const CertificateWaiting = () => {
                       }}
                       onClick={() => {
                         setIsReject(false);
-                        // Comment text remains after cancel
                       }}
                     >
                       Cancel

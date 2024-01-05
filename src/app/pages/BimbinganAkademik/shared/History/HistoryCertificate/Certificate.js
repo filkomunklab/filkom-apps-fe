@@ -215,7 +215,7 @@ const HistoryCertificate = () => {
               </Grid>
             </Grid>
           </Grid>
-          {comments !== null && comments.trim() !== "" && (
+          {comments && comments.trim() !== "" && (
             <Grid item xs={12} md={11.5} xl={11.5} paddingTop={2}>
               <Box component="form" noValidate autoComplete="off">
                 <Typography variant="h5" sx={{ fontWeight: 500 }}>
@@ -228,7 +228,7 @@ const HistoryCertificate = () => {
                   sx={{ backgroundColor: "background.default" }}
                 >
                   <Typography variant="body1" sx={{ p: 2 }}>
-                    {comments}
+                    {comments.trim()}
                   </Typography>
                 </Paper>
               </Box>
