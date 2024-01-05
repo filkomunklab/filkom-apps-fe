@@ -534,12 +534,6 @@ export const dosenMenus = [
     type: "section",
     children: [
       {
-        label: "Dashboard",
-        type: "nav-item",
-        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/dosen-pembimbing/dashboard",
-      },
-      {
         label: "Academic Guide",
         type: "nav-item",
         icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
