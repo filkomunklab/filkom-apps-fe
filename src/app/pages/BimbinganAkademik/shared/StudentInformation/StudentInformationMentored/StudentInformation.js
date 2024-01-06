@@ -7,25 +7,22 @@ import {
   InputLabel,
   ListSubheader,
   MenuItem,
+  Paper,
   Select,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TablePagination,
   TableRow,
   Typography,
-  Card,
-  CardHeader,
-  CardContent,
-  TableContainer,
-  Paper,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { json, useNavigate } from "react-router-dom";
 import { BASE_URL_API } from "@jumbo/config/env";
-import { useNavigate } from "react-router-dom";
 
 const yearList = [
   {
@@ -73,41 +70,50 @@ const prodiList = [
   },
 ];
 
-const StudentInformationFaculty = () => {
+const StudentInformationMentored = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
   const [dataStudent, setDataStudent] = useState([]);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
+  const controller = new AbortController();
+  const signal = controller.signal;
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
 
   const getDataStudent = async () => {
+    const { guidanceClassId } = JSON.parse(localStorage.getItem("user"));
     try {
-      const result = await axios.get(`${BASE_URL_API}/Student`);
+      // const { nik } = JSON.parse(localStorage.getItem("user"));
+      // const result = await axios.get(`${BASE_URL_API}/student/dosen/${nik}`, {
+      //   cancelToken: source.token,
+      // });
+      const result = await axios.get(
+        `${BASE_URL_API}/guidance-class/${guidanceClassId}`,
+        {
+          signal,
+        }
+      );
+
       const { status, data } = result.data;
 
       if (status === "OK") {
-        console.log("ini isi result.data dalam status ok", result.data.data);
-        setDataStudent(data);
+        console.log("ini isi result.data dalam status ok mentored", result);
+        setDataStudent(data.GuidanceClassMember);
       } else {
         console.error("error, ini data result: ", result);
-        console.error("Error, ini data result.data: ", result.data);
       }
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
   };
 
+  useEffect(() => console.log("tes", dataStudent), [dataStudent]);
+
   useEffect(() => {
     getDataStudent();
+    return () => controller.abort();
   }, []);
 
   return (
@@ -131,116 +137,6 @@ const StudentInformationFaculty = () => {
           the number, status, and other detailed and comprehensive information.
         </Typography>
       </Div>
-      <Grid container spacing={2} sx={{ paddingBottom: 4, paddingTop: 2 }}>
-        <Grid item sm={12} md={4} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/kaprodi/student-information/faculty-student/informatics"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Informatics Student " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {dataStudent
-                      .filter(
-                        (student) =>
-                          student.major === "IF" &&
-                          student.status !== "GRADUATE"
-                      )
-                      .reduce((total) => total + 1, 0)}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={4} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-system"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Information System Student" />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {dataStudent
-                      .filter(
-                        (student) =>
-                          student.major === "SI" &&
-                          student.status !== "GRADUATE"
-                      )
-                      .reduce((total) => total + 1, 0)}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid item sm={12} md={4} lg={4} xs={12}>
-          <Card
-            sx={{
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#E5F0FF",
-              },
-            }}
-            onClick={() =>
-              navigate(
-                "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-technology"
-              )
-            }
-          >
-            <Grid container>
-              <Grid item>
-                <CardHeader title="Information Technology Student " />
-                <CardContent sx={{ position: "relative", paddingY: 0 }}>
-                  <Typography variant="h3" color="#006AF5" fontSize="20px">
-                    {dataStudent
-                      .filter(
-                        (student) =>
-                          student.major === "DKV" &&
-                          student.status !== "GRADUATE"
-                      )
-                      .reduce((total) => total + 1, 0)}
-                  </Typography>
-                </CardContent>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
-      </Grid>
       <Grid container spacing={2}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
           <Typography
@@ -253,13 +149,13 @@ const StudentInformationFaculty = () => {
               },
             }}
           >
-            Computer Sciences Faculty Students List
+            List of mentored students
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={8} md={8} xl={3}>
-          <SearchGlobal sx={{ height: "100%", maxHeight: "53px" }} />
+        <Grid item xs={12} sm={8} md={3}>
+          <SearchGlobal sx={{ height: "100%" }} />
         </Grid>
-        <Grid item xs={12} sm={4} md={4} xl={3}>
+        <Grid item xs={12} sm={4} md={3}>
           <FormControl
             sx={{
               width: "100%",
@@ -326,25 +222,22 @@ const StudentInformationFaculty = () => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid sx={{ marginTop: "15px" }} item xs={12}>
-          <TableContainer sx={{ maxHeight: 480 }} component={Paper}>
+        <Grid item xs={12}>
+          <TableContainer sx={{ maxHeight: 540 }} component={Paper}>
             <Table stickyHeader>
               <TableHead>
                 <TableHeading />
               </TableHead>
               <TableBody>
-                {dataStudent &&
+                {dataStudent.length > 0 &&
                   dataStudent
-                    .filter((item) => item.status !== "GRADUATE")
-                    .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((item, index) => (
                       <TableItem item={item} index={index} key={index} />
                     ))}
               </TableBody>
             </Table>
           </TableContainer>
-        </Grid>
-        <Grid item xs={12}>
           <TablePagination
             sx={{
               width: "100%",
@@ -355,12 +248,10 @@ const StudentInformationFaculty = () => {
             }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
-            count={
-              dataStudent.filter((item) => item.status !== "GRADUATE").length
-            }
+            count={dataStudent.length || 0}
             rowsPerPage={rowsPerPage}
             page={page}
-            onPageChange={handleChangePage}
+            onPageChange={(_, newPage) => setPage(newPage)}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Grid>
@@ -373,39 +264,61 @@ const TableHeading = ({ index }) => {
   const style = { fontWeight: 400 };
   return (
     <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={{ ...style, width: "80px" }}>No</TableCell>
-      <TableCell sx={{ ...style, width: "140px" }}>NIM</TableCell>
-      <TableCell sx={{ ...style, width: "245px" }}>Student Name</TableCell>
-      <TableCell sx={{ ...style, width: "140px" }}>Program Studi</TableCell>
-      <TableCell sx={{ ...style, width: "90px" }}>Tahun Masuk</TableCell>
-      <TableCell sx={{ ...style, width: "140px" }}>Nilai</TableCell>
-      <TableCell sx={{ ...style, width: "140px" }}>Sertifikat</TableCell>
-      <TableCell sx={{ ...style, width: "140px" }}>Status</TableCell>
+      <TableCell sx={[style]}>No</TableCell>
+      <TableCell sx={[style]}>NIM</TableCell>
+      <TableCell sx={[style]}>Student Name</TableCell>
+      <TableCell sx={[style]}>Program Studi</TableCell>
+      <TableCell sx={[style]}>Tahun Masuk</TableCell>
+      <TableCell sx={[style]}>Nilai</TableCell>
+      <TableCell sx={[style]}>Sertifikat</TableCell>
+      <TableCell sx={[style]}>Status</TableCell>
     </TableRow>
   );
 };
 
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
+  const { firstName, lastName, major, arrivalYear, nim, status } = item.student;
+  const role = JSON.parse(localStorage.getItem("user")).role;
+  console.log("test role", role);
+
+  const getRole = () => {
+    const filter = role.includes("KAPRODI")
+      ? "kaprodi"
+      : role.includes("DEKAN")
+      ? "dekan"
+      : "dosen-pembimbing";
+
+    return filter;
+  };
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    // navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+    // navigate(
+    //   `/bimbingan-akademik/kaprodi/student-information/mentored-student/${item.nim}`
+    // );
 
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}`
+          `/bimbingan-akademik/${getRole()}/student-information${
+            getRole() !== "dosen-pembimbing" ? "/mentored-student" : ""
+          }/${nim}`,
+          { state: { studentNim: nim } }
         );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}/grade`
+          `/bimbingan-akademik/${getRole()}/student-information${
+            getRole() !== "dosen-pembimbing" ? "/mentored-student" : ""
+          }/${nim}/grade`
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}/certificate`
+          `/bimbingan-akademik/${getRole()}/student-information${
+            getRole() !== "dosen-pembimbing" ? "/mentored-student" : ""
+          }/${nim}/certificate`
         );
         break;
 
@@ -413,13 +326,15 @@ const TableItem = ({ item, index }) => {
         console.log("Path not found");
     }
   };
+
   const rowStyle = {
     "@media (max-width: 650px)": { fontSize: "11px" },
   };
+
   return (
     <TableRow>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{item.nim}</TableCell>
+      <TableCell sx={[rowStyle]}>{nim}</TableCell>
       <TableCell>
         <Button
           name="profile"
@@ -429,11 +344,20 @@ const TableItem = ({ item, index }) => {
           }}
           onClick={handleButtonNavigate}
         >
-          {item.lastName}, {item.firstName}
+          {lastName}, {firstName}
         </Button>
       </TableCell>
-      <TableCell sx={[rowStyle]}>{item.major}</TableCell>
-      <TableCell sx={[rowStyle]}>{item.arrivalYear}</TableCell>
+      <TableCell sx={[rowStyle]}>
+        {major === "IF"
+          ? "Informatics"
+          : major === "SI"
+          ? "Information System"
+          : major === "DKV"
+          ? "Information Technology"
+          : "-"}
+      </TableCell>
+      <TableCell sx={[rowStyle]}>{arrivalYear}</TableCell>
+
       <TableCell>
         <Button
           name="grade"
@@ -459,14 +383,10 @@ const TableItem = ({ item, index }) => {
         </Button>
       </TableCell>
       <TableCell sx={[rowStyle]}>
-        <Chip
-          label={item.status}
-          variant="filled"
-          color={item.status === "ACTIVE" ? "success" : "default"}
-        />
+        <Chip label={status} variant="filled" color={"success"} />
       </TableCell>
     </TableRow>
   );
 };
 
-export default StudentInformationFaculty;
+export default StudentInformationMentored;
