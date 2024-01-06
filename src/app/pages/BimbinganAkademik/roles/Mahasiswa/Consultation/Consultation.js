@@ -126,7 +126,7 @@ const Consultation = () => {
         student_major: informationStudent.major,
         student_name: `${informationStudent.firstName} ${informationStudent.lastName}`,
         student_nim: informationStudent.nim,
-        supervisor_name: `${supervisorData.firstName} ${supervisorData.lastName}`,
+        supervisor_name: `${supervisorData.teacher.firstName} ${supervisorData.teacher.lastName}`,
         description: trimmedValue,
       };
       // console.log("consultationData: ", consultationData);
@@ -171,14 +171,13 @@ const Consultation = () => {
       // console.log("ini data by nim", result);
 
       if (result.data.status === "OK") {
+        const { guidanceClassId } = JSON.parse(localStorage.getItem("user"));
         const response1 = await axios.get(
-          `${BASE_URL_API}/employee/profile/${result.data.data.employeeNik}` //employeeId itu nik dosen
+          `${BASE_URL_API}/guidance-class/${guidanceClassId}`
         );
-        // console.log("ini response1.data", response1.data);
         const response2 = await axios.get(
           `${BASE_URL_API}/employee/head/${result.data.data.major}`
         );
-        // console.log("ini response2.data:", response2.data);
 
         if (response1.data.status === "OK") {
           const supervisorData = response1.data.data;
@@ -262,7 +261,7 @@ const Consultation = () => {
             <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
                 {supervisorData
-                  ? `${supervisorData.lastName}, ${supervisorData.firstName}`
+                  ? `${supervisorData.teacher.lastName}, ${supervisorData.teacher.firstName}`
                   : "-"}
               </Typography>
             </Paper>
@@ -345,16 +344,16 @@ const Consultation = () => {
               }}
             >
               {supervisorData ? (
-                (supervisorData.firstName === kaprodiData.firstName &&
-                  supervisorData.lastName === kaprodiData.lastName) ||
-                (supervisorData.firstName === dekanData.firstName &&
-                  supervisorData.lastName === dekanData.lastName) ? (
+                (supervisorData.teacher.firstName === kaprodiData.firstName &&
+                  supervisorData.teacher.lastName === kaprodiData.lastName) ||
+                (supervisorData.teacher.firstName === dekanData.firstName &&
+                  supervisorData.teacher.lastName === dekanData.lastName) ? (
                   ""
                 ) : (
                   <MenuItem
-                    value={`${supervisorData.nik}|${supervisorData.lastName}, ${supervisorData.firstName}`}
+                    value={`${supervisorData.teacherId}|${supervisorData.teacher.lastName}, ${supervisorData.teacher.firstName}`}
                   >
-                    {`${supervisorData.lastName}, ${supervisorData.firstName}`}
+                    {`${supervisorData.teacher.lastName}, ${supervisorData.teacher.firstName}`}
                   </MenuItem>
                 )
               ) : (
@@ -442,14 +441,15 @@ const Consultation = () => {
                       fontWeight: 600,
                     }}
                   >
-                    Confirm request?
+                    Submit Consultation?
                   </Typography>
                   <Typography
                     id="modal-modal-description"
-                    style={{ marginTop: "16px", marginBottom: "20px" }}
+                    style={{ marginTop: "16px", marginBottom: "15px" }}
                   >
-                    Are you sure you want to submit this request? Forms that
-                    have been submitted cannot be edited again.
+                    Are you sure you want to submit this consultation? The
+                    consultation that have been submitted cannot be edited
+                    again.
                   </Typography>
 
                   <Grid container spacing={1} justifyContent="flex-end">

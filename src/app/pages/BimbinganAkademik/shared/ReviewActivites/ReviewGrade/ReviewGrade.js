@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 
-const ReviewCertificate = () => {
+const ReviewGrade = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -29,9 +29,16 @@ const ReviewCertificate = () => {
 
   const getDataWaiting = async () => {
     try {
-      const { guidanceClassId } = JSON.parse(localStorage.getItem("user"));
+      const token = localStorage.getItem("token");
+      const headers = { Authorization: `Bearer ${token}` };
+      const { id } = JSON.parse(localStorage.getItem("user"));
+
+      const response = await axios.get(`${BASE_URL_API}/employee/${id}`, {
+        headers,
+      });
+      const major = response.data.data.major;
       const result = await axios.get(
-        `${BASE_URL_API}/certificate/waitingList/dosen/${guidanceClassId}`
+        `${BASE_URL_API}/transaction/list/${major}`
       );
       const filteredData = result.data.data.filter((item) => {
         const studentFullName = `${item.Student?.lastName}, ${item.Student?.firstName}`;
@@ -42,7 +49,7 @@ const ReviewCertificate = () => {
 
       setDataWaiting(filteredData);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
   };
   useEffect(() => {
@@ -60,55 +67,30 @@ const ReviewCertificate = () => {
 
   const handleNavigate = async (value) => {
     try {
-      const certificateDetailsResult = await axios.get(
-        `${BASE_URL_API}/certificate/student/${value.id}`
+      const gradeDetailsResult = await axios.get(
+        `${BASE_URL_API}/transaction/submissionDetail/${value.id}`
       );
-      console.log("ini detail certi result:", certificateDetailsResult);
-      const { role } = JSON.parse(localStorage.getItem("user"));
-      let pathh;
-      console.log("hai ini role", role.includes("KAPRODI"));
-      if (role.includes("DEKAN")) {
-        pathh = "/bimbingan-akademik/dekan/review-activities/certificate/";
-      } else if (role.includes("KAPRODI")) {
-        pathh = "/bimbingan-akademik/kaprodi/review-activities/certificate/";
-      } else {
-        pathh =
-          "/bimbingan-akademik/dosen-pembimbing/review-activities/certificate/";
-      }
-
-      const {
-        student,
-        submitDate,
-        path,
-        category,
-        description,
-        approval_status,
-        title,
-        id,
-      } = certificateDetailsResult.data.data;
-      navigate(
-        `${pathh}${value.id}`,
-        {
-          state: {
-            certificateDetails: {
-              firstName: student.firstName,
-              lastName: student.lastName,
-              SupervisorFirstName:
-                student.GuidanceClassMember.gudianceClass.teacher.firstName,
-              SupervisorLastName:
-                student.GuidanceClassMember.gudianceClass.teacher.lastName,
-              submissionDate: submitDate,
-              pathFile: path,
-              category: category,
-              description: description,
-              status: approval_status,
-              title: title,
-              id: id,
-            },
+      const detail = gradeDetailsResult.data.data;
+      let path = "/bimbingan-akademik/kaprodi/review-activities/grade/";
+      navigate(`${path}${value.id}`, {
+        state: {
+          gradeDetails: {
+            studentName:
+              detail.Student.lastName + " " + detail.Student.firstName,
+            supervisorName:
+              detail.Student.GuidanceClassMember.gudianceClass.teacher
+                .lastName +
+              " " +
+              detail.Student.GuidanceClassMember.gudianceClass.teacher
+                .firstName,
+            submitedDate: detail.submitedDate,
+            status: detail.status,
+            semester: detail.semester,
+            grades: detail.Grades,
+            id: detail.id,
           },
         },
-        console.log("ini pathFile", path)
-      );
+      });
     } catch (error) {
       console.log(error.message);
     }
@@ -118,7 +100,7 @@ const ReviewCertificate = () => {
     <Div>
       <Div>
         <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
-          Review Certificate
+          Review Grades
         </Typography>
         <Typography
           variant="h6"
@@ -129,9 +111,9 @@ const ReviewCertificate = () => {
             textAlign: "justify",
           }}
         >
-          This page contains information related to the collection of
-          certificates from your students. You can use filters to sort the list
-          of students to get the information you are looking for.
+          This page contains information related to the collection of grades
+          submission from your students. You can use filters to sort the list of
+          students to get the information you are looking for.
         </Typography>
       </Div>
       <Grid container mb={3}>
@@ -211,9 +193,12 @@ const ReviewCertificate = () => {
               <TableRow>
                 <TableCell>Number</TableCell>
                 <TableCell>Submission Date</TableCell>
+                <TableCell>NIM</TableCell>
                 <TableCell>Student Name</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell>Category</TableCell>
+                <TableCell>Supervisor Name</TableCell>
+                <TableCell>Major</TableCell>
+                <TableCell>Arrival Year</TableCell>
+                <TableCell>Semester</TableCell>
                 <TableCell>Status </TableCell>
               </TableRow>
             </TableHead>
@@ -234,45 +219,50 @@ const ReviewCertificate = () => {
                       },
                     }}
                   >
-                    <TableCell
-                      align="right"
-                      sx={{ width: "80px", paddingRight: "40px" }}
-                    >
-                      {index + 1}
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>
+                      {new Date(value.submitedDate).toLocaleDateString(
+                        "en-US",
+                        {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        }
+                      )}
                     </TableCell>
-                    <TableCell sx={{ width: "180px", paddingLeft: "17px" }}>
-                      {new Date(value.submitDate).toLocaleDateString("en-US", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </TableCell>
-                    <TableCell sx={{ width: "200px" }}>
-                      {value.student.lastName}, {value.student.firstName}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        maxWidth: "240px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {value.title}
+                    <TableCell>{value.Student.nim}</TableCell>
+                    <TableCell>
+                      {value.Student.lastName}, {value.Student.firstName}
                     </TableCell>
                     <TableCell>
-                      {value.category.charAt(0).toUpperCase() +
-                        value.category.slice(1)}
+                      {
+                        value.Student.GuidanceClassMember.gudianceClass.teacher
+                          .firstName
+                      }{" "}
+                      {""}
+                      {
+                        value.Student.GuidanceClassMember.gudianceClass.teacher
+                          .lastName
+                      }
                     </TableCell>
+                    <TableCell>
+                      {value.Student.major === "IF"
+                        ? "Informatics"
+                        : value.Student.major === "SI"
+                        ? "Information System"
+                        : value.Student.major === "DKV"
+                        ? "Information Technology"
+                        : value.Student.major}
+                    </TableCell>
+                    <TableCell>{value.Student.arrivalYear}</TableCell>{" "}
+                    <TableCell>{value.semester}</TableCell>
                     <TableCell
                       sx={{
                         color: "#FFCC00",
-                        align: "left",
-                        width: "100px",
                       }}
                     >
-                      {value.approval_status.charAt(0) +
-                        value.approval_status.slice(1).toLowerCase()}
+                      {value.status.charAt(0) +
+                        value.status.slice(1).toLowerCase()}
                     </TableCell>
                   </TableRow>
                 ))
@@ -305,4 +295,4 @@ const ReviewCertificate = () => {
   );
 };
 
-export default ReviewCertificate;
+export default ReviewGrade;

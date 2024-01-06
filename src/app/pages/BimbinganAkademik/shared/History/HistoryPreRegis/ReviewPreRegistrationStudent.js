@@ -1,21 +1,20 @@
+import Div from "@jumbo/shared/Div";
 import {
+  Box,
+  Breadcrumbs,
   Grid,
-  Stack,
-  Typography,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Breadcrumbs,
+  Typography,
   experimentalStyled as styled,
-  Paper,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import { Link, useLocation } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -26,9 +25,8 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const PreRegistrationWaiting = () => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(7);
+const ReviewPreRegistrationStudent = () => {
+  const [commentText, setCommentText] = useState("");
   let totalCredit = 0;
 
   const { state } = useLocation();
@@ -38,89 +36,40 @@ const PreRegistrationWaiting = () => {
     studentName,
     supervisorName,
     submitDate,
+    approveDate,
     status,
     listSubjectPreregis,
-    curriculum,
+    comments,
   } = preregisDetails;
+
   for (const data of listSubjectPreregis) {
     totalCredit += data.subject.credits;
   }
-  const renderRows = () => {
-    const rows = [];
-    let currentSemester = null;
-    const subjects = curriculum ? curriculum.Subjects : [];
-
-    subjects.forEach((value, index) => {
-      if (value.semester !== currentSemester) {
-        rows.push(
-          <TableRow key={`semester-${value.semester}`}>
-            <TableCell
-              colSpan={6}
-              sx={{
-                lign: "left",
-                fontWeight: 500,
-                fontSize: "15px",
-                color: "black",
-              }}
-            >
-              {value.semester === 0
-                ? "Pre-Requisite"
-                : value.semester === 9
-                ? "Elective"
-                : `Semester ${value.semester}`}
-            </TableCell>
-          </TableRow>
-        );
-        currentSemester = value.semester;
-      }
-
-      rows.push(
-        <TableRow key={value.id}>
-          <TableCell>{value.code}</TableCell>
-          <TableCell>{value.name}</TableCell>
-          <TableCell>{value.credits}</TableCell>
-          <TableCell>{value.type}</TableCell>
-          <TableCell sx={{ width: "400px" }}>
-            {value.prerequisite === null || value.prerequisite === ""
-              ? "-"
-              : value.prerequisite
-                  .split(/(?<=\])\s-\s|\n/)
-                  .map((prereq, index) => (
-                    <React.Fragment key={index}>
-                      {index > 0 && (
-                        <>
-                          <br /> <br />
-                        </>
-                      )}
-                      {prereq}
-                    </React.Fragment>
-                  ))}
-          </TableCell>
-        </TableRow>
-      );
-    });
-
-    return rows;
-  };
 
   const handleBreadcrumbsClick = () => {
-    let path = "/bimbingan-akademik/current-activities";
-    return <StyledLink to={path}>Current Activities</StyledLink>;
+    const { role } = JSON.parse(localStorage.getItem("user"));
+    let path = "";
+
+    if (role.includes("DEKAN")) {
+      path = "/bimbingan-akademik/dekan/history";
+    } else if (role.includes("KAPRODI")) {
+      path = "/bimbingan-akademik/kaprodi/history";
+    } else {
+      path = "/bimbingan-akademik/dosen-pembimbing/history";
+    }
+    return <StyledLink to={path}>History</StyledLink>;
   };
 
   return (
-    <div>
-      <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 1 }}>
+    <Div>
+      <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
         {handleBreadcrumbsClick()}
-        <Typography color="text.primary">Pre-registration</Typography>
+        <Typography color="text.primary">Certificate</Typography>
       </Breadcrumbs>
       <Typography
-        sx={{
-          fontSize: { xs: "20px", md: "24px" },
-          fontWeight: 500,
-          marginBottom: 2,
-          paddingTop: "20px",
-        }}
+        fontSize={"24px"}
+        fontWeight="500"
+        sx={{ marginBottom: 2, paddingTop: "20px" }}
       >
         Courses Pre-registration
       </Typography>
@@ -170,6 +119,27 @@ const PreRegistrationWaiting = () => {
             </Grid>
           </Grid>
         </Grid>
+
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={4} md={3} xl={2}>
+              <Typography variant="h5">Approval Date</Typography>
+            </Grid>
+            <Grid item xs={1} xl={"auto"}>
+              <Typography variant="h5">:</Typography>
+            </Grid>
+            <Grid item xs={7} paddingLeft={1}>
+              <Typography variant="h5">
+                {new Date(approveDate).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  day: "numeric",
+                  month: "long",
+                })}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+
         <Grid item xs={12}>
           <Grid container>
             <Grid item xs={4} md={3} xl={2}>
@@ -179,7 +149,17 @@ const PreRegistrationWaiting = () => {
               <Typography variant="h5">:</Typography>
             </Grid>
             <Grid item xs={7} paddingLeft={1}>
-              <Typography variant="h5" sx={{ color: "#FFCC00" }}>
+              <Typography
+                variant="h5"
+                sx={{
+                  color:
+                    status === "REJECTED"
+                      ? "red"
+                      : status === "APPROVED"
+                      ? "blue"
+                      : "#005FDB",
+                }}
+              >
                 {status.charAt(0) + status.slice(1).toLowerCase()}
               </Typography>
             </Grid>
@@ -201,40 +181,38 @@ const PreRegistrationWaiting = () => {
                 <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
                 <TableCell sx={{ width: "40px" }}>Credit(s)</TableCell>
                 <TableCell sx={{ width: "40px" }}>Grade</TableCell>
-                <TableCell sx={{ width: "40px" }}>Type </TableCell>
+                <TableCell>Type </TableCell>
                 <TableCell sx={{ width: "380px" }}>Prerequisite</TableCell>
                 <TableCell sx={{ width: "110px" }}>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {listSubjectPreregis
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((data, index) => (
-                  <TableRow key={index}>
-                    <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
-                    <TableCell sx={{ width: "40px" }}>
-                      {data.subject.code}
-                    </TableCell>
-                    <TableCell sx={{ width: "400px" }}>
-                      {data.subject.name}
-                    </TableCell>
-                    <TableCell sx={{ width: "40px" }}>
-                      {data.subject.credits}
-                    </TableCell>
-                    <TableCell sx={{ width: "40px" }}>
-                      {/*ini kalo ada grade */}-
-                    </TableCell>
-                    <TableCell sx={{ width: "200px" }}>
-                      {data.subject.type}
-                    </TableCell>
-                    <TableCell sx={{ width: "380px" }}>
-                      {data.subject.prerequisite}
-                    </TableCell>
-                    <TableCell sx={{ width: "110px" }}>
-                      {/*ini kalo ada status, pass ato nda */}-{" "}
-                    </TableCell>
-                  </TableRow>
-                ))}
+              {listSubjectPreregis.map((data, index) => (
+                <TableRow key={index}>
+                  <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
+                  <TableCell sx={{ width: "40px" }}>
+                    {data.subject.code}
+                  </TableCell>
+                  <TableCell sx={{ width: "400px" }}>
+                    {data.subject.name}
+                  </TableCell>
+                  <TableCell sx={{ width: "40px" }}>
+                    {data.subject.credits}
+                  </TableCell>
+                  <TableCell sx={{ width: "40px" }}>
+                    {/*ini kalo ada grade */}-
+                  </TableCell>
+                  <TableCell sx={{ width: "200px" }}>
+                    {data.subject.type}
+                  </TableCell>
+                  <TableCell sx={{ width: "380px" }}>
+                    {data.subject.prerequisite}
+                  </TableCell>
+                  <TableCell sx={{ width: "110px" }}>
+                    {/*ini kalo ada status, pass ato nda */}-{" "}
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -242,8 +220,27 @@ const PreRegistrationWaiting = () => {
       <Typography variant="h5" sx={{ my: 5 }}>
         Total Credits: {totalCredit} credits
       </Typography>
-    </div>
+      {comments !== null && comments.trim() !== "" && (
+        <Grid item xs={12} md={11.5} xl={11.5} paddingTop={2}>
+          <Box component="form" noValidate autoComplete="off">
+            <Typography variant="h5" sx={{ fontWeight: 500 }}>
+              Comment from Supervisor
+            </Typography>
+            <Paper
+              elevation={0}
+              variant="outlined"
+              fullWidth
+              sx={{ backgroundColor: "background.default" }}
+            >
+              <Typography variant="body1" sx={{ p: 2 }}>
+                {comments}
+              </Typography>
+            </Paper>
+          </Box>
+        </Grid>
+      )}
+    </Div>
   );
 };
 
-export default PreRegistrationWaiting;
+export default ReviewPreRegistrationStudent;

@@ -6,8 +6,8 @@ import StudentInformation from "../pages/BimbinganAkademik/shared/StudentInforma
 import StudentProfile from "../pages/BimbinganAkademik/shared/StudentInformation/StudentProfile";
 import StudentGrade from "app/pages/BimbinganAkademik/roles/DosenPembimbing/StudentInformation/StudentGradeDashboard/StudentGrade";
 import StudentCertificate from "app/pages/BimbinganAkademik/roles/DosenPembimbing/StudentInformation/StudentCertificate";
-import ReviewPreRegistration from "app/pages/BimbinganAkademik/roles/DosenPembimbing/ReviewActivities/ReviewPreRegistration";
-import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/roles/DosenPembimbing/ReviewActivities/ReviewPreRegistration/ReviewPreRegistrationStudent";
+import ReviewPreRegistration from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewPreRegistration/ReviewPreRegistration";
+import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewPreRegistration/ReviewPreRegistrationStudent/ReviewPreRegistrationStudent";
 import ReviewCertificate from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/ReviewCertificate";
 import ReviewCertificateStudent from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/DetailCertificate/ViewCertificate";
 import History from "app/pages/BimbinganAkademik/shared/History";
@@ -15,8 +15,7 @@ import HistoryActivity from "app/pages/BimbinganAkademik/shared/History/HIstoryA
 import HistoryActivity1 from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity1";
 import HistoryActivity2 from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity2";
 import HistoryActivity3 from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity3";
-import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/shared/History/HistoryPreRegis/PreRegistrationApproved";
-import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/shared/History/HistoryPreRegis/PreRegistrationRejected";
+import HistoryPreRegistration from "app/pages/BimbinganAkademik/shared/History/HistoryPreRegis/ReviewPreRegistrationStudent";
 import HistoryCertificate from "app/pages/BimbinganAkademik/shared/History/HistoryCertificate/Certificate";
 import HistoryConsultationComplete from "app/pages/BimbinganAkademik/shared/History/HistoryConsultation/ConsultationComplete";
 import CertificateDetail from "app/pages/BimbinganAkademik/roles/DosenPembimbing/StudentInformation/StudentCertificate/CertificateDetail";
@@ -116,12 +115,8 @@ const dosenPembimbingRoutes = [
     element: <Page component={HistoryActivity3} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/history/pre-registration-approved",
-    element: <Page component={HistoryPreRegistrationApproved} />,
-  },
-  {
-    path: "/bimbingan-akademik/dosen-pembimbing/history/pre-registration-rejected",
-    element: <Page component={HistoryPreRegistrationRejected} />,
+    path: "/bimbingan-akademik/dosen-pembimbing/history/pre-registration/:id",
+    element: <Page component={HistoryPreRegistration} />,
   },
   {
     path: "/bimbingan-akademik/dosen-pembimbing/history/certificate/:id",

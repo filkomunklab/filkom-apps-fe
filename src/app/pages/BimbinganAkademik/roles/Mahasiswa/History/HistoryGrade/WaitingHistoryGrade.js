@@ -12,6 +12,7 @@ import {
   Stack,
   Paper,
   Grid,
+  Box,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 
@@ -24,7 +25,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const WaitingGrade = () => {
+const HistoryGrade = () => {
   const { state } = useLocation();
   const gradeDetails = state ? state.gradeDetails : {};
   const {
@@ -34,6 +35,8 @@ const WaitingGrade = () => {
     status,
     semester,
     grades,
+    comments,
+    approveDate,
   } = gradeDetails;
   console.log("ini grade detail", gradeDetails);
 
@@ -120,13 +123,42 @@ const WaitingGrade = () => {
         <Grid item xs={12}>
           <Grid container>
             <Grid item xs={4} md={3} xl={2}>
+              <Typography variant="h5">Approval Date</Typography>
+            </Grid>
+            <Grid item xs={1} xl={"auto"}>
+              <Typography variant="h5">:</Typography>
+            </Grid>
+            <Grid item xs={7} paddingLeft={1}>
+              <Typography variant="h5">
+                {new Date(approveDate).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  day: "numeric",
+                  month: "long",
+                })}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={4} md={3} xl={2}>
               <Typography variant="h5">Status</Typography>
             </Grid>
             <Grid item xs={1} xl={"auto"}>
               <Typography variant="h5">:</Typography>
             </Grid>
             <Grid item xs={7} paddingLeft={1}>
-              <Typography variant="h5" sx={{ color: "#FFCC00" }}>
+              <Typography
+                variant="h5"
+                sx={{
+                  color:
+                    status === "REJECTED"
+                      ? "red"
+                      : status === "APPROVED"
+                      ? "blue"
+                      : "#005FDB",
+                }}
+              >
                 {status.charAt(0) + status.slice(1).toLowerCase()}
               </Typography>
             </Grid>
@@ -164,8 +196,22 @@ const WaitingGrade = () => {
           </Table>
         </TableContainer>
       </Grid>
+      {comments !== null && comments.trim() !== "" && (
+        <Grid item xs={12} md={11.5} xl={11.5} paddingTop={4}>
+          <Box component="form" noValidate autoComplete="off">
+            <Typography variant="h5" sx={{ fontWeight: 500 }}>
+              Comment from Supervisor
+            </Typography>
+            <Paper elevation={0} variant="outlined" fullWidth>
+              <Typography variant="body1" sx={{ p: 2 }}>
+                {comments}
+              </Typography>
+            </Paper>
+          </Box>
+        </Grid>
+      )}
     </div>
   );
 };
 
-export default WaitingGrade;
+export default HistoryGrade;

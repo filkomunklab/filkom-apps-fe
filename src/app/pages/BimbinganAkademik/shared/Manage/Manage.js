@@ -32,6 +32,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import CircularProgress from "@mui/material/CircularProgress";
+import { column } from "stylis";
 
 const styleModal = {
   position: "absolute",
@@ -463,12 +464,18 @@ const Manage = () => {
                       values,
                     }) => (
                       <Form>
-                        <Grid container>
+                        <div
+                          style={{
+                            display: "flex",
+                            rowGap: "20px",
+                            flexDirection: "column",
+                          }}
+                        >
                           <Grid xs={12} item>
                             <JumboSelectField
                               name="semester"
                               label="Semester"
-                              sx={{ margin: "0 0 20px 0", width: "480px" }}
+                              sx={{ width: "480px" }}
                               options={[
                                 { value: "", label: "None" },
                                 { value: "Ganjil", label: "Ganjil" },
@@ -484,7 +491,6 @@ const Manage = () => {
                               name="semesterPeriod"
                               variant="outlined"
                               label="Semester Period (e.g., 2023/2024)"
-                              sx={{ margin: "0 0 20px 0" }}
                               fullWidth
                               onChange={handleChange}
                             />
@@ -493,7 +499,7 @@ const Manage = () => {
                             <JumboSelectField
                               name="major"
                               label="Major"
-                              sx={{ margin: "0 0 20px 0", width: "480px" }}
+                              sx={{ width: "480px" }}
                               options={[
                                 { value: "", label: "None" },
                                 { value: "IF", label: "Informatics" },
@@ -514,7 +520,6 @@ const Manage = () => {
                                 sx={{
                                   backgroundColor: "white",
                                   width: "100%",
-                                  margin: "0 0 20px 0",
                                 }}
                                 label="Choose Due Date"
                                 value={values.dueDate || null}
@@ -549,7 +554,7 @@ const Manage = () => {
                               Submit
                             </LoadingButton>
                           </Grid>
-                        </Grid>
+                        </div>
                       </Form>
                     )}
                   </Formik>

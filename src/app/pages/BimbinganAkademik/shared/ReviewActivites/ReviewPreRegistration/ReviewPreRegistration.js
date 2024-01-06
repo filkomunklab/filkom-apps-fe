@@ -1,14 +1,15 @@
+import Div from "@jumbo/shared/Div";
 import {
-  Typography,
+  Paper,
+  Grid,
   Table,
-  TableHead,
   TableBody,
-  TableRow,
   TableCell,
   TableContainer,
+  TableHead,
   TablePagination,
-  Grid,
-  Paper,
+  TableRow,
+  Typography,
   TextField,
   IconButton,
 } from "@mui/material";
@@ -18,31 +19,27 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 
-const StudentConsultation = () => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+const ReviewPreRegistration = () => {
   const [dataWaiting, setDataWaiting] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const getDataWaiting = async () => {
     try {
-      const { nik } = JSON.parse(localStorage.getItem("user"));
+      const user = JSON.parse(localStorage.getItem("user"));
       const result = await axios.get(
-        `${BASE_URL_API}/academic-consultation/employee/${nik}`
+        `${BASE_URL_API}/pre-regist/review/${user.guidanceClassId}`
       );
-      console.log("API Response:", result.data);
-
       const filteredData = result.data.data.filter((item) => {
-        const studentFullName = `${item.student_name}`.toLowerCase();
+        const studentFullName =
+          `${item.Student?.lastName}, ${item.Student?.firstName}`.toLowerCase();
         const includesSearch = studentFullName.includes(
           searchValue.toLowerCase()
         );
-
-        return includesSearch && item.status === "Waiting";
+        return includesSearch;
       });
-
-      console.log("Filtered data:", filteredData);
       setDataWaiting(filteredData);
     } catch (error) {
       console.log(error.message);
@@ -53,6 +50,46 @@ const StudentConsultation = () => {
     getDataWaiting();
   }, [searchValue]);
 
+  const handleNavigate = async (value) => {
+    try {
+      const preregisDetailsResult = await axios.get(
+        `${BASE_URL_API}/pre-regist/details/${value.id}`
+      );
+      const detail = preregisDetailsResult.data.data;
+      const { role } = JSON.parse(localStorage.getItem("user"));
+      let path = "";
+      console.log("hai ini role KAPRODI", role.includes("KAPRODI"));
+      console.log("hai ini role DEKAN", role.includes("DEKAN"));
+      if (role.includes("DEKAN")) {
+        path = "/bimbingan-akademik/dekan/review-activities/pre-registration/";
+      } else if (role.includes("KAPRODI")) {
+        path =
+          "/bimbingan-akademik/kaprodi/review-activities/pre-registration/";
+      } else {
+        path =
+          "/bimbingan-akademik/dosen-pembimbing/review-activities/pre-registration/";
+      }
+      navigate(`${path}${value.id}`, {
+        state: {
+          preregisDetails: {
+            id: detail.id,
+            studentName:
+              detail.Student.lastName + ", " + detail.Student.firstName,
+            supervisorName:
+              detail.Employee.firstName + " " + detail.Employee.lastName,
+            submitDate: detail.submitDate,
+            status: detail.status,
+            listSubjectPreregis: detail.ListOfRequest,
+            curriculum: detail.Student.curriculum,
+            totalCredits: value.totalCredits,
+          },
+        },
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -62,61 +99,28 @@ const StudentConsultation = () => {
     setPage(0);
   };
 
-  const handleNavigate = async (value) => {
-    try {
-      const consultationDetailsResult = await axios.get(
-        `${BASE_URL_API}/academic-consultation/detail/${value.id}`
-      );
-      // console.log("ini detail Consutation result:", consultationDetailsResult);
-      const { role } = JSON.parse(localStorage.getItem("user"));
-      let path = "";
-      console.log("hai ini role", role.includes === "KAPRODI");
-      if (role.includes("DEKAN")) {
-        path = "/bimbingan-akademik/dekan/review-activities/consultation/";
-      } else if (role.includes("KAPRODI")) {
-        path = "/bimbingan-akademik/kaprodi/review-activities/consultation/";
-      } else {
-        path =
-          "/bimbingan-akademik/dosen-pembimbing/review-activities/consultation/";
-      }
-
-      navigate(`${path}${value.id}`, {
-        state: {
-          consultationDetails: {
-            studentName: consultationDetailsResult.data.data.student_name,
-            supervisorName: consultationDetailsResult.data.data.supervisor_name,
-            studentMajor: consultationDetailsResult.data.data.student_major,
-            studentArrivalYear:
-              consultationDetailsResult.data.data.student_arrival_year,
-            topic: consultationDetailsResult.data.data.topic,
-            receiverName: consultationDetailsResult.data.data.receiver_name,
-            description: consultationDetailsResult.data.data.description,
-            id: consultationDetailsResult.data.data.id,
-          },
-        },
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   return (
-    <div>
-      <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
-        Student Consultation
-      </Typography>
-      <Typography
-        variant="h6"
-        sx={{
-          fontSize: "15px",
-          fontWeight: 400,
-          color: "rgba(27, 43, 65, 0.69)",
-          textAlign: "justify",
-        }}
-      >
-        You are now on the Consultations submitted by students page. This will
-        show you a list of students who have submitted a consultation with you.
-      </Typography>
+    <Div>
+      <Div>
+        <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
+          Review Pre-Registration
+        </Typography>
+        <Typography
+          variant="h6"
+          sx={{
+            fontSize: "15px",
+            fontWeight: 400,
+            color: "rgba(27, 43, 65, 0.69)",
+            textAlign: "justify",
+          }}
+        >
+          This page contains information related to filling out the Student
+          Study Plan Card, especially for students under your guidance. You can
+          use filters to sort the list of students to get the information you
+          are looking for.
+        </Typography>
+      </Div>
+
       <Grid container mb={4}>
         <Grid
           item
@@ -160,11 +164,11 @@ const StudentConsultation = () => {
             >
               <TableRow>
                 <TableCell>Number</TableCell>
-                <TableCell>Submission Date</TableCell>
+                <TableCell>NIM</TableCell>
                 <TableCell>Student Name</TableCell>
-                <TableCell>Topic</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>Major</TableCell>
+                <TableCell>Arrival Year</TableCell>
+                <TableCell>KRS Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -184,41 +188,22 @@ const StudentConsultation = () => {
                       },
                     }}
                   >
-                    <TableCell
-                      align="right"
-                      sx={{ width: "80px", paddingRight: "17px" }}
-                    >
-                      {index + 1}
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{value.Student.nim}</TableCell>
+                    <TableCell>
+                      {value.Student.lastName}, {value.Student.firstName}
                     </TableCell>
-                    <TableCell sx={{ width: "180px", paddingLeft: "17px" }}>
-                      {new Date(value.createdAt).toLocaleDateString("en-US", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </TableCell>
-                    <TableCell sx={{ width: "245px" }}>
-                      {value.student_name}
-                    </TableCell>
-                    <TableCell sx={{ width: "140px" }}>{value.topic}</TableCell>
-                    <TableCell
-                      sx={{
-                        maxWidth: "150px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {value.description}
-                    </TableCell>
+                    <TableCell>{value.Student.major}</TableCell>
+                    <TableCell>{value.Student.arrivalYear}</TableCell>
                     <TableCell
                       sx={{
                         color: "#FFCC00",
-                        width: "100px",
+
                         align: "left",
                       }}
                     >
-                      {value.status}
+                      {value.status.charAt(0) +
+                        value.status.slice(1).toLowerCase()}
                     </TableCell>
                   </TableRow>
                 ))
@@ -247,8 +232,8 @@ const StudentConsultation = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Grid>
-    </div>
+    </Div>
   );
 };
 
-export default StudentConsultation;
+export default ReviewPreRegistration;
