@@ -1,3 +1,4 @@
+import { BASE_URL_API } from "@jumbo/config/env";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
@@ -7,22 +8,34 @@ import {
   InputLabel,
   ListSubheader,
   MenuItem,
-  Paper,
   Select,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TablePagination,
   TableRow,
   Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  Breadcrumbs,
+  experimentalStyled as styled,
+  TableContainer,
+  Paper,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
-import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { BASE_URL_API } from "@jumbo/config/env";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 const yearList = [
   {
@@ -70,80 +83,89 @@ const prodiList = [
   },
 ];
 
-const StudentInformationMentored = () => {
+const data = Array.from(Array(15).keys()).map((item, index) => ({
+  nim: `105022010000`,
+  name: `Yuhu, Christopher Darell`,
+  prodi: `Informatika`,
+  year: `2021`,
+  status: `Active`,
+}));
+
+const { role } = JSON.parse(localStorage.getItem("user"));
+
+const StudentPerMajor = () => {
+  const location = useLocation();
+  const { major } = location.state;
+  const controller = new AbortController();
+  const signal = controller.signal;
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [dataStudent, setDataStudent] = useState([]);
-  const controller = new AbortController();
-  const signal = controller.signal;
+  const [studentList, setStudentList] = useState([]);
+
+  const getStudentList = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL_API}/student/major/${major}`,
+        { signal }
+      );
+      console.log("response", response);
+
+      const { status, data } = response.data;
+      if (status === "OK") {
+        setStudentList(data);
+      } else {
+        console.log("gagal");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getStudentList();
+    return () => controller.abort();
+  }, []);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
 
-  const getDataStudent = async () => {
-    try {
-      // const { nik } = JSON.parse(localStorage.getItem("user"));
-      // const result = await axios.get(`${BASE_URL_API}/student/dosen/${nik}`, {
-      //   cancelToken: source.token,
-      // });
-      const result = await axios.get(`${BASE_URL_API}/guidance-class`, {
-        signal,
-      });
-
-      const { status, data } = result.data;
-
-      if (status === "OK") {
-        console.log("ini isi result.data dalam status ok mentored", result);
-        setDataStudent(data);
-      } else {
-        console.error("error, ini data result: ", result);
-      }
-    } catch (error) {
-      console.error("Error fetching data: ", error);
-    }
+  const handleClick = (event) => {
+    event.preventDefault();
   };
 
-  useEffect(() => {
-    getDataStudent();
-    return () => controller.abort();
-  }, []);
+  useEffect(() => console.log("location: ", location), []);
 
   return (
     <Div>
-      <Div>
-        <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
-          Student Information
-        </Typography>
-        <Typography
-          variant="h6"
-          sx={{
-            paddingBottom: "25px",
-            fontSize: "15px",
-            fontWeight: 400,
-            color: "rgba(27, 43, 65, 0.69)",
-            textAlign: "justify",
-          }}
-        >
-          Currently, you are on the Student Information page, where you can
-          easily view all information about your mentored students, including
-          the number, status, and other detailed and comprehensive information.
-        </Typography>
-      </Div>
-      <Grid container spacing={2}>
-        <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-          <Typography
-            variant="h2"
-            sx={{
-              textAlign: "justify",
-              "@media (max-width: 390px)": {
-                fontSize: "16px",
-                fontWeight: 500,
-              },
-            }}
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink
+            to={`/bimbingan-akademik/${getRole()}/student-information/faculty-student`}
           >
-            List of mentored students
+            Faculty Student
+          </StyledLink>
+          <Typography color="text.primary">
+            {major === "IF"
+              ? "Informatics"
+              : major === "SI"
+              ? "Information System"
+              : major === "DKV"
+              ? "Information Technology"
+              : "-"}
+          </Typography>
+        </Breadcrumbs>
+      </div>
+      <Grid container spacing={2} paddingTop={1}>
+        <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
+          <Typography variant="h2" fontWeight={500}>
+            Informatics Students List
           </Typography>
         </Grid>
         <Grid item xs={12} sm={8} md={3}>
@@ -217,18 +239,18 @@ const StudentInformationMentored = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <TableContainer sx={{ maxHeight: 540 }} component={Paper}>
+          <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
             <Table stickyHeader>
               <TableHead>
                 <TableHeading />
               </TableHead>
               <TableBody>
-                {dataStudent.length > 0 &&
-                  dataStudent
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((item, index) => (
-                      <TableItem item={item} index={index} key={index} />
-                    ))}
+                {studentList
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .filter((item) => item.status !== "GRADUATE")
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -242,16 +264,28 @@ const StudentInformationMentored = () => {
             }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
-            count={dataStudent.length || 0}
+            count={
+              studentList.filter((item) => item.status !== "GRADUATE").length
+            }
             rowsPerPage={rowsPerPage}
             page={page}
-            onPageChange={(_, newPage) => setPage(newPage)}
+            onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Grid>
       </Grid>
     </Div>
   );
+};
+
+const getRole = () => {
+  const filter = role.includes("KAPRODI")
+    ? "kaprodi"
+    : role.includes("DEKAN")
+    ? "dekan"
+    : "dosen-pembimbing";
+
+  return filter;
 };
 
 const TableHeading = ({ index }) => {
@@ -272,26 +306,25 @@ const TableHeading = ({ index }) => {
 
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
+  const { nim, firstName, lastName, major, arrivalYear, status } = item;
+
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    // navigate(
-    //   `/bimbingan-akademik/kaprodi/student-information/mentored-student/${item.nim}`
-    // );
 
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/kaprodi/student-information/mentored-student/${item.nim}`
+          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}`
         );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/kaprodi/student-information/mentored-student/${item.nim}/grade`
+          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}/grade`
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/kaprodi/student-information/mentored-student/${item.nim}/certificate`
+          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}/certificate`
         );
         break;
 
@@ -307,7 +340,7 @@ const TableItem = ({ item, index }) => {
   return (
     <TableRow>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{item.nim}</TableCell>
+      <TableCell sx={[rowStyle]}>{nim}</TableCell>
       <TableCell>
         <Button
           name="profile"
@@ -317,19 +350,19 @@ const TableItem = ({ item, index }) => {
           }}
           onClick={handleButtonNavigate}
         >
-          {item.lastName}, {item.firstName}
+          {lastName}, {firstName}
         </Button>
       </TableCell>
       <TableCell sx={[rowStyle]}>
-        {item.major === "IF"
+        {major === "IF"
           ? "Informatics"
-          : item.major === "SI"
+          : major === "SI"
           ? "Information System"
-          : item.major === "DKV"
+          : major === "DKV"
           ? "Information Technology"
           : "-"}
       </TableCell>
-      <TableCell sx={[rowStyle]}>{item.arrival_Year}</TableCell>
+      <TableCell sx={[rowStyle]}>{arrivalYear}</TableCell>
 
       <TableCell>
         <Button
@@ -356,10 +389,14 @@ const TableItem = ({ item, index }) => {
         </Button>
       </TableCell>
       <TableCell sx={[rowStyle]}>
-        <Chip label={item.status} variant="filled" color={"success"} />
+        <Chip
+          label={status}
+          variant="filled"
+          color={status === "ACTIVE" ? "success" : "default"}
+        />
       </TableCell>
     </TableRow>
   );
 };
 
-export default StudentInformationMentored;
+export default StudentPerMajor;
