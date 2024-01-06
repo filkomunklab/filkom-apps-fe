@@ -49,7 +49,7 @@ const ReviewGrade = () => {
 
       setDataWaiting(filteredData);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
   };
   useEffect(() => {
@@ -68,22 +68,26 @@ const ReviewGrade = () => {
   const handleNavigate = async (value) => {
     try {
       const gradeDetailsResult = await axios.get(
-        `${BASE_URL_API}/transaction/submissionDetail/${value.transactionId}`
+        `${BASE_URL_API}/transaction/submissionDetail/${value.id}`
       );
       const detail = gradeDetailsResult.data.data;
-      let path = "/bimbingan-akademik/history/grade";
-
-      navigate(`${path}`, {
+      let path = "/bimbingan-akademik/kaprodi/review-activities/grade/";
+      navigate(`${path}${value.id}`, {
         state: {
           gradeDetails: {
             studentName:
-              detail.Student.firstName + " " + detail.Student.lastName,
+              detail.Student.lastName + " " + detail.Student.firstName,
             supervisorName:
-              detail.Employee.firstName + " " + detail.Employee.lastName,
-            submitedDate: detail.submitDate,
+              detail.Student.GuidanceClassMember.gudianceClass.teacher
+                .lastName +
+              " " +
+              detail.Student.GuidanceClassMember.gudianceClass.teacher
+                .firstName,
+            submitedDate: detail.submitedDate,
             status: detail.status,
             semester: detail.semester,
             grades: detail.Grades,
+            id: detail.id,
           },
         },
       });
@@ -96,7 +100,7 @@ const ReviewGrade = () => {
     <Div>
       <Div>
         <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
-          Review Certificate
+          Review Grades
         </Typography>
         <Typography
           variant="h6"
@@ -107,9 +111,9 @@ const ReviewGrade = () => {
             textAlign: "justify",
           }}
         >
-          This page contains information related to the collection of
-          certificates from your students. You can use filters to sort the list
-          of students to get the information you are looking for.
+          This page contains information related to the collection of grades
+          submission from your students. You can use filters to sort the list of
+          students to get the information you are looking for.
         </Typography>
       </Div>
       <Grid container mb={3}>
@@ -231,8 +235,15 @@ const ReviewGrade = () => {
                       {value.Student.lastName}, {value.Student.firstName}
                     </TableCell>
                     <TableCell>
-                      {value.Employee.firstName}
-                      {value.Employee.lastName}
+                      {
+                        value.Student.GuidanceClassMember.gudianceClass.teacher
+                          .firstName
+                      }{" "}
+                      {""}
+                      {
+                        value.Student.GuidanceClassMember.gudianceClass.teacher
+                          .lastName
+                      }
                     </TableCell>
                     <TableCell>
                       {value.Student.major === "IF"

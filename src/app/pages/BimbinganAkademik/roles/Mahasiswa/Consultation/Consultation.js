@@ -441,14 +441,15 @@ const Consultation = () => {
                       fontWeight: 600,
                     }}
                   >
-                    Confirm request?
+                    Submit Consultation?
                   </Typography>
                   <Typography
                     id="modal-modal-description"
-                    style={{ marginTop: "16px", marginBottom: "20px" }}
+                    style={{ marginTop: "16px", marginBottom: "15px" }}
                   >
-                    Are you sure you want to submit this request? Forms that
-                    have been submitted cannot be edited again.
+                    Are you sure you want to submit this consultation? The
+                    consultation that have been submitted cannot be edited
+                    again.
                   </Typography>
 
                   <Grid container spacing={1} justifyContent="flex-end">

@@ -10,8 +10,6 @@ import {
   Typography,
   Divider,
   experimentalStyled as styled,
-  Stack,
-  Grid,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -102,11 +100,12 @@ const CurrentActivities = () => {
       const { status: gradeStatus, data: gradeData } = resultGrade.data;
 
       if (consultationStatus === "OK") {
-        console.log("ini isi result.data dalam status ok", consultationData);
-        setDataConsultation(consultationData);
+        const filteredConsultationData = consultationData.filter(
+          (value) => value.status === "Waiting" || value.status === "OnProcess"
+        );
+        setDataConsultation(filteredConsultationData);
       } else {
-        console.log(resultConsultation);
-        console.log(resultConsultation.data);
+        console.log("ini error resultConsultation", resultConsultation);
       }
 
       if (certificateStatus === "OK") {
@@ -118,8 +117,10 @@ const CurrentActivities = () => {
       }
 
       if (preregisStatus === "OK") {
-        console.log("ini isi response.data preregisData", preregisData);
-        setDataPreregis(preregisData);
+        const filteredPreregisData = preregisData.filter(
+          (value) => value.status === "WAITING"
+        );
+        setDataPreregis(filteredPreregisData);
       } else {
         console.log(resultPreregis);
         console.log(resultPreregis.data);
@@ -311,9 +312,9 @@ const CurrentActivities = () => {
           preregisDetails: {
             id: detail.id,
             studentName:
-              detail.Student.firstName + " " + detail.Student.lastName,
+              detail.Student.lastName + ", " + detail.Student.firstName,
             supervisorName:
-              detail.Employee.firstName + " " + detail.Employee.lastName,
+              detail.Employee.lastName + ", " + detail.Employee.firstName,
             submitDate: detail.submitDate,
             status: detail.status,
             listSubjectPreregis: detail.ListOfRequest,
@@ -331,16 +332,20 @@ const CurrentActivities = () => {
         `${BASE_URL_API}/transaction/submissionDetail/${value.id}`
       );
       const detail = gradeDetailsResult.data.data;
-      let path = "/bimbingan-akademik/current-activities/grade";
+      let path = "/bimbingan-akademik/current-activities/grade/";
       console.log("isi detail", detail);
-      navigate(`${path}`, {
+      navigate(`${path}${value.id}`, {
         state: {
           gradeDetails: {
             studentName:
-              detail.Student.firstName + " " + detail.Student.lastName,
+              detail.Student.lastName + ", " + detail.Student.firstName,
             supervisorName:
-              detail.Employee.firstName + " " + detail.Employee.lastName,
-            submitedDate: detail.submitDate,
+              detail.Student.GuidanceClassMember.gudianceClass.teacher
+                .lastName +
+              ", " +
+              detail.Student.GuidanceClassMember.gudianceClass.teacher
+                .firstName,
+            submitedDate: detail.submitedDate,
             status: detail.status,
             semester: detail.semester,
             grades: detail.Grades,
@@ -394,11 +399,24 @@ const CurrentActivities = () => {
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
 
-          {Object.entries(groupedDataPreregis)
-            .filter(([date, dataPreregis]) =>
-              dataPreregis.some((value) => value.status === "WAITING")
-            )
-            .map(([date, dataPreregis]) => (
+          {dataPreregis.length === 0 ? (
+            <Box
+              sx={{
+                height: "50px",
+                backgroundColor: "rgba(235, 235, 235, 1)",
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "10px",
+              }}
+            >
+              <Typography
+                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+              >
+                You don't have any current pre-registration
+              </Typography>
+            </Box>
+          ) : (
+            Object.entries(groupedDataPreregis).map(([date, dataPreregis]) => (
               <div key={date}>
                 <Box
                   sx={{
@@ -509,7 +527,8 @@ const CurrentActivities = () => {
                     </List>
                   ))}
               </div>
-            ))}
+            ))
+          )}
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>
       </TabPanel>
@@ -517,8 +536,23 @@ const CurrentActivities = () => {
       <TabPanel value={value} index={1}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
-
-          {groupedDataCertificate &&
+          {dataCertificate.length === 0 ? (
+            <Box
+              sx={{
+                height: "50px",
+                backgroundColor: "rgba(235, 235, 235, 1)",
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "10px",
+              }}
+            >
+              <Typography
+                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+              >
+                You don't have any current certificate
+              </Typography>
+            </Box>
+          ) : (
             Object.entries(groupedDataCertificate).map(
               ([date, dataCertificate]) => (
                 <div key={date}>
@@ -584,7 +618,7 @@ const CurrentActivities = () => {
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
                                 >
-                                  {value.student.lastName},
+                                  {value.student.lastName},{" "}
                                   {value.student.firstName}
                                 </Typography>
                                 <Typography
@@ -629,7 +663,8 @@ const CurrentActivities = () => {
                     ))}
                 </div>
               )
-            )}
+            )
+          )}
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>
       </TabPanel>
@@ -637,131 +672,25 @@ const CurrentActivities = () => {
       <TabPanel value={value} index={2}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
-          {Object.entries(groupedDataGrade).map(([date, dataGrade]) => (
-            <div key={date}>
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "10px",
-                }}
+          {dataGrade.length === 0 ? (
+            <Box
+              sx={{
+                height: "50px",
+                backgroundColor: "rgba(235, 235, 235, 1)",
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "10px",
+              }}
+            >
+              <Typography
+                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
               >
-                <Typography
-                  sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
-                >
-                  {formatDate(date)}
-                </Typography>
-              </Box>
-              {dataGrade &&
-                dataGrade.map((value, index) => (
-                  <List
-                    sx={{
-                      width: "100%",
-                      maxWidth: 2000,
-                      bgcolor: "background.paper",
-                      paddingTop: "0px",
-                      paddingBottom: "0px",
-                      ":hover": {
-                        cursor: "pointer",
-                        backgroundColor: "#338CFF21",
-                        transition: "0.3s",
-                        transitionTimingFunction: "ease-in-out",
-                        transitionDelay: "0s",
-                        transitionProperty: "all",
-                      },
-                    }}
-                  >
-                    <ListItem
-                      sx={{ padding: "10px 50px" }}
-                      onClick={() => {
-                        handleNavigateGrade(value);
-                      }}
-                    >
-                      <ListItemText
-                        primary={
-                          <Chip
-                            size={"small"}
-                            label={"Grade"}
-                            sx={{
-                              backgroundColor: "rgba(101, 10, 204, 0.1)",
-                              color: "rgba(101, 10, 204, 1)",
-                            }}
-                          />
-                        }
-                        secondary={
-                          <>
-                            <Typography
-                              sx={{
-                                color: "rgba(0, 0, 0, 1)",
-                                paddingLeft: "8px",
-                                paddingTop: "5px",
-                                fontSize: { xs: "12px", md: "14px" },
-                              }}
-                            >
-                              {value.Student.lastName},{" "}
-                              {value.Student.firstName}{" "}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                paddingLeft: "8px",
-                                fontSize: { xs: "12px", md: "14px" },
-                              }}
-                            >
-                              {value.semester}
-                            </Typography>
-                          </>
-                        }
-                      />
-                      <Box
-                        sx={{
-                          marginLeft: { xs: "auto", md: 0 },
-                          textAlign: "right",
-                        }}
-                      >
-                        <ListItemText
-                          secondary={
-                            <Typography
-                              sx={{
-                                fontSize: { xs: "10px", md: "14px" },
-                                color: "rgba(27, 43, 65, 0.69)",
-                              }}
-                            >
-                              {new Date(value.submitedDate).toLocaleTimeString(
-                                "en-US",
-                                {
-                                  hour: "numeric",
-                                  minute: "numeric",
-                                  hour12: true,
-                                }
-                              )}
-                            </Typography>
-                          }
-                        />
-                      </Box>
-                    </ListItem>
-                    <Divider component="li" />
-                  </List>
-                ))}
-            </div>
-          ))}
-          <Typography sx={{ padding: "20px" }}></Typography>
-        </div>
-      </TabPanel>
-
-      <TabPanel value={value} index={3}>
-        <div>
-          <Typography sx={{ padding: "10px" }}></Typography>
-          {Object.entries(groupedDataConsultation)
-            .filter(([dateConsultation, dataConsultation]) =>
-              dataConsultation.some(
-                (value) =>
-                  value.status === "Waiting" || value.status === "OnProcess"
-              )
-            )
-            .map(([dateConsultation, dataConsultation]) => (
-              <div key={dateConsultation}>
+                You don't have any current grade
+              </Typography>
+            </Box>
+          ) : (
+            Object.entries(groupedDataGrade).map(([date, dataGrade]) => (
+              <div key={date}>
                 <Box
                   sx={{
                     height: "50px",
@@ -774,110 +703,245 @@ const CurrentActivities = () => {
                   <Typography
                     sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
                   >
-                    {formatDate(dateConsultation)}
+                    {formatDate(date)}
                   </Typography>
                 </Box>
-                {dataConsultation &&
-                  dataConsultation.map((value, index) =>
-                    value.status === "Waiting" ||
-                    value.status === "OnProcess" ? (
-                      <List
-                        sx={{
-                          width: "100%",
-                          maxWidth: 2000,
-                          bgcolor: "background.paper",
-                          paddingTop: "0px",
-                          paddingBottom: "0px",
-                          ":hover": {
-                            cursor: "pointer",
-                            backgroundColor: "#338CFF21",
-                            transition: "0.3s",
-                            transitionTimingFunction: "ease-in-out",
-                            transitionDelay: "0s",
-                            transitionProperty: "all",
-                          },
+                {dataGrade &&
+                  dataGrade.map((value, index) => (
+                    <List
+                      sx={{
+                        width: "100%",
+                        maxWidth: 2000,
+                        bgcolor: "background.paper",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        ":hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#338CFF21",
+                          transition: "0.3s",
+                          transitionTimingFunction: "ease-in-out",
+                          transitionDelay: "0s",
+                          transitionProperty: "all",
+                        },
+                      }}
+                    >
+                      <ListItem
+                        sx={{ padding: "10px 50px" }}
+                        onClick={() => {
+                          handleNavigateGrade(value);
                         }}
                       >
-                        <ListItem
-                          sx={{ padding: "10px 50px" }}
-                          onClick={() => {
-                            handleNavigateConsultation(value);
-                            // console.log("ini isi dari value: ", value);
+                        <ListItemText
+                          primary={
+                            <Chip
+                              size={"small"}
+                              label={"Grade"}
+                              sx={{
+                                backgroundColor: "rgba(101, 10, 204, 0.1)",
+                                color: "rgba(101, 10, 204, 1)",
+                              }}
+                            />
+                          }
+                          secondary={
+                            <>
+                              <Typography
+                                sx={{
+                                  color: "rgba(0, 0, 0, 1)",
+                                  paddingLeft: "8px",
+                                  paddingTop: "5px",
+                                  fontSize: { xs: "12px", md: "14px" },
+                                }}
+                              >
+                                {value.Student.lastName},{" "}
+                                {value.Student.firstName}
+                              </Typography>
+                              <Typography
+                                sx={{
+                                  paddingLeft: "8px",
+                                  fontSize: { xs: "12px", md: "14px" },
+                                }}
+                              >
+                                {value.semester}
+                              </Typography>
+                            </>
+                          }
+                        />
+                        <Box
+                          sx={{
+                            marginLeft: { xs: "auto", md: 0 },
+                            textAlign: "right",
                           }}
                         >
                           <ListItemText
-                            primary={
-                              <Chip
-                                size={"small"}
-                                label={"Consultation"}
-                                sx={{
-                                  backgroundColor: "rgba(223, 11, 146, 0.1)",
-                                  color: "rgba(223, 11, 146, 1)",
-                                }}
-                              />
-                            }
                             secondary={
-                              <>
-                                <Typography
-                                  sx={{
-                                    color: "rgba(0, 0, 0, 1)",
-                                    paddingLeft: "8px",
-                                    paddingTop: "5px",
-                                    fontSize: { xs: "12px", md: "14px" },
-                                  }}
-                                >
-                                  To {value.receiver_name}
-                                </Typography>
-                                <Typography
-                                  sx={{
-                                    paddingLeft: "8px",
-                                    fontSize: { xs: "12px", md: "14px" },
-                                  }}
-                                >
-                                  {value.topic === "others" && "Others"}
-                                  {value.topic === "academic" && "Academic"}
-                                  {value.topic === "non-academic" &&
-                                    "Non-Academic"}
-                                  {value.status && ` - ${value.status}`}
-                                </Typography>
-                              </>
+                              <Typography
+                                sx={{
+                                  fontSize: { xs: "10px", md: "14px" },
+                                  color: "rgba(27, 43, 65, 0.69)",
+                                }}
+                              >
+                                {new Date(
+                                  value.submitedDate
+                                ).toLocaleTimeString("en-US", {
+                                  hour: "numeric",
+                                  minute: "numeric",
+                                  hour12: true,
+                                })}
+                              </Typography>
                             }
                           />
-                          <Box
-                            sx={{
-                              marginLeft: { xs: "auto", md: 0 },
-                              textAlign: "right",
+                        </Box>
+                      </ListItem>
+                      <Divider component="li" />
+                    </List>
+                  ))}
+              </div>
+            ))
+          )}
+          <Typography sx={{ padding: "20px" }}></Typography>
+        </div>
+      </TabPanel>
+
+      <TabPanel value={value} index={3}>
+        <div>
+          <Typography sx={{ padding: "10px" }}></Typography>
+          {dataConsultation.length === 0 ? (
+            <Box
+              sx={{
+                height: "50px",
+                backgroundColor: "rgba(235, 235, 235, 1)",
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "10px",
+              }}
+            >
+              <Typography
+                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+              >
+                You don't have any current consultation
+              </Typography>
+            </Box>
+          ) : (
+            Object.entries(groupedDataConsultation).map(
+              ([dateConsultation, dataConsultation]) => (
+                <div key={dateConsultation}>
+                  <Box
+                    sx={{
+                      height: "50px",
+                      backgroundColor: "rgba(235, 235, 235, 1)",
+                      display: "flex",
+                      alignItems: "center",
+                      paddingLeft: "10px",
+                    }}
+                  >
+                    <Typography
+                      sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+                    >
+                      {formatDate(dateConsultation)}
+                    </Typography>
+                  </Box>
+                  {dataConsultation &&
+                    dataConsultation.map((value, index) =>
+                      value.status === "Waiting" ||
+                      value.status === "OnProcess" ? (
+                        <List
+                          sx={{
+                            width: "100%",
+                            maxWidth: 2000,
+                            bgcolor: "background.paper",
+                            paddingTop: "0px",
+                            paddingBottom: "0px",
+                            ":hover": {
+                              cursor: "pointer",
+                              backgroundColor: "#338CFF21",
+                              transition: "0.3s",
+                              transitionTimingFunction: "ease-in-out",
+                              transitionDelay: "0s",
+                              transitionProperty: "all",
+                            },
+                          }}
+                        >
+                          <ListItem
+                            sx={{ padding: "10px 50px" }}
+                            onClick={() => {
+                              handleNavigateConsultation(value);
+                              // console.log("ini isi dari value: ", value);
                             }}
                           >
                             <ListItemText
-                              secondary={
-                                <Typography
+                              primary={
+                                <Chip
+                                  size={"small"}
+                                  label={"Consultation"}
                                   sx={{
-                                    fontSize: { xs: "10px", md: "14px" },
-                                    color: "rgba(27, 43, 65, 0.69)",
+                                    backgroundColor: "rgba(223, 11, 146, 0.1)",
+                                    color: "rgba(223, 11, 146, 1)",
                                   }}
-                                >
-                                  {new Date(value.createdAt).toLocaleTimeString(
-                                    "en-US",
-                                    {
+                                />
+                              }
+                              secondary={
+                                <>
+                                  <Typography
+                                    sx={{
+                                      color: "rgba(0, 0, 0, 1)",
+                                      paddingLeft: "8px",
+                                      paddingTop: "5px",
+                                      fontSize: { xs: "12px", md: "14px" },
+                                    }}
+                                  >
+                                    To {value.receiver_name}
+                                  </Typography>
+                                  <Typography
+                                    sx={{
+                                      paddingLeft: "8px",
+                                      fontSize: { xs: "12px", md: "14px" },
+                                    }}
+                                  >
+                                    {value.topic === "others" && "Others"}
+                                    {value.topic === "academic" && "Academic"}
+                                    {value.topic === "non-academic" &&
+                                      "Non-Academic"}
+                                    {value.status && ` - ${value.status}`}
+                                  </Typography>
+                                </>
+                              }
+                            />
+                            <Box
+                              sx={{
+                                marginLeft: { xs: "auto", md: 0 },
+                                textAlign: "right",
+                              }}
+                            >
+                              <ListItemText
+                                secondary={
+                                  <Typography
+                                    sx={{
+                                      fontSize: { xs: "10px", md: "14px" },
+                                      color: "rgba(27, 43, 65, 0.69)",
+                                    }}
+                                  >
+                                    {new Date(
+                                      value.createdAt
+                                    ).toLocaleTimeString("en-US", {
                                       hour: "numeric",
                                       minute: "numeric",
                                       hour12: true,
-                                    }
-                                  )}
-                                </Typography>
-                              }
-                            />
-                          </Box>
-                        </ListItem>
-                        <Divider component="li" />
-                      </List>
-                    ) : (
-                      ""
-                    )
-                  )}
-              </div>
-            ))}
+                                    })}
+                                  </Typography>
+                                }
+                              />
+                            </Box>
+                          </ListItem>
+                          <Divider component="li" />
+                        </List>
+                      ) : (
+                        ""
+                      )
+                    )}
+                </div>
+              )
+            )
+          )}
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>
       </TabPanel>

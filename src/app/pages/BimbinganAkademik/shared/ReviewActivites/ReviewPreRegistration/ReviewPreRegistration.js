@@ -30,7 +30,7 @@ const ReviewPreRegistration = () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       const result = await axios.get(
-        `${BASE_URL_API}/pre-regist/list-for-advisor/${user.guidanceClassId}`
+        `${BASE_URL_API}/pre-regist/review/${user.guidanceClassId}`
       );
       const filteredData = result.data.data.filter((item) => {
         const studentFullName =
@@ -74,13 +74,14 @@ const ReviewPreRegistration = () => {
           preregisDetails: {
             id: detail.id,
             studentName:
-              detail.Student.firstName + " " + detail.Student.lastName,
+              detail.Student.lastName + ", " + detail.Student.firstName,
             supervisorName:
               detail.Employee.firstName + " " + detail.Employee.lastName,
             submitDate: detail.submitDate,
             status: detail.status,
             listSubjectPreregis: detail.ListOfRequest,
             curriculum: detail.Student.curriculum,
+            totalCredits: value.totalCredits,
           },
         },
       });
@@ -101,13 +102,12 @@ const ReviewPreRegistration = () => {
   return (
     <Div>
       <Div>
-        <Typography variant="h1" sx={{ mb: 3 }}>
+        <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
           Review Pre-Registration
         </Typography>
         <Typography
           variant="h6"
           sx={{
-            paddingBottom: "25px",
             fontSize: "15px",
             fontWeight: 400,
             color: "rgba(27, 43, 65, 0.69)",
@@ -120,20 +120,6 @@ const ReviewPreRegistration = () => {
           are looking for.
         </Typography>
       </Div>
-      <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
-        <Typography
-          variant="h2"
-          sx={{
-            textAlign: "justify",
-            "@media (max-width: 390px)": {
-              fontSize: "14px",
-              fontWeight: 500,
-            },
-          }}
-        >
-          Student Guidance Pre-Registration List
-        </Typography>
-      </Grid>
 
       <Grid container mb={4}>
         <Grid
@@ -187,42 +173,40 @@ const ReviewPreRegistration = () => {
             </TableHead>
             <TableBody>
               {dataWaiting && dataWaiting.length > 0 ? (
-                dataWaiting.map((value, index) =>
-                  value.status === "WAITING" ? (
-                    <TableRow
-                      key={value.id}
-                      onClick={() => handleNavigate(value)}
+                dataWaiting.map((value, index) => (
+                  <TableRow
+                    key={value.id}
+                    onClick={() => handleNavigate(value)}
+                    sx={{
+                      ":hover": {
+                        cursor: "pointer",
+                        backgroundColor: "#338CFF21",
+                        transition: "0.3s",
+                        transitionTimingFunction: "ease-in-out",
+                        transitionDelay: "0s",
+                        transitionProperty: "all",
+                      },
+                    }}
+                  >
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{value.Student.nim}</TableCell>
+                    <TableCell>
+                      {value.Student.lastName}, {value.Student.firstName}
+                    </TableCell>
+                    <TableCell>{value.Student.major}</TableCell>
+                    <TableCell>{value.Student.arrivalYear}</TableCell>
+                    <TableCell
                       sx={{
-                        ":hover": {
-                          cursor: "pointer",
-                          backgroundColor: "#338CFF21",
-                          transition: "0.3s",
-                          transitionTimingFunction: "ease-in-out",
-                          transitionDelay: "0s",
-                          transitionProperty: "all",
-                        },
+                        color: "#FFCC00",
+
+                        align: "left",
                       }}
                     >
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{value.Student.nim}</TableCell>
-                      <TableCell>
-                        {value.Student.firstName} {value.Student.lastName}
-                      </TableCell>
-                      <TableCell>{value.Student.major}</TableCell>
-                      <TableCell>{value.Student.arrivalYear}</TableCell>
-                      <TableCell
-                        sx={{
-                          color: "#FFCC00",
-
-                          align: "left",
-                        }}
-                      >
-                        {value.status.charAt(0) +
-                          value.status.slice(1).toLowerCase()}
-                      </TableCell>
-                    </TableRow>
-                  ) : null
-                )
+                      {value.status.charAt(0) +
+                        value.status.slice(1).toLowerCase()}
+                    </TableCell>
+                  </TableRow>
+                ))
               ) : (
                 <TableRow>
                   <TableCell colSpan={6}>No data available</TableCell>

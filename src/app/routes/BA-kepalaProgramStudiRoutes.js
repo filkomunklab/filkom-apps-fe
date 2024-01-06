@@ -59,7 +59,7 @@ import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/shared/Rev
 import ReviewCertificate from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/ReviewCertificate";
 import ReviewCertificateStudent from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/DetailCertificate/ViewCertificate";
 import ReviewGrade from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewGrade/ReviewGrade";
-import ReviewGradeStudent from "app/pages/BimbinganAkademik/roles/Kaprodi/ReviewActivities/ReviewGrade/ReviewGradeStudent";
+import ReviewGradeStudent from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewGrade/ReviewGradeStudent/GradeStudent";
 import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/StudentConsultation";
 import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/ReplyConsultation/Consultation";
 import SupervisorStudentProfile from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/StudentProfile/StudentProfile";

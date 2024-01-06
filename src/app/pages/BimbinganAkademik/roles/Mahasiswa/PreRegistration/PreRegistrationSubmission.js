@@ -108,10 +108,12 @@ const PreviewPopup = ({ open, onClose, previewRows, totalCredits }) => {
                       <TableCell>{data.code}</TableCell>
                       <TableCell>{data.name}</TableCell>
                       <TableCell>{data.credits}</TableCell>
-                      <TableCell>{data.grades}</TableCell>
+                      <TableCell>{data.grade ? data.grade : "-"}</TableCell>
                       <TableCell>{data.type}</TableCell>
-                      <TableCell>{data.prerequisite}</TableCell>
-                      <TableCell>{data.status}</TableCell>
+                      <TableCell>
+                        {data.prerequisite ? data.prerequisite : "-"}
+                      </TableCell>
+                      <TableCell>{data.status ? data.status : "-"}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -147,21 +149,6 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
     setShowPreviewPopup(false);
   };
 
-  // useEffect(() => {
-  //   const handleCheckboxChange = () => {
-  //     if (selectedRows.length > 0) {
-  //       setDivVisible(true);
-  //     } else {
-  //       setDivVisible(false);
-  //     }
-  //   };
-
-  //   window.addEventListener("click", handleCheckboxChange);
-
-  //   return () => {
-  //     window.removeEventListener("click", handleCheckboxChange);
-  //   };
-  // }, [selectedRows]);
   useEffect(() => {
     const handleCheckboxChange = () => {
       if (selectedRows.length > 0) {
@@ -458,7 +445,7 @@ const PreRegistrationSubmission = ({}) => {
           <TableCell>{value.code}</TableCell>
           <TableCell>{value.name}</TableCell>
           <TableCell>{value.credits}</TableCell>
-          <TableCell>{value.grade ? value.grade : "pass"}</TableCell>
+          <TableCell>{value.grade ? value.grade : "-"}</TableCell>
           <TableCell>{value.type}</TableCell>
           <TableCell sx={{ width: "400px" }}>
             {value.prerequisite === null || value.prerequisite === ""

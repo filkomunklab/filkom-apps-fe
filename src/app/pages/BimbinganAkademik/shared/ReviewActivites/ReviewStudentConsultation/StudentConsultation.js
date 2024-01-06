@@ -38,7 +38,8 @@ const StudentConsultation = () => {
         const includesSearch = studentFullName.includes(
           searchValue.toLowerCase()
         );
-        return includesSearch;
+
+        return includesSearch && item.status === "Waiting";
       });
 
       console.log("Filtered data:", filteredData);
@@ -168,63 +169,59 @@ const StudentConsultation = () => {
             </TableHead>
             <TableBody>
               {dataWaiting && dataWaiting.length > 0 ? (
-                dataWaiting.map((value, index) =>
-                  value.status === "Waiting" ? (
-                    <TableRow
-                      key={value.id}
-                      onClick={() => handleNavigate(value)}
+                dataWaiting.map((value, index) => (
+                  <TableRow
+                    key={value.id}
+                    onClick={() => handleNavigate(value)}
+                    sx={{
+                      ":hover": {
+                        cursor: "pointer",
+                        backgroundColor: "#338CFF21",
+                        transition: "0.3s",
+                        transitionTimingFunction: "ease-in-out",
+                        transitionDelay: "0s",
+                        transitionProperty: "all",
+                      },
+                    }}
+                  >
+                    <TableCell
+                      align="right"
+                      sx={{ width: "80px", paddingRight: "17px" }}
+                    >
+                      {index + 1}
+                    </TableCell>
+                    <TableCell sx={{ width: "180px", paddingLeft: "17px" }}>
+                      {new Date(value.createdAt).toLocaleDateString("en-US", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </TableCell>
+                    <TableCell sx={{ width: "245px" }}>
+                      {value.student_name}
+                    </TableCell>
+                    <TableCell sx={{ width: "140px" }}>{value.topic}</TableCell>
+                    <TableCell
                       sx={{
-                        ":hover": {
-                          cursor: "pointer",
-                          backgroundColor: "#338CFF21",
-                          transition: "0.3s",
-                          transitionTimingFunction: "ease-in-out",
-                          transitionDelay: "0s",
-                          transitionProperty: "all",
-                        },
+                        maxWidth: "150px",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
                       }}
                     >
-                      <TableCell
-                        align="right"
-                        sx={{ width: "80px", paddingRight: "17px" }}
-                      >
-                        {index + 1}
-                      </TableCell>
-                      <TableCell sx={{ width: "180px", paddingLeft: "17px" }}>
-                        {new Date(value.createdAt).toLocaleDateString("en-US", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </TableCell>
-                      <TableCell sx={{ width: "245px" }}>
-                        {value.student_name}
-                      </TableCell>
-                      <TableCell sx={{ width: "140px" }}>
-                        {value.topic}
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          maxWidth: "150px",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {value.description}
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          color: "#FFCC00",
-                          width: "100px",
-                          align: "left",
-                        }}
-                      >
-                        {value.status}
-                      </TableCell>
-                    </TableRow>
-                  ) : null
-                )
+                      {value.description}
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        color: "#FFCC00",
+                        width: "100px",
+                        align: "left",
+                      }}
+                    >
+                      {value.status}
+                    </TableCell>
+                  </TableRow>
+                ))
               ) : (
                 <TableRow>
                   <TableCell colSpan={6}>No data available</TableCell>

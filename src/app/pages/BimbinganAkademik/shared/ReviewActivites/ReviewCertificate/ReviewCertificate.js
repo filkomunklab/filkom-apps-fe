@@ -87,7 +87,7 @@ const ReviewCertificate = () => {
         id,
       } = certificateDetailsResult.data.data;
       navigate(
-        `${pathh}${value.certificateId}`,
+        `${pathh}${value.id}`,
         {
           state: {
             certificateDetails: {

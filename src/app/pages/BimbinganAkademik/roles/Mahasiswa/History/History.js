@@ -83,7 +83,7 @@ const History = () => {
       );
 
       const resultPreregis = await axios.get(
-        `${BASE_URL_API}/pre-regist/list-for-student/${nim}`
+        `${BASE_URL_API}/pre-regist/history-for-student/${nim}`
         // {  headers,}
       );
 
@@ -101,8 +101,11 @@ const History = () => {
       const { status: gradeStatus, data: gradeData } = resultGrade.data;
 
       if (consultationStatus === "OK") {
-        console.log("ini isi result.data dalam status ok", consultationData);
-        setDataConsultation(consultationData);
+        const filteredConsultationData = consultationData.filter(
+          (value) => value.status === "Complete"
+        );
+
+        setDataConsultation(filteredConsultationData);
       } else {
         console.log(resultConsultation);
         console.log(resultConsultation.data);
@@ -175,7 +178,7 @@ const History = () => {
   });
 
   dataPreregis.forEach((value) => {
-    const date = new Date(value.approveDate).toLocaleDateString("en-US", {
+    const date = new Date(value.submitDate).toLocaleDateString("en-US", {
       weekday: "long",
       year: "numeric",
       month: "short",
@@ -266,6 +269,7 @@ const History = () => {
         approvalDate,
         title,
         id,
+        comments,
       } = certificateDetailsResult.data.data;
       navigate(
         `${pathh}${value.id}`,
@@ -286,6 +290,7 @@ const History = () => {
               title: title,
               id: id,
               approvalDate: approvalDate,
+              comments: comments,
             },
           },
         },
@@ -309,9 +314,9 @@ const History = () => {
           preregisDetails: {
             id: detail.id,
             studentName:
-              detail.Student.firstName + " " + detail.Student.lastName,
+              detail.Student.lastName + ", " + detail.Student.firstName,
             supervisorName:
-              detail.Employee.firstName + " " + detail.Employee.lastName,
+              detail.Employee.lastName + ", " + detail.Employee.firstName,
             submitDate: detail.submitDate,
             approveDate: detail.approveDate,
             status: detail.status,
@@ -328,23 +333,28 @@ const History = () => {
   const handleNavigateGrade = async (value) => {
     try {
       const gradeDetailsResult = await axios.get(
-        `${BASE_URL_API}/transaction/submissionDetail/${value.transactionId}`
+        `${BASE_URL_API}/transaction/submissionDetail/${value.id}`
       );
       const detail = gradeDetailsResult.data.data;
-      let path = "/bimbingan-akademik/history/grade";
-
-      navigate(`${path}`, {
+      let path = "/bimbingan-akademik/history/grade/";
+      console.log("isi detail", detail);
+      navigate(`${path}${value.id}`, {
         state: {
           gradeDetails: {
             studentName:
-              detail.Student.firstName + " " + detail.Student.lastName,
+              detail.Student.lastName + ", " + detail.Student.firstName,
             supervisorName:
-              detail.Employee.firstName + " " + detail.Employee.lastName,
-            submitedDate: detail.submitDate,
-            approveDate: detail.approveDate,
+              detail.Student.GuidanceClassMember.gudianceClass.teacher
+                .lastName +
+              ", " +
+              detail.Student.GuidanceClassMember.gudianceClass.teacher
+                .firstName,
+            submitedDate: detail.submitedDate,
             status: detail.status,
             semester: detail.semester,
             grades: detail.Grades,
+            approveDate: detail.approveDate,
+            comments: detail.comments,
           },
         },
       });
@@ -700,14 +710,24 @@ const History = () => {
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
 
-          {Object.entries(groupedDataPreregis)
-            .filter(([date, dataPreregis]) =>
-              dataPreregis.some(
-                (value) =>
-                  value.status === "APPROVED" || value.status === "REJECTED"
-              )
-            )
-            .map(([date, dataPreregis]) => (
+          {dataPreregis.length === 0 ? (
+            <Box
+              sx={{
+                height: "50px",
+                backgroundColor: "rgba(235, 235, 235, 1)",
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "10px",
+              }}
+            >
+              <Typography
+                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+              >
+                You don't have any pre-registration history
+              </Typography>
+            </Box>
+          ) : (
+            Object.entries(groupedDataPreregis).map(([date, dataPreregis]) => (
               <div key={date}>
                 <Box
                   sx={{
@@ -781,8 +801,280 @@ const History = () => {
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
                               >
-                                Preregistration Semester Genap/Ganjil tahun
-                                ajaran 2023/2024
+                                Preregistration Semester{" "}
+                                {value.PreRegistration.semester} tahun ajaran{" "}
+                                {value.PreRegistration.semesterPeriod}
+                              </Typography>
+                            </>
+                          }
+                        />
+                        <Box
+                          sx={{
+                            marginLeft: { xs: "auto", md: 0 },
+                            textAlign: "right",
+                          }}
+                        >
+                          <ListItemText
+                            secondary={
+                              <Typography
+                                sx={{
+                                  fontSize: { xs: "10px", md: "14px" },
+                                  color: "rgba(27, 43, 65, 0.69)",
+                                }}
+                              >
+                                {new Date(value.submitDate).toLocaleTimeString(
+                                  "en-US",
+                                  {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    hour12: true,
+                                  }
+                                )}
+                              </Typography>
+                            }
+                          />
+                        </Box>
+                      </ListItem>
+                      <Divider component="li" />
+                    </List>
+                  ))}
+              </div>
+            ))
+          )}
+          <Typography sx={{ padding: "20px" }}></Typography>
+        </div>
+      </TabPanel>
+
+      <TabPanel value={value} index={2}>
+        <div>
+          <Typography sx={{ padding: "10px" }}></Typography>
+
+          {dataCertificate.length === 0 ? (
+            <Box
+              sx={{
+                height: "50px",
+                backgroundColor: "rgba(235, 235, 235, 1)",
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "10px",
+              }}
+            >
+              <Typography
+                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+              >
+                You don't have any certificate history
+              </Typography>
+            </Box>
+          ) : (
+            Object.entries(groupedDataCertificate).map(
+              ([date, dataCertificate]) => (
+                <div key={date}>
+                  <Box
+                    sx={{
+                      height: "50px",
+                      backgroundColor: "rgba(235, 235, 235, 1)",
+                      display: "flex",
+                      alignItems: "center",
+                      paddingLeft: "10px",
+                    }}
+                  >
+                    <Typography
+                      sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+                    >
+                      {formatDate(date)}
+                    </Typography>
+                  </Box>
+                  {dataCertificate &&
+                    dataCertificate.map((value, index) => (
+                      <List
+                        sx={{
+                          width: "100%",
+                          maxWidth: 2000,
+                          bgcolor: "background.paper",
+                          paddingTop: "0px",
+                          paddingBottom: "0px",
+                          ":hover": {
+                            cursor: "pointer",
+                            backgroundColor: "#338CFF21",
+                            transition: "0.3s",
+                            transitionTimingFunction: "ease-in-out",
+                            transitionDelay: "0s",
+                            transitionProperty: "all",
+                          },
+                        }}
+                      >
+                        <ListItem
+                          sx={{ padding: "10px 50px" }}
+                          onClick={() => {
+                            handleNavigateCertificate(value);
+                            // console.log("ini isi dari value certi: ", value);
+                          }}
+                        >
+                          <ListItemText
+                            primary={
+                              <Chip
+                                size={"small"}
+                                label={"Certificate"}
+                                sx={{
+                                  backgroundColor: "rgba(255, 204, 0, 0.1)",
+                                  color: "rgba(152, 82, 17, 1)",
+                                }}
+                              />
+                            }
+                            secondary={
+                              <>
+                                <Typography
+                                  sx={{
+                                    color: "rgba(0, 0, 0, 1)",
+                                    paddingLeft: "8px",
+                                    paddingTop: "5px",
+                                    fontSize: { xs: "12px", md: "14px" },
+                                  }}
+                                >
+                                  {value.student.lastName},{" "}
+                                  {value.student.firstName}
+                                </Typography>
+                                <Typography
+                                  sx={{
+                                    paddingLeft: "8px",
+                                    fontSize: { xs: "12px", md: "14px" },
+                                  }}
+                                >
+                                  {value.title}
+                                </Typography>
+                              </>
+                            }
+                          />
+                          <Box
+                            sx={{
+                              marginLeft: { xs: "auto", md: 0 },
+                              textAlign: "right",
+                            }}
+                          >
+                            <ListItemText
+                              secondary={
+                                <Typography
+                                  sx={{
+                                    fontSize: { xs: "10px", md: "14px" },
+                                    color: "rgba(27, 43, 65, 0.69)",
+                                  }}
+                                >
+                                  {new Date(
+                                    value.approvalDate
+                                  ).toLocaleTimeString("en-US", {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    hour12: true,
+                                  })}
+                                </Typography>
+                              }
+                            />
+                          </Box>
+                        </ListItem>
+                        <Divider component="li" />
+                      </List>
+                    ))}
+                </div>
+              )
+            )
+          )}
+          <Typography sx={{ padding: "20px" }}></Typography>
+        </div>
+      </TabPanel>
+
+      <TabPanel value={value} index={3}>
+        <div>
+          <Typography sx={{ padding: "10px" }}></Typography>
+          {dataGrade.length === 0 ? (
+            <Box
+              sx={{
+                height: "50px",
+                backgroundColor: "rgba(235, 235, 235, 1)",
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "10px",
+              }}
+            >
+              <Typography
+                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+              >
+                You don't have any grade history
+              </Typography>
+            </Box>
+          ) : (
+            Object.entries(groupedDataGrade).map(([date, dataGrade]) => (
+              <div key={date}>
+                <Box
+                  sx={{
+                    height: "50px",
+                    backgroundColor: "rgba(235, 235, 235, 1)",
+                    display: "flex",
+                    alignItems: "center",
+                    paddingLeft: "10px",
+                  }}
+                >
+                  <Typography
+                    sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+                  >
+                    {formatDate(date)}
+                  </Typography>
+                </Box>
+                {dataGrade &&
+                  dataGrade.map((value, index) => (
+                    <List
+                      sx={{
+                        width: "100%",
+                        maxWidth: 2000,
+                        bgcolor: "background.paper",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        ":hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#338CFF21",
+                          transition: "0.3s",
+                          transitionTimingFunction: "ease-in-out",
+                          transitionDelay: "0s",
+                          transitionProperty: "all",
+                        },
+                      }}
+                    >
+                      <ListItem
+                        sx={{ padding: "10px 50px" }}
+                        onClick={() => {
+                          handleNavigateGrade(value);
+                        }}
+                      >
+                        <ListItemText
+                          primary={
+                            <Chip
+                              size={"small"}
+                              label={"Grade"}
+                              sx={{
+                                backgroundColor: "rgba(101, 10, 204, 0.1)",
+                                color: "rgba(101, 10, 204, 1)",
+                              }}
+                            />
+                          }
+                          secondary={
+                            <>
+                              <Typography
+                                sx={{
+                                  color: "rgba(0, 0, 0, 1)",
+                                  paddingLeft: "8px",
+                                  paddingTop: "5px",
+                                  fontSize: { xs: "12px", md: "14px" },
+                                }}
+                              >
+                                {value.Student.lastName},{" "}
+                                {value.Student.firstName}
+                              </Typography>
+                              <Typography
+                                sx={{
+                                  paddingLeft: "8px",
+                                  fontSize: { xs: "12px", md: "14px" },
+                                }}
+                              >
+                                {value.semester}
                               </Typography>
                             </>
                           }
@@ -818,242 +1110,8 @@ const History = () => {
                     </List>
                   ))}
               </div>
-            ))}
-          <Typography sx={{ padding: "20px" }}></Typography>
-        </div>
-      </TabPanel>
-
-      <TabPanel value={value} index={2}>
-        <div>
-          <Typography sx={{ padding: "10px" }}></Typography>
-
-          {Object.entries(groupedDataCertificate).map(
-            ([date, dataCertificate]) => (
-              <div key={date}>
-                <Box
-                  sx={{
-                    height: "50px",
-                    backgroundColor: "rgba(235, 235, 235, 1)",
-                    display: "flex",
-                    alignItems: "center",
-                    paddingLeft: "10px",
-                  }}
-                >
-                  <Typography
-                    sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
-                  >
-                    {formatDate(date)}
-                  </Typography>
-                </Box>
-                {dataCertificate &&
-                  dataCertificate.map((value, index) => (
-                    <List
-                      sx={{
-                        width: "100%",
-                        maxWidth: 2000,
-                        bgcolor: "background.paper",
-                        paddingTop: "0px",
-                        paddingBottom: "0px",
-                        ":hover": {
-                          cursor: "pointer",
-                          backgroundColor: "#338CFF21",
-                          transition: "0.3s",
-                          transitionTimingFunction: "ease-in-out",
-                          transitionDelay: "0s",
-                          transitionProperty: "all",
-                        },
-                      }}
-                    >
-                      <ListItem
-                        sx={{ padding: "10px 50px" }}
-                        onClick={() => {
-                          handleNavigateCertificate(value);
-                          // console.log("ini isi dari value certi: ", value);
-                        }}
-                      >
-                        <ListItemText
-                          primary={
-                            <Chip
-                              size={"small"}
-                              label={"Certificate"}
-                              sx={{
-                                backgroundColor: "rgba(255, 204, 0, 0.1)",
-                                color: "rgba(152, 82, 17, 1)",
-                              }}
-                            />
-                          }
-                          secondary={
-                            <>
-                              <Typography
-                                sx={{
-                                  color: "rgba(0, 0, 0, 1)",
-                                  paddingLeft: "8px",
-                                  paddingTop: "5px",
-                                  fontSize: { xs: "12px", md: "14px" },
-                                }}
-                              >
-                                {value.student.lastName},
-                                {value.student.firstName}
-                              </Typography>
-                              <Typography
-                                sx={{
-                                  paddingLeft: "8px",
-                                  fontSize: { xs: "12px", md: "14px" },
-                                }}
-                              >
-                                {value.title}
-                              </Typography>
-                            </>
-                          }
-                        />
-                        <Box
-                          sx={{
-                            marginLeft: { xs: "auto", md: 0 },
-                            textAlign: "right",
-                          }}
-                        >
-                          <ListItemText
-                            secondary={
-                              <Typography
-                                sx={{
-                                  fontSize: { xs: "10px", md: "14px" },
-                                  color: "rgba(27, 43, 65, 0.69)",
-                                }}
-                              >
-                                {new Date(
-                                  value.approvalDate
-                                ).toLocaleTimeString("en-US", {
-                                  hour: "numeric",
-                                  minute: "numeric",
-                                  hour12: true,
-                                })}
-                              </Typography>
-                            }
-                          />
-                        </Box>
-                      </ListItem>
-                      <Divider component="li" />
-                    </List>
-                  ))}
-              </div>
-            )
+            ))
           )}
-          <Typography sx={{ padding: "20px" }}></Typography>
-        </div>
-      </TabPanel>
-
-      <TabPanel value={value} index={3}>
-        <div>
-          <Typography sx={{ padding: "10px" }}></Typography>
-          {Object.entries(groupedDataGrade).map(([date, dataGrade]) => (
-            <div key={date}>
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "10px",
-                }}
-              >
-                <Typography
-                  sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
-                >
-                  {formatDate(date)}
-                </Typography>
-              </Box>
-              {dataGrade &&
-                dataGrade.map((value, index) => (
-                  <List
-                    sx={{
-                      width: "100%",
-                      maxWidth: 2000,
-                      bgcolor: "background.paper",
-                      paddingTop: "0px",
-                      paddingBottom: "0px",
-                      ":hover": {
-                        cursor: "pointer",
-                        backgroundColor: "#338CFF21",
-                        transition: "0.3s",
-                        transitionTimingFunction: "ease-in-out",
-                        transitionDelay: "0s",
-                        transitionProperty: "all",
-                      },
-                    }}
-                  >
-                    <ListItem
-                      sx={{ padding: "10px 50px" }}
-                      onClick={() => {
-                        handleNavigateGrade(value);
-                      }}
-                    >
-                      <ListItemText
-                        primary={
-                          <Chip
-                            size={"small"}
-                            label={"Grade"}
-                            sx={{
-                              backgroundColor: "rgba(101, 10, 204, 0.1)",
-                              color: "rgba(101, 10, 204, 1)",
-                            }}
-                          />
-                        }
-                        secondary={
-                          <>
-                            <Typography
-                              sx={{
-                                color: "rgba(0, 0, 0, 1)",
-                                paddingLeft: "8px",
-                                paddingTop: "5px",
-                                fontSize: { xs: "12px", md: "14px" },
-                              }}
-                            >
-                              {value.Student.lastName},{" "}
-                              {value.Student.firstName}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                paddingLeft: "8px",
-                                fontSize: { xs: "12px", md: "14px" },
-                              }}
-                            >
-                              {value.semester}
-                            </Typography>
-                          </>
-                        }
-                      />
-                      <Box
-                        sx={{
-                          marginLeft: { xs: "auto", md: 0 },
-                          textAlign: "right",
-                        }}
-                      >
-                        <ListItemText
-                          secondary={
-                            <Typography
-                              sx={{
-                                fontSize: { xs: "10px", md: "14px" },
-                                color: "rgba(27, 43, 65, 0.69)",
-                              }}
-                            >
-                              {new Date(value.approveDate).toLocaleTimeString(
-                                "en-US",
-                                {
-                                  hour: "numeric",
-                                  minute: "numeric",
-                                  hour12: true,
-                                }
-                              )}
-                            </Typography>
-                          }
-                        />
-                      </Box>
-                    </ListItem>
-                    <Divider component="li" />
-                  </List>
-                ))}
-            </div>
-          ))}
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>
       </TabPanel>
@@ -1061,128 +1119,141 @@ const History = () => {
       <TabPanel value={value} index={4}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
-          {Object.entries(groupedDataConsultation)
-            .filter(
-              ([dateConsultation, dataConsultation]) =>
-                Array.isArray(dataConsultation) &&
-                dataConsultation.some((value) => value.status === "Complete")
-            )
-            .map(([dateConsultation, dataConsultation]) => (
-              <div key={dateConsultation}>
-                <Box
-                  sx={{
-                    height: "50px",
-                    backgroundColor: "rgba(235, 235, 235, 1)",
-                    display: "flex",
-                    alignItems: "center",
-                    paddingLeft: "10px",
-                  }}
-                >
-                  <Typography
-                    sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+          {dataConsultation.length === 0 ? (
+            <Box
+              sx={{
+                height: "50px",
+                backgroundColor: "rgba(235, 235, 235, 1)",
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "10px",
+              }}
+            >
+              <Typography
+                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+              >
+                You don't have any consultation history
+              </Typography>
+            </Box>
+          ) : (
+            Object.entries(groupedDataConsultation).map(
+              ([dateConsultation, dataConsultation]) => (
+                <div key={dateConsultation}>
+                  <Box
+                    sx={{
+                      height: "50px",
+                      backgroundColor: "rgba(235, 235, 235, 1)",
+                      display: "flex",
+                      alignItems: "center",
+                      paddingLeft: "10px",
+                    }}
                   >
-                    {formatDate(dateConsultation)}
-                  </Typography>
-                </Box>
-                {dataConsultation &&
-                  dataConsultation.map((value, index) =>
-                    value.status === "Complete" ? (
-                      <List
-                        sx={{
-                          width: "100%",
-                          maxWidth: 2000,
-                          bgcolor: "background.paper",
-                          paddingTop: "0px",
-                          paddingBottom: "0px",
-                          ":hover": {
-                            cursor: "pointer",
-                            backgroundColor: "#338CFF21",
-                            transition: "0.3s",
-                            transitionTimingFunction: "ease-in-out",
-                            transitionDelay: "0s",
-                            transitionProperty: "all",
-                          },
-                        }}
-                      >
-                        <ListItem
-                          sx={{ padding: "10px 50px" }}
-                          onClick={() => {
-                            handleNavigateConsultation(value);
+                    <Typography
+                      sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+                    >
+                      {formatDate(dateConsultation)}
+                    </Typography>
+                  </Box>
+                  {dataConsultation &&
+                    dataConsultation.map((value, index) =>
+                      value.status === "Complete" ? (
+                        <List
+                          sx={{
+                            width: "100%",
+                            maxWidth: 2000,
+                            bgcolor: "background.paper",
+                            paddingTop: "0px",
+                            paddingBottom: "0px",
+                            ":hover": {
+                              cursor: "pointer",
+                              backgroundColor: "#338CFF21",
+                              transition: "0.3s",
+                              transitionTimingFunction: "ease-in-out",
+                              transitionDelay: "0s",
+                              transitionProperty: "all",
+                            },
                           }}
                         >
-                          <ListItemText
-                            primary={
-                              <Chip
-                                size={"small"}
-                                label={"Consultation"}
-                                sx={{
-                                  backgroundColor: "rgba(223, 11, 146, 0.1)",
-                                  color: "rgba(223, 11, 146, 1)",
-                                }}
-                              />
-                            }
-                            secondary={
-                              <>
-                                <Typography
-                                  sx={{
-                                    color: "rgba(0, 0, 0, 1)",
-                                    paddingLeft: "8px",
-                                    paddingTop: "5px",
-                                    fontSize: { xs: "12px", md: "14px" },
-                                  }}
-                                >
-                                  To {value.receiver_name}
-                                </Typography>
-                                <Typography
-                                  sx={{
-                                    paddingLeft: "8px",
-                                    fontSize: { xs: "12px", md: "14px" },
-                                  }}
-                                >
-                                  {value.topic === "others" && "Others"}
-                                  {value.topic === "academic" && "Academic"}
-                                  {value.topic === "non-academic" &&
-                                    "Non-Academic"}
-                                  {value.status && ` - ${value.status}`}
-                                </Typography>
-                              </>
-                            }
-                          />
-                          <Box
-                            sx={{
-                              marginLeft: { xs: "auto", md: 0 },
-                              textAlign: "right",
+                          <ListItem
+                            sx={{ padding: "10px 50px" }}
+                            onClick={() => {
+                              handleNavigateConsultation(value);
                             }}
                           >
                             <ListItemText
-                              secondary={
-                                <Typography
+                              primary={
+                                <Chip
+                                  size={"small"}
+                                  label={"Consultation"}
                                   sx={{
-                                    fontSize: { xs: "10px", md: "14px" },
-                                    color: "rgba(27, 43, 65, 0.69)",
+                                    backgroundColor: "rgba(223, 11, 146, 0.1)",
+                                    color: "rgba(223, 11, 146, 1)",
                                   }}
-                                >
-                                  {new Date(value.createdAt).toLocaleTimeString(
-                                    "en-US",
-                                    {
+                                />
+                              }
+                              secondary={
+                                <>
+                                  <Typography
+                                    sx={{
+                                      color: "rgba(0, 0, 0, 1)",
+                                      paddingLeft: "8px",
+                                      paddingTop: "5px",
+                                      fontSize: { xs: "12px", md: "14px" },
+                                    }}
+                                  >
+                                    To {value.receiver_name}
+                                  </Typography>
+                                  <Typography
+                                    sx={{
+                                      paddingLeft: "8px",
+                                      fontSize: { xs: "12px", md: "14px" },
+                                    }}
+                                  >
+                                    {value.topic === "others" && "Others"}
+                                    {value.topic === "academic" && "Academic"}
+                                    {value.topic === "non-academic" &&
+                                      "Non-Academic"}
+                                    {value.status && ` - ${value.status}`}
+                                  </Typography>
+                                </>
+                              }
+                            />
+                            <Box
+                              sx={{
+                                marginLeft: { xs: "auto", md: 0 },
+                                textAlign: "right",
+                              }}
+                            >
+                              <ListItemText
+                                secondary={
+                                  <Typography
+                                    sx={{
+                                      fontSize: { xs: "10px", md: "14px" },
+                                      color: "rgba(27, 43, 65, 0.69)",
+                                    }}
+                                  >
+                                    {new Date(
+                                      value.createdAt
+                                    ).toLocaleTimeString("en-US", {
                                       hour: "numeric",
                                       minute: "numeric",
                                       hour12: true,
-                                    }
-                                  )}
-                                </Typography>
-                              }
-                            />
-                          </Box>
-                        </ListItem>
-                        <Divider component="li" />
-                      </List>
-                    ) : (
-                      ""
-                    )
-                  )}
-              </div>
-            ))}
+                                    })}
+                                  </Typography>
+                                }
+                              />
+                            </Box>
+                          </ListItem>
+                          <Divider component="li" />
+                        </List>
+                      ) : (
+                        ""
+                      )
+                    )}
+                </div>
+              )
+            )
+          )}
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>
       </TabPanel>

@@ -52,7 +52,6 @@ const ReviewPreRegistrationStudent = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const navigate = useNavigate();
   const [commentText, setCommentText] = useState("");
-  let totalCredit = 0;
 
   const { state } = useLocation();
   const preregisDetails = state ? state.preregisDetails : {};
@@ -64,6 +63,7 @@ const ReviewPreRegistrationStudent = () => {
     status,
     listSubjectPreregis,
     curriculum,
+    totalCredits,
   } = preregisDetails;
 
   const handleSubmitPreregis = async () => {
@@ -103,9 +103,6 @@ const ReviewPreRegistrationStudent = () => {
     setIsApprove(!isApprove);
   };
 
-  for (const data of listSubjectPreregis) {
-    totalCredit += data.subject.credits;
-  }
   const renderRows = () => {
     const rows = [];
     let currentSemester = null;
@@ -321,7 +318,7 @@ const ReviewPreRegistrationStudent = () => {
         </TableContainer>
       </Grid>
       <Typography variant="h5" sx={{ my: 5 }}>
-        Total Credits: {totalCredit} credits
+        Total Credits: {totalCredits} credits
       </Typography>
       <Box component="form" noValidate autoComplete="off">
         <Typography variant="h5">Comments</Typography>

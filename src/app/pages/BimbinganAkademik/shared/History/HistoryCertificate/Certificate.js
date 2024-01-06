@@ -39,7 +39,7 @@ const HistoryCertificate = () => {
     id,
   } = certificateDetails;
   const pdfURL = pathFile;
-
+  console.log("comment", comments);
   const handleBreadcrumbsClick = () => {
     const { role } = JSON.parse(localStorage.getItem("user"));
     let path = "";
@@ -215,6 +215,7 @@ const HistoryCertificate = () => {
               </Grid>
             </Grid>
           </Grid>
+
           {comments && comments.trim() !== "" && (
             <Grid item xs={12} md={11.5} xl={11.5} paddingTop={2}>
               <Box component="form" noValidate autoComplete="off">

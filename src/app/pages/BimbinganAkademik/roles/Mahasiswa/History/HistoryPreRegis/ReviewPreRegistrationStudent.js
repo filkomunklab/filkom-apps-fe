@@ -13,7 +13,7 @@ import {
   Typography,
   experimentalStyled as styled,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -26,7 +26,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const ReviewPreRegistrationStudent = () => {
-  const [commentText, setCommentText] = useState("");
   let totalCredit = 0;
 
   const { state } = useLocation();
@@ -47,16 +46,7 @@ const ReviewPreRegistrationStudent = () => {
   }
 
   const handleBreadcrumbsClick = () => {
-    const { role } = JSON.parse(localStorage.getItem("user"));
-    let path = "";
-
-    if (role.includes("DEKAN")) {
-      path = "/bimbingan-akademik/dekan/history";
-    } else if (role.includes("KAPRODI")) {
-      path = "/bimbingan-akademik/kaprodi/history";
-    } else {
-      path = "/bimbingan-akademik/dosen-pembimbing/history";
-    }
+    let path = "/bimbingan-akademik/history";
     return <StyledLink to={path}>History</StyledLink>;
   };
 

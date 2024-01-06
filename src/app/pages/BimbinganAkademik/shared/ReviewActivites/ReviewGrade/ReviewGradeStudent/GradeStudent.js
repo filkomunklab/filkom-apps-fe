@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   Container,
   Typography,
@@ -16,20 +15,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TablePagination,
   Paper,
+  CircularProgress,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 import Div from "@jumbo/shared/Div";
-
-const data = Array.from(Array(8).keys()).map((item, index) => ({
-  subject_name: `Keterampilan Komputer Dasar/ Basic Computer Skill`,
-  parallel: `C`,
-  lecturer: `Sompie, Dimitry Virgy`,
-  grade: `94`,
-  grade_in_alphabet: `A`,
-  retrieval_to: `1`,
-}));
 
 const style = {
   position: "absolute",
@@ -37,8 +30,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 402,
-  bgcolor: "background.paper",
-  border: "1px solid #000",
+  bgcolor: "white",
   borderRadius: 2,
   boxShadow: 24,
   overflow: "hidden",
@@ -57,8 +49,24 @@ const GradeStudent = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isReject, setIsReject] = useState(false);
   const [isApprove, setIsApprove] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const navigate = useNavigate();
+  const [commentText, setCommentText] = useState("");
+
+  const { state } = useLocation();
+  const gradeDetails = state ? state.gradeDetails : {};
+  const {
+    id,
+    studentName,
+    supervisorName,
+    submitedDate,
+    status,
+    semester,
+    grades,
+  } = gradeDetails;
+  console.log("ini grade detail", gradeDetails);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -69,8 +77,25 @@ const GradeStudent = () => {
     setPage(0);
   };
 
-  const handleSubmit = () => {
-    setIsModalVisible(!isModalVisible);
+  const handleSubmitGrade = async () => {
+    setLoading(true);
+    try {
+      setIsModalVisible(!isModalVisible);
+      const bodyData = {
+        status: isApprove ? "APPROVED" : "REJECTED",
+        comments: commentText || null,
+      };
+      await axios.put(
+        `${BASE_URL_API}/transaction/grades/approval/${id}`,
+        bodyData
+      );
+      setLoading(false);
+      let path = "/bimbingan-akademik/kaprodi/review-activities/grade";
+      navigate(path);
+    } catch (error) {
+      setLoading(false);
+      console.error("Error completing status:", error);
+    }
   };
 
   const handleReject = () => {
@@ -80,47 +105,34 @@ const GradeStudent = () => {
     setIsApprove(!isApprove);
   };
 
-  const handleClick = (event) => {
-    event.preventDefault();
+  const handleBreadcrumbsClick = () => {
+    let path = "/bimbingan-akademik/kaprodi/review-activities/grade";
+    return <StyledLink to={path}>Review Grades</StyledLink>;
   };
-
-  const TableHeading = ({ index }) => {
-    const style = { fontWeight: 400 };
-    return (
-      <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-        <TableCell sx={[style]}>Number</TableCell>
-        <TableCell sx={[style]}>Subject Name</TableCell>
-        <TableCell sx={[style]}>Parallel</TableCell>
-        <TableCell sx={[style]}>Lecturer</TableCell>
-        <TableCell sx={[style]}>Grade</TableCell>
-        <TableCell sx={[style]}>Retrieval to-</TableCell>
-      </TableRow>
-    );
-  };
-
-  const TableItem = ({ item, index }) => {
-    return (
-      <TableRow>
-        <TableCell>{index + 1}</TableCell>
-        <TableCell>{item.subject_name}</TableCell>
-        <TableCell>{item.parallel}</TableCell>
-        <TableCell>{item.lecturer}</TableCell>
-        <TableCell>{item.grade}</TableCell>
-        <TableCell>{item.retrieval_to}</TableCell>
-      </TableRow>
-    );
-  };
-
   return (
     <Div>
-      <Div role="presentation" onClick={handleClick}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/kaprodi/review-activities/grade">
-            Review Grade
-          </StyledLink>
-          <Typography color="text.primary">Grade</Typography>
-        </Breadcrumbs>
-      </Div>
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(34, 34, 34, 0.7)",
+            zIndex: 2003,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )}
+      <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
+        {handleBreadcrumbsClick()}
+        <Typography color="text.primary">Grade</Typography>
+      </Breadcrumbs>
       <Typography
         fontSize={"24px"}
         fontWeight="500"
@@ -129,158 +141,120 @@ const GradeStudent = () => {
         Student Grades
       </Typography>
       <Grid container spacing={2}>
-        <Grid item md={12} xl={12} id="detail-item">
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Title</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5" fontWeight={500}>
-                  Menang Lomba Desan Prototype
-                </Typography>
-              </Grid>
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={4} md={3} xl={2}>
+              <Typography variant="h5">Student Name</Typography>
+            </Grid>
+            <Grid item xs={1} xl={"auto"}>
+              <Typography variant="h5">:</Typography>
+            </Grid>
+            <Grid item xs={7} paddingLeft={1}>
+              <Typography variant="h5">{studentName}</Typography>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Student Name</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">Awuy, Diany Mariska</Typography>
-              </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={4} md={3} xl={2}>
+              <Typography variant="h5">Supervisor Name</Typography>
+            </Grid>
+            <Grid item xs={1} xl={"auto"}>
+              <Typography variant="h5">:</Typography>
+            </Grid>
+            <Grid item xs={7} paddingLeft={1}>
+              <Typography variant="h5">{supervisorName}</Typography>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Supervisor Name</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">Dengah, Mesakh Leonardo</Typography>
-              </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={4} md={3} xl={2}>
+              <Typography variant="h5">Semester</Typography>
+            </Grid>
+            <Grid item xs={1} xl={"auto"}>
+              <Typography variant="h5">:</Typography>
+            </Grid>
+            <Grid item xs={7} paddingLeft={1}>
+              <Typography variant="h5">{semester}</Typography>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Submission Date</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">November 14, 2023</Typography>
-              </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={4} md={3} xl={2}>
+              <Typography variant="h5">Submission Date</Typography>
+            </Grid>
+            <Grid item xs={1} xl={"auto"}>
+              <Typography variant="h5">:</Typography>
+            </Grid>
+            <Grid item xs={7} paddingLeft={1}>
+              <Typography variant="h5">
+                {new Date(submitedDate).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  day: "numeric",
+                  month: "long",
+                })}
+              </Typography>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Approval Date</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">-</Typography>
-              </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item xs={4} md={3} xl={2}>
+              <Typography variant="h5">Status</Typography>
             </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Category</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">Local</Typography>
-              </Grid>
+            <Grid item xs={1} xl={"auto"}>
+              <Typography variant="h5">:</Typography>
             </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Status</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5" sx={{ color: "#FFCC00" }}>
-                  Waiting
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Descriptions</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5" sx={{ textAlign: "justify" }}>
-                  Saya mengikuti lomba desain prototype website kampus yang
-                  diselenggarakan oleh Fakultas Ilmu Komputer.
-                </Typography>
-              </Grid>
+            <Grid item xs={7} paddingLeft={1}>
+              <Typography variant="h5" sx={{ color: "#FFCC00" }}>
+                {status.charAt(0) + status.slice(1).toLowerCase()}
+              </Typography>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={12} paddingTop={2}>
-        <TableContainer
-          sx={{
-            maxHeight: 640,
-          }}
-          component={Paper}
-        >
-          <Table stickyHeader>
+      <Grid item xs={12} paddingTop={4}>
+        <TableContainer component={Paper}>
+          <Table>
             <TableHead>
-              <TableHeading />
+              <TableRow sx={{ backgroundColor: "#1A38601A" }}>
+                <TableCell>No</TableCell>
+                <TableCell>Subject Name</TableCell>
+                <TableCell>Grade</TableCell>
+                <TableCell>Lecturer</TableCell>
+                <TableCell>Description</TableCell>
+              </TableRow>
             </TableHead>
             <TableBody>
-              {data
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem item={item} index={index} key={index} />
-                ))}
+              {grades.map((data, index) => (
+                <TableRow key={index}>
+                  <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
+                  <TableCell sx={{ width: "40px" }}>
+                    {data.subjectName}
+                  </TableCell>
+                  <TableCell sx={{ width: "40px" }}>{data.grades}</TableCell>
+                  <TableCell sx={{ width: "40px" }}>{data.lecturer}</TableCell>
+                  <TableCell sx={{ width: "40px" }}>
+                    {data.description || "-"}
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          component={"div"}
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
       </Grid>
       <Box component="form" noValidate autoComplete="off" sx={{ marginTop: 5 }}>
         <Typography variant="h6">Comments</Typography>
         <TextField
           id="outlined-multiline-static"
-          placeholder="Add comment"
+          placeholder="Add comment here (Optional)"
           multiline
-          minRows={4}
           fullWidth
+          minRows={3}
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
         />
       </Box>
       <Div
@@ -293,27 +267,16 @@ const GradeStudent = () => {
         }}
       >
         <Button
-          loading
           variant="contained"
           color="error"
-          sx={{
-            borderRadius: 50,
-            textTransform: "capitalize",
-            width: "152px",
-          }}
+          sx={{ borderRadius: 50, textTransform: "capitalize", width: "152px" }}
           onClick={handleReject}
         >
           Reject
         </Button>
         <Button
-          loading
           variant="contained"
-          //   color="success"
-          sx={{
-            borderRadius: 50,
-            textTransform: "capitalize",
-            width: "152px",
-          }}
+          sx={{ borderRadius: 50, textTransform: "capitalize", width: "152px" }}
           onClick={handleApprove}
         >
           Approve
@@ -327,7 +290,7 @@ const GradeStudent = () => {
           <Box sx={style}>
             <Div sx={{ py: 2, px: 3 }}>
               <Typography id="modal-modal-title" variant="h3" color={`#0A0A0A`}>
-                Reject this Student Certificate?
+                Reject this grade submission?
               </Typography>
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 Please remember to leave comments for the student regarding the
@@ -355,7 +318,15 @@ const GradeStudent = () => {
               >
                 Cancel
               </Button>
-              <Button variant="contained" sx={{ textTransform: "capitalize" }}>
+              <Button
+                variant="contained"
+                color="error"
+                sx={{ textTransform: "capitalize" }}
+                onClick={() => {
+                  handleSubmitGrade();
+                  setIsReject(false);
+                }}
+              >
                 Submit
               </Button>
             </Div>
@@ -370,11 +341,11 @@ const GradeStudent = () => {
           <Box sx={style}>
             <Div sx={{ py: 2, px: 3 }}>
               <Typography id="modal-modal-title" variant="h3" color={`#0A0A0A`}>
-                Approve this Student Certificate?
+                Approve this submission grade?
               </Typography>
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Please note that agreeing to this certificate will save the data
-                for statistical analysis before making it available.
+                Please note that approving this grades will store the data for
+                statistical analysis before making it available.
               </Typography>
             </Div>
             <Div
@@ -398,7 +369,11 @@ const GradeStudent = () => {
               >
                 Cancel
               </Button>
-              <Button variant="contained" sx={{ textTransform: "capitalize" }}>
+              <Button
+                onClick={handleSubmitGrade}
+                variant="contained"
+                sx={{ textTransform: "capitalize" }}
+              >
                 Submit
               </Button>
             </Div>
