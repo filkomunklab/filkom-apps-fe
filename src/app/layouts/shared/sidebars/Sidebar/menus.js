@@ -1262,7 +1262,7 @@ export const adminMenus = [
         label: "Student Management",
         type: "nav-item",
         icon: <AccountBoxSharpIcon sx={{ fontSize: 20 }} />,
-        uri: "/account-management",
+        uri: "/student-management",
       },
     ],
   },

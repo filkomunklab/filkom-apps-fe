@@ -27,19 +27,26 @@ import LockResetTwoToneIcon from "@mui/icons-material/LockResetTwoTone";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CircularProgress from "@mui/material/CircularProgress";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 
 import {
-  AddEmployeeModal,
+  AddStudentModal,
   EditDataModal,
   DeleteDataModal,
-  ChangePasswordEmployeeModal,
+  ChangePasswordStudentModal,
 } from "./Components";
 
-const EmployeeManagement = () => {
-  const [openModalAddEmployee, setOpenModalAddEmployee] = React.useState(false);
+// Load the plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+const StudentManagement = () => {
+  const [openModalAddStudent, setOpenModalAddStudent] = React.useState(false);
   const [openModalEditData, setOpenModalEditData] = React.useState(false);
   const [openModalDeleteData, setOpenModalDeleteData] = React.useState(false);
   const [openModalChangePassword, setOpenModalChangePassword] =
@@ -50,20 +57,33 @@ const EmployeeManagement = () => {
   const [selectedMajor, setSelectedMajor] = React.useState("");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [employees, setEmployees] = React.useState([]);
+  const [students, setStudents] = React.useState([]);
   const [loadingTable, setLoadingTable] = React.useState(true);
-  const [employeesFromApi, setEmployeesFromApi] = React.useState([]);
+  const [studentsFromApi, setStudentsFromApi] = React.useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [curriculumList, setCurriculumList] = React.useState([]);
 
   React.useEffect(() => {
-    getDataEmployee();
+    setLoadingTable(true);
+    getDataStudent();
+    setLoadingTable(false);
+    getListCurriculum();
   }, []);
 
   React.useEffect(() => {
-    // setLoadingTable(true);
-    filterAndSetEmployees();
-    // setLoadingTable(false);
-  }, [searchTerm, selectedMajor, employeesFromApi]);
+    setLoadingTable(true);
+    filterAndSetStudents();
+    setLoadingTable(false);
+  }, [searchTerm, selectedMajor, studentsFromApi]);
+
+  const getListCurriculum = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL_API}/curriculum`);
+      setCurriculumList(response.data.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const handleClick = (event, item) => {
     setPassingdata(item);
@@ -86,17 +106,15 @@ const EmployeeManagement = () => {
     setPage(0);
   };
 
-  const getDataEmployee = async () => {
+  const getDataStudent = async () => {
     try {
-      setLoadingTable(true);
-      const response = await axios.get(`${BASE_URL_API}/employee`, {
+      const response = await axios.get(`${BASE_URL_API}/Student`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      setEmployees(response.data.data);
-      setLoadingTable(false);
-      setEmployeesFromApi(response.data.data);
+      setStudents(response.data.data);
+      setStudentsFromApi(response.data.data);
     } catch (error) {
       console.log(error.message);
     }
@@ -121,26 +139,24 @@ const EmployeeManagement = () => {
     }
   };
 
-  const convertArrayToString = (employee) => {
-    if (employee.role.length > 0) {
-      const roleString = employee.role.map((item) => item.role).join(", ");
+  const convertArrayToString = (student) => {
+    if (student.role.length > 0) {
+      const roleString = student.role.map((item) => item.role).join(", ");
       return roleString;
     } else {
       return "-";
     }
   };
 
-  const filterAndSetEmployees = () => {
-    setLoadingTable(true);
-    const filteredData = employeesFromApi.filter(
+  const filterAndSetStudents = () => {
+    const filteredData = studentsFromApi.filter(
       (item) =>
         (item.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
           item.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
           item.nik.includes(searchTerm)) &&
         (selectedMajor === "" || item.major === selectedMajor)
     );
-    setEmployees(filteredData);
-    setLoadingTable(false);
+    setStudents(filteredData);
   };
 
   const handleSearch = (event) => {
@@ -178,14 +194,14 @@ const EmployeeManagement = () => {
           variant="h1"
           sx={{ fontSize: "1.875rem", color: "#192434" }}
         >
-          Employee Management
+          Student Management
         </Typography>
 
         <Button
           variant="contained"
           startIcon={<AddIcon />}
           sx={{ borderRadius: "60px", width: "168px", height: "52px" }}
-          onClick={() => setOpenModalAddEmployee(true)}
+          onClick={() => setOpenModalAddStudent(true)}
         >
           <Typography
             sx={{
@@ -193,14 +209,14 @@ const EmployeeManagement = () => {
               textTransform: "capitalize",
             }}
           >
-            Add Employee
+            Add Student
           </Typography>
         </Button>
-        <AddEmployeeModal
-          openModalAddEmployee={openModalAddEmployee}
-          setOpenModalAddEmployee={setOpenModalAddEmployee}
-          setEmployees={setEmployees}
-          setEmployeesFromApi={setEmployeesFromApi}
+        <AddStudentModal
+          openModalAddStudent={openModalAddStudent}
+          setOpenModalAddStudent={setOpenModalAddStudent}
+          setStudents={setStudents}
+          setStudentsFromApi={setStudentsFromApi}
         />
       </Stack>
       <Box>
@@ -218,13 +234,13 @@ const EmployeeManagement = () => {
           }}
         >
           <Typography variant="h2" sx={{ fontSize: "24px" }}>
-            List Employees
+            List Students
           </Typography>
 
           <Stack direction="row" columnGap="12px" flexWrap="wrap" rowGap="8px">
             <TextField
               fullWidth
-              placeholder="Search by Name or NIK"
+              placeholder="Search by Name or NIM"
               variant="outlined"
               id="search-field"
               InputProps={{
@@ -312,20 +328,46 @@ const EmployeeManagement = () => {
                   <TableHead sx={{ backgroundColor: "#1A38601A" }}>
                     <TableRow>
                       <TableCell>No</TableCell>
-                      <TableCell>NIK</TableCell>
-                      <TableCell>NIDN</TableCell>
-                      <TableCell>Employee Name</TableCell>
-                      <TableCell>Degree</TableCell>
+                      <TableCell>NIM</TableCell>
+                      <TableCell>Registration Number</TableCell>
+                      <TableCell>Student Name</TableCell>
+                      <TableCell>Gender</TableCell>
+                      <TableCell sx={{ width: "150px" }}>
+                        Date Of Birth
+                      </TableCell>
                       <TableCell>Major</TableCell>
+                      <TableCell>Curriculum</TableCell>
+                      <TableCell>Religion</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell>Marital Status</TableCell>
+                      <TableCell>Arrival Year</TableCell>
+                      <TableCell>Graduate Year</TableCell>
                       <TableCell>Phone Number</TableCell>
-                      <TableCell>Email</TableCell>
-                      <TableCell>Roles</TableCell>
+                      <TableCell>Student Email</TableCell>
+                      <TableCell>Personal Email</TableCell>
+                      <TableCell>Blood Type</TableCell>
+                      <TableCell>High School Graduation</TableCell>
+                      <TableCell>Area Of Concentration</TableCell>
+                      <TableCell>Address</TableCell>
+                      <TableCell>Current Address</TableCell>
+                      <TableCell>Current Residence Status</TableCell>
+                      {/* =========================== */}
+                      <TableCell>Parent / Guardian Name</TableCell>
+                      <TableCell>Parent / Guardian Status</TableCell>
+                      <TableCell>Parent / Guardian Religion</TableCell>
+                      <TableCell>Parent / Guardian Relationship</TableCell>
+                      <TableCell>Parent / Guardian Address</TableCell>
+
+                      <TableCell>Parent / Guardian Education</TableCell>
+                      <TableCell>Parent / Guardian Email</TableCell>
+                      <TableCell>Parent / Guardian Phone Number</TableCell>
+                      <TableCell>Role</TableCell>
                       <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {employees &&
-                      employees
+                    {students &&
+                      students
                         .slice(
                           page * rowsPerPage,
                           page * rowsPerPage + rowsPerPage
@@ -340,17 +382,103 @@ const EmployeeManagement = () => {
                             <TableCell>
                               {index + 1 + page * rowsPerPage}
                             </TableCell>
-                            <TableCell>{item.nik}</TableCell>
-                            <TableCell>{item.nidn ? item.nidn : "-"}</TableCell>
+                            <TableCell>{item.nim}</TableCell>
+                            <TableCell>
+                              {item.reg_num ? item.reg_num : "-"}
+                            </TableCell>
                             <TableCell>
                               {item.lastName}, {item.firstName}
                             </TableCell>
-                            <TableCell>
-                              {item.degree ? item.degree : "-"}
+                            <TableCell>{item.gender}</TableCell>
+                            <TableCell sx={{ width: "150px" }}>
+                              {item.dateOfBirth
+                                ? dayjs(item.dateOfBirth)
+                                    .tz("Asia/Shanghai")
+                                    .format("DD-MM-YYYY")
+                                : "-"}
                             </TableCell>
                             <TableCell>{majorDescriber(item.major)}</TableCell>
-                            <TableCell>{item.phoneNum}</TableCell>
-                            <TableCell>{item.email}</TableCell>
+                            <TableCell>
+                              {item.curriculum
+                                ? `${item.curriculum.major} ${item.curriculum.year}`
+                                : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.religion ? item.religion : "-"}
+                            </TableCell>
+                            <TableCell>{item.status}</TableCell>
+                            <TableCell>
+                              {item.MaritalStatus ? item.MaritalStatus : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.arrivalYear ? item.arrivalYear : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.graduate_year ? item.graduate_year : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.phoneNo ? item.phoneNo : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.studentEmail ? item.studentEmail : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.personalEmail ? item.personalEmail : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.bloodType ? item.bloodType : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.highSchoolGrad ? item.highSchoolGrad : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.AreaOfConcentration
+                                ? item.AreaOfConcentration
+                                : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.address ? item.address : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.currentAddress ? item.currentAddress : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.currentResidenceStatus
+                                ? item.currentResidenceStatus
+                                : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.guardianName ? item.guardianName : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.guardianStatus ? item.guardianStatus : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.guardianReligion
+                                ? item.guardianReligion
+                                : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.familyRelation ? item.familyRelation : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.guardianAddress
+                                ? item.guardianAddress
+                                : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.guardianEducation
+                                ? item.guardianEducation
+                                : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.guardianEmail ? item.guardianEmail : "-"}
+                            </TableCell>
+                            <TableCell>
+                              {item.guardianPhoneNo
+                                ? item.guardianPhoneNo
+                                : "-"}
+                            </TableCell>
                             <TableCell>{convertArrayToString(item)}</TableCell>
                             <TableCell>
                               <IconButton onClick={(e) => handleClick(e, item)}>
@@ -448,7 +576,7 @@ const EmployeeManagement = () => {
               <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={employees.length}
+                count={students.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
@@ -458,17 +586,18 @@ const EmployeeManagement = () => {
               <EditDataModal
                 openModalEditData={openModalEditData}
                 setOpenModalEditData={setOpenModalEditData}
-                setEmployees={setEmployees}
-                setEmployeesFromApi={setEmployeesFromApi}
+                setStudents={setStudents}
+                setStudentsFromApi={setStudentsFromApi}
                 passingData={passingData}
+                curriculumList={curriculumList}
               />
               <DeleteDataModal
                 openModalDeleteData={openModalDeleteData}
                 setOpenModalDeleteData={setOpenModalDeleteData}
                 passingData={passingData}
-                setEmployees={setEmployees}
+                setStudents={setStudents}
               />
-              <ChangePasswordEmployeeModal
+              <ChangePasswordStudentModal
                 openModalChangePassword={openModalChangePassword}
                 setOpenModalChangePassword={setOpenModalChangePassword}
                 passingData={passingData}
@@ -481,4 +610,4 @@ const EmployeeManagement = () => {
   );
 };
 
-export default EmployeeManagement;
+export default StudentManagement;
