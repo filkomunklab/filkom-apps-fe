@@ -16,7 +16,7 @@ import GradeSubmission from "app/pages/BimbinganAkademik/roles/Mahasiswa/GradeSu
 import GradeSubmissionClosed from "app/pages/BimbinganAkademik/roles/Mahasiswa/GradeSubmission/GradeSubmissionClosed";
 import History from "app/pages/BimbinganAkademik/roles/Mahasiswa/History";
 import HistoryActivity from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HIstoryActivity/HistoryActivity";
-import HistoryGrade from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryGrade/WaitingHistoryGrade";
+import HistoryGrade from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryGrade/HistoryGrade";
 import HistoryPreRegistration from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryPreRegis/ReviewPreRegistrationStudent";
 import HistoryCertificate from "app/pages/BimbinganAkademik/roles/Mahasiswa/History/HistoryCertificate/Certificate";
 import PreRegistration from "app/pages/BimbinganAkademik/roles/Mahasiswa/PreRegistration";
@@ -53,7 +53,7 @@ const mahasiswaRoutes = [
     element: <Page component={Grades} />,
   },
   {
-    path: "/bimbingan-akademik/student-grade/:id/grade/semester/:number",
+    path: "/bimbingan-akademik/student-grade/:id",
     element: <Page component={StudentGrade} />,
   },
   {

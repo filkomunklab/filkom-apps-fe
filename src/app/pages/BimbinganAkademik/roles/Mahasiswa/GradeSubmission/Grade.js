@@ -15,10 +15,8 @@ const Grade = () => {
       const nim = JSON.parse(localStorage.getItem("user")).nim;
       const studentData = await axios.get(`${BASE_URL_API}/student/${nim}`);
       const major = studentData.data.data.major;
-      const result = await axios.get(
-        `${BASE_URL_API}/access/list/gradesAccess/${major}/`
-      );
-      const gradeData = result.data.data;
+      const result = await axios.get(`${BASE_URL_API}/access/isOpen/${major}/`);
+      const gradeData = result.data.data.isOpen;
       setDataGrade(gradeData);
 
       console.log("ini panjang gradedata", gradeData);
@@ -34,11 +32,7 @@ const Grade = () => {
 
   return (
     <div>
-      {dataGrade === null || dataGrade.length === 0 ? (
-        <GradeSubmissionClosed />
-      ) : (
-        <GradeSubmission />
-      )}
+      {dataGrade === false ? <GradeSubmissionClosed /> : <GradeSubmission />}
     </div>
   );
 };

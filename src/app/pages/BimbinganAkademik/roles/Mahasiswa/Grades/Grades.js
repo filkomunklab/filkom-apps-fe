@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Grid,
@@ -7,6 +7,9 @@ import {
   Stack,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
+import { useNavigate } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -31,14 +34,54 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const Grades = () => {
-  const semesterNames = [
-    { label: "Semester 1", value: 1 },
-    { label: "Semester 2", value: 2 },
-    { label: "Semester 3", value: 3 },
-    { label: "Semester 4", value: 4 },
-    { label: "Semester 5", value: 5 },
-  ];
-  const id = "105022010000";
+  const navigate = useNavigate();
+  const [semesterData, setSemesterData] = useState([]);
+
+  const getDataGrade = async () => {
+    try {
+      const nim = JSON.parse(localStorage.getItem("user")).nim;
+      const response = await axios.get(
+        `${BASE_URL_API}/transaction/semesterList/${nim}`
+      );
+      console.log("ini respnse", response);
+      const sortedData = response.data.data.sort((a, b) =>
+        a.semester.localeCompare(b.semester, undefined, { numeric: true })
+      );
+
+      const reversedData = sortedData.reverse();
+
+      setSemesterData(reversedData);
+    } catch (error) {
+      console.log(error.message);
+      console.log("ini error: ", error);
+    }
+  };
+
+  useEffect(() => {
+    getDataGrade();
+  }, []);
+  console.log("ini yg mo loop", semesterData);
+
+  const handleNavigateGrade = async (value) => {
+    try {
+      const gradeDetailsResult = await axios.get(
+        `${BASE_URL_API}/grades/semesterList/${value.id}`
+      );
+      const detail = gradeDetailsResult.data.data;
+      let path = `/bimbingan-akademik/student-grade/`;
+      console.log("isi detail", detail);
+      navigate(`${path}${value.id}`, {
+        state: {
+          gradeDetails: {
+            semester: detail.semester,
+            subject: detail.subject,
+          },
+        },
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div>
@@ -48,40 +91,47 @@ const Grades = () => {
             Student Grade
           </Typography>
         </Stack>
-        <Typography variant="h5">Select a semester to view grades.</Typography>
+
+        {semesterData.length === 0 ? (
+          <Typography variant="h5">You don't have a grade yet.</Typography>
+        ) : (
+          <Typography variant="h5">
+            Select a semester to view grades.
+          </Typography>
+        )}
+
         <Grid
           container
           spacing={{ xs: 2, md: 3 }}
           columns={{ xs: 4, sm: 8, md: 12 }}
         >
-          {semesterNames.reverse().map((semester, index) => (
+          {semesterData.map((value, index) => (
             <Grid item xs={2} sm={4} md={4} key={index}>
-              <Link
-                to={`/bimbingan-akademik/student-grade/${id}/grade/semester/${semester.value}`}
-                style={{ textDecoration: "none" }}
+              <Item
+                onClick={() => {
+                  handleNavigateGrade(value);
+                }}
               >
-                <Item>
-                  <Typography
-                    sx={{
-                      fontSize: "11px",
-                      fontWeight: "400",
-                      color: "rgba(27, 43, 65, 0.69)",
-                      textAlign: "left",
-                    }}
-                  >
-                    Student Grades
-                  </Typography>
-                  <Typography
-                    sx={{
-                      fontSize: "17px",
-                      fontWeight: "600",
-                      textAlign: "left",
-                    }}
-                  >
-                    {semester.label}
-                  </Typography>
-                </Item>
-              </Link>
+                <Typography
+                  sx={{
+                    fontSize: "11px",
+                    fontWeight: "400",
+                    color: "rgba(27, 43, 65, 0.69)",
+                    textAlign: "left",
+                  }}
+                >
+                  Student Grades
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "17px",
+                    fontWeight: "600",
+                    textAlign: "left",
+                  }}
+                >
+                  {value.semester}
+                </Typography>
+              </Item>
             </Grid>
           ))}
         </Grid>

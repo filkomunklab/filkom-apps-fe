@@ -47,9 +47,8 @@ import ViewConsultation from "app/pages/BimbinganAkademik/shared/CurrentActiviti
 import HistoryActivity from "app/pages/BimbinganAkademik/roles/Kaprodi/History/HIstoryActivity/HistoryActivity";
 import HistoryPreRegistration from "app/pages/BimbinganAkademik/shared/History/HistoryPreRegis/ReviewPreRegistrationStudent";
 import HistoryCertificate from "app/pages/BimbinganAkademik/shared/History/HistoryCertificate/Certificate";
-import HistoryGradeApproved from "app/pages/BimbinganAkademik/roles/Kaprodi/History/HistoryGrade/ApprovedHistoryGrade";
-import HistoryGradeRejected from "app/pages/BimbinganAkademik/roles/Kaprodi/History/HistoryGrade/RejectedHistoryGrade";
 import HistoryConsultationComplete from "app/pages/BimbinganAkademik/shared/History/HistoryConsultation/ConsultationComplete";
+import HistoryGrade from "app/pages/BimbinganAkademik/shared/History/HistoryGrade/HistoryGrade";
 import ReviewPreRegistration from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewPreRegistration/ReviewPreRegistration";
 import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewPreRegistration/ReviewPreRegistrationStudent/ReviewPreRegistrationStudent";
 import ReviewCertificate from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/ReviewCertificate";
@@ -159,12 +158,8 @@ const kepalaProgramStudiRoutes = [
     element: <Page component={HistoryCertificate} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/history/grade-approved",
-    element: <Page component={HistoryGradeApproved} />,
-  },
-  {
-    path: "/bimbingan-akademik/kaprodi/history/grade-rejected",
-    element: <Page component={HistoryGradeRejected} />,
+    path: "/bimbingan-akademik/kaprodi/history/grade/:id",
+    element: <Page component={HistoryGrade} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/history/consultation/:id",

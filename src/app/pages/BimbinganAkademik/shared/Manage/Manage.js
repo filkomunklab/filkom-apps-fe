@@ -5,6 +5,7 @@ import {
   Tabs,
   Typography,
   Grid,
+  Popover,
   TextField,
   Button,
   IconButton,
@@ -32,7 +33,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import CircularProgress from "@mui/material/CircularProgress";
-import { column } from "stylis";
+import { MoreVert } from "@mui/icons-material";
 
 const styleModal = {
   position: "absolute",
@@ -133,6 +134,8 @@ const Manage = () => {
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
   const [major, setMajor] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = React.useState(false);
 
   // const getMajor = async () => {
   //   try {
@@ -195,6 +198,27 @@ const Manage = () => {
       setDataGrades(filteredData);
     } catch (error) {
       console.log(error.message);
+    }
+  };
+  const handleClose = async (id) => {
+    try {
+      setLoading(true);
+      const currentItem = dataGrades.find((item) => item.id === id);
+
+      if (currentItem && currentItem.isOpen === false) {
+        setLoading(false);
+        alert("Already closed");
+        return;
+      }
+
+      const response = await axios.patch(`${BASE_URL_API}/access/close/${id}`);
+      console.log("hehe", response);
+
+      getDataGrades();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
     }
   };
 
@@ -961,6 +985,7 @@ const Manage = () => {
                       <TableCell>Year</TableCell>
                       <TableCell>Due Date Estimation</TableCell>
                       <TableCell>Status</TableCell>
+                      <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -1036,10 +1061,38 @@ const Manage = () => {
                           </TableCell>
                           <TableCell
                             sx={{
-                              width: "200px",
+                              width: "100px",
                             }}
                           >
                             {value.isOpen ? "Open" : "Closed"}
+                          </TableCell>
+                          <TableCell>
+                            <MoreVert
+                              aria-describedby={value.id}
+                              onClick={(e) => {
+                                setAnchorEl(e.currentTarget);
+                                setOpen(true);
+                              }}
+                            />
+                            <Popover
+                              id={value.id}
+                              anchorEl={anchorEl}
+                              open={open}
+                              onClose={() => setOpen(false)}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                            >
+                              <Button
+                                onClick={() => {
+                                  handleClose(value.id);
+                                  console.log("Button Clicked");
+                                }}
+                              >
+                                Close
+                              </Button>
+                            </Popover>
                           </TableCell>
                         </TableRow>
                       ))

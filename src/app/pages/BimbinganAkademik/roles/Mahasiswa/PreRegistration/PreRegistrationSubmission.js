@@ -547,7 +547,7 @@ const PreRegistrationSubmission = ({}) => {
             clash of course schedules and can plan lectures more effectively.
             <br />
             <br /> It must be noted that each student can only fill in
-            pre-registration courses limited to 20 credits. No more than that.
+            pre-registration courses limited to 23 credits. No more than that.
           </Typography>
         </Paper>
         <Typography
