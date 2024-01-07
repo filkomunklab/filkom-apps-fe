@@ -41,8 +41,8 @@ const HistoryGrade = () => {
   console.log("ini grade detail", gradeDetails);
 
   const handleBreadcrumbsClick = () => {
-    let path = "/bimbingan-akademik/current-activities";
-    return <StyledLink to={path}>Current Activities</StyledLink>;
+    let path = "/bimbingan-akademik/kaprodi/history";
+    return <StyledLink to={path}>History</StyledLink>;
   };
 
   return (

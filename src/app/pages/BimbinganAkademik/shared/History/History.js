@@ -361,7 +361,7 @@ const History = (props) => {
         `${BASE_URL_API}/transaction/submissionDetail/${value.id}`
       );
       const detail = gradeDetailsResult.data.data;
-      let path = "/bimbingan-akademik/history/grade/";
+      let path = "/bimbingan-akademik/kaprodi/history/grade/";
       console.log("isi detail", detail);
       navigate(`${path}${value.id}`, {
         state: {

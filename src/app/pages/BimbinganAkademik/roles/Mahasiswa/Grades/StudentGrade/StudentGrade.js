@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Typography,
   Table,
@@ -13,7 +13,7 @@ import {
   Paper,
   Stack,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -25,58 +25,92 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const StudentGrade = () => {
-  const handleClick = (event) => {
-    event.preventDefault();
+  const { state } = useLocation();
+  const gradeDetails = state ? state.gradeDetails : {};
+  const { semester, subject } = gradeDetails;
+  console.log("ini grade detail", gradeDetails);
+
+  const getLetterGrade = (grade) => {
+    if (grade >= 91) return { letter: "A", weight: 4.0 };
+    else if (grade >= 85) return { letter: "A-", weight: 3.7 };
+    else if (grade >= 82) return { letter: "B+", weight: 3.3 };
+    else if (grade >= 78) return { letter: "B", weight: 3.0 };
+    else if (grade >= 75) return { letter: "B-", weight: 2.7 };
+    else if (grade >= 70) return { letter: "C+", weight: 2.3 };
+    else if (grade >= 67) return { letter: "C", weight: 2.0 };
+    else if (grade >= 60) return { letter: "C-", weight: 1.7 };
+    else if (grade >= 50) return { letter: "D", weight: 1.0 };
+    else return { letter: "F", weight: 0.0 };
+  };
+
+  const handleBreadcrumbsClick = () => {
+    let path = "/bimbingan-akademik/student-grade";
+    return <StyledLink to={path}>Grades</StyledLink>;
   };
 
   return (
     <div>
-      <div role="presentation" onClick={handleClick}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/student-grade">
-            Student Grades
-          </StyledLink>
-          <Typography color="text.primary">Grade</Typography>
-        </Breadcrumbs>
-      </div>
-      <Stack gap={3} paddingTop={3}>
+      <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
+        {handleBreadcrumbsClick()}
+        <Typography color="text.primary">Student Grade</Typography>
+      </Breadcrumbs>
+      <Stack gap={3} paddingTop={2}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography variant="h1" fontWeight={500}>
-            Grade
+            Grade {semester}
           </Typography>
         </Stack>
-        <Typography variant="h5">Semester 1</Typography>
-        <Grid item xs={12}>
-          <TableContainer
-            sx={{
-              maxHeight: 640,
-            }}
-            component={Paper}
-          >
-            <Table stickyHeader>
+
+        <Grid item xs={12} paddingTop={1}>
+          <TableContainer component={Paper}>
+            <Table>
               <TableHead>
-                <TableHeading />
+                <TableRow sx={{ backgroundColor: "#1A38601A" }}>
+                  <TableCell>No</TableCell>
+                  <TableCell>Subject Name</TableCell>
+                  <TableCell>Grade</TableCell>
+                  <TableCell>Lecturer</TableCell>
+                  <TableCell>Description</TableCell>
+                </TableRow>
               </TableHead>
               <TableBody>
-                {[...Array(10)].map((item, index) => (
-                  <TableItem index={index} key={index} />
-                ))}
+                {subject &&
+                  subject.map((data, index) => (
+                    <TableRow key={index}>
+                      <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
+                      <TableCell sx={{ width: "40px" }}>
+                        {data.subjectName}
+                      </TableCell>
+                      <TableCell sx={{ width: "40px" }}>
+                        {`${data.grades} (${
+                          getLetterGrade(data.grades).letter
+                        })`}
+                      </TableCell>
+                      <TableCell sx={{ width: "40px" }}>
+                        {data.lecturer}
+                      </TableCell>
+                      <TableCell sx={{ width: "40px" }}>
+                        {data.description || "-"}
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
-        <Stack>
+
+        <Stack paddingTop={2}>
           <Typography
             variant="h4"
             sx={{ fontSize: { xs: 14, md: 16, xl: 18 } }}
           >
-            Semester 1, Tahun Akademik 2022/2023
+            {semester}, Tahun Akademik 2022/2023
           </Typography>
           <Typography
             variant="h4"
             sx={{ fontSize: { xs: 14, md: 16, xl: 18 } }}
           >
-            Total Grade: 3.92
+            Total Grade: 4.00
           </Typography>
           <Typography
             variant="h4"
@@ -89,32 +123,4 @@ const StudentGrade = () => {
     </div>
   );
 };
-
-const TableHeading = () => {
-  const style = { fontWeight: 400 };
-  return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={[style]}>No</TableCell>
-      <TableCell sx={[style]}>Subject Name</TableCell>
-      <TableCell sx={[style]}>Parallel</TableCell>
-      <TableCell sx={[style]}>Lecturer</TableCell>
-      <TableCell sx={[style]}>Grade</TableCell>
-      <TableCell sx={[style]}>The -th Enrollment</TableCell>
-    </TableRow>
-  );
-};
-
-const TableItem = ({ item, index }) => {
-  return (
-    <TableRow>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{`[IF3263] Kecerdasan Buatan/ Artificial Intelligence`}</TableCell>
-      <TableCell>{`A`}</TableCell>
-      <TableCell>{`Adam, Stenly`}</TableCell>
-      <TableCell>{`A (95)`}</TableCell>
-      <TableCell>{`1`}</TableCell>
-    </TableRow>
-  );
-};
-
 export default StudentGrade;

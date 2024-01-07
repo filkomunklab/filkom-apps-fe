@@ -88,11 +88,13 @@ const GradeSubmission = () => {
       const nim = JSON.parse(localStorage.getItem("user")).nim;
       const studentData = await axios.get(`${BASE_URL_API}/student/${nim}`);
       const major = studentData.data.data.major;
-      const result = await axios.get(
-        `${BASE_URL_API}/access/list/gradesAccess/${major}/`
-      );
-      const gradeData = result.data.data;
-      setDataGrade(gradeData);
+      const result = await axios.get(`${BASE_URL_API}/access/isOpen/${major}/`);
+      if (result.data.data.isOpen === true) {
+        const gradeData = result.data.data;
+        setDataGrade(gradeData);
+      } else {
+        console.log("Grade close.");
+      }
     } catch (error) {
       console.log(error.message);
       console.log("ini error: ", error);
@@ -194,6 +196,7 @@ const GradeSubmission = () => {
     newSubjectNames[index] = { ...value, subjectId };
     setSubjectNames(newSubjectNames);
   };
+  console.log("ini subjectname", subjectNames);
 
   const handleGradeChange = (event, index) => {
     const newGrades = [...grades];
@@ -274,28 +277,19 @@ const GradeSubmission = () => {
         }}
       >
         <Typography variant="body1">
-          {dataGrade.length === 0 ? (
-            <>
-              Not yet filled out Grade <br /> <br />
-              Date of Grade Filling: N/A - N/A
-            </>
-          ) : (
-            <>
-              Filled out Grade <br /> <br />
-              Date of Grade Filling:{" "}
-              {new Date(dataGrade[0].createdAt).toLocaleDateString("en-US", {
-                month: "long",
-                day: "2-digit",
-                year: "numeric",
-              })}{" "}
-              -{" "}
-              {new Date(dataGrade[0].due_date).toLocaleDateString("en-US", {
-                month: "long",
-                day: "2-digit",
-                year: "numeric",
-              })}
-            </>
-          )}
+          Not yet filled out Grade <br /> <br />
+          Date of Grade Filling:{" "}
+          {new Date(dataGrade.createdAt).toLocaleDateString("en-US", {
+            month: "long",
+            day: "2-digit",
+            year: "numeric",
+          })}{" "}
+          -{" "}
+          {new Date(dataGrade.due_date).toLocaleDateString("en-US", {
+            month: "long",
+            day: "2-digit",
+            year: "numeric",
+          })}
         </Typography>
 
         <WarningAmberIcon sx={{ color: "#FFCC00", fontSize: "42px" }} />
@@ -378,7 +372,14 @@ const GradeSubmission = () => {
 
       <TableContainer>
         <Table stickyHeader>
-          <TableHead>
+          <TableHead
+            style={{
+              position: "-webkit-sticky",
+              position: "sticky",
+              top: 0,
+              backgroundColor: "rgba(26, 56, 96, 0.1)",
+            }}
+          >
             <TableHeading />
           </TableHead>
           <TableBody sx={{ backgroundColor: "white" }}>
@@ -396,7 +397,6 @@ const GradeSubmission = () => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        key={subjectNames[index]?.subjectId || index}
                         size="small"
                         value={subjectNames[index]?.name || ""}
                       />
@@ -627,7 +627,7 @@ const GradeSubmission = () => {
 const TableHeading = () => {
   const style = { fontWeight: 500 };
   return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
+    <TableRow>
       <TableCell sx={[style]}>Number</TableCell>
       <TableCell sx={{ ...[style], width: "400px" }}>Subject Name</TableCell>
       <TableCell sx={{ ...[style], width: "140px" }}>Grade</TableCell>

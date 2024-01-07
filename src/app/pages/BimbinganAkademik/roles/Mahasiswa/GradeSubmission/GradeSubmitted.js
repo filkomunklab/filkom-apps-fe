@@ -26,7 +26,7 @@ const GradeSubmitted = () => {
   return (
     <div>
       <Typography sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: 2 }}>
-        Courses Pre-registration
+        Grade Submission
       </Typography>
       <Paper
         sx={{
@@ -38,10 +38,10 @@ const GradeSubmitted = () => {
         }}
       >
         <Typography variant="body1">
-          KRS has already been filled in.
+          Grade has already been filled in.
           <br />
           <br />
-          Date of KRS Filling:{" "}
+          Date of Grade Filling:{" "}
           {new Date(dataPreregis.createdAt).toLocaleDateString("en-US", {
             month: "long",
             day: "2-digit",
