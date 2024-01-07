@@ -6,7 +6,10 @@ import {
   styled,
   Alert,
   IconButton,
+  Link,
 } from "@mui/material";
+import { EXCEL_FILE_BASE64 } from "./constants";
+import FileSaver from "file-saver";
 import Collapse from "@mui/material/Collapse";
 import LoadingButton from "@mui/lab/LoadingButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -176,6 +179,26 @@ const AddStudentModal = ({
     }
   };
 
+  const handleTemplate = () => {
+    let dataBlob = EXCEL_FILE_BASE64;
+    let sliceSize = 1024;
+    let byteCharacters = atob(dataBlob);
+    let bytesLength = byteCharacters.length;
+    let slicesCount = Math.ceil(bytesLength / sliceSize);
+    let byteArrays = new Array(slicesCount);
+    for (let sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+      let begin = sliceIndex * sliceSize;
+      let end = Math.min(begin + sliceSize, bytesLength);
+      let bytes = new Array(end - begin);
+      for (var offset = begin, i = 0; offset < end; ++i, ++offset) {
+        bytes[i] = byteCharacters[offset].charCodeAt(0);
+      }
+      byteArrays[sliceIndex] = new Uint8Array(bytes);
+    }
+    let blob = new Blob(byteArrays, { type: "application/vnd.ms.excel" });
+    FileSaver.saveAs(new Blob([blob], {}), "templateCurriculum.xlsx");
+  };
+
   const handleSubmitFile = async () => {
     setLoading(true);
     if (selectedFile) {
@@ -337,12 +360,13 @@ const AddStudentModal = ({
           >
             Add Student
           </Typography>
-          <Typography
+          <Link
             id="modal-modal-description"
-            sx={{ fontSize: "12px", color: "#005FDB" }}
+            sx={{ cursor: "pointer", fontSize: "12px", color: "#005FDB" }}
+            onClick={handleTemplate}
           >
             Template Excel
-          </Typography>
+          </Link>
         </Stack>
         <Button
           fullWidth
