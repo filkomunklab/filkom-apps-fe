@@ -481,12 +481,157 @@ const PerubahanProposalCoAvisor = () => {
                             </Button>
                           </Div>
                         )}
+                        <Div
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                          }}
+                        >
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Co-Advisor 2
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                            }}
+                          >
+                            <Typography>
+                              {typeof perubahan?.changes_by_co_advisor2 ===
+                              "string" ? (
+                                perubahan?.changes_by_co_advisor2
+                                  .split("\n")
+                                  .map((point, index) => (
+                                    <div key={index}>{point}</div>
+                                  ))
+                              ) : (
+                                <div>{perubahan?.changes_by_co_advisor2}</div>
+                              )}
+                              {perubahan?.changes_by_co_advisor2}
+                            </Typography>
+                          </Div>
+                        </Div>
                       </>
                     )}
                   {advisorAndCoAdvisor?.coAdvisor1 &&
                     perubahan?.is_report_open === true &&
                     perubahan?.changes_by_co_advisor1 !== null &&
                     userRole === "CO_ADVISOR1" && (
+                      <>
+                        <Div
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                          }}
+                        >
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Co-Advisor 1
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                            }}
+                          >
+                            <Typography>
+                              {typeof perubahan?.changes_by_co_advisor1 ===
+                              "string" ? (
+                                perubahan?.changes_by_co_advisor1
+                                  .split("\n")
+                                  .map((point, index) => (
+                                    <div key={index}>{point}</div>
+                                  ))
+                              ) : (
+                                <div>{perubahan?.changes_by_co_advisor1}</div>
+                              )}
+                            </Typography>
+                          </Div>
+                        </Div>
+                        <Div
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                          }}
+                        >
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Co-Advisor 2
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                            }}
+                          >
+                            <Typography>
+                              {typeof perubahan?.changes_by_co_advisor2 ===
+                              "string" ? (
+                                perubahan?.changes_by_co_advisor2
+                                  .split("\n")
+                                  .map((point, index) => (
+                                    <div key={index}>{point}</div>
+                                  ))
+                              ) : (
+                                <div>{perubahan?.changes_by_co_advisor2}</div>
+                              )}
+                            </Typography>
+                          </Div>
+                        </Div>
+                      </>
+                    )}
+                  {/* jika ada co-advisor 1 dan berita acara ditutup (view)*/}
+                  {advisorAndCoAdvisor?.coAdvisor1 &&
+                    perubahan?.is_report_open === false && (
                       <Div
                         sx={{
                           display: "flex",
@@ -534,47 +679,6 @@ const PerubahanProposalCoAvisor = () => {
                         </Div>
                       </Div>
                     )}
-                  {/* jika ada co-advisor 1 dan berita acara ditutup (view)*/}
-                  {advisorAndCoAdvisor?.coAdvisor1 &&
-                    perubahan?.is_report_open === false && (
-                      <Div
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "flex-start",
-                          alignSelf: "stretch",
-                        }}
-                      >
-                        <Div
-                          sx={{
-                            display: "flex",
-                            alignItems: "flex-start",
-                            alignSelf: "stretch",
-                            background: "rgba(26, 56, 96, 0.10)",
-                            padding: "14px 16px",
-                            borderRadius: "6px",
-                          }}
-                        >
-                          <Typography variant="subtitle2">
-                            Co-Advisor 1
-                          </Typography>
-                        </Div>
-                        <Div
-                          sx={{
-                            display: "flex",
-                            alignItems: "flex-start",
-                            alignSelf: "stretch",
-                            padding: "14px 16px",
-                            border: "2px solid rgba(26, 56, 96, 0.10)",
-                            borderRadius: "0 0 6px 6px",
-                          }}
-                        >
-                          <Typography>
-                            {perubahan?.changes_by_co_advisor1}
-                          </Typography>
-                        </Div>
-                      </Div>
-                    )}
                   {/* Perubahan Co-Advisor 1 */}
                   {/* jika ada co-advisor 2 dan berita acara dibuka dan belum mengisi perubahan dan role adalah co-advisor 2 (mengisi) */}
                   {advisorAndCoAdvisor?.coAdvisor2 &&
@@ -582,6 +686,52 @@ const PerubahanProposalCoAvisor = () => {
                     perubahan?.changes_by_co_advisor2 === null &&
                     userRole === "CO_ADVISOR2" && (
                       <>
+                        <Div
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            alignSelf: "stretch",
+                          }}
+                        >
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Co-Advisor 1
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                            }}
+                          >
+                            <Typography>
+                              {typeof perubahan?.changes_by_co_advisor1 ===
+                              "string" ? (
+                                perubahan?.changes_by_co_advisor1
+                                  .split("\n")
+                                  .map((point, index) => (
+                                    <div key={index}>{point}</div>
+                                  ))
+                              ) : (
+                                <div>{perubahan?.changes_by_co_advisor1}</div>
+                              )}
+                            </Typography>
+                          </Div>
+                        </Div>
                         <Div
                           sx={{
                             display: "flex",
@@ -629,7 +779,6 @@ const PerubahanProposalCoAvisor = () => {
                                 rowsMin={4}
                                 style={{
                                   width: "100%",
-                                  height: 108,
                                   marginBottom: "25px",
                                   display: "block",
                                   resize: "vertical",
@@ -674,93 +823,152 @@ const PerubahanProposalCoAvisor = () => {
                     perubahan?.is_report_open === true &&
                     perubahan?.changes_by_co_advisor2 !== null &&
                     userRole === "CO_ADVISOR2" && (
-                      <Div
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "flex-start",
-                          alignSelf: "stretch",
-                        }}
-                      >
+                      <>
                         <Div
                           sx={{
                             display: "flex",
+                            flexDirection: "column",
                             alignItems: "flex-start",
                             alignSelf: "stretch",
-                            background: "rgba(26, 56, 96, 0.10)",
-                            padding: "14px 16px",
-                            borderRadius: "6px",
                           }}
                         >
-                          <Typography variant="subtitle2">
-                            Co-Advisor 1
-                          </Typography>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Co-Advisor 1
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                            }}
+                          >
+                            <Typography>
+                              {typeof perubahan?.changes_by_co_advisor1 ===
+                              "string" ? (
+                                perubahan?.changes_by_co_advisor1
+                                  .split("\n")
+                                  .map((point, index) => (
+                                    <div key={index}>{point}</div>
+                                  ))
+                              ) : (
+                                <div>{perubahan?.changes_by_co_advisor1}</div>
+                              )}
+                            </Typography>
+                          </Div>
                         </Div>
                         <Div
                           sx={{
                             display: "flex",
+                            flexDirection: "column",
                             alignItems: "flex-start",
                             alignSelf: "stretch",
-                            padding: "14px 16px",
-                            border: "2px solid rgba(26, 56, 96, 0.10)",
-                            borderRadius: "0 0 6px 6px",
                           }}
                         >
-                          <Typography>
-                            {typeof perubahan?.changes_by_co_advisor2 ===
-                            "string" ? (
-                              perubahan?.changes_by_co_advisor2
-                                .split("\n")
-                                .map((point, index) => (
-                                  <div key={index}>{point}</div>
-                                ))
-                            ) : (
-                              <div>{perubahan?.changes_by_co_advisor2}</div>
-                            )}
-                          </Typography>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Co-Advisor 2
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                            }}
+                          >
+                            <Typography>
+                              {typeof perubahan?.changes_by_co_advisor2 ===
+                              "string" ? (
+                                perubahan?.changes_by_co_advisor2
+                                  .split("\n")
+                                  .map((point, index) => (
+                                    <div key={index}>{point}</div>
+                                  ))
+                              ) : (
+                                <div>{perubahan?.changes_by_co_advisor2}</div>
+                              )}
+                            </Typography>
+                          </Div>
                         </Div>
-                      </Div>
+                      </>
                     )}
                   {/* jika ada co-advisor 2 dan berita acara ditutup (view)*/}
                   {advisorAndCoAdvisor?.coAdvisor2 &&
                     perubahan?.is_report_open === false && (
-                      <Div
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "flex-start",
-                          alignSelf: "stretch",
-                        }}
-                      >
+                      <>
                         <Div
                           sx={{
                             display: "flex",
+                            flexDirection: "column",
                             alignItems: "flex-start",
                             alignSelf: "stretch",
-                            background: "rgba(26, 56, 96, 0.10)",
-                            padding: "14px 16px",
-                            borderRadius: "6px",
                           }}
                         >
-                          <Typography variant="subtitle2">
-                            Co-Advisor 2
-                          </Typography>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              background: "rgba(26, 56, 96, 0.10)",
+                              padding: "14px 16px",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              Co-Advisor 2
+                            </Typography>
+                          </Div>
+                          <Div
+                            sx={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              alignSelf: "stretch",
+                              padding: "14px 16px",
+                              border: "2px solid rgba(26, 56, 96, 0.10)",
+                              borderRadius: "0 0 6px 6px",
+                            }}
+                          >
+                            <Typography>
+                              {typeof perubahan?.changes_by_co_advisor2 ===
+                              "string" ? (
+                                perubahan?.changes_by_co_advisor2
+                                  .split("\n")
+                                  .map((point, index) => (
+                                    <div key={index}>{point}</div>
+                                  ))
+                              ) : (
+                                <div>{perubahan?.changes_by_co_advisor2}</div>
+                              )}
+                            </Typography>
+                          </Div>
                         </Div>
-                        <Div
-                          sx={{
-                            display: "flex",
-                            alignItems: "flex-start",
-                            alignSelf: "stretch",
-                            padding: "14px 16px",
-                            border: "2px solid rgba(26, 56, 96, 0.10)",
-                            borderRadius: "0 0 6px 6px",
-                          }}
-                        >
-                          <Typography>
-                            {perubahan?.changes_by_co_advisor2}
-                          </Typography>
-                        </Div>
-                      </Div>
+                      </>
                     )}
                 </Div>
               </>

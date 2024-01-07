@@ -22,7 +22,12 @@ import {
   FormControlLabel,
   DialogContentText,
   TextareaAutosize,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  TextField,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
 import MenuKetuaPanelis from "app/shared/MenuHorizontal/MenuKetuaPanelis";
@@ -38,11 +43,27 @@ const BeritaAcara = () => {
   const [dataBeritaAcara, setDataBeritaAcara] = useState();
   const [dataKesimpulan, setDataKesimpulan] = useState();
   const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
+  const [dataNilaiKesimpulan, setDataNilaiKesimpulan] = useState();
 
   const [selectedStudentId, setSelectedStudentId] = useState();
   const [selectedName, setSelectedName] = useState();
   const [selectedNIM, setSelectedNIM] = useState();
   const [selectedProdi, setSelectedProdi] = useState();
+
+  // State - menyimpan Perubahan
+  const [abstrak, setAbstrak] = useState("");
+  const [bab1, setBab1] = useState("");
+  const [bab2, setBab2] = useState("");
+  const [bab3, setBab3] = useState("");
+  const [bab4, setBab4] = useState("");
+  const [bab5, setBab5] = useState("");
+  const [lainnya, setLainnya] = useState("");
+
+  // State - mengatur tanggal
+  const [selectedDate, setSelectedDate] = useState("");
+
+  // state - menyimpan nilai kesimpulan
+  const [nilaiMahasiswa, setNilaiMahasiswa] = useState([]);
 
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
@@ -91,6 +112,17 @@ const BeritaAcara = () => {
           }
         );
         setDataPenilaian(response.data.data);
+
+        // Membuat array objek baru untuk nilaiMahasiswa
+        const newNilaiMahasiswa = response.data.data.map((mahasiswa) => ({
+          student_id: mahasiswa.student_id,
+          assessment_conclution: "",
+        }));
+        console.log("nilai mahasiswa di fetch", newNilaiMahasiswa);
+
+        // Mengatur nilaiMahasiswa dengan array baru yang dibuat
+        setNilaiMahasiswa(newNilaiMahasiswa);
+
         console.log("Request Get penilaian: ", response.data.data);
       } catch (error) {
         console.error("Terjadi kesalahan saat mengambil penilaian:", error);
@@ -144,11 +176,31 @@ const BeritaAcara = () => {
         console.error("Terjadi kesalahan saat mengambil kesimpulan:", error);
       }
     };
+    const fetchNilaiKesimpulanData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion-value/${skripsiId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+            },
+          }
+        );
+        setDataNilaiKesimpulan(response.data.data);
+        console.log("Request Get nilai kesimpulan: ", response.data.data);
+      } catch (error) {
+        console.error(
+          "Terjadi kesalahan saat mengambil nilai kesimpulan:",
+          error
+        );
+      }
+    };
     fetchIsOpenData();
     fetchPenilaianData();
     fetchPerubahanData();
     fetchBeritaAcaraData();
     fetchKesimpulanData();
+    fetchNilaiKesimpulanData();
   }, [token, skripsiId]);
 
   // State untuk mengontrol tampilan popup
@@ -169,6 +221,11 @@ const BeritaAcara = () => {
   const [errorMessagePenilaian, setErrorMessagePenilaian] = useState();
   const [openSignInConfirmationDialog, setOpenSignInConfirmationDialog] =
     useState(false);
+
+  // mengatur tanggal
+  const handleDateChange = (event) => {
+    setSelectedDate(event.target.value);
+  };
 
   const handleOpenSignInConfirmationDialog = () => {
     setOpenSignInConfirmationDialog(true);
@@ -200,10 +257,17 @@ const BeritaAcara = () => {
   ] = useState(false);
 
   const handleOpenConfirmationBeritaAcaraDialog = () => {
-    if (!status || !perubahan || !nilai || !deskripsi) {
-      // Tampilkan pesan kesalahan jika salah satu opsi belum diisi
-      setErrorMessageKesimpulan("Harap isi semua opsi sebelum submit.");
-      return;
+    if (!status || !perubahan || !deskripsi) {
+      for (const entry of nilaiMahasiswa) {
+        if (
+          entry?.assessment_conclution === null ||
+          entry?.assessment_conclution === ""
+        ) {
+          // Tampilkan pesan kesalahan jika salah satu opsi belum diisi
+          setErrorMessageKesimpulan("Harap isi semua opsi sebelum submit.");
+          return;
+        }
+      }
     }
     setOpenConfirmationBeritaAcaraDialog(true);
   };
@@ -218,12 +282,67 @@ const BeritaAcara = () => {
   const handleSubmitData = () => {
     // Di sini Anda dapat menambahkan logika untuk mengirim data atau tindakan yang diperlukan
 
+    console.log("nilai mahasiswa: ", nilaiMahasiswa);
+    for (const entry of nilaiMahasiswa) {
+      const nilaiKesimpulan = {
+        student_id: entry.student_id,
+        assessment_conclution: entry?.assessment_conclution,
+      };
+      console.log("Nilai kesimpulan yang akan dikirim: ", nilaiKesimpulan);
+      axios
+        .put(
+          `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion-value/${skripsiId}`,
+          nilaiKesimpulan,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(
+            `Berhasil mengisi nilai kesimpulan ${entry.student_id}: `,
+            response.data
+          );
+        })
+        .catch((error) => {
+          console.error(
+            `Terjadi kesalahan saat mengisi nilai kesimpulan ${entry.student_id}: `,
+            error
+          );
+        });
+    }
+
+    const batasRevisi = {
+      submission_dateline: selectedDate,
+    };
+    console.log("Tanggal batas revisi yang akan dikirim: ", batasRevisi);
+    axios
+      .put(
+        `http://localhost:2000/api/v1/skripsi/submission-dateline/${skripsiId}`,
+        batasRevisi,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(`Berhasil mengisi tanggal batas revisi: `, response.data);
+      })
+      .catch((error) => {
+        console.error(
+          `Terjadi kesalahan saat mengisi tanggal batas revisi: `,
+          error
+        );
+      });
+
     const kesimpulan = {
       exam_conclution: status,
       changes_conclusion: perubahan,
-      assessment_conclution: nilai,
       is_pass: deskripsi,
     };
+    console.log("Kesimpulan yang akan dikirim: ", kesimpulan);
     axios
       .put(
         `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion/${skripsiId}`,
@@ -279,8 +398,25 @@ const BeritaAcara = () => {
             );
           }
         };
-        fetchKesimpulanData();
+        const fetchPenilaianData = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+                },
+              }
+            );
+            setDataPenilaian(response.data.data);
+            console.log("Request Get penilaian: ", response.data.data);
+          } catch (error) {
+            console.error("Terjadi kesalahan saat mengambil penilaian:", error);
+          }
+        };
         fetchIsOpenData();
+        fetchKesimpulanData();
+        fetchPenilaianData();
       })
       .catch((error) => {
         console.error("Terjadi kesalahan saat mengisi kesimpulan:", error);
@@ -549,23 +685,59 @@ const BeritaAcara = () => {
 
   const [openRevisionDialog, setOpenRevisionDialog] = useState(false);
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
-  const [revisionText, setRevisionText] = useState(""); // State untuk menyimpan teks revisi
 
   const handleOpenRevisionDialog = () => {
+    // ketika menekan "Komen" = mengambil data perubahan sesuai role
+    if (userRole === "KETUA_PANELIS") {
+      setAbstrak(dataPerubahan?.changes_by_chairman_abstrak);
+      setBab1(dataPerubahan?.changes_by_chairman_bab1);
+      setBab2(dataPerubahan?.changes_by_chairman_bab2);
+      setBab3(dataPerubahan?.changes_by_chairman_bab3);
+      setBab4(dataPerubahan?.changes_by_chairman_bab4);
+      setBab5(dataPerubahan?.changes_by_chairman_bab5);
+      setLainnya(dataPerubahan?.changes_by_chairman_other);
+    }
+    if (userRole === "ANGGOTA_PANELIS") {
+      setAbstrak(dataPerubahan?.changes_by_member_abstrak);
+      setBab1(dataPerubahan?.changes_by_member_bab1);
+      setBab2(dataPerubahan?.changes_by_member_bab2);
+      setBab3(dataPerubahan?.changes_by_member_bab3);
+      setBab4(dataPerubahan?.changes_by_member_bab4);
+      setBab5(dataPerubahan?.changes_by_member_bab5);
+      setLainnya(dataPerubahan?.changes_by_member_other);
+    }
+    if (userRole === "ADVISOR") {
+      setAbstrak(dataPerubahan?.changes_by_advisor_abstrak);
+      setBab1(dataPerubahan?.changes_by_advisor_bab1);
+      setBab2(dataPerubahan?.changes_by_advisor_bab2);
+      setBab3(dataPerubahan?.changes_by_advisor_bab3);
+      setBab4(dataPerubahan?.changes_by_advisor_bab4);
+      setBab5(dataPerubahan?.changes_by_advisor_bab5);
+      setLainnya(dataPerubahan?.changes_by_advisor_other);
+    }
     setOpenRevisionDialog(true);
   };
 
   const handleCloseRevisionDialog = () => {
-    setRevisionText("");
+    setAbstrak();
+    setBab1();
+    setBab2();
+    setBab3();
+    setBab4();
+    setBab5();
+    setLainnya();
     setOpenRevisionDialog(false);
   };
 
   const handleRevisionSubmit = () => {
-    // // Simpan teks revisi yang diisi oleh pengguna
-    // setViewedChanges(revisionText);
-
     const perubahan = {
-      changes: revisionText,
+      abstrak: abstrak,
+      bab1: bab1,
+      bab2: bab2,
+      bab3: bab3,
+      bab4: bab4,
+      bab5: bab5,
+      other: lainnya,
     };
     axios
       .put(
@@ -1064,25 +1236,76 @@ const BeritaAcara = () => {
                       <TableRow key={studentIndex}>
                         <TableCell>{studentIndex + 1}</TableCell>
                         <TableCell>{student.fullName}</TableCell>
-                        <TableCell>{student.value_by_chairman}</TableCell>
-                        <TableCell>{student.value_by_member}</TableCell>
-                        <TableCell>{student.value_by_advisor}</TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
+                          {userRole === "KETUA_PANELIS" ||
+                          userRole === "KAPRODI" ||
+                          userRole === "DEKAN" ? (
+                            student.value_by_chairman
+                          ) : userRole !== "KETUA_PANELIS" &&
+                            student.value_by_chairman === null ? (
+                            <Chip label={"Belum"} />
+                          ) : (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
+                          {userRole === "KETUA_PANELIS" ||
+                          userRole === "ANGGOTA_PANELIS" ||
+                          userRole === "KAPRODI" ||
+                          userRole === "DEKAN" ? (
+                            student.value_by_member
+                          ) : userRole !== "KETUA_PANELIS" &&
+                            student.value_by_member === null ? (
+                            <Chip label={"Belum"} />
+                          ) : (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
+                          {userRole === "KETUA_PANELIS" ||
+                          userRole === "ADVISOR" ||
+                          userRole === "KAPRODI" ||
+                          userRole === "DEKAN" ? (
+                            student.value_by_advisor
+                          ) : userRole !== "KETUA_PANELIS" &&
+                            student.value_by_advisor === null ? (
+                            <Chip label={"Belum"} />
+                          ) : (
+                            <Chip
+                              label={"Sudah"}
+                              sx={{
+                                background: "rgba(21, 131, 67, 0.10)",
+                                color: "#0A7637",
+                              }}
+                            />
+                          )}
+                        </TableCell>
                         {userRole === "KETUA_PANELIS" && (
-                          <TableCell>
+                          <TableCell sx={{ textAlign: "center" }}>
                             <span
                               style={{
                                 textDecoration: "none",
                                 cursor:
-                                  student.value_by_chairman === null
+                                  isOpen?.is_open === true
                                     ? "pointer"
                                     : "not-allowed",
                                 color:
-                                  student.value_by_chairman === null
-                                    ? "blue"
-                                    : "gray",
+                                  isOpen?.is_open === true ? "blue" : "gray",
                               }}
                               onClick={() => {
-                                if (student.value_by_chairman === null) {
+                                if (isOpen?.is_open === true) {
                                   handleOpenDialog();
                                   setSelectedStudentId(student.student_id);
                                   setSelectedName(student.fullName);
@@ -1107,16 +1330,14 @@ const BeritaAcara = () => {
                               style={{
                                 textDecoration: "none",
                                 cursor:
-                                  student.value_by_member === null
+                                  isOpen?.is_open === true
                                     ? "pointer"
                                     : "not-allowed",
                                 color:
-                                  student.value_by_member === null
-                                    ? "blue"
-                                    : "gray",
+                                  isOpen?.is_open === true ? "blue" : "gray",
                               }}
                               onClick={() => {
-                                if (student.value_by_member === null) {
+                                if (isOpen?.is_open === true) {
                                   handleOpenDialog();
                                   setSelectedStudentId(student.student_id);
                                   setSelectedName(student.fullName);
@@ -1141,16 +1362,14 @@ const BeritaAcara = () => {
                               style={{
                                 textDecoration: "none",
                                 cursor:
-                                  student.value_by_advisor === null
+                                  isOpen?.is_open === true
                                     ? "pointer"
                                     : "not-allowed",
                                 color:
-                                  student.value_by_advisor === null
-                                    ? "blue"
-                                    : "gray",
+                                  isOpen?.is_open === true ? "blue" : "gray",
                               }}
                               onClick={() => {
-                                if (student.value_by_advisor === null) {
+                                if (isOpen?.is_open === true) {
                                   handleOpenDialog();
                                   setSelectedStudentId(student.student_id);
                                   setSelectedName(student.fullName);
@@ -1193,29 +1412,35 @@ const BeritaAcara = () => {
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
                       <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Ketua Penelis</TableCell>
-                      <TableCell sx={{ width: "25%" }}>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Ketua Penelis
+                      </TableCell>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
                         Anggota Penelis
                       </TableCell>
-                      <TableCell sx={{ width: "25%" }}>Advisor</TableCell>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Advisor
+                      </TableCell>
                       {advisorAndCoAdvisor?.coAdvisor1 && (
                         <TableCell sx={{ width: "25%" }}>
                           Co-Advisor 1
                         </TableCell>
                       )}
                       {advisorAndCoAdvisor?.coAdvisor2 && (
-                        <TableCell sx={{ width: "25%" }}>
+                        <TableCell sx={{ width: "25%", textAlign: "center" }}>
                           Co-Advisor 2
                         </TableCell>
                       )}
-                      <TableCell sx={{ width: "25%" }}>Action</TableCell>
+                      <TableCell sx={{ width: "25%", textAlign: "center" }}>
+                        Action
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     <TableRow>
                       <TableCell>1</TableCell>
-                      <TableCell>
-                        {dataPerubahan?.changes_by_chairman !== null ? (
+                      <TableCell sx={{ textAlign: "center" }}>
+                        {dataPerubahan?.changes_by_chairman_abstrak !== null ? (
                           <Chip
                             size="small"
                             label="Sudah"
@@ -1229,8 +1454,8 @@ const BeritaAcara = () => {
                           <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
-                      <TableCell>
-                        {dataPerubahan?.changes_by_member !== null ? (
+                      <TableCell sx={{ textAlign: "center" }}>
+                        {dataPerubahan?.changes_by_member_abstrak !== null ? (
                           <Chip
                             size="small"
                             label="Sudah"
@@ -1238,14 +1463,19 @@ const BeritaAcara = () => {
                               background: "rgba(0, 255, 0, 0.10)",
                               color: "#008000",
                               fontSize: "10px",
+                              textAlign: "center",
                             }}
                           />
                         ) : (
-                          <Chip size="small" label="Belum" />
+                          <Chip
+                            size="small"
+                            label="Belum"
+                            sx={{ textAlign: "center" }}
+                          />
                         )}
                       </TableCell>
-                      <TableCell>
-                        {dataPerubahan?.changes_by_advisor !== null ? (
+                      <TableCell sx={{ textAlign: "center" }}>
+                        {dataPerubahan?.changes_by_advisor_abstrak !== null ? (
                           <Chip
                             size="small"
                             label="Sudah"
@@ -1253,15 +1483,21 @@ const BeritaAcara = () => {
                               background: "rgba(0, 255, 0, 0.10)",
                               color: "#008000",
                               fontSize: "10px",
+                              textAlign: "center",
                             }}
                           />
                         ) : (
-                          <Chip size="small" label="Belum" />
+                          <Chip
+                            size="small"
+                            label="Belum"
+                            sx={{ textAlign: "center" }}
+                          />
                         )}
                       </TableCell>
                       {advisorAndCoAdvisor?.coAdvisor1 && (
-                        <TableCell>
-                          {dataPerubahan?.changes_by_co_advisor1 !== null ? (
+                        <TableCell sx={{ textAlign: "center" }}>
+                          {dataPerubahan?.changes_by_co_advisor1_abstrak !==
+                          null ? (
                             <Chip
                               size="small"
                               label="Sudah"
@@ -1269,16 +1505,22 @@ const BeritaAcara = () => {
                                 background: "rgba(0, 255, 0, 0.10)",
                                 color: "#008000",
                                 fontSize: "10px",
+                                textAlign: "center",
                               }}
                             />
                           ) : (
-                            <Chip size="small" label="Belum" />
+                            <Chip
+                              size="small"
+                              label="Belum"
+                              sx={{ textAlign: "center" }}
+                            />
                           )}
                         </TableCell>
                       )}
                       {advisorAndCoAdvisor?.coAdvisor2 && (
-                        <TableCell>
-                          {dataPerubahan?.changes_by_co_advisor2 !== null ? (
+                        <TableCell sx={{ textAlign: "center" }}>
+                          {dataPerubahan?.changes_by_co_advisor2_abstrak !==
+                          null ? (
                             <Chip
                               size="small"
                               label="Sudah"
@@ -1289,11 +1531,21 @@ const BeritaAcara = () => {
                               }}
                             />
                           ) : (
-                            <Chip size="small" label="Belum" />
+                            <Chip
+                              size="small"
+                              label="Belum"
+                              sx={{ textAlign: "center" }}
+                            />
                           )}
                         </TableCell>
                       )}
-                      <TableCell sx={{ display: "flex" }}>
+                      <TableCell
+                        sx={{
+                          display: "flex",
+                          textAlign: "center",
+                          justifyContent: "center",
+                        }}
+                      >
                         <span
                           style={{
                             textDecoration: "none",
@@ -1313,23 +1565,19 @@ const BeritaAcara = () => {
                               style={{
                                 textDecoration: "none",
                                 cursor:
-                                  dataPerubahan?.changes_by_chairman === null
+                                  isOpen?.is_open === true
                                     ? "pointer"
                                     : "not-allowed", // Mengubah tampilan kursor
                                 color:
-                                  dataPerubahan?.changes_by_chairman === null
-                                    ? "blue"
-                                    : "gray", // Mengubah warna
+                                  isOpen?.is_open === true ? "blue" : "gray", // Mengubah warna
                               }}
                               onClick={() => {
-                                if (
-                                  dataPerubahan?.changes_by_chairman === null
-                                ) {
+                                if (isOpen?.is_open === true) {
                                   handleOpenRevisionDialog();
                                 }
                               }}
                             >
-                              Revisi
+                              Komen
                             </span>
                           </>
                         )}
@@ -1342,21 +1590,19 @@ const BeritaAcara = () => {
                               style={{
                                 textDecoration: "none",
                                 cursor:
-                                  dataPerubahan?.changes_by_member === null
+                                  isOpen?.is_open === true
                                     ? "pointer"
                                     : "not-allowed", // Mengubah tampilan kursor
                                 color:
-                                  dataPerubahan?.changes_by_member === null
-                                    ? "blue"
-                                    : "gray", // Mengubah warna
+                                  isOpen?.is_open === true ? "blue" : "gray", // Mengubah warna
                               }}
                               onClick={() => {
-                                if (dataPerubahan?.changes_by_member === null) {
+                                if (isOpen?.is_open === true) {
                                   handleOpenRevisionDialog();
                                 }
                               }}
                             >
-                              Revisi
+                              Komen
                             </span>
                           </>
                         )}
@@ -1369,23 +1615,19 @@ const BeritaAcara = () => {
                               style={{
                                 textDecoration: "none",
                                 cursor:
-                                  dataPerubahan?.changes_by_advisor === null
+                                  isOpen?.is_open === true
                                     ? "pointer"
                                     : "not-allowed", // Mengubah tampilan kursor
                                 color:
-                                  dataPerubahan?.changes_by_advisor === null
-                                    ? "blue"
-                                    : "gray", // Mengubah warna
+                                  isOpen?.is_open === true ? "blue" : "gray", // Mengubah warna
                               }}
                               onClick={() => {
-                                if (
-                                  dataPerubahan?.changes_by_advisor === null
-                                ) {
+                                if (isOpen?.is_open === true) {
                                   handleOpenRevisionDialog();
                                 }
                               }}
                             >
-                              Revisi
+                              Komen
                             </span>
                           </>
                         )}
@@ -1413,14 +1655,18 @@ const BeritaAcara = () => {
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "rgba(25, 36, 52, 0.94)" }}>
                       <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "12%" }}>
+                      <TableCell sx={{ width: "12%", textAlign: "center" }}>
                         Dekan Fakultas
                       </TableCell>
-                      <TableCell sx={{ width: "12%" }}>Ketua Penelis</TableCell>
-                      <TableCell sx={{ width: "12%" }}>
+                      <TableCell sx={{ width: "12%", textAlign: "center" }}>
+                        Ketua Penelis
+                      </TableCell>
+                      <TableCell sx={{ width: "12%", textAlign: "center" }}>
                         Anggota Penelis
                       </TableCell>
-                      <TableCell sx={{ width: "12%" }}>Advisor</TableCell>
+                      <TableCell sx={{ width: "12%", textAlign: "center" }}>
+                        Advisor
+                      </TableCell>
                       {(userRole === "DEKAN" ||
                         userRole === "ADVISOR" ||
                         userRole === "KETUA_PANELIS" ||
@@ -1434,7 +1680,7 @@ const BeritaAcara = () => {
                   <TableBody>
                     <TableRow>
                       <TableCell>1</TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataBeritaAcara?.is_report_approve_by_dekan !==
                         null ? (
                           <>
@@ -1455,7 +1701,7 @@ const BeritaAcara = () => {
                           <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataBeritaAcara?.is_report_approve_by_panelist_chairman !==
                         null ? (
                           <>
@@ -1478,7 +1724,7 @@ const BeritaAcara = () => {
                           <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataBeritaAcara?.is_report_approve_by_panelist_member !==
                         null ? (
                           <>
@@ -1501,7 +1747,7 @@ const BeritaAcara = () => {
                           <Chip size="small" label="Belum" />
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={{ textAlign: "center" }}>
                         {dataBeritaAcara?.is_report_approve_by_advisor !==
                         null ? (
                           <>
@@ -1523,7 +1769,7 @@ const BeritaAcara = () => {
                         )}
                       </TableCell>
                       {userRole === "DEKAN" && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           <span
                             style={{
                               textDecoration: "none",
@@ -1547,12 +1793,12 @@ const BeritaAcara = () => {
                               }
                             }}
                           >
-                            Setujui
+                            Tandai
                           </span>
                         </TableCell>
                       )}
                       {userRole === "KETUA_PANELIS" && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           <span
                             style={{
                               textDecoration: "none",
@@ -1576,12 +1822,12 @@ const BeritaAcara = () => {
                               }
                             }}
                           >
-                            Setujui
+                            Tandai
                           </span>
                         </TableCell>
                       )}
                       {userRole === "ANGGOTA_PANELIS" && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           <span
                             style={{
                               textDecoration: "none",
@@ -1605,12 +1851,12 @@ const BeritaAcara = () => {
                               }
                             }}
                           >
-                            Setujui
+                            Tandai
                           </span>
                         </TableCell>
                       )}
                       {userRole === "ADVISOR" && (
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           <span
                             style={{
                               textDecoration: "none",
@@ -1634,7 +1880,7 @@ const BeritaAcara = () => {
                               }
                             }}
                           >
-                            Setujui
+                            Tandai
                           </span>
                         </TableCell>
                       )}
@@ -1647,7 +1893,14 @@ const BeritaAcara = () => {
 
               {/* Kesimpulan dari Pengujian Ketua penelis start */}
               {userRole === "KETUA_PANELIS" && isOpen?.is_open === true && (
-                <Div>
+                <Div
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                  }}
+                >
                   <Div
                     sx={{
                       display: "flex",
@@ -1722,6 +1975,7 @@ const BeritaAcara = () => {
                       </Div>
                     </Div>
                   </Div>
+                  {/* Nilai Kesimpulan Mahasiswa */}
                   <Div
                     sx={{
                       display: "flex",
@@ -1731,10 +1985,10 @@ const BeritaAcara = () => {
                       alignSelf: "stretch",
                     }}
                   >
-                    <Div>
-                      <Div>
+                    {dataPenilaian?.map((mahasiswa, index) => (
+                      <Div key={index}>
                         <Typography variant="subtitle2">
-                          Nilai Kesimpulan Ujian Skripsi
+                          Kesimpulan Nilai {mahasiswa.fullName}
                         </Typography>
                         <Div>
                           <FormControl component="fieldset">
@@ -1742,8 +1996,22 @@ const BeritaAcara = () => {
                               row
                               aria-label="nilai"
                               name="nilai"
-                              value={nilai}
-                              onChange={(e) => setNilai(e.target.value)}
+                              value={
+                                nilaiMahasiswa[index]?.assessment_conclution
+                              }
+                              onChange={(e) =>
+                                setNilaiMahasiswa((prevNilai) =>
+                                  prevNilai.map((item, i) =>
+                                    i === index
+                                      ? {
+                                          ...item,
+                                          assessment_conclution:
+                                            e.currentTarget.value,
+                                        }
+                                      : item
+                                  )
+                                )
+                              }
                             >
                               <FormControlLabel
                                 value="A"
@@ -1794,7 +2062,7 @@ const BeritaAcara = () => {
                           </FormControl>
                         </Div>
                       </Div>
-                    </Div>
+                    ))}
                   </Div>
                   <Div
                     sx={{
@@ -1840,6 +2108,19 @@ const BeritaAcara = () => {
                         {errorMessageKesimpulan}
                       </Typography>
                     </Div>
+                    <TextField
+                      id="date"
+                      label="Batas pengumpulan revisi"
+                      type="date"
+                      fullWidth
+                      placeholder="dd/mm/yyyy"
+                      value={selectedDate}
+                      onChange={handleDateChange}
+                      sx={{ marginTop: "25px" }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
                   </Div>
                   {/* Radio Button Penilaian Akhir End */}
                   <Div
@@ -1859,6 +2140,22 @@ const BeritaAcara = () => {
                       sx={{ textTransform: "none" }}
                       color="primary"
                       onClick={handleOpenConfirmationBeritaAcaraDialog}
+                      disabled={
+                        dataPenilaian?.some(
+                          (value) =>
+                            value.value_by_chairman === null ||
+                            value.value_by_member === null ||
+                            value.value_by_advisor === null
+                        ) ||
+                        dataPerubahan?.changes_by_chairman_abstrak === null ||
+                        dataPerubahan?.changes_by_member_abstrak === null ||
+                        dataPerubahan?.changes_by_advisor_abstrak === null ||
+                        dataBeritaAcara?.is_report_approve_by_panelist_chairman ===
+                          null ||
+                        dataBeritaAcara?.is_report_approve_by_panelist_member ===
+                          null ||
+                        dataBeritaAcara?.is_report_approve_by_advisor === null
+                      }
                     >
                       Submit
                     </Button>
@@ -1906,6 +2203,7 @@ const BeritaAcara = () => {
                       </Typography>
                     </Div>
                   </Div>
+                  {/* Nilai Kesimpulan Mahasiswa */}
                   <Div
                     sx={{
                       display: "flex",
@@ -1915,14 +2213,14 @@ const BeritaAcara = () => {
                       alignSelf: "stretch",
                     }}
                   >
-                    <Div>
-                      <Typography variant="subtitle2">
-                        Nilai Kesimpulan Ujian Skripsi
-                      </Typography>
-                      <Typography variant="body1">
-                        {dataKesimpulan?.assessment_conclution}
-                      </Typography>
-                    </Div>
+                    {dataPenilaian?.map((mahasiswa, index) => (
+                      <Div key={index}>
+                        <Typography variant="subtitle2">
+                          Kesimpulan Nilai {mahasiswa.fullName}
+                        </Typography>
+                        <Typography>{mahasiswa.value_conclusion}</Typography>
+                      </Div>
+                    ))}
                   </Div>
                   <Div
                     sx={{
@@ -2030,13 +2328,7 @@ const BeritaAcara = () => {
           >
             <Typography sx={{ width: "100px" }}>Program Studi</Typography>
             <Typography>:</Typography>
-            <Typography>
-              {selectedProdi === "IF"
-                ? "Informatika"
-                : selectedProdi === "SI"
-                ? "Sistem Informasi"
-                : ""}
-            </Typography>
+            <Typography>{selectedProdi}</Typography>
           </Div>
           {/* nilai */}
           <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
@@ -2511,63 +2803,139 @@ const BeritaAcara = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
-            gap: "15px",
+            gap: "20px",
             alignSelf: "stretch",
           }}
         >
           <Div
             sx={{
               display: "flex",
+              flexDirection: "column",
               alignItems: "flex-start",
-              gap: "10px",
+              gap: "20px",
               alignSelf: "stretch",
             }}
           >
-            <Typography sx={{ width: "100px" }}>Judul Skripsi</Typography>
-            <Typography>:</Typography>
-            <Typography>
-              {isOpen && isOpen.title ? isOpen.title.toUpperCase() : ""}
-            </Typography>
+            <DialogContentText sx={{ width: "100%", margin: "auto" }}>
+              Abstrak
+            </DialogContentText>
+            <TextareaAutosize
+              aria-label="minimum height"
+              minRows={3}
+              maxRows={10}
+              placeholder="Masukan Perubahan Abstrak"
+              style={{
+                width: "100%",
+                marginBottom: "25px",
+
+                resize: "vertical",
+              }}
+              value={abstrak}
+              onChange={(e) => setAbstrak(e.target.value)}
+            />
+            <DialogContentText sx={{ width: "100%", margin: "auto" }}>
+              Bab 1
+            </DialogContentText>
+            <TextareaAutosize
+              aria-label="minimum height"
+              minRows={3}
+              maxRows={10}
+              placeholder="Masukan Perubahan Bab 1"
+              style={{
+                width: "100%",
+                marginBottom: "25px",
+
+                resize: "vertical",
+              }}
+              value={bab1}
+              onChange={(e) => setBab1(e.target.value)}
+            />
+            <DialogContentText sx={{ width: "100%", margin: "auto" }}>
+              Bab 2
+            </DialogContentText>
+            <TextareaAutosize
+              aria-label="minimum height"
+              minRows={3}
+              maxRows={10}
+              placeholder="Masukkan Perubahan Bab 2"
+              style={{
+                width: "100%",
+                marginBottom: "25px",
+
+                resize: "vertical",
+              }}
+              value={bab2}
+              onChange={(e) => setBab2(e.target.value)}
+            />
+            <DialogContentText sx={{ width: "100%", margin: "auto" }}>
+              Bab 3
+            </DialogContentText>
+            <TextareaAutosize
+              aria-label="minimum height"
+              minRows={3}
+              maxRows={10}
+              placeholder="Masukkan Perubahan Bab 3"
+              style={{
+                width: "100%",
+                marginBottom: "25px",
+
+                resize: "vertical",
+              }}
+              value={bab3}
+              onChange={(e) => setBab3(e.target.value)}
+            />
+            <DialogContentText sx={{ width: "100%", margin: "auto" }}>
+              Bab 4
+            </DialogContentText>
+            <TextareaAutosize
+              aria-label="minimum height"
+              minRows={3}
+              maxRows={10}
+              placeholder="Masukkan Perubahan Bab 4"
+              style={{
+                width: "100%",
+                marginBottom: "25px",
+
+                resize: "vertical",
+              }}
+              value={bab4}
+              onChange={(e) => setBab4(e.target.value)}
+            />
+            <DialogContentText sx={{ width: "100%", margin: "auto" }}>
+              Bab 5
+            </DialogContentText>
+            <TextareaAutosize
+              aria-label="minimum height"
+              minRows={3}
+              maxRows={10}
+              placeholder="Masukkan Perubahan Bab 5"
+              style={{
+                width: "100%",
+                marginBottom: "25px",
+
+                resize: "vertical",
+              }}
+              value={bab5}
+              onChange={(e) => setBab5(e.target.value)}
+            />
+            <DialogContentText sx={{ width: "100%", margin: "auto" }}>
+              Lainnya
+            </DialogContentText>
+            <TextareaAutosize
+              aria-label="minimum height"
+              minRows={3}
+              maxRows={10}
+              placeholder="Masukkan Perubahan Lainnya"
+              style={{
+                width: "100%",
+                marginBottom: "25px",
+
+                resize: "vertical",
+              }}
+              value={lainnya}
+              onChange={(e) => setLainnya(e.target.value)}
+            />
           </Div>
-          <TableContainer>
-            <Table>
-              <TableHead sx={{ background: "#F5F5F5", width: "100%" }}>
-                <TableRow>
-                  <TableCell>No</TableCell>
-                  <TableCell>Nama Lengkap</TableCell>
-                  <TableCell>Nim</TableCell>
-                  <TableCell>Program Studi</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {dataPenilaian?.map((student, studentIndex) => (
-                  <TableRow>
-                    <TableCell>{studentIndex + 1}</TableCell>
-                    <TableCell>{student.fullName}</TableCell>
-                    <TableCell>{student.nim}</TableCell>
-                    <TableCell>{student.major}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <DialogContentText sx={{ width: "100%", margin: "auto" }}>
-            Perubahan
-          </DialogContentText>
-          <TextareaAutosize
-            aria-label="minimum height"
-            minRows={3}
-            placeholder="Masukkan Perubahan"
-            style={{
-              width: "100%",
-              height: 108,
-              marginBottom: "25px",
-              display: "block",
-              resize: "vertical",
-            }}
-            value={revisionText} // Set the value of the textarea to revisionText
-            onChange={(e) => setRevisionText(e.target.value)} // Update revisionText when input changes
-          />
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -2602,7 +2970,9 @@ const BeritaAcara = () => {
       >
         <DialogTitle>Perubahan</DialogTitle>
         <DialogContent>
-          <Typography>Apakah Anda yakin ingin memberikan perubahan?</Typography>
+          <Typography>
+            Apakah Anda yakin ingin memberikan dataPerubahan?
+          </Typography>
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
           <Button
@@ -2662,21 +3032,6 @@ const BeritaAcara = () => {
           <Div
             sx={{
               display: "flex",
-              alignItems: "flex-start",
-              gap: "10px",
-              alignSelf: "stretch",
-            }}
-          >
-            <Typography sx={{ width: "100px" }}>Judul Skripsi</Typography>
-            <Typography>:</Typography>
-            <Typography>
-              {isOpen && isOpen.title ? isOpen.title.toUpperCase() : ""}
-            </Typography>
-          </Div>
-
-          <Div
-            sx={{
-              display: "flex",
               padding: "0px 50px",
               flexDirection: "column",
               alignItems: "flex-start",
@@ -2693,187 +3048,596 @@ const BeritaAcara = () => {
                 boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
               }}
             >
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: "10px",
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Ketua Penelis
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: "10px",
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                  border: "2px solid #F5F5F5",
-                }}
-              >
-                <Typography sx={{ whiteSpace: "pre-line" }}>
-                  {dataPerubahan?.changes_by_chairman}
-                </Typography>
-              </Div>
+              <Accordion sx={{ width: "100%" }}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                  sx={{ background: "#F5F5F5" }}
+                >
+                  <Typography>Ketua Panelis</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Abstrak</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_chairman_abstrak}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 1</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_chairman_bab1}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 2</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_chairman_bab2}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 3</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_chairman_bab3}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 4</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_chairman_bab4}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 5</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_chairman_bab5}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Lainnya</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_chairman_other}
+                    </Typography>
+                  </Div>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion sx={{ width: "100%" }}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                  sx={{ background: "#F5F5F5" }}
+                >
+                  <Typography>Anggota Panelis</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Abstrak</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_member_abstrak}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 1</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_member_bab1}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 2</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_member_bab2}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 3</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_member_bab3}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 4</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_member_bab4}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 5</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_member_bab5}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Lainnya</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_member_other}
+                    </Typography>
+                  </Div>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion sx={{ width: "100%" }}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                  sx={{ background: "#F5F5F5" }}
+                >
+                  <Typography>Advisor</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Abstrak</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_advisor_abstrak}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 1</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_advisor_bab1}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 2</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_advisor_bab2}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 3</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_advisor_bab3}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 4</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_advisor_bab4}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Bab 5</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_advisor_bab5}
+                    </Typography>
+                  </Div>
+                  <Div
+                    sx={{
+                      display: "flex",
+                      padding: "14px 16px",
+                      flexDirection: "column",
+                      gap: "10px",
+                      flex: "1 0 0",
+                      alignSelf: "stretch",
+                    }}
+                  >
+                    <Typography>Lainnya</Typography>
+                    <Typography>
+                      {dataPerubahan?.changes_by_advisor_other}
+                    </Typography>
+                  </Div>
+                </AccordionDetails>
+              </Accordion>
+              {advisorAndCoAdvisor?.coAdvisor1 && (
+                <Accordion sx={{ width: "100%" }}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                    sx={{ background: "#F5F5F5" }}
+                  >
+                    <Typography>Co-Advisor 1</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Abstrak</Typography>
+                      <Typography>
+                        {dataPerubahan?.changes_by_co_advisor1_abstrak}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 1</Typography>
+                      <Typography>
+                        {dataPerubahan?.changes_by_co_advisor1_bab1}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 2</Typography>
+                      <Typography>
+                        {dataPerubahan?.changes_by_co_advisor1_bab2}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 3</Typography>
+                      <Typography>
+                        {dataPerubahan?.changes_by_co_advisor1_bab3}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 4</Typography>
+                      <Typography>
+                        {dataPerubahan?.changes_by_co_advisor1_bab4}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 5</Typography>
+                      <Typography>
+                        {dataPerubahan?.changes_by_co_advisor1_bab5}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Lainnya</Typography>
+                      <Typography>
+                        {dataPerubahan?.changes_by_co_advisor1_other}
+                      </Typography>
+                    </Div>
+                  </AccordionDetails>
+                </Accordion>
+              )}
+              {advisorAndCoAdvisor?.coAdvisor2 && (
+                <Accordion sx={{ width: "100%" }}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                    sx={{ background: "#F5F5F5" }}
+                  >
+                    <Typography>Co-Advisor 2</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Abstrak</Typography>
+                      <Typography>
+                        {dataPerubahan?.changes_by_co_advisor2_abstrak}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 1</Typography>
+                      <Typography>
+                        {dataPerubahan?.changes_by_co_advisor2_bab1}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 2</Typography>
+                      <Typography>
+                        {dataPerubahan?.changes_by_co_advisor2_bab2}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 3</Typography>
+                      <Typography>
+                        {dataPerubahan?.changes_by_co_advisor2_bab3}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 4</Typography>
+                      <Typography>
+                        {dataPerubahan?.changes_by_co_advisor2_bab4}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Bab 5</Typography>
+                      <Typography>
+                        {dataPerubahan?.changes_by_co_advisor2_bab5}
+                      </Typography>
+                    </Div>
+                    <Div
+                      sx={{
+                        display: "flex",
+                        padding: "14px 16px",
+                        flexDirection: "column",
+                        gap: "10px",
+                        flex: "1 0 0",
+                        alignSelf: "stretch",
+                      }}
+                    >
+                      <Typography>Lainnya</Typography>
+                      <Typography>
+                        {dataPerubahan?.changes_by_co_advisor2_other}
+                      </Typography>
+                    </Div>
+                  </AccordionDetails>
+                </Accordion>
+              )}
             </Div>
-            <Div
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-                boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: "10px",
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Anggota Penelis
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: "10px",
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                <Typography sx={{ whiteSpace: "pre-line" }}>
-                  {dataPerubahan?.changes_by_member}
-                </Typography>
-              </Div>
-            </Div>
-            <Div
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                alignSelf: "stretch",
-                boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-              }}
-            >
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: "10px",
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                  background: "#F5F5F5",
-                }}
-              >
-                Advisor
-              </Div>
-              <Div
-                sx={{
-                  display: "flex",
-                  padding: "14px 16px",
-                  alignItems: "center",
-                  gap: "10px",
-                  flex: "1 0 0",
-                  alignSelf: "stretch",
-                }}
-              >
-                <Typography sx={{ whiteSpace: "pre-line" }}>
-                  {dataPerubahan?.changes_by_advisor}
-                </Typography>
-              </Div>
-            </Div>
-            {advisorAndCoAdvisor?.coAdvisor1 && (
-              <Div
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  alignSelf: "stretch",
-                  boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-                }}
-              >
-                <Div
-                  sx={{
-                    display: "flex",
-                    padding: "14px 16px",
-                    alignItems: "center",
-                    gap: "10px",
-                    flex: "1 0 0",
-                    alignSelf: "stretch",
-                    background: "#F5F5F5",
-                  }}
-                >
-                  Co-Advisor 1
-                </Div>
-                <Div
-                  sx={{
-                    display: "flex",
-                    padding: "14px 16px",
-                    alignItems: "center",
-                    gap: "10px",
-                    flex: "1 0 0",
-                    alignSelf: "stretch",
-                  }}
-                >
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {dataPerubahan?.changes_by_co_advisor1}
-                  </Typography>
-                </Div>
-              </Div>
-            )}
-            {advisorAndCoAdvisor?.coAdvisor2 && (
-              <Div
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  alignSelf: "stretch",
-                  boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-                }}
-              >
-                <Div
-                  sx={{
-                    display: "flex",
-                    padding: "14px 16px",
-                    alignItems: "center",
-                    gap: "10px",
-                    flex: "1 0 0",
-                    alignSelf: "stretch",
-                    background: "#F5F5F5",
-                  }}
-                >
-                  Co-Advisor 2
-                </Div>
-                <Div
-                  sx={{
-                    display: "flex",
-                    padding: "14px 16px",
-                    alignItems: "center",
-                    gap: "10px",
-                    flex: "1 0 0",
-                    alignSelf: "stretch",
-                  }}
-                >
-                  <Typography sx={{ whiteSpace: "pre-line" }}>
-                    {dataPerubahan?.changes_by_co_advisor2}
-                  </Typography>
-                </Div>
-              </Div>
-            )}
           </Div>
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
@@ -2937,7 +3701,7 @@ const BeritaAcara = () => {
         <DialogTitle>Berita Acara</DialogTitle>
         <DialogContent>
           <Typography>
-            Apakah Anda yakin ingin menyetujui berita acara?
+            Apakah Anda yakin ingin menandatangani berita acara?
           </Typography>
         </DialogContent>
         <DialogActions sx={{ background: "rgba(26, 56, 96, 0.10)" }}>

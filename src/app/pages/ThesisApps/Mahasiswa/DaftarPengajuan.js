@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import AddIcon from "@mui/icons-material/Add";
+import Div from "@jumbo/shared/Div";
+import MuiAlert from "@mui/material/Alert";
 import {
   Button,
   Chip,
@@ -25,445 +26,670 @@ import {
   InputLabel,
   Paper,
   FormHelperText,
+  Snackbar,
+  Alert,
+  AlertTitle,
+  CircularProgress,
+  IconButton,
 } from "@mui/material";
-import { Link } from "react-router-dom";
-import Div from "@jumbo/shared/Div";
-import { pdfjs } from "react-pdf";
-import ClearIcon from "@mui/icons-material/Clear";
-import axios from "axios";
-import AttachmentIcon from "@mui/icons-material/Attachment";
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+import {
+  Add,
+  Attachment,
+  Clear,
+  CloudUpload,
+  InsertDriveFile,
+} from "@mui/icons-material";
+import { Link, useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { Box } from "@mui/system";
 
 // View Document pengajuan judul
-const PDFViewerPengajuanJudul = ({ pengajuanJudulFile }) => {
+const PDFViewerPengajuanJudul = ({
+  pengajuanJudulFile,
+  handleDeleteFile,
+  isFileUploaded,
+}) => {
   const viewPDFPengajuanJudul = () => {
-    // Buat URL objek untuk file PDF
-    const pdfURL = URL.createObjectURL(pengajuanJudulFile);
+    // Mengonversi base64 string ke binary
+    const binaryString = window.atob(pengajuanJudulFile.buffer);
+
+    // Membuat array dari karakter binary string
+    const binaryArray = [];
+    for (let i = 0; i < binaryString.length; i++) {
+      binaryArray.push(binaryString.charCodeAt(i));
+    }
+
+    // Membuat blob dari array binary
+    const blob = new Blob([new Uint8Array(binaryArray)], {
+      type: "application/pdf",
+    });
+
+    // Buat tautan URL dari blob
+    const pdfURL = URL.createObjectURL(blob);
 
     // Buka tautan dalam tab atau jendela baru
     window.open(pdfURL, "_blank");
   };
 
   return (
-    <div>
-      <span onClick={viewPDFPengajuanJudul} style={{ fontSize: "14px" }}>
-        Lihat
-      </span>
-    </div>
+    <Div>
+      <Box
+        sx={{
+          borderRadius: 1,
+          border: "1px solid #757575",
+          display: "inline-flex",
+          alignItems: "center",
+          p: 1,
+          height: "35px",
+          cursor: "pointer",
+        }}
+        onClick={viewPDFPengajuanJudul}
+      >
+        <InsertDriveFile
+          fontSize="small"
+          color="primary"
+          sx={{ marginRight: "5px" }}
+        ></InsertDriveFile>
+        <span
+          style={{
+            fontSize: "14px",
+            cursor: "pointer",
+            textDecoration: "none",
+            borderBottom: "1px solid transparent",
+            transition: "border-color 0.3s",
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.borderBottomColor = "initial";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.borderBottomColor = "transparent";
+          }}
+        >
+          {pengajuanJudulFile.name}
+        </span>
+        <IconButton
+          aria-label="clear"
+          onClick={(e) => {
+            e.stopPropagation(); // Menghentikan penyebaran klik
+            handleDeleteFile();
+          }}
+          size="small"
+          sx={{ marginLeft: "5px" }}
+          disabled={isFileUploaded}
+        >
+          <Clear fontSize="inherit" />
+        </IconButton>
+      </Box>
+    </Div>
   );
 };
 
 function DaftarPengajuan() {
-  // State -  Dialog
-  const [open, setOpen] = useState(false);
-  // State - Daftar pengajuan
-  const [daftarPengajuan, setDaftarPengajuan] = useState([]);
-  // State - Daftar kelas
-  const [kelas, setKelas] = useState(""); // State untuk nilai yang dipilih dalam Select
-  const [selectedClassroomId, setSelectedClassroomId] = useState(""); // State untuk ID kelas yang dipilih
-  const [daftarKelas, setDaftarKelas] = useState([]);
-  // State - Daftar partner
-  const [daftarPartner, setDaftarPartner] = useState([]);
-  const [selectedOptions, setSelectedOptions] = useState([""]);
-  const [inputCount, setInputCount] = useState(1);
-  const [partnerIds, setPartnerIds] = useState([]);
-  // State - Daftar dosen
-  const [daftarDosen, setDaftarDosen] = useState([]);
-  const [selectedAdvisorId, setSelectedAdvisorId] = useState("");
-  const [selectedCoAdvisor1Id, setSelectedCoAdvisor1Id] = useState("");
-  const [selectedCoAdvisor2Id, setSelectedCoAdvisor2Id] = useState("");
-  // state - judul
-  const [judulPengajuanBaru, setJudulPengajuanBaru] = useState(""); // State untuk judul yang dimasukkan
-  // state - konsultasi
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [konsultasi, setKonsultasi] = useState(null);
-  // State - file
-  const [pengajuanJudulFile, setPengajuanJudulFile] = useState(null);
-  const [selectedFileName, setSelectedFileName] = useState("");
-  const [UploadedFiles, setUploadedFiles] = useState([]);
-  // State - konfirmasi pengajuan
-  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-  // State - error message
-  const [judulError, setJudulError] = useState(""); // State untuk pesan error judul
-  // State - group id
+  // ======================== STATE ===========================
+  // mengatur loading page
+  const [loadingPage, setLoadingPage] = useState(true);
+  // console.log("loading page", loadingPage);
+  // mengatur loading form
+  const [loadingForm, setLoadingForm] = useState(true);
+  // console.log("loading form", loadingForm);
 
-  // const [judulPengajuan, setJudulPengajuan] = useState([]);
-  const [dosenPembibingError, setDosenPembibingError] = useState("");
-  const [selectFileError, setSelectFileError] = useState("");
-  const [selectKelasError, setSelectKelasError] = useState("");
-  const [selectedOptionError, setSelectedOptionError] = useState("");
+  // menyimpan hasil request - daftar pengajuan
+  const [daftarPengajuan, setDaftarPengajuan] = useState();
+  // menyimpan hasil request - daftar kelas
+  const [daftarKelas, setDaftarKelas] = useState();
+  // menyimpan hasil request - daftar parner
+  const [daftarPartner, setDaftarPartner] = useState();
+  // menyimpan hasil request - daftar dosen
+  const [daftarDosen, setDaftarDosen] = useState([]);
+
+  // mengatur notif error
+  const [alerts, setAlerts] = useState([]);
+
+  // menyimpan kelas yang dipilih - id
+  const [selectedClassroomId, setSelectedClassroomId] = useState(""); // State untuk ID kelas yang dipilih
+
+  // menyimpan partner yang dipilih
+  const [partnerData, setPartnerData] = useState([
+    { id: null, selectedPartnerName: "" },
+  ]);
+
+  // menyimpan dosen yang dipilih - advisor
+  const [selectedAdvisorId, setSelectedAdvisorId] = useState("");
+  // menambah co-advisor 1 & 2
+  const [addCoAdvisor, setAddCoAdvisor] = useState([
+    { id: null, selectedCoAdvisorName: "" },
+  ]);
+
+  // menyimpan status konsultasi yang dipilih
+  // const [selectedKonsultasi, setSelectedKonsultasi] = useState(null);
+  const [konsultasi, setKonsultasi] = useState(null);
+
+  // menyimpan judul yang diinput
+  const [judul, setJudul] = useState(""); // State untuk judul yang dimasukkan
+
+  // State -  Dialog
+  const [openMengajukanJudul, setOpenMengajukanJudul] = useState(false);
+
+  // State - file
+  const [unggahFile, setUnggahFile] = useState();
+  // State - konfirmasi pengajuan
+  const [isConfirmAjukanOpen, setIsConfirmAjukanOpen] = useState(false);
 
   // Tambahkan state untuk melacak apakah file telah diunggah
-  const [isFileUploaded, setFileUploaded] = useState(false);
+  const [isFileUploaded, setIsFileUploaded] = useState(false);
 
-  // fungsi membuka tombol AJUKAN JUDUL
-  const handleClickOpen = async () => {
-    setOpen(true);
+  // error message
+  const [errorMessages, setErrorMessages] = useState({
+    kelas: "",
+    file: "",
+    judul: "",
+    advisor: "",
+    konsultasi: "",
+  });
+
+  // ======================== FUNCTION ===========================
+  // fungsi untuk mendapatkan token JWT
+  const token = localStorage.getItem("token");
+  // console.log("token", token);
+
+  const navigate = useNavigate();
+
+  const fetchDaftarPengajuanData = async () => {
+    jwtAuthAxios
+      .get("/group/thesis_list", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // menyimpan hasil request
+        setDaftarPengajuan(response.data.data);
+        // console.log("Request get daftar pengajuan: ", response.data.data);
+        // menonaktifkan loading page
+        setLoadingPage(false);
+        // console.log("loading page", loadingPage);
+      })
+      .catch((error) => {
+        // redirect ke home
+        if (
+          error.response.data.data.error ===
+          "You don't have permission to perform this action"
+        ) {
+          navigate(`/`);
+        } else {
+          const newAlert = {
+            id: `error-${Math.random()}`,
+            open: true,
+            severity: "error",
+            title: "Terjadi Kesalahan!",
+            message: "Tidak dapat menampilkan daftar pengajuan.",
+          };
+          addAlert(newAlert);
+          // console.error(
+          //   "Terjadi kesalahan saat mengambil daftar pengajuan:",
+          //   error
+          // );
+        }
+      })
+      .finally(() => {
+        // menonaktifkan loading page
+        setLoadingPage(false);
+        // console.log("loading page", loadingPage);
+      });
   };
 
-  // fungsi untuk mendapatkan data GET
-  // token JWT
-  const token = localStorage.getItem("token");
-  console.log("token", token);
+  const fetchDaftarKelasData = async () => {
+    jwtAuthAxios
+      .get("/group/classroom_list", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // menyimpan hasil request
+        setDaftarKelas(response.data.data);
+        // console.log("Request get daftar kelas: ", response.data.data);
+      })
+      .catch((error) => {
+        // console.error("Terjadi kesalahan saat mengambil daftar kelas:", error);
+      });
+  };
+
+  const fetchDaftarMahasiswaData = async () => {
+    jwtAuthAxios
+      .get(`/group/classroom/students-list/${selectedClassroomId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        // menyimpan hasil request
+        setDaftarPartner(response.data.data);
+        // console.log("Request get daftar mahasiswa: ", response.data.data);
+      })
+      .catch((error) => {
+        // console.error(
+        //   "Terjadi kesalahan saat mengambil daftar mahasiswa:",
+        //   error
+        // );
+      });
+  };
+
+  const fetchDaftarDosenData = async () => {
+    jwtAuthAxios
+      .get(`/group/dosen-list`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+        },
+      })
+      .then((response) => {
+        // menyimpan hasil request
+        setDaftarDosen(response.data.data);
+        // console.log("Request get daftar dosen: ", response.data.data);
+      })
+      .catch((error) => {
+        // console.error("Terjadi kesalahan saat mengambil daftar dosen:", error);
+      });
+  };
 
   useEffect(() => {
-    const fetchDaftarPengajuanData = async () => {
+    fetchDaftarPengajuanData();
+  }, [token]);
+
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/group/thesis_list",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // Atur state 'daftarPengajuan' dengan data dari respons
-        setDaftarPengajuan(response.data.data);
+        await fetchDaftarKelasData();
+        await fetchDaftarMahasiswaData();
+        await fetchDaftarDosenData();
+        // menonaktifkan loading form
+        setLoadingForm(false);
       } catch (error) {
-        console.error(
-          "Terjadi kesalahan saat mengambil daftar pengajuan:",
-          error
-        );
+        // menonaktifkan loading form
+        setLoadingForm(false);
+        const newErrorAlert = {
+          id: `error-${Math.random()}`,
+          open: true,
+          severity: "error",
+          title: "Terjadi Kesalahan!",
+          message: "Tidak dapat menampilkan data formulir.",
+        };
+        addAlert(newErrorAlert);
       }
     };
-
-    const fetchDaftarKelasData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/group/classroom_list",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        // Mengubah format data dari backend menjadi format yang sesuai
-        const formattedData = response.data.data.map((kelasItem, index) => ({
-          label: kelasItem.classroom,
-          value: kelasItem.id,
-        }));
-        setDaftarKelas(formattedData);
-      } catch (error) {
-        console.error("Terjadi kesalahan saat mengambil daftar kelas:", error);
-      }
-    };
-
-    const fetchDaftarMahasiswaData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:2000/api/v1/group/classroom/students-list/${selectedClassroomId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setDaftarPartner(response.data.data);
-      } catch (error) {
-        console.error(
-          "Terjadi kesalahan saat mengambil daftar mahasiswa:",
-          error
-        );
-      }
-    };
-
-    const fetchDaftarDosenData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:2000/api/v1/group/dosen-list`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
-            },
-          }
-        );
-        setDaftarDosen(response.data.data);
-      } catch (error) {
-        console.error("Terjadi kesalahan saat mengambil daftar dosen:", error);
-      }
-    };
-
-    fetchDaftarPengajuanData(); // Panggil fungsi fetchData saat komponen dimuat
-    fetchDaftarKelasData();
-    fetchDaftarMahasiswaData();
-    fetchDaftarDosenData();
+    fetchData();
   }, [token, selectedClassroomId]);
 
-  // fungsi - ganti kelas
-  const handleKelasChange = (event) => {
-    const selectedClassroomId = event.target.value; // Mengambil ID kelas yang dipilih
-    setSelectedClassroomId(selectedClassroomId);
-    setSelectKelasError("");
+  // mengatur notif error
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const addAlert = (newAlert) => {
+    setAlerts((prevAlerts) => [...prevAlerts, newAlert]);
+  };
+  const closeAlert = (id) => {
+    setAlerts((prevAlerts) => prevAlerts.filter((alert) => alert.id !== id));
   };
 
-  // fungsi - ganti partner
-  const handlePartnerChange = (e, index) => {
-    // menambah id partner yang dipilih
+  // buka mengajukan judul
+  const handleOpenMengajukanJudul = async () => {
+    setOpenMengajukanJudul(true);
+  };
+
+  // tutup mengajukan Judul
+  const handleCloseMengajukanJudul = () => {
+    // clean error
+    setErrorMessages((prevErrors) => ({
+      ...prevErrors,
+      kelas: "",
+      file: "",
+      judul: "",
+      advisor: "",
+      konsultasi: "",
+    }));
+    // clean form
+    setSelectedClassroomId("");
+    setPartnerData([{ id: null, selectedPartnerName: "" }]);
+    setUnggahFile();
+    setJudul("");
+    setSelectedAdvisorId("");
+    setAddCoAdvisor([{ id: null, selectedCoAdvisorName: "" }]);
+    setKonsultasi(null);
+    // reset status menjadi false
+    setIsFileUploaded(false);
+    // close Mengajukan Judul
+    setOpenMengajukanJudul(false);
+  };
+
+  // ganti partner
+  const handleChangePartner = (e, index) => {
     const selectedPartner = daftarPartner.find(
-      (partner) => partner.fullName === e.target.value.fullName
+      (partner) => partner.fullName === e.target.value
     );
-    console.log(e.target.value);
+
     if (selectedPartner) {
-      const selectedPartnerId = selectedPartner.id;
-
-      const newPartnerIds = [...partnerIds];
-      newPartnerIds[index] = selectedPartnerId;
-      setPartnerIds(newPartnerIds);
-      console.log(selectedPartnerId);
-    }
-
-    const newSelectedOptions = [...selectedOptions];
-    newSelectedOptions[index] = e.target.value;
-    setSelectedOptions(newSelectedOptions);
-  };
-
-  // fungsi - tombol tambah partner
-  const handleAddSelect = () => {
-    if (inputCount < 4) {
-      setInputCount(inputCount + 1);
-      setSelectedOptions([...selectedOptions, ""]);
+      const updatedPartners = partnerData.map((partner, i) =>
+        i === index
+          ? {
+              ...partner,
+              id: selectedPartner.id,
+              selectedPartnerName: e.target.value,
+            }
+          : partner
+      );
+      setPartnerData(updatedPartners);
     }
   };
 
-  // fungsi - menghapus partner
-  const handleDeleteSelect = (index) => {
-    if (index >= 0) {
-      // menghapus id partner yang dipilih
-      const newPartnerIds = [...partnerIds];
-      newPartnerIds[index] = null;
-      setPartnerIds(newPartnerIds);
-      console.log(partnerIds);
-
-      const newSelectedOptions = [...selectedOptions];
-      newSelectedOptions.splice(index, 1);
-      setSelectedOptions(newSelectedOptions);
-
-      setInputCount(inputCount - 1);
+  // tambah partner
+  const handleAddPartner = () => {
+    if (partnerData.length < 4) {
+      setPartnerData([...partnerData, { id: null, selectedPartnerName: "" }]);
     }
   };
 
-  const handleAdvisorChange = (e) => {
+  // hapus partner
+  const handleDeletePartner = (index) => {
+    if (index > 0) {
+      const updatedPartners = [...partnerData];
+      updatedPartners.splice(index, 1);
+      setPartnerData(updatedPartners);
+    }
+  };
+
+  // ganti
+  const handleChangeAdvisor = (e) => {
     setSelectedAdvisorId(e.target.value);
-    setDosenPembibingError(""); // Ini akan menghilangkan pesan error ketika Advisor diubah
+    // clean error
+    setErrorMessages((prevErrors) => ({
+      ...prevErrors,
+      advisor: "",
+    }));
   };
 
-  // fungsi - radio button konsultasi
-  const handleOptionChange = (e) => {
-    const value = e.target.value;
-    setSelectedOption(value);
+  // ganti co-advisor
+  const handleChangeCoAdvisor = (e, index) => {
+    const selectedCoAdvisor = daftarDosen.find(
+      (dosen) => dosen.name === e.target.value
+    );
 
-    if (value) {
-      setSelectedOptionError(""); // Bersihkan pesan error saat ada pilihan yang dipilih
+    if (selectedCoAdvisor) {
+      const updatedCoAdvisor = addCoAdvisor.map((dosen, i) =>
+        i === index
+          ? {
+              ...dosen,
+              id: selectedCoAdvisor.id,
+              selectedCoAdvisorName: e.target.value,
+            }
+          : dosen
+      );
+      setAddCoAdvisor(updatedCoAdvisor);
     }
+  };
+
+  // tambah co-advisor
+  const handleAddCoAdvisor = () => {
+    // menambah co-advisor tidak lebih dari 2
+    if (addCoAdvisor.length < 3) {
+      setAddCoAdvisor([
+        ...addCoAdvisor,
+        { id: null, selectedCoAdvisorName: "" },
+      ]);
+    }
+  };
+
+  // hapus co-advisor
+  const handleDeleteCoAdvisor = (index) => {
+    if (index > 0) {
+      const updatedCoAdvisor = [...addCoAdvisor];
+      updatedCoAdvisor.splice(index, 1);
+      setAddCoAdvisor(updatedCoAdvisor);
+    }
+  };
+
+  // konsultasi
+  const handleChangeStatusKonsultasi = (e) => {
+    const value = e.target.value;
+
+    // clean error
+    setErrorMessages((prevErrors) => ({
+      ...prevErrors,
+      konsultasi: "",
+    }));
 
     if (value === "ya") {
       setKonsultasi(true);
     } else if (value === "tidak") {
       setKonsultasi(false);
     } else {
-      // Handle kasus ketika tidak ada opsi yang dipilih
-      setKonsultasi(false); // Atau Anda bisa menentukan nilai yang sesuai dengan kebutuhan Anda.
+      setKonsultasi();
     }
   };
 
-  // fungsi - tombol pilih file
-  const onPengajuanJudulFileChange = (event) => {
+  // unggah file
+  const handleAddFile = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      if (UploadedFiles.length === 0) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          // e.target.result berisi data URL dari file
-          const dataURL = e.target.result;
 
-          // Mengonversi data URL ke base64
-          const base64String = dataURL.split(",")[1];
-
-          setPengajuanJudulFile(file);
-          setSelectedFileName(file.name);
-
-          // Tambahkan data file baru ke state pengajuanJudulUploadedFiles
-          const newFileData = {
-            name: file.name,
-            size: file.size,
-            buffer: base64String,
-          };
-          console.log(newFileData);
-          setUploadedFiles([newFileData]);
-          // Set menjadi true
-          setFileUploaded(true);
-        };
-
-        reader.readAsDataURL(file);
-      } else {
-      }
-      setSelectFileError(""); // Clear error message when a file is uploaded
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
     }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setIsFileUploaded(true);
+
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
+
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setIsFileUploaded(false); // Aktifkan kembali tombol
+      return;
+    }
+
+    // Bersihkan error
+    setErrorMessages((prevErrors) => ({
+      ...prevErrors,
+      file: "",
+    }));
+
+    const reader = new FileReader();
+
+    // Menangani kesalahan FileReader
+    reader.onerror = (error) => {
+      console.error("Terjadi kesalahan saat membaca file:", error);
+    };
+
+    reader.onload = (e) => {
+      // e.target.result berisi data URL dari file
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1].replace(/\s/g, ""); // Menghilangkan spasi yang mungkin muncul dalam base64
+
+      // Logika pengolahan file
+      const fileSizeInKB = file.size / 1024; // Konversi ke KB
+      const fileSizeString =
+        fileSizeInKB < 1024
+          ? fileSizeInKB.toFixed(2) + " KB"
+          : (fileSizeInKB / 1024).toFixed(2) + " MB";
+
+      const newFileData = {
+        name: file.name,
+        size: fileSizeString,
+        buffer: base64String,
+      };
+
+      setUnggahFile(newFileData);
+
+      setIsFileUploaded(false);
+    };
+
+    reader.readAsDataURL(file);
   };
 
-  // fungsi - tombol menghapus file Pengajuan Judul
-  const handleDeleteFile = (index) => {
-    const updatedFiles = [...UploadedFiles];
-    updatedFiles.splice(index, 1);
-    setUploadedFiles(updatedFiles);
-    setPengajuanJudulFile(null);
-    setSelectedFileName("");
+  // hapus file
+  const handleDeleteFile = () => {
+    // Nonaktifkan tombol
+    setIsFileUploaded(true);
+
+    // hapus file
+    setUnggahFile();
+
+    // Aktifkan tombol
+    setIsFileUploaded(false);
+
+    //  set error
+    setErrorMessages((prevErrors) => ({
+      ...prevErrors,
+      file: "Dibutuhkan",
+    }));
   };
 
-  // fungsi - tombol menumtup Mengajukan Judul
-  const handleClose = () => {
-    setOpen(false);
-    setJudulError(""); // Bersihkan pesan error ketika dialog ditutup
-    setDosenPembibingError("");
-
-    // reset kelas terpilih
-    setKelas(null);
-    // reset id kelas terpilih
-    setSelectedClassroomId(null);
-    // reset baris partner
-    setInputCount(1);
-    // reset partner yang dipilih
-    setPartnerIds([]);
-    setSelectedOptions([]);
-    // reset id dosen terpillih
-    setSelectedAdvisorId(null);
-    setSelectedCoAdvisor1Id(null);
-    setSelectedCoAdvisor2Id(null);
-    // reset konsultasi pilihan
-    setSelectedOption(null);
-    // reset data konsultasi
-    setKonsultasi(null);
-    // reset judul
-    setJudulPengajuanBaru("");
-    // reset file dan nama file
-    setPengajuanJudulFile(null);
-    setSelectedFileName("");
-    // reset daftar file yang telah diunggah
-    setUploadedFiles([]);
-    // reset status menjadi false
-    setFileUploaded(false);
-  };
-
-  const [errorMessages, setErrorMessages] = useState({
-    judulPengajuanBaru: "",
-    selectedClassroomId: "",
-    selectedAdvisorId: "",
-    selectedOption: "",
-  });
-
-  // fungsi - tombol Ajukan
-  const handleSubmit = async () => {
+  // buka konfirmasi ajukan judul
+  const handleOpenConfirmAjukan = async () => {
     let isFormValid = true;
-    let newErrorMessages = {};
-
-    if (!judulPengajuanBaru) {
-      newErrorMessages.judulPengajuanBaru = "Judul harus diisi";
-      isFormValid = false;
-    }
+    let newErrorMessages = {
+      kelas: "",
+      file: "",
+      judul: "",
+      advisor: "",
+      konsultasi: "",
+    };
 
     if (!selectedClassroomId) {
-      newErrorMessages.selectedClassroomId = "Kelas harus diisi";
+      newErrorMessages.kelas = "Dibutuhkan";
       isFormValid = false;
     }
-
+    if (!unggahFile) {
+      newErrorMessages.file = "Dibutuhkan";
+      isFormValid = false;
+    }
+    if (!judul) {
+      newErrorMessages.judul = "Dibutuhkan";
+      isFormValid = false;
+    }
     if (!selectedAdvisorId) {
-      newErrorMessages.selectedAdvisorId = "Advisor harus diisi";
+      newErrorMessages.advisor = "Dibutuhkan";
       isFormValid = false;
     }
-
-    if (!selectedOption) {
-      newErrorMessages.selectedOption = "Harus memasukkan konsultasi di sini";
-      isFormValid = false;
-    }
-
-    if (!pengajuanJudulFile) {
-      setSelectFileError("Anda harus unggah file");
+    if (!konsultasi) {
+      newErrorMessages.konsultasi = "Dibutuhkan";
       isFormValid = false;
     }
 
     if (isFormValid) {
-      setIsConfirmDialogOpen(true);
+      setIsConfirmAjukanOpen(true);
     } else {
+      // set error
       setErrorMessages(newErrorMessages);
-      // Tampilkan pesan kesalahan
     }
   };
-  // fungsi - menutup konfirmasi pengajuan
-  const handleCloseConfirmDialog = () => {
-    setIsConfirmDialogOpen(false);
+
+  // tutup konfirmasi ajukan judul
+  const handleCloseConfirmAjukan = () => {
+    setIsConfirmAjukanOpen(false);
   };
 
-  // fungsi - mengirim pengajuan judul
+  // Kirim ajukan judul
   const handleConfirmSubmit = () => {
-    // Tambahkan judul baru ke dalam state judulPengajuan
-    // setJudulPengajuan([...judulPengajuan, judulPengajuanBaru]);
-
-    // Tutup popup konfirmasi
-    setIsConfirmDialogOpen(false);
-
     const submission_file = {
-      file_name: UploadedFiles[0].name,
-      file_size: UploadedFiles[0].size.toString(),
-      buffer: UploadedFiles[0].buffer,
+      file_name: unggahFile.name,
+      file_size: unggahFile.size.toString(),
+      buffer: unggahFile.buffer,
     };
+    const partner1Id = partnerData[0] ? partnerData[0].id : null;
+    const partner2Id = partnerData[1] ? partnerData[1].id : null;
+    const partner3Id = partnerData[2] ? partnerData[2].id : null;
+
     const pengajuanData = {
-      partner1: partnerIds[0] || null,
-      partner2: partnerIds[1] || null,
-      partner3: partnerIds[2] || null,
-      title: judulPengajuanBaru,
+      partner1: partner1Id,
+      partner2: partner2Id,
+      partner3: partner3Id,
+      title: judul,
       is_consultation: konsultasi,
       proposed_advisor_id: selectedAdvisorId,
-      proposed_co_advisor1_id: selectedCoAdvisor1Id || null,
-      proposed_co_advisor2_id: selectedCoAdvisor2Id || null,
+      proposed_co_advisor1_id: addCoAdvisor[0] ? addCoAdvisor[0].id : null,
+      proposed_co_advisor2_id: addCoAdvisor[1] ? addCoAdvisor[1].id : null,
       classroom_id: selectedClassroomId,
       submission_file,
     };
-    console.log(pengajuanData);
-    axios
-      .post(`http://localhost:2000/api/v1/submission`, pengajuanData, {
+    // console.log("data yang diajukan", pengajuanData);
+
+    jwtAuthAxios
+      .post(`/submission`, pengajuanData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        if (response.status === 201) {
-          // Tutup dialog
-          setOpen(false);
-          // reset kelas terpilih
-          setKelas(null);
-          // reset id kelas terpilih
-          setSelectedClassroomId(null);
-          // reset baris partner
-          setInputCount(1);
-          // reset partner yang dipilih
-          setPartnerIds([]);
-          // reset id dosen terpillih
-          setSelectedAdvisorId(null);
-          setSelectedCoAdvisor1Id(null);
-          setSelectedCoAdvisor2Id(null);
-          // reset konsultasi pilihan
-          setSelectedOption(null);
-          // reset data konsultasi
-          setKonsultasi(null);
-          // reset judul
-          setJudulPengajuanBaru("");
-          // reset file dan nama file
-          setPengajuanJudulFile(null);
-          setSelectedFileName("");
-          // reset daftar file yang telah diunggah
-          setUploadedFiles([]);
-          // reset status menjadi false
-          setFileUploaded(false);
-          console.log("Berhasil menambahkan data:", response.data);
-        } else {
-          console.error("Gagal menambahkan data:", response.data);
-        }
+        const newAlert = {
+          id: `success-${Math.random()}`,
+          open: true,
+          severity: "success",
+          title: "Sukses!",
+          message: "Berhasil mengajukan judul.",
+        };
+        addAlert(newAlert);
+
+        // console.log("Berhasil menambahkan data:", response.data);
+        // clean error
+        setErrorMessages((prevErrors) => ({
+          ...prevErrors,
+          kelas: "",
+          file: "",
+          judul: "",
+          advisor: "",
+          konsultasi: "",
+        }));
+        // clean form
+        setSelectedClassroomId("");
+        setPartnerData([{ id: null, selectedPartnerName: "" }]);
+        setUnggahFile();
+        setJudul("");
+        setSelectedAdvisorId("");
+        setAddCoAdvisor([{ id: null, selectedCoAdvisorName: "" }]);
+        setKonsultasi(null);
+        // reset status menjadi false
+        setIsFileUploaded(false);
+        // Tutup popup konfirmasi
+        setIsConfirmAjukanOpen(false);
+        // Tutup mengajukan judul
+        setOpenMengajukanJudul(false);
+
+        // request data
+        fetchDaftarPengajuanData();
       })
       .catch((error) => {
-        console.error("Terjadi kesalahan:", error);
+        const newAlert = {
+          id: `error-${Math.random()}`,
+          open: true,
+          severity: "error",
+          title: "Terjadi Kesalahan!",
+          message: "Tidak dapat mengajukan judul.",
+        };
+        addAlert(newAlert);
+        console.error("Terjadi kesalahan saat menambahkan data:", error);
       });
   };
+
+  // Menampilkan ikon loading jika data masih dalam proses fetching
+  if (loadingPage) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <Div>
@@ -500,16 +726,16 @@ function DaftarPengajuan() {
                   color: "#006AF5",
                 },
               }}
-              onClick={handleClickOpen}
+              onClick={handleOpenMengajukanJudul}
             >
-              <AddIcon />
+              <Add />
               Ajukan Judul
             </Button>
           </Div>
         </Div>
       </Div>
 
-      {daftarPengajuan.length > 0 ? (
+      {daftarPengajuan?.length > 0 ? (
         <TableContainer component={Paper}>
           <Table>
             <TableHead style={{ background: "rgba(26, 56, 96, 0.10)" }}>
@@ -534,7 +760,7 @@ function DaftarPengajuan() {
             </TableHead>
             <TableBody>
               {daftarPengajuan?.map((pengajuan, index) => (
-                <TableRow key={index}>
+                <TableRow key={pengajuan.group_id}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{pengajuan.title}</TableCell>
                   <TableCell>
@@ -563,13 +789,11 @@ function DaftarPengajuan() {
                         }}
                       />
                     ) : (
-                      pengajuan.is_approve
+                      <Chip label={"Belum"} />
                     )}
                   </TableCell>
                   <TableCell>
-                    {pengajuan.is_pass_proposal === null ? (
-                      <Chip label={"Belum"} />
-                    ) : pengajuan.is_pass_proposal === "Repeat" ? (
+                    {pengajuan.is_pass_proposal === "Repeat" ? (
                       <Chip
                         label={"Mengulang"}
                         sx={{
@@ -594,13 +818,11 @@ function DaftarPengajuan() {
                         }}
                       />
                     ) : (
-                      pengajuan.is_pass_proposal
+                      <Chip label={"Belum"} />
                     )}
                   </TableCell>
                   <TableCell>
-                    {pengajuan.is_pass_skripsi === null ? (
-                      <Chip label={"Belum"} />
-                    ) : pengajuan.is_pass_skripsi === "Repeat" ? (
+                    {pengajuan.is_pass_skripsi === "Repeat" ? (
                       <Chip
                         label={"Mengulang"}
                         sx={{
@@ -625,7 +847,7 @@ function DaftarPengajuan() {
                         }}
                       />
                     ) : (
-                      pengajuan.is_pass_skripsi
+                      <Chip label={"Belum"} />
                     )}
                   </TableCell>
                   <TableCell>
@@ -680,490 +902,630 @@ function DaftarPengajuan() {
         </Div>
       )}
 
-      <Dialog open={open} onClose={handleClose} maxWidth="xl" fullWidth>
+      <Dialog
+        open={openMengajukanJudul}
+        onClose={handleCloseMengajukanJudul}
+        maxWidth="xl"
+        fullWidth
+      >
         <DialogTitle
           style={{
             background: "rgba(26, 56, 96, 0.10)",
             width: "full",
             height: "75px",
-            marginBottom: "50px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            fontSize: "24px",
           }}
         >
-          Mengajukan Judul
+          MENGAJUKAN JUDUL
         </DialogTitle>
-        <DialogContent>
-          <DialogTitle
+        {loadingForm ? (
+          <Div
             style={{
-              background: "rgba(26, 56, 96, 0.10)",
-              width: "100%",
-              height: "75px",
-              marginBottom: "25px",
               display: "flex",
-              justifyContent: "flex-start",
+              justifyContent: "center",
               alignItems: "center",
-              borderRadius: "6px",
+              height: "100vh",
             }}
           >
-            Kelas Proposal
-          </DialogTitle>
-          {/* select kelas */}
-          <Div sx={{ marginBottom: "25px" }}>
-            <FormControl sx={{ m: 1, minWidth: "98%" }} size="small">
-              <InputLabel id="demo-select-kelas-small-label">Kelas</InputLabel>
-              <Select
-                labelId="demo-select-kelas-small-label"
-                id="demo-select-kelas-small"
-                value={selectedClassroomId}
-                label="Kelas"
-                onChange={handleKelasChange}
-                error={!!errorMessages.selectedClassroomId}
-                helperText={errorMessages.kelas}
-                MenuProps={{
-                  anchorOrigin: {
-                    vertical: "bottom",
-                    horizontal: "left",
-                  },
-                  transformOrigin: {
-                    vertical: "top",
-                    horizontal: "left",
-                  },
-                  getContentAnchorEl: null,
-                  style: {
-                    maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
-                  },
-                }}
-              >
-                {daftarKelas?.map((kelasItem, index) => (
-                  <MenuItem key={index} value={kelasItem.value}>
-                    {kelasItem.label}
-                  </MenuItem>
-                ))}
-              </Select>
-              <FormHelperText
-                sx={{ fontSize: "14px" }}
-                error={!!errorMessages.selectedClassroomId}
-              >
-                {errorMessages.selectedClassroomId}
-              </FormHelperText>
-            </FormControl>
+            <CircularProgress />
           </Div>
-          <Div>
-            {selectKelasError && (
-              <Typography
-                style={{
-                  color: "red",
-                  marginTop: "-20px",
-                  marginBottom: "25px",
-                }}
-              >
-                {selectKelasError}
-              </Typography>
-            )}
-          </Div>
-          <DialogTitle
-            style={{
-              background: "rgba(26, 56, 96, 0.10)",
-              width: "100%",
-              height: "75px",
-              marginBottom: "25px",
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              borderRadius: "6px",
-            }}
-          >
-            Buat Kelompok
-          </DialogTitle>
-          {[...Array(inputCount)].map((_, index) => (
-            <Div key={index} sx={{ display: "flex", gap: "15px" }}>
-              {index > 0 && ( // Munculkan input nama partner setelah indeks 0
-                <Div>
-                  <FormControl
-                    style={{ minWidth: 120, alignItems: "center" }}
-                    size="small"
-                  >
-                    <InputLabel id={`nama-partner-label-${index}`}>
-                      Nama Partner {index}
-                    </InputLabel>
-                    <Select
-                      labelId={`nama-partner-label-${index}`}
-                      id={`nama-partner-select-${index}`}
-                      label={`Nama Partner ${index + 1}`}
-                      fullWidth
-                      value={selectedOptions[index]}
-                      onChange={(e) => handlePartnerChange(e, index)}
-                      style={{ marginBottom: "25px", width: "400px" }}
-                    >
-                      {daftarPartner
-                        ? daftarPartner?.map((partner, partnerIndex) => (
-                            <MenuItem key={partnerIndex} value={partner}>
-                              {partner.fullName}
-                            </MenuItem>
-                          ))
-                        : null}
-                    </Select>
-                  </FormControl>
-                </Div>
-              )}
-              <Div sx={{ marginTop: "6px" }}>
-                {index > 0 && ( // Munculkan tombol hapus setelah indeks 0
-                  <span
-                    style={{
-                      textDecoration: "none",
-                      cursor: "pointer",
-                      color: "#757575",
-                    }}
-                    onClick={() => handleDeleteSelect(index)}
-                  >
-                    <ClearIcon />
-                  </span>
-                )}
-              </Div>
-            </Div>
-          ))}
-          {inputCount < 4 && (
-            <Button
-              style={{ fontSize: "14px", marginBottom: "25px" }}
-              onClick={handleAddSelect}
-            >
-              <AddIcon fontSize="small" />
-              Tambah Partner
-            </Button>
-          )}
-
-          <Div>
-            {/*TextArea Start */}
-            <Div>
-              <DialogContentText style={{ width: "100%", margin: "auto" }}>
-                Judul
-              </DialogContentText>
-              <TextareaAutosize
-                aria-label="minimum height"
-                minRows={3}
-                placeholder="Masukkan judul"
-                style={{
-                  width: "100%",
-                  height: 50,
-                  marginBottom: "25px",
-                  display: "block",
-                  resize: "vertical",
-                  borderColor: errorMessages.judulPengajuanBaru ? "red" : "",
-                }}
-                value={judulPengajuanBaru}
-                onChange={(e) => {
-                  setJudulPengajuanBaru(e.target.value);
-                  setErrorMessages({
-                    ...errorMessages,
-                    judulPengajuanBaru: "",
-                  }); // Bersihkan pesan error saat pengguna mengubah judul
-                }}
-              />
-              {errorMessages.judulPengajuanBaru && (
-                <Typography style={{ color: "red", marginTop: "-20px" }}>
-                  {errorMessages.judulPengajuanBaru}
-                </Typography>
-              )}
-            </Div>
-            {/* TextArea End */}
-
-            {/* Upload Pengajuan Judul Start */}
-            <Div
-              sx={{
+        ) : (
+          <DialogContent>
+            <DialogTitle
+              style={{
+                background: "rgba(26, 56, 96, 0.10)",
+                width: "100%",
+                height: "50px",
+                marginTop: "25px",
+                marginBottom: "25px",
                 display: "flex",
-                marginBottom: "20px",
-                marginTop: "20px",
-                gap: "25px",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                borderRadius: "6px",
               }}
             >
-              <Button
-                variant="contained"
-                component="label"
-                sx={{
-                  textTransform: "none",
-                  background: "#006AF5",
-                  color: "white",
-                  fontSize: "12px",
-                  borderRadius: "6px",
-                  padding: "6px 12px",
-                  width: "130px",
-                  height: "30px",
-                }}
-              >
-                <input
-                  type="file"
-                  accept=".pdf"
-                  onChange={onPengajuanJudulFileChange}
-                  style={{ display: "none" }}
-                />
-                <AttachmentIcon sx={{ fontSize: "16px", margin: "5px" }} />
-                Unggah file
-              </Button>
-              <Div
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "25px",
-                }}
-              >
-                {selectFileError && (
-                  <Typography style={{ color: "red", marginTop: "-20px" }}>
-                    {selectFileError}
-                  </Typography>
-                )}
-              </Div>
-            </Div>
-
-            {/* UPload Pengajuan Judul End */}
-            {/* Table Upload Pengajuan Judul Start*/}
-            <TableContainer sx={{ marginBottom: "25px" }} component={Paper}>
-              <Table>
-                <TableHead sx={{ background: "#F5F5F5" }}>
-                  <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                    <TableCell
-                      sx={{ fontSize: "12px", padding: "11px", width: "3%" }}
-                    >
-                      Nomor
-                    </TableCell>
-                    <TableCell
-                      sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
-                    >
-                      Nama File
-                    </TableCell>
-                    <TableCell
-                      sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
-                    >
-                      Ukuran
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        fontSize: "12px",
-                        padding: "11px",
-                        width: "12%",
-                      }}
-                    >
-                      Action
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {UploadedFiles?.map((file, index) => (
-                    <TableRow key={index}>
-                      <TableCell sx={{ fontSize: "12px" }}>
-                        {index + 1}
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }}>
-                        {file.name}
-                      </TableCell>
-                      <TableCell sx={{ fontSize: "12px" }}>
-                        {file.size} bytes
-                      </TableCell>
-                      <TableCell sx={{ textAlign: "center" }}>
-                        <Div
-                          sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "blue",
-                              bottom: "0",
-                            }}
-                          >
-                            {pengajuanJudulFile && (
-                              <PDFViewerPengajuanJudul
-                                pengajuanJudulFile={pengajuanJudulFile}
-                              />
-                            )}
-                          </span>
-                          <Div
-                            style={{
-                              margin: "0 5px", // Margin di sekitar garis vertikal
-                              color: "#E0E0E0",
-                            }}
-                          >
-                            |
-                          </Div>
-                          <span
-                            style={{
-                              textDecoration: "none",
-                              cursor: "pointer",
-                              color: "red",
-                              fontSize: "14px",
-                            }}
-                            onClick={() => handleDeleteFile(index)}
-                          >
-                            Hapus
-                          </span>
-                        </Div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            {/* Table Upload Pengajuan Judul End*/}
-
-            {/* Select Dosen Pembimbing Start */}
-            <Div sx={{ display: "flex", marginBottom: "25px" }}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="demo-select-small"></InputLabel>
-                <InputLabel id="demo-simple-select-label">
-                  Mengusulkan Advisor
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={selectedAdvisorId}
-                  label="Mengusulkan Advisor"
-                  onChange={handleAdvisorChange}
-                  error={!!errorMessages.selectedAdvisorId}
-                  MenuProps={{
-                    anchorOrigin: {
-                      vertical: "bottom",
-                      horizontal: "left",
-                    },
-                    transformOrigin: {
-                      vertical: "top",
-                      horizontal: "left",
-                    },
-                    getContentAnchorEl: null,
-                    style: {
-                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
-                    },
-                  }}
-                >
-                  {daftarDosen?.map((dosen) => (
-                    <MenuItem key={dosen.id} value={dosen.id}>
-                      {dosen.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-
-                <FormHelperText
-                  sx={{ fontSize: "14px" }}
-                  error={!!errorMessages.selectedAdvisorId}
-                >
-                  {errorMessages.selectedAdvisorId}
-                </FormHelperText>
-              </FormControl>
-              <FormControl fullWidth sx={{ margin: "0 25px" }} size="small">
-                <InputLabel id="demo-simple-select-label">
-                  Mengusulkan Co-Advisor 1
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={selectedCoAdvisor1Id}
-                  label="Mengusulkan Co-Advisor 1"
-                  onChange={(e) => setSelectedCoAdvisor1Id(e.target.value)}
-                  MenuProps={{
-                    anchorOrigin: {
-                      vertical: "bottom",
-                      horizontal: "left",
-                    },
-                    transformOrigin: {
-                      vertical: "top",
-                      horizontal: "left",
-                    },
-                    getContentAnchorEl: null,
-                    style: {
-                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
-                    },
-                  }}
-                >
-                  <MenuItem value="">-</MenuItem>
-                  {daftarDosen?.map((dosen) => (
-                    <MenuItem key={dosen.id} value={dosen.id}>
-                      {dosen.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl fullWidth size="small">
-                <InputLabel id="demo-simple-select-label">
-                  Mengusulkan Co-Advisor 2
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={selectedCoAdvisor2Id}
-                  label="Mengusulkan Co-Advisor 2"
-                  onChange={(e) => setSelectedCoAdvisor2Id(e.target.value)}
-                  MenuProps={{
-                    anchorOrigin: {
-                      vertical: "bottom",
-                      horizontal: "left",
-                    },
-                    transformOrigin: {
-                      vertical: "top",
-                      horizontal: "left",
-                    },
-                    getContentAnchorEl: null,
-                    style: {
-                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
-                    },
-                  }}
-                >
-                  <MenuItem value="">-</MenuItem>
-                  {daftarDosen?.map((dosen) => (
-                    <MenuItem key={dosen.id} value={dosen.id}>
-                      {dosen.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Div>
-            {/* Select Dosen Pembimbing End */}
-            {/* Radio Button Start */}
+              Kelas
+            </DialogTitle>
+            {/* select kelas */}
             <Div
               sx={{
-                display: "flex",
+                width: "100%",
+                padding: "0 25px",
                 flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "25px",
+                marginBottom: "25px",
               }}
             >
               <Typography variant="subtitle2" gutterBottom component="div">
-                Apakah Anda sudah melakukan konsultasi dengan Advisor sebelum
-                mengajukan judul?
+                Kelas <span style={{ color: "red" }}>*</span>
               </Typography>
-              <RadioGroup
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-                value={selectedOption}
-                onChange={handleOptionChange}
-                error={!!errorMessages.selectedOption}
-                helperText={errorMessages.selectedOption}
-              >
-                <FormControlLabel value="ya" control={<Radio />} label="Ya" />
-                <FormControlLabel
-                  value="tidak"
-                  control={<Radio />}
-                  label="Tidak"
-                />
-              </RadioGroup>
-              {errorMessages.selectedOption && (
-                <div style={{ color: "red" }}>
-                  {errorMessages.selectedOption}
-                </div>
-              )}
             </Div>
-            {/* Radio Button End*/}
-          </Div>
-        </DialogContent>
+            <Div
+              sx={{
+                width: "100%",
+                padding: "0 25px",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "25px",
+                marginBottom: "25px",
+              }}
+            >
+              <FormControl fullWidth size="small">
+                <InputLabel id="demo-select-kelas-small-label">
+                  Kelas Poposal
+                </InputLabel>
+                <Select
+                  labelId="demo-select-kelas-small-label"
+                  id="demo-select-kelas-small"
+                  value={selectedClassroomId}
+                  label="Kelas Proposal"
+                  onChange={(e) => {
+                    const selectedValue = e.target.value;
+                    setSelectedClassroomId(selectedValue);
+
+                    if (selectedValue.trim() !== "") {
+                      setErrorMessages((prevErrors) => ({
+                        ...prevErrors,
+                        kelas: "",
+                      }));
+                    } else {
+                      setErrorMessages((prevErrors) => ({
+                        ...prevErrors,
+                        kelas: "Dibutuhkan",
+                      }));
+                    }
+                  }}
+                  error={Boolean(errorMessages.kelas)}
+                  MenuProps={{
+                    anchorOrigin: {
+                      vertical: "bottom",
+                      horizontal: "left",
+                    },
+                    transformOrigin: {
+                      vertical: "top",
+                      horizontal: "left",
+                    },
+                    getContentAnchorEl: null,
+                    style: {
+                      maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                    },
+                  }}
+                >
+                  {daftarKelas?.map((kelas, index) => (
+                    <MenuItem key={kelas.id} value={kelas.id}>
+                      {kelas.classroom}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText
+                  sx={{ fontSize: "14px" }}
+                  error={Boolean(errorMessages.kelas)}
+                >
+                  {errorMessages.kelas}
+                </FormHelperText>
+              </FormControl>
+            </Div>
+            <Div
+              sx={{
+                width: "100%",
+                padding: "0 25px",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "25px",
+                marginBottom: "25px",
+              }}
+            >
+              <Typography variant="subtitle2" gutterBottom component="div">
+                Partner
+              </Typography>
+            </Div>
+            {partnerData.map((partner, index) => (
+              <>
+                {index > 0 && (
+                  <Div
+                    key={partner.id}
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      padding: "0 25px",
+                      gap: "25px",
+                      marginBottom: "25px",
+                    }}
+                  >
+                    <Div>
+                      <FormControl fullWidth size="small">
+                        <InputLabel id={`nama-partner-label-${index}`}>
+                          Nama Partner {index}
+                        </InputLabel>
+                        <Select
+                          labelId={`nama-partner-label-${index}`}
+                          id={`nama-partner-select-${index}`}
+                          label={`Nama Partner ${index + 1}`}
+                          value={partner.selectedPartnerName}
+                          onChange={(e) => handleChangePartner(e, index)}
+                          style={{
+                            minWidth: "990px",
+                            width: "100%",
+                          }}
+                        >
+                          {daftarPartner?.map((partner) => (
+                            <MenuItem key={partner.id} value={partner.fullName}>
+                              {partner.fullName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Div>
+                    <Button
+                      component="label"
+                      sx={{
+                        textTransform: "none",
+                        color: "#757575",
+                        fontSize: "12px",
+                        borderRadius: "6px",
+                        width: "30px",
+                        height: "35px",
+                        cursor: "pointer",
+                        marginRight: "30px",
+                      }}
+                      onClick={() => handleDeletePartner(index)}
+                    >
+                      <Clear />
+                    </Button>
+                  </Div>
+                )}
+              </>
+            ))}
+            {partnerData.length < 4 && (
+              <Div
+                sx={{
+                  width: "100%",
+                  padding: "0 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "25px",
+                }}
+              >
+                <Button
+                  style={{
+                    fontSize: "14px",
+                    marginBottom: "25px",
+                    textTransform: "none",
+                  }}
+                  onClick={handleAddPartner}
+                  disabled={!selectedClassroomId}
+                  TEX
+                >
+                  <Add fontSize="small" />
+                  Tambah Partner
+                </Button>
+              </Div>
+            )}
+
+            <Div>
+              <DialogTitle
+                style={{
+                  background: "rgba(26, 56, 96, 0.10)",
+                  width: "100%",
+                  height: "50px",
+                  marginBottom: "25px",
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  borderRadius: "6px",
+                }}
+              >
+                Mini Proposal
+              </DialogTitle>
+              <Div
+                sx={{
+                  width: "100%",
+                  padding: "0 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "25px",
+                }}
+              >
+                {/* Upload Pengajuan Judul Start */}
+                <Div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "15px",
+                  }}
+                >
+                  <Typography
+                    variant="subtitle2"
+                    gutterBottom
+                    component="div"
+                    style={{ marginRight: "auto", textAlign: "center" }}
+                  >
+                    Dokumen Mini Proposal{" "}
+                    <span style={{ color: "red" }}>*</span>
+                  </Typography>
+                </Div>
+                {unggahFile ? (
+                  <PDFViewerPengajuanJudul
+                    pengajuanJudulFile={unggahFile}
+                    handleDeleteFile={handleDeleteFile}
+                    isFileUploaded={isFileUploaded}
+                  />
+                ) : (
+                  <Div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Button
+                      component="label"
+                      variant="outlined"
+                      startIcon={<CloudUpload />}
+                      style={{
+                        textTransform: "none",
+                      }}
+                    >
+                      Unggah file
+                      <input
+                        type="file"
+                        accept=".pdf"
+                        onChange={handleAddFile}
+                        style={{
+                          clip: "rect(0 0 0 0)",
+                          clipPath: "inset(50%)",
+                          height: 1,
+                          overflow: "hidden",
+                          position: "absolute",
+                          bottom: 0,
+                          left: 0,
+                          whiteSpace: "nowrap",
+                          width: 1,
+                          background: isFileUploaded ? "#A0A0A0" : "#006AF5",
+                          cursor: isFileUploaded ? "not-allowed" : "pointer",
+                          "&:hover": {
+                            background: isFileUploaded ? "#A0A0A0" : "#006AF5",
+                          },
+                        }}
+                      />
+                    </Button>
+                  </Div>
+                )}
+
+                {errorMessages.file && (
+                  <Div>
+                    <Typography variant="caption" color="error">
+                      {errorMessages.file}
+                    </Typography>
+                  </Div>
+                )}
+              </Div>
+              {/* Upload Pengajuan Judul End */}
+              {/* Judul Start */}
+              <Div
+                sx={{
+                  width: "100%",
+                  padding: "0 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "25px",
+                }}
+              >
+                <Typography
+                  variant="subtitle2"
+                  gutterBottom
+                  component="div"
+                  sx={{
+                    marginTop: "25px",
+                    marginBottom: "10px",
+                  }}
+                >
+                  Judul <span style={{ color: "red" }}>*</span>
+                </Typography>
+                <TextareaAutosize
+                  aria-label="minimum height"
+                  minRows={3}
+                  placeholder="Masukkan judul"
+                  style={{
+                    width: "100%",
+                    height: 50,
+                    marginBottom: !errorMessages.judul ? "25px" : "",
+                    display: "block",
+                    resize: "vertical",
+                    borderColor: errorMessages.judul ? "red" : "",
+                  }}
+                  value={judul}
+                  onChange={(e) => {
+                    const inputValue = e.target.value;
+                    setJudul(inputValue);
+                    if (inputValue.trim() !== "") {
+                      setErrorMessages((prevErrors) => ({
+                        ...prevErrors,
+                        judul: "",
+                      }));
+                    } else {
+                      setErrorMessages((prevErrors) => ({
+                        ...prevErrors,
+                        judul: "Dibutuhkan",
+                      }));
+                    }
+                  }}
+                />
+                {errorMessages.judul && (
+                  <Div sx={{ marginBottom: "25px" }}>
+                    <Typography variant="caption" color="error">
+                      {errorMessages.judul}
+                    </Typography>
+                  </Div>
+                )}
+              </Div>
+              {/* Judul End */}
+
+              {/* Select Dosen Pembimbing Start */}
+              <Div
+                sx={{
+                  width: "100%",
+                  padding: "0 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "25px",
+                  marginBottom: "25px",
+                }}
+              >
+                <Typography variant="subtitle2" gutterBottom component="div">
+                  Advisor <span style={{ color: "red" }}>*</span>
+                </Typography>
+                <FormControl fullWidth size="small" sx={{ marginTop: "15px" }}>
+                  <InputLabel id="demo-simple-select-label">
+                    Mengusulkan Advisor
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={selectedAdvisorId}
+                    label="Mengusulkan Advisor"
+                    onChange={handleChangeAdvisor}
+                    error={Boolean(errorMessages.advisor)}
+                    MenuProps={{
+                      anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: "left",
+                      },
+                      transformOrigin: {
+                        vertical: "top",
+                        horizontal: "left",
+                      },
+                      getContentAnchorEl: null,
+                      style: {
+                        maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                      },
+                    }}
+                  >
+                    {daftarDosen?.map((dosen) => (
+                      <MenuItem key={dosen.id} value={dosen.id}>
+                        {dosen.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText
+                    sx={{ fontSize: "14px" }}
+                    error={Boolean(errorMessages.advisor)}
+                  >
+                    {errorMessages.advisor}
+                  </FormHelperText>
+                </FormControl>
+              </Div>
+              <Div
+                sx={{
+                  width: "100%",
+                  padding: "0 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "25px",
+                  marginBottom: "15px",
+                }}
+              >
+                <Typography variant="subtitle2" gutterBottom component="div">
+                  Co-Advisor
+                </Typography>
+              </Div>
+              {addCoAdvisor.map((coAdvisor, index) => (
+                <>
+                  {index > 0 && (
+                    <Div
+                      key={coAdvisor.id}
+                      sx={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        justifyContent: "space-between",
+                        width: "100%",
+                        padding: "0 25px",
+                        gap: "25px",
+                        marginBottom: "25px",
+                      }}
+                    >
+                      <Div>
+                        <FormControl
+                          style={{
+                            alignItems: "center",
+                            flex: "1",
+                          }}
+                          size="small"
+                        >
+                          <InputLabel id="demo-simple-select-label">
+                            {`Mengusulkan Co-Advisor ${index}`}
+                          </InputLabel>
+                          <Select
+                            labelId={`demo-simple-select-label-${index}`}
+                            id={`demo-simple-select-${index}`}
+                            label={`Mengusulkan Co-Advisor ${index + 1}`}
+                            value={coAdvisor.selectedCoAdvisorName}
+                            onChange={(e) => handleChangeCoAdvisor(e, index)}
+                            MenuProps={{
+                              anchorOrigin: {
+                                vertical: "bottom",
+                                horizontal: "left",
+                              },
+                              transformOrigin: {
+                                vertical: "top",
+                                horizontal: "left",
+                              },
+                              getContentAnchorEl: null,
+                              style: {
+                                maxHeight: "200px", // Sesuaikan dengan tinggi yang diinginkan
+                              },
+                            }}
+                            style={{
+                              minWidth: "990px",
+                              width: "100%",
+                            }}
+                          >
+                            {daftarDosen?.map((dosen) => (
+                              <MenuItem key={dosen.id} value={dosen.name}>
+                                {dosen.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <Button
+                          component="label"
+                          sx={{
+                            textTransform: "none",
+                            color: "#757575",
+                            fontSize: "12px",
+                            borderRadius: "6px",
+                            width: "30px",
+                            height: "35px",
+                            cursor: "pointer",
+                            marginLeft: "30px",
+                          }}
+                          onClick={() => handleDeleteCoAdvisor(index)}
+                        >
+                          <Clear />
+                        </Button>
+                      </Div>
+                    </Div>
+                  )}
+                </>
+              ))}
+              {addCoAdvisor.length < 3 && (
+                <Div
+                  sx={{
+                    width: "100%",
+                    padding: "0 25px",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    gap: "25px",
+                  }}
+                >
+                  <Button
+                    style={{
+                      fontSize: "14px",
+                      marginBottom: "25px",
+                      textTransform: "none",
+                    }}
+                    onClick={handleAddCoAdvisor}
+                    disabled={!selectedAdvisorId}
+                  >
+                    <Add fontSize="small" />
+                    Tambah Co-Advisor
+                  </Button>
+                </Div>
+              )}
+              {/* Select Dosen Pembimbing End */}
+              {/* Radio Button Start */}
+              <Div
+                sx={{
+                  width: "100%",
+                  padding: "0 25px",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "25px",
+                }}
+              >
+                <Typography variant="subtitle2" gutterBottom component="div">
+                  Apakah Anda sudah melakukan konsultasi dengan calon Advisor?{" "}
+                  <span style={{ color: "red" }}>*</span>
+                </Typography>
+                <RadioGroup
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                  value={
+                    konsultasi === true
+                      ? "ya"
+                      : konsultasi === false
+                      ? "tidak"
+                      : ""
+                  }
+                  onChange={handleChangeStatusKonsultasi}
+                >
+                  <FormControlLabel
+                    value="ya"
+                    control={
+                      <Radio
+                        sx={{
+                          color: errorMessages.konsultasi ? "red" : "primary",
+                        }}
+                      />
+                    }
+                    label="Ya"
+                  />
+                  <FormControlLabel
+                    value="tidak"
+                    control={
+                      <Radio
+                        sx={{
+                          color: errorMessages.konsultasi ? "red" : "primary",
+                        }}
+                      />
+                    }
+                    label="Tidak"
+                  />
+                </RadioGroup>
+                {errorMessages.konsultasi && (
+                  <Div sx={{ marginBottom: "25px" }}>
+                    <Typography variant="caption" color="error">
+                      {errorMessages.konsultasi}
+                    </Typography>
+                  </Div>
+                )}
+              </Div>
+              {/* Radio Button End*/}
+            </Div>
+          </DialogContent>
+        )}
 
         <DialogActions style={{ background: "#F5F5F5" }}>
           <Button
-            onClick={handleClose}
+            onClick={handleCloseMengajukanJudul}
             style={{
               borderRadius: "6px",
               border: "##E0E0E0",
@@ -1174,7 +1536,7 @@ function DaftarPengajuan() {
             Batal
           </Button>
           <Button
-            onClick={handleSubmit}
+            onClick={handleOpenConfirmAjukan}
             color="primary"
             style={{
               background: "#006AF5",
@@ -1190,8 +1552,8 @@ function DaftarPengajuan() {
       </Dialog>
 
       <Dialog
-        open={isConfirmDialogOpen}
-        onClose={handleCloseConfirmDialog}
+        open={isConfirmAjukanOpen}
+        onClose={handleCloseConfirmAjukan}
         maxWidth="xs"
         fullWidth
       >
@@ -1205,7 +1567,7 @@ function DaftarPengajuan() {
         </DialogContent>
         <DialogActions style={{ background: "#F5F5F5" }}>
           <Button
-            onClick={handleCloseConfirmDialog}
+            onClick={handleCloseConfirmAjukan}
             style={{
               borderRadius: "6px",
               border: "#E0E0E0",
@@ -1232,6 +1594,26 @@ function DaftarPengajuan() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {alerts.map((alert, index) => (
+        <Snackbar
+          key={alert.id}
+          open={alert.open}
+          autoHideDuration={6000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          style={{ marginBottom: `${index * 10}px` }}
+        >
+          <Alert
+            onClose={() => {
+              closeAlert(alert.id);
+            }}
+            severity={alert.severity}
+          >
+            <AlertTitle>{alert.title}</AlertTitle>
+            {alert.message}
+          </Alert>
+        </Snackbar>
+      ))}
     </Div>
   );
 }

@@ -19,8 +19,13 @@ import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 
 // View Document Proposal
-const PDFViewerProposal = ({ dokumenProposal }) => {
+const PDFViewerProposal = ({ dokumenProposal, isUploading }) => {
   const viewPDFProposal = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
     const pdfURL = dokumenProposal?.file_path_proposal;
 
@@ -30,16 +35,27 @@ const PDFViewerProposal = ({ dokumenProposal }) => {
 
   return (
     <div>
-      <span sx={{ fontSize: "10px" }} onClick={viewPDFProposal}>
-        Detail
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFProposal}
+      >
+        Lihat
       </span>
     </div>
   );
 };
 
 // View Document Payment
-const PDFViewerPayment = ({ buktiPembayaran }) => {
+const PDFViewerPayment = ({ buktiPembayaran, isUploading }) => {
   const viewPDFPayment = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
     const pdfURL = buktiPembayaran.file_path_payment;
 
@@ -49,14 +65,27 @@ const PDFViewerPayment = ({ buktiPembayaran }) => {
 
   return (
     <div>
-      <span onClick={viewPDFPayment}>Detail</span>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFPayment}
+      >
+        Lihat
+      </span>
     </div>
   );
 };
 
 // View Document Cek Plagiat
-const PDFViewerCekPlagiat = ({ hasilCekPlagiat }) => {
+const PDFViewerCekPlagiat = ({ hasilCekPlagiat, isUploading }) => {
   const viewPDFCekPlagiat = () => {
+    if (isUploading) {
+      // Jangan lakukan apa pun jika sedang mengunggah
+      return;
+    }
+
     // Buat URL objek untuk file PDF
     const pdfURL = hasilCekPlagiat.file_path_plagiarismcheck;
 
@@ -66,7 +95,15 @@ const PDFViewerCekPlagiat = ({ hasilCekPlagiat }) => {
 
   return (
     <div>
-      <span onClick={viewPDFCekPlagiat}>Detail</span>
+      <span
+        style={{
+          cursor: isUploading ? "not-allowed" : "pointer",
+          color: isUploading ? "#A0A0A0" : "blue",
+        }}
+        onClick={viewPDFCekPlagiat}
+      >
+        Lihat
+      </span>
     </div>
   );
 };
@@ -76,6 +113,11 @@ const UnggahProposal = () => {
   const [dokumenProposal, setDokumenProposal] = useState();
   const [buktiPembayaran, setBuktiPembayaran] = useState();
   const [hasilCekPlagiat, setHasilCekPlagiat] = useState();
+
+  // state - disabled button
+  const [isSubmittingProposal, setSubmittionProposal] = useState(false);
+  const [isSubmittingPayment, setSubmittionPayment] = useState(false);
+  const [isSubmittingPlagiat, setSubmittionPlagiat] = useState(false);
 
   const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
 
@@ -160,11 +202,21 @@ const UnggahProposal = () => {
   const handleUnggahDokumenProposal = (event) => {
     const file = event.target.files[0];
 
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionProposal(true);
+
     // Validasi tipe file
     const allowedFileTypes = ["application/pdf"];
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionProposal(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -246,17 +298,30 @@ const UnggahProposal = () => {
           "Terjadi kesalahan saat mengunggah dokumen proposal:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        setSubmittionProposal(false);
       });
   };
 
   const handleUnggahBuktiPembayaran = (event) => {
     const file = event.target.files[0];
 
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionPayment(true);
+
     // Validasi tipe file
     const allowedFileTypes = ["application/pdf"];
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionPayment(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -338,17 +403,30 @@ const UnggahProposal = () => {
           "Terjadi kesalahan saat mengunggah bukti pembayaran:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        setSubmittionPayment(false);
       });
   };
 
   const handleUnggahPlagiat = (event) => {
     const file = event.target.files[0];
 
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
+    }
+
+    // Nonaktifkan tombol unggah pembayaran
+    setSubmittionPlagiat(true);
+
     // Validasi tipe file
     const allowedFileTypes = ["application/pdf"];
 
-    if (!file || !allowedFileTypes.includes(file.type)) {
-      console.error("Tipe file tidak valid atau file tidak ada");
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmittionPlagiat(false); // Aktifkan kembali tombol
       return;
     }
 
@@ -430,10 +508,16 @@ const UnggahProposal = () => {
           "Terjadi kesalahan saat mengunggah hasil cek plagiat:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        setSubmittionPlagiat(false);
       });
   };
 
   const handleHapusDokumenProposal = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionProposal(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/proposal/proposal-document/delete/${proposalId}`,
@@ -477,10 +561,17 @@ const UnggahProposal = () => {
           "Terjadi kesalahan saat menghapus dokumen proposal:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionProposal(false);
       });
   };
 
   const handleHapusBuktiPembayaran = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionPayment(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/proposal/proposal-payment/delete/${proposalId}`,
@@ -524,10 +615,17 @@ const UnggahProposal = () => {
           "Terjadi kesalahan saat menghapus bukti pembayaran:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionPayment(false);
       });
   };
 
   const handleHapusPlagiat = () => {
+    // Nonaktifkan tombol Hapus
+    setSubmittionPlagiat(true);
+
     axios
       .put(
         `http://localhost:2000/api/v1/proposal/proposal-plagiarism-check/delete/${proposalId}`,
@@ -571,6 +669,10 @@ const UnggahProposal = () => {
           "Terjadi kesalahan saat menghapus hasil cek plagiat:",
           error.response.data.message
         );
+      })
+      .finally(() => {
+        // Aktifkan tombol Hapus
+        setSubmittionPlagiat(false);
       });
   };
 
@@ -707,13 +809,18 @@ const UnggahProposal = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingProposal ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
                     width: "150px",
                     height: "30px",
+                    cursor: isSubmittingProposal ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingProposal ? "#A0A0A0" : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingProposal}
                 >
                   <input
                     type="file"
@@ -741,7 +848,7 @@ const UnggahProposal = () => {
                         sx={{
                           fontSize: "12px",
                           padding: "11px",
-                          width: "15%",
+                          width: "40%",
                           whiteSpace: "nowrap",
                           overflow: "hidden",
                         }}
@@ -752,20 +859,31 @@ const UnggahProposal = () => {
                         sx={{
                           fontSize: "12px",
                           padding: "11px",
-                          maxWidth: "10%",
+                          width: "10%",
                           whiteSpace: "nowrap",
                           overflow: "hidden",
+                          textAlign: "center",
                         }}
                       >
                         Tanggal
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "10%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "5%",
+                          textAlign: "center",
+                        }}
                       >
                         Ukuran
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "15%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "15%",
+                          textAlign: "center",
+                        }}
                       >
                         Advisor
                       </TableCell>
@@ -775,17 +893,19 @@ const UnggahProposal = () => {
                             fontSize: "12px",
                             padding: "11px",
                             width: "15%",
+                            textAlign: "center",
                           }}
                         >
                           Co-Advisor 1
                         </TableCell>
                       )}
-                      {advisorAndCoAdvisor?.is_proposal_approve_by_co_advisor2 && (
+                      {advisorAndCoAdvisor?.coAdvisor2 && (
                         <TableCell
                           sx={{
                             fontSize: "12px",
                             padding: "11px",
                             width: "15%",
+                            textAlign: "center",
                           }}
                         >
                           Co-Advisor 2
@@ -811,125 +931,147 @@ const UnggahProposal = () => {
                         <TableCell sx={{ fontSize: "12px" }}>
                           {dokumenProposal?.file_name_proposal}
                         </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
+                        <TableCell
+                          sx={{ fontSize: "12px", textAlign: "center" }}
+                        >
                           {dokumenProposal?.upload_date_proposal}
                         </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
+                        <TableCell
+                          sx={{ fontSize: "12px", textAlign: "center" }}
+                        >
                           {dokumenProposal?.file_size_proposal}
                         </TableCell>
                         {/* status Advisor */}
-                        <TableCell>
-                          {dokumenProposal?.is_proposal_approve_by_advisor ===
-                          "Waiting" ? (
-                            <Chip
-                              size="small"
-                              label={"Menunggu"}
-                              sx={{
-                                background: "rgba(255, 204, 0, 0.10)",
-                                color: "#985211",
-                              }}
-                            />
-                          ) : dokumenProposal?.is_proposal_approve_by_advisor ===
-                            "Approve" ? (
-                            <Chip
-                              size="small"
-                              label={"Disetujui"}
-                              sx={{
-                                background: "rgba(21, 131, 67, 0.10)",
-                                color: "#0A7637",
-                              }}
-                            />
-                          ) : dokumenProposal?.is_proposal_approve_by_advisor ===
-                            "Rejected" ? (
-                            <Chip
-                              size="small"
-                              label={"Ditolak"}
-                              sx={{
-                                background: "rgba(226, 29, 18, 0.10)",
-                                color: "#CA150C",
-                              }}
-                            />
-                          ) : (
-                            dokumenProposal?.is_proposal_approve_by_advisor
+                        <TableCell sx={{ textAlign: "center" }}>
+                          {dokumenProposal?.file_name_proposal !== null && (
+                            <>
+                              {dokumenProposal?.is_proposal_approve_by_advisor ===
+                              "Waiting" ? (
+                                <Chip
+                                  size="small"
+                                  label={"Menunggu"}
+                                  sx={{
+                                    background: "rgba(255, 204, 0, 0.10)",
+                                    color: "#985211",
+                                    textAlign: "center",
+                                  }}
+                                />
+                              ) : dokumenProposal?.is_proposal_approve_by_advisor ===
+                                "Approve" ? (
+                                <Chip
+                                  size="small"
+                                  label={"Disetujui"}
+                                  sx={{
+                                    background: "rgba(21, 131, 67, 0.10)",
+                                    color: "#0A7637",
+                                    textAlign: "center",
+                                  }}
+                                />
+                              ) : dokumenProposal?.is_proposal_approve_by_advisor ===
+                                "Rejected" ? (
+                                <Chip
+                                  size="small"
+                                  label={"Ditolak"}
+                                  sx={{
+                                    background: "rgba(226, 29, 18, 0.10)",
+                                    color: "#CA150C",
+                                    textAlign: "center",
+                                  }}
+                                />
+                              ) : (
+                                dokumenProposal?.is_proposal_approve_by_advisor
+                              )}
+                            </>
                           )}
                         </TableCell>
                         {/* status CoAdvisor 1 */}
                         {advisorAndCoAdvisor?.coAdvisor1 && (
-                          <TableCell>
-                            {dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
-                            "Waiting" ? (
-                              <Chip
-                                size="small"
-                                label={"Menunggu"}
-                                sx={{
-                                  background: "rgba(255, 204, 0, 0.10)",
-                                  color: "#985211",
-                                }}
-                              />
-                            ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
-                              "Approve" ? (
-                              <Chip
-                                size="small"
-                                label={"Disetujui"}
-                                sx={{
-                                  background: "rgba(21, 131, 67, 0.10)",
-                                  color: "#0A7637",
-                                }}
-                              />
-                            ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
-                              "Rejected" ? (
-                              <Chip
-                                size="small"
-                                label={"Ditolak"}
-                                sx={{
-                                  background: "rgba(226, 29, 18, 0.10)",
-                                  color: "#CA150C",
-                                }}
-                              />
-                            ) : (
-                              dokumenProposal?.is_proposal_approve_by_co_advisor1
+                          <TableCell sx={{ textAlign: "center" }}>
+                            {dokumenProposal?.file_name_proposal !== null && (
+                              <>
+                                {dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                "Waiting" ? (
+                                  <Chip
+                                    size="small"
+                                    label={"Menunggu"}
+                                    sx={{
+                                      background: "rgba(255, 204, 0, 0.10)",
+                                      color: "#985211",
+                                      textAlign: "center",
+                                    }}
+                                  />
+                                ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                  "Approve" ? (
+                                  <Chip
+                                    size="small"
+                                    label={"Disetujui"}
+                                    sx={{
+                                      background: "rgba(21, 131, 67, 0.10)",
+                                      color: "#0A7637",
+                                      textAlign: "center",
+                                    }}
+                                  />
+                                ) : dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                  "Rejected" ? (
+                                  <Chip
+                                    size="small"
+                                    label={"Ditolak"}
+                                    sx={{
+                                      background: "rgba(226, 29, 18, 0.10)",
+                                      color: "#CA150C",
+                                      textAlign: "center",
+                                    }}
+                                  />
+                                ) : (
+                                  dokumenProposal?.is_proposal_approve_by_co_advisor1
+                                )}
+                              </>
                             )}
                           </TableCell>
                         )}
                         {/* status CoAdvisor 2 */}
                         {advisorAndCoAdvisor?.coAdvisor2 && (
-                          <TableCell>
-                            {dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
-                            "Waiting" ? (
-                              <Chip
-                                size="small"
-                                label={"Menunggu"}
-                                sx={{
-                                  background: "rgba(255, 204, 0, 0.10)",
-                                  color: "#985211",
-                                }}
-                              />
-                            ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
-                              "Approve" ? (
-                              <Chip
-                                size="small"
-                                label={"Disetujui"}
-                                sx={{
-                                  background: "rgba(21, 131, 67, 0.10)",
-                                  color: "#0A7637",
-                                }}
-                              />
-                            ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
-                              "Rejected" ? (
-                              <Chip
-                                size="small"
-                                label={"Ditolak"}
-                                sx={{
-                                  background: "rgba(226, 29, 18, 0.10)",
-                                  color: "#CA150C",
-                                }}
-                              />
-                            ) : (
-                              dokumenProposal?.is_proposal_approve_by_co_advisor2
+                          <TableCell sx={{ textAlign: "center" }}>
+                            {dokumenProposal?.file_name_proposal !== null && (
+                              <>
+                                {dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                                "Waiting" ? (
+                                  <Chip
+                                    size="small"
+                                    label={"Menunggu"}
+                                    sx={{
+                                      background: "rgba(255, 204, 0, 0.10)",
+                                      color: "#985211",
+                                    }}
+                                  />
+                                ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                                  "Approve" ? (
+                                  <Chip
+                                    size="small"
+                                    label={"Disetujui"}
+                                    sx={{
+                                      background: "rgba(21, 131, 67, 0.10)",
+                                      color: "#0A7637",
+                                    }}
+                                  />
+                                ) : dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                                  "Rejected" ? (
+                                  <Chip
+                                    size="small"
+                                    label={"Ditolak"}
+                                    sx={{
+                                      background: "rgba(226, 29, 18, 0.10)",
+                                      color: "#CA150C",
+                                    }}
+                                  />
+                                ) : (
+                                  dokumenProposal?.is_proposal_approve_by_co_advisor2
+                                )}
+                              </>
                             )}
                           </TableCell>
                         )}
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           {dokumenProposal?.file_name_proposal !== null && (
                             <Div sx={{ display: "flex" }}>
                               <span
@@ -943,6 +1085,7 @@ const UnggahProposal = () => {
                                 {dokumenProposal && (
                                   <PDFViewerProposal
                                     dokumenProposal={dokumenProposal}
+                                    isUploading={isSubmittingProposal}
                                   />
                                 )}
                               </span>
@@ -954,17 +1097,144 @@ const UnggahProposal = () => {
                               >
                                 |
                               </Div>
-                              <span
-                                style={{
-                                  textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
-                                  fontSize: "12px",
-                                }}
-                                onClick={handleHapusDokumenProposal}
-                              >
-                                Hapus
-                              </span>
+                              {/* tombol unggah proposal jika tidak ada co-advisor */}
+                              {advisorAndCoAdvisor?.coAdvisor1 === null &&
+                                advisorAndCoAdvisor?.coAdvisor2 === null && (
+                                  <span
+                                    style={{
+                                      textDecoration: "none",
+                                      cursor:
+                                        isSubmittingProposal ||
+                                        dokumenProposal?.is_proposal_approve_by_advisor ===
+                                          "Approve"
+                                          ? "not-allowed"
+                                          : "pointer",
+                                      color:
+                                        isSubmittingProposal ||
+                                        dokumenProposal?.is_proposal_approve_by_advisor ===
+                                          "Approve"
+                                          ? "#A0A0A0"
+                                          : "red",
+                                      fontSize: "12px",
+                                    }}
+                                    onClick={() => {
+                                      if (
+                                        !isSubmittingProposal &&
+                                        dokumenProposal?.is_proposal_approve_by_advisor !==
+                                          "Approve"
+                                      ) {
+                                        handleHapusDokumenProposal();
+                                      }
+                                    }}
+                                    disabled={
+                                      isSubmittingProposal ||
+                                      dokumenProposal?.is_proposal_approve_by_advisor ===
+                                        "Approve"
+                                    }
+                                  >
+                                    Hapus
+                                  </span>
+                                )}
+                              {/* tombol unggah proposal jika ada co-advisor 1 saja */}
+                              {advisorAndCoAdvisor?.coAdvisor1 &&
+                                advisorAndCoAdvisor?.coAdvisor2 === null && (
+                                  <span
+                                    style={{
+                                      textDecoration: "none",
+                                      cursor:
+                                        isSubmittingProposal ||
+                                        (dokumenProposal?.is_proposal_approve_by_advisor ===
+                                          "Approve" &&
+                                          dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                            "Approve")
+                                          ? "not-allowed"
+                                          : "pointer",
+                                      color:
+                                        isSubmittingProposal ||
+                                        (dokumenProposal?.is_proposal_approve_by_advisor ===
+                                          "Approve" &&
+                                          dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                            "Approve")
+                                          ? "#A0A0A0"
+                                          : "red",
+                                      fontSize: "12px",
+                                    }}
+                                    onClick={() => {
+                                      if (
+                                        !isSubmittingProposal &&
+                                        dokumenProposal?.is_proposal_approve_by_advisor !==
+                                          "Approve" &&
+                                        dokumenProposal?.is_proposal_approve_by_co_advisor1 !==
+                                          "Approve"
+                                      ) {
+                                        handleHapusDokumenProposal();
+                                      }
+                                    }}
+                                    disabled={
+                                      isSubmittingProposal ||
+                                      (dokumenProposal?.is_proposal_approve_by_advisor ===
+                                        "Approve" &&
+                                        dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                          "Approve")
+                                    }
+                                  >
+                                    Hapus
+                                  </span>
+                                )}
+                              {/* tombol unggah proposal jika ada co-advisor 1 dan 2 */}
+                              {advisorAndCoAdvisor?.coAdvisor1 &&
+                                advisorAndCoAdvisor?.coAdvisor2 && (
+                                  <span
+                                    style={{
+                                      textDecoration: "none",
+                                      cursor:
+                                        isSubmittingProposal ||
+                                        (dokumenProposal?.is_proposal_approve_by_advisor ===
+                                          "Approve" &&
+                                          dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                            "Approve" &&
+                                          dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                                            "Approve")
+                                          ? "not-allowed"
+                                          : "pointer",
+                                      color:
+                                        isSubmittingProposal ||
+                                        (dokumenProposal?.is_proposal_approve_by_advisor ===
+                                          "Approve" &&
+                                          dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                            "Approve" &&
+                                          dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                                            "Approve")
+                                          ? "#A0A0A0"
+                                          : "red",
+                                      fontSize: "12px",
+                                    }}
+                                    onClick={() => {
+                                      if (
+                                        !isSubmittingProposal &&
+                                        dokumenProposal?.is_proposal_approve_by_advisor !==
+                                          "Approve" &&
+                                        dokumenProposal?.is_proposal_approve_by_co_advisor1 !==
+                                          "Approve" &&
+                                        dokumenProposal?.is_proposal_approve_by_co_advisor2 !==
+                                          "Approve"
+                                      ) {
+                                        handleHapusDokumenProposal();
+                                      }
+                                    }}
+                                    disabled={
+                                      isSubmittingProposal ||
+                                      (dokumenProposal?.is_proposal_approve_by_advisor ===
+                                        "Approve" &&
+                                        dokumenProposal?.is_proposal_approve_by_co_advisor1 ===
+                                          "Approve" &&
+                                        dokumenProposal?.is_proposal_approve_by_co_advisor2 ===
+                                          "Approve")
+                                    }
+                                  >
+                                    Hapus
+                                  </span>
+                                )}
                             </Div>
                           )}
                         </TableCell>
@@ -1016,13 +1286,18 @@ const UnggahProposal = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingPayment ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
                     width: "150px",
                     height: "30px",
+                    cursor: isSubmittingPayment ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingPayment ? "#A0A0A0" : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingPayment}
                 >
                   <input
                     type="file"
@@ -1047,17 +1322,27 @@ const UnggahProposal = () => {
                         Nomor
                       </TableCell> */}
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
+                        sx={{ fontSize: "12px", padding: "11px", width: "70%" }}
                       >
                         Nama File
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "15%",
+                          textAlign: "center",
+                        }}
                       >
                         Tanggal
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "10%",
+                          textAlign: "center",
+                        }}
                       >
                         Ukuran
                       </TableCell>
@@ -1066,7 +1351,7 @@ const UnggahProposal = () => {
                           fontSize: "12px",
                           padding: "11px",
                           textAlign: "center",
-                          width: "12%",
+                          width: "10%",
                         }}
                       >
                         Action
@@ -1080,13 +1365,17 @@ const UnggahProposal = () => {
                         <TableCell sx={{ fontSize: "12px" }}>
                           {buktiPembayaran.file_name_payment}
                         </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
+                        <TableCell
+                          sx={{ fontSize: "12px", textAlign: "center" }}
+                        >
                           {buktiPembayaran.upload_date_payment}
                         </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
+                        <TableCell
+                          sx={{ fontSize: "12px", textAlign: "center" }}
+                        >
                           {buktiPembayaran.file_size_payment}
                         </TableCell>
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           {buktiPembayaran.file_name_payment !== null && (
                             <Div sx={{ display: "flex" }}>
                               <span
@@ -1100,6 +1389,7 @@ const UnggahProposal = () => {
                                 {buktiPembayaran && (
                                   <PDFViewerPayment
                                     buktiPembayaran={buktiPembayaran}
+                                    isUploading={isSubmittingPayment}
                                   />
                                 )}
                               </span>
@@ -1114,11 +1404,16 @@ const UnggahProposal = () => {
                               <span
                                 style={{
                                   textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
+                                  cursor: isSubmittingPayment
+                                    ? "not-allowed"
+                                    : "pointer",
+                                  color: isSubmittingPayment
+                                    ? "#A0A0A0"
+                                    : "red",
                                   fontSize: "12px",
                                 }}
                                 onClick={handleHapusBuktiPembayaran}
+                                disabled={isSubmittingPayment}
                               >
                                 Hapus
                               </span>
@@ -1173,13 +1468,18 @@ const UnggahProposal = () => {
                   component="label"
                   sx={{
                     textTransform: "none",
-                    background: "#006AF5",
+                    background: isSubmittingPlagiat ? "#A0A0A0" : "#006AF5",
                     color: "white",
                     fontSize: "12px",
                     borderRadius: "6px",
                     width: "150px",
                     height: "30px",
+                    cursor: isSubmittingPlagiat ? "not-allowed" : "pointer",
+                    "&:hover": {
+                      background: isSubmittingPlagiat ? "#A0A0A0" : "#006AF5",
+                    },
                   }}
+                  disabled={isSubmittingPlagiat}
                 >
                   <input
                     type="file"
@@ -1204,17 +1504,31 @@ const UnggahProposal = () => {
                         Nomor
                       </TableCell> */}
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "45%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "70%",
+                        }}
                       >
                         Nama File
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "15%",
+                          textAlign: "center",
+                        }}
                       >
                         Tanggal
                       </TableCell>
                       <TableCell
-                        sx={{ fontSize: "12px", padding: "11px", width: "20%" }}
+                        sx={{
+                          fontSize: "12px",
+                          padding: "11px",
+                          width: "10%",
+                          textAlign: "center",
+                        }}
                       >
                         Ukuran
                       </TableCell>
@@ -1223,7 +1537,7 @@ const UnggahProposal = () => {
                           fontSize: "12px",
                           padding: "11px",
                           textAlign: "center",
-                          width: "12%",
+                          width: "10%",
                         }}
                       >
                         Action
@@ -1237,13 +1551,17 @@ const UnggahProposal = () => {
                         <TableCell sx={{ fontSize: "12px" }}>
                           {hasilCekPlagiat.file_name_plagiarismcheck}
                         </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
+                        <TableCell
+                          sx={{ fontSize: "12px", textAlign: "center" }}
+                        >
                           {hasilCekPlagiat.upload_date_plagiarismcheck}
                         </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
+                        <TableCell
+                          sx={{ fontSize: "12px", textAlign: "center" }}
+                        >
                           {hasilCekPlagiat.file_size_plagiarismcheck}
                         </TableCell>
-                        <TableCell>
+                        <TableCell sx={{ textAlign: "center" }}>
                           {hasilCekPlagiat.file_name_plagiarismcheck !==
                             null && (
                             <Div sx={{ display: "flex" }}>
@@ -1258,6 +1576,7 @@ const UnggahProposal = () => {
                                 {hasilCekPlagiat && (
                                   <PDFViewerCekPlagiat
                                     hasilCekPlagiat={hasilCekPlagiat}
+                                    isUploading={isSubmittingPlagiat}
                                   />
                                 )}
                               </span>
@@ -1272,11 +1591,16 @@ const UnggahProposal = () => {
                               <span
                                 style={{
                                   textDecoration: "none",
-                                  cursor: "pointer",
-                                  color: "red",
+                                  cursor: isSubmittingPlagiat
+                                    ? "not-allowed"
+                                    : "pointer",
+                                  color: isSubmittingPlagiat
+                                    ? "#A0A0A0"
+                                    : "red",
                                   fontSize: "12px",
                                 }}
                                 onClick={handleHapusPlagiat}
+                                disabled={isSubmittingPlagiat}
                               >
                                 Hapus
                               </span>

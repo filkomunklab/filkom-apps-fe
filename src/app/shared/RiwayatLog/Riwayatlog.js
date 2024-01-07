@@ -89,7 +89,6 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
           sx={{
             maxWidth: 400,
             marginLeft: "20px",
-
             maxHeight: "100%",
             overflowY: "auto",
           }}
@@ -125,27 +124,25 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
       <Div
         sx={{
           display: "flex",
-          width: "100%",
           flexDirection: "column",
-          alignItems: "flex-start",
+          alignItems: "stretch",
           borderRadius: "6px",
           border: "1px solid rgba(26, 56, 96, 0.10)",
           background: "#FFF",
+          width: "100%",
         }}
       >
         {/* Advisor */}
         <Div
           sx={{
             display: "flex",
-            width: "100%",
-            alignItems: "flex-start",
+            alignItems: "stretch",
           }}
         >
           <Div
             variant="subtitle2"
             sx={{
-              display: "flex",
-              width: "120px",
+              flex: "0 0 120px",
               padding: "16px 16px",
               alignItems: "center",
               background: "#F5F5F5",
@@ -162,8 +159,9 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
           <Div
             sx={{
               display: "flex",
+              flex: 1,
               padding: "10px 16px",
-              alignItems: "flex-start",
+              alignItems: "center",
             }}
           >
             <Typography sx={{ fontSize: "12px" }}>
@@ -177,15 +175,13 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
           <Div
             sx={{
               display: "flex",
-              width: "100%",
-              alignItems: "flex-start",
+              alignItems: "stretch",
             }}
           >
             <Div
               variant="subtitle2"
               sx={{
-                display: "flex",
-                width: "120px",
+                flex: "0 0 120px",
                 padding: "14px 16px",
                 alignItems: "center",
                 background: "#F5F5F5",
@@ -202,8 +198,9 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
             <Div
               sx={{
                 display: "flex",
+                flex: 1,
                 padding: "10px 16px",
-                alignItems: "flex-start",
+                alignItems: "center",
               }}
             >
               <Typography sx={{ fontSize: "12px" }}>
@@ -217,15 +214,13 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
           <Div
             sx={{
               display: "flex",
-              width: "100%",
-              alignItems: "flex-start",
+              alignItems: "stretch",
             }}
           >
             <Div
               variant="subtitle2"
               sx={{
-                display: "flex",
-                width: "120px",
+                flex: "0 0 120px",
                 padding: "14px 16px",
                 alignItems: "center",
                 background: "#F5F5F5",
@@ -242,8 +237,9 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
             <Div
               sx={{
                 display: "flex",
+                flex: 1,
                 padding: "10px 16px",
-                alignItems: "flex-start",
+                alignItems: "center",
               }}
             >
               <Typography sx={{ fontSize: "12px" }}>
@@ -253,6 +249,7 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
           </Div>
         )}
       </Div>
+
       {/* Dosen Pembimbing End */}
     </Div>
   );

@@ -51,7 +51,26 @@ const PDFViewerPengajuanJudul = ({ pengajuanJudulFile }) => {
   );
 };
 
+const PDFViewerJudul = ({ pengajuanJudul }) => {
+  const viewPDFJudul = () => {
+    // Buat URL objek untuk file PDF
+    const pdfURL = pengajuanJudul?.file_path;
+
+    // Buka tautan dalam tab atau jendela baru
+    window.open(pdfURL, "_blank");
+  };
+
+  return (
+    <div>
+      <span onClick={viewPDFJudul}>Lihat</span>
+    </div>
+  );
+};
+
 const PengajuanJudul = () => {
+  // state - disabled button
+  const [isSubmitting, setSubmitting] = useState(false);
+
   // state - simpan request pengajuan judul
   const [pengajuanJudul, setPengajuanJudul] = useState();
   // state - simpan request daftar dosen
@@ -226,37 +245,50 @@ const PengajuanJudul = () => {
 
   const onPengajuanJudulFileChange = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      if (pengajuanJudulUploadedFiles.length === 0) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          // e.target.result berisi data URL dari file
-          const dataURL = e.target.result;
 
-          // Mengonversi data URL ke base64
-          const base64String = dataURL.split(",")[1];
-
-          setPengajuanJudulFile(file);
-          setSelectedPengajuanJudulFileName(file.name);
-
-          // Tambahkan data file baru ke state paymentUploadedFiles
-          const newFileData = {
-            name: file.name,
-            size: file.size,
-            buffer: base64String,
-          };
-          setPengajuanJudulUploadedFiles([newFileData]);
-          // Set isPaymentUploaded menjadi true
-          setIsPaymentUploaded(true);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        // alert(
-        //   "Anda sudah mengunggah satu file. Hapus file sebelumnya untuk mengunggah yang baru."
-        // );
-      }
+    // Cek apakah pengguna memilih file atau membatalkan
+    if (!file) {
+      // Tidak ada file dipilih, tidak perlu menonaktifkan tombol
+      return;
     }
+
+    setSubmitting(true);
+
+    // Validasi tipe file
+    const allowedFileTypes = ["application/pdf"];
+
+    if (!allowedFileTypes.includes(file.type)) {
+      console.error("Tipe file tidak valid");
+      setSubmitting(false); // Aktifkan kembali tombol
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      // e.target.result berisi data URL dari file
+      const dataURL = e.target.result;
+
+      // Mengonversi data URL ke base64
+      const base64String = dataURL.split(",")[1];
+
+      setPengajuanJudulFile(file);
+      setSelectedPengajuanJudulFileName(file.name);
+
+      // Tambahkan data file baru ke state paymentUploadedFiles
+      const newFileData = {
+        name: file.name,
+        size: file.size,
+        buffer: base64String,
+      };
+      setPengajuanJudulUploadedFiles([newFileData]);
+      // Set isPaymentUploaded menjadi true
+      setIsPaymentUploaded(true);
+    };
+    reader.readAsDataURL(file);
+
+    setSubmitting(false); // Aktifkan kembali tombol
   };
+
   // Fungsi untuk menghapus file Pengajuan Judul
   const handleDeletePengajuanJudulFile = (index) => {
     if (index >= 0 && index < pengajuanJudulUploadedFiles.length && isEditing) {
@@ -369,6 +401,9 @@ const PengajuanJudul = () => {
       })
       .catch((error) => {
         console.error("Terjadi kesalahan:", error);
+      })
+      .finally(() => {
+        setSubmitting(false);
       });
   };
   return (
@@ -438,7 +473,11 @@ const PengajuanJudul = () => {
             hidden={userRole.includes("MAHASISWA") ? false : true}
             sx={{ width: "100%" }}
           >
-            <MenuMahasiswa dataGroupId={groupId} dataProgress={progress} />
+            <MenuMahasiswa
+              dataGroupId={groupId}
+              dataProgress={progress}
+              page={"Pengajuan Judul"}
+            />
           </Div>
           {/* Menu horizontal End */}
 
@@ -516,10 +555,10 @@ const PengajuanJudul = () => {
                 <Table>
                   <TableHead sx={{ background: "rgba(26, 56, 96, 0.10)" }}>
                     <TableRow sx={{ color: "#rgba(25, 36, 52, 0.94)" }}>
-                      <TableCell sx={{ width: "25%" }}>Nomor</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Nama Lengkap</TableCell>
-                      <TableCell sx={{ width: "25%" }}>NIM</TableCell>
-                      <TableCell sx={{ width: "25%" }}>Program Studi</TableCell>
+                      <TableCell sx={{ width: "5%" }}>Nomor</TableCell>
+                      <TableCell sx={{ width: "55%" }}>Nama Lengkap</TableCell>
+                      <TableCell sx={{ width: "20%" }}>NIM</TableCell>
+                      <TableCell sx={{ width: "20%" }}>Program Studi</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -570,14 +609,19 @@ const PengajuanJudul = () => {
                     component="label"
                     sx={{
                       textTransform: "none",
-                      background: "#006AF5",
+                      background: isSubmitting ? "#A0A0A0" : "#006AF5",
                       color: "white",
                       fontSize: "12px",
                       borderRadius: "6px",
                       width: "130px",
                       height: "30px",
                       padding: "6px 12px",
+                      cursor: isSubmitting ? "not-allowed" : "pointer",
+                      "&:hover": {
+                        background: isSubmitting ? "#A0A0A0" : "#006AF5",
+                      },
                     }}
+                    disabled={isSubmitting}
                   >
                     <input
                       type="file"
@@ -624,56 +668,103 @@ const PengajuanJudul = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {pengajuanJudulUploadedFiles.map((file, index) => (
-                      <TableRow key={index}>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {index + 1}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.name}
-                        </TableCell>
-                        <TableCell sx={{ fontSize: "12px" }}>
-                          {file.size} bytes
-                        </TableCell>
-                        <TableCell>
-                          <Div sx={{ display: "flex" }}>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                color: "blue",
-                                fontSize: "12px",
-                              }}
-                            >
-                              <PDFViewerPengajuanJudul
-                                pengajuanJudulFile={pengajuanJudulFile}
-                              />
-                            </span>
-                            <Div
-                              style={{
-                                margin: "0 5px", // Margin di sekitar garis vertikal
-                                color: "#E0E0E0",
-                              }}
-                            >
-                              |
+                    {isEditing ? (
+                      <>
+                        {pengajuanJudulUploadedFiles.map((file, index) => (
+                          <TableRow key={index}>
+                            <TableCell sx={{ fontSize: "12px" }}>
+                              {index + 1}
+                            </TableCell>
+                            <TableCell sx={{ fontSize: "12px" }}>
+                              {file.name}
+                            </TableCell>
+                            <TableCell sx={{ fontSize: "12px" }}>
+                              {file.size}
+                            </TableCell>
+                            <TableCell>
+                              <Div sx={{ display: "flex" }}>
+                                {file.path === pengajuanJudul?.file_path ? (
+                                  <span
+                                    style={{
+                                      textDecoration: "none",
+                                      cursor: "pointer",
+                                      color: "blue",
+                                      fontSize: "12px",
+                                    }}
+                                  >
+                                    <PDFViewerJudul
+                                      pengajuanJudul={pengajuanJudul}
+                                    />
+                                  </span>
+                                ) : (
+                                  <span
+                                    style={{
+                                      textDecoration: "none",
+                                      cursor: "pointer",
+                                      color: "blue",
+                                      fontSize: "12px",
+                                    }}
+                                  >
+                                    <PDFViewerPengajuanJudul
+                                      pengajuanJudulFile={pengajuanJudulFile}
+                                    />
+                                  </span>
+                                )}
+                                <Div
+                                  style={{
+                                    margin: "0 5px", // Margin di sekitar garis vertikal
+                                    color: "#E0E0E0",
+                                  }}
+                                >
+                                  |
+                                </Div>
+                                <span
+                                  style={{
+                                    textDecoration: "none",
+                                    cursor: isEditing ? "pointer" : "default", // Nonaktifkan jika bukan mode edit
+                                    color: isEditing ? "red" : "#E0E0E0", // Ubah warna saat dalam mode edit
+                                    fontSize: "12px",
+                                  }}
+                                  onClick={() =>
+                                    handleDeletePengajuanJudulFile(index)
+                                  }
+                                >
+                                  Hapus
+                                </span>
+                              </Div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        <TableRow>
+                          <TableCell sx={{ fontSize: "12px" }}>{1}</TableCell>
+                          <TableCell sx={{ fontSize: "12px" }}>
+                            {pengajuanJudul?.file_name}
+                          </TableCell>
+                          <TableCell sx={{ fontSize: "12px" }}>
+                            {pengajuanJudul?.file_size}
+                          </TableCell>
+                          <TableCell>
+                            <Div sx={{ display: "flex" }}>
+                              <span
+                                style={{
+                                  textDecoration: "none",
+                                  cursor: "pointer",
+                                  color: "blue",
+                                  fontSize: "12px",
+                                }}
+                              >
+                                <PDFViewerJudul
+                                  pengajuanJudul={pengajuanJudul}
+                                />
+                              </span>
                             </Div>
-                            <span
-                              style={{
-                                textDecoration: "none",
-                                cursor: isEditing ? "pointer" : "default", // Nonaktifkan jika bukan mode edit
-                                color: isEditing ? "red" : "#E0E0E0", // Ubah warna saat dalam mode edit
-                                fontSize: "12px",
-                              }}
-                              onClick={() =>
-                                handleDeletePengajuanJudulFile(index)
-                              }
-                            >
-                              Hapus
-                            </span>
-                          </Div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          </TableCell>
+                        </TableRow>
+                      </>
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -681,7 +772,9 @@ const PengajuanJudul = () => {
               {/* Select Dosen Pembimbing Start */}
               {!isEditing && (
                 <>
-                  <Typography variant="subtitle2">Judul</Typography>
+                  <Typography variant="subtitle2">
+                    Mengusulkan Advisor
+                  </Typography>
                   <Typography sx={{ whiteSpace: "pre-line" }}>
                     {
                       (
