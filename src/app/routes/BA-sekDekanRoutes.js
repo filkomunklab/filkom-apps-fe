@@ -1,15 +1,15 @@
 import AcademicGuide from "app/pages/BimbinganAkademik/shared/AcademicGuide/AcademicGuide";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/shared/VisionMisionGoals/VisionMissionGoals";
 import Curriculum from "app/pages/BimbinganAkademik/shared/Curriculum/Curriculum";
-import StudentInformation from "app/pages/BimbinganAkademik/roles/SekDekan/StudentInformation";
-import StudentInformationFacultyInformatics from "app/pages/BimbinganAkademik/roles/SekDekan/StudentInformation/StudentInformationFaculty/Informatics";
+import StudentInformation from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty";
+import StudentInformationFacultyPerMajor from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty/StudentPerMajor";
 import StudentInformationFacultyInformationSystem from "app/pages/BimbinganAkademik/roles/SekDekan/StudentInformation/StudentInformationFaculty/InformationSystem";
 import StudentInformationFacultyInformationTechnology from "app/pages/BimbinganAkademik/roles/SekDekan/StudentInformation/StudentInformationFaculty/InformationTechnology";
-import StudentProfile from "../pages/BimbinganAkademik/roles/SekDekan/StudentInformation/StudentProfile";
-import StudentGrade from "app/pages/BimbinganAkademik/roles/SekDekan/StudentInformation/StudentGradeDashboard/StudentGrade";
-import StudentCertificate from "app/pages/BimbinganAkademik/roles/SekDekan/StudentInformation/StudentCertificate";
-import CertificateDetail from "app/pages/BimbinganAkademik/roles/SekDekan/StudentInformation/StudentCertificate/CertificateDetail";
-import StudentGradeDashboard from "app/pages/BimbinganAkademik/roles/SekDekan/StudentInformation/StudentGradeDashboard";
+import StudentProfile from "../pages/BimbinganAkademik/shared/StudentInformation/StudentProfile";
+import StudentGrade from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard/StudentGrade";
+import StudentCertificate from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentCertificate";
+import CertificateDetail from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentCertificate/CertificateDetail";
+import StudentGradeDashboard from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard";
 import Profile from "app/pages/BimbinganAkademik/shared/Profile/Profile";
 import SupervisorInformation from "app/pages/BimbinganAkademik/roles/SekDekan/SupervisorInformation";
 import AdvisorProfile from "app/pages/BimbinganAkademik/roles/SekDekan/SupervisorInformation/AdvisorProfile/AdvisorProfilFaculty";
@@ -54,22 +54,16 @@ const sekDekanRoutes = [
     element: <Page component={StudentInformation} />,
   },
   {
-    path: "/bimbingan-akademik/sek-dekan/student-information/informatics",
-    element: <Page component={StudentInformationFacultyInformatics} />,
+    path: "/bimbingan-akademik/sek-dekan/student-information/faculty-student/informatics",
+    element: <Page component={StudentInformationFacultyPerMajor} />,
   },
   {
-    path: "/bimbingan-akademik/sek-dekan/student-information/information-system",
-    element: <Page component={StudentInformationFacultyInformationSystem} />,
+    path: "/bimbingan-akademik/sek-dekan/student-information/faculty-student/information-system",
+    element: <Page component={StudentInformationFacultyPerMajor} />,
   },
   {
-    path: "/bimbingan-akademik/sek-dekan/student-information/information-technology",
-    element: (
-      <Page component={StudentInformationFacultyInformationTechnology} />
-    ),
-  },
-  {
-    path: "/bimbingan-akademik/sek-dekan/student-information",
-    element: <Page component={StudentInformation} />,
+    path: "/bimbingan-akademik/sek-dekan/student-information/faculty-student/information-technology",
+    element: <Page component={StudentInformationFacultyPerMajor} />,
   },
   {
     path: "/bimbingan-akademik/sek-dekan/student-information/:id",

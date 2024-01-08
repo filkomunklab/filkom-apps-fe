@@ -91,11 +91,14 @@ const data = Array.from(Array(15).keys()).map((item, index) => ({
   status: `Active`,
 }));
 
-const { role } = JSON.parse(localStorage.getItem("user"));
+const role = Boolean(localStorage.getItem("user"))
+  ? JSON.parse(localStorage.getItem("user")).role
+  : [];
 
 const StudentPerMajor = () => {
+  const navigate = useNavigate();
   const location = useLocation();
-  const { major } = location.state;
+  const { major } = location.state ? location.state : "";
   const controller = new AbortController();
   const signal = controller.signal;
   const [filter, setFilter] = useState([]);
@@ -138,6 +141,7 @@ const StudentPerMajor = () => {
 
   const handleClick = (event) => {
     event.preventDefault();
+    navigate(-1);
   };
 
   useEffect(() => console.log("location: ", location), []);
@@ -147,7 +151,7 @@ const StudentPerMajor = () => {
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
           <StyledLink
-            to={`/bimbingan-akademik/${getRole()}/student-information/faculty-student`}
+          // to={`/bimbingan-akademik/${getRole()}/student-information/faculty-student`}
           >
             Faculty Student
           </StyledLink>
@@ -283,6 +287,8 @@ const getRole = () => {
     ? "kaprodi"
     : role.includes("DEKAN")
     ? "dekan"
+    : role.includes("OPERATOR_FAKULTAS")
+    ? "sek-dekan"
     : "dosen-pembimbing";
 
   return filter;
@@ -314,17 +320,23 @@ const TableItem = ({ item, index }) => {
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}`
+          `/bimbingan-akademik/${getRole()}/student-information/${item.nim}`,
+          { state: { studentNim: nim } }
         );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}/grade`
+          `/bimbingan-akademik/${getRole()}/student-information/${
+            item.nim
+          }/grade`,
+          { state: { studentNim: nim } }
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/kaprodi/student-information/faculty-student/${item.nim}/certificate`
+          `/bimbingan-akademik/${getRole()}/student-information/${
+            item.nim
+          }/certificate`
         );
         break;
 

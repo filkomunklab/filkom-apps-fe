@@ -6,8 +6,8 @@ import AddActivity from "app/pages/BimbinganAkademik/shared/AddActivity";
 import Manage from "app/pages/BimbinganAkademik/shared/Manage/Manage";
 import Dashboard from "app/pages/BimbinganAkademik/shared/Dashboard/Dashboard.";
 import History from "app/pages/BimbinganAkademik/shared/History";
-import StudentCertificate from "app/pages/BimbinganAkademik/roles/Kaprodi/StudentInformation/StudentInformationMentored/StudentCertificate/StudentCertificate";
-import CertificateDetail from "app/pages/BimbinganAkademik/roles/Kaprodi/StudentInformation/StudentInformationMentored/StudentCertificate/CertificateDetail/CertificateDetail";
+import StudentCertificate from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentCertificate";
+import CertificateDetail from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentCertificate/CertificateDetail";
 import StudentGradeDashboard from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard";
 import StudentGrade from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard/StudentGrade";
 import StudentProfile from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentProfile";
@@ -106,19 +106,19 @@ const kepalaProgramStudiRoutes = [
     element: <Page component={StudentProfile} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/student-information/mentored-student/:id/grade",
+    path: "/bimbingan-akademik/kaprodi/student-information/:id/grade",
     element: <Page component={StudentGradeDashboard} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/student-information/mentored-student/:id/grade/semester/:number",
+    path: "/bimbingan-akademik/kaprodi/student-information/:id/grade/semester/:number",
     element: <Page component={StudentGrade} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/student-information/mentored-student/:id/certificate",
+    path: "/bimbingan-akademik/kaprodi/student-information/:id/certificate",
     element: <Page component={StudentCertificate} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/student-information/mentored-student/:id/certificate/detail",
+    path: "/bimbingan-akademik/kaprodi/student-information/:id/certificate/detail",
     element: <Page component={CertificateDetail} />,
   },
   {
