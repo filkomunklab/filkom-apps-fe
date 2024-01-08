@@ -33,7 +33,7 @@ const roleValues = [
   "DOSEN",
   "DOSEN_MK",
   "OPERATOR_FAKULTAS",
-  "SEKERTARIS",
+  "SEKRETARIS",
   "REGISTER",
 ];
 
@@ -164,7 +164,7 @@ const AddEmployeeModal = ({
       byteArrays[sliceIndex] = new Uint8Array(bytes);
     }
     let blob = new Blob(byteArrays, { type: "application/vnd.ms.excel" });
-    FileSaver.saveAs(new Blob([blob], {}), "templateCurriculum.xlsx");
+    FileSaver.saveAs(new Blob([blob], {}), "templateEmployeeManagement.xlsx");
   };
 
   const handleSubmitFile = async () => {
@@ -217,7 +217,7 @@ const AddEmployeeModal = ({
             console.error("Detail kesalahan pada field:");
             const arrayError = error.inner.map((error) => {
               const number =
-                parseInt(error.path.split(".")[0].slice(1, -1), 10) + 1;
+                parseInt(error.path.split(".")[0].slice(1, -1), 10) + 2;
               const column = error.path.split(".")[1];
               return `Row: ${number}, Column: ${column}, Message: ${error.message}. `;
             });

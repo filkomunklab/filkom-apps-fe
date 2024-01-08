@@ -196,7 +196,7 @@ const AddStudentModal = ({
       byteArrays[sliceIndex] = new Uint8Array(bytes);
     }
     let blob = new Blob(byteArrays, { type: "application/vnd.ms.excel" });
-    FileSaver.saveAs(new Blob([blob], {}), "templateCurriculum.xlsx");
+    FileSaver.saveAs(new Blob([blob], {}), "templateStudentManagement.xlsx");
   };
 
   const handleSubmitFile = async () => {

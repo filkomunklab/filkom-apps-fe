@@ -386,7 +386,7 @@ const TableItem = ({ item, index }) => {
           ? "Information Technology"
           : "-"}
       </TableCell>
-      <TableCell>{item.arrival_Year}</TableCell>
+      <TableCell>{item.arrivalYear}</TableCell>
 
       <TableCell>
         <Chip label={item.status} variant="filled" color={"success"} />
