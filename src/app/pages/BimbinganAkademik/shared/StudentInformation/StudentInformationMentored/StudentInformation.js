@@ -287,6 +287,8 @@ const TableItem = ({ item, index }) => {
       ? "kaprodi"
       : role.includes("DEKAN")
       ? "dekan"
+      : role.includes("OPERATOR_FAKULTAS")
+      ? "sek-dekan"
       : "dosen-pembimbing";
 
     return filter;
@@ -301,24 +303,19 @@ const TableItem = ({ item, index }) => {
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/${getRole()}/student-information${
-            getRole() !== "dosen-pembimbing" ? "/mentored-student" : ""
-          }/${nim}`,
+          `/bimbingan-akademik/${getRole()}/student-information/${nim}`,
           { state: { studentNim: nim } }
         );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/${getRole()}/student-information${
-            getRole() !== "dosen-pembimbing" ? "/mentored-student" : ""
-          }/${nim}/grade`
+          `/bimbingan-akademik/${getRole()}/student-information/${nim}/grade`,
+          { state: { studentNim: nim } }
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/${getRole()}/student-information${
-            getRole() !== "dosen-pembimbing" ? "/mentored-student" : ""
-          }/${nim}/certificate`
+          `/bimbingan-akademik/${getRole()}/student-information/${nim}/certificate`
         );
         break;
 
@@ -383,7 +380,11 @@ const TableItem = ({ item, index }) => {
         </Button>
       </TableCell>
       <TableCell sx={[rowStyle]}>
-        <Chip label={status} variant="filled" color={"success"} />
+        <Chip
+          label={status}
+          variant="filled"
+          color={status === "ACTIVE" ? "success" : "default"}
+        />
       </TableCell>
     </TableRow>
   );

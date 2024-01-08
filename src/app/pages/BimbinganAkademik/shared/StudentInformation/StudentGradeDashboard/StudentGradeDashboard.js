@@ -7,7 +7,7 @@ import {
   Paper,
   Breadcrumbs,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -47,12 +47,17 @@ const getRole = () => {
     ? "kaprodi"
     : role.includes("DEKAN")
     ? "dekan"
+    : role.includes("OPERATOR_FAKULTAS")
+    ? "sek-dekan"
     : "dosen-pembimbing";
 
   return filter;
 };
 
 const StudentGradeDashboard = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { studentNim } = location.state ? location.state : "";
   const semesterNames = [
     { label: "Semester 1", value: 1 },
     { label: "Semester 2", value: 2 },
@@ -60,9 +65,7 @@ const StudentGradeDashboard = () => {
     { label: "Semester 4", value: 4 },
     { label: "Semester 5", value: 5 },
   ];
-  const id = "105022010000";
 
-  const navigate = useNavigate();
   const handleClick = (event) => {
     event.preventDefault();
     navigate(-1);
@@ -94,7 +97,7 @@ const StudentGradeDashboard = () => {
           {semesterNames.reverse().map((semester, index) => (
             <Grid item xs={2} sm={4} md={4} key={index}>
               <Link
-                to={`/bimbingan-akademik/${getRole()}/student-information/${id}/grade/semester/${
+                to={`/bimbingan-akademik/${getRole()}/student-information/${studentNim}/grade/semester/${
                   semester.value
                 }`}
                 style={{ textDecoration: "none" }}

@@ -16,14 +16,19 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import { useLocation, useNavigate } from "react-router-dom";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import { update } from "immutable";
 
-const role = JSON.parse(localStorage.getItem("user")).role;
+const role = Boolean(localStorage.getItem("user"))
+  ? JSON.parse(localStorage.getItem("user")).role
+  : [];
 
 const StudentProfile = () => {
   const navigate = useNavigate();
@@ -33,23 +38,10 @@ const StudentProfile = () => {
   const { studentNim } = location.state || "-";
   const [advisorProfileData, setAdvisorProfileData] = useState([]);
   const [studentProfileData, setStudentProfileData] = useState([]);
+  // const [updateStatus, setUpdateStatus] = useState("");
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [status, setStatus] = useState("Active");
-
-  const handleOpenPopover = (event) => {
-    setAnchorEl(event.currentTarget);
-    setOpen(true);
-  };
-
-  const handleClosePopover = () => {
-    setAnchorEl(null);
-    setOpen(false);
-  };
-
-  const handleStatusChange = (event) => {
-    setStatus(event.target.value);
-  };
+  const [isLoading, setIsLoading] = useState(false);
 
   const replaceNull = (data) => {
     const result = {};
@@ -65,7 +57,7 @@ const StudentProfile = () => {
     firstName,
     lastName,
     gender,
-    // status,
+    status,
     nim,
     reg_num,
     dateOfBirth,
@@ -90,6 +82,8 @@ const StudentProfile = () => {
     guardianAddress,
   } = replaceNull(studentProfileData);
 
+  // useEffect(() => console.log("ini status", updateStatus), [updateStatus]);
+
   const getProfile = async () => {
     try {
       const { guidanceClassId } = JSON.parse(localStorage.getItem("user"));
@@ -110,21 +104,60 @@ const StudentProfile = () => {
     }
   };
 
+  const changeStatus = async (value) => {
+    try {
+      setIsLoading(true);
+      handleClosePopover();
+      const response = await axios.patch(
+        `${BASE_URL_API}/employee/biodataStudent/status/${nim}`,
+        { status: value },
+        { signal }
+      );
+
+      console.log("response update status", response);
+      const { status, data } = response.data;
+      if (status === "OK") {
+        getProfile();
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.log("error patch status", error);
+    }
+  };
+
   useEffect(() => {
     getProfile();
+    return () => controller.abort();
   }, []);
+
+  // useEffect(() => {
+  //   changeStatus();
+  // }, [updateStatus]);
+
+  const handleOpenPopover = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen(true);
+  };
+
+  const handleClosePopover = () => {
+    setAnchorEl(null);
+    setOpen(false);
+  };
 
   const handleClick = (event) => {
     event.preventDefault();
-    navigate(
-      `/bimbingan-akademik/${getRole()}/student-information${
-        getRole() !== "dosen-pembimbing" ? "/faculty-student" : ""
-      }`
-    );
+    navigate(-1);
   };
 
   return (
     <Div>
+      <Backdrop
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress />
+      </Backdrop>
       <Breadcrumbs aria-label="breadcrumb" onClick={handleClick}>
         <StyledLink>Student Information</StyledLink>
         <Typography color="text.primary">Student Profile</Typography>
@@ -278,22 +311,26 @@ const StudentProfile = () => {
             horizontal: "center",
           }}
         >
-          <FormControl component="fieldset">
+          <FormControl
+            component="fieldset"
+            id="demo-controlled-radio-buttons-group"
+          >
             <RadioGroup
               row
-              aria-label="status"
-              name="status"
+              aria-labelledby="demo-controlled-radio-buttons-group"
+              name="controlled-radio-buttons-group"
+              // defaultValue={status}
               value={status}
-              onChange={handleStatusChange}
+              onChange={(e) => changeStatus(e.target.value)}
             >
               <FormControlLabel
-                value="Active"
+                value="ACTIVE"
                 control={<Radio />}
                 label="Active"
                 sx={{ marginLeft: "3px" }}
               />
               <FormControlLabel
-                value="Inactive"
+                value="INACTIVE"
                 control={<Radio />}
                 label="Inactive"
               />
@@ -412,6 +449,8 @@ const getRole = () => {
     ? "kaprodi"
     : role.includes("DEKAN")
     ? "dekan"
+    : role.includes("OPERATOR_FAKULTAS")
+    ? "sek-dekan"
     : "dosen-pembimbing";
 
   return filter;

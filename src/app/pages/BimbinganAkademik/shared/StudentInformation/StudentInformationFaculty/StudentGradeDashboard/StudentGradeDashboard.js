@@ -47,6 +47,8 @@ const getRole = () => {
     ? "kaprodi"
     : role.includes("DEKAN")
     ? "dekan"
+    : role.includes("OPERATOR_FAKULTAS")
+    ? "sek-dekan"
     : "dosen-pembimbing";
 
   return filter;

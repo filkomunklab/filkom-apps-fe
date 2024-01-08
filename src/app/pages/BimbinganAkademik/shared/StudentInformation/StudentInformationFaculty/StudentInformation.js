@@ -73,7 +73,9 @@ const prodiList = [
   },
 ];
 
-const role = JSON.parse(localStorage.getItem("user")).role;
+const role = Boolean(localStorage.getItem("user"))
+  ? JSON.parse(localStorage.getItem("user")).role
+  : [];
 
 const StudentInformationFaculty = () => {
   const [filter, setFilter] = useState([]);
@@ -382,6 +384,8 @@ const getRole = () => {
     ? "kaprodi"
     : role.includes("DEKAN")
     ? "dekan"
+    : role.includes("OPERATOR_FAKULTAS")
+    ? "sek-dekan"
     : "dosen-pembimbing";
 
   return filter;
@@ -406,7 +410,6 @@ const TableHeading = ({ index }) => {
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
   const { nim, firstName, lastName, major, arrivalYear, status } = item;
-  console.log("hehe", getRole());
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
@@ -421,12 +424,13 @@ const TableItem = ({ item, index }) => {
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/${nim}/grade`
+          `/bimbingan-akademik/${getRole()}/student-information/${nim}/grade`,
+          { state: { studentNim: nim } }
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${nim}/certificate`
+          `/bimbingan-akademik/${getRole()}/student-information/${nim}/certificate`
         );
         break;
 
@@ -434,9 +438,11 @@ const TableItem = ({ item, index }) => {
         console.log("Path not found");
     }
   };
+
   const rowStyle = {
     "@media (max-width: 650px)": { fontSize: "11px" },
   };
+
   return (
     <TableRow>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>

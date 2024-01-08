@@ -7,8 +7,8 @@ import StudentInformationMentored from "app/pages/BimbinganAkademik/shared/Stude
 import StudentInformationFaculty from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty";
 import StudentInformationFacultyPerMajor from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty/StudentPerMajor";
 import StudentProfile from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentProfile";
-import StudentCertificate from "app/pages/BimbinganAkademik/roles/Dekan/StudentInformation/StudentCertificate";
-import CertificateDetail from "app/pages/BimbinganAkademik/roles/Dekan/StudentInformation/StudentCertificate/CertificateDetail";
+import StudentCertificate from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentCertificate";
+import CertificateDetail from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentCertificate/CertificateDetail";
 import StudentGrade from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard/StudentGrade";
 import StudentGradeDashboard from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard";
 import SupervisorInformation from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation";
