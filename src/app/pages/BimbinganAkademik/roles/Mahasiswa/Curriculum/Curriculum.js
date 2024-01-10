@@ -27,7 +27,6 @@ const Curriculum = () => {
   const getCurriculumDetails = async () => {
     try {
       const curriculumResult = await axios.get(`${BASE_URL_API}/curriculum`);
-
       if (curriculumResult.data.status === "OK") {
         const firstCurriculum = curriculumResult.data.data[0];
 
@@ -105,42 +104,70 @@ const Curriculum = () => {
 
     return rows;
   };
+  console.log("ini result curriculumResult", curriculumDetails);
+  console.log("ini result listSubject", listSubject);
 
   return (
     <div>
-      <div>
-        <Typography
-          sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "10px" }}
-        >
-          Curriculum{` ${curriculumDetails.name} - ${curriculumDetails.year}`}
-        </Typography>
-      </div>
-
-      <Grid container pt={2}>
-        <TableContainer sx={{ maxHeight: 530 }} component={Paper}>
-          <Table>
-            <TableHead
-              sx={{
-                position: "-webkit-sticky",
-                position: "sticky",
-                top: 0,
-                backgroundColor: "rgb(245, 247, 250)",
-              }}
+      {curriculumDetails &&
+      (curriculumDetails.name === "" || curriculumDetails.year === "") ? (
+        <Grid>
+          <Typography
+            sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "20px" }}
+          >
+            Curriculum
+          </Typography>
+          <Paper
+            sx={{
+              backgroundColor: "rgba(0, 106, 245, 0.1)",
+              padding: "15px",
+              borderRadius: "10px",
+              boxShadow: "50px",
+              marginBottom: "15px",
+            }}
+          >
+            <Typography variant="body1">
+              You don't have a curriculum yet.
+            </Typography>
+          </Paper>
+        </Grid>
+      ) : (
+        <Grid container>
+          <div>
+            <Typography
+              sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "15px" }}
             >
-              <TableRow>
-                <TableCell sx={{ width: "80px" }}>Code</TableCell>
-                <TableCell sx={{ width: "400px" }}>Name</TableCell>
-                <TableCell sx={{ width: "80px", lign: "right" }}>
-                  Credit(s)
-                </TableCell>
-                <TableCell sx={{ width: "130px" }}>Type</TableCell>
-                <TableCell sx={{ width: "400px" }}>Prerequisite</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{renderRows()}</TableBody>
-          </Table>
-        </TableContainer>
-      </Grid>
+              Curriculum
+              {` ${curriculumDetails.name} - ${curriculumDetails.year}`}
+            </Typography>
+          </div>
+          <Grid container pt={2}>
+            <TableContainer sx={{ maxHeight: 530 }} component={Paper}>
+              <Table>
+                <TableHead
+                  sx={{
+                    position: "-webkit-sticky",
+                    position: "sticky",
+                    top: 0,
+                    backgroundColor: "rgb(245, 247, 250)",
+                  }}
+                >
+                  <TableRow>
+                    <TableCell sx={{ width: "80px" }}>Code</TableCell>
+                    <TableCell sx={{ width: "400px" }}>Name</TableCell>
+                    <TableCell sx={{ width: "80px", lign: "right" }}>
+                      Credit(s)
+                    </TableCell>
+                    <TableCell sx={{ width: "130px" }}>Type</TableCell>
+                    <TableCell sx={{ width: "400px" }}>Prerequisite</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>{renderRows()}</TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+        </Grid>
+      )}
     </div>
   );
 };

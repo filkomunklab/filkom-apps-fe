@@ -2,7 +2,7 @@ import Dashboard from "app/pages/BimbinganAkademik/shared/Dashboard/Dashboard.";
 import AcademicGuide from "app/pages/BimbinganAkademik/shared/AcademicGuide/AcademicGuide";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/shared/VisionMisionGoals/VisionMissionGoals";
 import Curriculum from "app/pages/BimbinganAkademik/shared/Curriculum/Curriculum";
-import StudentInformation from "../pages/BimbinganAkademik/roles/Dekan/StudentInformation";
+// import StudentInformation from "../pages/BimbinganAkademik/roles/Dekan/StudentInformation";
 import StudentInformationMentored from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationMentored";
 import StudentInformationFaculty from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty";
 import StudentInformationFacultyPerMajor from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty/StudentPerMajor";
@@ -11,19 +11,19 @@ import StudentCertificate from "app/pages/BimbinganAkademik/shared/StudentInform
 import CertificateDetail from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentCertificate/CertificateDetail";
 import StudentGrade from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard/StudentGrade";
 import StudentGradeDashboard from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard";
-import SupervisorInformation from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation";
-import AddSupervisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AddSupervisor";
-import InformaticsLS from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AddSupervisor/Informatics";
-import InformationSytemLS from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AddSupervisor/InformationSystem";
-import InformationTechnologyLS from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AddSupervisor/InformationTechnology";
-import AdvisorProfile from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorProfile";
-import EditStudent from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorProfile/EditStudent";
-import AdvisorHistory from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory";
-import HistoryActivityAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HIstoryActivity";
-import HistoryGradeAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HistoryGrade";
-import HistoryPreRegistrationAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HistoryPreRegis";
-import HistoryCertificateAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HistoryCertificate";
-import HistoryConsultationAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HistoryConsultation";
+// import SupervisorInformation from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation";
+// import AddSupervisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AddSupervisor";
+// import InformaticsLS from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AddSupervisor/Informatics";
+// import InformationSytemLS from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AddSupervisor/InformationSystem";
+// import InformationTechnologyLS from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AddSupervisor/InformationTechnology";
+// import AdvisorProfile from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorProfile";
+// import EditStudent from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorProfile/EditStudent";
+// import AdvisorHistory from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory";
+// import HistoryActivityAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HIstoryActivity";
+// import HistoryGradeAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HistoryGrade";
+// import HistoryPreRegistrationAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HistoryPreRegis";
+// import HistoryCertificateAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HistoryCertificate";
+// import HistoryConsultationAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HistoryConsultation";
 import ReviewPreRegistration from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewPreRegistration/ReviewPreRegistration";
 import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewPreRegistration/ReviewPreRegistrationStudent/ReviewPreRegistrationStudent";
 import ReviewCertificate from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/ReviewCertificate";
@@ -31,14 +31,14 @@ import ReviewCertificateStudent from "app/pages/BimbinganAkademik/shared/ReviewA
 import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/StudentConsultation";
 import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/ReplyConsultation/Consultation";
 import History from "app/pages/BimbinganAkademik/shared/History";
-import HistoryActivity from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/HistoryActivity";
-import ListCourses from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses";
-import ListStudent from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses/ListStudent";
-import StudentPreRegis from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses/ListStudent/StudentPreRegis";
-import ListStudentNotPreRegis from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListStudentNotPreRegis";
+// import HistoryActivity from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/HistoryActivity";
+// import ListCourses from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses";
+// import ListStudent from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses/ListStudent";
+// import StudentPreRegis from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses/ListStudent/StudentPreRegis";
+// import ListStudentNotPreRegis from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListStudentNotPreRegis";
 import HistoryPreRegistration from "app/pages/BimbinganAkademik/shared/History/HistoryPreRegis/ReviewPreRegistrationStudent";
 import HistoryCertificate from "app/pages/BimbinganAkademik/shared/History/HistoryCertificate/Certificate";
-import HistoryGrade from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryGrade/HistoryGrade";
+// import HistoryGrade from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryGrade/HistoryGrade";
 import HistoryConsultationComplete from "app/pages/BimbinganAkademik/shared/History/HistoryConsultation/ConsultationComplete";
 import CurrentActivities from "app/pages/BimbinganAkademik/shared/CurrentActivities";
 import ViewActivity from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewActivity/ViewActivity";
@@ -87,10 +87,10 @@ const dekanRoutes = [
     path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-technology",
     element: <Page component={StudentInformationFacultyPerMajor} />,
   },
-  {
-    path: "/bimbingan-akademik/dekan/student-information",
-    element: <Page component={StudentInformation} />,
-  },
+  // {
+  //   path: "/bimbingan-akademik/dekan/student-information",
+  //   element: <Page component={StudentInformation} />,
+  // },
   {
     path: "/bimbingan-akademik/dekan/student-information/:id",
     element: <Page component={StudentProfile} />,
@@ -135,82 +135,82 @@ const dekanRoutes = [
     path: "/bimbingan-akademik/dekan/review-activities/consultation/:id",
     element: <Page component={ReplyConsultation} />,
   },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information",
-    element: <Page component={SupervisorInformation} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor",
-    element: <Page component={AddSupervisor} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id",
-    element: <Page component={AdvisorProfile} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id/edit-student",
-    element: <Page component={EditStudent} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id",
-    element: <Page component={AdvisorHistory} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-activity",
-    element: <Page component={HistoryActivityAdvisor} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-grade",
-    element: <Page component={HistoryGradeAdvisor} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-preregistration",
-    element: <Page component={HistoryPreRegistrationAdvisor} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-certificate",
-    element: <Page component={HistoryCertificateAdvisor} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-consultation",
-    element: <Page component={HistoryConsultationAdvisor} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/informatics",
-    element: <Page component={InformaticsLS} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/information-system",
-    element: <Page component={InformationSytemLS} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/information-technology",
-    element: <Page component={InformationTechnologyLS} />,
-  },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information",
+  //   element: <Page component={SupervisorInformation} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor",
+  //   element: <Page component={AddSupervisor} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id",
+  //   element: <Page component={AdvisorProfile} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id/edit-student",
+  //   element: <Page component={EditStudent} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id",
+  //   element: <Page component={AdvisorHistory} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-activity",
+  //   element: <Page component={HistoryActivityAdvisor} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-grade",
+  //   element: <Page component={HistoryGradeAdvisor} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-preregistration",
+  //   element: <Page component={HistoryPreRegistrationAdvisor} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-certificate",
+  //   element: <Page component={HistoryCertificateAdvisor} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-consultation",
+  //   element: <Page component={HistoryConsultationAdvisor} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/informatics",
+  //   element: <Page component={InformaticsLS} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/information-system",
+  //   element: <Page component={InformationSytemLS} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/information-technology",
+  //   element: <Page component={InformationTechnologyLS} />,
+  // },
   {
     path: "/bimbingan-akademik/dekan/history",
     element: <Page component={History} />,
   },
-  {
-    path: "/bimbingan-akademik/dekan/history/activity",
-    element: <Page component={HistoryActivity} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/history/activity/list-courses/",
-    element: <Page component={ListCourses} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/history/activity/list-courses/list-student/:id",
-    element: <Page component={ListStudent} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/history/activity/list-courses/list-student/:id/student-preregistration",
-    element: <Page component={StudentPreRegis} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/history/activity/list-student-not-preregistration",
-    element: <Page component={ListStudentNotPreRegis} />,
-  },
+  // {
+  //   path: "/bimbingan-akademik/dekan/history/activity",
+  //   element: <Page component={HistoryActivity} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/history/activity/list-courses/",
+  //   element: <Page component={ListCourses} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/history/activity/list-courses/list-student/:id",
+  //   element: <Page component={ListStudent} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/history/activity/list-courses/list-student/:id/student-preregistration",
+  //   element: <Page component={StudentPreRegis} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/history/activity/list-student-not-preregistration",
+  //   element: <Page component={ListStudentNotPreRegis} />,
+  // },
   {
     path: "/bimbingan-akademik/dekan/history/pre-registration/:id",
     element: <Page component={HistoryPreRegistration} />,
@@ -219,10 +219,10 @@ const dekanRoutes = [
     path: "/bimbingan-akademik/dekan/history/certificate/:id",
     element: <Page component={HistoryCertificate} />,
   },
-  {
-    path: "/bimbingan-akademik/dekan/history/grade",
-    element: <Page component={HistoryGrade} />,
-  },
+  // {
+  //   path: "/bimbingan-akademik/dekan/history/grade",
+  //   element: <Page component={HistoryGrade} />,
+  // },
   {
     path: "/bimbingan-akademik/dekan/history/consultation/:id",
     element: <Page component={HistoryConsultationComplete} />,

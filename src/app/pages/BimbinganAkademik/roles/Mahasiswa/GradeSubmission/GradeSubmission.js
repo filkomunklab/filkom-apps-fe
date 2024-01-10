@@ -62,7 +62,7 @@ const style2 = {
 const GradeSubmission = () => {
   const [openFirstModal, setOpenFirstModal] = useState(false);
   const [openSecondModal, setOpenSecondModal] = useState(false);
-  const [openErrorModal, setOpenErrorModal] = React.useState(false);
+  const [openErrorModal, setOpenErrorModal] = useState(false);
   const [dataGrade, setDataGrade] = useState([]);
   const [curriculumData, setCurriculumData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -172,7 +172,7 @@ const GradeSubmission = () => {
   };
 
   const [semester, setSemester] = useState("");
-  const [row, setRow] = useState();
+  const [row, setRow] = useState("");
   const [subjectNames, setSubjectNames] = useState(Array(row).fill(""));
   const [grades, setGrades] = useState(Array(row).fill(""));
   const [lecturers, setLecturers] = useState(Array(row).fill(""));
@@ -346,7 +346,7 @@ const GradeSubmission = () => {
           <Stack spacing={2}>
             <FormControl size="small" sx={{ backgroundColor: "white" }}>
               <InputLabel shrink={false}>
-                {showLabel2 ? "Select Row" : ""}
+                {showLabel2 ? "Select Row for Subject" : ""}
               </InputLabel>
               <Select
                 value={row}
@@ -614,7 +614,7 @@ const GradeSubmission = () => {
                 id="modal-modal-description"
                 style={{ marginTop: "16px", marginBottom: "20px" }}
               >
-                Error: Failed to submit Pre-Registration. Please try again.
+                Error: Failed to submit Grade. Please try again.
               </Typography>
             </div>
           </Modal>

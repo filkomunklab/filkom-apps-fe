@@ -85,57 +85,61 @@ const Grades = () => {
 
   return (
     <div>
-      <Stack gap={3} paddingTop={3}>
-        <Stack direction={"row"} justifyContent={"space-between"}>
-          <Typography variant="h1" fontWeight={500}>
-            Student Grade
-          </Typography>
-        </Stack>
-
-        {semesterData.length === 0 ? (
-          <Typography variant="h5">You don't have a grade yet.</Typography>
-        ) : (
-          <Typography variant="h5">
-            Select a semester to view grades.
-          </Typography>
-        )}
-
-        <Grid
-          container
-          spacing={{ xs: 2, md: 3 }}
-          columns={{ xs: 4, sm: 8, md: 12 }}
+      <Typography
+        sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "20px" }}
+      >
+        Student Grades
+      </Typography>
+      {semesterData && semesterData.length === 0 ? (
+        <Paper
+          sx={{
+            backgroundColor: "rgba(0, 106, 245, 0.1)",
+            padding: "15px",
+            borderRadius: "10px",
+            boxShadow: "50px",
+            marginBottom: "15px",
+          }}
         >
-          {semesterData.map((value, index) => (
-            <Grid item xs={2} sm={4} md={4} key={index}>
-              <Item
-                onClick={() => {
-                  handleNavigateGrade(value);
+          <Typography variant="body1">You don't have a grade yet.</Typography>
+        </Paper>
+      ) : (
+        <Typography variant="h5">Select a semester to view grades.</Typography>
+      )}
+      <Grid
+        container
+        spacing={{ xs: 2, md: 3 }}
+        columns={{ xs: 4, sm: 8, md: 12 }}
+      >
+        {semesterData.map((value, index) => (
+          <Grid item xs={2} sm={4} md={4} key={index}>
+            <Item
+              onClick={() => {
+                handleNavigateGrade(value);
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "11px",
+                  fontWeight: "400",
+                  color: "rgba(27, 43, 65, 0.69)",
+                  textAlign: "left",
                 }}
               >
-                <Typography
-                  sx={{
-                    fontSize: "11px",
-                    fontWeight: "400",
-                    color: "rgba(27, 43, 65, 0.69)",
-                    textAlign: "left",
-                  }}
-                >
-                  Student Grades
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "17px",
-                    fontWeight: "600",
-                    textAlign: "left",
-                  }}
-                >
-                  {value.semester}
-                </Typography>
-              </Item>
-            </Grid>
-          ))}
-        </Grid>
-      </Stack>
+                Student Grades
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "17px",
+                  fontWeight: "600",
+                  textAlign: "left",
+                }}
+              >
+                {value.semester}
+              </Typography>
+            </Item>
+          </Grid>
+        ))}
+      </Grid>
     </div>
   );
 };
