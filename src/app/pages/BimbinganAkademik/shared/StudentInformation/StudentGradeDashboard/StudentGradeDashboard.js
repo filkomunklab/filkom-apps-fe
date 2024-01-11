@@ -79,7 +79,7 @@ const StudentGradeDashboard = () => {
   const handleNavigateGrade = async (value, studentNim) => {
     try {
       const gradeDetailsResult = await axios.get(
-        `${BASE_URL_API}/grades/semesterList/${value.id}`
+        `${BASE_URL_API}/grades/detailGrades/${value.id}`
       );
       const detail = gradeDetailsResult.data.data;
       console.log("isi detail", detail);

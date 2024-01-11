@@ -49,6 +49,31 @@ const StudentGrade = () => {
     navigate(step);
   };
 
+  const calculateTotalGrade = (subjects) => {
+    let totalGrade = 0;
+    let totalMajorGrade = 0;
+    let totalSKS = 0;
+
+    subjects.forEach((data) => {
+      const letterGrade = getLetterGrade(data.grades);
+      const weightedGrade = letterGrade.weight * data.Subject.credits;
+
+      totalSKS += data.Subject.credits;
+      totalGrade += weightedGrade;
+
+      if (data.Subject.type === "Major") {
+        totalMajorGrade += weightedGrade;
+      }
+    });
+
+    const ip = totalGrade / totalSKS;
+    const majorIp = totalMajorGrade / totalSKS;
+
+    return { ip, majorIp };
+  };
+
+  const { ip, majorIp } = calculateTotalGrade(subject);
+
   return (
     <Div>
       <Div role="presentation">
@@ -81,6 +106,8 @@ const StudentGrade = () => {
                   <TableCell>Subject Name</TableCell>
                   <TableCell>Grade</TableCell>
                   <TableCell>Lecturer</TableCell>
+                  <TableCell>Credit(s)</TableCell>
+                  <TableCell>Type</TableCell>
                   <TableCell>Description</TableCell>
                 </TableRow>
               </TableHead>
@@ -101,6 +128,12 @@ const StudentGrade = () => {
                         {data.lecturer}
                       </TableCell>
                       <TableCell sx={{ width: "40px" }}>
+                        {data.Subject.credits}
+                      </TableCell>
+                      <TableCell sx={{ width: "40px" }}>
+                        {data.Subject.type}
+                      </TableCell>
+                      <TableCell sx={{ width: "40px" }}>
                         {data.description || "-"}
                       </TableCell>
                     </TableRow>
@@ -115,13 +148,13 @@ const StudentGrade = () => {
             variant="h4"
             sx={{ fontSize: { xs: 14, md: 16, xl: 18 } }}
           >
-            Total Grade: 3.92
+            Total Grade: {ip.toFixed(2)}
           </Typography>
           <Typography
             variant="h4"
             sx={{ fontSize: { xs: 14, md: 16, xl: 18 } }}
           >
-            Total Major Grade: 3.95
+            Total Major Grade: {majorIp.toFixed(2)}
           </Typography>
         </Stack>
       </Stack>
