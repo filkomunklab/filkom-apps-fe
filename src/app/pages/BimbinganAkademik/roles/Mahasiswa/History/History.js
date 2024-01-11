@@ -164,8 +164,24 @@ const History = () => {
     groupedDataConsultation[dateConsultation].push(value);
   });
 
-  if (Array.isArray(dataCertificate)) {
-    const groupedDataCertificate = {};
+  // if (Array.isArray(dataCertificate)) {
+  //   const groupedDataCertificate = {};
+  //   dataCertificate.forEach((value) => {
+  //     const date = new Date(value.approvalDate).toLocaleDateString("en-US", {
+  //       weekday: "long",
+  //       year: "numeric",
+  //       month: "short",
+  //       day: "numeric",
+  //     });
+  //     if (!groupedDataCertificate[date]) {
+  //       groupedDataCertificate[date] = [];
+  //     }
+  //     groupedDataCertificate[date].push(value);
+  //   });
+  // } else {
+  //   console.error("dataCertificate is not an array");
+  // }
+
     dataCertificate.forEach((value) => {
       const date = new Date(value.approvalDate).toLocaleDateString("en-US", {
         weekday: "long",
@@ -178,9 +194,6 @@ const History = () => {
       }
       groupedDataCertificate[date].push(value);
     });
-  } else {
-    console.error("dataCertificate is not an array");
-  }
 
   dataPreregis.forEach((value) => {
     const date = new Date(value.submitDate).toLocaleDateString("en-US", {

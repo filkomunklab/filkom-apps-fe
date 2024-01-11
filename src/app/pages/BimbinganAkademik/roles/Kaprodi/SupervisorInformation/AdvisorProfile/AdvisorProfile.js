@@ -40,51 +40,51 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const yearList = [
-  {
-    value: "2017",
-    label: "2017",
-  },
-  {
-    value: "2018",
-    label: "2018",
-  },
-  {
-    value: "2019",
-    label: "2019",
-  },
-  {
-    value: "2020",
-    label: "2020",
-  },
-  {
-    value: "2021",
-    label: "2021",
-  },
-  {
-    value: "2022",
-    label: "2022",
-  },
-  {
-    value: "2023",
-    label: "2023",
-  },
-];
+// const yearList = [
+//   {
+//     value: "2017",
+//     label: "2017",
+//   },
+//   {
+//     value: "2018",
+//     label: "2018",
+//   },
+//   {
+//     value: "2019",
+//     label: "2019",
+//   },
+//   {
+//     value: "2020",
+//     label: "2020",
+//   },
+//   {
+//     value: "2021",
+//     label: "2021",
+//   },
+//   {
+//     value: "2022",
+//     label: "2022",
+//   },
+//   {
+//     value: "2023",
+//     label: "2023",
+//   },
+// ];
 
-const prodiList = [
-  {
-    value: "informatika",
-    label: "Informatika",
-  },
-  {
-    value: "dkv",
-    label: "DKV",
-  },
-  {
-    value: "si",
-    label: "SI",
-  },
-];
+// const prodiList = [
+//   {
+//     value: "informatika",
+//     label: "Informatika",
+//   },
+//   {
+//     value: "dkv",
+//     label: "DKV",
+//   },
+//   {
+//     value: "si",
+//     label: "SI",
+//   },
+// ];
 
 const AdvisorProfile = () => {
   const navigate = useNavigate();
@@ -102,6 +102,17 @@ const AdvisorProfile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const controller = new AbortController();
   const signal = controller.signal;
+  const role = JSON.parse(localStorage.getItem("user")).role;
+  console.log("test role", role);
+
+  const getRole = () => {
+    const filter = role.includes("KAPRODI")
+      ? "kaprodi"
+      : role.includes("DEKAN")
+      ? "dekan"
+      : "undefined";
+    return filter;
+  };
 
   const getProfile = async () => {
     try {
@@ -268,7 +279,7 @@ const AdvisorProfile = () => {
             List of mentored students
           </Typography>
         </Grid>
-        <Grid
+        {/* <Grid
           item
           xs={12}
           sm={8}
@@ -367,12 +378,12 @@ const AdvisorProfile = () => {
               </Div>
             </Select>
           </FormControl>
-        </Grid>
+        </Grid> */}
         <Grid item display={"flex"} alignItems={"center"}>
           <Button
             onClick={() =>
               navigate(
-                `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}/edit-student`,
+                `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${nik}/edit-student`,
                 {
                   state: {
                     nik: nik,
@@ -519,23 +530,39 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
   const navigate = useNavigate();
   const { arrivalYear, firstName, id, lastName, major, nim, status } =
     item.student;
+  const role = JSON.parse(localStorage.getItem("user")).role;
+  console.log("test role", role);
 
+  const getRole = () => {
+    const filter = role.includes("KAPRODI")
+      ? "kaprodi"
+      : role.includes("DEKAN")
+      ? "dekan"
+      : "undefined";
+    return filter;
+  };
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${item.nim}/student-profile`
+          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${
+            item.nim
+          }/student-profile`
         );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${item.nim}/student-grade`
+          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${
+            item.nim
+          }/student-grade`
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${item.nim}/student-certificate`
+          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${
+            item.nim
+          }/student-certificate`
         );
         break;
 

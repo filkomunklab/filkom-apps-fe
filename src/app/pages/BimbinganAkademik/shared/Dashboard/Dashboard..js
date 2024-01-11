@@ -237,241 +237,239 @@ const Dashboard = () => {
 
   return (
     <Div>
-      <Container>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={12} md={7}>
-            <Card sx={{ width: "100%" }}>
-              <CardHeader title="Distribution of students" />
-              <CardContent style={{ width: "100%" }}>
-                <ResponsiveContainer width="100%" height={250}>
-                  <BarChart data={distributionData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="year" />
-                    <YAxis
-                      label={{
-                        value: "Total Students",
-                        angle: -90,
-                        position: "insideLeft",
-                        dy: 50,
-                        dx: 10,
-                      }}
-                    />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="SI" fill="#8884d8" />
-                    <Bar dataKey="IF" fill="#82ca9d" />
-                    <Bar dataKey="DKV" fill="skyblue" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={12} md={5}>
-            <Card>
-              <CardHeader title="Certificate" />
-              <CardContent>
-                <ResponsiveContainer width={"100%"} height={250}>
-                  <PieChart>
-                    <Pie
-                      data={certificateData}
-                      dataKey="count"
-                      nameKey="category"
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={80}
-                      fill="skyblue"
-                      label
-                    >
-                      {data.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </Grid>
-          {role.includes("DEKAN") ? (
-            <Grid item container spacing={2} xs={12} sm={12} md={12} xl={12}>
-              <Grid item xs={12} sm={6} md={6} xl={6}>
-                <Card sx={{ height: "100%" }}>
-                  <CardHeader title="Number of Faculty Students" />
-                  <CardContent
-                    sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={12} md={7}>
+          <Card sx={{ width: "100%" }}>
+            <CardHeader title="Distribution of students" />
+            <CardContent style={{ width: "100%" }}>
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={distributionData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="year" />
+                  <YAxis
+                    label={{
+                      value: "Total Students",
+                      angle: -90,
+                      position: "insideLeft",
+                      dy: 50,
+                      dx: 10,
+                    }}
+                  />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="SI" fill="#8884d8" />
+                  <Bar dataKey="IF" fill="#82ca9d" />
+                  <Bar dataKey="DKV" fill="skyblue" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={12} md={5}>
+          <Card>
+            <CardHeader title="Certificate" />
+            <CardContent>
+              <ResponsiveContainer width={"100%"} height={250}>
+                <PieChart>
+                  <Pie
+                    data={certificateData}
+                    dataKey="count"
+                    nameKey="category"
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    fill="skyblue"
+                    label
                   >
-                    <Typography
-                      sx={{
-                        fontSize: { xs: 38, md: 40, lg: 38, xl: 50 },
-                        color: "#006AF5",
-                      }}
-                    >
-                      {`${facultyStudent} peoples`}
-                    </Typography>
-                    <PeopleOutlinedIcon
-                      sx={{
-                        position: "absolute",
-                        right: 0,
-                        fontSize: 40,
-                        bottom: 0,
-                        color: "#006AF5",
-                      }}
-                    />
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} sm={6} md={6} xl={6}>
-                <Card sx={{ height: "100%" }}>
-                  <CardHeader title="Student Status" />
-                  <CardContent
-                    sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
+                    {data.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </Grid>
+        {role.includes("DEKAN") ? (
+          <Grid item container spacing={2} xs={12} sm={12} md={12} xl={12}>
+            <Grid item xs={12} sm={6} md={6} xl={6}>
+              <Card sx={{ height: "100%" }}>
+                <CardHeader title="Number of Faculty Students" />
+                <CardContent
+                  sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: { xs: 38, md: 40, lg: 38, xl: 50 },
+                      color: "#006AF5",
+                    }}
                   >
-                    <Typography variant="body1">{`Active`}</Typography>
-                    <LinearProgressWithLabel
-                      value={(() => {
-                        const result =
-                          (activeStudentStatus / facultyStudent) * 100;
-                        // console.log("ini result e: ", result);
-
-                        // Memeriksa apakah hasil kalkulasi adalah NaN
-                        const finalResult = isNaN(result) ? 0 : result;
-
-                        return finalResult;
-                      })()}
-                      color="success"
-                    />
-                    <Typography variant="body1">{`Non-active`}</Typography>
-                    <LinearProgressWithLabel
-                      value={(() => {
-                        const result =
-                          (inActiveStudentStatus / facultyStudent) * 100;
-
-                        // Memeriksa apakah hasil kalkulasi adalah NaN
-                        const finalResult = isNaN(result) ? 0 : result;
-                        // console.log("ini result e: ", result);
-
-                        return finalResult;
-                      })()}
-                      color="warning"
-                    />
-                    <BubbleChartIcon
-                      sx={{
-                        position: "absolute",
-                        right: 0,
-                        fontSize: 40,
-                        bottom: 0,
-                        color: "#006AF5",
-                      }}
-                    />
-                  </CardContent>
-                </Card>
-              </Grid>
+                    {`${facultyStudent} people`}
+                  </Typography>
+                  <PeopleOutlinedIcon
+                    sx={{
+                      position: "absolute",
+                      right: 0,
+                      fontSize: 40,
+                      bottom: 0,
+                      color: "#006AF5",
+                    }}
+                  />
+                </CardContent>
+              </Card>
             </Grid>
-          ) : role.includes("KAPRODI") ? (
-            <Grid item container spacing={2} xs={12} sm={12} md={12} xl={12}>
-              <Grid item xs={12} sm={6} md={6} xl={6}>
-                <Card sx={{ height: "100%" }}>
-                  <CardHeader title="Number of Study Program Students" />
-                  <CardContent
-                    sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
-                  >
-                    <Typography
-                      sx={{
-                        fontSize: { xs: 38, md: 40, lg: 38, xl: 50 },
-                        color: "#006AF5",
-                      }}
-                    >
-                      {`${
-                        (majorStudent &&
-                          majorStudent.find((major) => major.major === myMajor)
-                            ?.count) ||
-                        0
-                      } peoples`}
-                    </Typography>
-                    <PeopleOutlinedIcon
-                      sx={{
-                        position: "absolute",
-                        right: 0,
-                        fontSize: 40,
-                        bottom: 0,
-                        color: "#006AF5",
-                      }}
-                    />
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} sm={6} md={6} xl={6}>
-                <Card sx={{ height: "100%" }}>
-                  <CardHeader title="Student Status" />
-                  <CardContent
-                    sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
-                  >
-                    <Typography variant="body1">{`Active`}</Typography>
-                    <LinearProgressWithLabel
-                      value={(() => {
-                        const studentActiveCount = activeStudentStatus.find(
-                          (item) => item.major === myMajor
-                        );
-                        const allStudentCount = majorStudent.find(
-                          (item) => item.major === myMajor
-                        );
+            <Grid item xs={12} sm={6} md={6} xl={6}>
+              <Card sx={{ height: "100%" }}>
+                <CardHeader title="Student Status" />
+                <CardContent
+                  sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
+                >
+                  <Typography variant="body1">{`Active`}</Typography>
+                  <LinearProgressWithLabel
+                    value={(() => {
+                      const result =
+                        (activeStudentStatus / facultyStudent) * 100;
+                      // console.log("ini result e: ", result);
 
-                        const result =
-                          (studentActiveCount?.count / allStudentCount?.count) *
-                          100;
-                        // console.log("ini result e: ", result);
+                      // Memeriksa apakah hasil kalkulasi adalah NaN
+                      const finalResult = isNaN(result) ? 0 : result;
 
-                        // Memeriksa apakah hasil kalkulasi adalah NaN
-                        const finalResult = isNaN(result) ? 0 : result;
+                      return finalResult;
+                    })()}
+                    color="success"
+                  />
+                  <Typography variant="body1">{`Non-active`}</Typography>
+                  <LinearProgressWithLabel
+                    value={(() => {
+                      const result =
+                        (inActiveStudentStatus / facultyStudent) * 100;
 
-                        return finalResult;
-                      })()}
-                      color="success"
-                    />
-                    <Typography variant="body1">{`Non-active`}</Typography>
-                    <LinearProgressWithLabel
-                      value={(() => {
-                        const studentInActiveCount = inActiveStudentStatus.find(
-                          (item) => item.major === myMajor
-                        );
-                        const allStudentCount = majorStudent.find(
-                          (item) => item.major === myMajor
-                        );
+                      // Memeriksa apakah hasil kalkulasi adalah NaN
+                      const finalResult = isNaN(result) ? 0 : result;
+                      // console.log("ini result e: ", result);
 
-                        const result =
-                          (studentInActiveCount?.count /
-                            allStudentCount?.count) *
-                          100;
-
-                        // Memeriksa apakah hasil kalkulasi adalah NaN
-                        const finalResult = isNaN(result) ? 0 : result;
-                        // console.log("ini result e: ", result);
-
-                        return finalResult;
-                      })()}
-                      color="warning"
-                    />
-                    <BubbleChartIcon
-                      sx={{
-                        position: "absolute",
-                        right: 0,
-                        fontSize: 40,
-                        bottom: 0,
-                        color: "#006AF5",
-                      }}
-                    />
-                  </CardContent>
-                </Card>
-              </Grid>
+                      return finalResult;
+                    })()}
+                    color="warning"
+                  />
+                  <BubbleChartIcon
+                    sx={{
+                      position: "absolute",
+                      right: 0,
+                      fontSize: 40,
+                      bottom: 0,
+                      color: "#006AF5",
+                    }}
+                  />
+                </CardContent>
+              </Card>
             </Grid>
-          ) : (
-            <div>setang</div>
-          )}
-          {/* <Grid item container spacing={2} xs={12} sm={12} md={12} xl={12}>
+          </Grid>
+        ) : role.includes("KAPRODI") ? (
+          <Grid item container spacing={2} xs={12} sm={12} md={12} xl={12}>
+            <Grid item xs={12} sm={6} md={6} xl={6}>
+              <Card sx={{ height: "100%" }}>
+                <CardHeader title="Number of Study Program Students" />
+                <CardContent
+                  sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: { xs: 38, md: 40, lg: 38, xl: 50 },
+                      color: "#006AF5",
+                    }}
+                  >
+                    {`${
+                      (majorStudent &&
+                        majorStudent.find((major) => major.major === myMajor)
+                          ?.count) ||
+                      0
+                    } peoples`}
+                  </Typography>
+                  <PeopleOutlinedIcon
+                    sx={{
+                      position: "absolute",
+                      right: 0,
+                      fontSize: 40,
+                      bottom: 0,
+                      color: "#006AF5",
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={6} xl={6}>
+              <Card sx={{ height: "100%" }}>
+                <CardHeader title="Student Status" />
+                <CardContent
+                  sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
+                >
+                  <Typography variant="body1">{`Active`}</Typography>
+                  <LinearProgressWithLabel
+                    value={(() => {
+                      const studentActiveCount = activeStudentStatus.find(
+                        (item) => item.major === myMajor
+                      );
+                      const allStudentCount = majorStudent.find(
+                        (item) => item.major === myMajor
+                      );
+
+                      const result =
+                        (studentActiveCount?.count / allStudentCount?.count) *
+                        100;
+                      // console.log("ini result e: ", result);
+
+                      // Memeriksa apakah hasil kalkulasi adalah NaN
+                      const finalResult = isNaN(result) ? 0 : result;
+
+                      return finalResult;
+                    })()}
+                    color="success"
+                  />
+                  <Typography variant="body1">{`Non-active`}</Typography>
+                  <LinearProgressWithLabel
+                    value={(() => {
+                      const studentInActiveCount = inActiveStudentStatus.find(
+                        (item) => item.major === myMajor
+                      );
+                      const allStudentCount = majorStudent.find(
+                        (item) => item.major === myMajor
+                      );
+
+                      const result =
+                        (studentInActiveCount?.count / allStudentCount?.count) *
+                        100;
+
+                      // Memeriksa apakah hasil kalkulasi adalah NaN
+                      const finalResult = isNaN(result) ? 0 : result;
+                      // console.log("ini result e: ", result);
+
+                      return finalResult;
+                    })()}
+                    color="warning"
+                  />
+                  <BubbleChartIcon
+                    sx={{
+                      position: "absolute",
+                      right: 0,
+                      fontSize: 40,
+                      bottom: 0,
+                      color: "#006AF5",
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        ) : (
+          <div>setang</div>
+        )}
+        {/* <Grid item container spacing={2} xs={12} sm={12} md={12} xl={12}>
             <Grid item xs={12} sm={6} md={6} xl={6}>
               <Card sx={{ height: "100%" }}>
                 <CardHeader title="Number of Study Program Students" />
@@ -566,8 +564,7 @@ const Dashboard = () => {
               </Card>
             </Grid>
           </Grid> */}
-        </Grid>
-      </Container>
+      </Grid>
     </Div>
   );
 };

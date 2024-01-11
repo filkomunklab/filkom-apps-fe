@@ -141,6 +141,7 @@ const History = (props) => {
   useEffect(() => {
     getHistory();
   }, []);
+  console.log("ini data certi", dataCertificate);
 
   const groupedDataConsultation = {};
   const groupedDataCertificate = {};
@@ -162,6 +163,22 @@ const History = (props) => {
     }
     groupedDataConsultation[dateConsultation].push(value);
   });
+
+  // if (Array.isArray(dataCertificate)) {
+  //   const groupedDataCertificate = {};
+  //   dataCertificate.forEach((value) => {
+  //     const date = new Date(value.approvalDate).toLocaleDateString("en-US", {
+  //       weekday: "long",
+  //       year: "numeric",
+  //       month: "short",
+  //       day: "numeric",
+  //     });
+  //     if (!groupedDataCertificate[date]) {
+  //       groupedDataCertificate[date] = [];
+  //     }
+  //     groupedDataCertificate[date].push(value);
+  //   });
+  // }
 
   dataCertificate.forEach((value) => {
     const date = new Date(value.approvalDate).toLocaleDateString("en-US", {

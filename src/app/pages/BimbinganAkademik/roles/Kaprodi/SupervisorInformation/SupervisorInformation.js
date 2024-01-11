@@ -25,7 +25,12 @@ import { useNavigate, Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { MoreVert } from "@mui/icons-material";
 
+const userRole = Boolean(localStorage.getItem("user"))
+  ? JSON.parse(localStorage.getItem("user")).role
+  : [];
+
 const SupervisorInformation = () => {
+  const [role, setRole] = useState(userRole);
   const [searchValue, setSearchValue] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -139,7 +144,7 @@ const SupervisorInformation = () => {
             List of Academic Supervisors
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={8} md={4} xl={3.5}>
+        {/* <Grid item xs={12} sm={8} md={4} xl={3.5}>
           <TextField
             // label="Search by Name and NIDN"
             placeholder="Search by Name and NIDN"
@@ -159,31 +164,33 @@ const SupervisorInformation = () => {
               style: { borderRadius: "25px" },
             }}
           />
-        </Grid>
-        <Grid item xs={12} sm={4} md={2}>
-          <Button
-            sx={{
-              backgroundColor: "#006AF5",
-              borderRadius: "24px",
-              color: "white",
-              width: "100%",
-              minWidth: "132px",
-              fontSize: "12px",
-              height: "95%",
-              "&:hover": {
-                backgroundColor: "#025ED8",
-              },
-            }}
-            onClick={() => {
-              navigate(
-                "/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor"
-              );
-            }}
-          >
-            <AddIcon sx={{ fontSize: "14px" }} />
-            Add Dosen
-          </Button>
-        </Grid>
+        </Grid> */}
+        {role.includes("KAPRODI") && (
+          <Grid item xs={12} sm={4} md={2}>
+            <Button
+              sx={{
+                backgroundColor: "#006AF5",
+                borderRadius: "24px",
+                color: "white",
+                width: "100%",
+                minWidth: "132px",
+                fontSize: "12px",
+                height: "95%",
+                "&:hover": {
+                  backgroundColor: "#025ED8",
+                },
+              }}
+              onClick={() => {
+                navigate(
+                  "/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor"
+                );
+              }}
+            >
+              <AddIcon sx={{ fontSize: "14px" }} />
+              Add Dosen
+            </Button>
+          </Grid>
+        )}
       </Grid>
       <Grid xs={12} mt={3}>
         <TableContainer component={Paper}>
@@ -253,19 +260,30 @@ const TableItem = ({ item, index, handleDelete }) => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   const { firstName, lastName, major, nidn, nik } = item.teacher;
+  console.log("ini isi item.techer", item.teacher);
+  const role = JSON.parse(localStorage.getItem("user")).role;
+  console.log("test role", role);
 
+  const getRole = () => {
+    const filter = role.includes("KAPRODI")
+      ? "kaprodi"
+      : role.includes("DEKAN")
+      ? "dekan"
+      : "undefined";
+    return filter;
+  };
   const handleButtonNavigate = (_, name) => {
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}`,
+          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${nik}`,
           { state: { classID: item.id, nik: nik } }
         );
         break;
       case "history":
         navigate(
-          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/${nik}`,
-          { state: nik }
+          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-history/${nik}`,
+          { state: { classID: item.id, nik: nik, major: major, id: id } }
         );
         break;
 

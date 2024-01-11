@@ -169,10 +169,17 @@ const StudentPerMajor = () => {
       <Grid container spacing={2} paddingTop={1}>
         <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
           <Typography variant="h2" fontWeight={500}>
-            Informatics Students List
+            {major === "IF"
+              ? "Informatics"
+              : major === "SI"
+              ? "Information System"
+              : major === "DKV"
+              ? "Information Technology"
+              : "-"}{" "}
+            Students List
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={8} md={3}>
+        {/* <Grid item xs={12} sm={8} md={3}>
           <SearchGlobal sx={{ height: "100%" }} />
         </Grid>
         <Grid item xs={12} sm={4} md={3}>
@@ -241,7 +248,7 @@ const StudentPerMajor = () => {
               </Div>
             </Select>
           </FormControl>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
             <Table stickyHeader>
@@ -314,32 +321,59 @@ const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
   const { nim, firstName, lastName, major, arrivalYear, status } = item;
 
+  const getMajorDisplayName = (major) => {
+    switch (major) {
+      case "IF":
+        return "informatics";
+      case "SI":
+        return "information-system";
+      case "DKV":
+        return "information-technology";
+      default:
+        return "-";
+    }
+  };
+
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
 
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/${item.nim}`,
+          `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${getMajorDisplayName(
+            major
+          )}/${nim}`,
           { state: { studentNim: nim } }
         );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/${
-            item.nim
-          }/grade`,
-          { state: { studentNim: nim } }
+          `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${getMajorDisplayName(
+            major
+          )}/${nim}/grade`,
+          {
+            state: {
+              studentNim: nim,
+              firstName: firstName,
+              lastName: lastName,
+            },
+          }
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/${
-            item.nim
-          }/certificate`
+          `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${getMajorDisplayName(
+            major
+          )}/${nim}/certificate`,
+          {
+            state: {
+              studentNim: nim,
+              firstName: firstName,
+              lastName: lastName,
+            },
+          }
         );
         break;
-
       default:
         console.log("Path not found");
     }

@@ -23,8 +23,8 @@ const ReviewCertificate = () => {
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [dataWaiting, setDataWaiting] = useState([]);
   const [searchValue, setSearchValue] = useState("");
+  const [dataWaiting, setDataWaiting] = useState([]);
   const navigate = useNavigate();
 
   const getDataWaiting = async () => {

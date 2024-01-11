@@ -1,17 +1,14 @@
 import Div from "@jumbo/shared/Div";
 import {
   Box,
-  Button,
-  Container,
   Grid,
-  Stack,
-  TextareaAutosize,
+  Paper,
   Typography,
   Breadcrumbs,
   experimentalStyled as styled,
-  Link,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -24,200 +21,229 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const CertificateDetail = () => {
-  const imageUrl =
-    "https://i.pinimg.com/originals/fc/fa/29/fcfa2911e796d71f1bf6aa25ee1d8d89.jpg";
-
   const navigate = useNavigate();
+  const { state } = useLocation();
+  const certificateDetails = state ? state.certificateDetails : {};
+  const {
+    firstName,
+    lastName,
+    SupervisorFirstName,
+    SupervisorLastName,
+    submissionDate,
+    pathFile,
+    category,
+    description,
+    status,
+    title,
+    comments,
+    approvalDate,
+    id,
+  } = certificateDetails;
+  const pdfURL = pathFile;
+
   const handleClick = (event, step) => {
     event.preventDefault();
     navigate(step);
   };
+
+  const commentContent =
+    comments && comments.trim() !== "" ? comments.trim() : "-";
+
   return (
-    <Div>
-      <Div role="presentation">
-        <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink onClick={(event) => handleClick(event, -2)}>
-            Student Information
-          </StyledLink>
-          <StyledLink onClick={(event) => handleClick(event, -1)}>
-            Student Certificates
-          </StyledLink>
-          <Typography color="text.primary">Certificate</Typography>
-        </Breadcrumbs>
-      </Div>
-      <Typography
-        fontSize={"24px"}
-        fontWeight="500"
-        sx={{ marginBottom: 2, paddingTop: "20px" }}
-      >
-        Certificate
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid item md={8} id="detail-item">
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Title</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5" fontWeight={500}>
-                  Menang Student Programmer Competition
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Student Name</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">Awuy, Diany Mariska</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Supervisor Name</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">Dengah, Mesakh Leonardo</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Submission Date</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">November 14, 2023</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Approval Date</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">-</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Category</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5">Local</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Status</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5" sx={{ color: "#FFCC00" }}>
-                  Waiting
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={4} md={3} xl={3}>
-                <Typography variant="h5">Descriptions</Typography>
-              </Grid>
-              <Grid item xs={1} xl={"auto"}>
-                <Typography variant="h5">:</Typography>
-              </Grid>
-              <Grid item xs={7} paddingLeft={1}>
-                <Typography variant="h5" sx={{ textAlign: "justify" }}>
-                  Saya mengikuti lomba desain prototype website kampus yang
-                  diselenggarakan oleh Fakultas Ilmu Komputer.
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item md={4} id="certificate-item">
-          <Box sx={{ flex: 1 }}>
-            <img
-              src={imageUrl}
-              alt="Certificate-pic"
-              style={{ maxWidth: "100%", scale: "0.8" }}
-            />
-          </Box>
-        </Grid>
-      </Grid>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
-          <Typography>Coments</Typography>
-          <TextareaAutosize minRows={4} maxRows={8} style={{ width: "100%" }} />
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          md={4}
-          display="flex"
-          alignItems={"center"}
-          justifyContent={"space-evenly"}
-        >
-          <Stack direction={"row"} gap={2}>
-            <Button
-              variant="contained"
-              color="error"
+    <Grid container spacing={2}>
+      <Grid item md={6} id="detail-item">
+        <Box style={{ height: "100%", overflowY: "auto" }}>
+          <Breadcrumbs aria-label="breadcrumb">
+            <StyledLink onClick={(event) => handleClick(event, -2)}>
+              Student Information
+            </StyledLink>
+            <StyledLink onClick={(event) => handleClick(event, -1)}>
+              Student Certificates
+            </StyledLink>
+            <Typography color="text.primary">Certificate</Typography>
+          </Breadcrumbs>
+          <Grid item>
+            <Typography
               sx={{
-                borderRadius: "24px",
-                textTransform: "capitalize",
-                width: "100%",
-                fontSize: "1rem",
+                fontWeight: 500,
+                fontSize: { xs: "20px", md: "24px" },
+                marginBottom: 2,
+                paddingTop: "20px",
               }}
             >
-              Reject
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{
-                borderRadius: "24px",
-                textTransform: "capitalize",
-                width: "100%",
-                fontSize: "1rem",
-              }}
-            >
-              Approve
-            </Button>
-          </Stack>
-        </Grid>
+              Certificate
+            </Typography>
+            <Grid item xs={12}>
+              <Grid container>
+                <Grid item xs={4} md={4} xl={3} pb={1}>
+                  <Typography variant="h5">Title</Typography>
+                </Grid>
+                <Grid item xs={1} xl={0.5}>
+                  <Typography variant="h5">:</Typography>
+                </Grid>
+                <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                  <Typography variant="h5">
+                    {title.charAt(0).toUpperCase() + title.slice(1)}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container>
+                <Grid item xs={4} md={4} xl={3} pb={1}>
+                  <Typography variant="h5">Student Name</Typography>
+                </Grid>
+                <Grid item xs={1} xl={0.5}>
+                  <Typography variant="h5">:</Typography>
+                </Grid>
+                <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                  <Typography variant="h5">
+                    {lastName}, {firstName}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container>
+                <Grid item xs={4} md={4} xl={3} pb={1}>
+                  <Typography variant="h5">Supervisor Name</Typography>
+                </Grid>
+                <Grid item xs={1} xl={0.5}>
+                  <Typography variant="h5">:</Typography>
+                </Grid>
+                <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                  <Typography variant="h5">
+                    {SupervisorLastName}, {SupervisorFirstName}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container>
+                <Grid item xs={4} md={4} xl={3} pb={1}>
+                  <Typography variant="h5">Submission Date</Typography>
+                </Grid>
+                <Grid item xs={1} xl={0.5}>
+                  <Typography variant="h5">:</Typography>
+                </Grid>
+                <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                  <Typography variant="h5">
+                    {new Date(submissionDate).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      day: "numeric",
+                      month: "long",
+                    })}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container>
+                <Grid item xs={4} md={4} xl={3} pb={1}>
+                  <Typography variant="h5">Approval Date</Typography>
+                </Grid>
+                <Grid item xs={1} xl={0.5}>
+                  <Typography variant="h5">:</Typography>
+                </Grid>
+                <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                  <Typography variant="h5">
+                    {new Date(approvalDate).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      day: "numeric",
+                      month: "long",
+                    })}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container>
+                <Grid item xs={4} md={4} xl={3} pb={1}>
+                  <Typography variant="h5">Category</Typography>
+                </Grid>
+                <Grid item xs={1} xl={0.5}>
+                  <Typography variant="h5">:</Typography>
+                </Grid>
+                <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                  <Typography variant="h5">
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container>
+                <Grid item xs={4} md={4} xl={3} pb={1}>
+                  <Typography variant="h5">Status</Typography>
+                </Grid>
+                <Grid item xs={1} xl={0.5}>
+                  <Typography variant="h5">:</Typography>
+                </Grid>
+                <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      color:
+                        status === "REJECTED"
+                          ? "red"
+                          : status === "APPROVED"
+                          ? "#005FDB"
+                          : status === "WAITING"
+                          ? "#FFCC00"
+                          : "inherit",
+                    }}
+                  >
+                    {status.charAt(0) + status.slice(1).toLowerCase()}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container>
+                <Grid item xs={4} md={4} xl={3} pb={1}>
+                  <Typography variant="h5">Descriptions</Typography>
+                </Grid>
+                <Grid item xs={1} xl={0.5}>
+                  <Typography variant="h5">:</Typography>
+                </Grid>
+                <Grid item xs={7} md={6.5} xl={8} paddingLeft={1}>
+                  <Typography variant="h5" sx={{ textAlign: "justify" }}>
+                    {description
+                      ? description.charAt(0).toUpperCase() +
+                        description.slice(1)
+                      : "-"}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} md={11.5} xl={11.5} paddingTop={2}>
+            <Box component="form" noValidate autoComplete="off">
+              <Typography variant="h5" sx={{ fontWeight: 500 }}>
+                Comment from Supervisor
+              </Typography>
+              <Paper
+                elevation={0}
+                variant="outlined"
+                fullWidth
+                sx={{ backgroundColor: "background.default" }}
+              >
+                <Typography variant="body1" sx={{ p: 2 }}>
+                  {commentContent}
+                </Typography>
+              </Paper>
+            </Box>
+          </Grid>
+        </Box>
       </Grid>
-    </Div>
+      <Grid item xs={12} md={6}>
+        <iframe
+          src={pdfURL}
+          title="Certificate-pdf"
+          style={{ width: "100%", height: "80vh" }}
+        />
+      </Grid>
+    </Grid>
   );
 };
 

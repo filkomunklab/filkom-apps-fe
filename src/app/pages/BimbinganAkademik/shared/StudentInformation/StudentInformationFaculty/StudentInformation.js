@@ -348,19 +348,32 @@ const TableItem = ({ item, index }) => {
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/${nim}`,
+          `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${nim}`,
           { state: { studentNim: nim } }
         );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/${nim}/grade`,
-          { state: { studentNim: nim } }
+          `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${nim}/grade`,
+          {
+            state: {
+              studentNim: nim,
+              firstName: firstName,
+              lastName: lastName,
+            },
+          }
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/${nim}/certificate`
+          `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${nim}/certificate`,
+          {
+            state: {
+              studentNim: nim,
+              firstName: firstName,
+              lastName: lastName,
+            },
+          }
         );
         break;
 

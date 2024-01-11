@@ -1,7 +1,7 @@
 import AcademicGuide from "app/pages/BimbinganAkademik/shared/AcademicGuide/AcademicGuide";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/shared/VisionMisionGoals/VisionMissionGoals";
 import Curriculum from "app/pages/BimbinganAkademik/shared/Curriculum/Curriculum";
-import StudentInformation from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty";
+import StudentInformationFaculty from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty";
 import StudentInformationFacultyPerMajor from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty/StudentPerMajor";
 // import StudentInformationFacultyInformationSystem from "app/pages/BimbinganAkademik/roles/SekDekan/StudentInformation/StudentInformationFaculty/InformationSystem";
 // import StudentInformationFacultyInformationTechnology from "app/pages/BimbinganAkademik/roles/SekDekan/StudentInformation/StudentInformationFaculty/InformationTechnology";
@@ -50,39 +50,102 @@ const sekDekanRoutes = [
     element: <Page component={Curriculum} />,
   },
   {
-    path: "/bimbingan-akademik/sek-dekan/student-information",
-    element: <Page component={StudentInformation} />,
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student",
+    element: <Page component={StudentInformationFaculty} />,
   },
   {
-    path: "/bimbingan-akademik/sek-dekan/student-information/faculty-student/informatics",
-    element: <Page component={StudentInformationFacultyPerMajor} />,
-  },
-  {
-    path: "/bimbingan-akademik/sek-dekan/student-information/faculty-student/information-system",
-    element: <Page component={StudentInformationFacultyPerMajor} />,
-  },
-  {
-    path: "/bimbingan-akademik/sek-dekan/student-information/faculty-student/information-technology",
-    element: <Page component={StudentInformationFacultyPerMajor} />,
-  },
-  {
-    path: "/bimbingan-akademik/sek-dekan/student-information/:id",
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/:id",
     element: <Page component={StudentProfile} />,
   },
   {
-    path: "/bimbingan-akademik/sek-dekan/student-information/:id/grade",
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/:id/grade",
     element: <Page component={StudentGradeDashboard} />,
   },
   {
-    path: "/bimbingan-akademik/sek-dekan/student-information/:id/grade/semester/:number",
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/:id/grade/:id",
     element: <Page component={StudentGrade} />,
   },
   {
-    path: "/bimbingan-akademik/sek-dekan/student-information/:id/certificate",
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/:id/certificate",
     element: <Page component={StudentCertificate} />,
   },
   {
-    path: "/bimbingan-akademik/sek-dekan/student-information/:id/certificate/:id",
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/:id/certificate/:id",
+    element: <Page component={CertificateDetail} />,
+  },
+
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/informatics",
+    element: <Page component={StudentInformationFacultyPerMajor} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/informatics/:id",
+    element: <Page component={StudentProfile} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/informatics/:id/grade",
+    element: <Page component={StudentGradeDashboard} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/informatics/:id/grade/:id",
+    element: <Page component={StudentGrade} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/informatics/:id/certificate",
+    element: <Page component={StudentCertificate} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/informatics/:id/certificate/:id",
+    element: <Page component={CertificateDetail} />,
+  },
+
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-system",
+    element: <Page component={StudentInformationFacultyPerMajor} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-system/:id",
+    element: <Page component={StudentProfile} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-system/:id/grade",
+    element: <Page component={StudentGradeDashboard} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-system/:id/grade/:id",
+    element: <Page component={StudentGrade} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-system/:id/certificate",
+    element: <Page component={StudentCertificate} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-system/:id/certificate/:id",
+    element: <Page component={CertificateDetail} />,
+  },
+
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-technology",
+    element: <Page component={StudentInformationFacultyPerMajor} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-technology/:id",
+    element: <Page component={StudentProfile} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-technology/:id/grade",
+    element: <Page component={StudentGradeDashboard} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-technology/:id/grade/:id",
+    element: <Page component={StudentGrade} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-technology/:id/certificate",
+    element: <Page component={StudentCertificate} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-technology/:id/certificate/:id",
     element: <Page component={CertificateDetail} />,
   },
   {

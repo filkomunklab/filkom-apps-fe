@@ -45,6 +45,9 @@ const HistoryCertificate = () => {
     return <StyledLink to={path}>History</StyledLink>;
   };
 
+  const commentContent =
+    comments && comments.trim() !== "" ? comments.trim() : "-";
+
   return (
     <Grid container spacing={2}>
       <Grid item md={6} id="detail-item">
@@ -206,25 +209,23 @@ const HistoryCertificate = () => {
               </Grid>
             </Grid>
           </Grid>
-          {comments && comments.trim() !== "" && (
-            <Grid item xs={12} md={11.5} xl={11.5} paddingTop={2}>
-              <Box component="form" noValidate autoComplete="off">
-                <Typography variant="h5" sx={{ fontWeight: 500 }}>
-                  Comment from Supervisor
+          <Grid item xs={12} md={11.5} xl={11.5} paddingTop={2}>
+            <Box component="form" noValidate autoComplete="off">
+              <Typography variant="h5" sx={{ fontWeight: 500 }}>
+                Comment from Supervisor
+              </Typography>
+              <Paper
+                elevation={0}
+                variant="outlined"
+                fullWidth
+                sx={{ backgroundColor: "background.default" }}
+              >
+                <Typography variant="body1" sx={{ p: 2 }}>
+                  {commentContent}
                 </Typography>
-                <Paper
-                  elevation={0}
-                  variant="outlined"
-                  fullWidth
-                  sx={{ backgroundColor: "background.default" }}
-                >
-                  <Typography variant="body1" sx={{ p: 2 }}>
-                    {comments.trim()}
-                  </Typography>
-                </Paper>
-              </Box>
-            </Grid>
-          )}
+              </Paper>
+            </Box>
+          </Grid>
         </Box>
       </Grid>
       <Grid item xs={12} md={6}>

@@ -110,35 +110,36 @@ const Grades = () => {
         spacing={{ xs: 2, md: 3 }}
         columns={{ xs: 4, sm: 8, md: 12 }}
       >
-        {semesterData.map((value, index) => (
-          <Grid item xs={2} sm={4} md={4} key={index}>
-            <Item
-              onClick={() => {
-                handleNavigateGrade(value);
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: "11px",
-                  fontWeight: "400",
-                  color: "rgba(27, 43, 65, 0.69)",
-                  textAlign: "left",
+        {semesterData &&
+          semesterData.map((value, index) => (
+            <Grid item xs={2} sm={4} md={4} key={index}>
+              <Item
+                onClick={() => {
+                  handleNavigateGrade(value);
                 }}
               >
-                Student Grades
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "17px",
-                  fontWeight: "600",
-                  textAlign: "left",
-                }}
-              >
-                {value.semester}
-              </Typography>
-            </Item>
-          </Grid>
-        ))}
+                <Typography
+                  sx={{
+                    fontSize: "11px",
+                    fontWeight: "400",
+                    color: "rgba(27, 43, 65, 0.69)",
+                    textAlign: "left",
+                  }}
+                >
+                  Student Grades
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "17px",
+                    fontWeight: "600",
+                    textAlign: "left",
+                  }}
+                >
+                  {value.semester}
+                </Typography>
+              </Item>
+            </Grid>
+          ))}
       </Grid>
     </div>
   );

@@ -57,7 +57,7 @@ const StudentGrade = () => {
       <Stack gap={3} paddingTop={2}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography variant="h1" fontWeight={500}>
-            Grade {semester}
+            Student Grade {semester}
           </Typography>
         </Stack>
 
@@ -100,12 +100,6 @@ const StudentGrade = () => {
         </Grid>
 
         <Stack paddingTop={2}>
-          <Typography
-            variant="h4"
-            sx={{ fontSize: { xs: 14, md: 16, xl: 18 } }}
-          >
-            {semester}, Tahun Akademik 2022/2023
-          </Typography>
           <Typography
             variant="h4"
             sx={{ fontSize: { xs: 14, md: 16, xl: 18 } }}

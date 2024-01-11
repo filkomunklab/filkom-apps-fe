@@ -1,4 +1,5 @@
 import Div from "@jumbo/shared/Div";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Stack,
@@ -7,7 +8,10 @@ import {
   Paper,
   Breadcrumbs,
 } from "@mui/material";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
+import { useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -40,69 +44,116 @@ const Item = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const getRole = () => {
-  const { role } = JSON.parse(localStorage.getItem("user"));
-
-  const filter = role.includes("KAPRODI")
-    ? "kaprodi"
-    : role.includes("DEKAN")
-    ? "dekan"
-    : role.includes("OPERATOR_FAKULTAS")
-    ? "sek-dekan"
-    : "dosen-pembimbing";
-
-  return filter;
-};
-
 const StudentGradeDashboard = () => {
-  const navigate = useNavigate();
   const location = useLocation();
-  const { studentNim } = location.state ? location.state : "";
-  const semesterNames = [
-    { label: "Semester 1", value: 1 },
-    { label: "Semester 2", value: 2 },
-    { label: "Semester 3", value: 3 },
-    { label: "Semester 4", value: 4 },
-    { label: "Semester 5", value: 5 },
-  ];
+  const { studentNim, firstName, lastName } = location.state
+    ? location.state
+    : "";
+  const navigate = useNavigate();
+  const [semesterData, setSemesterData] = useState([]);
 
-  const handleClick = (event) => {
+  const getDataGrade = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL_API}/transaction/semesterList/${studentNim}`
+      );
+      console.log("ini respnse", response);
+      const sortedData = response.data.data.sort((a, b) =>
+        a.semester.localeCompare(b.semester, undefined, { numeric: true })
+      );
+
+      const reversedData = sortedData.reverse();
+
+      setSemesterData(reversedData);
+    } catch (error) {
+      console.log(error.message);
+      console.log("ini error: ", error);
+    }
+  };
+
+  useEffect(() => {
+    getDataGrade();
+  }, []);
+  console.log("ini yg mo loop", semesterData);
+
+  const handleNavigateGrade = async (value, studentNim) => {
+    try {
+      const gradeDetailsResult = await axios.get(
+        `${BASE_URL_API}/grades/semesterList/${value.id}`
+      );
+      const detail = gradeDetailsResult.data.data;
+      console.log("isi detail", detail);
+
+      navigate(`${value.id}`, {
+        state: {
+          gradeDetails: {
+            semester: detail.semester,
+            subject: detail.subject,
+            lastName: lastName,
+            firstName: firstName,
+          },
+        },
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleClick = (event, step) => {
     event.preventDefault();
-    navigate(-1);
+    navigate(step);
   };
 
   return (
     <Div>
-      <Div role="presentation" onClick={handleClick}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Student Information</StyledLink>
-          <Typography color="text.primary">Student Grades</Typography>
-        </Breadcrumbs>
-      </Div>
+      <Breadcrumbs aria-label="breadcrumb">
+        <StyledLink onClick={(event) => handleClick(event, -1)}>
+          Student Information
+        </StyledLink>
+        <Typography color="text.primary">Student Grades</Typography>
+      </Breadcrumbs>
       <Stack gap={3} paddingTop={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography variant="h1" fontWeight={500}>
             Student Grade
           </Typography>
-          <Typography variant="h6">Yuhu, Darell Deil</Typography>
+          <Typography variant="h6">
+            {lastName}, {firstName}
+          </Typography>
         </Stack>
-        <Typography variant="h5">
-          Please select a semester to view student grades.
-        </Typography>
+
+        {semesterData && semesterData.length === 0 ? (
+          <Paper
+            sx={{
+              backgroundColor: "rgba(0, 106, 245, 0.1)",
+              padding: "15px",
+              borderRadius: "10px",
+              boxShadow: "50px",
+              marginBottom: "15px",
+            }}
+          >
+            <Typography variant="body1">
+              This student has not submitted their grades yet.
+            </Typography>
+          </Paper>
+        ) : (
+          <Typography variant="h5">
+            Select a semester to view grades.
+          </Typography>
+        )}
         <Grid
           container
           spacing={{ xs: 2, md: 3 }}
           columns={{ xs: 4, sm: 8, md: 12 }}
         >
-          {semesterNames.reverse().map((semester, index) => (
-            <Grid item xs={2} sm={4} md={4} key={index}>
-              <Link
-                to={`/bimbingan-akademik/${getRole()}/student-information/${studentNim}/grade/semester/${
-                  semester.value
-                }`}
-                style={{ textDecoration: "none" }}
-              >
-                <Item>
+          {semesterData &&
+            semesterData.map((value, index) => (
+              <Grid item xs={2} sm={4} md={4} key={index}>
+                <Item
+                  onClick={() => {
+                    handleNavigateGrade(value, studentNim);
+                  }}
+                >
                   <Typography
                     sx={{
                       fontSize: "11px",
@@ -120,12 +171,11 @@ const StudentGradeDashboard = () => {
                       textAlign: "left",
                     }}
                   >
-                    {semester.label}{" "}
+                    {value.semester}
                   </Typography>
                 </Item>
-              </Link>
-            </Grid>
-          ))}
+              </Grid>
+            ))}
         </Grid>
       </Stack>
     </Div>

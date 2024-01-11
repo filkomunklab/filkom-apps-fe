@@ -55,7 +55,7 @@ function a11yProps(index) {
 
 const History = (props) => {
   const var1 = useLocation();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
   useEffect(() => {
     const storedValue = localStorage.getItem("historyTabValue");
@@ -107,7 +107,7 @@ const History = (props) => {
         approved will be displayed on this page.
       </Typography>
 
-      <Grid container>
+      {/* <Grid container>
         <Grid item xs={12} sm={12} md={12} lg={12} sx={{ paddingBottom: 4 }}>
           <SearchLocal
             sx={{
@@ -119,7 +119,7 @@ const History = (props) => {
             }}
           />
         </Grid>
-      </Grid>
+      </Grid> */}
 
       <div sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs

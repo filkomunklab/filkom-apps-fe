@@ -46,6 +46,29 @@ import ViewConsultation from "app/pages/BimbinganAkademik/shared/CurrentActiviti
 import AddActivity from "app/pages/BimbinganAkademik/shared/AddActivity";
 import Manage from "app/pages/BimbinganAkademik/shared/Manage/ManageDekan";
 
+import SupervisorInformation from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation";
+import AdvisorProfile from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/AdvisorProfile";
+// import AdvisorProfileFaculty from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/AdvisorProfilFaculty";
+import AdvisorStudentProfile from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/StudentProfile";
+import AdvisorStudentGrade from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/StudentGradeDashboard";
+import AdvisorStudentGrade2 from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/StudentGradeDashboard/StudentGrade";
+import AdvisorStudentCertificate from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/StudentCertificate";
+import AdvisorStudentCertificate2 from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/StudentCertificate/CertificateDetail";
+import EditStudent from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/EditStudent";
+import SupervisorInformatics from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/Informatics";
+import SupervisorInformationSystem from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/InformationSystem";
+import SupervisorInformationTechnology from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/InformationTechnology";
+import AddSupervisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor";
+import StudentList from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor/AddStudent";
+import InformationSytemLS from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor/InformationSystem";
+import InformationTechnologyLS from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor/AddStudent";
+import AdvisorHistory from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory";
+import HistoryActivityAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HIstoryActivity";
+import HistoryGradeAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HistoryGrade";
+import HistoryPreRegistrationAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HistoryPreRegis";
+import HistoryCertificateAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HistoryCertificate";
+import HistoryConsultationAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HistoryConsultation";
+
 import Profile from "app/pages/BimbinganAkademik/shared/Profile/Profile";
 
 const { default: Page } = require("@jumbo/shared/Page");
@@ -72,45 +95,126 @@ const dekanRoutes = [
     element: <Page component={StudentInformationMentored} />,
   },
   {
+    path: "/bimbingan-akademik/dekan/student-information/mentored-student/:id",
+    element: <Page component={StudentProfile} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/mentored-student/:id/grade",
+    element: <Page component={StudentGradeDashboard} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/mentored-student/:id/grade/:id",
+    element: <Page component={StudentGrade} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/mentored-student/:id/certificate",
+    element: <Page component={StudentCertificate} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/mentored-student/:id/certificate/:id",
+    element: <Page component={CertificateDetail} />,
+  },
+
+  {
     path: "/bimbingan-akademik/dekan/student-information/faculty-student",
     element: <Page component={StudentInformationFaculty} />,
   },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/:id",
+    element: <Page component={StudentProfile} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/:id/grade",
+    element: <Page component={StudentGradeDashboard} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/:id/grade/:id",
+    element: <Page component={StudentGrade} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/:id/certificate",
+    element: <Page component={StudentCertificate} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/:id/certificate/:id",
+    element: <Page component={CertificateDetail} />,
+  },
+
   {
     path: "/bimbingan-akademik/dekan/student-information/faculty-student/informatics",
     element: <Page component={StudentInformationFacultyPerMajor} />,
   },
   {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/informatics/:id",
+    element: <Page component={StudentProfile} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/informatics/:id/grade",
+    element: <Page component={StudentGradeDashboard} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/informatics/:id/grade/:id",
+    element: <Page component={StudentGrade} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/informatics/:id/certificate",
+    element: <Page component={StudentCertificate} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/informatics/:id/certificate/:id",
+    element: <Page component={CertificateDetail} />,
+  },
+
+  {
     path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-system",
     element: <Page component={StudentInformationFacultyPerMajor} />,
   },
   {
-    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-technology",
-    element: <Page component={StudentInformationFacultyPerMajor} />,
-  },
-  // {
-  //   path: "/bimbingan-akademik/dekan/student-information",
-  //   element: <Page component={StudentInformation} />,
-  // },
-  {
-    path: "/bimbingan-akademik/dekan/student-information/:id",
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-system/:id",
     element: <Page component={StudentProfile} />,
   },
   {
-    path: "/bimbingan-akademik/dekan/student-information/:id/grade",
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-system/:id/grade",
     element: <Page component={StudentGradeDashboard} />,
   },
   {
-    path: "/bimbingan-akademik/dekan/student-information/:id/grade/semester/:number",
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-system/:id/grade/:id",
     element: <Page component={StudentGrade} />,
   },
   {
-    path: "/bimbingan-akademik/dekan/student-information/:id/certificate",
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-system/:id/certificate",
     element: <Page component={StudentCertificate} />,
   },
   {
-    path: "/bimbingan-akademik/dekan/student-information/:id/certificate/:id",
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-system/:id/certificate/:id",
     element: <Page component={CertificateDetail} />,
   },
+
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-technology",
+    element: <Page component={StudentInformationFacultyPerMajor} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-technology/:id",
+    element: <Page component={StudentProfile} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-technology/:id/grade",
+    element: <Page component={StudentGradeDashboard} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-technology/:id/grade/:id",
+    element: <Page component={StudentGrade} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-technology/:id/certificate",
+    element: <Page component={StudentCertificate} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/student-information/faculty-student/information-technology/:id/certificate/:id",
+    element: <Page component={CertificateDetail} />,
+  },
+
   {
     path: "/bimbingan-akademik/dekan/review-activities/pre-registration",
     element: <Page component={ReviewPreRegistration} />,
@@ -258,6 +362,95 @@ const dekanRoutes = [
   // {
   //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/list-student/information-technology",
   //   element: <Page component={AddSupervisor} />,
+  // },
+
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information",
+    element: <Page component={SupervisorInformation} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/informatics",
+    element: <Page component={SupervisorInformatics} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/information-system",
+    element: <Page component={SupervisorInformationSystem} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/information-technology",
+    element: <Page component={SupervisorInformationTechnology} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor",
+    element: <Page component={AddSupervisor} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id",
+    element: <Page component={AdvisorProfile} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id/edit-student",
+    element: <Page component={EditStudent} />,
+  },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/",
+  //   element: <Page component={AdvisorProfileFaculty} />,
+  // },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id/student-profile",
+    element: <Page component={AdvisorStudentProfile} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id/student-grade",
+    element: <Page component={AdvisorStudentGrade} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id/grade/semester/:id",
+    element: <Page component={AdvisorStudentGrade2} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id/student-certificate",
+    element: <Page component={AdvisorStudentCertificate} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id/student-certificate/:id",
+    element: <Page component={AdvisorStudentCertificate2} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id",
+    element: <Page component={AdvisorHistory} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-activity",
+    element: <Page component={HistoryActivityAdvisor} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-grade",
+    element: <Page component={HistoryGradeAdvisor} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-preregistration",
+    element: <Page component={HistoryPreRegistrationAdvisor} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-certificate",
+    element: <Page component={HistoryCertificateAdvisor} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-consultation",
+    element: <Page component={HistoryConsultationAdvisor} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/student-list",
+    element: <Page component={StudentList} />,
+  },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/information-system",
+  //   element: <Page component={InformationSytemLS} />,
+  // },
+  // {
+  //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/information-technology",
+  //   element: <Page component={InformationTechnologyLS} />,
   // },
 ];
 

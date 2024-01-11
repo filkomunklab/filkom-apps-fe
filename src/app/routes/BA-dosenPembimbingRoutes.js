@@ -2,8 +2,8 @@ import AcademicGuide from "app/pages/BimbinganAkademik/shared/AcademicGuide/Acad
 import VisionMisionGoals from "app/pages/BimbinganAkademik/shared/VisionMisionGoals/VisionMissionGoals";
 import Curriculum from "app/pages/BimbinganAkademik/shared/Curriculum/Curriculum";
 import StudentGradeDashboard from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard";
-import StudentInformation from "../pages/BimbinganAkademik/shared/StudentInformation/StudentInformationMentored";
-import StudentProfile from "../pages/BimbinganAkademik/shared/StudentInformation/StudentProfile";
+import StudentInformation from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationMentored";
+import StudentProfile from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentProfile";
 import StudentGrade from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard/StudentGrade";
 import StudentCertificate from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentCertificate";
 import ReviewPreRegistration from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewPreRegistration/ReviewPreRegistration";
@@ -43,29 +43,30 @@ const dosenPembimbingRoutes = [
     element: <Page component={Curriculum} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/student-information",
+    path: "/bimbingan-akademik/dosen-pembimbing/student-information/mentored-student",
     element: <Page component={StudentInformation} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/student-information/:id",
+    path: "/bimbingan-akademik/dosen-pembimbing/student-information/mentored-student/:id",
     element: <Page component={StudentProfile} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/student-information/:id/grade",
+    path: "/bimbingan-akademik/dosen-pembimbing/student-information/mentored-student/:id/grade",
     element: <Page component={StudentGradeDashboard} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/student-information/:id/grade/semester/:number",
+    path: "/bimbingan-akademik/dosen-pembimbing/student-information/mentored-student/:id/grade/:id",
     element: <Page component={StudentGrade} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/student-information/:id/certificate",
+    path: "/bimbingan-akademik/dosen-pembimbing/student-information/mentored-student/:id/certificate",
     element: <Page component={StudentCertificate} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/student-information/:id/certificate/:id",
+    path: "/bimbingan-akademik/dosen-pembimbing/student-information/mentored-student/:id/certificate/:id",
     element: <Page component={CertificateDetail} />,
   },
+
   {
     path: "/bimbingan-akademik/dosen-pembimbing/review-activities/pre-registration",
     element: <Page component={ReviewPreRegistration} />,

@@ -20,8 +20,11 @@ import {
   Breadcrumbs,
 } from "@mui/material";
 import SearchLocal from "app/shared/SearchLocal";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
+import { useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -32,66 +35,84 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const yearList = [
-  {
-    value: "2017",
-    label: "2017",
-  },
-  {
-    value: "2018",
-    label: "2018",
-  },
-  {
-    value: "2019",
-    label: "2019",
-  },
-  {
-    value: "2020",
-    label: "2020",
-  },
-  {
-    value: "2021",
-    label: "2021",
-  },
-  {
-    value: "2022",
-    label: "2022",
-  },
-  {
-    value: "2023",
-    label: "2023",
-  },
-];
-
-const prodiList = [
-  {
-    value: "informatika",
-    label: "Informatika",
-  },
-  {
-    value: "dkv",
-    label: "DKV",
-  },
-  {
-    value: "si",
-    label: "SI",
-  },
-];
-
-const data = [...Array(15)].map(() => ({
-  submissionDate: "10 May 2000",
-  title: "Menang Lomba Desain Prototype",
-  category: "Faculty",
-  certifacePhoto: "Sertifikat menang lomba.pdf",
-  description:
-    "Saya mengikuti lomba desain prototype website kampus yang diselenggarakan oleh Fakultas Ilmu Komputer",
-  status: "Approved",
-}));
-
 const StudentCertificate = () => {
   const [page, setPage] = useState(0);
+  const [dataWaiting, setDataWaiting] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [filter, setFilter] = useState([]);
+  const location = useLocation();
+  const { studentNim, firstName, lastName } = location.state
+    ? location.state
+    : "";
+
+  const navigate = useNavigate();
+
+  const getDataWaiting = async () => {
+    try {
+      const result = await axios.get(
+        `${BASE_URL_API}/certificate/history/student/${studentNim}`
+      );
+      console.log("ini isi result data di certi", result);
+
+      if (result.data && result.data.data) {
+        setDataWaiting(result.data.data);
+      } else {
+        setDataWaiting([]); // Set to an empty array if data is undefined or null
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  useEffect(() => {
+    getDataWaiting();
+  }, []);
+  const handleNavigate = async (value, studentNim) => {
+    try {
+      const certificateDetailsResult = await axios.get(
+        `${BASE_URL_API}/certificate/student/${value.id}`
+      );
+      console.log("ini detail certi result:", certificateDetailsResult);
+
+      const {
+        student,
+        submitDate,
+        path,
+        category,
+        description,
+        approval_status,
+        approvalDate,
+        title,
+        id,
+        comments,
+      } = certificateDetailsResult.data.data;
+      navigate(
+        `${value.id}`,
+        {
+          state: {
+            certificateDetails: {
+              firstName: student.firstName,
+              lastName: student.lastName,
+              SupervisorFirstName:
+                student.GuidanceClassMember.gudianceClass.teacher.firstName,
+              SupervisorLastName:
+                student.GuidanceClassMember.gudianceClass.teacher.lastName,
+              submissionDate: submitDate,
+              pathFile: path,
+              category: category,
+              description: description,
+              status: approval_status,
+              title: title,
+              id: id,
+              approvalDate: approvalDate,
+              comments: comments,
+            },
+          },
+        },
+        console.log("ini pathFile", path)
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -102,26 +123,27 @@ const StudentCertificate = () => {
     setPage(0);
   };
 
-  const navigate = useNavigate();
-  const handleClick = (event) => {
+  const handleClick = (event, step) => {
     event.preventDefault();
-    navigate(-1);
+    navigate(step);
   };
 
   return (
     <Div>
-      <Div role="presentation" onClick={handleClick}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Student Information</StyledLink>
-          <Typography color="text.primary">Student Certificates</Typography>
-        </Breadcrumbs>
-      </Div>
+      <Breadcrumbs aria-label="breadcrumb">
+        <StyledLink onClick={(event) => handleClick(event, -1)}>
+          Student Information
+        </StyledLink>
+        <Typography color="text.primary">Student Certificates</Typography>
+      </Breadcrumbs>
       <Stack gap={3} paddingTop={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography variant="h1" fontWeight={500}>
             All Certifications
           </Typography>
-          <Typography variant="h6">Yuhu, Darell Deil</Typography>
+          <Typography variant="h6">
+            {lastName}, {firstName}
+          </Typography>
         </Stack>
         <Grid container spacing={2} alignItems={"center"}>
           <Grid item md={6}>
@@ -131,120 +153,117 @@ const StudentCertificate = () => {
             </Typography>
           </Grid>
           <Grid item xs={12} sm={8} md={3}>
-            <SearchLocal
+            {/* <SearchLocal
               sx={{
                 height: "100%",
                 "@media (max-width: 390px)": {
                   height: "40px",
                 },
               }}
-            />
+            /> */}
           </Grid>
           <Grid item xs={12} sm={4} md={3}>
-            <FormControl
-              sx={{
-                width: "100%",
-              }}
-            >
-              <InputLabel>Filter</InputLabel>
-              <Select
-                sx={{
-                  borderRadius: 50,
-                  "@media (max-width: 390px)": {
-                    height: "45px",
-                  },
-                }}
-                multiple
-                value={filter}
-                label="Grouping"
-                renderValue={(selected) => selected.join(", ")}
-                MenuProps={{
-                  PaperProps: {
-                    style: {
-                      maxHeight: "37%",
-                    },
-                  },
-                }}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                  Status
-                </ListSubheader>
-                <MenuItem
-                  sx={{
-                    backgroundColor: "#FAFAFA",
-                    borderRadius: "5px",
-                  }}
-                  value={"activeStudent"}
-                >
-                  Active
-                </MenuItem>
-                <MenuItem
-                  sx={{
-                    backgroundColor: "#FAFAFA",
-                    borderRadius: "5px",
-                  }}
-                  value={"nonactiveStudent"}
-                >
-                  Nonactive
-                </MenuItem>
-                <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                  Tahun Masuk
-                </ListSubheader>
-                {yearList.map((item) => (
-                  <MenuItem
-                    key={item.value}
-                    value={item.value}
-                    sx={{
-                      backgroundColor: "#FAFAFA",
-                      borderRadius: "5px",
-                    }}
-                  >
-                    {item.label}
-                  </MenuItem>
-                ))}
-                <Div>
-                  <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                    Prodi
-                  </ListSubheader>
-                  {prodiList.map((item) => (
-                    <MenuItem
-                      key={item.value}
-                      onChange={(event) =>
-                        console.log(event.currentTarget.value)
-                      }
-                      value={item.value}
-                      sx={{
-                        backgroundColor: "#FAFAFA",
-                        borderRadius: "5px",
-                      }}
-                    >
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </Div>
-              </Select>
-            </FormControl>
+            {/* <FormControl
+             
+            > 
+            </FormControl> */}
           </Grid>
           <Grid item xs={12}>
-            <TableContainer
-              sx={{
-                maxHeight: 640,
-              }}
-              component={Paper}
-            >
-              <Table stickyHeader>
-                <TableHead>
-                  <TableHeading />
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead
+                  style={{
+                    position: "-webkit-sticky",
+                    position: "sticky",
+                    top: 0,
+                    backgroundColor: "rgba(26, 56, 96, 0.1)",
+                  }}
+                >
+                  <TableRow>
+                    <TableCell>Number</TableCell>
+                    <TableCell>Submission Date</TableCell>
+                    <TableCell>Student Name</TableCell>
+                    <TableCell>Title</TableCell>
+                    {/* <TableCell>Category</TableCell>
+                    <TableCell>Status </TableCell> */}
+                  </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((item, index) => (
-                      <TableItem item={item} index={index} key={index} />
-                    ))}
+                  {dataWaiting && dataWaiting.length > 0 ? (
+                    dataWaiting.map((value, index) => (
+                      <TableRow
+                        key={value.id}
+                        onClick={() => handleNavigate(value, studentNim)}
+                        sx={{
+                          ":hover": {
+                            cursor: "pointer",
+                            backgroundColor: "#338CFF21",
+                            transition: "0.3s",
+                            transitionTimingFunction: "ease-in-out",
+                            transitionDelay: "0s",
+                            transitionProperty: "all",
+                          },
+                        }}
+                      >
+                        <TableCell
+                          align="right"
+                          sx={{ width: "80px", paddingRight: "40px" }}
+                        >
+                          {index + 1}
+                        </TableCell>
+                        <TableCell sx={{ width: "180px", paddingLeft: "17px" }}>
+                          {new Date(value.approvalDate).toLocaleDateString(
+                            "en-US",
+                            {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            }
+                          )}
+                        </TableCell>
+                        <TableCell sx={{ width: "200px" }}>
+                          {value.student.lastName}, {value.student.firstName}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            maxWidth: "240px",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {value.title}
+                        </TableCell>
+                        {/* <TableCell>
+                          {value.category &&
+                            value.category.charAt(0).toUpperCase() +
+                              value.category.slice(1)}
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            color:
+                              value.approval_status === "WAITING"
+                                ? "#FFCC00"
+                                : value.approval_status === "APPROVED"
+                                ? "#005FDB"
+                                : value.approval_status === "REJECTED"
+                                ? "#E21D12"
+                                : "inherit",
+                            align: "left",
+                            width: "100px",
+                          }}
+                        >
+                          {value.approval_status &&
+                            value.approval_status.charAt(0) +
+                              value.approval_status.slice(1).toLowerCase()}
+                        </TableCell> */}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={8}>No data available</TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -258,97 +277,16 @@ const StudentCertificate = () => {
               }}
               rowsPerPageOptions={[10, 25, 50, 100]}
               component="div"
-              count={data.length}
+              count={dataWaiting.length}
               rowsPerPage={rowsPerPage}
               page={page}
-              onPageChange={handleChangePage}
+              onPageChange={(_, newPage) => setPage(newPage)}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Grid>
         </Grid>
-        {/* <Table sx={{ overflowX: "auto" }}>
-          <TableHead>
-            <TableHeading />
-          </TableHead>
-          <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((item, index) => (
-                <TableItem index={index} key={index} item={item} />
-              ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[10, 25]}
-          component={"div"}
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        /> */}
       </Stack>
     </Div>
-  );
-};
-
-const TableHeading = () => {
-  const style = { fontWeight: 400, whiteSpace: "nowrap" };
-  return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={[style]}>No</TableCell>
-      <TableCell sx={[style]}>Submission Date</TableCell>
-      <TableCell sx={[style]}>Title</TableCell>
-      <TableCell sx={[style]}>Category</TableCell>
-      <TableCell sx={[style]}>Certificate Photo</TableCell>
-      <TableCell sx={[style]}>Description</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
-    </TableRow>
-  );
-};
-
-const TableItem = ({ item, index }) => {
-  const navigate = useNavigate();
-  let statusColor;
-
-  switch (item.status) {
-    case "Waiting":
-      statusColor = "#FFCC00";
-      break;
-    case "Approved":
-      statusColor = "#005FDB";
-      break;
-    case "Rejected":
-      statusColor = "#E21D12";
-      break;
-  }
-
-  const handleNavigate = () => {
-    navigate("detail");
-  };
-
-  return (
-    <TableRow
-      onClick={handleNavigate}
-      sx={{
-        ":hover": {
-          cursor: "pointer",
-          backgroundColor: "#338CFF21",
-          transition: "0.3s",
-          transitionTimingFunction: "ease-in-out",
-          transitionDelay: "0s",
-          transitionProperty: "all",
-        },
-      }}
-    >
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{item.submissionDate}</TableCell>
-      <TableCell>{item.title}</TableCell>
-      <TableCell>{item.category}</TableCell>
-      <TableCell>{item.certifacePhoto}</TableCell>
-      <TableCell>{item.description}</TableCell>
-      <TableCell sx={{ color: statusColor }}>{item.status}</TableCell>
-    </TableRow>
   );
 };
 
