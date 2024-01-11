@@ -45,7 +45,10 @@ function a11yProps(index) {
 
 const CurrentActivities = () => {
   const navigate = useNavigate();
+  const controller = new AbortController();
+  const signal = controller.signal;
   const [value, setValue] = useState(0);
+  const [dataActivity, setDataActivity] = useState([]);
   const [dataConsultation, setDataConsultation] = useState([]);
   const [dataCertificate, setDataCertificate] = useState([]);
   const [dataPreregis, setDataPreregis] = useState([]);
@@ -64,20 +67,28 @@ const CurrentActivities = () => {
 
   const getCurrentActivities = async () => {
     try {
+      const token = localStorage.getItem("token");
       //content-type dan Authorization liat di dokumentasi API atau postman
-      // const headers = {
-      //     'Content-Type': 'multipart/form-data',
-      //     Authorization: `Bearer token_apa`,
-      //   };
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
 
       const { nim } = JSON.parse(localStorage.getItem("user"));
+
+      const resultActivity = await axios.get(
+        `${BASE_URL_API}/activity/current/${nim}`,
+        { signal }
+      );
+
       const resultConsultation = await axios.get(
         `${BASE_URL_API}/academic-consultation/student/${nim}`
         // {  headers,}
       );
 
       const resultCertificate = await axios.get(
-        `${BASE_URL_API}/certificate/current/student/${nim}`
+        `${BASE_URL_API}/certificate/current/student/${nim}`,
+        { headers }
         // {  headers,}
       );
 
@@ -90,7 +101,9 @@ const CurrentActivities = () => {
         `${BASE_URL_API}/transaction/student/currentGrades/${nim}`
         // {  headers,}
       );
-
+      console.log("result activity", resultActivity);
+      const { status: activityStatus, data: activityData } =
+        resultActivity.data;
       const { status: consultationStatus, data: consultationData } =
         resultConsultation.data;
       const { status: certificateStatus, data: certificateData } =
@@ -98,6 +111,10 @@ const CurrentActivities = () => {
       const { status: preregisStatus, data: preregisData } =
         resultPreregis.data;
       const { status: gradeStatus, data: gradeData } = resultGrade.data;
+
+      if (activityStatus === "OK") {
+        setDataActivity(activityData);
+      }
 
       if (consultationStatus === "OK") {
         const filteredConsultationData = consultationData.filter(
@@ -142,6 +159,7 @@ const CurrentActivities = () => {
     getCurrentActivities();
   }, []);
 
+  const groupedDataActivity = {};
   const groupedDataConsultation = {};
   const groupedDataCertificate = {};
   const groupedDataPreregis = {};
@@ -161,6 +179,19 @@ const CurrentActivities = () => {
       groupedDataConsultation[dateConsultation] = [];
     }
     groupedDataConsultation[dateConsultation].push(value);
+  });
+
+  dataActivity.forEach((value) => {
+    const date = new Date().toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    if (!groupedDataActivity[date]) {
+      groupedDataActivity[date] = [];
+    }
+    groupedDataActivity[date].push(value);
   });
 
   dataCertificate.forEach((value) => {
@@ -388,14 +419,152 @@ const CurrentActivities = () => {
           aria-label="scrollable auto tabs example"
           onChange={(event, newValue) => setValue(newValue)}
         >
-          <Tab label="Pre-registration" {...a11yProps(0)} />
-          <Tab label="Certificate" {...a11yProps(1)} />
-          <Tab label="Grade" {...a11yProps(2)} />
-          <Tab label="Consultation" {...a11yProps(3)} />
+          <Tab label="Activity" {...a11yProps(0)} />
+          <Tab label="Pre-registration" {...a11yProps(1)} />
+          <Tab label="Certificate" {...a11yProps(2)} />
+          <Tab label="Grade" {...a11yProps(3)} />
+          <Tab label="Consultation" {...a11yProps(4)} />
         </Tabs>
       </div>
 
       <TabPanel value={value} index={0}>
+        <div>
+          <Typography sx={{ padding: "10px" }}></Typography>
+
+          {dataActivity.length === 0 ? (
+            <Box
+              sx={{
+                height: "50px",
+                backgroundColor: "rgba(235, 235, 235, 1)",
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "10px",
+              }}
+            >
+              <Typography
+                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+              >
+                You don't have any current actvities
+              </Typography>
+            </Box>
+          ) : (
+            Object.entries(groupedDataActivity).map(([date, dataPreregis]) => (
+              <div key={date}>
+                <Box
+                  sx={{
+                    height: "50px",
+                    backgroundColor: "rgba(235, 235, 235, 1)",
+                    display: "flex",
+                    alignItems: "center",
+                    paddingLeft: "10px",
+                  }}
+                >
+                  <Typography
+                    sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+                  >
+                    {formatDate(date)}
+                  </Typography>
+                </Box>
+                {dataActivity &&
+                  dataActivity.map((value, index) => (
+                    <List
+                      key={index}
+                      sx={{
+                        width: "100%",
+                        maxWidth: 2000,
+                        bgcolor: "background.paper",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        ":hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#338CFF21",
+                          transition: "0.3s",
+                          transitionTimingFunction: "ease-in-out",
+                          transitionDelay: "0s",
+                          transitionProperty: "all",
+                        },
+                      }}
+                    >
+                      <ListItem
+                        sx={{ padding: "10px 50px" }}
+                        onClick={() => {
+                          handleNavigatePreregis(value);
+                          // console.log("ini isi dari value preregis: ", value);
+                        }}
+                      >
+                        <ListItemText
+                          primary={
+                            <Chip
+                              size={"small"}
+                              label={"Activity"}
+                              sx={{
+                                backgroundColor: "rgba(21, 131, 67, 0.1)",
+                                color: "rgba(21, 131, 67, 1)",
+                              }}
+                            />
+                          }
+                          secondary={
+                            <>
+                              <Typography
+                                sx={{
+                                  color: "rgba(0, 0, 0, 1)",
+                                  paddingLeft: "8px",
+                                  paddingTop: "5px",
+                                  fontSize: { xs: "12px", md: "14px" },
+                                }}
+                              >
+                                {value.title}
+                              </Typography>
+                              <Typography
+                                sx={{
+                                  paddingLeft: "8px",
+                                  fontSize: { xs: "12px", md: "14px" },
+                                }}
+                              >
+                                {value.description}
+                              </Typography>
+                            </>
+                          }
+                        />
+                        <Box
+                          sx={{
+                            marginLeft: { xs: "auto", md: 0 },
+                            textAlign: "right",
+                          }}
+                        >
+                          <ListItemText
+                            secondary={
+                              <Typography
+                                sx={{
+                                  fontSize: { xs: "10px", md: "14px" },
+                                  color: "rgba(27, 43, 65, 0.69)",
+                                }}
+                              >
+                                {new Date(value.createdAt).toLocaleTimeString(
+                                  "en-US",
+                                  {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    hour12: true,
+                                  }
+                                )}
+                              </Typography>
+                            }
+                          />
+                        </Box>
+                      </ListItem>
+                      <Divider component="li" />
+                    </List>
+                  ))}
+              </div>
+              // <div>activity</div>
+            ))
+          )}
+          <Typography sx={{ padding: "20px" }}></Typography>
+        </div>
+      </TabPanel>
+
+      <TabPanel value={value} index={1}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
 
@@ -533,7 +702,7 @@ const CurrentActivities = () => {
         </div>
       </TabPanel>
 
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={2}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
           {dataCertificate.length === 0 ? (
@@ -669,7 +838,7 @@ const CurrentActivities = () => {
         </div>
       </TabPanel>
 
-      <TabPanel value={value} index={2}>
+      <TabPanel value={value} index={3}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
           {dataGrade.length === 0 ? (
@@ -802,7 +971,7 @@ const CurrentActivities = () => {
         </div>
       </TabPanel>
 
-      <TabPanel value={value} index={3}>
+      <TabPanel value={value} index={4}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
           {dataConsultation.length === 0 ? (

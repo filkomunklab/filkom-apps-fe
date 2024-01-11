@@ -14,7 +14,42 @@ import axios from "axios";
 
 const CurrentActivities = () => {
   const navigate = useNavigate();
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const [dataActivity, setDataActivity] = useState([]);
   const [dataConsultation, setDataConsultation] = useState([]);
+
+  const getActivity = async () => {
+    try {
+      //content-type dan Authorization liat di dokumentasi API atau postman
+      // const headers = {
+      //     'Content-Type': 'multipart/form-data',
+      //     Authorization: `Bearer token_apa`,
+      //   };
+
+      const { nik } = JSON.parse(localStorage.getItem("user"));
+      const result = await axios.get(
+        `${BASE_URL_API}/activity/current/${nik}`,
+        { signal }
+        // {  headers,}
+      );
+
+      console.log("ini result", result);
+      const { status, data } = result.data;
+      if (status === "OK") {
+        // const onProcessConsultations = result.data.data.filter(
+        //   (consultation) => consultation.status === "OnProcess"
+        // );
+
+        setDataActivity(data);
+      } else {
+        console.log(result);
+        console.log(result.data);
+      }
+    } catch (error) {
+      console.log("error getActivity", error);
+    }
+  };
 
   const getConsultation = async () => {
     try {
@@ -26,12 +61,13 @@ const CurrentActivities = () => {
 
       const { nik } = JSON.parse(localStorage.getItem("user"));
       const result = await axios.get(
-        `${BASE_URL_API}/academic-consultation/employee/${nik}`
+        `${BASE_URL_API}/academic-consultation/employee/${nik}`,
+        { signal }
         // {  headers,}
       );
-      const { status } = result.data;
+      const { status, data } = result.data;
       if (status === "OK") {
-        const onProcessConsultations = result.data.data.filter(
+        const onProcessConsultations = data.filter(
           (consultation) => consultation.status === "OnProcess"
         );
 
@@ -46,6 +82,9 @@ const CurrentActivities = () => {
   };
   useEffect(() => {
     getConsultation();
+    getActivity();
+
+    return () => controller.abort();
   }, []);
 
   const groupedData = {};
@@ -122,6 +161,10 @@ const CurrentActivities = () => {
     }
   };
 
+  const handleNavigateActivity = () => {
+    navigate(`view-activity`);
+  };
+
   return (
     <div>
       <Typography
@@ -144,7 +187,7 @@ const CurrentActivities = () => {
         respond to ongoing consultations.
       </Typography>
 
-      {dataConsultation.length === 0 ? (
+      {dataConsultation.length === 0 && dataActivity.length === 0 ? (
         <Box
           sx={{
             height: "50px",
@@ -174,7 +217,92 @@ const CurrentActivities = () => {
                 {formatDate(date)}
               </Typography>
             </Box>
+            {dataActivity.map((item, index) => (
+              <List
+                key={index}
+                sx={{
+                  width: "100%",
+                  maxWidth: 2000,
+                  bgcolor: "background.paper",
+                  paddingTop: "0px",
+                  paddingBottom: "0px",
+                  ":hover": {
+                    cursor: "pointer",
+                    backgroundColor: "#338CFF21",
+                    transition: "0.3s",
+                    transitionTimingFunction: "ease-in-out",
+                    transitionDelay: "0s",
+                    transitionProperty: "all",
+                  },
+                }}
+              >
+                <ListItem onClick={() => handleNavigateActivity()}>
+                  <ListItemText
+                    primary={
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontSize: { xs: "12px", md: "14px" },
+                          "&:hover": {
+                            textDecorationLine: ["none"],
+                          },
+                        }}
+                      >
+                        {item.title}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography
+                        sx={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          color: "rgba(27, 43, 65, 0.69)",
+                          fontSize: { xs: "12px", md: "14px" },
+                        }}
+                      >
+                        {item.description}
+                      </Typography>
+                    }
+                  />
 
+                  <Box
+                    sx={{
+                      marginRight: "-72px",
+                      textAlign: "right",
+                      width: "300px",
+                      "@media (max-width: 630px)": {
+                        width: "400px",
+                      },
+                      "@media (max-width: 400px)": {
+                        width: "600px",
+                      },
+                    }}
+                  >
+                    <ListItemText
+                      secondary={
+                        <Typography
+                          sx={{
+                            fontSize: { xs: "10px", md: "14px" },
+                            color: "rgba(27, 43, 65, 0.69)",
+                          }}
+                        >
+                          {new Date(item.createdAt).toLocaleTimeString(
+                            "en-US",
+                            {
+                              hour: "numeric",
+                              minute: "numeric",
+                              hour12: true,
+                            }
+                          )}
+                        </Typography>
+                      }
+                    />
+                  </Box>
+                  <Divider component="li" variant="inset" />
+                </ListItem>
+              </List>
+            ))}
             {dataConsultation.map((value, index) => (
               <List
                 key={index}
