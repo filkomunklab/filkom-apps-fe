@@ -7,7 +7,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@mui/styles";
 import Div from "@jumbo/shared/Div";
 import { ASSET_IMAGES } from "app/utils/constants/paths";
@@ -21,6 +21,9 @@ import * as yup from "yup";
 import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
 import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
 import { useMediaQuery } from "@mui/material";
+
+import { FormAfterLogin } from "./components";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
@@ -68,6 +71,9 @@ const signInSchema = yup.object({
 });
 
 const Login = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [profileMahasiswa, setProfileMahasiswa] = useState([]);
+  const [userLogin, setUserLogin] = useState("");
   const style = useStyles();
   const maxWidth515 = useMediaQuery("(max-width: 515px)");
 
@@ -76,11 +82,42 @@ const Login = () => {
 
   const onSignIn = async (formdata) => {
     const { token, user } = await authService.signIn(formdata);
-    setAuthToken(token);
 
-    localStorage.setItem("user", JSON.stringify(user));
+    if (user.role === "MAHASISWA") {
+      const response = await jwtAuthAxios.get(
+        `student/biodata/check/${user.nim}`
+      );
 
-    navigate("/");
+      if (response.data.data.biodataCheck) {
+        setAuthToken(token);
+
+        console.log("ini user loh: ", user);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        navigate("/");
+      } else {
+        const response = await jwtAuthAxios.get(`student/${user.nim}`);
+        const responseCurriculum = await jwtAuthAxios.get(
+          `curriculum/${response.data.data.curriculumId}`
+        );
+
+        const data = {
+          ...response.data.data,
+          curriculum: responseCurriculum.data.data,
+        };
+        console.log("ini data: ", data);
+        setProfileMahasiswa(data);
+        setUserLogin(user);
+        setOpenModal(true);
+      }
+    } else {
+      setAuthToken(token);
+
+      console.log("ini user loh: ", user);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      navigate("/");
+    }
   };
 
   return (
@@ -234,6 +271,12 @@ const Login = () => {
           />
         </Div>
       </Div>
+      <FormAfterLogin
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        profileMahasiswa={profileMahasiswa}
+        userLogin={userLogin}
+      />
     </Div>
   );
 };

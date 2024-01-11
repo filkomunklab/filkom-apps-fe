@@ -153,7 +153,7 @@ const StudentManagement = () => {
       (item) =>
         (item.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
           item.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.nik.includes(searchTerm)) &&
+          item.nim.includes(searchTerm)) &&
         (selectedMajor === "" || item.major === selectedMajor)
     );
     setStudents(filteredData);
