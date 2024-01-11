@@ -17,6 +17,8 @@ import {
   Checkbox,
   Modal,
   Alert,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -25,6 +27,7 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
+import { newDate } from "date-fns-jalali";
 
 const requiredStyle = {
   color: "red",
@@ -51,10 +54,10 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (max-width: 768px)": {
+  "@media (maxWidth: 768px)": {
     maxWidth: "80%",
   },
-  "@media (max-width: 480px)": {
+  "@media (maxWidth: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -71,6 +74,11 @@ const style2 = {
 
 const AddActivity = () => {
   const prevSelectedStudentRef = useRef();
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const role = Boolean(localStorage.getItem("user"))
+    ? JSON.parse(localStorage.getItem("user")).role
+    : [];
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState(null);
@@ -79,13 +87,26 @@ const AddActivity = () => {
   const [studentOptions, setStudentOptions] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState([]);
   const [date, setDate] = useState(null);
-  const [time, setTime] = useState("");
+  const [time, setTime] = useState("00:00");
   const [showLabel, setShowLabel] = useState(true);
   const [showLabel2, setShowLabel2] = useState(true);
   const [openFirstModal, setOpenFirstModal] = useState(false);
   const [openSecondModal, setOpenSecondModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   prevSelectedStudentRef.current = selectedStudent;
+
+  const getRole = () => {
+    const filter = role.includes("KAPRODI")
+      ? "kaprodi"
+      : role.includes("DEKAN")
+      ? "dekan"
+      : role.includes("OPERATOR_FAKULTAS")
+      ? "sek-dekan"
+      : "dosen-pembimbing";
+
+    return filter;
+  };
 
   const handleStudentChange = (event) => {
     setValueStudent(event.target.value);
@@ -112,98 +133,171 @@ const AddActivity = () => {
     };
   }, [openSecondModal === true]);
 
-  // const getStudentList = async()=>{
-  //   try{
-  //     const headers = {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer token_apa`,
-  //       };
-
-  //     let response;
-  //     if('Pilih mahasiswa bimbingan'){
-  //       response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
-  //     }else if('Pilih mahasiswa fakultas'){
-  //       response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
-  //     }
-  //     const {status, message, data, code} = response.data
-  //     console.log('ini data getStudentList', response)
-  //     if(code=== '200') {//string tergantung status dari backend
-  //       //simpan dalam usestate contoh:
-  //       //setStudentList = data
-  //     }else{
-  //       console.log(response)//buat handler sendiri misalkan alert
-  //     }
-
-  //   }catch(error){
-  //     console.log(error)
-  //   }
-  // }
-
-  const handleSubmit = async () => {
+  const getStudentList = async () => {
     try {
-      //format header tergantung backend
+      const { guidanceClassId } = JSON.parse(localStorage.getItem("user"));
+      const token = localStorage.getItem("token");
+      console.log("ini token", token);
       const headers = {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       };
-      const response = await axios.post(
-        `${BASE_URL_API}/activity/${
-          JSON.parse(localStorage.getItem("user")).nik
-        }`,
-        {
-          title: "Ehem",
-          description: "Hello World!",
-          date: "2023-12-06T18:00:00Z",
-          time: "18.05",
-          employeeId: "1003",
-          grades_access: false,
-          // form_attendance: attendance
+
+      let response, responseMajor;
+
+      if (valueStudent === "GUIDANCE_CLASS") {
+        response = await axios.get(
+          `${BASE_URL_API}/guidance-class/${guidanceClassId}`,
+          { signal }
+        );
+      } else {
+        const { id } = JSON.parse(localStorage.getItem("user"));
+
+        responseMajor = await axios.get(`${BASE_URL_API}/employee/${id}`, {
+          signal,
+          headers,
+        });
+        response = await axios.get(`${BASE_URL_API}/Student`, { signal });
+      }
+
+      const { status, data } = response.data;
+      console.log("ini data getStudentList", response);
+
+      if (status === "OK" && data) {
+        if (valueStudent === "GUIDANCE_CLASS") {
+          setStudentOptions([
+            "All students",
+            ...data.GuidanceClassMember?.filter(
+              (item) => item.student.status === "ACTIVE"
+            ).map((item) => item.student),
+          ]);
+        } else if (valueStudent === "MAJOR") {
+          setStudentOptions([
+            "All students",
+            ...data.filter(
+              (item) =>
+                item.status === "ACTIVE" &&
+                item.major === responseMajor.data.data.major
+            ),
+          ]);
+        } else {
+          console.log("masok");
+          setStudentOptions([
+            "All students",
+            ...data.filter((item) => item.status === "ACTIVE"),
+          ]);
         }
-        // {headers}
-      );
-      console.log(
-        "ini itu",
-        response,
-        JSON.parse(localStorage.getItem("user")).nik,
-        localStorage.getItem("token")
-      );
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      if (validation()) {
+        const { nik } = JSON.parse(localStorage.getItem("user"));
+
+        const headers = {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        };
+        const response = await axios.post(
+          `${BASE_URL_API}/activity`,
+          {
+            title: title,
+            description: description ? description : "-",
+            dueDate: dueDate,
+            isAttendance: attendance,
+            activityType: valueStudent,
+            employeeNik: nik,
+            members: selectedStudent
+              .filter((item) => item !== "All students")
+              .map((item) => ({ studentNim: item.nim })),
+          },
+          { signal }
+          // {headers}
+        );
+        console.log("ini itu", response);
+
+        const { status, data } = response.data;
+        if (status === "OK") {
+          handleSubmitFirstModal();
+          setTitle("");
+          setDescription("");
+          setDueDate(null);
+          setTime("00:00");
+          setDate(null);
+          setAttendance("");
+          setStudentOptions([]);
+          setSelectedStudent([]);
+          setValueStudent("");
+          setShowLabel(true);
+          setShowLabel2(true);
+        }
+      } else {
+        console.log("data tidak valid");
+        setOpenFirstModal(false);
+        alert("Data tidak valid");
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
+
+  const validation = () => {
+    const current = new Date();
+    console.log("waktu skarang", current);
+    return (
+      title !== "" &&
+      dueDate !== null &&
+      dueDate > current &&
+      attendance !== "" &&
+      selectedStudent.length > 0
+    );
+  };
+
   useEffect(() => {
     setSelectedStudent([]);
-    if (valueStudent === "MahasiswaBimbingan") {
-      setStudentOptions(
-        [...Array(10).keys()].map((i) =>
-          i === 0 ? `All students` : `Student ${i}`
-        )
-      );
-    } else if (valueStudent === "MahasiswaFakultas") {
-      setStudentOptions(
-        [...Array(10).keys()].map((i) =>
-          i === 0 ? `All students` : `Student ${i + 10}`
-        )
-      );
+    setStudentOptions([]);
+    if (valueStudent) {
+      getStudentList();
     }
+    return () => controller.abort();
   }, [valueStudent]);
 
   useEffect(() => {
-    console.log("ini selected student", selectedStudent);
     console.log("ini time", time);
     console.log("ini date", date);
-    console.log("ini title", title);
-    console.log("ini deskripsi", description);
-    console.log("ini duedate", dueDate);
     combinedDateTime();
-  }, [time, date, selectedStudent]);
+  }, [time, date]);
+
+  useEffect(() => {
+    console.log("due date: ", dueDate);
+  }, [dueDate]);
 
   const combinedDateTime = () => {
-    const dateString = date?.toISOString().split("T")[0];
-    const combine = new Date(dateString + " " + time);
-    console.log("yoho", combine);
-    return new Date(dateString + " " + time);
+    if (!date || isNaN(date)) {
+      console.log("Invalid date");
+      return null; // atau nilai default yang sesuai
+    }
+
+    // const dateString = date.toISOString().split("T")[0];
+    // const combine = new Date(dateString + " " + time);
+    // console.log("yoho", combine);
+    // setDueDate(new Date(dateString + " " + time));
+    const combinedDateTime = new Date(date);
+    const [hours, minutes] = time.split(":");
+
+    console.log("rrrrrrrrrrrrrrrr", hours);
+    console.log("ddddddddddd", minutes);
+
+    combinedDateTime.setHours(hours);
+    combinedDateTime.setMinutes(minutes);
+    setDueDate(combinedDateTime);
   };
 
   const handleSelectStudent = (_, newValue) => {
@@ -231,6 +325,12 @@ const AddActivity = () => {
 
   return (
     <div>
+      <Backdrop
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress />
+      </Backdrop>
       <Typography
         sx={{
           fontSize: "24px",
@@ -267,7 +367,7 @@ const AddActivity = () => {
 
       <Grid container spacing={2}>
         <Grid item xs={12} md={4}>
-          <Typography sx={{ paddingBottom: "15px" }}>Due Date</Typography>
+          <RTypography sx={{ paddingBottom: "15px" }}>Date</RTypography>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DesktopDatePicker
               sx={{ backgroundColor: "white", width: "100%" }}
@@ -300,9 +400,9 @@ const AddActivity = () => {
           />
         </Grid>
         <Grid item xs={12} md={4}>
-          <Typography sx={{ paddingBottom: "15px" }}>
+          <RTypography sx={{ paddingBottom: "15px" }}>
             Form Attendance
-          </Typography>
+          </RTypography>
           <FormControl sx={{ backgroundColor: "white" }} fullWidth>
             <InputLabel shrink={false}>
               {showLabel ? "Select Option" : ""}
@@ -318,8 +418,8 @@ const AddActivity = () => {
                 },
               }}
             >
-              <MenuItem value="Yes">Yes</MenuItem>
-              <MenuItem value="No">No</MenuItem>
+              <MenuItem value={true}>Yes</MenuItem>
+              <MenuItem value={false}>No</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -343,10 +443,13 @@ const AddActivity = () => {
                 },
               }}
             >
-              <MenuItem value="MahasiswaBimbingan">
-                Mahasiswa Bimbingan
-              </MenuItem>
-              <MenuItem value="MahasiswaFakultas">Mahasiswa Fakultas</MenuItem>
+              <MenuItem value="GUIDANCE_CLASS">Mahasiswa Bimbingan</MenuItem>
+              {getRole() === "dekan" && (
+                <MenuItem value="FACULTY">Mahasiswa Fakultas</MenuItem>
+              )}
+              {getRole() === "kaprodi" && (
+                <MenuItem value="MAJOR">Mahasiswa Prodi</MenuItem>
+              )}
             </Select>
           </FormControl>
         </Grid>
@@ -357,11 +460,16 @@ const AddActivity = () => {
             sx={{ backgroundColor: "white" }}
             multiple
             value={selectedStudent}
+            key={studentOptions[1] ? "All students" : studentOptions.id}
             onChange={handleSelectStudent}
             id="checkboxes-tags-demo"
             options={studentOptions}
             disableCloseOnSelect
-            getOptionLabel={(option) => option}
+            getOptionLabel={(option) =>
+              option === "All students"
+                ? option
+                : `${option.lastName}, ${option.firstName}`
+            }
             renderOption={(props, option, { selected }) => (
               <li {...props}>
                 <Checkbox
@@ -370,7 +478,9 @@ const AddActivity = () => {
                   style={{ marginRight: 8 }}
                   checked={selected}
                 />
-                {option}
+                {option === "All students"
+                  ? option
+                  : `${option.lastName}, ${option.firstName}`}
               </li>
             )}
             renderInput={(params) => {
@@ -434,7 +544,7 @@ const AddActivity = () => {
               fontWeight: 600,
             }}
           >
-            Send Certificate?
+            Send Activity?
           </Typography>
           <Typography
             id="modal-modal-description"
@@ -463,10 +573,7 @@ const AddActivity = () => {
             </Grid>
             <Grid item>
               <Button
-                onClick={() => {
-                  // handleSubmit();
-                  handleSubmitFirstModal();
-                }}
+                onClick={() => handleSubmit()}
                 sx={{
                   backgroundColor: "#006AF5",
                   borderRadius: "5px",
