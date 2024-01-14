@@ -6,10 +6,6 @@ import {
   Grid,
   Typography,
   Stack,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Paper,
   MenuItem,
   FormControl,
   Select,
@@ -18,20 +14,51 @@ import {
   styled,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
-import {
-  DesktopDatePicker,
-  DesktopDateTimePicker,
-  LocalizationProvider,
-} from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import Backdrop from "@mui/material/Backdrop";
-import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import LoadingButton from "@mui/lab/LoadingButton";
+import * as Yup from "yup";
+
+const formSchema = Yup.object().shape({
+  guardianPhoneNo: Yup.string()
+    .matches(/^\d+$/, "Parent / Guardian phone number must only contain digits")
+    .min(10, "Parent / Guardian phone number must be at least 10 digits")
+    .max(13, "Parent / Guardian phone number cannot be more than 13 digits")
+    .required("Parent / Guardian Phone Number is Required"),
+  guardianEmail: Yup.string()
+    .email()
+    .required("Parent / Guardian Email is Required"),
+  guardianStatus: Yup.string().required(
+    "Parent / Guardian Mariage Status is Required"
+  ),
+  guardianEducation: Yup.string().required(
+    "Parent / Guardian Level of Education is Required"
+  ),
+  currentResidenceStatus: Yup.string().required(),
+  currentAddress: Yup.string()
+    .min(3, "Current Address must be at least 3 digits")
+    .max(100, "Current Address cannot be more than 100 digits")
+    .required("Current Address is Required"),
+  highSchoolGrad: Yup.string()
+    .min(3, "Prev High School must be at least 3 digits")
+    .max(100, "Prev High School cannot be more than 100 digits")
+    .required("Prev High School is Required"),
+  AreaOfConcentration: Yup.string().required(
+    "Area of Concentration is Required"
+  ),
+  phoneNo: Yup.string()
+    .matches(/^\d+$/, "Student phone number must only contain digits")
+    .min(10, "Student Phone No must be at least 10 digits")
+    .max(13, "Studnet Phone No cannot be more than 13 digits")
+    .required("Student Phone Number is Required"),
+  dateOfBirth: Yup.string().required("Date of Birth is Required"),
+  bloodType: Yup.string().required("Blood Type is Required"),
+  base64Image: Yup.string().nullable(false).required("Image is Required"),
+});
 
 const FormAfterLogin = ({
   openModal,
@@ -109,61 +136,64 @@ const FormAfterLogin = ({
   };
 
   const submitBiodata = async () => {
-    if (
-      (bloodType,
-      dateOfBirth,
-      phoneNo,
-      AreaOfConcentration,
-      highSchoolGrad,
-      currentAddress,
-      currentResidenceStatus,
-      guardianEducation,
-      guardianStatus,
-      guardianEmail,
-      guardianPhoneNo,
-      base64Image)
-    ) {
-      try {
-        setLoading(true);
-        const buffer = base64Image.split(",")[1];
-        const nama_file = fileName;
+    try {
+      console.log("ini phone no: ", phoneNo);
+      await formSchema.validate(
+        {
+          base64Image,
+          bloodType,
+          dateOfBirth,
+          phoneNo,
+          AreaOfConcentration,
+          highSchoolGrad,
+          currentAddress,
+          currentResidenceStatus,
+          guardianEducation,
+          guardianStatus,
+          guardianEmail,
+          guardianPhoneNo,
+        },
+        {
+          abortEarly: true,
+        }
+      );
 
-        console.log("ini token loh: ", profileMahasiswa.token);
-        await axios.patch(
-          `${BASE_URL_API}/student/biodata/${profileMahasiswa.nim}`,
-          {
-            bloodType,
-            dateOfBirth,
-            phoneNo,
-            AreaOfConcentration,
-            highSchoolGrad,
-            currentAddress,
-            currentResidenceStatus,
-            guardianEducation,
-            guardianStatus,
-            guardianEmail,
-            guardianPhoneNo,
-            studentImage: {
-              filename: nama_file,
-              buffer,
-            },
+      setLoading(true);
+      const buffer = base64Image.split(",")[1];
+      const nama_file = fileName;
+
+      await axios.patch(
+        `${BASE_URL_API}/student/biodata/${profileMahasiswa.nim}`,
+        {
+          bloodType,
+          dateOfBirth,
+          phoneNo: phoneNo.trim(),
+          AreaOfConcentration,
+          highSchoolGrad: highSchoolGrad.trim(),
+          currentAddress: currentAddress.trim(),
+          currentResidenceStatus,
+          guardianEducation,
+          guardianStatus,
+          guardianEmail: guardianEmail.trim(),
+          guardianPhoneNo: guardianPhoneNo.trim(),
+          studentImage: {
+            filename: nama_file,
+            buffer,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${profileMahasiswa.token}`,
-            },
-          }
-        );
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${profileMahasiswa.token}`,
+          },
+        }
+      );
 
-        localStorage.setItem("user", JSON.stringify(userLogin));
-        navigate("/");
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        alert(error.message);
-      }
-    } else {
-      alert("Please Input all field required!!");
+      localStorage.setItem("user", JSON.stringify(userLogin));
+      navigate("/");
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      alert(error.message);
     }
   };
 
@@ -337,7 +367,7 @@ const FormAfterLogin = ({
                   <Grid item xs={12} md={6}>
                     <RTypography variant="h5">Date of Birth</RTypography>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DesktopDateTimePicker
+                      <DatePicker
                         sx={{
                           width: "100%",
                           "& .MuiSvgIcon-root": { fontSize: 20 },
@@ -347,7 +377,7 @@ const FormAfterLogin = ({
                         views={["day", "month", "year"]}
                         name="dateOfBirth"
                         onChange={(event) => {
-                          setDateOfBirth(event.$d);
+                          setDateOfBirth(event?.$d);
                         }}
                       />
                     </LocalizationProvider>
@@ -705,13 +735,10 @@ const FormAfterLogin = ({
                   paddingTop: 3,
                 }}
               >
-                <LoadingButton
+                <Button
                   type="submit"
                   size="small"
-                  // onClick={submitBiodata}
                   onClick={handleOpenFirstModal}
-                  loading={loading}
-                  loadingIndicator="Loading…"
                   variant="contained"
                   sx={{
                     backgroundColor: "#006AF5",
@@ -727,7 +754,7 @@ const FormAfterLogin = ({
                   }}
                 >
                   <span style={{ fontSize: "14.5px" }}>SUBMIT</span>
-                </LoadingButton>
+                </Button>
               </Box>
 
               <Modal
@@ -775,21 +802,20 @@ const FormAfterLogin = ({
                       </Button>
                     </Grid>
                     <Grid item>
-                      <Button
+                      <LoadingButton
                         onClick={submitBiodata}
+                        loading={loading}
+                        variant="contained"
+                        loadingIndicator="Loading"
                         sx={{
-                          backgroundColor: "#006AF5",
                           borderRadius: "5px",
                           boxShadow: 4,
-                          color: "white",
+                          overflow: "hidden",
                           whiteSpace: "nowrap",
-                          "&:hover": {
-                            backgroundColor: "#025ED8",
-                          },
                         }}
                       >
                         Submit
-                      </Button>
+                      </LoadingButton>
                     </Grid>
                   </Grid>
                 </div>
