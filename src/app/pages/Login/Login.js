@@ -85,7 +85,12 @@ const Login = () => {
 
     if (user.role === "MAHASISWA") {
       const response = await jwtAuthAxios.get(
-        `student/biodata/check/${user.nim}`
+        `student/biodata/check/${user.nim}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (response.data.data.biodataCheck) {
@@ -96,7 +101,11 @@ const Login = () => {
 
         navigate("/");
       } else {
-        const response = await jwtAuthAxios.get(`student/${user.nim}`);
+        const response = await jwtAuthAxios.get(`student/${user.nim}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const responseCurriculum = await jwtAuthAxios.get(
           `curriculum/${response.data.data.curriculumId}`
         );
