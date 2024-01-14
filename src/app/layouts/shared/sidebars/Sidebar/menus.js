@@ -5,6 +5,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
+import BallotIcon from "@mui/icons-material/Ballot";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import PeopleIcon from "@mui/icons-material/People";
@@ -183,13 +184,19 @@ export const mahasiswaMenus = [
         label: "Grades",
         type: "nav-item",
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/grades",
+        uri: "/bimbingan-akademik/student-grade",
       },
       {
         label: "Certificates",
         type: "nav-item",
         icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
         uri: "/bimbingan-akademik/certificates",
+      },
+      {
+        label: "Current Activities",
+        type: "nav-item",
+        icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/current-activities",
       },
       {
         label: "History",
@@ -305,12 +312,12 @@ export const dekanMenus = [
           {
             label: "Mentored Student",
             type: "nav-item",
-            uri: "/bimbingan-akademik/dekan/student-information-mentored",
+            uri: "/bimbingan-akademik/dekan/student-information/mentored-student",
           },
           {
             label: "Faculty Student",
             type: "nav-item",
-            uri: "/bimbingan-akademik/dekan/student-information-faculty",
+            uri: "/bimbingan-akademik/dekan/student-information/faculty-student",
           },
         ],
       },
@@ -319,6 +326,18 @@ export const dekanMenus = [
         type: "nav-item",
         icon: <GroupIcon sx={{ fontSize: 20 }} />,
         uri: "/bimbingan-akademik/dekan/supervisor-information",
+      },
+      {
+        label: "Add Activity",
+        type: "nav-item",
+        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dekan/add-activity",
+      },
+      {
+        label: "Manage Pre-regis and Grades",
+        type: "nav-item",
+        icon: <BallotIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/dekan/manage",
       },
       {
         label: "Review Activities",
@@ -340,30 +359,19 @@ export const dekanMenus = [
             type: "nav-item",
             uri: "/bimbingan-akademik/dekan/review-activities/consultation",
           },
-          {
-            label: "Review Grades",
-            type: "nav-item",
-            uri: "/bimbingan-akademik/dekan/review-activities/grade",
-          },
         ],
       },
       {
-        label: "Recent History",
+        label: "Current Activities",
         type: "nav-item",
         icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/dekan/recent-history",
+        uri: "/bimbingan-akademik/dekan/current-activities",
       },
       {
-        label: "Activity History",
+        label: "History",
         type: "nav-item",
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/dekan/activity-history",
-      },
-      {
-        label: "Add Activity",
-        type: "nav-item",
-        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/dekan/add-activity",
+        uri: "/bimbingan-akademik/dekan/history",
       },
       {
         label: "Profile",
@@ -560,12 +568,6 @@ export const dosenMenus = [
     type: "section",
     children: [
       {
-        label: "Dashboard",
-        type: "nav-item",
-        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/dosen-pembimbing/dashboard",
-      },
-      {
         label: "Academic Guide",
         type: "nav-item",
         icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
@@ -587,7 +589,7 @@ export const dosenMenus = [
         label: "Student Information",
         type: "nav-item",
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/dosen-pembimbing/student-information",
+        uri: "/bimbingan-akademik/dosen-pembimbing/student-information/mentored-student",
       },
       {
         label: "Review Activities",
@@ -993,6 +995,18 @@ export const kaprodiMenus = [
         uri: "/bimbingan-akademik/kaprodi/supervisor-information",
       },
       {
+        label: "Add Activity",
+        type: "nav-item",
+        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/add-activity",
+      },
+      {
+        label: "Manage Pre-regis and Grades",
+        type: "nav-item",
+        icon: <BallotIcon sx={{ fontSize: 20 }} />,
+        uri: "/bimbingan-akademik/kaprodi/manage",
+      },
+      {
         label: "Review Activities",
         type: "collapsible",
         icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
@@ -1030,12 +1044,6 @@ export const kaprodiMenus = [
         type: "nav-item",
         icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
         uri: "/bimbingan-akademik/kaprodi/history",
-      },
-      {
-        label: "Add Activity",
-        type: "nav-item",
-        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/kaprodi/add-activity",
       },
       {
         label: "Profile",

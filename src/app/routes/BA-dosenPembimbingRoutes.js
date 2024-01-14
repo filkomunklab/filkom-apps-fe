@@ -1,42 +1,35 @@
-import Dashboard from "../pages/BimbinganAkademik/DosenPembimbing/Dashboard";
-import AcademicGuide from "app/pages/BimbinganAkademik/DosenPembimbing/AcademicGuide";
-import VisionMisionGoals from "app/pages/BimbinganAkademik/DosenPembimbing/VisionMisionGoals";
-import Curriculum from "app/pages/BimbinganAkademik/DosenPembimbing/Curriculum/Curriculum";
-import StudentGradeDashboard from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentGradeDashboard";
-import StudentInformation from "../pages/BimbinganAkademik/DosenPembimbing/StudentInformation";
-import StudentProfile from "../pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentProfile";
-import StudentGrade from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentGradeDashboard/StudentGrade";
-import StudentCertificate from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentCertificate";
-import ReviewPreRegistration from "app/pages/BimbinganAkademik/DosenPembimbing/ReviewActivities/ReviewPreRegistration";
-import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/DosenPembimbing/ReviewActivities/ReviewPreRegistration/ReviewPreRegistrationStudent";
-import ReviewCertificate from "app/pages/BimbinganAkademik/DosenPembimbing/ReviewActivities/ReviewCertificate/ReviewCertificate";
-import ReviewCertificateStudent from "app/pages/BimbinganAkademik/DosenPembimbing/ReviewActivities/ReviewCertificate/ReviewCertificateStudent";
-import History from "app/pages/BimbinganAkademik/DosenPembimbing/History";
-import HistoryActivity from "app/pages/BimbinganAkademik/DosenPembimbing/History/HIstoryActivity/HistoryActivity";
-import HistoryActivity1 from "app/pages/BimbinganAkademik/DosenPembimbing/History/HIstoryActivity/HistoryActivity1";
-import HistoryActivity2 from "app/pages/BimbinganAkademik/DosenPembimbing/History/HIstoryActivity/HistoryActivity2";
-import HistoryActivity3 from "app/pages/BimbinganAkademik/DosenPembimbing/History/HIstoryActivity/HistoryActivity3";
-import HistoryPreRegistrationApproved from "app/pages/BimbinganAkademik/DosenPembimbing/History/HistoryPreRegis/PreRegistrationApproved";
-import HistoryPreRegistrationRejected from "app/pages/BimbinganAkademik/DosenPembimbing/History/HistoryPreRegis/PreRegistrationRejected";
-import HistoryCertificateApproved from "app/pages/BimbinganAkademik/DosenPembimbing/History/HistoryCertificate/CertificateApproved";
-import HistoryCertificateRejected from "app/pages/BimbinganAkademik/DosenPembimbing/History/HistoryCertificate/CertificateRejected";
-import HistoryConsultationComplete from "app/pages/BimbinganAkademik/DosenPembimbing/History/HistoryConsultation/ConsultationComplete";
-import CertificateDetail from "app/pages/BimbinganAkademik/DosenPembimbing/StudentInformation/StudentCertificate/CertificateDetail";
-import StudentConsultation from "app/pages/BimbinganAkademik/DosenPembimbing/ReviewActivities/StudentConsultation";
-import ReplyConsultation from "app/pages/BimbinganAkademik/DosenPembimbing/ReviewActivities/StudentConsultation/ReplyConsultation/Consultation";
-import CurrentActivities from "app/pages/BimbinganAkademik/DosenPembimbing/CurrentActivities";
-import ViewActivity from "app/pages/BimbinganAkademik/DosenPembimbing/CurrentActivities/ViewActivity/ViewActivity";
-import ViewConsultation from "app/pages/BimbinganAkademik/DosenPembimbing/CurrentActivities/ViewConsultation/ViewConsultation";
-import AddActivity from "app/pages/BimbinganAkademik/DosenPembimbing/AddActivity";
-import Profile from "app/pages/BimbinganAkademik/DosenPembimbing/Profile";
+import AcademicGuide from "app/pages/BimbinganAkademik/shared/AcademicGuide/AcademicGuide";
+import VisionMisionGoals from "app/pages/BimbinganAkademik/shared/VisionMisionGoals/VisionMissionGoals";
+import Curriculum from "app/pages/BimbinganAkademik/shared/Curriculum/Curriculum";
+import StudentGradeDashboard from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard";
+import StudentInformation from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationMentored";
+import StudentProfile from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentProfile";
+import StudentGrade from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard/StudentGrade";
+import StudentCertificate from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentCertificate";
+import ReviewPreRegistration from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewPreRegistration/ReviewPreRegistration";
+import ReviewPreRegistrationStudent from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewPreRegistration/ReviewPreRegistrationStudent/ReviewPreRegistrationStudent";
+import CertificateDetail from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentCertificate/CertificateDetail";
+import ReviewCertificate from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/ReviewCertificate";
+import ReviewCertificateStudent from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/DetailCertificate/ViewCertificate";
+import History from "app/pages/BimbinganAkademik/shared/History";
+import HistoryActivity from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity";
+import HistoryActivity1 from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity1";
+import HistoryActivity2 from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity2";
+import HistoryActivity3 from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity3";
+import HistoryPreRegistration from "app/pages/BimbinganAkademik/shared/History/HistoryPreRegis/ReviewPreRegistrationStudent";
+import HistoryCertificate from "app/pages/BimbinganAkademik/shared/History/HistoryCertificate/Certificate";
+import HistoryConsultationComplete from "app/pages/BimbinganAkademik/shared/History/HistoryConsultation/ConsultationComplete";
+import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/StudentConsultation";
+import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/ReplyConsultation/Consultation";
+import CurrentActivities from "app/pages/BimbinganAkademik/shared/CurrentActivities";
+import ViewActivity from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewActivity/ViewActivity";
+import ViewConsultation from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewConsultation/ViewConsultation";
+import AddActivity from "app/pages/BimbinganAkademik/shared/AddActivity";
+import Profile from "app/pages/BimbinganAkademik/shared/Profile/Profile";
 
 const { default: Page } = require("@jumbo/shared/Page");
 
 const dosenPembimbingRoutes = [
-  {
-    path: "/bimbingan-akademik/dosen-pembimbing/dashboard",
-    element: <Page component={Dashboard} />,
-  },
   {
     path: "/bimbingan-akademik/dosen-pembimbing/academic-guide",
     element: <Page component={AcademicGuide} />,
@@ -50,29 +43,30 @@ const dosenPembimbingRoutes = [
     element: <Page component={Curriculum} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/student-information",
+    path: "/bimbingan-akademik/dosen-pembimbing/student-information/mentored-student",
     element: <Page component={StudentInformation} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/student-information/:id",
+    path: "/bimbingan-akademik/dosen-pembimbing/student-information/mentored-student/:id",
     element: <Page component={StudentProfile} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/student-information/:id/grade",
+    path: "/bimbingan-akademik/dosen-pembimbing/student-information/mentored-student/:id/grade",
     element: <Page component={StudentGradeDashboard} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/student-information/:id/grade/semester/:number",
+    path: "/bimbingan-akademik/dosen-pembimbing/student-information/mentored-student/:id/grade/:id",
     element: <Page component={StudentGrade} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/student-information/:id/certificate",
+    path: "/bimbingan-akademik/dosen-pembimbing/student-information/mentored-student/:id/certificate",
     element: <Page component={StudentCertificate} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/student-information/:id/certificate/:id",
+    path: "/bimbingan-akademik/dosen-pembimbing/student-information/mentored-student/:id/certificate/:id",
     element: <Page component={CertificateDetail} />,
   },
+
   {
     path: "/bimbingan-akademik/dosen-pembimbing/review-activities/pre-registration",
     element: <Page component={ReviewPreRegistration} />,
@@ -122,23 +116,15 @@ const dosenPembimbingRoutes = [
     element: <Page component={HistoryActivity3} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/history/pre-registration-approved",
-    element: <Page component={HistoryPreRegistrationApproved} />,
+    path: "/bimbingan-akademik/dosen-pembimbing/history/pre-registration/:id",
+    element: <Page component={HistoryPreRegistration} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/history/pre-registration-rejected",
-    element: <Page component={HistoryPreRegistrationRejected} />,
+    path: "/bimbingan-akademik/dosen-pembimbing/history/certificate/:id",
+    element: <Page component={HistoryCertificate} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/history/certificate-approved",
-    element: <Page component={HistoryCertificateApproved} />,
-  },
-  {
-    path: "/bimbingan-akademik/dosen-pembimbing/history/certificate-rejected",
-    element: <Page component={HistoryCertificateRejected} />,
-  },
-  {
-    path: "/bimbingan-akademik/dosen-pembimbing/history/consultation",
+    path: "/bimbingan-akademik/dosen-pembimbing/history/consultation/:id",
     element: <Page component={HistoryConsultationComplete} />,
   },
   {
@@ -146,7 +132,7 @@ const dosenPembimbingRoutes = [
     element: <Page component={ViewActivity} />,
   },
   {
-    path: "/bimbingan-akademik/dosen-pembimbing/current-activities/view-consultation",
+    path: "/bimbingan-akademik/dosen-pembimbing/current-activities/view-consultation/:id",
     element: <Page component={ViewConsultation} />,
   },
   {
