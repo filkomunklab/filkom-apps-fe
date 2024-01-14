@@ -2,16 +2,22 @@ import React, { useEffect, useState } from "react";
 import { Typography, Paper } from "@mui/material";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const GradeSubmitted = () => {
   const [dataPreregis, setDataPreregis] = useState([]);
   const getDataPreregis = async () => {
     try {
       const nim = JSON.parse(localStorage.getItem("user")).nim;
-      const studentData = await axios.get(`${BASE_URL_API}/student/${nim}`);
+      const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       const major = studentData.data.data.major;
-      const result = await axios.get(
-        `${BASE_URL_API}/pre-regist/status/${major}/${nim}`
+      const result = await jwtAuthAxios.get(
+        `/pre-regist/status/${major}/${nim}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
 
       setDataPreregis(result.data.data);

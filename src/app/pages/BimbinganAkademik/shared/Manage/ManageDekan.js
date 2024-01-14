@@ -18,14 +18,11 @@ import {
   Paper,
   Modal,
 } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
-import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
-import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -65,8 +62,13 @@ const Manage = () => {
 
   const getDataGrades = async () => {
     try {
-      // const { major } = JSON.parse(localStorage.getItem("user"));
-      const result = await axios.get(`${BASE_URL_API}/access/list/gradeAccess`);
+      const { major } = JSON.parse(localStorage.getItem("user"));
+      const result = await jwtAuthAxios.get(
+        `/access/list/gradesAccess/${major}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       const filteredData = result.data.data.filter((item) => {
         const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
         return employeeFullName
@@ -81,7 +83,9 @@ const Manage = () => {
   const getDataPreregis = async () => {
     try {
       // const { major } = JSON.parse(localStorage.getItem("user"));
-      const result = await axios.get(`${BASE_URL_API}/pre-regist`);
+      const result = await jwtAuthAxios.get(`/pre-regist`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       const filteredData = result.data.data.filter((item) => {
         const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
         return employeeFullName

@@ -26,6 +26,7 @@ import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const style = {
   position: "absolute",
@@ -86,9 +87,13 @@ const GradeSubmission = () => {
   const getDataGrade = async () => {
     try {
       const nim = JSON.parse(localStorage.getItem("user")).nim;
-      const studentData = await axios.get(`${BASE_URL_API}/student/${nim}`);
+      const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       const major = studentData.data.data.major;
-      const result = await axios.get(`${BASE_URL_API}/access/isOpen/${major}/`);
+      const result = await jwtAuthAxios.get(`/access/isOpen/${major}/`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       if (result.data.data.isOpen === true) {
         const gradeData = result.data.data;
         setDataGrade(gradeData);
@@ -106,9 +111,13 @@ const GradeSubmission = () => {
       const curriculumId = JSON.parse(
         localStorage.getItem("user")
       ).curriculumId;
-      const curriculumResponse = await axios.get(
-        `${BASE_URL_API}/subject/${curriculumId}`
+      const curriculumResponse = await jwtAuthAxios.get(
+        `/subject/${curriculumId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       console.log("isi kurikulumrespon", curriculumResponse);
       setCurriculumData(curriculumResponse.data.data);
     } catch (error) {
@@ -139,10 +148,14 @@ const GradeSubmission = () => {
 
       console.log("Request Body:", requestBody);
 
-      const response = await axios.post(
-        `${BASE_URL_API}/transaction/grades/${nim}`,
-        requestBody
+      const response = await jwtAuthAxios.post(
+        `/transaction/grades/${nim}`,
+        requestBody,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       if (response.data.status === "OK") {
         handleCloseFirstModal();
         handleOpenSecondModal();

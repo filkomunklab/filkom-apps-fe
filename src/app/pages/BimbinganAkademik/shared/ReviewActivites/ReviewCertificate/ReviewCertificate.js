@@ -18,6 +18,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const ReviewCertificate = () => {
   const [filter, setFilter] = useState([]);
@@ -30,9 +31,13 @@ const ReviewCertificate = () => {
   const getDataWaiting = async () => {
     try {
       const { guidanceClassId } = JSON.parse(localStorage.getItem("user"));
-      const result = await axios.get(
-        `${BASE_URL_API}/certificate/waitingList/dosen/${guidanceClassId}`
+      const result = await jwtAuthAxios.get(
+        `/certificate/waitingList/dosen/${guidanceClassId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       const filteredData = result.data.data.filter((item) => {
         const studentFullName = `${item.Student?.lastName}, ${item.Student?.firstName}`;
         return studentFullName
@@ -60,9 +65,13 @@ const ReviewCertificate = () => {
 
   const handleNavigate = async (value) => {
     try {
-      const certificateDetailsResult = await axios.get(
-        `${BASE_URL_API}/certificate/student/${value.id}`
+      const certificateDetailsResult = await jwtAuthAxios.get(
+        `/certificate/student/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       console.log("ini detail certi result:", certificateDetailsResult);
       const { role } = JSON.parse(localStorage.getItem("user"));
       let pathh;
