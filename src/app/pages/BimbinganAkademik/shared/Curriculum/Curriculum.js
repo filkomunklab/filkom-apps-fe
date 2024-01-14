@@ -134,7 +134,7 @@ const Curriculum = () => {
   const handleConfirmDelete = async () => {
     try {
       await jwtAuthAxios.delete(
-        `/curriculum/${curriculum}`
+        `/curriculums/${curriculum}`
         // {
         //   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         // }
