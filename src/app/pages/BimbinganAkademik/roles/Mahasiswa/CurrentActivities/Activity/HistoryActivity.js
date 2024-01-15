@@ -11,7 +11,7 @@ import {
   FormControlLabel,
   FormGroup,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 
@@ -26,7 +26,19 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 const Activity = () => {
   const navigate = useNavigate();
-  const [isPreRegistration, setIsPreRegistration] = useState(true);
+  const location = useLocation();
+  const {
+    // activityMember,
+    // activityType,
+    // createdAt,
+    // description,
+    // dueDate,
+    // isAttendance,
+    // title,
+    activityDetails,
+  } = location.state ? location.state : [];
+  console.log("ini location", location);
+  const [isAttendance, setisAttendance] = useState(true);
   const [isGradeSubmission, setIsGradeSubmission] = useState(false);
 
   const getActivity = async () => {
@@ -61,6 +73,27 @@ const Activity = () => {
     navigate(-1);
   };
 
+  const formatDate = (date) => {
+    const currentDate = new Date();
+    const formattedDate = new Date(date);
+
+    if (formattedDate.toDateString() === currentDate.toDateString()) {
+      return "Today";
+    } else if (
+      formattedDate.toDateString() ===
+      new Date(currentDate - 1 * 24 * 60 * 60 * 1000).toDateString()
+    ) {
+      return "Yesterday";
+    } else {
+      return formattedDate.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+  };
+
   return (
     <div>
       <div role="presentation" onClick={handleClick}>
@@ -87,8 +120,7 @@ const Activity = () => {
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 1 }}>
-                PENGUMPULAN KARTU RENCANA STUDI SEMESTER GANJIL TAHUN 2022/2023
-                GELOMBANG 1
+                {activityDetails?.title}
               </Typography>
             </Paper>
           </Stack>
@@ -101,20 +133,13 @@ const Activity = () => {
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                Diinfokan untuk semua mahasiswa yang akan mendaftar kuliah
-                semester depan semester I 2023/2024 WAJIB untuk mengisi
-                PreRegistration segera. Mohon memperhatikan tahun kurikulum anda
-                agar dapat mengisi pada form yang benar. Perhatikan due-date
-                yang ada. <br />
-                <br />
-                Note: Jika tidak mengisi, maka anda tidak bisa untuk kontrak
-                mata kuliah di semester yang akan datang. Terima Kasih.
+                {activityDetails?.description}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Due Date</Typography>
@@ -122,13 +147,13 @@ const Activity = () => {
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                Senin, 22 September 2023
+                {formatDate(activityDetails?.dueDate)}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Clock (optional)</Typography>
@@ -136,49 +161,29 @@ const Activity = () => {
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                18:00
+                {/* {new Date(activityDetails?.dueDate).getHours()}:
+                {new Date(activityDetails?.dueDate).getMinutes()} */}
+                {new Date(activityDetails?.dueDate).toLocaleString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
 
-        <Grid container paddingTop={4} paddingLeft={2} gap={3}>
-          {/* <Grid item xs={12} md={6} xl={4}> */}
-          {isPreRegistration && (
-            <FormGroup sx={{ paddingLeft: "9px" }}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    defaultChecked
-                    size="small"
-                    color="primary"
-                    disabled
-                  />
-                }
-                label="Add Pre-registration Page"
-                sx={{ whiteSpace: "nowrap", gap: 2 }}
-              />
-            </FormGroup>
-          )}
-          {/* </Grid> */}
-          {/* <Grid item xs={12} md={6} xl={4}> */}
-          {isGradeSubmission && (
-            <FormGroup sx={{ paddingLeft: "9px" }}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    defaultChecked
-                    size="small"
-                    color="primary"
-                    disabled
-                  />
-                }
-                label="Add Grade Submission Page"
-                sx={{ whiteSpace: "nowrap", gap: 2 }}
-              />
-            </FormGroup>
-          )}
-          {/* </Grid> */}
+        <Grid item xs={12} md={4}>
+          <Stack spacing={2}>
+            <Grid sx={{ display: "flex", direction: "row" }}>
+              <Typography>Form Attendance</Typography>
+            </Grid>
+
+            <Paper elevation={0} variant="outlined" fullWidth>
+              <Typography variant="body1" sx={{ p: 2 }}>
+                {activityDetails?.isAttendance === true ? "Yes" : "No"}
+              </Typography>
+            </Paper>
+          </Stack>
         </Grid>
       </Grid>
     </div>

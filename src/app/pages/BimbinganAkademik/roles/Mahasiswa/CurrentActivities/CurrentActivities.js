@@ -98,8 +98,8 @@ const CurrentActivities = () => {
       );
 
       const resultGrade = await axios.get(
-        `${BASE_URL_API}/transaction/student/currentGrades/${nim}`
-        // {  headers,}
+        `${BASE_URL_API}/transaction/student/currentGrades/${nim}`,
+        { headers, signal }
       );
       console.log("result activity", resultActivity);
       const { status: activityStatus, data: activityData } =
@@ -113,7 +113,9 @@ const CurrentActivities = () => {
       const { status: gradeStatus, data: gradeData } = resultGrade.data;
 
       if (activityStatus === "OK") {
-        setDataActivity(activityData);
+        setDataActivity(
+          activityData.filter((item) => item.type === "activity")
+        );
       }
 
       if (consultationStatus === "OK") {
@@ -182,7 +184,7 @@ const CurrentActivities = () => {
   });
 
   dataActivity.forEach((value) => {
-    const date = new Date().toLocaleDateString("en-US", {
+    const date = new Date(value.createdAt).toLocaleDateString("en-US", {
       weekday: "long",
       year: "numeric",
       month: "short",
@@ -254,6 +256,36 @@ const CurrentActivities = () => {
         month: "short",
         day: "numeric",
       });
+    }
+  };
+
+  const handleNavigateActivity = async (value) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL_API}/activity/detail/${value}`,
+        { signal }
+      );
+      const { status, data } = response.data;
+      console.log("response navigate activity", response);
+      const path = "/bimbingan-akademik/current-activities/activity";
+
+      if (status === "OK") {
+        navigate("/bimbingan-akademik/current-activities/activity", {
+          state: {
+            activityDetails: {
+              activityMember: data.ActivityMember,
+              activityType: data.activityType,
+              createdAt: data.createdAt,
+              description: data.description,
+              dueDate: data.dueDate,
+              isAttendance: data.isAttendance,
+              title: data.title,
+            },
+          },
+        });
+      }
+    } catch (error) {
+      console.log("error navigate activity", error);
     }
   };
 
@@ -448,7 +480,7 @@ const CurrentActivities = () => {
               </Typography>
             </Box>
           ) : (
-            Object.entries(groupedDataActivity).map(([date, dataPreregis]) => (
+            Object.entries(groupedDataActivity).map(([date, dataActivity]) => (
               <div key={date}>
                 <Box
                   sx={{
@@ -488,7 +520,7 @@ const CurrentActivities = () => {
                       <ListItem
                         sx={{ padding: "10px 50px" }}
                         onClick={() => {
-                          handleNavigatePreregis(value);
+                          handleNavigateActivity(value.id);
                           // console.log("ini isi dari value preregis: ", value);
                         }}
                       >
