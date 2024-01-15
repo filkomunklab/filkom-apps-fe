@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Stack,
@@ -6,8 +6,18 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
   Paper,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  Checkbox,
+  TableCell,
+  TableBody,
+  Chip,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -19,6 +29,41 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 const ViewActivity = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log("loca", location);
+  const { activityId } = location?.state || "-";
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const [activityDetail, setActivityDetail] = useState("");
+
+  const getActivityDetail = async () => {
+    try {
+      const headers = {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer token_apa`,
+      };
+
+      const response = await axios.get(
+        `${BASE_URL_API}/activity/detail/${activityId}`,
+        { signal }
+      );
+      console.log("res activity detail", response);
+
+      const { status, data } = response.data;
+      if (status === "OK") {
+        setActivityDetail(data);
+      } else {
+        //tambah handler jika respon lain, kalau tidak perlu hapus saja
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getActivityDetail();
+    return () => controller.abort();
+  }, []);
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -29,7 +74,7 @@ const ViewActivity = () => {
     <div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink>Back</StyledLink>
+          <StyledLink>History</StyledLink>
           <Typography color="text.primary">Activity</Typography>
         </Breadcrumbs>
       </div>
@@ -47,8 +92,7 @@ const ViewActivity = () => {
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 1 }}>
-                Pengumpulan Krtu Rencana Studi Semester Ganjil Tahun Ajaran
-                2022/2023 Gelombang 1
+                {activityDetail?.title}
               </Typography>
             </Paper>
           </Stack>
@@ -61,14 +105,7 @@ const ViewActivity = () => {
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                Diinfokan untuk semua mahasiswa yang akan mendaftar kuliah
-                semester depan semester I 2023/2024 WAJIB untuk mengisi
-                PreRegistration segera. Mohon memperhatikan tahun kurikulum anda
-                agar dapat mengisi pada form yang benar. Perhatikan due-date
-                yang ada. <br />
-                <br />
-                Note: Jika tidak mengisi, maka anda tidak bisa untuk kontrak
-                mata kuliah di semester yang akan datang. Terima Kasih.
+                {activityDetail?.description}
               </Typography>
             </Paper>
           </Stack>
@@ -77,12 +114,17 @@ const ViewActivity = () => {
         <Grid item xs={12} md={4}>
           <Stack spacing={2}>
             <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
-              <Typography>Due Date</Typography>
+              <Typography>Date</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                Senin, 22 September 2023
+                {new Date(activityDetail?.dueDate).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
               </Typography>
             </Paper>
           </Stack>
@@ -96,7 +138,10 @@ const ViewActivity = () => {
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                18:00
+                {new Date(activityDetail.dueDate).toLocaleString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </Typography>
             </Paper>
           </Stack>
@@ -110,39 +155,77 @@ const ViewActivity = () => {
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                No
+                {activityDetail?.isAttendance === true ? "Yes" : "No"}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
 
-        <Grid item xs={12} md={6}>
-          <Stack spacing={2}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
-              <Typography>For</Typography>
-            </Grid>
-
-            <Paper elevation={0} variant="outlined" fullWidth>
-              <Typography variant="body1" sx={{ p: 2 }}>
-                Mahasiswa Fakultas
-              </Typography>
-            </Paper>
-          </Stack>
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <Stack spacing={2}>
-            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
-              <Typography>Student</Typography>
-            </Grid>
-
-            <Paper elevation={0} variant="outlined" fullWidth>
-              <Typography variant="body1" sx={{ p: 2 }}>
-                All Student
-              </Typography>
-            </Paper>
-          </Stack>
-        </Grid>
+        {activityDetail?.isAttendance === true && (
+          <Grid container paddingLeft={2}>
+            <Typography
+              sx={{ fontSize: "24px", mt: 2, mb: 2, fontWeight: 400 }}
+            >
+              Attendance
+            </Typography>
+            <TableContainer
+              sx={{
+                maxHeight: 640,
+              }}
+              component={Paper}
+            >
+              <Table stickyHeader>
+                <TableHead
+                  size="small"
+                  sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}
+                >
+                  <TableRow size="small">
+                    <TableCell>Number</TableCell>
+                    <TableCell>Student Name</TableCell>
+                    <TableCell>NIM</TableCell>
+                    <TableCell>Prodi</TableCell>
+                    <TableCell>Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {activityDetail.ActivityMember.map((student, index) => (
+                    <TableRow key={student.studentNim}>
+                      <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
+                      <TableCell sx={{ width: "190px" }}>
+                        {student.studentNim}
+                      </TableCell>
+                      <TableCell sx={{ width: "80px" }}>
+                        {student.studentNim}
+                      </TableCell>
+                      <TableCell sx={{ width: "80px" }}>
+                        {student.studentNim}
+                      </TableCell>
+                      <TableCell sx={{ width: "80px" }}>
+                        <Chip
+                          label={
+                            student.presence === true
+                              ? "Present"
+                              : student.presence === false
+                              ? "Absent"
+                              : "null"
+                          }
+                          variant="filled"
+                          color={
+                            student.presence === true
+                              ? "success"
+                              : student.presence === false
+                              ? "error"
+                              : "default"
+                          }
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+        )}
       </Grid>
     </div>
   );

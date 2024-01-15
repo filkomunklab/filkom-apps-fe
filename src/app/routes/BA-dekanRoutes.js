@@ -31,7 +31,7 @@ import ReviewCertificateStudent from "app/pages/BimbinganAkademik/shared/ReviewA
 import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/StudentConsultation";
 import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/ReplyConsultation/Consultation";
 import History from "app/pages/BimbinganAkademik/shared/History";
-// import HistoryActivity from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/HistoryActivity";
+import HistoryActivity from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity";
 // import ListCourses from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses";
 // import ListStudent from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses/ListStudent";
 // import StudentPreRegis from "app/pages/BimbinganAkademik/roles/Dekan/History/HistoryActivity/ListCourses/ListStudent/StudentPreRegis";
@@ -295,10 +295,10 @@ const dekanRoutes = [
     path: "/bimbingan-akademik/dekan/history",
     element: <Page component={History} />,
   },
-  // {
-  //   path: "/bimbingan-akademik/dekan/history/activity",
-  //   element: <Page component={HistoryActivity} />,
-  // },
+  {
+    path: "/bimbingan-akademik/dekan/history/activity",
+    element: <Page component={HistoryActivity} />,
+  },
   // {
   //   path: "/bimbingan-akademik/dekan/history/activity/list-courses/",
   //   element: <Page component={ListCourses} />,
