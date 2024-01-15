@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -77,9 +78,11 @@ const History = () => {
         // {  headers,}
       );
 
-      const resultCertificate = await axios.get(
-        `${BASE_URL_API}/certificate/history/student/${nim}`
-        // {  headers,}
+      const resultCertificate = await jwtAuthAxios.get(
+        `/certificate/history/student/${nim}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
 
       const resultPreregis = await axios.get(
@@ -87,9 +90,11 @@ const History = () => {
         // {  headers,}
       );
 
-      const resultGrade = await axios.get(
-        `${BASE_URL_API}/transaction/student/history/${nim}`
-        // {  headers,}
+      const resultGrade = await jwtAuthAxios.get(
+        `/transaction/student/history/${nim}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
 
       const { status: consultationStatus, data: consultationData } =
@@ -182,18 +187,18 @@ const History = () => {
   //   console.error("dataCertificate is not an array");
   // }
 
-    dataCertificate.forEach((value) => {
-      const date = new Date(value.approvalDate).toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-      if (!groupedDataCertificate[date]) {
-        groupedDataCertificate[date] = [];
-      }
-      groupedDataCertificate[date].push(value);
+  dataCertificate.forEach((value) => {
+    const date = new Date(value.approvalDate).toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
+    if (!groupedDataCertificate[date]) {
+      groupedDataCertificate[date] = [];
+    }
+    groupedDataCertificate[date].push(value);
+  });
 
   dataPreregis.forEach((value) => {
     const date = new Date(value.submitDate).toLocaleDateString("en-US", {
@@ -272,9 +277,13 @@ const History = () => {
 
   const handleNavigateCertificate = async (value) => {
     try {
-      const certificateDetailsResult = await axios.get(
-        `${BASE_URL_API}/certificate/student/${value.id}`
+      const certificateDetailsResult = await jwtAuthAxios.get(
+        `/certificate/student/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       let pathh = "/bimbingan-akademik/history/certificate/";
 
       const {
@@ -350,9 +359,13 @@ const History = () => {
 
   const handleNavigateGrade = async (value) => {
     try {
-      const gradeDetailsResult = await axios.get(
-        `${BASE_URL_API}/transaction/submissionDetail/${value.id}`
+      const gradeDetailsResult = await jwtAuthAxios.get(
+        `/transaction/submissionDetail/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       const detail = gradeDetailsResult.data.data;
       let path = "/bimbingan-akademik/history/grade/";
       console.log("isi detail", detail);

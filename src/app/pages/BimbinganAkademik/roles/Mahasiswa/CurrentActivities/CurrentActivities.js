@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -128,7 +129,10 @@ const CurrentActivities = () => {
       }
 
       if (certificateStatus === "OK") {
-        console.log("ini isi response.data dalam status ok", certificateData);
+        console.log(
+          "ini isi response.data dalam status certificate woyyyyyy",
+          certificateData
+        );
         setDataCertificate(certificateData);
       } else {
         console.log(resultCertificate);
@@ -319,9 +323,13 @@ const CurrentActivities = () => {
 
   const handleNavigateCertificate = async (value) => {
     try {
-      const certificateDetailsResult = await axios.get(
-        `${BASE_URL_API}/certificate/student/${value.id}`
+      const certificateDetailsResult = await jwtAuthAxios.get(
+        `/certificate/student/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       let pathh = "/bimbingan-akademik/current-activities/certificate/";
 
       const {
@@ -391,9 +399,13 @@ const CurrentActivities = () => {
 
   const handleNavigateGrade = async (value) => {
     try {
-      const gradeDetailsResult = await axios.get(
-        `${BASE_URL_API}/transaction/submissionDetail/${value.id}`
+      const gradeDetailsResult = await jwtAuthAxios.get(
+        `/transaction/submissionDetail/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       const detail = gradeDetailsResult.data.data;
       let path = "/bimbingan-akademik/current-activities/grade/";
       console.log("isi detail", detail);

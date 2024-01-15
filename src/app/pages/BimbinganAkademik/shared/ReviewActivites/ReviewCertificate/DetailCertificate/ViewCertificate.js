@@ -17,6 +17,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 const style = {
   position: "absolute",
   top: "50%",
@@ -53,10 +54,10 @@ const CertificateWaiting = () => {
         approval_status: isApprove ? "APPROVED" : "REJECTED",
         comments: commentText || null,
       };
-      await axios.put(
-        `${BASE_URL_API}/certificate/approval/status/${id}`,
-        bodyData
-      );
+      await jwtAuthAxios.put(`/certificate/approval/status/${id}`, bodyData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+
       setLoading(false);
       const { role } = JSON.parse(localStorage.getItem("user"));
       let path = "";

@@ -25,6 +25,7 @@ import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -48,9 +49,10 @@ const StudentCertificate = () => {
 
   const getDataWaiting = async () => {
     try {
-      const result = await axios.get(
-        `${BASE_URL_API}/certificate/history/student/${studentNim}`
-      );
+      const result = await jwtAuthAxios.get(`/certificate/all/${studentNim}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+
       console.log("ini isi result data di certi", result);
 
       if (result.data && result.data.data) {
@@ -67,9 +69,13 @@ const StudentCertificate = () => {
   }, []);
   const handleNavigate = async (value, studentNim) => {
     try {
-      const certificateDetailsResult = await axios.get(
-        `${BASE_URL_API}/certificate/student/${value.id}`
+      const certificateDetailsResult = await jwtAuthAxios.get(
+        `/certificate/student/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       console.log("ini detail certi result:", certificateDetailsResult);
 
       const {
@@ -184,8 +190,9 @@ const StudentCertificate = () => {
                     <TableCell>Submission Date</TableCell>
                     <TableCell>Student Name</TableCell>
                     <TableCell>Title</TableCell>
-                    {/* <TableCell>Category</TableCell>
-                    <TableCell>Status </TableCell> */}
+                    <TableCell>Category</TableCell>
+                    <TableCell>Descriptions</TableCell>
+                    <TableCell>Status</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -234,11 +241,12 @@ const StudentCertificate = () => {
                         >
                           {value.title}
                         </TableCell>
-                        {/* <TableCell>
+                        <TableCell>
                           {value.category &&
                             value.category.charAt(0).toUpperCase() +
                               value.category.slice(1)}
                         </TableCell>
+                        <TableCell>{value.description}</TableCell>
                         <TableCell
                           sx={{
                             color:
@@ -256,7 +264,7 @@ const StudentCertificate = () => {
                           {value.approval_status &&
                             value.approval_status.charAt(0) +
                               value.approval_status.slice(1).toLowerCase()}
-                        </TableCell> */}
+                        </TableCell>
                       </TableRow>
                     ))
                   ) : (

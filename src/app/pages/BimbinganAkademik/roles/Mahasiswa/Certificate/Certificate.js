@@ -18,6 +18,7 @@ import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const requiredStyle = {
   color: "red",
@@ -149,7 +150,10 @@ const Certificate = () => {
   // });
   const handleSubmitFirstModal = async () => {
     const nim = JSON.parse(localStorage.getItem("user")).nim;
-    const response = await axios.get(`${BASE_URL_API}/student/${nim}`);
+    const response = await jwtAuthAxios.get(`/student/${nim}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+
     const employeeNik = response.data.data.employeeNik;
 
     handleCloseFirstModal();
@@ -166,10 +170,9 @@ const Certificate = () => {
       employeeNik,
     };
     try {
-      const result = await axios.post(
-        `${BASE_URL_API}/certificate/${nim}`,
-        data
-      );
+      const result = await jwtAuthAxios.post(`/certificate/${nim}`, data, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
 
       if (result.data.status === "OK") {
         setTitle("");

@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -109,7 +110,9 @@ const History = (props) => {
       );
 
       const resultGrade = await axios.get(
-        `${BASE_URL_API}/transaction/history/kaprodi/${major}`
+ 
+        `${BASE_URL_API}/transaction/hisotry/kaprodi/${major}`,
+        { headers } 
       );
 
       const { status: activityStatus, data: activityData } =
@@ -318,9 +321,13 @@ const History = (props) => {
 
   const handleNavigateCertificate = async (value) => {
     try {
-      const certificateDetailsResult = await axios.get(
-        `${BASE_URL_API}/certificate/student/${value.id}`
+      const certificateDetailsResult = await jwtAuthAxios.get(
+        `/certificate/student/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       const { role } = JSON.parse(localStorage.getItem("user"));
       let pathh = "";
       if (role.includes("DEKAN")) {
@@ -413,9 +420,13 @@ const History = (props) => {
 
   const handleNavigateGrade = async (value) => {
     try {
-      const gradeDetailsResult = await axios.get(
-        `${BASE_URL_API}/transaction/submissionDetail/${value.id}`
+      const gradeDetailsResult = await jwtAuthAxios.get(
+        `/transaction/submissionDetail/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       const detail = gradeDetailsResult.data.data;
       let path = "/bimbingan-akademik/kaprodi/history/grade/";
       console.log("isi detail", detail);

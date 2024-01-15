@@ -589,7 +589,7 @@ export const dosenMenus = [
         label: "Student Information",
         type: "nav-item",
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/dosen-pembimbing/student-information",
+        uri: "/bimbingan-akademik/dosen-pembimbing/student-information/mentored-student",
       },
       {
         label: "Review Activities",

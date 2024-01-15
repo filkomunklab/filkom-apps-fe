@@ -34,6 +34,7 @@ import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import CircularProgress from "@mui/material/CircularProgress";
 import { MoreVert } from "@mui/icons-material";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const styleModal = {
   position: "absolute",
@@ -186,8 +187,11 @@ const Manage = () => {
     try {
       const { major } = await getMajor();
 
-      const result = await axios.get(
-        `${BASE_URL_API}/access/list/gradesAccess/${major}`
+      const result = await jwtAuthAxios.get(
+        `/access/list/gradesAccess/${major}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
 
       const filteredData = result.data.data.filter((item) => {
@@ -211,7 +215,9 @@ const Manage = () => {
         return;
       }
 
-      const response = await axios.patch(`${BASE_URL_API}/access/close/${id}`);
+      const response = await jwtAuthAxios.patch(`/access/close/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       console.log("hehe", response);
 
       getDataGrades();
@@ -226,9 +232,9 @@ const Manage = () => {
     try {
       const { major } = await getMajor();
 
-      const result = await axios.get(
-        `${BASE_URL_API}/pre-regist?major=${major}`
-      );
+      const result = await jwtAuthAxios.get(`/pre-regist?major=${major}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
 
       const filteredData = result.data.data.filter((item) => {
         const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
@@ -456,9 +462,16 @@ const Manage = () => {
                       values.dueDate = values.dueDate;
                       values.employeeNik = nik;
                       try {
-                        const response = await axios.post(
-                          `${BASE_URL_API}/pre-regist/create`,
-                          values
+                        const response = await jwtAuthAxios.post(
+                          `/pre-regist/create`,
+                          values,
+                          {
+                            headers: {
+                              Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                              )}`,
+                            },
+                          }
                         );
                         console.log(
                           "ini response.data di preregis: ",
@@ -839,10 +852,18 @@ const Manage = () => {
                       values.due_date = values.due_date;
                       values.employeeNik = nik;
                       try {
-                        const result = await axios.post(
-                          `${BASE_URL_API}/access/open/grades`,
-                          values
+                        const result = await jwtAuthAxios.post(
+                          `/access/open/grades`,
+                          values,
+                          {
+                            headers: {
+                              Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                              )}`,
+                            },
+                          }
                         );
+
                         setLoading(false);
 
                         resetForm();
@@ -1152,7 +1173,6 @@ const Manage = () => {
             component="h2"
             sx={{
               fontWeight: 600,
-              color: "#006AF5",
             }}
           >
             Success creating submission form!

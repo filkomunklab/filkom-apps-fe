@@ -130,7 +130,7 @@ const SupervisorInformation = () => {
         </Typography>
       </Div>
       <Grid container spacing={2}>
-        <Grid item md={5.5} xl={6.5}>
+        <Grid item xs={12} sm={9} md={10} xl={10}>
           <Typography
             variant="h2"
             sx={{
@@ -166,7 +166,7 @@ const SupervisorInformation = () => {
           />
         </Grid> */}
         {role.includes("KAPRODI") && (
-          <Grid item xs={12} sm={4} md={2}>
+          <Grid item xs={2} sm={2} md={2} xl={2}>
             <Button
               sx={{
                 backgroundColor: "#006AF5",
@@ -272,6 +272,7 @@ const TableItem = ({ item, index, handleDelete }) => {
       : "undefined";
     return filter;
   };
+  console.log("ini get role", getRole);
   const handleButtonNavigate = (_, name) => {
     switch (name) {
       case "profile":
