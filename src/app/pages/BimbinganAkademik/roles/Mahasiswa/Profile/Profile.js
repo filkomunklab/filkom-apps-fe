@@ -11,6 +11,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const StudentProfile = () => {
   const [advisorProfileData, setAdvisorProfileData] = useState([]);
@@ -23,10 +24,17 @@ const StudentProfile = () => {
   const getProfile = async () => {
     try {
       const { nim } = JSON.parse(localStorage.getItem("user"));
-      const resultStudent = await axios.get(`${BASE_URL_API}/student/${nim}`);
-      const result = await axios.get(
-        `${BASE_URL_API}/employee/profile/${resultStudent.data.data.employeeNik}`
+      const resultStudent = await jwtAuthAxios.get(`/student/${nim}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+
+      const result = await jwtAuthAxios.get(
+        `/employee/profile/${resultStudent.data.data.employeeNik}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       console.log(result);
       // console.log(resultStudent);
       setStudentProfileData(resultStudent.data.data);

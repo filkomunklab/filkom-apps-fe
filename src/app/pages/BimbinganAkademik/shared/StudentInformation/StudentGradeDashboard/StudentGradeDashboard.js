@@ -12,6 +12,7 @@ import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -54,9 +55,13 @@ const StudentGradeDashboard = () => {
 
   const getDataGrade = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/transaction/semesterList/${studentNim}`
+      const response = await jwtAuthAxios.get(
+        `/transaction/semesterList/${studentNim}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       console.log("ini respnse", response);
       const sortedData = response.data.data.sort((a, b) =>
         a.semester.localeCompare(b.semester, undefined, { numeric: true })
@@ -78,9 +83,13 @@ const StudentGradeDashboard = () => {
 
   const handleNavigateGrade = async (value, studentNim) => {
     try {
-      const gradeDetailsResult = await axios.get(
-        `${BASE_URL_API}/grades/detailGrades/${value.id}`
+      const gradeDetailsResult = await jwtAuthAxios.get(
+        `/grades/detailGrades/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       const detail = gradeDetailsResult.data.data;
       console.log("isi detail", detail);
 

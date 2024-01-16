@@ -26,6 +26,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const yearList = [
   {
@@ -95,7 +96,13 @@ const StudentInformationFaculty = () => {
 
   const getDataStudent = async () => {
     try {
-      const result = await axios.get(`${BASE_URL_API}/Student`);
+      const result = await jwtAuthAxios.get(
+        `/Student`
+        // {
+        //   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        // }
+      );
+
       const { status, data } = result.data;
 
       if (status === "OK") {

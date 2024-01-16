@@ -5,6 +5,7 @@ import { BASE_URL_API } from "@jumbo/config/env";
 import GradeSubmission from "./GradeSubmission";
 import GradeSubmissionClosed from "./GradeSubmissionClosed";
 import GradeSubmitted from "./GradeSubmitted";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const Grade = () => {
   const [dataGrade, setDataGrade] = useState(null);
@@ -13,11 +14,17 @@ const Grade = () => {
   const getDataGrade = async () => {
     try {
       const nim = JSON.parse(localStorage.getItem("user")).nim;
-      const studentData = await axios.get(`${BASE_URL_API}/student/${nim}`);
+      const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       const major = studentData.data.data.major;
-      const result = await axios.get(
-        `${BASE_URL_API}/access/list/gradesAccess/${major}/`
+      const result = await jwtAuthAxios.get(
+        `/access/list/gradesAccess/${major}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       const gradeData = result.data.data;
       // const result = await axios.get(`${BASE_URL_API}/access/isOpen/${major}/`);
       // const gradeData = result.data.data.isOpen;

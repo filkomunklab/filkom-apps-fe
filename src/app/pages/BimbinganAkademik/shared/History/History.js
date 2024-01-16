@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -109,7 +110,9 @@ const History = (props) => {
       );
 
       const resultGrade = await axios.get(
-        `${BASE_URL_API}/transaction/hisotry/kaprodi/${major}`
+ 
+        `${BASE_URL_API}/transaction/hisotry/kaprodi/${major}`,
+        { headers } 
       );
 
       const { status: activityStatus, data: activityData } =
@@ -168,10 +171,24 @@ const History = (props) => {
   }, []);
   console.log("ini data certi", dataCertificate);
 
+  const groupedDataActivity = {};
   const groupedDataConsultation = {};
   const groupedDataCertificate = {};
   const groupedDataPreregis = {};
   const groupedDataGrade = {};
+
+  dataActivity.forEach((value) => {
+    const dateActivity = new Date(value.dueDate).toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    if (!groupedDataActivity[dateActivity]) {
+      groupedDataActivity[dateActivity] = [];
+    }
+    groupedDataActivity[dateActivity].push(value);
+  });
 
   dataConsultation.forEach((value) => {
     const dateConsultation = new Date(value.createdAt).toLocaleDateString(
@@ -304,9 +321,13 @@ const History = (props) => {
 
   const handleNavigateCertificate = async (value) => {
     try {
-      const certificateDetailsResult = await axios.get(
-        `${BASE_URL_API}/certificate/student/${value.id}`
+      const certificateDetailsResult = await jwtAuthAxios.get(
+        `/certificate/student/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       const { role } = JSON.parse(localStorage.getItem("user"));
       let pathh = "";
       if (role.includes("DEKAN")) {
@@ -399,9 +420,13 @@ const History = (props) => {
 
   const handleNavigateGrade = async (value) => {
     try {
-      const gradeDetailsResult = await axios.get(
-        `${BASE_URL_API}/transaction/submissionDetail/${value.id}`
+      const gradeDetailsResult = await jwtAuthAxios.get(
+        `/transaction/submissionDetail/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       const detail = gradeDetailsResult.data.data;
       let path = "/bimbingan-akademik/kaprodi/history/grade/";
       console.log("isi detail", detail);
@@ -519,7 +544,8 @@ const History = (props) => {
                     button
                     tabIndex={index}
                     component={Link}
-                    to="activity2"
+                    to="activity"
+                    state={{ activityId: item.id }}
                     sx={{ paddingLeft: "50px", paddingRight: "50px" }}
                   >
                     <ListItemText

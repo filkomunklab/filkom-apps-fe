@@ -31,6 +31,7 @@ import * as XLSX from "xlsx";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { EXCEL_FILE_BASE64 } from "./constants";
 import FileSaver from "file-saver";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const styleCurriculum = {
   position: "absolute",
@@ -132,7 +133,13 @@ const Curriculum = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await axios.delete(`${BASE_URL_API}/curriculums/${curriculum}`);
+      await jwtAuthAxios.delete(
+        `/curriculums/${curriculum}`
+        // {
+        //   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        // }
+      );
+
       handleCloseDeleteConfirmationModal();
       getCurriculum();
       setCurriculum("selectCurriculum");
@@ -169,8 +176,15 @@ const Curriculum = () => {
       };
 
       try {
-        const result = await axios.post(`${BASE_URL_API}/curriculum`, data);
-        if (result.data.status === "OK") {
+        const response = await jwtAuthAxios.post(
+          `/curriculum`,
+          data
+          // {
+          //   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          // }
+        );
+
+        if (response.data.status === "OK") {
           console.log("Successful response:", result.data);
           setSelectedProdi("");
           setSelectedYear("");
@@ -223,7 +237,13 @@ const Curriculum = () => {
 
   const getSubjectByIdCurriculum = async () => {
     try {
-      const result = await axios.get(`${BASE_URL_API}/subject/${curriculum}`);
+      const result = await jwtAuthAxios.get(
+        `/subject/${curriculum}`
+        //  {
+        //   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        // }
+      );
+
       if (result.data.status === "OK") {
         setListSubject(result.data.data);
       }
@@ -235,7 +255,10 @@ const Curriculum = () => {
 
   const getCurriculum = async () => {
     try {
-      const result = await axios.get(`${BASE_URL_API}/curriculum`);
+      const result = await jwtAuthAxios.get(`/curriculum`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+
       if (result.data.status === "OK") {
         setListCurriculum(result.data.data);
       }

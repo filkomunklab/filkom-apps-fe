@@ -23,6 +23,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import Div from "@jumbo/shared/Div";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const style = {
   position: "absolute",
@@ -85,10 +86,9 @@ const GradeStudent = () => {
         status: isApprove ? "APPROVED" : "REJECTED",
         comments: commentText || null,
       };
-      await axios.put(
-        `${BASE_URL_API}/transaction/grades/approval/${id}`,
-        bodyData
-      );
+      await jwtAuthAxios.put(`/transaction/grades/approval/${id}`, bodyData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       setLoading(false);
       let path = "/bimbingan-akademik/kaprodi/review-activities/grade";
       navigate(path);

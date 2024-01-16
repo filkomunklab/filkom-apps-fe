@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -40,9 +41,13 @@ const Grades = () => {
   const getDataGrade = async () => {
     try {
       const nim = JSON.parse(localStorage.getItem("user")).nim;
-      const response = await axios.get(
-        `${BASE_URL_API}/transaction/semesterList/${nim}`
+      const response = await jwtAuthAxios.get(
+        `/transaction/semesterList/${nim}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
+
       console.log("ini respnse", response);
       const sortedData = response.data.data.sort((a, b) =>
         a.semester.localeCompare(b.semester, undefined, { numeric: true })
@@ -64,8 +69,11 @@ const Grades = () => {
 
   const handleNavigateGrade = async (value) => {
     try {
-      const gradeDetailsResult = await axios.get(
-        `${BASE_URL_API}/grades/detailGrades/${value.id}`
+      const gradeDetailsResult = await jwtAuthAxios.get(
+        `/grades/detailGrades/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
       const detail = gradeDetailsResult.data.data;
       let path = `/bimbingan-akademik/student-grade/`;

@@ -18,6 +18,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const ReviewGrade = () => {
   const [filter, setFilter] = useState([]);
@@ -38,7 +39,10 @@ const ReviewGrade = () => {
       });
       const major = response.data.data.major;
       const result = await axios.get(
-        `${BASE_URL_API}/transaction/list/${major}`
+        `${BASE_URL_API}/transaction/list/${major}`,
+        {
+          headers,
+        }
       );
       const filteredData = result.data.data.filter((item) => {
         const studentFullName = `${item.Student?.lastName}, ${item.Student?.firstName}`;
@@ -67,8 +71,11 @@ const ReviewGrade = () => {
 
   const handleNavigate = async (value) => {
     try {
-      const gradeDetailsResult = await axios.get(
-        `${BASE_URL_API}/transaction/submissionDetail/${value.id}`
+      const gradeDetailsResult = await jwtAuthAxios.get(
+        `/transaction/submissionDetail/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
       const detail = gradeDetailsResult.data.data;
       let path = "/bimbingan-akademik/kaprodi/review-activities/grade/";

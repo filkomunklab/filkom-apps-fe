@@ -27,6 +27,7 @@ import Div from "@jumbo/shared/Div";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import Header from "app/layouts/shared/headers/Header";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const COLORS = ["#8884d8", "#82ca9d"];
 
@@ -134,8 +135,11 @@ const Dashboard = () => {
 
   const getCertificateData = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/dashboard/statistc/categoryCertificate`
+      const response = await jwtAuthAxios.get(
+        `/dashboard/statistc/categoryCertificate`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
 
       setCertificateData(response.data.data);
@@ -146,8 +150,11 @@ const Dashboard = () => {
 
   const getDataDistributionStudent = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/dashboard/statistic/majorStudent/arrivalYear`
+      const response = await jwtAuthAxios.get(
+        `/dashboard/statistic/majorStudent/arrivalYear`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
 
       // setDistributionData(response.data.data);
@@ -161,8 +168,11 @@ const Dashboard = () => {
 
   const getMajorStudent = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/dashboard/statistic/majorStudent/`
+      const response = await jwtAuthAxios.get(
+        `/dashboard/statistic/majorStudent/`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
 
       console.log(response.data);
@@ -175,9 +185,9 @@ const Dashboard = () => {
 
   const getFacultyStudent = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/dashboard/statistic/faculty/`
-      );
+      const response = await jwtAuthAxios.get(`/dashboard/statistic/faculty/`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
 
       console.log(response.data);
 
@@ -190,16 +200,26 @@ const Dashboard = () => {
   const getActiveStudentStatus = async () => {
     try {
       if (role.includes("KAPRODI")) {
-        const response = await axios.get(
-          `${BASE_URL_API}/dashboard/statistic/majorStudent/active`
+        const response = await jwtAuthAxios.get(
+          `/dashboard/statistic/majorStudent/active`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
 
         console.log(response.data);
 
         setActiveStudentStatus(response.data.data);
       } else {
-        const response = await axios.get(
-          `${BASE_URL_API}/dashboard/statistic/faculty/active`
+        const response = await jwtAuthAxios.get(
+          `/dashboard/statistic/faculty/active`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
 
         console.log(response.data);
@@ -214,16 +234,26 @@ const Dashboard = () => {
   const getInactiveStudentStatus = async () => {
     try {
       if (role.includes("KAPRODI")) {
-        const response = await axios.get(
-          `${BASE_URL_API}/dashboard/statistic/majorStudent/inActive`
+        const response = await jwtAuthAxios.get(
+          `/dashboard/statistic/majorStudent/inActive`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
 
         console.log(response.data);
 
         setInActiveStudentStatus(response.data.data);
       } else {
-        const response = await axios.get(
-          `${BASE_URL_API}/dashboard/statistic/faculty/inActive`
+        const response = await jwtAuthAxios.get(
+          `/dashboard/statistic/faculty/inActive`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
 
         console.log(response.data);
