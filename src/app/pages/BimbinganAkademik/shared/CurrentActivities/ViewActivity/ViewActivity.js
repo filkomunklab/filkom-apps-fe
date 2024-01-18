@@ -20,7 +20,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 
@@ -71,34 +71,39 @@ const studentsData = Array.from({ length: 29 }, (_, index) => ({
 
 const ViewActivity = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { activityId } = location?.state || "-";
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const [activityDetail, setActivityDetail] = useState("");
   const [selectedAll, setSelectedAll] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [openFirstModal, setOpenFirstModal] = useState(false);
   const [openSecondModal, setOpenSecondModal] = useState(false);
 
-  // const getActivityDetail = async() => {
-  //   try{
-  //     const headers = {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer token_apa`,
-  //     };
+  const getActivityDetail = async () => {
+    try {
+      const headers = {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer token_apa`,
+      };
 
-  //     const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
+      const response = await axios.get(
+        `${BASE_URL_API}/activity/detail/${activityId}`,
+        { signal }
+      );
+      console.log("res activity detail", response);
 
-  //     const {status, message, code, data} = response.data
-  //     if(status === 'OK'){ //isi status atau code tergantung API
-  //     //simpan dalam usestate contoh:
-  //     //setStudentList = data
-  //     //tambahkan handle lain jika perlu
-  //     }else{
-  //     //tambah handler jika respon lain, kalau tidak perlu hapus saja
-  //       console.log(response)
-  //     }
-
-  //   }catch(error){
-  //     console.log(error)
-  //   }
-  // }
+      const { status, data } = response.data;
+      if (status === "OK") {
+        setActivityDetail(data);
+      } else {
+        //tambah handler jika respon lain, kalau tidak perlu hapus saja
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // const getStudentList = async() =>{
   //   try{
@@ -139,26 +144,32 @@ const ViewActivity = () => {
   //   }
   // }
 
-  // const submitActivity = async()=>{
-  //   try{
-  //     const headers = {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer token_apa`,
-  //     };
+  const submitAttendance = async () => {
+    try {
+      const headers = {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer token_apa`,
+      };
 
-  //     const response = await axios.post(`${BASE_URL_API}/bla/bla/bla`,{body: 'data apa'},{headers})
+      const response = await axios.post(
+        `${BASE_URL_API}/activity/take-attendance/${activityId}`,
+        { body: "data apa" },
+        { signal }
+      );
 
-  //   // jika tidak akan melakukan handle terhadap response maka hapus saja "const response =", jadi sisa await dst...
-  //     console.log(response)
-  //   }catch(error){
-  //     console.log(error)
-  //   }
-  // }
+      // jika tidak akan melakukan handle terhadap response maka hapus saja "const response =", jadi sisa await dst...
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSelectAll = () => {
     setSelectedAll(!selectedAll);
     setSelectedStudents(
-      selectedAll ? [] : studentsData.map((student) => student.id)
+      selectedAll
+        ? []
+        : activityDetail.ActivityMember.map((student) => student.studentNim)
     );
   };
 
@@ -180,6 +191,11 @@ const ViewActivity = () => {
     setOpenFirstModal(false);
     setOpenSecondModal(true);
   };
+
+  useEffect(() => {
+    getActivityDetail();
+    return () => controller.abort();
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -213,8 +229,7 @@ const ViewActivity = () => {
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 1 }}>
-                Pengumpulan Kartu Rencana Studi Semester ganjil tahun 2022/2023
-                Gelombang 1
+                {activityDetail?.title}
               </Typography>
             </Paper>
           </Stack>
@@ -227,14 +242,7 @@ const ViewActivity = () => {
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                Diinfokan untuk semua mahasiswa yang akan mendaftar kuliah
-                semester depan semester I 2023/2024 WAJIB untuk mengisi
-                PreRegistration segera. Mohon memperhatikan tahun kurikulum anda
-                agar dapat mengisi pada form yang benar. Perhatikan due-date
-                yang ada. <br />
-                <br />
-                Note: Jika tidak mengisi, maka anda tidak bisa untuk kontrak
-                mata kuliah di semester yang akan datang. Terima Kasih.
+                {activityDetail?.description}
               </Typography>
             </Paper>
           </Stack>
@@ -243,12 +251,17 @@ const ViewActivity = () => {
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <Typography>Due Date</Typography>
+              <Typography>Date</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                Senin, 22 September 2023
+                {new Date(activityDetail?.dueDate).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
               </Typography>
             </Paper>
           </Stack>
@@ -262,7 +275,10 @@ const ViewActivity = () => {
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                18:00
+                {new Date(activityDetail?.dueDate).toLocaleString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </Typography>
             </Paper>
           </Stack>
@@ -396,80 +412,90 @@ const ViewActivity = () => {
         </div>
       </Modal> */}
 
-      <div>
-        <Typography sx={{ fontSize: "24px", mt: 2, mb: 2, fontWeight: 400 }}>
-          Attendance
-        </Typography>
-        <TableContainer
-          sx={{
-            maxHeight: 640,
-          }}
-          component={Paper}
-        >
-          <Table stickyHeader>
-            <TableHead
-              size="small"
-              sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}
-            >
-              <TableRow size="small">
-                <TableCell>
-                  <Checkbox checked={selectedAll} onChange={handleSelectAll} />
-                </TableCell>
-                <TableCell>Number</TableCell>
-                <TableCell>Student Name</TableCell>
-                <TableCell>NIM</TableCell>
-                <TableCell>Prodi</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {studentsData.map((student) => (
-                <TableRow key={student.id}>
-                  <TableCell sx={{ width: "40px" }}>
+      {activityDetail?.isAttendance === true && (
+        <div>
+          <Typography sx={{ fontSize: "24px", mt: 2, mb: 2, fontWeight: 400 }}>
+            Attendance
+          </Typography>
+          <TableContainer
+            sx={{
+              maxHeight: 640,
+            }}
+            component={Paper}
+          >
+            <Table stickyHeader>
+              <TableHead
+                size="small"
+                sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}
+              >
+                <TableRow size="small">
+                  <TableCell>
                     <Checkbox
-                      checked={selectedStudents.includes(student.id)}
-                      onChange={() => handleSelectStudent(student.id)}
+                      checked={selectedAll}
+                      onChange={handleSelectAll}
                     />
                   </TableCell>
-                  <TableCell sx={{ width: "40px" }}>{student.id}</TableCell>
-                  <TableCell sx={{ width: "190px" }}>{student.name}</TableCell>
-                  <TableCell sx={{ width: "80px" }}>{student.nim}</TableCell>
-                  <TableCell sx={{ width: "80px" }}>{student.prodi}</TableCell>
+                  <TableCell>Number</TableCell>
+                  <TableCell>Student Name</TableCell>
+                  <TableCell>NIM</TableCell>
+                  <TableCell>Prodi</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+              </TableHead>
+              <TableBody>
+                {activityDetail.ActivityMember.map((student, index) => (
+                  <TableRow key={student.studentNim}>
+                    <TableCell sx={{ width: "40px" }}>
+                      <Checkbox
+                        checked={selectedStudents.includes(student.studentNim)}
+                        onChange={() => handleSelectStudent(student.studentNim)}
+                      />
+                    </TableCell>
+                    <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
+                    <TableCell sx={{ width: "190px" }}>
+                      {student.studentNim}
+                    </TableCell>
+                    <TableCell sx={{ width: "80px" }}>
+                      {student.studentNim}
+                    </TableCell>
+                    <TableCell sx={{ width: "80px" }}>
+                      {student.studentNim}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Grid
+            sx={{
+              padding: 2,
+              paddingTop: "30px",
+              display: "flex",
+              justifyContent: "flex-end",
+              paddingBottom: "60px",
+            }}
+          >
+            <Button
+              onClick={() => setOpenFirstModal(true)}
+              sx={{
+                backgroundColor: "#006AF5",
+                borderRadius: "24px",
+                color: "white",
+                whiteSpace: "nowrap",
+                minWidth: "132px",
+                fontSize: "12px",
+                padding: "10px",
+                gap: "6px",
 
-      <Grid
-        sx={{
-          padding: 2,
-          paddingTop: "30px",
-          display: "flex",
-          justifyContent: "flex-end",
-          paddingBottom: "60px",
-        }}
-      >
-        <Button
-          onClick={() => setOpenFirstModal(true)}
-          sx={{
-            backgroundColor: "#006AF5",
-            borderRadius: "24px",
-            color: "white",
-            whiteSpace: "nowrap",
-            minWidth: "132px",
-            fontSize: "12px",
-            padding: "10px",
-            gap: "6px",
-
-            "&:hover": {
-              backgroundColor: "#025ED8",
-            },
-          }}
-        >
-          Submit
-        </Button>
-      </Grid>
+                "&:hover": {
+                  backgroundColor: "#025ED8",
+                },
+              }}
+            >
+              Submit Attendance
+            </Button>
+          </Grid>
+        </div>
+      )}
 
       <Modal
         open={openFirstModal}

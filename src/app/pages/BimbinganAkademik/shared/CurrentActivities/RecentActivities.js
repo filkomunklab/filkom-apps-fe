@@ -87,7 +87,22 @@ const CurrentActivities = () => {
     return () => controller.abort();
   }, []);
 
-  const groupedData = {};
+  const groupedDataActivity = {};
+  const groupedDataConsultation = {};
+
+  dataActivity.forEach((value) => {
+    const date = new Date(value.createdAt).toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    if (!groupedDataActivity[date]) {
+      groupedDataActivity[date] = [];
+    }
+    groupedDataActivity[date].push(value);
+  });
+
   dataConsultation.forEach((value) => {
     const date = new Date(value.createdAt).toLocaleDateString("en-US", {
       weekday: "long",
@@ -95,10 +110,10 @@ const CurrentActivities = () => {
       month: "short",
       day: "numeric",
     });
-    if (!groupedData[date]) {
-      groupedData[date] = [];
+    if (!groupedDataConsultation[date]) {
+      groupedDataConsultation[date] = [];
     }
-    groupedData[date].push(value);
+    groupedDataConsultation[date].push(value);
   });
 
   const formatDate = (date) => {
@@ -124,11 +139,14 @@ const CurrentActivities = () => {
 
   const handleNavigate = async (value) => {
     try {
-      const consultationDetailsResult = await axios.get(
-        `${BASE_URL_API}/academic-consultation/detail/${value.id}`
-      );
-      // console.log("ini detail Consutation result:", consultationDetailsResult);
       const { role } = JSON.parse(localStorage.getItem("user"));
+
+      const consultationDetailsResult = await axios.get(
+        `${BASE_URL_API}/academic-consultation/detail/${value}`
+      );
+      console.log("ini detail Consutation result:", consultationDetailsResult);
+      const { data, status } = consultationDetailsResult.data;
+
       let path = "";
       if (role.includes("DEKAN")) {
         path =
@@ -141,28 +159,29 @@ const CurrentActivities = () => {
           "/bimbingan-akademik/dosen-pembimbing/current-activities/view-consultation/";
       }
 
-      navigate(`${path}${value.id}`, {
-        state: {
-          consultationDetails: {
-            studentName: consultationDetailsResult.data.data.student_name,
-            supervisorName: consultationDetailsResult.data.data.supervisor_name,
-            studentMajor: consultationDetailsResult.data.data.student_major,
-            studentArrivalYear:
-              consultationDetailsResult.data.data.student_arrival_year,
-            topic: consultationDetailsResult.data.data.topic,
-            receiverName: consultationDetailsResult.data.data.receiver_name,
-            description: consultationDetailsResult.data.data.description,
-            id: consultationDetailsResult.data.data.id,
+      if (status === "OK") {
+        navigate(`${path}${value}`, {
+          state: {
+            consultationDetails: {
+              studentName: data.student_name,
+              supervisorName: data.supervisor_name,
+              studentMajor: data.student_major,
+              studentArrivalYear: data.student_arrival_year,
+              topic: data.topic,
+              receiverName: data.receiver_name,
+              description: data.description,
+              id: data.id,
+            },
           },
-        },
-      });
+        });
+      }
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  const handleNavigateActivity = () => {
-    navigate(`view-activity`);
+  const handleNavigateActivity = (value) => {
+    navigate(`view-activity`, { state: { activityId: value } });
   };
 
   return (
@@ -187,7 +206,7 @@ const CurrentActivities = () => {
         respond to ongoing consultations.
       </Typography>
 
-      {dataConsultation.length === 0 && dataActivity.length === 0 ? (
+      {dataActivity.length === 0 ? (
         <Box
           sx={{
             height: "50px",
@@ -202,7 +221,7 @@ const CurrentActivities = () => {
           </Typography>
         </Box>
       ) : (
-        Object.entries(groupedData).map(([date, dataConsultation]) => (
+        Object.entries(groupedDataActivity).map(([date, dataActivity]) => (
           <div key={date}>
             <Box
               sx={{
@@ -236,7 +255,13 @@ const CurrentActivities = () => {
                   },
                 }}
               >
-                <ListItem onClick={() => handleNavigateActivity()}>
+                <ListItem
+                  onClick={() =>
+                    item.type === "activity"
+                      ? handleNavigateActivity(item.id)
+                      : handleNavigate(item.id)
+                  }
+                >
                   <ListItemText
                     primary={
                       <Typography
@@ -248,7 +273,9 @@ const CurrentActivities = () => {
                           },
                         }}
                       >
-                        {item.title}
+                        {item.type === "activity"
+                          ? item.title
+                          : `${item.student.lastName},${item.student.firstName} `}
                       </Typography>
                     }
                     secondary={
@@ -303,7 +330,7 @@ const CurrentActivities = () => {
                 </ListItem>
               </List>
             ))}
-            {dataConsultation.map((value, index) => (
+            {/* {dataConsultation.map((value, index) => (
               <List
                 key={index}
                 sx={{
@@ -388,7 +415,7 @@ const CurrentActivities = () => {
                   <Divider component="li" variant="inset" />
                 </ListItem>
               </List>
-            ))}
+            ))} */}
           </div>
         ))
       )}

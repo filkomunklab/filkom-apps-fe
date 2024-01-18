@@ -14,8 +14,8 @@ import { BASE_URL_API } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const StudentProfile = () => {
-  const [advisorProfileData, setAdvisorProfileData] = useState([]);
   const [studentProfileData, setStudentProfileData] = useState([]);
+  const [advisorProfileData, setAdvisorProfileData] = useState([]);
 
   useEffect(() => {
     getProfile();
@@ -24,26 +24,27 @@ const StudentProfile = () => {
   const getProfile = async () => {
     try {
       const { nim } = JSON.parse(localStorage.getItem("user"));
-      const resultStudent = await jwtAuthAxios.get(`/student/${nim}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-
-      const result = await jwtAuthAxios.get(
-        `/employee/profile/${resultStudent.data.data.employeeNik}`,
+      const resultStudent = await jwtAuthAxios.get(
+        `/student/view/biodata/${nim}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
 
-      console.log(result);
+      console.log("ini isi student", resultStudent);
       // console.log(resultStudent);
       setStudentProfileData(resultStudent.data.data);
-      setAdvisorProfileData(result.data.data);
+      setAdvisorProfileData(
+        resultStudent.data.data.GuidanceClassMember.gudianceClass.teacher
+      );
     } catch (error) {
       console.log(error.message);
     }
   };
-
+  console.log(
+    "isi student profil data check dpe kurikulum",
+    studentProfileData
+  );
   return (
     <Div>
       <Typography
@@ -72,7 +73,22 @@ const StudentProfile = () => {
                   borderRadius: "10px",
                 }}
               >
-                <Typography>Photo</Typography>
+                {studentProfileData?.path ? (
+                  <img
+                    id="displayImage"
+                    src={studentProfileData.path}
+                    alt="Profile-Picture"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      borderRadius: "10px",
+                    }}
+                    loading="lazy"
+                  />
+                ) : (
+                  <Typography>No photo</Typography>
+                )}
               </Div>
             </Grid>
             <Grid item xs={12} md={12}>
@@ -110,7 +126,16 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Date of Birth</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.dateOfBirth}
+                {studentProfileData?.dateOfBirth
+                  ? new Date(studentProfileData.dateOfBirth).toLocaleString(
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }
+                    )
+                  : "N/A"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -146,7 +171,9 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Curriculum</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.curriculumId}
+                {studentProfileData?.curriculum
+                  ? `${studentProfileData?.curriculum.major} - ${studentProfileData?.curriculum.year}`
+                  : "N/A"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -260,7 +287,7 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Typography variant="h5">NIDN</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {advisorProfileData?.nidn}
+                {advisorProfileData?.nik}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>

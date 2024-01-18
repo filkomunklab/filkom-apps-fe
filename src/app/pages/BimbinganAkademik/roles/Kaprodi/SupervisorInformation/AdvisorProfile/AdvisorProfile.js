@@ -173,6 +173,7 @@ const AdvisorProfile = () => {
     }
   };
 
+  console.log("data profile", dataProfile);
   return (
     <Div>
       <Backdrop

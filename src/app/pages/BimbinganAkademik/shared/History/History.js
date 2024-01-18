@@ -110,8 +110,9 @@ const History = (props) => {
       );
 
       const resultGrade = await axios.get(
+ 
         `${BASE_URL_API}/transaction/hisotry/kaprodi/${major}`,
-        { headers }
+        { headers } 
       );
 
       const { status: activityStatus, data: activityData } =
@@ -170,10 +171,24 @@ const History = (props) => {
   }, []);
   console.log("ini data certi", dataCertificate);
 
+  const groupedDataActivity = {};
   const groupedDataConsultation = {};
   const groupedDataCertificate = {};
   const groupedDataPreregis = {};
   const groupedDataGrade = {};
+
+  dataActivity.forEach((value) => {
+    const dateActivity = new Date(value.dueDate).toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    if (!groupedDataActivity[dateActivity]) {
+      groupedDataActivity[dateActivity] = [];
+    }
+    groupedDataActivity[dateActivity].push(value);
+  });
 
   dataConsultation.forEach((value) => {
     const dateConsultation = new Date(value.createdAt).toLocaleDateString(
@@ -529,7 +544,8 @@ const History = (props) => {
                     button
                     tabIndex={index}
                     component={Link}
-                    to="activity2"
+                    to="activity"
+                    state={{ activityId: item.id }}
                     sx={{ paddingLeft: "50px", paddingRight: "50px" }}
                   >
                     <ListItemText
