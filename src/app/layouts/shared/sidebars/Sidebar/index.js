@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Avatar, Typography } from "@mui/material";
 import JumboVerticalNavbar from "@jumbo/components/JumboVerticalNavbar/JumboVerticalNavbar";
 import JumboScrollbar from "@jumbo/components/JumboScrollbar";
@@ -11,6 +11,7 @@ import JumboNavSection from "@jumbo/components/JumboVerticalNavbar/JumboNavSecti
 import useJumboAuth from "@jumbo/hooks/useJumboAuth";
 import { useNavigate } from "react-router-dom";
 import { ROLES } from "app/utils/constants/roles";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import {
   adminMenus,
   dekanMenus,
@@ -109,7 +110,29 @@ const Sidebar = () => {
 
 const SidebarHeader = () => {
   const navigate = useNavigate();
+  const [studentProfileData, setStudentProfileData] = useState([]);
 
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  const getProfile = async () => {
+    try {
+      const { nim } = JSON.parse(localStorage.getItem("user"));
+      const resultStudent = await jwtAuthAxios.get(
+        `/student/view/biodata/${nim}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+
+      console.log("ini isi student", resultStudent);
+      // console.log(resultStudent);
+      setStudentProfileData(resultStudent.data.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   // const { sidebarOptions, setSidebarOptions } = useJumboLayoutSidebar();
   // const { sidebarTheme } = useJumboSidebarTheme();
 
@@ -140,6 +163,31 @@ const SidebarHeader = () => {
 
   const accessRole = typeof role === "string" ? role : checkArrayRole();
 
+  const getProfilePath = (role) => {
+    switch (role) {
+      case ROLES.KAPRODI:
+        return "kaprodi";
+      case ROLES.DOSEN:
+        return "dosen-pembimbing";
+      case ROLES.DEKAN:
+        return "dekan";
+      case ROLES.OPERATOR_FAKULTAS:
+      case ROLES.SEKRETARIS:
+        return "sek-dekan";
+      default:
+        return "unknown";
+    }
+  };
+
+  const handleClick = () => {
+    if (accessRole === ROLES.MAHASISWA) {
+      navigate("/bimbingan-akademik/profile");
+    } else {
+      const profilePath = getProfilePath(accessRole);
+      navigate(`/bimbingan-akademik/${profilePath}/profile`);
+    }
+  };
+
   return (
     <React.Fragment>
       <Div
@@ -155,10 +203,10 @@ const SidebarHeader = () => {
             cursor: "pointer",
           },
         }}
-        onClick={() => navigate("/bimbingan-akademik/profile")}
+        onClick={handleClick}
       >
         <Avatar
-          //   src={authUser.profile_pic}
+          src={accessRole === "MAHASISWA" ? studentProfileData.path : undefined}
           alt={authUser.name}
           sx={{ width: 48, height: 48 }}
         />
