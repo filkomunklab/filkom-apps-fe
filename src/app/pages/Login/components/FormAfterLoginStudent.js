@@ -38,7 +38,6 @@ const formSchema = Yup.object().shape({
   guardianEducation: Yup.string().required(
     "Parent / Guardian Level of Education is Required"
   ),
-  currentResidenceStatus: Yup.string().required(),
   currentAddress: Yup.string()
     .min(3, "Current Address must be at least 3 digits")
     .max(100, "Current Address cannot be more than 100 digits")
@@ -58,9 +57,21 @@ const formSchema = Yup.object().shape({
   dateOfBirth: Yup.string().required("Date of Birth is Required"),
   bloodType: Yup.string().required("Blood Type is Required"),
   base64Image: Yup.string().nullable(false).required("Image is Required"),
+  confirmNewPassword: Yup.string()
+    .trim("Confirm New Password cannot include leading and trailing spaces")
+    .strict(true)
+    .oneOf(
+      [Yup.ref("newPassword"), null],
+      "New Password and Confirm New Password field must match"
+    )
+    .required("Confirm New Password Required"),
+  newPassword: Yup.string()
+    .trim("New Password cannot include leading and trailing spaces")
+    .strict(true)
+    .required("New Password Required"),
 });
 
-const FormAfterLogin = ({
+const FormAfterLoginStudent = ({
   openModal,
   setOpenModal,
   profileMahasiswa,
@@ -79,13 +90,20 @@ const FormAfterLogin = ({
   });
 
   const navigate = useNavigate();
-  const [showLabel, setShowLabel] = useState(true);
+  const [showLabelBloodType, setShowLabelBloodType] = useState(true);
+  const [showLabelAreaOfConcentration, setShowLabelAreaOfConcentration] =
+    useState(true);
+  const [showLabelLevelOfEducation, setShowLabelLevelOfEducation] =
+    useState(true);
+  const [showLabelMarriageStatus, setShowLabelMarriageStatus] = useState(true);
   const [loading, setLoading] = useState(false);
   const [openFirstModal, setOpenFirstModal] = useState(false);
   const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
 
   //field input student
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [fileName, setFileName] = useState("");
   const [base64Image, setBase64Image] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
@@ -94,7 +112,6 @@ const FormAfterLogin = ({
   const [AreaOfConcentration, setAreaOfConcentration] = useState("");
   const [highSchoolGrad, setHighSchoolGrad] = useState("");
   const [currentAddress, setCurrentAddress] = useState("");
-  const [currentResidenceStatus, setCurrentResidenceStatus] = useState("");
 
   // field input parent / guardian
   const [guardianEducation, setGuardianEducation] = useState("");
@@ -140,6 +157,8 @@ const FormAfterLogin = ({
       console.log("ini phone no: ", phoneNo);
       await formSchema.validate(
         {
+          newPassword,
+          confirmNewPassword,
           base64Image,
           bloodType,
           dateOfBirth,
@@ -147,7 +166,6 @@ const FormAfterLogin = ({
           AreaOfConcentration,
           highSchoolGrad,
           currentAddress,
-          currentResidenceStatus,
           guardianEducation,
           guardianStatus,
           guardianEmail,
@@ -162,16 +180,46 @@ const FormAfterLogin = ({
       const buffer = base64Image.split(",")[1];
       const nama_file = fileName;
 
+      // format tanggal lahir agar sesuai dengan yang diinput
+      const tanggalLahir = new Date(dateOfBirth);
+      const tahun = tanggalLahir.getFullYear();
+      const bulan = tanggalLahir.getMonth() + 1;
+      const tanggal = tanggalLahir.getDate();
+
+      const jam = tanggalLahir.getHours();
+      const menit = tanggalLahir.getMinutes();
+      const detik = tanggalLahir.getSeconds();
+
+      var waktuISO8601 =
+        tahun +
+        "-" +
+        (bulan < 10 ? "0" : "") +
+        bulan +
+        "-" +
+        (tanggal < 10 ? "0" : "") +
+        tanggal +
+        "T" +
+        (jam < 10 ? "0" : "") +
+        jam +
+        ":" +
+        (menit < 10 ? "0" : "") +
+        menit +
+        ":" +
+        (detik < 10 ? "0" : "") +
+        detik +
+        "Z";
+
+      console.log("ini waktu iso loh: ", waktuISO8601);
       await axios.patch(
         `${BASE_URL_API}/student/biodata/${profileMahasiswa.nim}`,
         {
           bloodType,
-          dateOfBirth,
+          password: newPassword,
+          dateOfBirth: waktuISO8601,
           phoneNo: phoneNo.trim(),
           AreaOfConcentration,
           highSchoolGrad: highSchoolGrad.trim(),
           currentAddress: currentAddress.trim(),
-          currentResidenceStatus,
           guardianEducation,
           guardianStatus,
           guardianEmail: guardianEmail.trim(),
@@ -272,7 +320,7 @@ const FormAfterLogin = ({
                   Student Information
                 </Typography>
                 <Grid container spacing={3} sx={{ padding: 2 }}>
-                  <Grid item>
+                  <Grid item xs={12} md={12}>
                     <Button
                       fullWidth
                       component="label"
@@ -323,6 +371,49 @@ const FormAfterLogin = ({
                       />
                     </Button>
                   </Grid>
+
+                  <Grid item xs={12} md={6}>
+                    <RTypography variant="h5">New Password</RTypography>
+                    <TextField
+                      id="outlined-basic-1"
+                      variant="outlined"
+                      placeholder="Enter New Password..."
+                      fullWidth
+                      value={newPassword}
+                      onChange={(event) => setNewPassword(event.target.value)}
+                      size="small"
+                      sx={{
+                        backgroundColor: "white",
+                        "& input": { padding: 1.5 },
+                        display: "block",
+                      }}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} md={6}></Grid>
+
+                  <Grid item xs={12} md={6}>
+                    <RTypography variant="h5">
+                      Confirmation New Password
+                    </RTypography>
+                    <TextField
+                      id="outlined-basic-1"
+                      variant="outlined"
+                      placeholder="Enter Confirmation New Password..."
+                      fullWidth
+                      value={confirmNewPassword}
+                      onChange={(event) =>
+                        setConfirmNewPassword(event.target.value)
+                      }
+                      size="small"
+                      sx={{
+                        backgroundColor: "white",
+                        "& input": { padding: 1.5 },
+                      }}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} md={6}></Grid>
 
                   <Grid item xs={12} md={12}>
                     <Typography variant="h5">Full Name</Typography>
@@ -398,7 +489,7 @@ const FormAfterLogin = ({
                       fullWidth
                     >
                       <InputLabel shrink={false}>
-                        {showLabel ? "Select Option" : ""}
+                        {showLabelBloodType ? "Select Option" : ""}
                       </InputLabel>
                       <Select
                         sx={{
@@ -407,7 +498,7 @@ const FormAfterLogin = ({
                         value={bloodType}
                         onChange={(event) => {
                           setBloodType(event.target.value);
-                          setShowLabel(false);
+                          setShowLabelBloodType(false);
                         }}
                         MenuProps={{
                           PaperProps: {
@@ -474,7 +565,7 @@ const FormAfterLogin = ({
                       fullWidth
                     >
                       <InputLabel shrink={false}>
-                        {showLabel ? "Select Option" : ""}
+                        {showLabelAreaOfConcentration ? "Select Option" : ""}
                       </InputLabel>
                       <Select
                         sx={{
@@ -483,7 +574,7 @@ const FormAfterLogin = ({
                         value={AreaOfConcentration}
                         onChange={(event) => {
                           setAreaOfConcentration(event.target.value);
-                          setShowLabel(false);
+                          setShowLabelAreaOfConcentration(false);
                         }}
                         MenuProps={{
                           PaperProps: {
@@ -555,37 +646,9 @@ const FormAfterLogin = ({
                     <RTypography variant="h5">
                       Current Residence Status
                     </RTypography>
-                    <FormControl
-                      size="small"
-                      sx={{ backgroundColor: "white" }}
-                      fullWidth
-                    >
-                      <InputLabel shrink={false}>
-                        {showLabel ? "Select Option" : ""}
-                      </InputLabel>
-                      <Select
-                        sx={{
-                          padding: 0.5,
-                        }}
-                        value={currentResidenceStatus}
-                        onChange={(event) =>
-                          setCurrentResidenceStatus(event.target.value)
-                        }
-                        MenuProps={{
-                          PaperProps: {
-                            style: {
-                              maxHeight: "37%",
-                            },
-                          },
-                        }}
-                      >
-                        <MenuItem value="Asrama">Asrama</MenuItem>
-                        <MenuItem value="Outsider Dekat">
-                          Ousider Dekat
-                        </MenuItem>
-                        <MenuItem value="Outsider Jauh">Outsider Jauh</MenuItem>
-                      </Select>
-                    </FormControl>
+                    <Typography variant="h6" sx={textStyle}>
+                      {profileMahasiswa?.currentResidenceStatus || "-"}
+                    </Typography>
                   </Grid>
                 </Grid>
                 <Typography
@@ -614,16 +677,17 @@ const FormAfterLogin = ({
                       fullWidth
                     >
                       <InputLabel shrink={false}>
-                        {showLabel ? "Select Option" : ""}
+                        {showLabelLevelOfEducation ? "Select Option" : ""}
                       </InputLabel>
                       <Select
                         sx={{
                           padding: 0.5,
                         }}
                         value={guardianEducation}
-                        onChange={(event) =>
-                          setGuardianEducation(event.target.value)
-                        }
+                        onChange={(event) => {
+                          setGuardianEducation(event.target.value);
+                          setShowLabelLevelOfEducation(false);
+                        }}
                         MenuProps={{
                           PaperProps: {
                             style: {
@@ -654,16 +718,17 @@ const FormAfterLogin = ({
                       fullWidth
                     >
                       <InputLabel shrink={false}>
-                        {showLabel ? "Select Option" : ""}
+                        {showLabelMarriageStatus ? "Select Option" : ""}
                       </InputLabel>
                       <Select
                         sx={{
                           padding: 0.5,
                         }}
                         value={guardianStatus}
-                        onChange={(event) =>
-                          setGuardianStatus(event.target.value)
-                        }
+                        onChange={(event) => {
+                          setGuardianStatus(event.target.value);
+                          setShowLabelMarriageStatus(false);
+                        }}
                         MenuProps={{
                           PaperProps: {
                             style: {
@@ -872,4 +937,4 @@ const modalStyle = {
   },
 };
 
-export default FormAfterLogin;
+export default FormAfterLoginStudent;

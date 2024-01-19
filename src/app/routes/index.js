@@ -1,6 +1,7 @@
 import React from "react";
 import Home from "../pages/home";
 import Page from "@jumbo/shared/Page";
+import ChangePassword from "app/pages/ChangePassword";
 import Login from "app/pages/Login";
 import mahasiswaRoutes from "./BA-mahasiswaRoutes";
 import NotFound from "../pages/404";
@@ -33,6 +34,10 @@ const routesForAuthenticatedOnly = [
   {
     path: "/",
     element: <Page component={Home} />,
+  },
+  {
+    path: "/change-password",
+    element: <Page component={ChangePassword} />,
   },
   ...mahasiswaRoutes,
   ...operatorRoutes,
