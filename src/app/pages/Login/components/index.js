@@ -1,3 +1,3 @@
-import FormAfterLogin from "./formAfterLogin";
+import FormAfterLoginStudent from "./FormAfterLoginStudent";
 
-export { FormAfterLogin };
+export { FormAfterLoginStudent };
