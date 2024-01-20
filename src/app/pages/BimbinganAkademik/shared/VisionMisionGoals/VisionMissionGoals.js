@@ -42,9 +42,12 @@ const VisionMissionGoals = () => {
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Typography sx={{ fontWeight: 500 }}>A. VISION</Typography>
+            <Typography sx={{ fontWeight: 500 }}>Universitas Klabat</Typography>
           </AccordionSummary>
           <AccordionDetails>
+            <Typography pl={2} mb={1.5} fontWeight={500}>
+              Vision
+            </Typography>
             <Typography
               sx={{
                 paddingLeft: "25px",
@@ -64,18 +67,10 @@ const VisionMissionGoals = () => {
               pengembangan yang serasi yakni spiritual, intelektual, fisik dan
               sosial.
             </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary
-            sx={{ paddingLeft: "24px" }}
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel2a-content"
-            id="panel2a-header"
-          >
-            <Typography sx={{ fontWeight: 500 }}>B. MISSION</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
+
+            <Typography pl={2} pt={2} mb={1.5} fontWeight={500}>
+              Mission
+            </Typography>
             <Typography
               sx={{
                 paddingLeft: "25px",
@@ -96,18 +91,10 @@ const VisionMissionGoals = () => {
               mandiri dan bekerja untuk melayani sesama manusia tanpa
               mementingkan diri sendiri.
             </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary
-            sx={{ paddingLeft: "24px" }}
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel3a-content"
-            id="panel3a-header"
-          >
-            <Typography sx={{ fontWeight: 500 }}>C. GOALS</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
+
+            <Typography pl={2} pt={2} mb={1.5} fontWeight={500}>
+              Goals
+            </Typography>
             <Typography
               sx={{
                 paddingLeft: "25px",
@@ -157,6 +144,38 @@ const VisionMissionGoals = () => {
                   dosen, staf, dan mahasiswa.
                 </li>
               </ol>
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary
+            sx={{ paddingLeft: "24px" }}
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel2a-content"
+            id="panel2a-header"
+          >
+            <Typography sx={{ fontWeight: 500 }}>Fakultas</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography
+              sx={{
+                paddingLeft: "25px",
+                paddingRight: "25px",
+                textAlign: "justify",
+                "@media (max-width: 390px)": {
+                  fontSize: "12px",
+                  paddingLeft: "5px",
+                  paddingRight: "5px",
+                },
+              }}
+            >
+              Universitas Klabat bertekad mencapai keunggulan mutu dalam
+              pendidikan Kristen Masehi Advent Hari Ketujuh dengan menciptakan
+              lingkungan yang kondusif untuk pengembangan karakter Kristiani
+              yang mulia dan untuk pembekalan ketrampilan dan ilmu pengetahuan
+              kepada mahasiswa agar bisa menjadi warga negara yang mampu hidup
+              mandiri dan bekerja untuk melayani sesama manusia tanpa
+              mementingkan diri sendiri.
             </Typography>
           </AccordionDetails>
         </Accordion>

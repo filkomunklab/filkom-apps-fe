@@ -65,6 +65,7 @@ const FormAfterLogin = ({
   setOpenModal,
   profileMahasiswa,
   userLogin,
+  tokenUser,
 }) => {
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -189,6 +190,7 @@ const FormAfterLogin = ({
       );
 
       localStorage.setItem("user", JSON.stringify(userLogin));
+      localStorage.setItem("token", tokenUser);
       navigate("/");
       setLoading(false);
     } catch (error) {
@@ -295,9 +297,13 @@ const FormAfterLogin = ({
                           src={base64Image}
                           alt="Profile-Picture"
                           style={{
-                            maxWidth: "100%",
-                            maxHeight: "100%",
-                            height: "auto",
+                            width: "100%",
+                            height: "100%",
+                            // maxWidth: "100%",
+                            // maxHeight: "100%",
+                            // height: "auto",
+                            // width: "auto",
+                            // objectFit: "cover",
                           }}
                           loading="lazy"
                         />
@@ -581,7 +587,7 @@ const FormAfterLogin = ({
                       >
                         <MenuItem value="Asrama">Asrama</MenuItem>
                         <MenuItem value="Outsider Dekat">
-                          Ousider Dekat
+                          Outsider Dekat
                         </MenuItem>
                         <MenuItem value="Outsider Jauh">Outsider Jauh</MenuItem>
                       </Select>
@@ -632,11 +638,16 @@ const FormAfterLogin = ({
                           },
                         }}
                       >
+                        <MenuItem value="S1">S3</MenuItem>
+                        <MenuItem value="S2">S2</MenuItem>
+                        <MenuItem value="S3">S1</MenuItem>
+                        <MenuItem value="D3">D3</MenuItem>
+                        <MenuItem value="D2">D2</MenuItem>
+                        <MenuItem value="D1">D1</MenuItem>
                         <MenuItem value="SMA/SMK Sederajat">
                           SMA/SMK Sederajat
                         </MenuItem>
-                        <MenuItem value="D3">D3</MenuItem>
-                        <MenuItem value="Sarjana">Sarjana</MenuItem>
+                        <MenuItem value="Lainnya">Lainnya</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -674,7 +685,12 @@ const FormAfterLogin = ({
                       >
                         <MenuItem value="Belum Menikah">Belum Menikah</MenuItem>
                         <MenuItem value="Menikah">Menikah</MenuItem>
-                        <MenuItem value="Janda / Duda">Janda / Duda</MenuItem>
+                        <MenuItem
+                          value="Cerai Hidup / Cerai
+                         Mati"
+                        >
+                          Lainnya
+                        </MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>

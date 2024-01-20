@@ -18,19 +18,16 @@ const Grade = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       const major = studentData.data.data.major;
-      const result = await jwtAuthAxios.get(
-        `/access/list/gradesAccess/${major}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const result = await jwtAuthAxios.get(`/access/isOpen/${major}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
 
       const gradeData = result.data.data;
       // const result = await axios.get(`${BASE_URL_API}/access/isOpen/${major}/`);
       // const gradeData = result.data.data.isOpen;
       setDataGrade(gradeData);
 
-      console.log("ini panjang gradedata", gradeData);
+      console.log("ini panjang gradedata", result);
     } catch (error) {
       console.log(error.message);
       console.log("ini error: ", error);

@@ -313,7 +313,7 @@ const StudentProfile = () => {
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
               // defaultValue={status}
-              value={studentProfileData.status}
+              value={studentProfileData?.status}
               onChange={(e) => changeStatus(e.target.value)}
             >
               <FormControlLabel

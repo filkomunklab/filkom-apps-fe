@@ -275,7 +275,7 @@ const CurrentActivities = () => {
                       >
                         {item.type === "activity"
                           ? item.title
-                          : `${item.student.lastName},${item.student.firstName} `}
+                          : `${item.student.lastName}, ${item.student.firstName} `}
                       </Typography>
                     }
                     secondary={

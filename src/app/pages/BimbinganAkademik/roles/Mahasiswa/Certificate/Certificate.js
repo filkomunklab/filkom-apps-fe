@@ -139,15 +139,6 @@ const Certificate = () => {
       handleOpenFirstModal();
     }
   };
-  // const test = async () => {
-  //   const nim = JSON.parse(localStorage.getItem("user")).nim;
-  //   const response = await axios.get(`${BASE_URL_API}/student/${nim}`);
-  //   const employeeNik = response.data.data.employeeNik;
-  //   console.log("ini employeeNik dan nim", employeeNik, nim);
-  // };
-  // useEffect(() => {
-  //   test();
-  // });
   const handleSubmitFirstModal = async () => {
     const nim = JSON.parse(localStorage.getItem("user")).nim;
     const response = await jwtAuthAxios.get(`/student/${nim}`, {
@@ -277,7 +268,7 @@ const Certificate = () => {
         <Grid item xs={12} md={6}>
           <Stack spacing={2} sx={{ paddingBottom: 3 }}>
             <RTypography sx={{ paddingBottom: "5px" }}>
-              Certificate Photo
+              Certificate PDF
             </RTypography>
             <FormControl
               fullWidth
@@ -287,13 +278,13 @@ const Certificate = () => {
               <Input
                 type="file"
                 accept=".pdf"
-                id="certificate-photo"
+                id="certificate-pdf"
                 onChange={handleFileInputChange}
                 disableUnderline
                 inputProps={{ style: { display: "none" } }}
               />
               <label
-                htmlFor="certificate-photo"
+                htmlFor="certificate-pdf"
                 style={{
                   border: "0.5px solid #BCBCBC",
                   padding: "14px",

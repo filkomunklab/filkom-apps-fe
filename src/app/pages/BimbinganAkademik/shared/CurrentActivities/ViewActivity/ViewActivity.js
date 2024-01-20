@@ -151,12 +151,16 @@ const ViewActivity = () => {
         Authorization: `Bearer token_apa`,
       };
 
-      const response = await axios.post(
+      const response = await axios.patch(
         `${BASE_URL_API}/activity/take-attendance/${activityId}`,
-        { body: "data apa" },
+        { members: selectedStudents },
         { signal }
       );
-
+      if (response.data.status === "OK") {
+        setOpenFirstModal(false);
+        setOpenSecondModal(true);
+        // navigate(-1);
+      }
       // jika tidak akan melakukan handle terhadap response maka hapus saja "const response =", jadi sisa await dst...
       console.log(response);
     } catch (error) {
@@ -270,7 +274,7 @@ const ViewActivity = () => {
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <Typography>Clock (optional)</Typography>
+              <Typography>Clock</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
@@ -284,133 +288,6 @@ const ViewActivity = () => {
           </Stack>
         </Grid>
       </Grid>
-
-      {/* <Grid
-        sx={{
-          padding: 2,
-          paddingTop: "30px",
-          display: "flex",
-          justifyContent: "flex-end",
-        }}
-      >
-        <Button
-          onClick={()=>setOpenFirstModal(true)}
-          sx={{
-            backgroundColor: "#006AF5",
-            borderRadius: "24px",
-            color: "white",
-            whiteSpace: "nowrap",
-            minWidth: "132px",
-            fontSize: "12px",
-            padding: "10px",
-            gap: "6px",
-
-            "&:hover": {
-              backgroundColor: "#025ED8",
-            },
-          }}
-        >
-          Submit
-        </Button>
-      </Grid> */}
-      {/* <Modal
-        open={openFirstModal}
-        onClose={() => setOpenFirstModal(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div style={style}>
-          <Typography
-            id="modal-modal-title"
-            variant="h4"
-            component="h2"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            Submit Now?
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            style={{ marginTop: "16px", marginBottom: "20px" }}
-          >
-            Are you sure you want to submit this? Forms that have been submitted
-            cannot be edited again.
-          </Typography>
-
-          <Grid container spacing={1} justifyContent="flex-end">
-            <Grid item>
-              <Button
-                onClick={() => setOpenFirstModal(false)}
-                sx={{
-                  backgroundColor: "white",
-                  borderRadius: "5px",
-                  color: "black",
-                  whiteSpace: "nowrap",
-                  "&:hover": {
-                    backgroundColor: "lightgrey",
-                  },
-                }}
-              >
-                Cancel
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleSubmitFirstModal}
-                sx={{
-                  backgroundColor: "#006AF5",
-                  borderRadius: "5px",
-                  color: "white",
-                  whiteSpace: "nowrap",
-                  "&:hover": {
-                    backgroundColor: "#025ED8",
-                  },
-                }}
-              >
-                Submit the Attendance?
-              </Button>
-            </Grid>
-          </Grid>
-        </div>
-      </Modal>
-      <Modal
-        open={openSecondModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div style={style2}>
-          <IconButton
-            edge="end"
-            color="#D9D9D9"
-            onClick={() => setOpenSecondModal(false)}
-            aria-label="close"
-            sx={{
-              position: "absolute",
-              top: "10px",
-              right: "20px",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <Typography
-            id="modal-modal-title"
-            variant="h4"
-            component="h2"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            Successful Submission!
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            style={{ marginTop: "16px", marginBottom: "20px" }}
-          >
-            You have successfully entered the student attendance form.
-          </Typography>
-        </div>
-      </Modal> */}
 
       {activityDetail?.isAttendance === true && (
         <div>
@@ -450,15 +327,19 @@ const ViewActivity = () => {
                         onChange={() => handleSelectStudent(student.studentNim)}
                       />
                     </TableCell>
-                    <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
-                    <TableCell sx={{ width: "190px" }}>
-                      {student.studentNim}
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>
+                      {student.student.lastName}, {student.student.firstName}
                     </TableCell>
-                    <TableCell sx={{ width: "80px" }}>
-                      {student.studentNim}
-                    </TableCell>
-                    <TableCell sx={{ width: "80px" }}>
-                      {student.studentNim}
+                    <TableCell>{student.studentNim}</TableCell>
+                    <TableCell>
+                      {student.student.major === "IF"
+                        ? "Informatika"
+                        : student.student.major === "SI"
+                        ? "Sistem Informasi"
+                        : student.student.major === "DKV"
+                        ? "Teknologi Informasi"
+                        : student.student.major}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -475,7 +356,7 @@ const ViewActivity = () => {
             }}
           >
             <Button
-              onClick={() => setOpenFirstModal(true)}
+              onClick={() => submitAttendance(true)}
               sx={{
                 backgroundColor: "#006AF5",
                 borderRadius: "24px",

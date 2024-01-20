@@ -278,10 +278,8 @@ const ReviewPreRegistrationStudent = () => {
                 <TableCell sx={{ width: "40px" }}>Code</TableCell>
                 <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
                 <TableCell sx={{ width: "40px" }}>Credit(s)</TableCell>
-                <TableCell sx={{ width: "40px" }}>Grade</TableCell>
                 <TableCell sx={{ width: "40px" }}>Type </TableCell>
                 <TableCell sx={{ width: "380px" }}>Prerequisite</TableCell>
-                <TableCell sx={{ width: "110px" }}>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -299,17 +297,11 @@ const ReviewPreRegistrationStudent = () => {
                     <TableCell sx={{ width: "40px" }}>
                       {data.subject.credits}
                     </TableCell>
-                    <TableCell sx={{ width: "40px" }}>
-                      {/*ini kalo ada grade */}-
-                    </TableCell>
                     <TableCell sx={{ width: "200px" }}>
                       {data.subject.type}
                     </TableCell>
                     <TableCell sx={{ width: "380px" }}>
                       {data.subject.prerequisite}
-                    </TableCell>
-                    <TableCell sx={{ width: "110px" }}>
-                      {/*ini kalo ada status, pass ato nda */}-{" "}
                     </TableCell>
                   </TableRow>
                 ))}

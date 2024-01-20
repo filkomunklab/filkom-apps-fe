@@ -80,16 +80,11 @@ const History = (props) => {
         localStorage.getItem("user")
       );
 
-      console.log("idddddddddddddddddd", id);
+      console.log("niiiiiiiiiiik", nik);
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       };
-      const majorResponse = await axios.get(`${BASE_URL_API}/employee/${id}`, {
-        headers,
-      });
-
-      const major = majorResponse.data.data.major;
 
       const resultActivity = await axios.get(
         `${BASE_URL_API}/activity/history-for-advisor/${nik}`,
@@ -109,12 +104,6 @@ const History = (props) => {
         `${BASE_URL_API}/pre-regist/history-for-advisor/${guidanceClassId}`
       );
 
-      const resultGrade = await axios.get(
- 
-        `${BASE_URL_API}/transaction/hisotry/kaprodi/${major}`,
-        { headers } 
-      );
-
       const { status: activityStatus, data: activityData } =
         resultActivity.data;
       const { status: consultationStatus, data: consultationData } =
@@ -123,7 +112,6 @@ const History = (props) => {
         resultCertificate.data;
       const { status: preregisStatus, data: preregisData } =
         resultPreregis.data;
-      const { status: gradeStatus, data: gradeData } = resultGrade.data;
 
       console.log("response result activity", resultActivity);
 
@@ -154,6 +142,34 @@ const History = (props) => {
       } else {
         console.log("ini error resultPreregis", resultPreregis);
       }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getHistoryGrade = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const { nik, id } = JSON.parse(localStorage.getItem("user"));
+
+      console.log("niiiiiiiiiiik", nik);
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+      const majorResponse = await axios.get(`${BASE_URL_API}/employee/${id}`, {
+        headers,
+      });
+
+      const major = majorResponse.data.data.major;
+
+      const resultGrade = await axios.get(
+        `${BASE_URL_API}/transaction/hisotry/kaprodi/${major}`,
+        { headers }
+      );
+
+      const { status: gradeStatus, data: gradeData } = resultGrade.data;
 
       if (gradeStatus === "OK") {
         console.log("ini isi response.data gradeData", gradeData);
@@ -168,8 +184,9 @@ const History = (props) => {
 
   useEffect(() => {
     getHistory();
+    getHistoryGrade();
   }, []);
-  console.log("ini data certi", dataCertificate);
+  console.log("ini data activiti", dataActivity);
 
   const groupedDataActivity = {};
   const groupedDataConsultation = {};
@@ -280,6 +297,10 @@ const History = (props) => {
         day: "numeric",
       });
     }
+  };
+
+  const handleNavigateActivity = (value) => {
+    navigate(`activity`, { state: { activityId: value } });
   };
 
   const handleNavigateConsultation = async (value) => {
@@ -508,625 +529,137 @@ const History = (props) => {
 
       <TabPanel value={value} index={0}>
         <div>
-          {/* {dataActivity?.map((item, index) => ( */}
           <Typography sx={{ padding: "10px" }}></Typography>
-          <Stack
-            direction={"row"}
-            flexWrap={"wrap"}
-            justifyContent={"flex-start"}
-          >
-            <List
+
+          {dataActivity.length === 0 ? (
+            <Box
               sx={{
-                width: "100%",
-                maxWidth: 2000,
-                bgcolor: "background.paper",
-                paddingTop: "0px",
-                paddingBottom: "0px",
+                height: "50px",
+                backgroundColor: "rgba(235, 235, 235, 1)",
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "10px",
               }}
             >
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
+              <Typography
+                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
               >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Today
-                </Typography>
-              </Box>
-              {dataActivity?.map((item, index) => (
-                <>
-                  <ListItem
-                    size="small"
-                    button
-                    tabIndex={index}
-                    component={Link}
-                    to="activity"
-                    state={{ activityId: item.id }}
-                    sx={{ paddingLeft: "50px", paddingRight: "50px" }}
+                You don't have any history actvities
+              </Typography>
+            </Box>
+          ) : (
+            Object.entries(groupedDataActivity).map(([date, dataActivity]) => (
+              <div key={date}>
+                <Box
+                  sx={{
+                    height: "50px",
+                    backgroundColor: "rgba(235, 235, 235, 1)",
+                    display: "flex",
+                    alignItems: "center",
+                    paddingLeft: "10px",
+                  }}
+                >
+                  <Typography
+                    sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
                   >
-                    <ListItemText
-                      primary={
-                        <Chip
-                          size={"small"}
-                          label={"Activity"}
-                          sx={{
-                            backgroundColor: "rgba(0, 106, 245, 0.1)",
-                            color: "rgba(0, 95, 219, 1)",
-                          }}
-                        />
-                      }
-                      secondary={
-                        <>
-                          <Typography
-                            sx={{
-                              color: "rgba(0, 0, 0, 1)",
-                              paddingLeft: "8px",
-                              paddingTop: "5px",
-                              fontSize: { xs: "12px", md: "14px" },
-                            }}
-                          >
-                            {item.title}
-                          </Typography>
-                          <Typography
-                            sx={{
-                              paddingLeft: "8px",
-                              fontSize: { xs: "12px", md: "14px" },
-                            }}
-                          >
-                            {item.description}
-                          </Typography>
-                        </>
-                      }
-                    />
-                    <Box
+                    {formatDate(date)}
+                  </Typography>
+                </Box>
+                {dataActivity &&
+                  dataActivity.map((value, index) => (
+                    <List
+                      key={index}
                       sx={{
-                        marginLeft: { xs: "auto", md: 0 },
-                        width: { xs: "100%", md: "45%" },
-                        textAlign: "right",
+                        width: "100%",
+                        maxWidth: 2000,
+                        bgcolor: "background.paper",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        ":hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#338CFF21",
+                          transition: "0.3s",
+                          transitionTimingFunction: "ease-in-out",
+                          transitionDelay: "0s",
+                          transitionProperty: "all",
+                        },
                       }}
                     >
-                      <ListItemText
-                        secondary={
-                          <Typography
-                            sx={{
-                              fontSize: { xs: "10px", md: "12px" },
-                              color: "rgba(27, 43, 65, 0.69)",
-                            }}
-                          >
-                            {new Date(item.dueDate).toLocaleTimeString(
-                              "en-US",
-                              {
-                                hour: "numeric",
-                                minute: "numeric",
-                                hour12: true,
-                              }
-                            )}
-                          </Typography>
-                        }
-                      />
-                    </Box>
-                  </ListItem>
-                  <Divider component="li" />
-                </>
-              ))}
-
-              {/* <ListItem
-                    size="small"
-                    button
-                    component={Link}
-                    to="activity1"
-                    sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-                  >
-                    <ListItemText
-                      primary={
-                        <Chip
-                          size={"small"}
-                          label={"Activity"}
-                          sx={{
-                            backgroundColor: "rgba(0, 106, 245, 0.1)",
-                            color: "rgba(0, 95, 219, 1)",
-                          }}
+                      <ListItem
+                        sx={{ padding: "10px 50px" }}
+                        onClick={() => {
+                          handleNavigateActivity(value.id);
+                          // console.log("ini isi dari value preregis: ", value);
+                        }}
+                      >
+                        <ListItemText
+                          primary={
+                            <Chip
+                              size={"small"}
+                              label={"Activity"}
+                              sx={{
+                                backgroundColor: "rgba(0, 106, 245, 0.1)",
+                                color: "rgba(0, 95, 219, 1)",
+                              }}
+                            />
+                          }
+                          secondary={
+                            <>
+                              <Typography
+                                sx={{
+                                  color: "rgba(0, 0, 0, 1)",
+                                  paddingLeft: "8px",
+                                  paddingTop: "5px",
+                                  fontSize: { xs: "12px", md: "14px" },
+                                }}
+                              >
+                                {value.title}
+                              </Typography>
+                              <Typography
+                                sx={{
+                                  paddingLeft: "8px",
+                                  fontSize: { xs: "12px", md: "14px" },
+                                }}
+                              >
+                                {value.description}
+                              </Typography>
+                            </>
+                          }
                         />
-                      }
-                      secondary={
-                        <>
-                          <Typography
-                            sx={{
-                              color: "rgba(0, 0, 0, 1)",
-                              paddingLeft: "8px",
-                              paddingTop: "5px",
-                              fontSize: { xs: "12px", md: "14px" },
-                            }}
-                          >
-                            Akan Diadakan Pertemuan pada 10 Februari 2024
-                          </Typography>
-                          <Typography
-                            sx={{
-                              paddingLeft: "8px",
-                              fontSize: { xs: "12px", md: "14px" },
-                            }}
-                          >
-                            Pertemuan dilaksanakan di gedung GK3 lt.2.
-                            Diwajibkan memakai sepatu.
-                          </Typography>
-                        </>
-                      }
-                    />
-                    <Box
-                      sx={{
-                        marginLeft: { xs: "auto", md: 0 },
-                        width: { xs: "100%", md: "45%" },
-                        textAlign: "right",
-                      }}
-                    >
-                      <ListItemText
-                        secondary={
-                          <Typography
-                            sx={{
-                              fontSize: { xs: "10px", md: "12px" },
-                              color: "rgba(27, 43, 65, 0.69)",
-                            }}
-                          >
-                            02:00 PM
-                          </Typography>
-                        }
-                      />
-                    </Box>
-                  </ListItem>
-                  <Divider component="li" />
-                  <ListItem
-                    size="small"
-                    button
-                    component={Link}
-                    to="activity"
-                    sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-                  >
-                    <ListItemText
-                      primary={
-                        <Chip
-                          size={"small"}
-                          label={"Activity"}
+                        <Box
                           sx={{
-                            backgroundColor: "rgba(0, 106, 245, 0.1)",
-                            color: "rgba(0, 95, 219, 1)",
+                            marginLeft: { xs: "auto", md: 0 },
+                            textAlign: "right",
                           }}
-                        />
-                      }
-                      secondary={
-                        <>
-                          <Typography
-                            sx={{
-                              color: "rgba(0, 0, 0, 1)",
-                              paddingLeft: "8px",
-                              paddingTop: "5px",
-                              fontSize: { xs: "12px", md: "14px" },
-                            }}
-                          >
-                            Pemasukan sertifikat
-                          </Typography>
-                          <Typography
-                            sx={{
-                              paddingLeft: "8px",
-                              fontSize: { xs: "12px", md: "14px" },
-                            }}
-                          >
-                            Himbauan untuk memasukan sertifikat yang telah
-                            didapat dari fakultas
-                          </Typography>
-                        </>
-                      }
-                    />
-                    <Box
-                      sx={{
-                        marginLeft: { xs: "auto", md: 0 },
-                        width: { xs: "100%", md: "45%" },
-                        textAlign: "right",
-                      }}
-                    >
-                      <ListItemText
-                        secondary={
-                          <Typography
-                            sx={{
-                              fontSize: { xs: "10px", md: "12px" },
-                              color: "rgba(27, 43, 65, 0.69)",
-                            }}
-                          >
-                            02:00 PM
-                          </Typography>
-                        }
-                      />
-                    </Box>
-                  </ListItem>
-                  <Divider component="li" />
-
-                  <Box
-                    sx={{
-                      height: "50px",
-                      backgroundColor: "rgba(235, 235, 235, 1)",
-                      display: "flex",
-                      alignItems: "center",
-                      paddingLeft: "35px",
-                    }}
-                  >
-                    <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                      Tuesday, Feb 2, 2024
-                    </Typography>
-                  </Box>
-                  <ListItem
-                    size="small"
-                    button
-                    component={Link}
-                    to="activity3"
-                    sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-                  >
-                    <ListItemText
-                      primary={
-                        <Chip
-                          size={"small"}
-                          label={"Activity"}
-                          sx={{
-                            backgroundColor: "rgba(0, 106, 245, 0.1)",
-                            color: "rgba(0, 95, 219, 1)",
-                          }}
-                        />
-                      }
-                      secondary={
-                        <>
-                          <Typography
-                            sx={{
-                              color: "rgba(0, 0, 0, 1)",
-                              paddingLeft: "8px",
-                              paddingTop: "5px",
-                              fontSize: { xs: "12px", md: "14px" },
-                            }}
-                          >
-                            Silakan memasukkan nilai semester anda sebelumnya
-                          </Typography>
-                          <Typography
-                            sx={{
-                              paddingLeft: "8px",
-                              fontSize: { xs: "12px", md: "14px" },
-                            }}
-                          >
-                            Saat ini sedang masa pemasukkan nilai semester
-                            sebelumnya. Harap semuanya dapat mengisi
-                          </Typography>
-                        </>
-                      }
-                    />
-                    <Box
-                      sx={{
-                        marginLeft: { xs: "auto", md: 0 },
-                        width: { xs: "100%", md: "45%" },
-                        textAlign: "right",
-                      }}
-                    >
-                      <ListItemText
-                        secondary={
-                          <Typography
-                            sx={{
-                              fontSize: { xs: "10px", md: "12px" },
-                              color: "rgba(27, 43, 65, 0.69)",
-                            }}
-                          >
-                            02:00 PM
-                          </Typography>
-                        }
-                      />
-                    </Box>
-                  </ListItem>
-                  <Divider component="li" /> */}
-            </List>
-          </Stack>
+                        >
+                          <ListItemText
+                            secondary={
+                              <Typography
+                                sx={{
+                                  fontSize: { xs: "10px", md: "14px" },
+                                  color: "rgba(27, 43, 65, 0.69)",
+                                }}
+                              >
+                                {new Date(value.createdAt).toLocaleTimeString(
+                                  "en-US",
+                                  {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    hour12: true,
+                                  }
+                                )}
+                              </Typography>
+                            }
+                          />
+                        </Box>
+                      </ListItem>
+                      <Divider component="li" />
+                    </List>
+                  ))}
+              </div>
+            ))
+          )}
           <Typography sx={{ padding: "20px" }}></Typography>
-          {/* <Typography sx={{ padding: "10px" }}></Typography>
-          <Stack
-            direction={"row"}
-            flexWrap={"wrap"}
-            justifyContent={"flex-start"}
-          >
-            <List
-              sx={{
-                width: "100%",
-                maxWidth: 2000,
-                bgcolor: "background.paper",
-                paddingTop: "0px",
-                paddingBottom: "0px",
-              }}
-            >
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Today
-                </Typography>
-              </Box>
-
-              <ListItem
-                size="small"
-                button
-                component={Link}
-                to="activity2"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Activity"}
-                      sx={{
-                        backgroundColor: "rgba(0, 106, 245, 0.1)",
-                        color: "rgba(0, 95, 219, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Form untuk memasukan Pre-Registration Course telah
-                        dibuka.
-                      </Typography>
-                      <Typography
-                        sx={{
-                          paddingLeft: "8px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Tidak ada pertemuan tatap muka. Diharapkan semua untuk
-                        mengisi.
-                      </Typography>
-                    </>
-                  }
-                />
-                <Box
-                  sx={{
-                    marginLeft: { xs: "auto", md: 0 },
-                    width: { xs: "100%", md: "45%" },
-                    textAlign: "right",
-                  }}
-                >
-                  <ListItemText
-                    secondary={
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "10px", md: "12px" },
-                          color: "rgba(27, 43, 65, 0.69)",
-                        }}
-                      >
-                        02:00 PM
-                      </Typography>
-                    }
-                  />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-
-              <ListItem
-                size="small"
-                button
-                component={Link}
-                to="activity1"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Activity"}
-                      sx={{
-                        backgroundColor: "rgba(0, 106, 245, 0.1)",
-                        color: "rgba(0, 95, 219, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Akan Diadakan Pertemuan pada 10 Februari 2024
-                      </Typography>
-                      <Typography
-                        sx={{
-                          paddingLeft: "8px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Pertemuan dilaksanakan di gedung GK3 lt.2. Diwajibkan
-                        memakai sepatu.
-                      </Typography>
-                    </>
-                  }
-                />
-                <Box
-                  sx={{
-                    marginLeft: { xs: "auto", md: 0 },
-                    width: { xs: "100%", md: "45%" },
-                    textAlign: "right",
-                  }}
-                >
-                  <ListItemText
-                    secondary={
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "10px", md: "12px" },
-                          color: "rgba(27, 43, 65, 0.69)",
-                        }}
-                      >
-                        02:00 PM
-                      </Typography>
-                    }
-                  />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-              <ListItem
-                size="small"
-                button
-                component={Link}
-                to="activity"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Activity"}
-                      sx={{
-                        backgroundColor: "rgba(0, 106, 245, 0.1)",
-                        color: "rgba(0, 95, 219, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Pemasukan sertifikat
-                      </Typography>
-                      <Typography
-                        sx={{
-                          paddingLeft: "8px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Himbauan untuk memasukan sertifikat yang telah didapat
-                        dari fakultas
-                      </Typography>
-                    </>
-                  }
-                />
-                <Box
-                  sx={{
-                    marginLeft: { xs: "auto", md: 0 },
-                    width: { xs: "100%", md: "45%" },
-                    textAlign: "right",
-                  }}
-                >
-                  <ListItemText
-                    secondary={
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "10px", md: "12px" },
-                          color: "rgba(27, 43, 65, 0.69)",
-                        }}
-                      >
-                        02:00 PM
-                      </Typography>
-                    }
-                  />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-
-              <Box
-                sx={{
-                  height: "50px",
-                  backgroundColor: "rgba(235, 235, 235, 1)",
-                  display: "flex",
-                  alignItems: "center",
-                  paddingLeft: "35px",
-                }}
-              >
-                <Typography sx={{ color: "rgba(0, 0, 0, 1)" }}>
-                  Tuesday, Feb 2, 2024
-                </Typography>
-              </Box>
-              <ListItem
-                size="small"
-                button
-                component={Link}
-                to="activity3"
-                sx={{ paddingLeft: "50px", paddingRight: "50px" }}
-              >
-                <ListItemText
-                  primary={
-                    <Chip
-                      size={"small"}
-                      label={"Activity"}
-                      sx={{
-                        backgroundColor: "rgba(0, 106, 245, 0.1)",
-                        color: "rgba(0, 95, 219, 1)",
-                      }}
-                    />
-                  }
-                  secondary={
-                    <>
-                      <Typography
-                        sx={{
-                          color: "rgba(0, 0, 0, 1)",
-                          paddingLeft: "8px",
-                          paddingTop: "5px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Silakan memasukkan nilai semester anda sebelumnya
-                      </Typography>
-                      <Typography
-                        sx={{
-                          paddingLeft: "8px",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        Saat ini sedang masa pemasukkan nilai semester
-                        sebelumnya. Harap semuanya dapat mengisi
-                      </Typography>
-                    </>
-                  }
-                />
-                <Box
-                  sx={{
-                    marginLeft: { xs: "auto", md: 0 },
-                    width: { xs: "100%", md: "45%" },
-                    textAlign: "right",
-                  }}
-                >
-                  <ListItemText
-                    secondary={
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "10px", md: "12px" },
-                          color: "rgba(27, 43, 65, 0.69)",
-                        }}
-                      >
-                        02:00 PM
-                      </Typography>
-                    }
-                  />
-                </Box>
-              </ListItem>
-              <Divider component="li" />
-            </List>
-          </Stack>
-          <Typography sx={{ padding: "20px" }}></Typography> */}
         </div>
       </TabPanel>
 

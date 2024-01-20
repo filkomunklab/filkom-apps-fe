@@ -25,11 +25,8 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import Div from "@jumbo/shared/Div";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
-import SearchLocal from "app/shared/SearchLocal";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { display } from "@mui/system";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -89,7 +86,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const AdvisorProfile = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { classID, nik } = location.state;
+  const { classID, nik, major } = location.state;
   const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -116,8 +113,13 @@ const AdvisorProfile = () => {
 
   const getProfile = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/guidance-class/${classID}`,
+      const response = await jwtAuthAxios.get(
+        `/guidance-class/${classID}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
         { signal }
       );
       console.log("ini isi result.data", response.data);
@@ -136,12 +138,14 @@ const AdvisorProfile = () => {
   const handleDelete = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.delete(
-        `${BASE_URL_API}/guidance-class/delete-student`,
+      const response = await jwtAuthAxios.delete(
+        `/guidance-class/delete-student`,
         {
-          data: { studentList: selectedStudent },
-          signal,
-        }
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+        { data: { studentList: selectedStudent }, signal }
       );
 
       console.log("res delete: ", response);
@@ -280,120 +284,25 @@ const AdvisorProfile = () => {
             List of mentored students
           </Typography>
         </Grid>
-        {/* <Grid
-          item
-          xs={12}
-          sm={8}
-          md={12}
-          xl={6}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <SearchLocal
-            sx={{
-              height: "100%",
-              "@media (max-width: 390px)": {
-                height: "40px",
-              },
-            }}
-          />
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={4}
-          md={12}
-          xl={3}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <FormControl
-            sx={{
-              width: "100%",
-            }}
-          >
-            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
-            <Select
-              sx={{
-                borderRadius: 50,
-                "@media (max-width: 390px)": {
-                  height: "45px",
-                },
-              }}
-              multiple
-              value={filter}
-              label="Grouping"
-              renderValue={(selected) => selected.join(", ")}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: "37%",
-                  },
-                },
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Status
-              </ListSubheader>
-              <MenuItem value={"activeStudent"}>Active</MenuItem>
-              <MenuItem value={"nonactiveStudent"}>Nonactive</MenuItem>
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Tahun Masuk
-              </ListSubheader>
-              {yearList.map((item) => (
-                <MenuItem
-                  key={item.value}
-                  value={item.value}
-                  sx={{
-                    backgroundColor: "#FAFAFA",
-                    borderRadius: "5px",
-                    margin: "5px",
-                  }}
-                >
-                  {item.label}
-                </MenuItem>
-              ))}
-              <Div>
-                <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                  Prodi
-                </ListSubheader>
-                {prodiList.map((item) => (
-                  <MenuItem
-                    key={item.value}
-                    onChange={(event) => console.log(event.currentTarget.value)}
-                    value={item.value}
-                    sx={{
-                      backgroundColor: "#FAFAFA",
-                      borderRadius: "5px",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Div>
-            </Select>
-          </FormControl>
-        </Grid> */}
         <Grid item display={"flex"} alignItems={"center"}>
           <Button
-            onClick={() =>
+            onClick={() => {
+              console.log("Navigating to edit-student with parameters:", {
+                nik: nik,
+                classID: classID,
+              });
+
               navigate(
                 `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${nik}/edit-student`,
                 {
                   state: {
                     nik: nik,
                     classID: classID,
-                    // students: dataProfile?.student.map((item) => item.nim),
+                    major: dataProfile.major,
                   },
                 }
-              )
-            }
+              );
+            }}
             sx={{
               backgroundColor: "#006AF5",
               borderRadius: "24px",
@@ -402,7 +311,6 @@ const AdvisorProfile = () => {
               minWidth: "135px",
               fontSize: "12px",
               padding: "10px",
-
               "&:hover": {
                 backgroundColor: "#025ED8",
               },
@@ -529,8 +437,7 @@ const textStyle = {
 
 const TableItem = ({ item, index, isSelected, handleClick }) => {
   const navigate = useNavigate();
-  const { arrivalYear, firstName, id, lastName, major, nim, status } =
-    item.student;
+  const { arrivalYear, firstName, lastName, major, nim, status } = item.student;
   const role = JSON.parse(localStorage.getItem("user")).role;
   console.log("test role", role);
 
@@ -547,23 +454,32 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${
-            item.nim
-          }/student-profile`
+          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${nim}/student-profile`,
+          { state: { studentNim: nim } }
         );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${
-            item.nim
-          }/student-grade`
+          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${nim}/student-grade`,
+          {
+            state: {
+              studentNim: nim,
+              firstName: firstName,
+              lastName: lastName,
+            },
+          }
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${
-            item.nim
-          }/student-certificate`
+          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${nim}/student-certificate`,
+          {
+            state: {
+              studentNim: nim,
+              firstName: firstName,
+              lastName: lastName,
+            },
+          }
         );
         break;
 

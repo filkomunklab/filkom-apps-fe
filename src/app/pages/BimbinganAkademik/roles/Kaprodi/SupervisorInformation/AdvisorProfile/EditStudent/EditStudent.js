@@ -21,8 +21,7 @@ import {
 import SearchLocal from "app/shared/SearchLocal";
 import Div from "@jumbo/shared/Div";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -44,7 +43,7 @@ const CountStudent = ({ selected, totalStudents }) => {
 const EditStudent = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { nik, classID } = location.state;
+  const { nik, classID, major } = location.state;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [studentOptions, setStudentOptions] = useState([]);
@@ -55,15 +54,25 @@ const EditStudent = () => {
 
   const getStudent = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/guidance-class/get-all-unassigned-student/list`,
+      const response = await jwtAuthAxios.get(
+        `/guidance-class/get-all-unassigned-student/list`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
         { signal }
       );
 
       const { status, data } = response.data;
       console.log("inii response :", response);
       if (status === "OK") {
-        setStudentOptions(data.filter((item) => item.status !== "GRADUATE"));
+        const filteredStudents = data.filter(
+          (item) => item.status !== "GRADUATE" && item.major === major
+        );
+        console.log("isi major di supervisor", major);
+        setStudentOptions(filteredStudents);
+        // setStudentOptions(data.filter((item) => item.status !== "GRADUATE"));
       } else {
         console.log("ini response :", response);
       }
@@ -78,11 +87,17 @@ const EditStudent = () => {
       const nimList = selectedStudent.map((nim) => ({ studentNim: nim }));
       console.log("yaho", nimList);
 
-      const response = await axios.post(
-        `${BASE_URL_API}/guidance-class/add-student/${classID}`,
+      const response = await jwtAuthAxios.post(
+        `/guidance-class/add-student/${classID}`,
         { studentList: nimList },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
         { signal }
       );
+
       console.log("ahahaha :", response);
       const { status } = response.data;
       setIsLoading(false);

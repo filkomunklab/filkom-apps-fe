@@ -19,13 +19,11 @@ import {
   Modal,
   CircularProgress,
 } from "@mui/material";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import CloseIcon from "@mui/icons-material/Close";
-import PreRegistrationSubmitted from "./PreRegistrationSubmitted";
 import { useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const style = {
   position: "absolute",
@@ -254,10 +252,19 @@ const PreRegistrationSubmission = ({}) => {
   const getDataPreregis = async () => {
     try {
       const nim = JSON.parse(localStorage.getItem("user")).nim;
-      const studentData = await axios.get(`${BASE_URL_API}/student/${nim}`);
+      const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       const major = studentData.data.data.major;
-      const result = await axios.get(
-        `${BASE_URL_API}/pre-regist/status/${major}/${nim}`
+      const result = await jwtAuthAxios.get(
+        `/pre-regist/status/${major}/${nim}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       const preregisData = result.data.data;
       setDataPreregis(preregisData);
@@ -308,9 +315,16 @@ const PreRegistrationSubmission = ({}) => {
     handleCloseFirstModal();
     setLoading(true);
     const user = JSON.parse(localStorage.getItem("user"));
-    const classId = await axios.get(
-      `${BASE_URL_API}/guidance-class/${user.guidanceClassId}`
+
+    const classId = await jwtAuthAxios.get(
+      `/guidance-class/${user.guidanceClassId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
     );
+
     const employeeId = classId.data.data.teacherId;
 
     const listOfSubject = selectedRows.map((row) => ({ subjectId: row.id }));
@@ -322,9 +336,14 @@ const PreRegistrationSubmission = ({}) => {
       preRegistrationId: dataPreregis.id,
     };
     try {
-      const response = await axios.post(
-        `${BASE_URL_API}/pre-regist/submit`,
-        requestBody
+      const response = await jwtAuthAxios.post(
+        `/pre-regist/submit`,
+        requestBody,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       if (response.data.status === "OK") {
         window.location.reload();
@@ -380,8 +399,11 @@ const PreRegistrationSubmission = ({}) => {
   const getCurriculumDetails = async () => {
     try {
       const userNIM = JSON.parse(localStorage.getItem("user")).nim;
-      const studentData = await axios.get(`${BASE_URL_API}/student/${userNIM}`);
-
+      const studentData = await jwtAuthAxios.get(`/student/${userNIM}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       const curriculumId = studentData.data.data.curriculumId;
       // const curriculumId = "790021f2-9d25-4d65-a637-f4e883ad1885";
 
@@ -390,8 +412,13 @@ const PreRegistrationSubmission = ({}) => {
         return;
       }
 
-      const curriculumResult = await axios.get(
-        `${BASE_URL_API}/pre-regist/curriculum?id=${curriculumId}`
+      const curriculumResult = await jwtAuthAxios.get(
+        `/pre-regist/curriculum?id=${curriculumId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       const detail = curriculumResult.data.data;
       setCurriculumDetails({

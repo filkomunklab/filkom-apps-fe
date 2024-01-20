@@ -55,13 +55,8 @@ import AdvisorStudentGrade2 from "app/pages/BimbinganAkademik/roles/Kaprodi/Supe
 import AdvisorStudentCertificate from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/StudentCertificate";
 import AdvisorStudentCertificate2 from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/StudentCertificate/CertificateDetail";
 import EditStudent from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/EditStudent";
-import SupervisorInformatics from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/Informatics";
-import SupervisorInformationSystem from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/InformationSystem";
-import SupervisorInformationTechnology from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/InformationTechnology";
 import AddSupervisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor";
 import StudentList from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor/AddStudent";
-import InformationSytemLS from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor/InformationSystem";
-import InformationTechnologyLS from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor/AddStudent";
 import AdvisorHistory from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory";
 import HistoryActivityAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HIstoryActivity";
 import HistoryGradeAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HistoryGrade";
@@ -367,18 +362,6 @@ const dekanRoutes = [
   {
     path: "/bimbingan-akademik/dekan/supervisor-information",
     element: <Page component={SupervisorInformation} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/informatics",
-    element: <Page component={SupervisorInformatics} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/information-system",
-    element: <Page component={SupervisorInformationSystem} />,
-  },
-  {
-    path: "/bimbingan-akademik/dekan/supervisor-information/information-technology",
-    element: <Page component={SupervisorInformationTechnology} />,
   },
   {
     path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor",

@@ -142,7 +142,7 @@ const Activity = () => {
         <Grid item xs={12} md={4}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <Typography>Due Date</Typography>
+              <Typography>Date</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
@@ -156,7 +156,7 @@ const Activity = () => {
         <Grid item xs={12} md={4}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <Typography>Clock (optional)</Typography>
+              <Typography>Clock</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>

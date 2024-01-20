@@ -5,6 +5,7 @@ import { BASE_URL_API } from "@jumbo/config/env";
 import PreRegistrationClosedCase from "./PreRegistrationClosedCase";
 import PreRegistrationSubmission from "./PreRegistrationSubmission";
 import PreRegistrationSubmitted from "./PreRegistrationSubmitted";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const PreRegistration = () => {
   const [dataPreregis, setDataPreregis] = useState(null);
@@ -13,11 +14,24 @@ const PreRegistration = () => {
   const getDataPreregis = async () => {
     try {
       const nim = JSON.parse(localStorage.getItem("user")).nim;
-      const studentData = await axios.get(`${BASE_URL_API}/student/${nim}`);
+
+      const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
       const major = studentData.data.data.major;
-      const result = await axios.get(
-        `${BASE_URL_API}/pre-regist/status/${major}/${nim}`
+
+      const result = await jwtAuthAxios.get(
+        `/pre-regist/status/${major}/${nim}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
+
       const preregisData = result.data.data;
       setDataPreregis(preregisData);
 

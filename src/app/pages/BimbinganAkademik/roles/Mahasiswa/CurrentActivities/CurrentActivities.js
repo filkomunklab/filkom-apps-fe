@@ -542,8 +542,8 @@ const CurrentActivities = () => {
                               size={"small"}
                               label={"Activity"}
                               sx={{
-                                backgroundColor: "rgba(21, 131, 67, 0.1)",
-                                color: "rgba(21, 131, 67, 1)",
+                                backgroundColor: "rgba(0, 106, 245, 0.1)",
+                                color: "rgba(0, 95, 219, 1)",
                               }}
                             />
                           }

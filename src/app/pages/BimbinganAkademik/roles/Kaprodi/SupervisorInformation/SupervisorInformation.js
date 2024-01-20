@@ -24,6 +24,7 @@ import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate, Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { MoreVert } from "@mui/icons-material";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const userRole = Boolean(localStorage.getItem("user"))
   ? JSON.parse(localStorage.getItem("user")).role
@@ -45,9 +46,14 @@ const SupervisorInformation = () => {
       const token = localStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
 
-      const response = await axios.get(`${BASE_URL_API}/guidance-class`, {
-        signal,
-      });
+      const response = await axios.get(
+        `${BASE_URL_API}/guidance-class`,
+        { headers },
+        {
+          signal,
+        }
+      );
+
       const { status, data } = response.data;
       const searchData = data.filter((item) => {
         const fullName =
@@ -76,9 +82,12 @@ const SupervisorInformation = () => {
   const handleDelete = async (id) => {
     try {
       setIsLoading(true);
-      const response = await axios.delete(
-        `${BASE_URL_API}//guidance-class/${id}`
-      );
+
+      const response = await jwtAuthAxios.get(`/guidance-class/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       console.log("hehe", response.status);
       getDataSupervisor();
       setIsLoading(false);

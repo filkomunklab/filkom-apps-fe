@@ -74,6 +74,7 @@ const Login = () => {
   const [openModal, setOpenModal] = useState(false);
   const [profileMahasiswa, setProfileMahasiswa] = useState([]);
   const [userLogin, setUserLogin] = useState("");
+  const [tokenUser, setTokenUser] = useState("");
   const style = useStyles();
   const maxWidth515 = useMediaQuery("(max-width: 515px)");
 
@@ -122,6 +123,7 @@ const Login = () => {
         console.log("ini data: ", data);
         setProfileMahasiswa(data);
         setUserLogin(user);
+        setTokenUser(token);
         setOpenModal(true);
       }
     } else {
@@ -290,6 +292,7 @@ const Login = () => {
         setOpenModal={setOpenModal}
         profileMahasiswa={profileMahasiswa}
         userLogin={userLogin}
+        tokenUser={tokenUser}
       />
     </Div>
   );

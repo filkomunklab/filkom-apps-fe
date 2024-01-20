@@ -137,8 +137,11 @@ const StudentCertificate = () => {
   return (
     <Div>
       <Breadcrumbs aria-label="breadcrumb">
+        <StyledLink onClick={(event) => handleClick(event, -2)}>
+          Supervisor Information
+        </StyledLink>
         <StyledLink onClick={(event) => handleClick(event, -1)}>
-          Student Information
+          Advisor Profile
         </StyledLink>
         <Typography color="text.primary">Student Certificates</Typography>
       </Breadcrumbs>

@@ -26,6 +26,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import AddIcon from "@mui/icons-material/Add";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -46,7 +48,7 @@ const styleModal = {
   boxShadow: 24,
   padding: 35,
   backgroundColor: "white",
-  borderRadius: 10,
+  borderRadius: 8,
   maxWidth: "90%",
   "@media (maxWidth: 768px)": {
     maxWidth: "80%",
@@ -70,7 +72,7 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <p
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -82,7 +84,7 @@ function TabPanel(props) {
           <Typography>{children}</Typography>
         </div>
       )}
-    </div>
+    </p>
   );
 }
 
@@ -135,47 +137,21 @@ const Manage = () => {
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
   const [major, setMajor] = useState([]);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [open, setOpen] = React.useState(false);
 
-  // const getMajor = async () => {
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     const headers = { Authorization: `Bearer ${token}` };
-  //     const { id } = JSON.parse(localStorage.getItem("user"));
-  //     const response = await axios.get(`${BASE_URL_API}/employee/${id}`, {
-  //       headers,
-  //     });
-
-  //     const { status, data } = response.data;
-
-  //     if (status === "OK") {
-  //       setMajor(data.major);
-  //     } else {
-  //       console.log("ini response :", response);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [listPreregisModalOpen, setListPreregisModalOpen] = useState(false);
 
   const getMajor = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const headers = { Authorization: `Bearer ${token}` };
       const { id } = JSON.parse(localStorage.getItem("user"));
-
-      const response = await axios.get(`${BASE_URL_API}/employee/${id}`, {
-        headers,
+      const response = await jwtAuthAxios.get(`/employee/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
       const { status, data } = response.data;
 
       if (status === "OK") {
         return { major: data.major };
-      } else {
-        console.error("Error fetching data:", response);
-        return { error: response.data.message };
       }
     } catch (error) {
       console.error("An error occurred:", error.message);
@@ -183,75 +159,47 @@ const Manage = () => {
     }
   };
 
-  const getDataGrades = async () => {
+  const fetchData = async () => {
     try {
       const { major } = await getMajor();
 
-      const result = await jwtAuthAxios.get(
+      const gradesPromise = jwtAuthAxios.get(
         `/access/list/gradesAccess/${major}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
 
-      const filteredData = result.data.data.filter((item) => {
+      const preregisPromise = jwtAuthAxios.get(`/pre-regist?major=${major}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+
+      const [gradesResult, preregisResult] = await Promise.all([
+        gradesPromise,
+        preregisPromise,
+      ]);
+
+      const filteredGrades = gradesResult.data.data.filter((item) => {
         const isOpenText = item.isOpen ? "Open" : "Closed";
         return isOpenText.toLowerCase().includes(searchValue.toLowerCase());
       });
 
-      setDataGrades(filteredData);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-  const handleClose = async (id) => {
-    try {
-      setLoading(true);
-      const currentItem = dataGrades.find((item) => item.id === id);
-
-      if (currentItem && currentItem.isOpen === false) {
-        setLoading(false);
-        alert("Already closed");
-        return;
-      }
-
-      const response = await jwtAuthAxios.patch(`/access/close/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-      console.log("hehe", response);
-
-      getDataGrades();
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-    }
-  };
-
-  const getDataPreregis = async () => {
-    try {
-      const { major } = await getMajor();
-
-      const result = await jwtAuthAxios.get(`/pre-regist?major=${major}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-
-      const filteredData = result.data.data.filter((item) => {
+      const filteredPreregis = preregisResult.data.data.filter((item) => {
         const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
         return employeeFullName
           .toLowerCase()
           .includes(searchValue.toLowerCase());
       });
 
-      setDataPreregis(filteredData);
+      setDataGrades(filteredGrades);
+      setDataPreregis(filteredPreregis);
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
   useEffect(() => {
-    getDataGrades();
-    getDataPreregis();
+    fetchData();
   }, [searchValue]);
 
   console.log("ini isi major", major);
@@ -272,6 +220,17 @@ const Manage = () => {
 
   const GradeModalClose = () => {
     setGradeModalOpen(false);
+  };
+
+  const handleTableRowClick = (rowData) => {
+    console.log("ahaha", rowData);
+    setSelectedRow(rowData);
+    setListPreregisModalOpen(true);
+  };
+
+  const ListPreregisModalClose = () => {
+    setSelectedRow(null);
+    setListPreregisModalOpen(false);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -627,6 +586,7 @@ const Manage = () => {
                         <TableRow
                           key={value.id}
                           // onClick={() => handleNavigate(value)}
+                          onClick={() => handleTableRowClick(value)}
                           sx={{
                             ":hover": {
                               cursor: "pointer",
@@ -708,6 +668,170 @@ const Manage = () => {
                     )}
                   </TableBody>
                 </Table>
+                <Modal
+                  open={listPreregisModalOpen}
+                  onClose={ListPreregisModalClose}
+                >
+                  <Box
+                    style={{
+                      ...styleModal,
+                      overflow: "auto",
+                      maxHeight: "80vh",
+                    }}
+                  >
+                    <IconButton
+                      edge="end"
+                      color="#D9D9D9"
+                      onClick={ListPreregisModalClose}
+                      aria-label="close"
+                      sx={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "20px",
+                      }}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                    <Grid container>
+                      <Grid item md={8} xs={8}>
+                        <Typography
+                          id="modal-modal-title"
+                          variant="h4"
+                          component="h2"
+                          sx={{
+                            fontWeight: 600,
+                            paddingBottom: 3,
+                            "@media (max-width: 390px)": {
+                              fontSize: "15px",
+                            },
+                          }}
+                        >
+                          Pre-registration Submission
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={3}>
+                      {/* {dataPreregis.map((value) => ( */}
+                      {/* <React.Fragment key={value.id}> */}
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="h6">Semester</Typography>
+                        <Typography variant="h6" sx={textStyle}>
+                          {selectedRow?.semester}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="h6">Year</Typography>
+                        <Typography variant="h6" sx={textStyle}>
+                          {selectedRow?.semesterPeriod}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="h6">To Major</Typography>
+                        <Typography variant="h6" sx={textStyle}>
+                          {selectedRow?.major === "IF"
+                            ? "Informatics"
+                            : selectedRow?.major === "SI"
+                            ? "Information System"
+                            : selectedRow?.major === "DKV"
+                            ? "Information Technology"
+                            : selectedRow?.major}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="h6">Status</Typography>
+                        <Typography variant="h6" sx={textStyle}>
+                          {selectedRow?.isOpen ? "Open" : "Closed"}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="h6">Create Date</Typography>
+                        <Typography variant="h6" sx={textStyle}>
+                          {new Date(selectedRow?.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            }
+                          )}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="h6">
+                          Due Date Estimation
+                        </Typography>
+                        <Typography variant="h6" sx={textStyle}>
+                          {new Date(selectedRow?.dueDate).toLocaleDateString(
+                            "en-US",
+                            {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            }
+                          )}
+                        </Typography>
+                      </Grid>
+                      {/* </React.Fragment> */}
+                      {/* ))} */}
+                      <Grid item xs={12} md={6}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          onClick={() =>
+                            navigate(
+                              `/bimbingan-akademik/kaprodi/manage/list-student/${selectedRow?.id}`
+                            )
+                          }
+                          sx={{
+                            backgroundColor: "#006AF5",
+                            borderRadius: "15px",
+                            color: "white",
+                            fontSize: "12px",
+                            padding: "7px",
+                            paddingLeft: "9px",
+                            paddingRight: "13px",
+                            gap: "5px",
+                            "&:hover": {
+                              backgroundColor: "#025ED8",
+                            },
+                          }}
+                        >
+                          <PeopleAltIcon sx={{ fontSize: "14px" }} />
+                          View List Student
+                        </Button>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          onClick={() =>
+                            navigate(
+                              `/bimbingan-akademik/kaprodi/manage/list-courses/${selectedRow?.id}`
+                            )
+                          }
+                          sx={{
+                            backgroundColor: "#006AF5",
+                            borderRadius: "15px",
+                            color: "white",
+                            fontSize: "12px",
+                            padding: "7px",
+                            paddingLeft: "9px",
+                            paddingRight: "13px",
+                            gap: "5px",
+                            "&:hover": {
+                              backgroundColor: "#025ED8",
+                            },
+                          }}
+                        >
+                          <ViewListIcon sx={{ fontSize: "14px" }} />
+                          View List Courses
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Modal>
               </TableContainer>
               <TablePagination
                 sx={{
@@ -1006,7 +1130,6 @@ const Manage = () => {
                       <TableCell>Year</TableCell>
                       <TableCell>Due Date Estimation</TableCell>
                       <TableCell>Status</TableCell>
-                      <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -1086,34 +1209,6 @@ const Manage = () => {
                             }}
                           >
                             {value.isOpen ? "Open" : "Closed"}
-                          </TableCell>
-                          <TableCell>
-                            <MoreVert
-                              aria-describedby={value.id}
-                              onClick={(e) => {
-                                setAnchorEl(e.currentTarget);
-                                setOpen(true);
-                              }}
-                            />
-                            <Popover
-                              id={value.id}
-                              anchorEl={anchorEl}
-                              open={open}
-                              onClose={() => setOpen(false)}
-                              anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "left",
-                              }}
-                            >
-                              <Button
-                                onClick={() => {
-                                  handleClose(value.id);
-                                  console.log("Button Clicked");
-                                }}
-                              >
-                                Close
-                              </Button>
-                            </Popover>
                           </TableCell>
                         </TableRow>
                       ))
@@ -1224,6 +1319,15 @@ const Manage = () => {
       </Modal>
     </div>
   );
+};
+
+const textStyle = {
+  borderWidth: 1,
+  borderColor: "#00000029",
+  borderStyle: "solid",
+  paddingX: "24px",
+  paddingY: "13px",
+  borderRadius: "4px",
 };
 
 export default Manage;
