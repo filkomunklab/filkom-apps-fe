@@ -228,12 +228,12 @@ const SidebarFooter = () => {
     label: "Settings",
     type: "section",
     children: [
-      // {
-      //   uri: "/change-password",
-      //   label: "Change Password",
-      //   type: "nav-item",
-      //   icon: <VpnKeyIcon sx={{ fontSize: 20 }} />,
-      // },
+      {
+        uri: "/change-password",
+        label: "Change Password",
+        type: "nav-item",
+        icon: <VpnKeyIcon sx={{ fontSize: 20 }} />,
+      },
       {
         onClick: () => {
           localStorage.clear();

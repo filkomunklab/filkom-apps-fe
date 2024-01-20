@@ -101,7 +101,7 @@ const EditDataSchema = Yup.object().shape({
     .required(),
   arrivalYear: Yup.string().nullable(),
   graduate_year: Yup.string().nullable(),
-  phoneNum: Yup.string()
+  phoneNo: Yup.string()
     .trim("Phone Number cannot include leading and trailing spaces")
     .strict(true)
     .matches(/^\d+$/, "phone number must only contain digits")
@@ -184,7 +184,7 @@ const EditDataSchema = Yup.object().shape({
       "Parent / guardian Education cannot include leading and trailing spaces"
     )
     .strict(true)
-    .min(3, "must be at least 3 characters")
+    .min(1, "must be at least 1 character")
     .nullable(),
   guardianEmail: Yup.string()
     .trim("Parent / guardian Email cannot include leading and trailing spaces")
@@ -321,7 +321,6 @@ const EditDataModal = ({
           .match(/\b\d{4}\b/)
           ? values.graduate_year.toString().match(/\b\d{4}\b/)[0]
           : null;
-        console.log("ini values: ", values);
 
         setLoading(true);
         try {
@@ -350,9 +349,16 @@ const EditDataModal = ({
             }
           );
 
+          const { curriculumId, ...valuesWithoutCurriculumId } = values;
+
           await jwtAuthAxios.put(
             `/student/update/id/${passingData.id}`,
-            values,
+            {
+              ...valuesWithoutCurriculumId,
+              curriculum: {
+                connect: { id: curriculumId },
+              },
+            },
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -502,7 +508,11 @@ const EditDataModal = ({
                     label={"Date Of Birth"}
                     views={["day", "month", "year"]}
                     name="dateOfBirth"
-                    defaultValue={dayjs(passingData.dateOfBirth)}
+                    defaultValue={
+                      passingData.dateOfBirth
+                        ? dayjs(passingData.dateOfBirth)
+                        : null
+                    }
                     error={errors.dateOfBirth && touched.dateOfBirth}
                     helperText={errors.dateOfBirth}
                     onChange={(event) => {
@@ -535,17 +545,17 @@ const EditDataModal = ({
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
-                    name="curriculum"
+                    name="curriculumId"
                     id="demo-simple-select"
                     label="Curriculum"
                     defaultValue={passingData.curriculumId}
                     onChange={(event) => {
-                      setFieldValue("curriculum", event.target.value);
+                      setFieldValue("curriculumId", event.target.value);
                     }}
                   >
                     {curriculumList &&
-                      curriculumList.map((item) => (
-                        <MenuItem value={item.id}>
+                      curriculumList.map((item, index) => (
+                        <MenuItem key={index} value={item.id}>
                           {item.major} {item.year}
                         </MenuItem>
                       ))}
@@ -609,7 +619,11 @@ const EditDataModal = ({
                     label={"Arrival Year"}
                     views={["year"]}
                     name="arrivalYear"
-                    defaultValue={dayjs(passingData.arrivalYear)}
+                    defaultValue={
+                      passingData.arrivalYear
+                        ? dayjs(passingData.arrivalYear)
+                        : null
+                    }
                     error={errors.arrivalYear && touched.arrivalYear}
                     helperText={errors.arrivalYear}
                     onChange={(event) => {
@@ -624,7 +638,11 @@ const EditDataModal = ({
                     label={"Graduate Year"}
                     views={["year"]}
                     name="graduate_year"
-                    defaultValue={dayjs(passingData.graduate_year)}
+                    defaultValue={
+                      passingData.graduate_year
+                        ? dayjs(passingData.graduate_year)
+                        : null
+                    }
                     error={errors.graduate_year && touched.graduate_year}
                     helperText={errors.graduate_year}
                     onChange={(event) => {

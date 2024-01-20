@@ -22,7 +22,7 @@ import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
 import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
 import { useMediaQuery } from "@mui/material";
 
-import { FormAfterLogin } from "./components";
+import { FormAfterLoginStudent } from "./components";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const useStyles = makeStyles((theme) => ({
@@ -287,7 +287,7 @@ const Login = () => {
           />
         </Div>
       </Div>
-      <FormAfterLogin
+      <FormAfterLoginStudent
         openModal={openModal}
         setOpenModal={setOpenModal}
         profileMahasiswa={profileMahasiswa}
