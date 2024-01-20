@@ -172,7 +172,7 @@ const TableItem = ({ item, index }) => {
       : role.includes("DEKAN")
       ? "dekan"
       : role.includes("OPERATOR_FAKULTAS")
-      ? "sek-dekan"
+      ? "sekretaris"
       : "dosen-pembimbing";
 
     return filter;

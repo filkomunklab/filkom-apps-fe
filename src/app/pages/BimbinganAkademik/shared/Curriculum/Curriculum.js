@@ -334,8 +334,8 @@ const Curriculum = () => {
 
   const getRoleFromPath = () => {
     const path = window.location.pathname;
-    if (path.includes("sek-dekan")) {
-      return "sekdekan";
+    if (path.includes("sekretaris")) {
+      return "sekretaris";
     } else if (path.includes("dekan")) {
       return "dekan";
     } else if (path.includes("kaprodi")) {
@@ -347,7 +347,7 @@ const Curriculum = () => {
   const [role, setRole] = useState(getRoleFromPath());
   const determineAllowedFeatures = () => {
     switch (role) {
-      case "sekdekan":
+      case "sekretaris":
         return ["view_kurikulum", "add_kurikulum", "delete_kurikulum"];
       case "dekan":
         return ["view_kurikulum"];
@@ -479,334 +479,335 @@ const Curriculum = () => {
             </Typography>
           </Grid>
 
-          {role === "sekdekan" && allowedFeatures.includes("add_kurikulum") && (
-            <Grid
-              item
-              md={4}
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                padding: "3px",
-                paddingBottom: "15px",
-              }}
-            >
-              <Button
-                variant="outlined"
-                size="small"
+          {role === "sekretaris" &&
+            allowedFeatures.includes("add_kurikulum") && (
+              <Grid
+                item
+                md={4}
                 sx={{
-                  backgroundColor: "#006AF5",
-                  borderRadius: "24px",
-                  color: "white",
-                  fontSize: "12px",
-                  padding: "7px",
-                  paddingLeft: "9px",
-                  paddingRight: "9px",
-                  minWidth: "110px",
-                  gap: "5px",
-                  "&:hover": {
-                    backgroundColor: "#025ED8",
-                  },
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  padding: "3px",
+                  paddingBottom: "15px",
                 }}
-                onClick={handleAddModalOpen}
               >
-                <AddIcon sx={{ fontSize: "14px" }} />
-                Add Curriculum
-              </Button>
-              <Modal open={isAddModalOpen} onClose={handleAddModalClose}>
-                <Box style={styleCurriculum}>
-                  <IconButton
-                    edge="end"
-                    color="#D9D9D9"
-                    onClick={closeModal}
-                    aria-label="close"
-                    sx={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "20px",
-                    }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                  <Grid container paddingTop={2}>
-                    <Grid item md={8} xs={8}>
-                      <Typography
-                        id="modal-modal-title"
-                        variant="h4"
-                        component="h2"
+                <Button
+                  variant="outlined"
+                  size="small"
+                  sx={{
+                    backgroundColor: "#006AF5",
+                    borderRadius: "24px",
+                    color: "white",
+                    fontSize: "12px",
+                    padding: "7px",
+                    paddingLeft: "9px",
+                    paddingRight: "9px",
+                    minWidth: "110px",
+                    gap: "5px",
+                    "&:hover": {
+                      backgroundColor: "#025ED8",
+                    },
+                  }}
+                  onClick={handleAddModalOpen}
+                >
+                  <AddIcon sx={{ fontSize: "14px" }} />
+                  Add Curriculum
+                </Button>
+                <Modal open={isAddModalOpen} onClose={handleAddModalClose}>
+                  <Box style={styleCurriculum}>
+                    <IconButton
+                      edge="end"
+                      color="#D9D9D9"
+                      onClick={closeModal}
+                      aria-label="close"
+                      sx={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "20px",
+                      }}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                    <Grid container paddingTop={2}>
+                      <Grid item md={8} xs={8}>
+                        <Typography
+                          id="modal-modal-title"
+                          variant="h4"
+                          component="h2"
+                          sx={{
+                            fontWeight: 600,
+                            paddingBottom: 3,
+                            paddingTop: 2,
+                            "@media (max-width: 390px)": {
+                              fontSize: "15px",
+                            },
+                          }}
+                        >
+                          Add Curriculum
+                        </Typography>
+                      </Grid>
+                      <Grid item mt={2} md={4} xs={4}>
+                        <Link
+                          sx={{
+                            cursor: "pointer",
+                            color: "#025ED8",
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            "@media (max-width: 390px)": { fontSize: "11px" },
+                          }}
+                          onClick={handleTemplate}
+                        >
+                          Template Excel
+                        </Link>
+                      </Grid>
+                    </Grid>
+                    <FormControl
+                      fullWidth
+                      sx={{
+                        width: "100%",
+                        marginBottom: 3,
+                      }}
+                      label="Program Studi"
+                    >
+                      <InputLabel>Program Studi</InputLabel>
+                      <Select
+                        label="Program Studi"
+                        value={selectedProdi}
+                        onChange={handleProdiChange}
+                      >
+                        <MenuItem value="Informatika">Informatika</MenuItem>
+                        <MenuItem value="Sistem Informasi">
+                          Sistem Informasi
+                        </MenuItem>
+                        <MenuItem value="Teknologi Informasi">
+                          Teknologi Informasi
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                    <TextField
+                      label="Tahun"
+                      variant="outlined"
+                      fullWidth
+                      value={selectedYear}
+                      onChange={handleYearChange}
+                      sx={{ marginBottom: 3 }}
+                    />
+                    <FormControl
+                      fullWidth
+                      variant="outlined"
+                      sx={{ backgroundColor: "white" }}
+                      size="small"
+                    >
+                      <Input
+                        type="file"
+                        id="excel-file-input"
+                        onChange={handleFileInputChange}
+                        disableUnderline
+                        inputProps={{ style: { display: "none" } }}
+                      />
+                      <label
+                        htmlFor="excel-file-input"
+                        style={{
+                          border: "0.2px solid #BCBCBC",
+                          padding: "14px",
+                          height: "53px",
+                          borderRadius: "4px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          transition: "border-color 0.3s ease",
+                          cursor: "pointer",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.borderColor = "black";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.border = "0.2px solid #BCBCBC";
+                        }}
+                        onClick={(e) => {
+                          e.currentTarget.style.border = "2px solid #006AF5";
+                        }}
+                        id="excel-file-label"
+                      >
+                        <span
+                          style={{
+                            color: selectedFileName ? "#000000" : "#7a7a7a",
+                          }}
+                        >
+                          {selectedFileName || "Import Excel"}
+                        </span>
+                        <SaveAltIcon sx={{ color: "#888888" }} />
+                      </label>
+                    </FormControl>
+                    <Grid
+                      item
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        pt: 3,
+                      }}
+                    >
+                      <Button
+                        size="small"
+                        onClick={handleOpenFirstModal}
                         sx={{
-                          fontWeight: 600,
-                          paddingBottom: 3,
-                          paddingTop: 2,
-                          "@media (max-width: 390px)": {
-                            fontSize: "15px",
+                          backgroundColor: "#006AF5",
+                          borderRadius: "24px",
+                          color: "white",
+                          fontSize: "12px",
+                          padding: "7px",
+                          paddingLeft: "20px",
+                          paddingRight: "20px",
+                          gap: "5px",
+                          "&:hover": {
+                            backgroundColor: "#025ED8",
                           },
                         }}
                       >
-                        Add Curriculum
-                      </Typography>
+                        Submit
+                      </Button>
                     </Grid>
-                    <Grid item mt={2} md={4} xs={4}>
-                      <Link
-                        sx={{
-                          cursor: "pointer",
-                          color: "#025ED8",
-                          display: "flex",
-                          justifyContent: "flex-end",
-                          "@media (max-width: 390px)": { fontSize: "11px" },
-                        }}
-                        onClick={handleTemplate}
-                      >
-                        Template Excel
-                      </Link>
-                    </Grid>
-                  </Grid>
-                  <FormControl
-                    fullWidth
-                    sx={{
-                      width: "100%",
-                      marginBottom: 3,
-                    }}
-                    label="Program Studi"
-                  >
-                    <InputLabel>Program Studi</InputLabel>
-                    <Select
-                      label="Program Studi"
-                      value={selectedProdi}
-                      onChange={handleProdiChange}
+                    <Modal
+                      open={openFirstModal}
+                      onClose={handleCloseFirstModal}
+                      aria-labelledby="modal-modal-title"
+                      aria-describedby="modal-modal-description"
                     >
-                      <MenuItem value="Informatika">Informatika</MenuItem>
-                      <MenuItem value="Sistem Informasi">
-                        Sistem Informasi
-                      </MenuItem>
-                      <MenuItem value="Teknologi Informasi">
-                        Teknologi Informasi
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                  <TextField
-                    label="Tahun"
-                    variant="outlined"
-                    fullWidth
-                    value={selectedYear}
-                    onChange={handleYearChange}
-                    sx={{ marginBottom: 3 }}
-                  />
-                  <FormControl
-                    fullWidth
-                    variant="outlined"
-                    sx={{ backgroundColor: "white" }}
-                    size="small"
-                  >
-                    <Input
-                      type="file"
-                      id="excel-file-input"
-                      onChange={handleFileInputChange}
-                      disableUnderline
-                      inputProps={{ style: { display: "none" } }}
-                    />
-                    <label
-                      htmlFor="excel-file-input"
-                      style={{
-                        border: "0.2px solid #BCBCBC",
-                        padding: "14px",
-                        height: "53px",
-                        borderRadius: "4px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        transition: "border-color 0.3s ease",
-                        cursor: "pointer",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = "black";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.border = "0.2px solid #BCBCBC";
-                      }}
-                      onClick={(e) => {
-                        e.currentTarget.style.border = "2px solid #006AF5";
-                      }}
-                      id="excel-file-label"
-                    >
-                      <span
-                        style={{
-                          color: selectedFileName ? "#000000" : "#7a7a7a",
-                        }}
-                      >
-                        {selectedFileName || "Import Excel"}
-                      </span>
-                      <SaveAltIcon sx={{ color: "#888888" }} />
-                    </label>
-                  </FormControl>
-                  <Grid
-                    item
-                    sx={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      pt: 3,
-                    }}
-                  >
-                    <Button
-                      size="small"
-                      onClick={handleOpenFirstModal}
-                      sx={{
-                        backgroundColor: "#006AF5",
-                        borderRadius: "24px",
-                        color: "white",
-                        fontSize: "12px",
-                        padding: "7px",
-                        paddingLeft: "20px",
-                        paddingRight: "20px",
-                        gap: "5px",
-                        "&:hover": {
-                          backgroundColor: "#025ED8",
-                        },
-                      }}
-                    >
-                      Submit
-                    </Button>
-                  </Grid>
-                  <Modal
-                    open={openFirstModal}
-                    onClose={handleCloseFirstModal}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                  >
-                    <div style={style}>
-                      <Typography
-                        id="modal-modal-title"
-                        variant="h4"
-                        component="h2"
-                        sx={{
-                          fontWeight: 600,
-                        }}
-                      >
-                        Add Curriculum?
-                      </Typography>
-                      <Typography
-                        id="modal-modal-description"
-                        sx={{ marginTop: "16px", marginBottom: "20px" }}
-                      >
-                        Are you sure you want to add this curriculum on the
-                        list?
-                      </Typography>
+                      <div style={style}>
+                        <Typography
+                          id="modal-modal-title"
+                          variant="h4"
+                          component="h2"
+                          sx={{
+                            fontWeight: 600,
+                          }}
+                        >
+                          Add Curriculum?
+                        </Typography>
+                        <Typography
+                          id="modal-modal-description"
+                          sx={{ marginTop: "16px", marginBottom: "20px" }}
+                        >
+                          Are you sure you want to add this curriculum on the
+                          list?
+                        </Typography>
 
-                      <Grid container spacing={1} justifyContent="flex-end">
-                        <Grid item>
-                          <Button
-                            onClick={handleCloseFirstModal}
-                            sx={{
-                              backgroundColor: "white",
-                              borderRadius: "5px",
-                              color: "black",
-                              whiteSpace: "nowrap",
-                              backgroundColor: "lightgrey",
-                              "&:hover": {
-                                backgroundColor: "darkgrey",
-                              },
-                            }}
-                          >
-                            No
-                          </Button>
+                        <Grid container spacing={1} justifyContent="flex-end">
+                          <Grid item>
+                            <Button
+                              onClick={handleCloseFirstModal}
+                              sx={{
+                                backgroundColor: "white",
+                                borderRadius: "5px",
+                                color: "black",
+                                whiteSpace: "nowrap",
+                                backgroundColor: "lightgrey",
+                                "&:hover": {
+                                  backgroundColor: "darkgrey",
+                                },
+                              }}
+                            >
+                              No
+                            </Button>
+                          </Grid>
+                          <Grid item>
+                            <Button
+                              onClick={handleSubmitFirstModal}
+                              sx={{
+                                backgroundColor: "#006AF5",
+                                borderRadius: "5px",
+                                color: "white",
+                                whiteSpace: "nowrap",
+                                "&:hover": {
+                                  backgroundColor: "#025ED8",
+                                },
+                              }}
+                            >
+                              Yes
+                            </Button>
+                          </Grid>
                         </Grid>
-                        <Grid item>
-                          <Button
-                            onClick={handleSubmitFirstModal}
-                            sx={{
-                              backgroundColor: "#006AF5",
-                              borderRadius: "5px",
-                              color: "white",
-                              whiteSpace: "nowrap",
-                              "&:hover": {
-                                backgroundColor: "#025ED8",
-                              },
-                            }}
-                          >
-                            Yes
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </div>
-                  </Modal>
-                </Box>
-              </Modal>
-              <Modal
-                open={openSecondModal}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                <div style={style2}>
-                  <IconButton
-                    edge="end"
-                    color="#D9D9D9"
-                    onClick={handleCloseSecondModal}
-                    aria-label="close"
-                    sx={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "20px",
-                    }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                  <Typography
-                    id="modal-modal-title"
-                    variant="h4"
-                    component="h2"
-                    sx={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    Successful Adding Curriculum!
-                  </Typography>
-                  <Typography
-                    id="modal-modal-description"
-                    style={{ marginTop: "16px", marginBottom: "20px" }}
-                  >
-                    You have successfully added a new curriculum to the list
-                  </Typography>
-                </div>
-              </Modal>
-              <Modal
-                open={openErrorModal}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                <div style={style2}>
-                  <IconButton
-                    edge="end"
-                    color="#D9D9D9"
-                    onClick={handleCloseErrorModal}
-                    aria-label="close"
-                    sx={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "20px",
-                    }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                  <Typography
-                    id="modal-modal-title"
-                    variant="h4"
-                    component="h2"
-                    sx={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    Error Submission!
-                  </Typography>
-                  <Typography
-                    id="modal-modal-description"
-                    style={{ marginTop: "16px", marginBottom: "20px" }}
-                  >
-                    Error: Failed to add curriculum. Please try again.
-                  </Typography>
-                </div>
-              </Modal>
-            </Grid>
-          )}
+                      </div>
+                    </Modal>
+                  </Box>
+                </Modal>
+                <Modal
+                  open={openSecondModal}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <div style={style2}>
+                    <IconButton
+                      edge="end"
+                      color="#D9D9D9"
+                      onClick={handleCloseSecondModal}
+                      aria-label="close"
+                      sx={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "20px",
+                      }}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                    <Typography
+                      id="modal-modal-title"
+                      variant="h4"
+                      component="h2"
+                      sx={{
+                        fontWeight: 600,
+                      }}
+                    >
+                      Successful Adding Curriculum!
+                    </Typography>
+                    <Typography
+                      id="modal-modal-description"
+                      style={{ marginTop: "16px", marginBottom: "20px" }}
+                    >
+                      You have successfully added a new curriculum to the list
+                    </Typography>
+                  </div>
+                </Modal>
+                <Modal
+                  open={openErrorModal}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <div style={style2}>
+                    <IconButton
+                      edge="end"
+                      color="#D9D9D9"
+                      onClick={handleCloseErrorModal}
+                      aria-label="close"
+                      sx={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "20px",
+                      }}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                    <Typography
+                      id="modal-modal-title"
+                      variant="h4"
+                      component="h2"
+                      sx={{
+                        fontWeight: 600,
+                      }}
+                    >
+                      Error Submission!
+                    </Typography>
+                    <Typography
+                      id="modal-modal-description"
+                      style={{ marginTop: "16px", marginBottom: "20px" }}
+                    >
+                      Error: Failed to add curriculum. Please try again.
+                    </Typography>
+                  </div>
+                </Modal>
+              </Grid>
+            )}
         </Grid>
       </div>
       <div>
@@ -851,7 +852,7 @@ const Curriculum = () => {
                 }}
               >
                 {value.major} {value.year}
-                {role === "sekdekan" &&
+                {role === "sekretaris" &&
                   allowedFeatures.includes("add_kurikulum") && (
                     <IconButton
                       className="delete-icon"
