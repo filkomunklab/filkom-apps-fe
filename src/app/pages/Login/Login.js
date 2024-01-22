@@ -107,12 +107,12 @@ const Login = () => {
           },
         });
         const responseCurriculum = await jwtAuthAxios.get(
-          `curriculum/${response.data.data.curriculumId}`
-          // {
-          //   headers: {
-          //     Authorization: `Bearer ${localStorage.getItem("token")}`,
-          //   },
-          // }
+          `curriculum/${response.data.data.curriculumId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         const data = {
