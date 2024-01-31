@@ -930,6 +930,7 @@ const textStyle = {
   paddingX: "24px",
   paddingY: "13px",
   borderRadius: "4px",
+  color: "rgba(28,52,84,0.26)",
   //   size: "small",
 };
 
