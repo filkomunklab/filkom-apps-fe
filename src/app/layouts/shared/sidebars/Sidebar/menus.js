@@ -560,6 +560,34 @@ export const dekanMenus = [
       },
     ],
   },
+  {
+    label: "Outcome-Based Education",
+    type: "section",
+    children: [
+      {
+        label: "Curriculum Management",
+        type: "collapsible",
+        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Informatics",
+            type: "nav-item",
+            uri: "/obe/curriculum/list/IF",
+          },
+          {
+            label: "Information System",
+            type: "nav-item",
+            uri: "/obe/curriculum/list/SI",
+          },
+          {
+            label: "Information Technology",
+            type: "nav-item",
+            uri: "/obe/curriculum/list/DKV",
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export const dosenMenus = [
