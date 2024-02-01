@@ -45,12 +45,13 @@ import HistoryGradeAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/Super
 import HistoryPreRegistrationAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HistoryPreRegis";
 import HistoryCertificateAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HistoryCertificate";
 import HistoryConsultationAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HistoryConsultation";
-
+import CurriculumList from "app/pages/Obe/CurriculumList";
 import Profile from "app/pages/BimbinganAkademik/shared/Profile/Profile";
 
 const { default: Page } = require("@jumbo/shared/Page");
 
 const dekanRoutes = [
+  // ========================== BIMBINGAN AKADEMIK ROUTES ==========================
   {
     path: "/bimbingan-akademik/dekan/dashboard",
     element: <Page component={Dashboard} />,
@@ -335,6 +336,20 @@ const dekanRoutes = [
   {
     path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/student-list",
     element: <Page component={StudentList} />,
+  },
+
+  // ========================== OBE ROUTES ==========================
+  {
+    path: "/obe/curriculum/list/:major",
+    element: <Page component={CurriculumList} />,
+  },
+  {
+    path: "/obe/curriculum/:id/subject-list",
+    // element: <Page component={StudentList} />,
+  },
+  {
+    path: "/obe/subject/:id/cpl-mapping",
+    // element: <Page component={StudentList} />,
   },
 ];
 

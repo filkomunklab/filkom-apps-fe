@@ -45,27 +45,27 @@ function App() {
                       }}
                       maxSnack={3}
                     >
-                      <JumboAuthProvider>
-                        <AppLayout>
-                          <Suspense
-                            fallback={
-                              <Div
-                                sx={{
-                                  display: "flex",
-                                  minWidth: 0,
-                                  alignItems: "center",
-                                  alignContent: "center",
-                                  height: "100%",
-                                }}
-                              >
-                                <CircularProgress sx={{ m: "-40px auto 0" }} />
-                              </Div>
-                            }
-                          >
-                            <AppRoutes />
-                          </Suspense>
-                        </AppLayout>
-                      </JumboAuthProvider>
+                      {/* <JumboAuthProvider> */}
+                      <AppLayout>
+                        <Suspense
+                          fallback={
+                            <Div
+                              sx={{
+                                display: "flex",
+                                minWidth: 0,
+                                alignItems: "center",
+                                alignContent: "center",
+                                height: "100%",
+                              }}
+                            >
+                              <CircularProgress sx={{ m: "-40px auto 0" }} />
+                            </Div>
+                          }
+                        >
+                          <AppRoutes />
+                        </Suspense>
+                      </AppLayout>
+                      {/* </JumboAuthProvider>  */}
                     </SnackbarProvider>
                   </JumboDialogProvider>
                 </JumboRTL>
