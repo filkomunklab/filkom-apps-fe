@@ -170,7 +170,7 @@ const Login = () => {
                   width: maxWidth515 ? "275px" : "433px",
                 }}
               >
-                <Logo mini sx={{ height: "104px" }} />
+                <Logo mini />
                 <Typography
                   variant="h1"
                   sx={{
