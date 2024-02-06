@@ -43,7 +43,6 @@ const BeritaAcara = () => {
   const [dataBeritaAcara, setDataBeritaAcara] = useState();
   const [dataKesimpulan, setDataKesimpulan] = useState();
   const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
-
   const [selectedStudentId, setSelectedStudentId] = useState();
   const [selectedName, setSelectedName] = useState();
   const [selectedNIM, setSelectedNIM] = useState();
@@ -185,7 +184,6 @@ const BeritaAcara = () => {
             },
           }
         );
-        setDataNilaiKesimpulan(response.data.data);
         console.log("Request Get nilai kesimpulan: ", response.data.data);
       } catch (error) {
         console.error(
