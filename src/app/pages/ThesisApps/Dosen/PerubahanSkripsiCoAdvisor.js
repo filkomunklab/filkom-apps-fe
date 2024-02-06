@@ -9,13 +9,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Menu,
-  MenuItem,
   TextareaAutosize,
   Typography,
 } from "@mui/material";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-import { Link } from "react-router-dom";
 import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
 
 const PerubahanSkripsiCoAvisor = () => {

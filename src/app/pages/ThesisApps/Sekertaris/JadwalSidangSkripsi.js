@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Div from "@jumbo/shared/Div";
-import PeopleIcon from "@mui/icons-material/People";
 import {
   Button,
   Container,
@@ -13,9 +12,6 @@ import {
   FormHelperText,
   Grid,
   InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -29,11 +25,8 @@ import {
   AccordionSummary,
   Paper,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
 import { Link } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import EventAvailableIcon from "@mui/icons-material/EventAvailable";
-import EventBusyIcon from "@mui/icons-material/EventBusy";
 
 const JadwalSidangSkripsi = () => {
   // State untuk melacak panel accordion yang terbuka

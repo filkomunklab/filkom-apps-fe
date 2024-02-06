@@ -3,9 +3,6 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
-  FormControl,
-  MenuItem,
-  Select,
   Typography,
   Table,
   TableBody,
@@ -17,9 +14,7 @@ import {
   Accordion,
   AccordionSummary,
   Paper,
-  useStepContext,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const DaftarRiwayatNilaiDosenSkripsi = () => {

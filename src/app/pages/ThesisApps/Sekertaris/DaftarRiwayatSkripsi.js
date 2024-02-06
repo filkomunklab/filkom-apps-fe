@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const DaftarRiwayatSkripsi = () => {
@@ -34,20 +33,7 @@ const DaftarRiwayatSkripsi = () => {
   // state - daftar dosen
   const [daftarDosen, setDaftarDosen] = useState([]);
   // state - menyimpan data yang dipilih
-  const [jadwalIndex, setJadwalIndex] = useState();
   const [semesterIndex, setSemesterIndex] = useState();
-  const [selectedSkripsiId, setSelectedSkripsiId] = useState();
-  const [selectedAdvisor, setSelectedAdvisor] = useState();
-  const [selectedKetuaPenelis, setSelectedKetuaPenelis] = useState(""); // State untuk ketua penelis
-  const [selectedAnggotaPenelis, setSelectedAnggotaPenelis] = useState(""); // State untuk anggota penelis
-  const [mulaiWaktu, setMulaiWaktu] = useState(""); // State untuk mulai waktu
-  const [selesaiWaktu, setSelesaiWaktu] = useState(""); // State untuk selesai waktu
-  const [mulaiTanggal, setMulaiTanggal] = useState(""); // State untuk mulai tanggal
-  const [ruangan, setRuangan] = useState(""); // State untuk ruangan
-  // state lainnya
-  const [openDialog, setOpenDialog] = useState(false);
-  const [konfirmasiDialog, setKonfirmasiDialog] = useState(false); // State untuk dialog konfirmasi
-  // const [jadwal, setJadwal] = useState([]);
 
   // fungsi untuk mendapatkan data token JWT
   const token = localStorage.getItem("token");
@@ -91,181 +77,6 @@ const DaftarRiwayatSkripsi = () => {
     fetchDaftarJadwalSkripsi(); // Panggil fungsi fetchData saat komponen dimuat
     fetchDaftarDosen();
   }, [token]);
-
-  const handleUpdateClick = (scheduleIndex, jadwalIndex) => {
-    setOpenDialog(true);
-
-    // Set jadwalIndex dan semesterIndex sesuai dengan yang dipilih
-    setJadwalIndex(jadwalIndex);
-    setSemesterIndex(scheduleIndex);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setSelectedSkripsiId("");
-    setSelectedAdvisor("");
-    setSelectedKetuaPenelis("");
-    setSelectedAnggotaPenelis("");
-    setMulaiWaktu("");
-    setSelesaiWaktu("");
-    setMulaiTanggal("");
-    setRuangan("");
-  };
-
-  const [errorMessages, setErrorMessages] = useState({
-    mulaiWaktu: "",
-    selesaiWaktu: "",
-    mulaiTanggal: "",
-    selectedKetuaPenelis: "",
-    selectedAnggotaPenelis: "",
-    ruangan: "",
-    selectedAdvisor: "",
-  });
-
-  const handlePerbarui = () => {
-    let hasError = false;
-    const newErrorMessages = {};
-
-    // Validasi input waktu
-    if (!mulaiWaktu) {
-      newErrorMessages.mulaiWaktu = "Mulai Waktu harus diisi";
-      hasError = true;
-    }
-
-    if (!selesaiWaktu) {
-      newErrorMessages.selesaiWaktu = "Selesai Waktu harus diisi";
-      hasError = true;
-    }
-
-    // Validasi input tanggal
-    if (!mulaiTanggal) {
-      newErrorMessages.mulaiTanggal = "Mulai Tanggal harus diisi";
-      hasError = true;
-    }
-
-    // Validasi ketua panelis
-    if (!selectedKetuaPenelis) {
-      newErrorMessages.selectedKetuaPenelis = "Ketua panelis harus dipilih";
-      hasError = true;
-    }
-
-    // Validasi anggota panelis
-    if (!selectedAnggotaPenelis) {
-      newErrorMessages.selectedAnggotaPenelis = "Anggota panelis harus dipilih";
-      hasError = true;
-    }
-
-    // Validasi input ruangan
-    if (!ruangan) {
-      newErrorMessages.ruangan = "Ruangan harus diisi";
-      hasError = true;
-    }
-
-    // Validasi jika Ketua Panelis dan Anggota Panelis sama
-    if (selectedKetuaPenelis === selectedAnggotaPenelis) {
-      newErrorMessages.selectedKetuaPenelis =
-        "Ketua Panelis dan Anggota Panelis tidak boleh sama";
-      newErrorMessages.selectedAnggotaPenelis =
-        "Ketua Panelis dan Anggota Panelis tidak boleh sama";
-      hasError = true;
-    }
-
-    // Validasi jika Ketua Panelis dan Advisor sama
-    if (selectedKetuaPenelis === selectedAdvisor) {
-      newErrorMessages.selectedKetuaPenelis =
-        "Ketua Panelis tidak boleh sama dengan Advisor";
-      newErrorMessages.selectedAdvisor =
-        "Ketua Panelis tidak boleh sama dengan Advisor";
-      hasError = true;
-    }
-
-    // Validasi jika Anggota Panelis dan Advisor sama
-    if (selectedAnggotaPenelis === selectedAdvisor) {
-      newErrorMessages.selectedAnggotaPenelis =
-        "Anggota Panelis tidak boleh sama dengan Advisor";
-      newErrorMessages.selectedAdvisor =
-        "Anggota Panelis tidak boleh sama dengan Advisor";
-      hasError = true;
-    }
-
-    if (hasError) {
-      setErrorMessages(newErrorMessages);
-      // Tampilkan pesan kesalahan
-    } else {
-      setKonfirmasiDialog(true);
-    }
-  };
-
-  const handlePerbaruiJadwal = () => {
-    // Buat objek jadwal baru
-    const jadwalBaru = {
-      panelist_chairman_id: selectedKetuaPenelis || null,
-      panelist_member_id: selectedAnggotaPenelis || null,
-      start_defence: mulaiWaktu || null,
-      end_defence: selesaiWaktu || null,
-      defence_room: ruangan || null,
-      defence_date: mulaiTanggal || null,
-    };
-    console.log("skripsi_id: ", selectedSkripsiId);
-    axios
-      .put(
-        `http://localhost:2000/api/v1/skripsi/schedule/${selectedSkripsiId}`,
-        jadwalBaru,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Berhasil memperbarui jadwal:", response.data);
-        // Setelah berhasil perbarui data, tampilkan dialog konfirmasi
-        // setKonfirmasiDialog(true);
-        handleKonfirmasiDialogClose();
-        setOpenDialog(false);
-
-        // Reset semua state input
-        setSelectedSkripsiId("");
-        setSelectedAdvisor("");
-        setSelectedKetuaPenelis("");
-        setSelectedAnggotaPenelis("");
-        setMulaiWaktu("");
-        setSelesaiWaktu("");
-        setMulaiTanggal("");
-        setRuangan("");
-
-        // request data
-        const fetchDaftarJadwalSkripsi = async () => {
-          try {
-            const response = await axios.get(
-              "http://localhost:2000/api/v1/skripsi/schedule",
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-            // Atur state 'setDaftarJadwal' dengan data dari respons
-            setDaftarJadwal(response.data.data);
-            console.log("Request Daftar Jadwal Skripsi", response.data.data);
-          } catch (error) {
-            console.error(
-              "Terjadi kesalahan saat mengambil daftar jadwal:",
-              error
-            );
-          }
-        };
-        fetchDaftarJadwalSkripsi();
-      })
-      .catch((error) => {
-        console.error("Terjadi kesalahan:", error);
-      });
-  };
-
-  const handleKonfirmasiDialogClose = () => {
-    // Setelah menutup dialog konfirmasi, reset semua state
-    setKonfirmasiDialog(false);
-  };
 
   return (
     <Div>
