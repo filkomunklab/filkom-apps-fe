@@ -34,7 +34,6 @@ const BuatKonsultasi = () => {
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
   const [progress, setProgress] = useState(null);
-  const [proposalId, setProposalId] = useState(null);
 
   const userRole = useParams().role;
   console.log("role user akses page: ", userRole);
@@ -70,7 +69,6 @@ const BuatKonsultasi = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [description, setDescription] = useState("");
-  const [consultations, setConsultations] = useState([]);
 
   const handleDialogOpen = () => {
     setIsDialogOpen(true);

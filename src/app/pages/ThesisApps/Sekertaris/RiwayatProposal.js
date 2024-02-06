@@ -16,8 +16,6 @@ import {
   Paper,
   Chip,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
-import { Link } from "react-router-dom";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";

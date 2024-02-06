@@ -180,8 +180,6 @@ const TestBeritaAcaraProposal = () => {
   const [status, setStatus] = useState(""); // State untuk menyimpan status
   const [isScoreEnabled, setIsScoreEnabled] = useState(true);
   const [isSignInEnabled, setIsSignInEnabled] = useState(true);
-  const [isSubmitButtonVisible, setIsSubmitButtonVisible] = useState(true);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [nilai, setNilai] = useState("");
   const [perubahan, setPerubahan] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
@@ -197,8 +195,6 @@ const TestBeritaAcaraProposal = () => {
     setSelectedDate(event.target.value);
   };
 
-  const handleShowDate = () => {};
-
   const handleOpenSignInConfirmationDialog = () => {
     setOpenSignInConfirmationDialog(true);
   };
@@ -209,18 +205,6 @@ const TestBeritaAcaraProposal = () => {
 
   const handleStatusChange = (event) => {
     setStatus(event.target.value); // Mengubah status saat radio button berubah
-  };
-
-  const handleNilaiChange = (event) => {
-    setNilai(event.target.value); // Mengubah nilai saat radio button berubah
-  };
-
-  const handlePerubahanChange = (event) => {
-    setPerubahan(event.target.value); // Mengubah jenis perubahan saat radio button berubah
-  };
-
-  const handleDeskripsiChange = (event) => {
-    setDeskripsi(event.target.value); // Ubah nama state saat radio button berubah
   };
 
   const [

@@ -29,10 +29,7 @@ import {
 } from "@mui/material";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
-import { pdfjs } from "react-pdf";
 import AttachmentIcon from "@mui/icons-material/Attachment";
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 // View Document pengajuan judul
 const PDFViewerPengajuanJudul = ({ pengajuanJudulFile }) => {
