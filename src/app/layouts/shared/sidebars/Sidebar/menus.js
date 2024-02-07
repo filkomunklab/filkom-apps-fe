@@ -51,7 +51,7 @@ export const sekretarisMenus = [
         label: "Student Information",
         type: "nav-item",
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/sekretaris/student-information",
+        uri: "/bimbingan-akademik/sekretaris/student-information/faculty-student",
       },
       {
         label: "Supervisor Information",
