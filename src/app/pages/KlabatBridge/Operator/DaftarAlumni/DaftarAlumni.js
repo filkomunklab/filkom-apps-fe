@@ -24,8 +24,8 @@ import {
   Checkbox,
   IconButton,
   TablePagination,
+  DialogTitle,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
 import React, { useEffect, useState } from "react";
 import MarkunreadIcon from "@mui/icons-material/Markunread";
 import SearchIcon from "@mui/icons-material/Search";
