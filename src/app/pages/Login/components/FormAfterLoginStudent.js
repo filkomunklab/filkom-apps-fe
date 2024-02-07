@@ -239,7 +239,7 @@ const FormAfterLoginStudent = ({
 
       localStorage.setItem("user", JSON.stringify(userLogin));
       localStorage.setItem("token", tokenUser);
-      navigate("/");
+      navigate("/bimbingan-akademik/profile");
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -649,9 +649,9 @@ const FormAfterLoginStudent = ({
                   </Grid>
 
                   <Grid item xs={12} md={6}>
-                    <RTypography variant="h5">
+                    <Typography variant="h5">
                       Current Residence Status
-                    </RTypography>
+                    </Typography>
                     <Typography variant="h6" sx={textStyle}>
                       {profileMahasiswa?.currentResidenceStatus || "-"}
                     </Typography>
