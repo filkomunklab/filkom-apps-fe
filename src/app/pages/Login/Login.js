@@ -94,6 +94,11 @@ const Login = () => {
         <Formik
           validateOnChange={true}
           validationSchema={signInSchema}
+          initialValues={{
+            username: "",
+            password: "",
+            loginAs: "",
+          }}
           onSubmit={async (data, { setSubmitting }) => {
             setSubmitting(true);
             try {
