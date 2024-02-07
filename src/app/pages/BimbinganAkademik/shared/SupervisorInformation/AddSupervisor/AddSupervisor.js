@@ -16,16 +16,13 @@ import {
   MenuItem,
   Chip,
   TableContainer,
-  Select,
   TablePagination,
   Backdrop,
   CircularProgress,
 } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
-import { width } from "@mui/system";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -36,18 +33,14 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nim: `105022010000`,
-  name: `Yuhu, Christopher Darell`,
-  prodi: `Informatika`,
-  year: `2021`,
-  status: `Active`,
-}));
-
 const AddSupervisor = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const location = useLocation();
   const { students, supervisor } = location.state || [];
-  const navigate = useNavigate();
   const [SupervisorOptions, setSupervisorOptions] = useState([]);
   const [supervisorNik, setSupervisorNik] = useState("");
   const [selectedSupervisor, setSelectedSupervisor] = useState(
@@ -57,19 +50,32 @@ const AddSupervisor = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
-  const controller = new AbortController();
-  const signal = controller.signal;
+
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (
+      error.response &&
+      error.response.status >= 401 &&
+      error.response.status <= 403
+    ) {
+      console.log("You don't have permission to access this page");
+      navigate(`/`);
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
 
   const getSupervisor = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const headers = { Authorization: `Bearer ${token}` };
-
-      const response = await axios.get(
-        `${BASE_URL_API}/guidance-class/get-all-unassigned-teacher/list`,
-        { signal }
+      const response = await jwtAuthAxios.get(
+        `/guidance-class/get-all-unassigned-teacher/list`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
-
       const { status, data } = response.data;
 
       if (status === "OK") {
@@ -79,27 +85,26 @@ const AddSupervisor = () => {
         console.log("ini response :", response);
       }
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
-        console.log("request canceled");
-      } else {
-        console.log(error);
-      }
+      handleError();
     }
   };
 
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.post(
-        // `${BASE_URL_API}/supervisor/${supervisor.nik}/student`,
-        `${BASE_URL_API}/guidance-class/create-new/${supervisor.nik}`,
+      const response = await jwtAuthAxios.post(
+        `/guidance-class/create-new/${supervisor.nik}`,
         {
           studentList: students.map((item) => ({
             studentNim: item.nim,
           })),
         },
-        { signal }
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
+
       const { status } = response.data;
       console.log("wkwkwk", response);
       setIsLoading(false);
@@ -109,11 +114,7 @@ const AddSupervisor = () => {
         console.log(response);
       }
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
-        console.log("request canceled");
-      } else {
-        console.log(error);
-      }
+      handleError(error);
     }
   };
 
@@ -263,17 +264,9 @@ const AddSupervisor = () => {
             state={{
               supervisor: selectedSupervisor,
               students: students,
+              major: selectedSupervisor?.major,
             }}
             style={{ textDecoration: "none", color: "white" }}
-            // to={`${
-            //   selectedSupervisor?.major === "IF"
-            //     ? "informatics"
-            //     : selectedSupervisor?.major === "SI"
-            //     ? "information-system"
-            //     : selectedSupervisor?.major === "DKV"
-            //     ? "information-technology"
-            //     : undefined
-            // }`}
             to="student-list"
           >
             <Button
@@ -301,17 +294,35 @@ const AddSupervisor = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
-            <Table stickyHeader>
-              <TableHead>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead
+                sx={{
+                  position: "-webkit-sticky",
+                  position: "sticky",
+                  top: 0,
+                  backgroundColor: "#e8ecf2",
+                  zIndex: 1,
+                }}
+              >
                 <TableHeading />
               </TableHead>
               <TableBody>
                 {students
                   ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((item, index) => (
-                    <TableItem item={item} index={index} key={item.nim} />
-                  ))}
+                  .map((item, index) =>
+                    item ? (
+                      <TableItem
+                        item={item}
+                        index={index + page * rowsPerPage}
+                        key={index}
+                      />
+                    ) : (
+                      <TableRow key={index}>
+                        <TableCell colSpan={6}>No data available</TableCell>
+                      </TableRow>
+                    )
+                  )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -356,15 +367,14 @@ const AddSupervisor = () => {
 };
 
 const TableHeading = () => {
-  const style = { fontWeight: 400 };
   return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={[style]}>No</TableCell>
-      <TableCell sx={[style]}>NIM</TableCell>
-      <TableCell sx={[style]}>Student Name</TableCell>
-      <TableCell sx={[style]}>Program Studi</TableCell>
-      <TableCell sx={[style]}>Tahun Masuk</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
+    <TableRow>
+      <TableCell>No</TableCell>
+      <TableCell>NIM</TableCell>
+      <TableCell>Student Name</TableCell>
+      <TableCell>Major</TableCell>
+      <TableCell>Arrival Year</TableCell>
+      <TableCell>Status</TableCell>
     </TableRow>
   );
 };

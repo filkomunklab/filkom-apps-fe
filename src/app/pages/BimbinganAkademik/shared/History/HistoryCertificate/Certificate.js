@@ -8,8 +8,7 @@ import {
   experimentalStyled as styled,
   TextField,
 } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
-import { comment } from "stylis";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -23,6 +22,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const HistoryCertificate = () => {
   const { state } = useLocation();
   const certificateDetails = state ? state.certificateDetails : {};
+  const navigate = useNavigate();
   const {
     firstName,
     lastName,
@@ -40,18 +40,10 @@ const HistoryCertificate = () => {
   } = certificateDetails;
   const pdfURL = pathFile;
   console.log("comment", comments);
-  const handleBreadcrumbsClick = () => {
-    const { role } = JSON.parse(localStorage.getItem("user"));
-    let path = "";
 
-    if (role.includes("DEKAN")) {
-      path = "/bimbingan-akademik/dekan/history";
-    } else if (role.includes("KAPRODI")) {
-      path = "/bimbingan-akademik/kaprodi/history";
-    } else {
-      path = "/bimbingan-akademik/dosen-pembimbing/history";
-    }
-    return <StyledLink to={path}>History</StyledLink>;
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigate(-1);
   };
 
   const commentContent =
@@ -60,9 +52,12 @@ const HistoryCertificate = () => {
   return (
     <Grid container spacing={2}>
       <Grid item md={6} id="detail-item">
-        <Box style={{ height: "100%", overflowY: "auto" }}>
-          <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
-            {handleBreadcrumbsClick()}
+        <Box
+          style={{ height: "100%", overflowY: "auto" }}
+          onClick={handleClick}
+        >
+          <Breadcrumbs aria-label="breadcrumb">
+            <StyledLink>History</StyledLink>
             <Typography color="text.primary">Certificate</Typography>
           </Breadcrumbs>
           <Grid item>
@@ -86,7 +81,9 @@ const HistoryCertificate = () => {
                 </Grid>
                 <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                   <Typography variant="h5">
-                    {title.charAt(0).toUpperCase() + title.slice(1)}
+                    {title
+                      ? title.charAt(0).toUpperCase() + title.slice(1)
+                      : "-"}
                   </Typography>
                 </Grid>
               </Grid>
@@ -169,7 +166,9 @@ const HistoryCertificate = () => {
                 </Grid>
                 <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                   <Typography variant="h5">
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                    {category
+                      ? category.charAt(0).toUpperCase() + category.slice(1)
+                      : "-"}
                   </Typography>
                 </Grid>
               </Grid>
@@ -194,7 +193,9 @@ const HistoryCertificate = () => {
                           : "#005FDB",
                     }}
                   >
-                    {status.charAt(0) + status.slice(1).toLowerCase()}
+                    {status
+                      ? status.charAt(0) + status.slice(1).toLowerCase()
+                      : "-"}
                   </Typography>
                 </Grid>
               </Grid>

@@ -7,15 +7,9 @@ import {
   List,
   ListItem,
   ListItemText,
-  Stack,
   Divider,
-  Grid,
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
-import { Link } from "react-router-dom";
-// import SearchGlobal from "app/shared/SearchGlobal";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
@@ -47,19 +41,18 @@ function a11yProps(index) {
 }
 
 const History = (props) => {
+  //abort
   const navigate = useNavigate();
   const controller = new AbortController();
   const signal = controller.signal;
-  const [value, setValue] = useState(0);
 
+  const [value, setValue] = useState(0);
   const [dataActivity, setDataActivity] = useState([]);
   const [dataConsultation, setDataConsultation] = useState([]);
   const [dataCertificate, setDataCertificate] = useState([]);
   const [dataPreregis, setDataPreregis] = useState([]);
-  const [dataGrade, setDataGrade] = useState([]);
 
   const { role } = JSON.parse(localStorage.getItem("user"));
-  const isKaprodi = role.includes("KAPRODI");
 
   useEffect(() => {
     const storedValue = localStorage.getItem("historyTabValue");
@@ -72,36 +65,58 @@ const History = (props) => {
     localStorage.setItem("historyTabValue", value);
   }, [value]);
 
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (
+      error.response &&
+      error.response.status >= 401 &&
+      error.response.status <= 403
+    ) {
+      console.log("You don't have permission to access this page");
+      navigate(`/`);
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
+
   const getHistory = async () => {
     try {
-      const token = localStorage.getItem("token");
-
       const { nik, guidanceClassId, id } = JSON.parse(
         localStorage.getItem("user")
       );
 
-      console.log("niiiiiiiiiiik", nik);
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
-
-      const resultActivity = await axios.get(
-        `${BASE_URL_API}/activity/history-for-advisor/${nik}`,
-        { signal }
+      const resultActivity = await jwtAuthAxios.get(
+        `/activity/history-for-advisor/${nik}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
 
-      const resultConsultation = await axios.get(
-        `${BASE_URL_API}/academic-consultation/employee/${nik}`
+      const resultConsultation = await jwtAuthAxios.get(
+        `/academic-consultation/employee/${nik}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
 
-      const resultCertificate = await axios.get(
-        `${BASE_URL_API}/certificate/dosen/${guidanceClassId}`,
-        { headers }
+      const resultCertificate = await jwtAuthAxios.get(
+        `/certificate/dosen/${guidanceClassId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
 
-      const resultPreregis = await axios.get(
-        `${BASE_URL_API}/pre-regist/history-for-advisor/${guidanceClassId}`
+      const resultPreregis = await jwtAuthAxios.get(
+        `/pre-regist/history-for-advisor/${guidanceClassId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
 
       const { status: activityStatus, data: activityData } =
@@ -143,56 +158,19 @@ const History = (props) => {
         console.log("ini error resultPreregis", resultPreregis);
       }
     } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getHistoryGrade = async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      const { nik, id } = JSON.parse(localStorage.getItem("user"));
-
-      console.log("niiiiiiiiiiik", nik);
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
-      const majorResponse = await axios.get(`${BASE_URL_API}/employee/${id}`, {
-        headers,
-      });
-
-      const major = majorResponse.data.data.major;
-
-      const resultGrade = await axios.get(
-        `${BASE_URL_API}/transaction/hisotry/kaprodi/${major}`,
-        { headers }
-      );
-
-      const { status: gradeStatus, data: gradeData } = resultGrade.data;
-
-      if (gradeStatus === "OK") {
-        console.log("ini isi response.data gradeData", gradeData);
-        setDataGrade(gradeData);
-      } else {
-        console.log("ini error resultGrade", resultGrade);
-      }
-    } catch (error) {
-      console.log(error);
+      handleError(error);
     }
   };
 
   useEffect(() => {
     getHistory();
-    getHistoryGrade();
+    return () => controller.abort();
   }, []);
-  console.log("ini data activiti", dataActivity);
 
   const groupedDataActivity = {};
   const groupedDataConsultation = {};
   const groupedDataCertificate = {};
   const groupedDataPreregis = {};
-  const groupedDataGrade = {};
 
   dataActivity.forEach((value) => {
     const dateActivity = new Date(value.dueDate).toLocaleDateString("en-US", {
@@ -223,22 +201,6 @@ const History = (props) => {
     groupedDataConsultation[dateConsultation].push(value);
   });
 
-  // if (Array.isArray(dataCertificate)) {
-  //   const groupedDataCertificate = {};
-  //   dataCertificate.forEach((value) => {
-  //     const date = new Date(value.approvalDate).toLocaleDateString("en-US", {
-  //       weekday: "long",
-  //       year: "numeric",
-  //       month: "short",
-  //       day: "numeric",
-  //     });
-  //     if (!groupedDataCertificate[date]) {
-  //       groupedDataCertificate[date] = [];
-  //     }
-  //     groupedDataCertificate[date].push(value);
-  //   });
-  // }
-
   dataCertificate.forEach((value) => {
     const date = new Date(value.approvalDate).toLocaleDateString("en-US", {
       weekday: "long",
@@ -263,19 +225,6 @@ const History = (props) => {
       groupedDataPreregis[date] = [];
     }
     groupedDataPreregis[date].push(value);
-  });
-
-  dataGrade.forEach((value) => {
-    const date = new Date(value.approveDate).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-    if (!groupedDataGrade[date]) {
-      groupedDataGrade[date] = [];
-    }
-    groupedDataGrade[date].push(value);
   });
 
   const formatDate = (date) => {
@@ -305,10 +254,13 @@ const History = (props) => {
 
   const handleNavigateConsultation = async (value) => {
     try {
-      const consultationDetailsResult = await axios.get(
-        `${BASE_URL_API}/academic-consultation/detail/${value.id}`
+      const consultationDetailsResult = await jwtAuthAxios.get(
+        `/academic-consultation/detail/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
-      // console.log("ini detail Consutation result:", consultationDetailsResult);
 
       const { role } = JSON.parse(localStorage.getItem("user"));
       let path = "";
@@ -336,7 +288,7 @@ const History = (props) => {
         },
       });
     } catch (error) {
-      console.log(error.message);
+      handleError(error);
     }
   };
 
@@ -397,14 +349,18 @@ const History = (props) => {
         console.log("ini pathFile", path)
       );
     } catch (error) {
-      console.log(error.message);
+      handleError(error);
     }
   };
 
   const handleNavigatePreregis = async (value) => {
     try {
-      const preregisDetailsResult = await axios.get(
-        `${BASE_URL_API}/pre-regist/details/${value.id}`
+      const preregisDetailsResult = await jwtAuthAxios.get(
+        `/pre-regist/details/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
       const detail = preregisDetailsResult.data.data;
       const { role } = JSON.parse(localStorage.getItem("user"));
@@ -435,44 +391,7 @@ const History = (props) => {
         },
       });
     } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const handleNavigateGrade = async (value) => {
-    try {
-      const gradeDetailsResult = await jwtAuthAxios.get(
-        `/transaction/submissionDetail/${value.id}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
-
-      const detail = gradeDetailsResult.data.data;
-      let path = "/bimbingan-akademik/kaprodi/history/grade/";
-      console.log("isi detail", detail);
-      navigate(`${path}${value.id}`, {
-        state: {
-          gradeDetails: {
-            studentName:
-              detail.Student.lastName + ", " + detail.Student.firstName,
-            supervisorName:
-              detail.Student.GuidanceClassMember.gudianceClass.teacher
-                .lastName +
-              ", " +
-              detail.Student.GuidanceClassMember.gudianceClass.teacher
-                .firstName,
-            submitedDate: detail.submitedDate,
-            status: detail.status,
-            semester: detail.semester,
-            grades: detail.Grades,
-            approveDate: detail.approveDate,
-            comments: detail.comments,
-          },
-        },
-      });
-    } catch (error) {
-      console.log(error.message);
+      handleError(error);
     }
   };
 
@@ -497,20 +416,6 @@ const History = (props) => {
         approved will be displayed on this page.
       </Typography>
 
-      {/* <Grid container>
-        <Grid item xs={12} sm={12} md={12} lg={12} sx={{ paddingBottom: 4 }}>
-          <SearchGlobal
-            sx={{
-              width: "40%",
-              "@media (max-width: 600px)": {
-                height: "40px",
-                width: "100%",
-              },
-            }}
-          />
-        </Grid>
-      </Grid> */}
-
       <div sx={{ borderBottom: 1, borderColor: "divider", paddingTop: "16px" }}>
         <Tabs
           value={value}
@@ -523,7 +428,6 @@ const History = (props) => {
           <Tab label="Pre-registration" {...a11yProps(1)} />
           <Tab label="Certificate" {...a11yProps(2)} />
           <Tab label="Consultation" {...a11yProps(3)} />
-          {isKaprodi && <Tab label="Grade" {...a11yProps(4)} />}
         </Tabs>
       </div>
 
@@ -1075,140 +979,6 @@ const History = (props) => {
             )
           )}
 
-          <Typography sx={{ padding: "20px" }}></Typography>
-        </div>
-      </TabPanel>
-
-      <TabPanel value={value} index={4}>
-        <div>
-          <Typography sx={{ padding: "10px" }}></Typography>
-          {dataGrade.length === 0 ? (
-            <Box
-              sx={{
-                height: "50px",
-                backgroundColor: "rgba(235, 235, 235, 1)",
-                display: "flex",
-                alignItems: "center",
-                paddingLeft: "10px",
-              }}
-            >
-              <Typography
-                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
-              >
-                You don't have any grade history
-              </Typography>
-            </Box>
-          ) : (
-            Object.entries(groupedDataGrade).map(([date, dataGrade]) => (
-              <div key={date}>
-                <Box
-                  sx={{
-                    height: "50px",
-                    backgroundColor: "rgba(235, 235, 235, 1)",
-                    display: "flex",
-                    alignItems: "center",
-                    paddingLeft: "10px",
-                  }}
-                >
-                  <Typography
-                    sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
-                  >
-                    {formatDate(date)}
-                  </Typography>
-                </Box>
-                {dataGrade &&
-                  dataGrade.map((value, index) => (
-                    <List
-                      sx={{
-                        width: "100%",
-                        maxWidth: 2000,
-                        bgcolor: "background.paper",
-                        paddingTop: "0px",
-                        paddingBottom: "0px",
-                        ":hover": {
-                          cursor: "pointer",
-                          backgroundColor: "#338CFF21",
-                          transition: "0.3s",
-                          transitionTimingFunction: "ease-in-out",
-                          transitionDelay: "0s",
-                          transitionProperty: "all",
-                        },
-                      }}
-                    >
-                      <ListItem
-                        sx={{ padding: "10px 50px" }}
-                        onClick={() => {
-                          handleNavigateGrade(value);
-                        }}
-                      >
-                        <ListItemText
-                          primary={
-                            <Chip
-                              size={"small"}
-                              label={"Grade"}
-                              sx={{
-                                backgroundColor: "rgba(101, 10, 204, 0.1)",
-                                color: "rgba(101, 10, 204, 1)",
-                              }}
-                            />
-                          }
-                          secondary={
-                            <>
-                              <Typography
-                                sx={{
-                                  color: "rgba(0, 0, 0, 1)",
-                                  paddingLeft: "8px",
-                                  paddingTop: "5px",
-                                  fontSize: { xs: "12px", md: "14px" },
-                                }}
-                              >
-                                {value.Student.lastName},{" "}
-                                {value.Student.firstName}
-                              </Typography>
-                              <Typography
-                                sx={{
-                                  paddingLeft: "8px",
-                                  fontSize: { xs: "12px", md: "14px" },
-                                }}
-                              >
-                                {value.semester}
-                              </Typography>
-                            </>
-                          }
-                        />
-                        <Box
-                          sx={{
-                            marginLeft: { xs: "auto", md: 0 },
-                            textAlign: "right",
-                          }}
-                        >
-                          <ListItemText
-                            secondary={
-                              <Typography
-                                sx={{
-                                  fontSize: { xs: "10px", md: "14px" },
-                                  color: "rgba(27, 43, 65, 0.69)",
-                                }}
-                              >
-                                {new Date(value.approveDate).toLocaleTimeString(
-                                  "en-US",
-                                  {
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                    hour12: true,
-                                  }
-                                )}
-                              </Typography>
-                            }
-                          />
-                        </Box>
-                      </ListItem>
-                      <Divider component="li" />
-                    </List>
-                  ))}
-              </div>
-            ))
-          )}
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>
       </TabPanel>

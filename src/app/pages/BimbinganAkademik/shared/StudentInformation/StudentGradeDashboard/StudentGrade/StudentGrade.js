@@ -14,6 +14,7 @@ import {
   Grid,
 } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -44,11 +45,6 @@ const StudentGrade = () => {
     else return { letter: "F", weight: 0.0 };
   };
 
-  const handleClick = (event, step) => {
-    event.preventDefault();
-    navigate(step);
-  };
-
   const calculateTotalGrade = (subjects) => {
     let totalGrade = 0;
     let totalMajorGrade = 0;
@@ -73,6 +69,11 @@ const StudentGrade = () => {
   };
 
   const { ip, majorIp } = calculateTotalGrade(subject);
+
+  const handleClick = (event, step) => {
+    event.preventDefault();
+    navigate(step);
+  };
 
   return (
     <Div>
@@ -128,10 +129,10 @@ const StudentGrade = () => {
                         {data.lecturer}
                       </TableCell>
                       <TableCell sx={{ width: "40px" }}>
-                        {data.Subject.credits}
+                        {data.Subject?.credits}
                       </TableCell>
                       <TableCell sx={{ width: "40px" }}>
-                        {data.Subject.type}
+                        {data.Subject?.type}
                       </TableCell>
                       <TableCell sx={{ width: "40px" }}>
                         {data.description || "-"}

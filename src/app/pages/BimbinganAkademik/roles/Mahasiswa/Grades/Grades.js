@@ -6,9 +6,6 @@ import {
   Paper,
   Stack,
 } from "@mui/material";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
@@ -35,7 +32,11 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const Grades = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
   const navigate = useNavigate();
+
   const [semesterData, setSemesterData] = useState([]);
 
   const getDataGrade = async () => {
@@ -45,27 +46,39 @@ const Grades = () => {
         `/transaction/semesterList/${nim}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
 
-      console.log("ini respnse", response);
+      //menampilkan semester yang paling terbaru secara berurut
       const sortedData = response.data.data.sort((a, b) =>
         a.semester.localeCompare(b.semester, undefined, { numeric: true })
       );
-
       const reversedData = sortedData.reverse();
 
       setSemesterData(reversedData);
     } catch (error) {
-      console.log(error.message);
-      console.log("ini error: ", error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
   useEffect(() => {
     getDataGrade();
+    return () => controller.abort();
   }, []);
-  console.log("ini yg mo loop", semesterData);
 
   const handleNavigateGrade = async (value) => {
     try {
@@ -73,12 +86,12 @@ const Grades = () => {
         `/grades/detailGrades/${value.id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
       const detail = gradeDetailsResult.data.data;
-      let path = `/bimbingan-akademik/student-grade/`;
       console.log("isi detail", detail);
-      navigate(`${path}${value.id}`, {
+      navigate(`${value.id}`, {
         state: {
           gradeDetails: {
             semester: detail.semester,
@@ -87,7 +100,20 @@ const Grades = () => {
         },
       });
     } catch (error) {
-      console.log(error.message);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 

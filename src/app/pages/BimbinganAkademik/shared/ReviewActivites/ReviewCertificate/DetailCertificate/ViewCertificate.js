@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Grid,
-  Stack,
   TextField,
   Typography,
   Box,
@@ -13,11 +12,8 @@ import {
 } from "@mui/material";
 import Div from "@jumbo/shared/Div";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
-import { format } from "date-fns";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -39,12 +35,16 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const CertificateWaiting = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isReject, setIsReject] = useState(false);
   const [isApprove, setIsApprove] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmitCertificate = async () => {
     setLoading(true);
@@ -56,6 +56,7 @@ const CertificateWaiting = () => {
       };
       await jwtAuthAxios.put(`/certificate/approval/status/${id}`, bodyData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
       });
 
       setLoading(false);
@@ -73,7 +74,20 @@ const CertificateWaiting = () => {
       navigate(path);
     } catch (error) {
       setLoading(false);
-      console.error("Error completing status:", error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 

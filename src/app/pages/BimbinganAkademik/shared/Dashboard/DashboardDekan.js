@@ -26,7 +26,6 @@ import BubbleChartIcon from "@mui/icons-material/BubbleChart";
 import Div from "@jumbo/shared/Div";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
-import Header from "app/layouts/shared/headers/Header";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const COLORS = ["#8884d8", "#82ca9d"];
@@ -157,7 +156,6 @@ const Dashboard = () => {
         }
       );
 
-      // setDistributionData(response.data.data);
       const apiData = response.data.data;
 
       setDistributionData(response.data.data);

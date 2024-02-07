@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
-  Box,
   Tab,
   Tabs,
   Typography,
   Grid,
   TextField,
-  Button,
   IconButton,
   TableContainer,
   Table,
@@ -16,11 +14,8 @@ import {
   TablePagination,
   TableRow,
   Paper,
-  Modal,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import SearchIcon from "@mui/icons-material/Search";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
@@ -52,23 +47,41 @@ function a11yProps(index) {
 }
 
 const Manage = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
+  //inisialisasi
   const [dataGrades, setDataGrades] = useState([]);
   const [dataPreregis, setDataPreregis] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
+
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (
+      error.response &&
+      error.response.status >= 401 &&
+      error.response.status <= 403
+    ) {
+      console.log("You don't have permission to access this page");
+      navigate(`/`);
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
 
   const getDataGrades = async () => {
     try {
-      const { major } = JSON.parse(localStorage.getItem("user"));
-      const result = await jwtAuthAxios.get(
-        `/access/list/gradesAccess/${major}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const result = await jwtAuthAxios.get(`/access/list/gradeAccess`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
       const filteredData = result.data.data.filter((item) => {
         const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
         return employeeFullName
@@ -77,14 +90,14 @@ const Manage = () => {
       });
       setDataGrades(filteredData);
     } catch (error) {
-      console.log(error.message);
+      handleError(error);
     }
   };
   const getDataPreregis = async () => {
     try {
-      // const { major } = JSON.parse(localStorage.getItem("user"));
       const result = await jwtAuthAxios.get(`/pre-regist`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
       });
       const filteredData = result.data.data.filter((item) => {
         const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
@@ -94,13 +107,14 @@ const Manage = () => {
       });
       setDataPreregis(filteredData);
     } catch (error) {
-      console.log(error.message);
+      handleError(error);
     }
   };
 
   useEffect(() => {
     getDataGrades();
     getDataPreregis();
+    return () => controller.abort();
   }, [searchValue]);
 
   const handleChangePage = (event, newPage) => {
@@ -240,7 +254,8 @@ const Manage = () => {
                             )}
                           </TableCell>
                           <TableCell sx={{ width: "250px" }}>
-                            {value.Employee.firstName} {value.Employee.lastName}
+                            {value.Employee?.firstName}{" "}
+                            {value.Employee?.lastName}
                           </TableCell>
                           <TableCell
                             sx={{
@@ -413,7 +428,8 @@ const Manage = () => {
                             )}
                           </TableCell>
                           <TableCell sx={{ width: "250px" }}>
-                            {value.Employee.firstName} {value.Employee.lastName}
+                            {value.Employee?.firstName}{" "}
+                            {value.Employee?.lastName}
                           </TableCell>
                           <TableCell
                             sx={{

@@ -20,18 +20,18 @@ import {
   TableCell,
   TableContainer,
   Paper,
+  CircularProgress,
 } from "@mui/material";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
-import axios from "axios";
-import CircularProgress from "@mui/material/CircularProgress";
-import { BASE_URL_API } from "@jumbo/config/env";
 import * as XLSX from "xlsx";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { EXCEL_FILE_BASE64 } from "./constants";
 import FileSaver from "file-saver";
+import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import SuccessOrError from "../../components/Modal/SuccessOrError";
 
 const styleCurriculum = {
   position: "absolute",
@@ -77,75 +77,82 @@ const style2 = {
   top: "15%",
   right: "2%",
   width: 400,
-  padding: 24,
-  backgroundColor: "white",
-  borderRadius: 10,
-};
-
-const style3 = {
-  position: "fixed",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
+  boxShadow: 24,
   padding: 24,
   backgroundColor: "white",
   borderRadius: 10,
 };
 
 const Curriculum = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
+  //inisialisasi
   const [curriculum, setCurriculum] = useState("selectCurriculum");
   const [isAddModalOpen, setAddModalOpen] = useState(false);
-  const [selectedProdi, setSelectedProdi] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileName, setSelectedFileName] = useState("");
-  const [openFirstModal, setOpenFirstModal] = React.useState(false);
-  const [openSecondModal, setOpenSecondModal] = React.useState(false);
-  const [openErrorModal, setOpenErrorModal] = React.useState(false);
   const [loading, setLoading] = useState(false);
 
   const [listCurriculum, setListCurriculum] = useState([]);
   const [listSubject, setListSubject] = useState([]);
 
+  //modal
+  const [selectedProdi, setSelectedProdi] = useState("");
+  const [openFirstModal, setOpenFirstModal] = useState(false);
+  const [openSuccessModal, setOpenSuccessModal] = useState(false);
+  const [openErrorModal, setOpenErrorModal] = useState(false);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
-  const handleOpenSecondModal = () => setOpenSecondModal(true);
-  const handleCloseSecondModal = () => setOpenSecondModal(false);
+  const handleOpenSuccessModal = () => setOpenSuccessModal(true);
+  const handleCloseSuccessModal = () => setOpenSuccessModal(false);
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
 
-  const [selectedCurriculumId, setSelectedCurriculumId] = useState(null);
-  const [isDeleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
-    useState(false);
+  const handleAddModalOpen = () => setAddModalOpen(true);
+  const handleAddModalClose = () => setAddModalOpen(false);
 
-  const handleOpenDeleteConfirmationModal = () => {
+  const handleOpenDeleteConfirmationModal = () =>
     setDeleteConfirmationModalOpen(true);
-  };
-
-  const handleCloseDeleteConfirmationModal = () => {
+  const handleCloseDeleteConfirmationModal = () =>
     setDeleteConfirmationModalOpen(false);
-  };
 
   const handleDeleteClick = (curriculumId) => {
     setSelectedCurriculumId(curriculumId);
     handleOpenDeleteConfirmationModal();
   };
 
+  const [selectedCurriculumId, setSelectedCurriculumId] = useState(null);
+  const [isDeleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
+    useState(false);
+
   const handleConfirmDelete = async () => {
     try {
-      await jwtAuthAxios.delete(
-        `/curriculums/${curriculum}`
-        // {
-        //   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        // }
-      );
+      await jwtAuthAxios.delete(`/curriculums/${curriculum}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
 
       handleCloseDeleteConfirmationModal();
       getCurriculum();
       setCurriculum("selectCurriculum");
     } catch (error) {
-      console.error("Error deleting curriculum:", error);
-      console.error("Error response:", error.response);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -176,21 +183,18 @@ const Curriculum = () => {
       };
 
       try {
-        const response = await jwtAuthAxios.post(
-          `/curriculum`,
-          data
-          // {
-          //   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          // }
-        );
+        const response = await jwtAuthAxios.post(`/curriculum`, data, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        });
 
         if (response.data.status === "OK") {
-          console.log("Successful response:", result.data);
+          console.log("Successful response:", response.data);
           setSelectedProdi("");
           setSelectedYear("");
           setSelectedFile(null);
           setSelectedFileName("");
-          handleOpenSecondModal();
+          handleOpenSuccessModal();
           handleCloseFirstModal();
           handleAddModalClose();
           getCurriculum();
@@ -216,16 +220,16 @@ const Curriculum = () => {
   useEffect(() => {
     let timer;
 
-    if (openSecondModal) {
+    if (openSuccessModal) {
       timer = setTimeout(() => {
-        handleCloseSecondModal();
+        handleCloseSuccessModal();
       }, 5000);
     }
 
     return () => {
       clearTimeout(timer);
     };
-  }, [openSecondModal, handleCloseSecondModal]);
+  }, [openSuccessModal, handleCloseSuccessModal]);
 
   useEffect(() => {
     getCurriculum();
@@ -237,19 +241,29 @@ const Curriculum = () => {
 
   const getSubjectByIdCurriculum = async () => {
     try {
-      const result = await jwtAuthAxios.get(
-        `/subject/${curriculum}`
-        //  {
-        //   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        // }
-      );
+      const result = await jwtAuthAxios.get(`/subject/${curriculum}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
 
       if (result.data.status === "OK") {
         setListSubject(result.data.data);
       }
     } catch (error) {
-      console.error("Error:", error);
-      console.error("Error response:", error.response);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -257,14 +271,27 @@ const Curriculum = () => {
     try {
       const result = await jwtAuthAxios.get(`/curriculum`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
       });
 
       if (result.data.status === "OK") {
         setListCurriculum(result.data.data);
       }
     } catch (error) {
-      console.error("Error:", error);
-      console.error("Error response:", error.response);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -300,14 +327,6 @@ const Curriculum = () => {
     setCurriculum(e.target.value);
   };
 
-  const handleAddModalOpen = () => {
-    setAddModalOpen(true);
-  };
-
-  const handleAddModalClose = () => {
-    setAddModalOpen(false);
-  };
-
   const handleProdiChange = (event) => {
     setSelectedProdi(event.target.value);
   };
@@ -319,6 +338,7 @@ const Curriculum = () => {
       setSelectedYear(inputValue);
     }
   };
+
   const handleOpenFirstModal = (event) => {
     if (!selectedProdi || !selectedYear || !selectedFile) {
       alert("Please fill the field first");
@@ -461,18 +481,18 @@ const Curriculum = () => {
       )}
       <div>
         <Typography
-          sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "6px" }}
+          sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "5px" }}
         >
           Curriculum
         </Typography>
-        <Grid container spacing={2} pb={1}>
+        <Grid container spacing={2} pb={2}>
           <Grid item md={8}>
             <Typography
               sx={{
                 fontSize: "15px",
                 fontWeight: 400,
                 color: "rgba(27, 43, 65, 0.69)",
-                paddingBottom: "6px",
+                paddingTop: "7px",
               }}
             >
               You can choose the curriculum
@@ -732,80 +752,18 @@ const Curriculum = () => {
                     </Modal>
                   </Box>
                 </Modal>
-                <Modal
-                  open={openSecondModal}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <div style={style2}>
-                    <IconButton
-                      edge="end"
-                      color="#D9D9D9"
-                      onClick={handleCloseSecondModal}
-                      aria-label="close"
-                      sx={{
-                        position: "absolute",
-                        top: "10px",
-                        right: "20px",
-                      }}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                    <Typography
-                      id="modal-modal-title"
-                      variant="h4"
-                      component="h2"
-                      sx={{
-                        fontWeight: 600,
-                      }}
-                    >
-                      Successful Adding Curriculum!
-                    </Typography>
-                    <Typography
-                      id="modal-modal-description"
-                      style={{ marginTop: "16px", marginBottom: "20px" }}
-                    >
-                      You have successfully added a new curriculum to the list
-                    </Typography>
-                  </div>
-                </Modal>
-                <Modal
+                <SuccessOrError
+                  open={openSuccessModal}
+                  handleClose={handleCloseSuccessModal}
+                  title="Successful Adding Curriculum!"
+                  description="You have successfully added a new curriculum to the list."
+                />
+                <SuccessOrError
                   open={openErrorModal}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <div style={style2}>
-                    <IconButton
-                      edge="end"
-                      color="#D9D9D9"
-                      onClick={handleCloseErrorModal}
-                      aria-label="close"
-                      sx={{
-                        position: "absolute",
-                        top: "10px",
-                        right: "20px",
-                      }}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                    <Typography
-                      id="modal-modal-title"
-                      variant="h4"
-                      component="h2"
-                      sx={{
-                        fontWeight: 600,
-                      }}
-                    >
-                      Error Submission!
-                    </Typography>
-                    <Typography
-                      id="modal-modal-description"
-                      style={{ marginTop: "16px", marginBottom: "20px" }}
-                    >
-                      Error: Failed to add curriculum. Please try again.
-                    </Typography>
-                  </div>
-                </Modal>
+                  handleClose={handleCloseErrorModal}
+                  title="Error Submission!"
+                  description="Error: Failed to add curriculum. Please try again."
+                />
               </Grid>
             )}
         </Grid>
@@ -945,7 +903,7 @@ const Curriculum = () => {
         </Modal>
       </div>
 
-      <Grid container pt={3}>
+      <Grid container pt={4}>
         {curriculum === "selectCurriculum" ? (
           ""
         ) : (
@@ -956,7 +914,7 @@ const Curriculum = () => {
                   position: "-webkit-sticky",
                   position: "sticky",
                   top: 0,
-                  backgroundColor: "rgb(245, 247, 250)",
+                  backgroundColor: "#dfe4eb",
                 }}
               >
                 <TableRow>

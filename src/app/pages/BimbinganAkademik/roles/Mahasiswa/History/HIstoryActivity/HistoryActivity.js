@@ -6,18 +6,9 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
   Paper,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  Checkbox,
-  TableCell,
-  TableBody,
-  Chip,
 } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -29,35 +20,46 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const Activity = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
   const navigate = useNavigate();
+
   const location = useLocation();
   console.log("loca", location);
   const { activityId } = location?.state || "-";
-  const controller = new AbortController();
-  const signal = controller.signal;
   const [activityDetail, setActivityDetail] = useState("");
 
   const getActivityDetail = async () => {
     try {
-      const headers = {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer token_apa`,
-      };
-
-      const response = await axios.get(
-        `${BASE_URL_API}/activity/detail/${activityId}`,
-        { signal }
+      const response = await jwtAuthAxios.get(
+        `/activity/detail/${activityId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
-      console.log("res activity detail", response);
-
       const { status, data } = response.data;
       if (status === "OK") {
         setActivityDetail(data);
       } else {
-        //tambah handler jika respon lain, kalau tidak perlu hapus saja
+        console.log("status result tidak ok", response);
       }
     } catch (error) {
-      console.log(error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -160,72 +162,6 @@ const Activity = () => {
             </Paper>
           </Stack>
         </Grid>
-        {/* 
-        {activityDetail?.isAttendance === true && (
-          <Grid container paddingLeft={2}>
-            <Typography
-              sx={{ fontSize: "24px", mt: 2, mb: 2, fontWeight: 400 }}
-            >
-              Attendance
-            </Typography>
-            <TableContainer
-              sx={{
-                maxHeight: 640,
-              }}
-              component={Paper}
-            >
-              <Table stickyHeader>
-                <TableHead
-                  size="small"
-                  sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}
-                >
-                  <TableRow size="small">
-                    <TableCell>Number</TableCell>
-                    <TableCell>Student Name</TableCell>
-                    <TableCell>NIM</TableCell>
-                    <TableCell>Prodi</TableCell>
-                    <TableCell>Status</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {activityDetail.ActivityMember.map((student, index) => (
-                    <TableRow key={student.studentNim}>
-                      <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
-                      <TableCell sx={{ width: "190px" }}>
-                        {student.studentNim}
-                      </TableCell>
-                      <TableCell sx={{ width: "80px" }}>
-                        {student.studentNim}
-                      </TableCell>
-                      <TableCell sx={{ width: "80px" }}>
-                        {student.studentNim}
-                      </TableCell>
-                      <TableCell sx={{ width: "80px" }}>
-                        <Chip
-                          label={
-                            student.presence === true
-                              ? "Present"
-                              : student.presence === false
-                              ? "Absent"
-                              : "null"
-                          }
-                          variant="filled"
-                          color={
-                            student.presence === true
-                              ? "success"
-                              : student.presence === false
-                              ? "error"
-                              : "default"
-                          }
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
-        )} */}
       </Grid>
     </div>
   );

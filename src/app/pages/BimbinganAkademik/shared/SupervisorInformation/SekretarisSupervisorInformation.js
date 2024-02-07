@@ -76,7 +76,8 @@ const SupervisorInformation = () => {
   const handleDelete = async (id) => {
     try {
       setIsLoading(true);
-      const response = await jwtAuthAxios.delete(`/guidance-class/${id}`, {
+
+      const response = await jwtAuthAxios.get(`/guidance-class/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -193,6 +194,31 @@ const SupervisorInformation = () => {
             List of Academic Supervisors
           </Typography>
         </Grid>
+
+        {role.includes("KAPRODI") && (
+          <Grid item xs={2} sm={2} md={2} xl={2}>
+            <Button
+              sx={{
+                backgroundColor: "#006AF5",
+                borderRadius: "24px",
+                color: "white",
+                width: "100%",
+                minWidth: "132px",
+                fontSize: "12px",
+                height: "95%",
+                "&:hover": {
+                  backgroundColor: "#025ED8",
+                },
+              }}
+              onClick={() => {
+                navigate("add-supervisor");
+              }}
+            >
+              <AddIcon sx={{ fontSize: "14px" }} />
+              Add Dosen
+            </Button>
+          </Grid>
+        )}
       </Grid>
 
       <Grid container paddingTop={3} paddingBottom={2} spacing={2}>
@@ -277,30 +303,6 @@ const SupervisorInformation = () => {
             </MenuItem>
           </TextField>
         </Grid>
-        {role.includes("KAPRODI") && (
-          <Grid item xs={2} sm={2} md={2} xl={2}>
-            <Button
-              sx={{
-                backgroundColor: "#006AF5",
-                borderRadius: "24px",
-                color: "white",
-                width: "100%",
-                minWidth: "132px",
-                fontSize: "12px",
-                height: "95%",
-                "&:hover": {
-                  backgroundColor: "#025ED8",
-                },
-              }}
-              onClick={() => {
-                navigate("add-supervisor");
-              }}
-            >
-              <AddIcon sx={{ fontSize: "14px" }} />
-              Add Dosen
-            </Button>
-          </Grid>
-        )}
       </Grid>
 
       <Grid xs={12} mt={3}>
@@ -330,7 +332,6 @@ const SupervisorInformation = () => {
                       item={item}
                       index={index + page * rowsPerPage}
                       key={index}
-                      onDelete={() => handleDelete(item.id)}
                     />
                   ))
               )}
@@ -366,14 +367,13 @@ const TableHeading = () => {
       <TableCell sx={{ textAlign: "center" }}>NIDN</TableCell>
       <TableCell sx={{ textAlign: "center" }}>Name</TableCell>
       <TableCell sx={{ textAlign: "center" }}>Major</TableCell>
-      <TableCell sx={{ textAlign: "center" }}>History</TableCell>
       <TableCell sx={{ textAlign: "center" }}>Number of Student</TableCell>
       <TableCell sx={{ textAlign: "center" }}>Action</TableCell>
     </TableRow>
   );
 };
 
-const TableItem = ({ item, index, onDelete }) => {
+const TableItem = ({ item, index, handleDelete }) => {
   const navigate = useNavigate();
   const [isActionVisible, setIsActionVisible] = useState(false);
   const [anchorEl, setAnchorE1] = useState(null);
@@ -387,11 +387,6 @@ const TableItem = ({ item, index, onDelete }) => {
       case "profile":
         navigate(`advisor-profile/${nik}`, {
           state: { classID: item.id, nik: nik },
-        });
-        break;
-      case "history":
-        navigate(`advisor-history/${nik}`, {
-          state: { classID: item.id, nik: nik, major: major, id: id },
         });
         break;
 
@@ -416,9 +411,8 @@ const TableItem = ({ item, index, onDelete }) => {
             textTransform: "capitalize",
             "@media (maxWidth: 650px)": { fontSize: "11px" },
             color: "#006AF5",
-            textDecoration: "none",
-            width: "100%",
             textAlign: "center",
+            textDecoration: "none",
             cursor: "pointer",
           }}
         >
@@ -434,23 +428,6 @@ const TableItem = ({ item, index, onDelete }) => {
           ? "Information Technology"
           : "-"}
       </TableCell>
-      <TableCell>
-        <Typography
-          onClick={(e) => handleButtonNavigate(e, "history")}
-          style={{
-            "@media (maxWidth: 650px)": { fontSize: "11px" },
-            textTransform: "capitalize",
-            paddingX: 0,
-            color: "#006AF5",
-            textDecoration: "none",
-            width: "100%",
-            cursor: "pointer",
-            textAlign: "center",
-          }}
-        >
-          View History
-        </Typography>
-      </TableCell>
       <TableCell sx={[rowStyle]}>{item._count.GuidanceClassMember}</TableCell>
       <TableCell>
         <MoreVert
@@ -464,7 +441,7 @@ const TableItem = ({ item, index, onDelete }) => {
           onClose={() => setAnchorE1(null)}
           anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         >
-          <Button onClick={() => onDelete()} sx={{ color: "#CA150C" }}>
+          <Button onClick={() => handleDelete()} sx={{ color: "#CA150C" }}>
             Delete
           </Button>
         </Popover>

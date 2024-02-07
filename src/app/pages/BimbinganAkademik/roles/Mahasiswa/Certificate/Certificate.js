@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from "react";
 import {
-  Typography,
-  TextField,
-  Stack,
-  Grid,
-  FormControl,
   Box,
   Button,
-  Input,
-  IconButton,
   CircularProgress,
+  FormControl,
+  Grid,
+  Input,
+  MenuItem,
+  Modal,
+  Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import { Link } from "react-router-dom";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
-import Modal from "@mui/material/Modal";
-import CloseIcon from "@mui/icons-material/Close";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
+import { useNavigate } from "react-router-dom";
 
 const requiredStyle = {
   color: "red",
@@ -54,49 +51,39 @@ const style = {
   },
 };
 
-const style2 = {
-  position: "fixed",
-  top: "15%",
-  right: "2%",
-  width: 400,
-  boxShadow: 24,
-  padding: 24,
-  backgroundColor: "white",
-  borderRadius: 10,
-};
-
 const Certificate = () => {
+  const navigate = useNavigate();
+
+  //inisialisasi
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [buffer, setBuffer] = useState("");
-
-  const [showLabel, setShowLabel] = useState(true);
-  const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileName, setSelectedFileName] = useState("");
-
-  const [openFirstModal, setOpenFirstModal] = useState(false);
-  const [openSecondModal, setOpenSecondModal] = useState(false);
-  const [openErrorModal, setOpenErrorModal] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showLabel, setShowLabel] = useState(true);
 
+  //modal
+  const [openFirstModal, setOpenFirstModal] = useState(false);
+  const [openSuccessModal, setOpenSuccessModal] = useState(false);
+  const [openErrorModal, setOpenErrorModal] = useState(false);
   const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
-  const handleOpenSecondModal = () => setOpenSecondModal(true);
-  const handleCloseSecondModal = () => setOpenSecondModal(false);
-
+  const handleOpenSuccessModal = () => setOpenSuccessModal(true);
+  const handleCloseSuccessModal = () => setOpenSuccessModal(false);
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      handleCloseSecondModal();
+      handleCloseSuccessModal();
     }, 5000);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [handleOpenSecondModal]);
+  }, [handleOpenSuccessModal]);
 
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
@@ -139,16 +126,41 @@ const Certificate = () => {
       handleOpenFirstModal();
     }
   };
+
   const handleSubmitFirstModal = async () => {
-    const nim = JSON.parse(localStorage.getItem("user")).nim;
-    const response = await jwtAuthAxios.get(`/student/${nim}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-
-    const employeeNik = response.data.data.employeeNik;
-
     handleCloseFirstModal();
     setLoading(true);
+
+    //ambil nim
+    const nim = JSON.parse(localStorage.getItem("user")).nim;
+
+    //ambil employeeNik
+    let employeeNik;
+    try {
+      const response = await jwtAuthAxios.get(`/student/${nim}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      employeeNik = response.data.data.employeeNik;
+    } catch (error) {
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        handleOpenErrorModal();
+        setLoading(false);
+        return;
+      }
+    }
+
+    //bodyRequest
     const certificateFile = {
       filename: selectedFile.name,
       buffer,
@@ -160,6 +172,8 @@ const Certificate = () => {
       certificateFile,
       employeeNik,
     };
+
+    //post certificate
     try {
       const result = await jwtAuthAxios.post(`/certificate/${nim}`, data, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -172,20 +186,30 @@ const Certificate = () => {
         setDescription("");
         setSelectedFile(null);
         setSelectedFileName("");
-        handleOpenSecondModal();
-
+        handleOpenSuccessModal();
         setLoading(false);
       }
     } catch (error) {
-      console.log("ini error: ", error);
-      setTitle("");
-      setCategory("");
-      setShowLabel(true);
-      setDescription("");
-      setSelectedFile(null);
-      setSelectedFileName("");
-      handleOpenErrorModal();
-      setLoading(false);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+      } else {
+        console.log("ini error: ", error);
+        handleOpenErrorModal();
+        setTitle("");
+        setCategory("");
+        setShowLabel(true);
+        setDescription("");
+        setSelectedFile(null);
+        setSelectedFileName("");
+        setLoading(false);
+      }
     }
   };
 
@@ -357,147 +381,84 @@ const Certificate = () => {
             >
               Submit
             </Button>
-
-            <Modal
-              open={openFirstModal}
-              onClose={handleCloseFirstModal}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <div style={style}>
-                <Typography
-                  id="modal-modal-title"
-                  variant="h4"
-                  component="h2"
-                  sx={{
-                    fontWeight: 600,
-                  }}
-                >
-                  Send Certificate?
-                </Typography>
-                <Typography
-                  id="modal-modal-description"
-                  style={{ marginTop: "16px", marginBottom: "20px" }}
-                >
-                  Are you sure you want to submit this? Forms that have been
-                  submitted cannot be edited again.
-                </Typography>
-
-                <Grid container spacing={1} justifyContent="flex-end">
-                  <Grid item>
-                    <Button
-                      onClick={handleCloseFirstModal}
-                      sx={{
-                        backgroundColor: "white",
-                        borderRadius: "5px",
-                        boxShadow: 4,
-                        color: "black",
-                        whiteSpace: "nowrap",
-                        "&:hover": {
-                          backgroundColor: "lightgrey",
-                        },
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={handleSubmitFirstModal}
-                      sx={{
-                        backgroundColor: "#006AF5",
-                        borderRadius: "5px",
-                        boxShadow: 4,
-                        color: "white",
-                        whiteSpace: "nowrap",
-                        "&:hover": {
-                          backgroundColor: "#025ED8",
-                        },
-                      }}
-                    >
-                      Submit
-                    </Button>
-                  </Grid>
-                </Grid>
-              </div>
-            </Modal>
-            <Modal
-              open={openSecondModal}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <div style={style2}>
-                <IconButton
-                  edge="end"
-                  color="#D9D9D9"
-                  onClick={handleCloseSecondModal}
-                  aria-label="close"
-                  sx={{
-                    position: "absolute",
-                    top: "10px",
-                    right: "20px",
-                  }}
-                >
-                  <CloseIcon />
-                </IconButton>
-                <Typography
-                  id="modal-modal-title"
-                  variant="h4"
-                  component="h2"
-                  sx={{
-                    fontWeight: 600,
-                  }}
-                >
-                  Successful Submission!
-                </Typography>
-                <Typography
-                  id="modal-modal-description"
-                  style={{ marginTop: "16px", marginBottom: "20px" }}
-                >
-                  You have successfully submitted your certificate.
-                </Typography>
-              </div>
-            </Modal>
-
-            <Modal
-              open={openErrorModal}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <div style={style2}>
-                <IconButton
-                  edge="end"
-                  color="#D9D9D9"
-                  onClick={handleCloseErrorModal}
-                  aria-label="close"
-                  sx={{
-                    position: "absolute",
-                    top: "10px",
-                    right: "20px",
-                  }}
-                >
-                  <CloseIcon />
-                </IconButton>
-                <Typography
-                  id="modal-modal-title"
-                  variant="h4"
-                  component="h2"
-                  sx={{
-                    fontWeight: 600,
-                  }}
-                >
-                  Error Submission!
-                </Typography>
-                <Typography
-                  id="modal-modal-description"
-                  style={{ marginTop: "16px", marginBottom: "20px" }}
-                >
-                  Error: Failed to submit the certificate. Please try again.
-                </Typography>
-              </div>
-            </Modal>
           </Box>
         </Grid>
+
+        <Modal
+          open={openFirstModal}
+          onClose={handleCloseFirstModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <div style={style}>
+            <Typography
+              id="modal-modal-title"
+              variant="h4"
+              component="h2"
+              sx={{
+                fontWeight: 600,
+              }}
+            >
+              Send Certificate?
+            </Typography>
+            <Typography
+              id="modal-modal-description"
+              style={{ marginTop: "16px", marginBottom: "20px" }}
+            >
+              Are you sure you want to submit this? Forms that have been
+              submitted cannot be edited again.
+            </Typography>
+
+            <Grid container spacing={1} justifyContent="flex-end">
+              <Grid item>
+                <Button
+                  onClick={handleCloseFirstModal}
+                  sx={{
+                    backgroundColor: "white",
+                    borderRadius: "5px",
+                    boxShadow: 4,
+                    color: "black",
+                    whiteSpace: "nowrap",
+                    "&:hover": {
+                      backgroundColor: "lightgrey",
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={handleSubmitFirstModal}
+                  sx={{
+                    backgroundColor: "#006AF5",
+                    borderRadius: "5px",
+                    boxShadow: 4,
+                    color: "white",
+                    whiteSpace: "nowrap",
+                    "&:hover": {
+                      backgroundColor: "#025ED8",
+                    },
+                  }}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+          </div>
+        </Modal>
+        <SuccessOrError
+          open={openSuccessModal}
+          handleClose={handleCloseSuccessModal}
+          title="Successful Submission!"
+          description="You have successfully submitted your certificate."
+        />
+        <SuccessOrError
+          open={openErrorModal}
+          handleClose={handleCloseErrorModal}
+          title="Error Submission!"
+          description="Error: Failed to submit the certificate. Please try again."
+        />
       </Grid>
     </div>
   );

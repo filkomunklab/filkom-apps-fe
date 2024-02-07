@@ -1,11 +1,7 @@
 import Div from "@jumbo/shared/Div";
 import {
-  FormControl,
   Grid,
   Paper,
-  InputLabel,
-  MenuItem,
-  Select,
   Stack,
   Table,
   TableBody,
@@ -16,15 +12,10 @@ import {
   TableContainer,
   Typography,
   experimentalStyled as styled,
-  ListSubheader,
   Breadcrumbs,
 } from "@mui/material";
-import SearchLocal from "app/shared/SearchLocal";
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -37,6 +28,11 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const StudentCertificate = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [page, setPage] = useState(0);
   const [dataWaiting, setDataWaiting] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -45,12 +41,27 @@ const StudentCertificate = () => {
     ? location.state
     : "";
 
-  const navigate = useNavigate();
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (
+      error.response &&
+      error.response.status >= 401 &&
+      error.response.status <= 403
+    ) {
+      console.log("You don't have permission to access this page");
+      navigate(`/`);
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
 
   const getDataWaiting = async () => {
     try {
       const result = await jwtAuthAxios.get(`/certificate/all/${studentNim}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
       });
 
       console.log("ini isi result data di certi", result);
@@ -58,21 +69,25 @@ const StudentCertificate = () => {
       if (result.data && result.data.data) {
         setDataWaiting(result.data.data);
       } else {
-        setDataWaiting([]); // Set to an empty array if data is undefined or null
+        setDataWaiting([]);
       }
     } catch (error) {
-      console.log(error.message);
+      handleError(error);
     }
   };
+
   useEffect(() => {
     getDataWaiting();
+    return () => controller.abort();
   }, []);
-  const handleNavigate = async (value, studentNim) => {
+
+  const handleNavigate = async (value) => {
     try {
       const certificateDetailsResult = await jwtAuthAxios.get(
         `/certificate/student/${value.id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
 

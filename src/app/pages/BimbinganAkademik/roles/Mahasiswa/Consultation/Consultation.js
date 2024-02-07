@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from "react";
 import {
-  Typography,
-  TextField,
-  Stack,
-  Grid,
   Box,
   Button,
-  IconButton,
+  CircularProgress,
+  Grid,
+  MenuItem,
+  Modal,
   Paper,
+  Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import { Link } from "react-router-dom";
-import Modal from "@mui/material/Modal";
-import CloseIcon from "@mui/icons-material/Close";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
-import CircularProgress from "@mui/material/CircularProgress";
+import { useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
 
 const requiredStyle = {
   color: "red",
@@ -44,80 +42,58 @@ const style = {
   borderRadius: 10,
 };
 
-const style2 = {
-  position: "fixed",
-  top: "15%",
-  right: "2%",
-  width: 400,
-  boxShadow: 24,
-  padding: 24,
-  backgroundColor: "white",
-  borderRadius: 10,
-};
-
 const Consultation = () => {
+  const navigate = useNavigate();
+
+  //inisialisasi get data
   const [supervisorData, setSupervisorData] = useState("");
   const [kaprodiData, setKaprodiData] = useState("");
   const [dekanData, setDekanData] = useState("");
 
+  //inisialisasi
   const [topic, setTopic] = useState("");
   const [receiver, setReceiver] = useState("");
   const [description, setDescription] = useState("");
-
   const [showLabel, setShowLabel] = useState(true);
   const [showLabel2, setShowLabel2] = useState(true);
-
-  const [openFirstModal, setOpenFirstModal] = React.useState(false);
-  const [openSecondModal, setOpenSecondModal] = React.useState(false);
-  const [isMounted, setIsMounted] = useState(true);
-  const [openErrorModal, setOpenErrorModal] = React.useState(false);
   const [loading, setLoading] = useState(false);
+  const [informationStudent, setInformationStudent] = useState([]);
 
+  //modal
+  const [openFirstModal, setOpenFirstModal] = useState(false);
+  const [openSuccessModal, setOpenSuccessModal] = useState(false);
+  const [openErrorModal, setOpenErrorModal] = useState(false);
   const handleOpenFirstModal = () => setOpenFirstModal(true);
+  const handleCloseFirstModal = () => setOpenFirstModal(false);
+  const handleOpenSuccessModal = () => setOpenSuccessModal(true);
+  const handleCloseSuccessModal = () => setOpenSuccessModal(false);
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
-  const handleCloseFirstModal = () => setOpenFirstModal(false);
-  const handleOpenSecondModal = () => setOpenSecondModal(true);
-  const handleCloseSecondModal = () => {
-    if (isMounted) {
-      setOpenSecondModal(false);
-    }
-  };
-
-  useEffect(() => {
-    setIsMounted(true);
-
-    return () => {
-      setIsMounted(false);
-    };
-  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      handleCloseSecondModal();
+      handleCloseSuccessModal();
     }, 5000);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [handleOpenSecondModal]);
+  }, [handleOpenSuccessModal]);
 
   const handleSubmitFirstModal = async () => {
+    //validasi
     if (!topic || !receiver || !description) {
       alert("Please fill in all required fields.");
       return;
     }
-
     const trimmedValue = description.trim();
-
     if (trimmedValue !== "") {
       handleCloseFirstModal();
       setLoading(true);
-
       const arrayReceiver = receiver.split("|");
       const receiver_nik = arrayReceiver[0];
       const receiver_name = arrayReceiver[1];
-
+      //bodyRequest
       const consultationData = {
         topic,
         receiver_name,
@@ -129,54 +105,74 @@ const Consultation = () => {
         supervisor_name: `${supervisorData.teacher.firstName} ${supervisorData.teacher.lastName}`,
         description: trimmedValue,
       };
-      // console.log("consultationData: ", consultationData);
 
       try {
-        const consultationResult = await axios.post(
-          `${BASE_URL_API}/academic-consultation`,
-          consultationData
+        const consultationResult = await jwtAuthAxios.post(
+          `/academic-consultation`,
+          consultationData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
-        // console.log("ini yang nanti di post: ", consultationResult);
 
         if (consultationResult.data.status === "OK") {
-          handleOpenSecondModal();
+          handleOpenSuccessModal();
           setTopic("");
           setReceiver("");
           setShowLabel(true);
           setShowLabel2(true);
           setDescription("");
-
           setLoading(false);
         }
       } catch (error) {
-        console.log("ini error: ", error.consultationResult);
-        console.error("Error response:", error);
-        handleOpenErrorModal();
-        setLoading(false);
+        if (error.code === "ERR_CANCELED") {
+          console.log("request canceled");
+        } else if (
+          error.response &&
+          error.response.status >= 401 &&
+          error.response.status <= 403
+        ) {
+          console.log("You don't have permission to access this page");
+          navigate(`/`);
+        } else {
+          console.log("ini error: ", error);
+          handleOpenErrorModal();
+          setLoading(false);
+        }
       }
     } else {
       alert("Input tidak valid. Mohon masukkan pesan yang valid.");
     }
   };
 
-  const [informationStudent, setInformationStudent] = useState([]);
-
   const getInformationStudent = async () => {
     try {
-      const result = await axios.get(
-        `${BASE_URL_API}/student/${
-          JSON.parse(localStorage.getItem("user")).nim
-        }`
+      const result = await jwtAuthAxios.get(
+        `/student/${JSON.parse(localStorage.getItem("user")).nim}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
-      // console.log("ini data by nim", result);
 
       if (result.data.status === "OK") {
         const { guidanceClassId } = JSON.parse(localStorage.getItem("user"));
-        const response1 = await axios.get(
-          `${BASE_URL_API}/guidance-class/${guidanceClassId}`
+        const response1 = await jwtAuthAxios.get(
+          `/guidance-class/${guidanceClassId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
-        const response2 = await axios.get(
-          `${BASE_URL_API}/employee/head/${result.data.data.major}`
+        const response2 = await jwtAuthAxios.get(
+          `/employee/head/${result.data.data.major}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
 
         if (response1.data.status === "OK") {
@@ -200,11 +196,21 @@ const Consultation = () => {
         }
         setInformationStudent(result.data.data);
       } else {
-        console.log(result);
+        console.log("status result tidak ok", result);
       }
     } catch (error) {
-      console.error("Error:", error);
-      console.error("Error response:", error.response);
+      if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -246,7 +252,7 @@ const Consultation = () => {
 
             <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                {informationStudent.lastName}, {informationStudent.firstName}
+                {informationStudent?.lastName}, {informationStudent?.firstName}
               </Typography>
             </Paper>
           </Stack>
@@ -261,7 +267,7 @@ const Consultation = () => {
             <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
                 {supervisorData
-                  ? `${supervisorData.teacher.lastName}, ${supervisorData.teacher.firstName}`
+                  ? `${supervisorData?.teacher?.lastName}, ${supervisorData?.teacher?.firstName}`
                   : "-"}
               </Typography>
             </Paper>
@@ -276,13 +282,13 @@ const Consultation = () => {
 
             <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                {informationStudent.major === "IF"
+                {informationStudent?.major === "IF"
                   ? "Informatics"
-                  : informationStudent.major === "SI"
+                  : informationStudent?.major === "SI"
                   ? "Information System"
-                  : informationStudent.major === "DKV"
+                  : informationStudent?.major === "DKV"
                   ? "Information Technology"
-                  : informationStudent.major}
+                  : informationStudent?.major}
               </Typography>
             </Paper>
           </Stack>
@@ -296,7 +302,7 @@ const Consultation = () => {
 
             <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                {informationStudent.arrivalYear}
+                {informationStudent?.arrivalYear}
               </Typography>
             </Paper>
           </Stack>
@@ -344,35 +350,32 @@ const Consultation = () => {
               }}
             >
               {supervisorData ? (
-                (supervisorData.teacher.firstName === kaprodiData.firstName &&
-                  supervisorData.teacher.lastName === kaprodiData.lastName) ||
-                (supervisorData.teacher.firstName === dekanData.firstName &&
-                  supervisorData.teacher.lastName === dekanData.lastName) ? (
+                (supervisorData?.teacher?.firstName ===
+                  kaprodiData?.firstName &&
+                  supervisorData?.teacher?.lastName ===
+                    kaprodiData?.lastName) ||
+                (supervisorData?.teacher?.firstName === dekanData?.firstName &&
+                  supervisorData?.teacher?.lastName === dekanData?.lastName) ? (
                   ""
                 ) : (
                   <MenuItem
-                    value={`${supervisorData.teacherId}|${supervisorData.teacher.lastName}, ${supervisorData.teacher.firstName}`}
+                    value={`${supervisorData?.teacherId}|${supervisorData?.teacher?.lastName}, ${supervisorData?.teacher?.firstName}`}
                   >
-                    {`${supervisorData.teacher.lastName}, ${supervisorData.teacher.firstName}`}
+                    {`${supervisorData?.teacher?.lastName}, ${supervisorData?.teacher?.firstName}`}
                   </MenuItem>
                 )
               ) : (
                 ""
               )}
-              {/* <MenuItem value="dospem">
-                {supervisorData
-                  ? `${supervisorData.lastName}, ${supervisorData.firstName}`
-                  : "-"}
-              </MenuItem> */}
               <MenuItem
-                value={`${kaprodiData.nik}|${kaprodiData.lastName}, ${kaprodiData.firstName}`}
+                value={`${kaprodiData?.nik}|${kaprodiData?.lastName}, ${kaprodiData?.firstName}`}
               >
-                {kaprodiData.lastName}, {kaprodiData.firstName}
+                {kaprodiData?.lastName}, {kaprodiData?.firstName}
               </MenuItem>
               <MenuItem
-                value={`${dekanData.nik}|${dekanData.lastName}, ${dekanData.firstName}`}
+                value={`${dekanData?.nik}|${dekanData?.lastName}, ${dekanData?.firstName}`}
               >
-                {dekanData.lastName}, {dekanData.firstName}
+                {dekanData?.lastName}, {dekanData?.firstName}
               </MenuItem>
             </TextField>
           </Stack>
@@ -397,176 +400,109 @@ const Consultation = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Link
-            style={{ textDecoration: "none", color: "white" }}
-            to="/bimbingan-akademik/consultation/"
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: "20px",
+            }}
           >
-            <Box
+            <Button
+              onClick={handleOpenFirstModal}
               sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginTop: "20px",
+                backgroundColor: "#006AF5",
+                borderRadius: "24px",
+                color: "white",
+                whiteSpace: "nowrap",
+                minWidth: "132px",
+                fontSize: "12px",
+                padding: "10px",
+                gap: "6px",
+                "&:hover": {
+                  backgroundColor: "#025ED8",
+                },
               }}
             >
-              <Button
-                onClick={handleOpenFirstModal}
-                sx={{
-                  backgroundColor: "#006AF5",
-                  borderRadius: "24px",
-                  color: "white",
-                  whiteSpace: "nowrap",
-                  minWidth: "132px",
-                  fontSize: "12px",
-                  padding: "10px",
-                  gap: "6px",
-                  "&:hover": {
-                    backgroundColor: "#025ED8",
-                  },
-                }}
-              >
-                Submit
-              </Button>
-              <Modal
-                open={openFirstModal}
-                onClose={handleCloseFirstModal}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                <div style={style}>
-                  <Typography
-                    id="modal-modal-title"
-                    variant="h4"
-                    component="h2"
-                    sx={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    Submit Consultation?
-                  </Typography>
-                  <Typography
-                    id="modal-modal-description"
-                    style={{ marginTop: "16px", marginBottom: "15px" }}
-                  >
-                    Are you sure you want to submit this consultation? The
-                    consultation that have been submitted cannot be edited
-                    again.
-                  </Typography>
-
-                  <Grid container spacing={1} justifyContent="flex-end">
-                    <Grid item>
-                      <Button
-                        onClick={handleCloseFirstModal}
-                        sx={{
-                          backgroundColor: "white",
-                          borderRadius: "5px",
-                          boxShadow: 4,
-                          color: "black",
-                          whiteSpace: "nowrap",
-                          "&:hover": {
-                            backgroundColor: "lightgrey",
-                          },
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        onClick={handleSubmitFirstModal}
-                        sx={{
-                          backgroundColor: "#006AF5",
-                          borderRadius: "5px",
-                          boxShadow: 4,
-                          color: "white",
-                          whiteSpace: "nowrap",
-                          "&:hover": {
-                            backgroundColor: "#025ED8",
-                          },
-                        }}
-                      >
-                        Submit
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </div>
-              </Modal>
-              <Modal
-                open={openSecondModal}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                <div style={style2}>
-                  <IconButton
-                    edge="end"
-                    color="#D9D9D9"
-                    onClick={handleCloseSecondModal}
-                    aria-label="close"
-                    sx={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "20px",
-                    }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                  <Typography
-                    id="modal-modal-title"
-                    variant="h4"
-                    component="h2"
-                    sx={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    Successfull Request!
-                  </Typography>
-                  <Typography
-                    id="modal-modal-description"
-                    style={{ marginTop: "16px", marginBottom: "20px" }}
-                  >
-                    You have successfully made a consultation request.
-                  </Typography>
-                </div>
-              </Modal>
-              <Modal
-                open={openErrorModal}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                <div style={style2}>
-                  <IconButton
-                    edge="end"
-                    color="#D9D9D9"
-                    onClick={handleCloseErrorModal}
-                    aria-label="close"
-                    sx={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "20px",
-                    }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                  <Typography
-                    id="modal-modal-title"
-                    variant="h4"
-                    component="h2"
-                    sx={{
-                      fontWeight: 600,
-                    }}
-                  >
-                    Error Submission!
-                  </Typography>
-                  <Typography
-                    id="modal-modal-description"
-                    style={{ marginTop: "16px", marginBottom: "20px" }}
-                  >
-                    Error: Failed to create Consultation. Please try again.
-                  </Typography>
-                </div>
-              </Modal>
-            </Box>
-          </Link>
+              Submit
+            </Button>
+          </Box>
         </Grid>
+
+        <Modal
+          open={openFirstModal}
+          onClose={handleCloseFirstModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <div style={style}>
+            <Typography
+              id="modal-modal-title"
+              variant="h4"
+              component="h2"
+              sx={{
+                fontWeight: 600,
+              }}
+            >
+              Submit Consultation?
+            </Typography>
+            <Typography
+              id="modal-modal-description"
+              style={{ marginTop: "16px", marginBottom: "15px" }}
+            >
+              Are you sure you want to submit this consultation? The
+              consultation that have been submitted cannot be edited again.
+            </Typography>
+
+            <Grid container spacing={1} justifyContent="flex-end">
+              <Grid item>
+                <Button
+                  onClick={handleCloseFirstModal}
+                  sx={{
+                    backgroundColor: "white",
+                    borderRadius: "5px",
+                    boxShadow: 4,
+                    color: "black",
+                    whiteSpace: "nowrap",
+                    "&:hover": {
+                      backgroundColor: "lightgrey",
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={handleSubmitFirstModal}
+                  sx={{
+                    backgroundColor: "#006AF5",
+                    borderRadius: "5px",
+                    boxShadow: 4,
+                    color: "white",
+                    whiteSpace: "nowrap",
+                    "&:hover": {
+                      backgroundColor: "#025ED8",
+                    },
+                  }}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+          </div>
+        </Modal>
+        <SuccessOrError
+          open={openSuccessModal}
+          handleClose={handleCloseSuccessModal}
+          title="Successful Submission!"
+          description="You have successfully submitted your consultation request."
+        />
+        <SuccessOrError
+          open={openErrorModal}
+          handleClose={handleCloseErrorModal}
+          title="Error Submission!"
+          description="Error: Failed to create Consultation. Please try again."
+        />
       </Grid>
     </div>
   );

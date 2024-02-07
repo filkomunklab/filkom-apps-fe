@@ -22,23 +22,23 @@ import { useNavigate, useParams } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const PreregisStudentList = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const { id } = useParams();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState("");
-  const navigate = useNavigate();
   const [dataStudent, setDataStudent] = useState([]);
 
   const getDataStudent = async () => {
     try {
-      const result = await jwtAuthAxios.get(
-        `pre-regist/list-submitted/${id}`
-        //  {
-        //   headers: {
-        //     Authorization: `Bearer ${localStorage.getItem("token")}`,
-        //   },
-        // }
-      );
+      const result = await jwtAuthAxios.get(`pre-regist/list-submitted/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
 
       const filteredData = result.data.data.PreRegistrationData.filter(
         (item) => {
@@ -48,20 +48,27 @@ const PreregisStudentList = () => {
             .includes(searchValue.toLowerCase());
         }
       );
-
-      setDataStudent(
-        // result.data.data
-        filteredData
-      );
+      console.log("isi result", result);
+      setDataStudent(filteredData);
     } catch (error) {
-      console.log(error.message);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+      } else {
+        console.log("ini error: ", error);
+      }
     }
   };
   useEffect(() => {
     getDataStudent();
+    return () => controller.abort();
   }, [searchValue, id]);
-
-  console.log("ini isi data student", dataStudent);
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -125,8 +132,15 @@ const PreregisStudentList = () => {
       </Div>
       <Grid item xs={12}>
         <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
-          <Table stickyHeader>
-            <TableHead>
+          <Table>
+            <TableHead
+              style={{
+                position: "-webkit-sticky",
+                position: "sticky",
+                top: 0,
+                backgroundColor: "rgba(26, 56, 96, 0.1)",
+              }}
+            >
               <TableRow>
                 <TableCell>No</TableCell>
                 <TableCell>NIM</TableCell>
@@ -136,15 +150,21 @@ const PreregisStudentList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataStudent.map((registration, index) => (
-                <TableRow key={index}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{registration.Student?.nim}</TableCell>
-                  <TableCell>{`${registration.Student?.firstName} ${registration.Student?.lastName}`}</TableCell>
-                  <TableCell>{registration.Student?.arrivalYear}</TableCell>
-                  <TableCell>{registration.status}</TableCell>
+              {dataStudent && dataStudent.length > 0 ? (
+                dataStudent.map((registration, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{registration.Student?.nim}</TableCell>
+                    <TableCell>{`${registration.Student?.firstName} ${registration.Student?.lastName}`}</TableCell>
+                    <TableCell>{registration.Student?.arrivalYear}</TableCell>
+                    <TableCell>{registration.status}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={8}>No data available</TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </TableContainer>

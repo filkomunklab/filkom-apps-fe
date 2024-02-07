@@ -2,11 +2,6 @@ import {
   Paper,
   Typography,
   Grid,
-  MenuItem,
-  Select,
-  FormControl,
-  ListSubheader,
-  InputLabel,
   Table,
   TableCell,
   TableRow,
@@ -37,68 +32,21 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-// const yearList = [
-//   {
-//     value: "2017",
-//     label: "2017",
-//   },
-//   {
-//     value: "2018",
-//     label: "2018",
-//   },
-//   {
-//     value: "2019",
-//     label: "2019",
-//   },
-//   {
-//     value: "2020",
-//     label: "2020",
-//   },
-//   {
-//     value: "2021",
-//     label: "2021",
-//   },
-//   {
-//     value: "2022",
-//     label: "2022",
-//   },
-//   {
-//     value: "2023",
-//     label: "2023",
-//   },
-// ];
-
-// const prodiList = [
-//   {
-//     value: "informatika",
-//     label: "Informatika",
-//   },
-//   {
-//     value: "dkv",
-//     label: "DKV",
-//   },
-//   {
-//     value: "si",
-//     label: "SI",
-//   },
-// ];
-
 const AdvisorProfile = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
   const navigate = useNavigate();
+
   const location = useLocation();
-  const { classID, nik, major } = location.state;
-  const [filter, setFilter] = useState([]);
+  const { classID, nik } = location.state || { classID: null, nik: null };
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dataProfile, setDataProfile] = useState([]);
-  // const studentOptions =
-  //   // dataProfile?.student.filter((item) => item.status !== "GRADUATE") ||
-  //   [];
   const [studentOptions, setStudentOptions] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const controller = new AbortController();
-  const signal = controller.signal;
   const role = JSON.parse(localStorage.getItem("user")).role;
   console.log("test role", role);
 
@@ -113,25 +61,32 @@ const AdvisorProfile = () => {
 
   const getProfile = async () => {
     try {
-      const response = await jwtAuthAxios.get(
-        `/guidance-class/${classID}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+      const response = await jwtAuthAxios.get(`/guidance-class/${classID}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        { signal }
-      );
-      console.log("ini isi result.data", response.data);
-
+        signal,
+      });
       const { status, data } = response.data;
-
       if (status === "OK") {
         setDataProfile(data.teacher);
         setStudentOptions(data.GuidanceClassMember);
       }
     } catch (error) {
-      console.log(error.message);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -141,11 +96,12 @@ const AdvisorProfile = () => {
       const response = await jwtAuthAxios.delete(
         `/guidance-class/delete-student`,
         {
+          data: { studentList: selectedStudent },
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        },
-        { data: { studentList: selectedStudent }, signal }
+          signal,
+        }
       );
 
       console.log("res delete: ", response);
@@ -157,13 +113,25 @@ const AdvisorProfile = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.log(error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
   useEffect(() => {
     getProfile();
-    console.log("ini di profile :", location.state);
     return () => controller.abort();
   }, []);
 
@@ -177,7 +145,6 @@ const AdvisorProfile = () => {
     }
   };
 
-  console.log("data profile", dataProfile);
   return (
     <Div>
       <Backdrop
@@ -188,7 +155,7 @@ const AdvisorProfile = () => {
       </Backdrop>
       <Div role="presentation" sx={{ paddingBottom: "15px" }}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/kaprodi/supervisor-information/">
+          <StyledLink onClick={() => navigate(-1)}>
             Supervisor Information
           </StyledLink>
           <Typography color="text.primary">Advisor Profile</Typography>

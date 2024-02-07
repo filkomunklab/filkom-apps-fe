@@ -81,34 +81,21 @@ const Login = () => {
   const { setAuthToken } = useJumboAuth();
   const navigate = useNavigate();
 
+  const navigateUserRoles = {
+    DEKAN: "/bimbingan-akademik/dekan/dashboard",
+    KAPRODI: "/bimbingan-akademik/kaprodi/dashboard",
+    DOSEN: "/bimbingan-akademik/dosen-pembimbing/academic-guide",
+    OPERATOR_FAKULTAS: "/bimbingan-akademik/sekretaris/academic-guide",
+    DEFAULT: "/",
+  };
+
   const onSignIn = async (formdata) => {
-    const { token, user } = await authService.signIn(formdata);
+    try {
+      const { token, user } = await authService.signIn(formdata);
 
-    if (user.role === "MAHASISWA") {
-      const response = await jwtAuthAxios.get(
-        `student/biodata/check/${user.nim}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.data.data.biodataCheck) {
-        setAuthToken(token);
-
-        console.log("ini user loh: ", user);
-        localStorage.setItem("user", JSON.stringify(user));
-
-        navigate("/");
-      } else {
-        const response = await jwtAuthAxios.get(`student/${user.nim}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const responseCurriculum = await jwtAuthAxios.get(
-          `curriculum/${response.data.data.curriculumId}`,
+      if (user.role === "MAHASISWA") {
+        const response = await jwtAuthAxios.get(
+          `student/biodata/check/${user.nim}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -116,23 +103,56 @@ const Login = () => {
           }
         );
 
-        const data = {
-          ...response.data.data,
-          curriculum: responseCurriculum.data.data,
-        };
-        console.log("ini data: ", data);
-        setProfileMahasiswa(data);
-        setUserLogin(user);
-        setTokenUser(token);
-        setOpenModal(true);
+        if (response.data.data.biodataCheck) {
+          setAuthToken(token);
+
+          console.log("ini user loh: ", user);
+          localStorage.setItem("user", JSON.stringify(user));
+
+          navigate("/bimbingan-akademik/profile");
+        } else {
+          const response = await jwtAuthAxios.get(`student/${user.nim}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const responseCurriculum = await jwtAuthAxios.get(
+            `curriculum/${response.data.data.curriculumId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          const data = {
+            ...response.data.data,
+            curriculum: responseCurriculum.data.data,
+          };
+          console.log("ini data: ", data);
+          setProfileMahasiswa(data);
+          setUserLogin(user);
+          setTokenUser(token);
+          setOpenModal(true);
+        }
+      } else {
+        const matchingRole =
+          Array.isArray(user.role) &&
+          user.role.find((role) => navigateUserRoles[role]);
+
+        const roleNavigation = matchingRole
+          ? navigateUserRoles[matchingRole]
+          : navigateUserRoles.DEFAULT;
+
+        setAuthToken(token);
+        console.log("ini user loh: ", user);
+        localStorage.setItem("user", JSON.stringify(user));
+        navigate(roleNavigation);
       }
-    } else {
-      setAuthToken(token);
+    } catch (error) {
+      console.error("Login error:", error);
 
-      console.log("ini user loh: ", user);
-      localStorage.setItem("user", JSON.stringify(user));
-
-      navigate("/");
+      alert("Login failed. Please check your username, password, and role.");
     }
   };
 
@@ -158,7 +178,7 @@ const Login = () => {
             }
           }
           onSubmit={(data, { setSubmitting }) => {
-            console.log(data);
+            console.log("data di onsubmit", data);
             setSubmitting(true);
             onSignIn(data);
             setSubmitting(false);

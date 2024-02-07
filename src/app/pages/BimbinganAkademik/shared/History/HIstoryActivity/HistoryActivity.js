@@ -10,14 +10,13 @@ import {
   Table,
   TableHead,
   TableRow,
-  Checkbox,
   TableCell,
   TableBody,
   Chip,
 } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -28,35 +27,49 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const ViewActivity = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
   const navigate = useNavigate();
+
   const location = useLocation();
   console.log("loca", location);
   const { activityId } = location?.state || "-";
-  const controller = new AbortController();
-  const signal = controller.signal;
   const [activityDetail, setActivityDetail] = useState("");
 
   const getActivityDetail = async () => {
     try {
-      const headers = {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer token_apa`,
-      };
-
-      const response = await axios.get(
-        `${BASE_URL_API}/activity/detail/${activityId}`,
-        { signal }
+      const response = await jwtAuthAxios.get(
+        `/activity/detail/${activityId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
+
       console.log("res activity detail", response);
 
       const { status, data } = response.data;
       if (status === "OK") {
         setActivityDetail(data);
       } else {
-        //tambah handler jika respon lain, kalau tidak perlu hapus saja
+        console.log("status result tidak ok", response);
       }
     } catch (error) {
-      console.log(error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -138,7 +151,7 @@ const ViewActivity = () => {
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                {new Date(activityDetail.dueDate).toLocaleString("en-US", {
+                {new Date(activityDetail?.dueDate).toLocaleString("en-US", {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
@@ -188,32 +201,32 @@ const ViewActivity = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {activityDetail.ActivityMember.map((student, index) => (
-                    <TableRow key={student.studentNim}>
+                  {activityDetail?.ActivityMember.map((student, index) => (
+                    <TableRow key={student?.studentNim}>
                       <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
                       <TableCell sx={{ width: "190px" }}>
-                        {student.studentNim}
+                        {student?.studentNim}
                       </TableCell>
                       <TableCell sx={{ width: "80px" }}>
-                        {student.studentNim}
+                        {student?.studentNim}
                       </TableCell>
                       <TableCell sx={{ width: "80px" }}>
-                        {student.studentNim}
+                        {student?.studentNim}
                       </TableCell>
                       <TableCell sx={{ width: "80px" }}>
                         <Chip
                           label={
-                            student.presence === true
+                            student?.presence === true
                               ? "Present"
-                              : student.presence === false
+                              : student?.presence === false
                               ? "Absent"
                               : "null"
                           }
                           variant="filled"
                           color={
-                            student.presence === true
+                            student?.presence === true
                               ? "success"
-                              : student.presence === false
+                              : student?.presence === false
                               ? "error"
                               : "default"
                           }

@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Typography, Paper } from "@mui/material";
 
 const GradeSubmissionClosed = () => {
@@ -18,7 +17,6 @@ const GradeSubmissionClosed = () => {
         }}
       >
         <Typography variant="body1">
-          {" "}
           Student semester grade entry has closed. Please wait for direction
           from your Head of Study Program.
         </Typography>

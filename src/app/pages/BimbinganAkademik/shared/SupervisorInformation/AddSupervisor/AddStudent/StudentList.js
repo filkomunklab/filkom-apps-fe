@@ -15,12 +15,15 @@ import {
   experimentalStyled as styled,
   Button,
   Paper,
+  TextField,
+  InputAdornment,
+  MenuItem,
 } from "@mui/material";
-import SearchLocal from "app/shared/SearchLocal";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import SearchIcon from "@mui/icons-material/Search";
 import Div from "@jumbo/shared/Div";
-import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -49,10 +52,13 @@ const CountStudent = ({ selected, totalStudents }) => {
 };
 
 const StudentList = () => {
-  const location = useLocation();
-  const { students, supervisor } = location.state;
+  //abort
   const controller = new AbortController();
   const signal = controller.signal;
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const { students, supervisor, major } = location.state;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [studentOptions, setStudentOptions] = useState([]);
@@ -60,22 +66,38 @@ const StudentList = () => {
     students?.map((data) => data.nim) || []
   );
 
+  //search dan filter
+  const [searchFilteredData, setSearchFilteredData] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
+  const [originalDataStudent, setOriginalDataStudent] = useState([]);
+
   const getStudent = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/guidance-class/get-all-unassigned-student/list`,
-        { signal }
+      const response = await jwtAuthAxios.get(
+        `/guidance-class/get-all-unassigned-student/list`,
+        // `/students-without-supervisor`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
-
-      const { status, data } = response.data;
-      console.log("inii response :", response);
-      if (status === "OK") {
-        setStudentOptions(data.filter((item) => item.status !== "GRADUATE"));
-      } else {
-        console.log("ini response :", response);
-      }
+      setStudentOptions(
+        response.data.data.filter((item) => item.status !== "GRADUATE")
+      );
     } catch (error) {
-      console.log(error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+      } else {
+        console.log("ini error: ", error);
+      }
     }
   };
 
@@ -85,12 +107,47 @@ const StudentList = () => {
     return () => controller.abort();
   }, []);
 
+  useEffect(() => {
+    setOriginalDataStudent(studentOptions);
+  }, [studentOptions]);
+
+  useEffect(() => {
+    filterAndSetStudents();
+  }, [search, filter, originalDataStudent]);
+
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelected = studentOptions.map((item) => item.nim);
       setSelectedStudent(newSelected);
     } else {
       setSelectedStudent([]);
+    }
+  };
+
+  const filterAndSetStudents = () => {
+    const filteredData = originalDataStudent.filter((item) => {
+      const nameMatches =
+        item.firstName.toLowerCase().includes(search.toLowerCase()) ||
+        item.lastName.toLowerCase().includes(search.toLowerCase());
+      const nimMatches = item.nim.toLowerCase().includes(search.toLowerCase());
+      const majorMatches = filter === "" || item.major === filter;
+
+      return (nameMatches || nimMatches) && majorMatches;
+    });
+
+    setSearchFilteredData(filteredData);
+  };
+  console.log("ini isi originial", originalDataStudent);
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+  };
+
+  const handleFilter = (event) => {
+    if (event.target.value === "All Major") {
+      setFilter("");
+    } else {
+      setFilter(event.target.value);
     }
   };
 
@@ -123,22 +180,103 @@ const StudentList = () => {
               List of Students
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={8} md={5}>
-            <SearchLocal
-              sx={{
-                height: "100%",
-                "@media (max-width: 390px)": {
-                  height: "40px",
-                },
-              }}
-            />
-          </Grid>
         </Grid>
       </Div>
+      <Grid container paddingTop={1} paddingBottom={3.5} spacing={2}>
+        <Grid item xs={12} sm={6} md={3.5}>
+          <TextField
+            size="small"
+            placeholder="Search by Name or NIM"
+            variant="outlined"
+            id="search-field"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "#1C304A85" }} />
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "65px",
+              },
+            }}
+            sx={{
+              width: "100%",
+              marginBottom: { xs: 2, md: 0 },
+            }}
+            value={search}
+            onChange={handleSearch}
+            // value={search}
+            // onChange={handleSearch}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            size="small"
+            fullWidth
+            id="outlined-select-currency"
+            select
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start" sx={{ zIndex: -2 }}>
+                  <FilterListIcon sx={{ color: "#1C304A85" }} />
+
+                  <Typography sx={{ marginLeft: "16px", color: "#1C304A85" }}>
+                    Filter:
+                  </Typography>
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "65px",
+                borderColor: "#E0E0E0",
+              },
+            }}
+            sx={{
+              m: 0,
+              borderRadius: "65px",
+              width: "100%",
+              borderColor: "#E0E0E0",
+            }}
+            value={filter ? filter : "All Major"}
+            onChange={handleFilter}
+          >
+            <Typography
+              sx={{
+                fontWeight: "600",
+                paddingLeft: "12px",
+                marginBottom: "10px",
+                marginTop: "10px",
+              }}
+            >
+              Major
+            </Typography>
+            <MenuItem key={"All Major"} value={"All Major"}>
+              All Major
+            </MenuItem>
+            <MenuItem key={"IF"} value={"IF"}>
+              Informatics
+            </MenuItem>
+            <MenuItem key={"SI"} value={"SI"}>
+              Information System
+            </MenuItem>
+            <MenuItem key={"DKV"} value={"DKV"}>
+              Information Technology
+            </MenuItem>
+          </TextField>
+        </Grid>
+      </Grid>
       <Grid item xs={12}>
         <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
-          <Table stickyHeader>
-            <TableHead>
+          <Table>
+            <TableHead
+              sx={{
+                position: "-webkit-sticky",
+                position: "sticky",
+                top: 0,
+                backgroundColor: "#e8ecf2",
+                zIndex: 1,
+              }}
+            >
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
@@ -156,36 +294,42 @@ const StudentList = () => {
                 <TableCell>No</TableCell>
                 <TableCell>NIM</TableCell>
                 <TableCell>Student Name</TableCell>
-                <TableCell>Program Studi</TableCell>
-                <TableCell>Tahun Masuk</TableCell>
+                <TableCell>Major</TableCell>
+                <TableCell>Arrival Year</TableCell>
                 <TableCell>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {studentOptions
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => (
-                  <TableItem
-                    item={item}
-                    index={index}
-                    key={item.nim}
-                    isSelected={selectedStudent.includes(item.nim)}
-                    handleClick={(i) =>
-                      setSelectedStudent(
-                        selectedStudent.includes(i.nim)
-                          ? selectedStudent.filter((nim) => nim !== i.nim)
-                          : [...selectedStudent, i.nim]
-                      )
-                    }
-                  />
-                ))}
+              {searchFilteredData.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8}>No data available</TableCell>
+                </TableRow>
+              ) : (
+                searchFilteredData
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem
+                      item={item}
+                      index={index}
+                      key={item.nim}
+                      isSelected={selectedStudent.includes(item.nim)}
+                      handleClick={(i) =>
+                        setSelectedStudent(
+                          selectedStudent.includes(i.nim)
+                            ? selectedStudent.filter((nim) => nim !== i.nim)
+                            : [...selectedStudent, i.nim]
+                        )
+                      }
+                    />
+                  ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"
-          count={studentOptions.length}
+          count={searchFilteredData.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={(_, newPage) => setPage(newPage)}

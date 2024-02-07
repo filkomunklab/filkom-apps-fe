@@ -22,42 +22,49 @@ import { useNavigate, useParams } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const PreregisCoursesList = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const { id } = useParams();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState("");
-  const navigate = useNavigate();
   const [dataCourses, setDataCourses] = useState([]);
 
   const getDataCourses = async () => {
     try {
-      const result = await jwtAuthAxios.get(
-        `pre-regist/list-subject/${id}`
-        //  {
-        //   headers: {
-        //     Authorization: `Bearer ${localStorage.getItem("token")}`,
-        //   },
-        // }
-      );
+      const result = await jwtAuthAxios.get(`pre-regist/list-subject/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
 
       const filteredData = result.data.data.filter((item) => {
         const subjectName = item.name.toLowerCase();
         return subjectName.includes(searchValue.toLowerCase());
       });
 
-      setDataCourses(
-        // result.data.data
-        filteredData
-      );
+      setDataCourses(filteredData);
     } catch (error) {
-      console.log(error.message);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+      } else {
+        console.log("ini error: ", error);
+      }
     }
   };
   useEffect(() => {
     getDataCourses();
+    return () => controller.abort();
   }, [searchValue, id]);
-
-  console.log("ini isi data student", dataCourses);
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -120,8 +127,15 @@ const PreregisCoursesList = () => {
       </Div>
       <Grid item xs={12}>
         <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
-          <Table stickyHeader>
-            <TableHead>
+          <Table>
+            <TableHead
+              style={{
+                position: "-webkit-sticky",
+                position: "sticky",
+                top: 0,
+                backgroundColor: "rgba(26, 56, 96, 0.1)",
+              }}
+            >
               <TableRow>
                 <TableCell>No</TableCell>
                 <TableCell>Code</TableCell>
@@ -131,15 +145,21 @@ const PreregisCoursesList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataCourses.map((course, index) => (
-                <TableRow key={index}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{course.code}</TableCell>
-                  <TableCell>{course.name}</TableCell>
-                  <TableCell>{course.type}</TableCell>
-                  <TableCell>{course.totalRequest}</TableCell>
+              {dataCourses && dataCourses.length > 0 ? (
+                dataCourses.map((course, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{course.code}</TableCell>
+                    <TableCell>{course.name}</TableCell>
+                    <TableCell>{course.type}</TableCell>
+                    <TableCell>{course.totalRequest}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={8}>No data available</TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </TableContainer>

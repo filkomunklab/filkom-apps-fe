@@ -8,8 +8,8 @@ import {
   ListItem,
   ListItemText,
   Divider,
-  Chip,
 } from "@mui/material";
+import Chip from "@mui/material/Chip";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
@@ -40,21 +40,20 @@ function a11yProps(index) {
   };
 }
 
-const History = () => {
+const History = (props) => {
   //abort
+  const navigate = useNavigate();
   const controller = new AbortController();
   const signal = controller.signal;
-  const navigate = useNavigate();
 
-  //get data
+  const [value, setValue] = useState(0);
   const [dataActivity, setDataActivity] = useState([]);
   const [dataConsultation, setDataConsultation] = useState([]);
   const [dataCertificate, setDataCertificate] = useState([]);
   const [dataPreregis, setDataPreregis] = useState([]);
   const [dataGrade, setDataGrade] = useState([]);
 
-  //set tab value
-  const [value, setValue] = useState(0);
+  const { role } = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     const storedValue = localStorage.getItem("historyTabValue");
@@ -83,21 +82,23 @@ const History = () => {
     }
   };
 
-  //get history
   const getHistory = async () => {
     try {
-      const { nim } = JSON.parse(localStorage.getItem("user"));
+      const { nik, guidanceClassId, id } = JSON.parse(
+        localStorage.getItem("user")
+      );
 
-      const resultConsultation = await jwtAuthAxios.get(
-        `/academic-consultation/student/${nim}`,
+      const resultActivity = await jwtAuthAxios.get(
+        `/activity/history-for-advisor/${nik}`,
+        // `/academic-consultation/employee/${nik}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
         }
       );
 
-      const resultActivity = await jwtAuthAxios.get(
-        `/activity/history-for-student/${nim}`,
+      const resultConsultation = await jwtAuthAxios.get(
+        `/academic-consultation/employee/${nik}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -105,7 +106,8 @@ const History = () => {
       );
 
       const resultCertificate = await jwtAuthAxios.get(
-        `/certificate/history/student/${nim}`,
+        // `/academic-consultation/employee/${nik}`,
+        `/certificate/dosen/${guidanceClassId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -113,15 +115,8 @@ const History = () => {
       );
 
       const resultPreregis = await jwtAuthAxios.get(
-        `/pre-regist/history-for-student/${nim}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          signal,
-        }
-      );
-
-      const resultGrade = await jwtAuthAxios.get(
-        `/transaction/student/history/${nim}`,
+        // `/academic-consultation/employee/${nik}`,
+        `/pre-regist/history-for-advisor/${guidanceClassId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -136,7 +131,8 @@ const History = () => {
         resultCertificate.data;
       const { status: preregisStatus, data: preregisData } =
         resultPreregis.data;
-      const { status: gradeStatus, data: gradeData } = resultGrade.data;
+
+      console.log("response result activity", resultActivity);
 
       if (activityStatus === "OK") {
         setDataActivity(activityData);
@@ -145,32 +141,56 @@ const History = () => {
       }
 
       if (consultationStatus === "OK") {
-        setDataConsultation(
-          consultationData.filter((value) => value.status === "Complete")
+        const filteredConsultationData = consultationData.filter(
+          (value) => value.status === "Complete"
         );
+
+        setDataConsultation(filteredConsultationData);
       } else {
-        console.log(resultConsultation);
+        console.log("ini error resultConsultation", resultConsultation);
       }
 
       if (certificateStatus === "OK") {
         setDataCertificate(certificateData);
       } else {
-        console.log(resultCertificate);
-        console.log(resultCertificate.data);
+        console.log("ini error resultCertificate", resultCertificate);
       }
 
       if (preregisStatus === "OK") {
         setDataPreregis(preregisData);
       } else {
-        console.log(resultCertificate);
-        console.log(resultCertificate.data);
+        console.log("ini error resultPreregis", resultPreregis);
       }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const getHistoryGrade = async () => {
+    try {
+      const { id } = JSON.parse(localStorage.getItem("user"));
+
+      const majorResponse = await jwtAuthAxios.get(`/employee/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
+      const major = majorResponse.data.data.major;
+
+      const resultGrade = await jwtAuthAxios.get(
+        `/transaction/hisotry/kaprodi/${major}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
+
+      const { status: gradeStatus, data: gradeData } = resultGrade.data;
 
       if (gradeStatus === "OK") {
+        console.log("ini isi response.data gradeData", gradeData);
         setDataGrade(gradeData);
       } else {
-        console.log(resultGrade);
-        console.log(resultGrade.data);
+        console.log("ini error resultGrade", resultGrade);
       }
     } catch (error) {
       handleError(error);
@@ -179,6 +199,7 @@ const History = () => {
 
   useEffect(() => {
     getHistory();
+    getHistoryGrade();
     return () => controller.abort();
   }, []);
 
@@ -291,8 +312,15 @@ const History = () => {
         }
       );
 
-      console.log("ini detail Consutation result:", consultationDetailsResult);
-      let path = "/bimbingan-akademik/history/consultation/";
+      const { role } = JSON.parse(localStorage.getItem("user"));
+      let path = "";
+      if (role.includes("DEKAN")) {
+        path = "/bimbingan-akademik/dekan/history/consultation/";
+      } else if (role.includes("KAPRODI")) {
+        path = "/bimbingan-akademik/kaprodi/history/consultation/";
+      } else {
+        path = "/bimbingan-akademik/dosen-pembimbing/history/consultation/";
+      }
 
       navigate(`${path}${value.id}`, {
         state: {
@@ -320,11 +348,18 @@ const History = () => {
         `/certificate/student/${value.id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          signal,
         }
       );
 
-      let pathh = "/bimbingan-akademik/history/certificate/";
+      const { role } = JSON.parse(localStorage.getItem("user"));
+      let pathh = "";
+      if (role.includes("DEKAN")) {
+        pathh = "/bimbingan-akademik/dekan/history/certificate/";
+      } else if (role.includes("KAPRODI")) {
+        pathh = "/bimbingan-akademik/kaprodi/history/certificate/";
+      } else {
+        pathh = "/bimbingan-akademik/dosen-pembimbing/history/certificate/";
+      }
 
       const {
         student,
@@ -377,10 +412,18 @@ const History = () => {
           signal,
         }
       );
-
       const detail = preregisDetailsResult.data.data;
-      let path = "/bimbingan-akademik/history/pre-registration/";
-
+      const { role } = JSON.parse(localStorage.getItem("user"));
+      let path = "";
+      console.log("hai ini role KAPRODI", role.includes("KAPRODI"));
+      console.log("hai ini role DEKAN", role.includes("DEKAN"));
+      if (role.includes("DEKAN")) {
+        path = "/bimbingan-akademik/dekan/history/pre-registration/";
+      } else if (role.includes("KAPRODI")) {
+        path = "/bimbingan-akademik/kaprodi/history/pre-registration/";
+      } else {
+        path = "/bimbingan-akademik/dosen-pembimbing/history/pre-registration/";
+      }
       navigate(`${path}${value.id}`, {
         state: {
           preregisDetails: {
@@ -408,12 +451,11 @@ const History = () => {
         `/transaction/submissionDetail/${value.id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          signal,
         }
       );
 
       const detail = gradeDetailsResult.data.data;
-      let path = "/bimbingan-akademik/history/grade/";
+      let path = "/bimbingan-akademik/kaprodi/history/grade/";
       console.log("isi detail", detail);
       navigate(`${path}${value.id}`, {
         state: {
@@ -442,16 +484,14 @@ const History = () => {
 
   return (
     <div>
-      <Typography
-        sx={{ fontSize: { xs: "20px", md: "24px" }, fontWeight: 500 }}
-      >
+      <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
         History
       </Typography>
       <Typography
         sx={{
           paddingTop: "22px",
-          paddingBottom: "32px",
-          fontSize: { xs: "14px", md: "15px" },
+          paddingBottom: "28px",
+          fontSize: "15px",
           fontWeight: 400,
           color: "rgba(27, 43, 65, 0.69)",
           textAlign: "justify",
@@ -463,7 +503,7 @@ const History = () => {
         approved will be displayed on this page.
       </Typography>
 
-      <div sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <div sx={{ borderBottom: 1, borderColor: "divider", paddingTop: "16px" }}>
         <Tabs
           value={value}
           variant="scrollable"
@@ -474,8 +514,8 @@ const History = () => {
           <Tab label="Activity" {...a11yProps(0)} />
           <Tab label="Pre-registration" {...a11yProps(1)} />
           <Tab label="Certificate" {...a11yProps(2)} />
-          <Tab label="Grade" {...a11yProps(3)} />
-          <Tab label="Consultation" {...a11yProps(4)} />
+          <Tab label="Consultation" {...a11yProps(3)} />
+          <Tab label="Grade" {...a11yProps(4)} />
         </Tabs>
       </div>
 
@@ -541,6 +581,7 @@ const History = () => {
                         sx={{ padding: "10px 50px" }}
                         onClick={() => {
                           handleNavigateActivity(value.id);
+                          // console.log("ini isi dari value preregis: ", value);
                         }}
                       >
                         <ListItemText
@@ -676,6 +717,7 @@ const History = () => {
                         sx={{ padding: "10px 50px" }}
                         onClick={() => {
                           handleNavigatePreregis(value);
+                          // console.log("ini isi dari value preregis: ", value);
                         }}
                       >
                         <ListItemText
@@ -708,7 +750,7 @@ const History = () => {
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
                               >
-                                Preregistration Semester{" "}
+                                Preregistrsi Semester{" "}
                                 {value.PreRegistration.semester} tahun ajaran{" "}
                                 {value.PreRegistration.semesterPeriod}
                               </Typography>
@@ -794,6 +836,7 @@ const History = () => {
                   {dataCertificate &&
                     dataCertificate.map((value, index) => (
                       <List
+                        key={index}
                         sx={{
                           width: "100%",
                           maxWidth: 2000,
@@ -890,6 +933,145 @@ const History = () => {
       </TabPanel>
 
       <TabPanel value={value} index={3}>
+        <div>
+          <Typography sx={{ padding: "10px" }}></Typography>
+
+          {dataConsultation.length === 0 ? (
+            <Box
+              sx={{
+                height: "50px",
+                backgroundColor: "rgba(235, 235, 235, 1)",
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "10px",
+              }}
+            >
+              <Typography
+                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+              >
+                You don't have any consultation history
+              </Typography>
+            </Box>
+          ) : (
+            Object.entries(groupedDataConsultation).map(
+              ([date, dataConsultation]) => (
+                <div key={date}>
+                  <Box
+                    sx={{
+                      height: "50px",
+                      backgroundColor: "rgba(235, 235, 235, 1)",
+                      display: "flex",
+                      alignItems: "center",
+                      paddingLeft: "10px",
+                    }}
+                  >
+                    <Typography
+                      sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+                    >
+                      {formatDate(date)}
+                    </Typography>
+                  </Box>
+                  {dataConsultation &&
+                    dataConsultation.map((value, index) => (
+                      <List
+                        key={index}
+                        sx={{
+                          width: "100%",
+                          maxWidth: 2000,
+                          bgcolor: "background.paper",
+                          paddingTop: "0px",
+                          paddingBottom: "0px",
+                          ":hover": {
+                            cursor: "pointer",
+                            backgroundColor: "#338CFF21",
+                            transition: "0.3s",
+                            transitionTimingFunction: "ease-in-out",
+                            transitionDelay: "0s",
+                            transitionProperty: "all",
+                          },
+                        }}
+                      >
+                        <ListItem
+                          sx={{ padding: "10px 50px" }}
+                          onClick={() => handleNavigateConsultation(value)}
+                        >
+                          <ListItemText
+                            primary={
+                              <Chip
+                                size={"small"}
+                                label={"Consultation"}
+                                sx={{
+                                  backgroundColor: "rgba(223, 11, 146, 0.1)",
+                                  color: "rgba(223, 11, 146, 1)",
+                                }}
+                              />
+                            }
+                            secondary={
+                              <>
+                                <Typography
+                                  sx={{
+                                    color: "rgba(0, 0, 0, 1)",
+                                    paddingLeft: "8px",
+                                    paddingTop: "5px",
+                                    fontSize: { xs: "12px", md: "14px" },
+                                  }}
+                                >
+                                  {value.student_name}
+                                </Typography>
+                                <Typography
+                                  sx={{
+                                    paddingLeft: "8px",
+                                    fontSize: { xs: "12px", md: "14px" },
+                                  }}
+                                >
+                                  {value.topic === "others" && "Others"}
+                                  {value.topic === "academic" && "Academic"}
+                                  {value.topic === "non-academic" &&
+                                    "Non-Academic"}
+                                </Typography>
+                              </>
+                            }
+                          />
+                          <Box
+                            sx={{
+                              marginLeft: { xs: "auto", md: 0 },
+                              textAlign: "right",
+                            }}
+                          >
+                            <ListItemText
+                              secondary={
+                                <Typography
+                                  sx={{
+                                    fontSize: { xs: "10px", md: "14px" },
+                                    color: "rgba(27, 43, 65, 0.69)",
+                                  }}
+                                >
+                                  {new Date(value.createdAt).toLocaleTimeString(
+                                    "en-US",
+                                    {
+                                      hour: "numeric",
+                                      minute: "numeric",
+                                      hour12: true,
+                                    }
+                                  )}
+                                </Typography>
+                              }
+                            />
+                          </Box>
+                        </ListItem>
+                        <Divider component="li" />
+                      </List>
+                    ))}
+                </div>
+              )
+            )
+          )}
+
+          <Typography sx={{ padding: "20px" }}></Typography>
+        </div>
+      </TabPanel>
+
+      <TabPanel value={value} index={4}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
           {dataGrade.length === 0 ? (
@@ -1018,148 +1200,6 @@ const History = () => {
                   ))}
               </div>
             ))
-          )}
-          <Typography sx={{ padding: "20px" }}></Typography>
-        </div>
-      </TabPanel>
-
-      <TabPanel value={value} index={4}>
-        <div>
-          <Typography sx={{ padding: "10px" }}></Typography>
-          {dataConsultation.length === 0 ? (
-            <Box
-              sx={{
-                height: "50px",
-                backgroundColor: "rgba(235, 235, 235, 1)",
-                display: "flex",
-                alignItems: "center",
-                paddingLeft: "10px",
-              }}
-            >
-              <Typography
-                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
-              >
-                You don't have any consultation history
-              </Typography>
-            </Box>
-          ) : (
-            Object.entries(groupedDataConsultation).map(
-              ([dateConsultation, dataConsultation]) => (
-                <div key={dateConsultation}>
-                  <Box
-                    sx={{
-                      height: "50px",
-                      backgroundColor: "rgba(235, 235, 235, 1)",
-                      display: "flex",
-                      alignItems: "center",
-                      paddingLeft: "10px",
-                    }}
-                  >
-                    <Typography
-                      sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
-                    >
-                      {formatDate(dateConsultation)}
-                    </Typography>
-                  </Box>
-                  {dataConsultation &&
-                    dataConsultation.map((value, index) =>
-                      value.status === "Complete" ? (
-                        <List
-                          sx={{
-                            width: "100%",
-                            maxWidth: 2000,
-                            bgcolor: "background.paper",
-                            paddingTop: "0px",
-                            paddingBottom: "0px",
-                            ":hover": {
-                              cursor: "pointer",
-                              backgroundColor: "#338CFF21",
-                              transition: "0.3s",
-                              transitionTimingFunction: "ease-in-out",
-                              transitionDelay: "0s",
-                              transitionProperty: "all",
-                            },
-                          }}
-                        >
-                          <ListItem
-                            sx={{ padding: "10px 50px" }}
-                            onClick={() => {
-                              handleNavigateConsultation(value);
-                            }}
-                          >
-                            <ListItemText
-                              primary={
-                                <Chip
-                                  size={"small"}
-                                  label={"Consultation"}
-                                  sx={{
-                                    backgroundColor: "rgba(223, 11, 146, 0.1)",
-                                    color: "rgba(223, 11, 146, 1)",
-                                  }}
-                                />
-                              }
-                              secondary={
-                                <>
-                                  <Typography
-                                    sx={{
-                                      color: "rgba(0, 0, 0, 1)",
-                                      paddingLeft: "8px",
-                                      paddingTop: "5px",
-                                      fontSize: { xs: "12px", md: "14px" },
-                                    }}
-                                  >
-                                    To {value.receiver_name}
-                                  </Typography>
-                                  <Typography
-                                    sx={{
-                                      paddingLeft: "8px",
-                                      fontSize: { xs: "12px", md: "14px" },
-                                    }}
-                                  >
-                                    {value.topic === "others" && "Others"}
-                                    {value.topic === "academic" && "Academic"}
-                                    {value.topic === "non-academic" &&
-                                      "Non-Academic"}
-                                    {value.status && ` - ${value.status}`}
-                                  </Typography>
-                                </>
-                              }
-                            />
-                            <Box
-                              sx={{
-                                marginLeft: { xs: "auto", md: 0 },
-                                textAlign: "right",
-                              }}
-                            >
-                              <ListItemText
-                                secondary={
-                                  <Typography
-                                    sx={{
-                                      fontSize: { xs: "10px", md: "14px" },
-                                      color: "rgba(27, 43, 65, 0.69)",
-                                    }}
-                                  >
-                                    {new Date(
-                                      value.createdAt
-                                    ).toLocaleTimeString("en-US", {
-                                      hour: "numeric",
-                                      minute: "numeric",
-                                      hour12: true,
-                                    })}
-                                  </Typography>
-                                }
-                              />
-                            </Box>
-                          </ListItem>
-                          <Divider component="li" />
-                        </List>
-                      ) : (
-                        ""
-                      )
-                    )}
-                </div>
-              )
-            )
           )}
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>

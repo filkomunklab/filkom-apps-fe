@@ -28,7 +28,6 @@ const StudentGrade = () => {
   const { state } = useLocation();
   const gradeDetails = state ? state.gradeDetails : {};
   const { semester, subject } = gradeDetails;
-  console.log("ini grade detail", gradeDetails);
 
   const getLetterGrade = (grade) => {
     if (grade >= 91) return { letter: "A", weight: 4.0 };
@@ -41,11 +40,6 @@ const StudentGrade = () => {
     else if (grade >= 60) return { letter: "C-", weight: 1.7 };
     else if (grade >= 50) return { letter: "D", weight: 1.0 };
     else return { letter: "F", weight: 0.0 };
-  };
-
-  const handleBreadcrumbsClick = () => {
-    let path = "/bimbingan-akademik/student-grade";
-    return <StyledLink to={path}>Grades</StyledLink>;
   };
 
   const calculateTotalGrade = (subjects) => {
@@ -72,6 +66,11 @@ const StudentGrade = () => {
   };
 
   const { ip, majorIp } = calculateTotalGrade(subject);
+
+  const handleBreadcrumbsClick = () => {
+    let path = "/bimbingan-akademik/student-grade";
+    return <StyledLink to={path}>Grades</StyledLink>;
+  };
 
   return (
     <div>
@@ -117,10 +116,10 @@ const StudentGrade = () => {
                         {data.lecturer}
                       </TableCell>
                       <TableCell sx={{ width: "40px" }}>
-                        {data.Subject.credits}
+                        {data.Subject?.credits}
                       </TableCell>
                       <TableCell sx={{ width: "40px" }}>
-                        {data.Subject.type}
+                        {data.Subject?.type}
                       </TableCell>
                       <TableCell sx={{ width: "40px" }}>
                         {data.description || "-"}

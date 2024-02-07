@@ -9,17 +9,18 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { useNavigate } from "react-router-dom";
 
 const StudentProfile = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
+  //get data
   const [studentProfileData, setStudentProfileData] = useState([]);
   const [advisorProfileData, setAdvisorProfileData] = useState([]);
-
-  useEffect(() => {
-    getProfile();
-  }, []);
 
   const getProfile = async () => {
     try {
@@ -28,23 +29,37 @@ const StudentProfile = () => {
         `/student/view/biodata/${nim}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
 
-      console.log("ini isi student", resultStudent);
-      // console.log(resultStudent);
       setStudentProfileData(resultStudent.data.data);
       setAdvisorProfileData(
         resultStudent.data.data.GuidanceClassMember.gudianceClass.teacher
       );
     } catch (error) {
-      console.log(error.message);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
-  console.log(
-    "isi student profil data check dpe kurikulum",
-    studentProfileData
-  );
+
+  useEffect(() => {
+    getProfile();
+    return () => controller.abort();
+  }, []);
+
   return (
     <Div>
       <Typography
@@ -76,7 +91,7 @@ const StudentProfile = () => {
                 {studentProfileData?.path ? (
                   <img
                     id="displayImage"
-                    src={studentProfileData.path}
+                    src={studentProfileData?.path}
                     alt="Profile-Picture"
                     style={{
                       width: "100%",
@@ -127,7 +142,7 @@ const StudentProfile = () => {
               <Typography variant="h5">Date of Birth</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.dateOfBirth
-                  ? new Date(studentProfileData.dateOfBirth).toLocaleString(
+                  ? new Date(studentProfileData?.dateOfBirth).toLocaleString(
                       "en-US",
                       {
                         year: "numeric",

@@ -5,7 +5,6 @@ import {
   Tabs,
   Typography,
   Grid,
-  Popover,
   TextField,
   Button,
   IconButton,
@@ -18,13 +17,12 @@ import {
   TableRow,
   Paper,
   Modal,
+  Popover,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
 import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import AddIcon from "@mui/icons-material/Add";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
@@ -35,8 +33,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import CircularProgress from "@mui/material/CircularProgress";
-import { MoreVert } from "@mui/icons-material";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
+import { MoreVert } from "@mui/icons-material";
 
 const styleModal = {
   position: "absolute",
@@ -56,16 +55,6 @@ const styleModal = {
   "@media (maxWidth: 480px)": {
     maxWidth: "80%",
   },
-};
-
-const styleResponseModal = {
-  position: "fixed",
-  top: "15%",
-  right: "2%",
-  width: 420,
-  padding: 24,
-  backgroundColor: "white",
-  borderRadius: 10,
 };
 
 function TabPanel(props) {
@@ -103,7 +92,6 @@ const preregisSchema = Yup.object({
       'Invalid format. Please use "YYYY/YYYY".'
     )
     .required("Semester Period is required"),
-  major: Yup.string("Select Major").required("Major is required"),
   dueDate: Yup.date("Choose DueDate").required("DueDate is required"),
 });
 
@@ -115,10 +103,13 @@ const gradeSchema = Yup.object({
       'Invalid format. Please use "YYYY/YYYY".'
     )
     .required("Semester Period is required"),
-  major: Yup.string("Select Major").required("Major is required"),
   due_date: Yup.date("Choose DueDate").required("DueDate is required"),
 });
+
 const Manage = () => {
+  const navigate = useNavigate();
+
+  //inisialisasi
   const [formType, setFormType] = useState("");
   const [loading, setLoading] = useState(false);
   const [dataGrades, setDataGrades] = useState([]);
@@ -129,17 +120,45 @@ const Manage = () => {
   const [gradeModalOpen, setGradeModalOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
-  const [openSuccessModal, setOpenSuccessModal] = React.useState(false);
-  const [openErrorModal, setOpenErrorModal] = React.useState(false);
+  const [major, setMajor] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  //modal
+  const [openSuccessModal, setOpenSuccessModal] = useState(false);
+  const [openErrorModal, setOpenErrorModal] = useState(false);
   const handleOpenSuccessModal = () => setOpenSuccessModal(true);
   const handleCloseSuccessModal = () => setOpenSuccessModal(false);
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
-  const [major, setMajor] = useState([]);
 
-  const [selectedRow, setSelectedRow] = useState(null);
-  const [listPreregisModalOpen, setListPreregisModalOpen] = useState(false);
+  //handle error
+  const handleError = (error) => {
+    if (
+      error.response &&
+      error.response.status >= 401 &&
+      error.response.status <= 403
+    ) {
+      console.log("You don't have permission to access this page");
+      navigate(`/`);
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      await getMajor();
+    };
+
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (major) {
+      getGradeAndPreregis();
+    }
+  }, [major, searchValue]);
 
   const getMajor = async () => {
     try {
@@ -148,21 +167,14 @@ const Manage = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
-      const { status, data } = response.data;
-
-      if (status === "OK") {
-        return { major: data.major };
-      }
+      setMajor(response.data.data.major);
     } catch (error) {
-      console.error("An error occurred:", error.message);
-      return { error: error.message };
+      handleError(error);
     }
   };
 
-  const fetchData = async () => {
+  const getGradeAndPreregis = async () => {
     try {
-      const { major } = await getMajor();
-
       const gradesPromise = jwtAuthAxios.get(
         `/access/list/gradesAccess/${major}`,
         {
@@ -194,33 +206,68 @@ const Manage = () => {
       setDataGrades(filteredGrades);
       setDataPreregis(filteredPreregis);
     } catch (error) {
-      console.error(error.message);
+      handleError(error);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [searchValue]);
+  const handleClosePreregis = async (id) => {
+    try {
+      setLoading(true);
+      const currentItem = dataPreregis.find((item) => item.id === id);
 
-  console.log("ini isi major", major);
-  console.log("ini isi dataPreregis", dataPreregis);
-  console.log("ini isi dataGrades ", dataGrades);
+      if (currentItem && currentItem.isOpen === false) {
+        setLoading(false);
+        alert("Already closed");
+        return;
+      }
 
-  const handlePreregisModalOpen = () => {
-    setPreregisModalOpen(true);
+      const response = await jwtAuthAxios.patch(
+        `/pre-regist/close-access/${id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      console.log("response close prereg", response);
+
+      getGradeAndPreregis();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
 
-  const PreregisModalClose = () => {
-    setPreregisModalOpen(false);
+  const handleCloseGrade = async (id) => {
+    try {
+      setLoading(true);
+      const currentItem = dataGrades.find((item) => item.id === id);
+
+      if (currentItem && currentItem.isOpen === false) {
+        setLoading(false);
+        alert("Already closed");
+        return;
+      }
+
+      const response = await jwtAuthAxios.patch(`/access/close/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      console.log("response close prereg", response);
+
+      getGradeAndPreregis();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
 
-  const handleGradeModalOpen = () => {
-    setGradeModalOpen(true);
-  };
-
-  const GradeModalClose = () => {
-    setGradeModalOpen(false);
-  };
+  //handle
+  const handlePreregisModalOpen = () => setPreregisModalOpen(true);
+  const PreregisModalClose = () => setPreregisModalOpen(false);
+  const handleGradeModalOpen = () => setGradeModalOpen(true);
+  const GradeModalClose = () => setGradeModalOpen(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [listPreregisModalOpen, setListPreregisModalOpen] = useState(false);
 
   const handleTableRowClick = (rowData) => {
     console.log("ahaha", rowData);
@@ -244,6 +291,10 @@ const Manage = () => {
   useEffect(() => {
     localStorage.setItem("historyTabValue", value);
   }, [value]);
+
+  useEffect(() => {
+    getMajor();
+  }, []);
 
   return (
     <div>
@@ -413,13 +464,20 @@ const Manage = () => {
                     onSubmit={async (values, { resetForm, setSubmitting }) => {
                       const { nik } = JSON.parse(localStorage.getItem("user"));
                       setLoading(true);
-                      console.log("Submitting form with data:", values);
-                      console.log("ini itu kaprodi pe:", nik);
+
+                      // buat dueDate ke WITA
+                      const dueDateWITA = new Date(
+                        values.dueDate
+                      ).toLocaleString("en-US", {
+                        timeZone: "Asia/Makassar",
+                      });
+
                       values.semester = values.semester;
                       values.semesterPeriod = values.semesterPeriod;
-                      values.major = values.major;
-                      values.dueDate = values.dueDate;
+                      values.major = major;
+                      values.dueDate = new Date(dueDateWITA);
                       values.employeeNik = nik;
+
                       try {
                         const response = await jwtAuthAxios.post(
                           `/pre-regist/create`,
@@ -432,18 +490,29 @@ const Manage = () => {
                             },
                           }
                         );
-                        console.log(
-                          "ini response.data di preregis: ",
-                          response.data
-                        );
+
+                        console.log("ini isi values preregis", values);
+
                         setLoading(false);
                         resetForm();
                         PreregisModalClose();
                         handleOpenSuccessModal();
                         setSubmitting(false);
-                        setFormType("preregistration");
+                        setFormType("pre-registration");
                       } catch (error) {
-                        console.log(error);
+                        console.log("Error submitting form:", error);
+
+                        if (error.response) {
+                          console.log(
+                            "Server responded with status:",
+                            error.response.status
+                          );
+                          console.log(
+                            "Server responded with data:",
+                            error.response.data
+                          );
+                        }
+
                         setLoading(false);
                         PreregisModalClose();
                         handleOpenErrorModal();
@@ -492,25 +561,6 @@ const Manage = () => {
                             />
                           </Grid>
                           <Grid xs={12} item>
-                            <JumboSelectField
-                              name="major"
-                              label="Major"
-                              sx={{ width: "480px" }}
-                              options={[
-                                { value: "", label: "None" },
-                                { value: "IF", label: "Informatics" },
-                                { value: "SI", label: "Information System" },
-                                {
-                                  value: "DKV",
-                                  label: "Information Technology",
-                                },
-                              ]}
-                              onChange={(event) => {
-                                setFieldValue("major", event.target.value);
-                              }}
-                            />
-                          </Grid>
-                          <Grid xs={12} item>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                               <DesktopDatePicker
                                 sx={{
@@ -532,20 +582,18 @@ const Manage = () => {
                             item
                             sx={{
                               display: "flex",
-                              justifyContent: "flex-end",
+                              justifyContent: "flex-start",
                             }}
                           >
                             <LoadingButton
                               loading={isSubmitting}
                               type="submit"
                               variant="contained"
-                              fullWidth
                               sx={{
                                 textTransform: "capitalize",
                                 backgroundColor: "#006AF5",
                               }}
                               onClick={handleSubmit}
-                              // aria-disabled={isSubmitting}
                             >
                               Submit
                             </LoadingButton>
@@ -578,6 +626,7 @@ const Manage = () => {
                       <TableCell>Year</TableCell>
                       <TableCell>Due Date Estimation</TableCell>
                       <TableCell>Status</TableCell>
+                      <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -585,7 +634,6 @@ const Manage = () => {
                       dataPreregis.map((value, index) => (
                         <TableRow
                           key={value.id}
-                          // onClick={() => handleNavigate(value)}
                           onClick={() => handleTableRowClick(value)}
                           sx={{
                             ":hover": {
@@ -659,6 +707,34 @@ const Manage = () => {
                           >
                             {value.isOpen ? "Open" : "Closed"}
                           </TableCell>
+                          <TableCell>
+                            <MoreVert
+                              aria-describedby={value.id}
+                              onClick={(e) => {
+                                setAnchorEl(e.currentTarget);
+                                setOpen(true);
+                              }}
+                            />
+                            <Popover
+                              id={value.id}
+                              anchorEl={anchorEl}
+                              open={open}
+                              onClose={() => setOpen(false)}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                            >
+                              <Button
+                                onClick={() => {
+                                  handleClosePreregis(value.id);
+                                  console.log("Button Clicked prereg");
+                                }}
+                              >
+                                Close
+                              </Button>
+                            </Popover>
+                          </TableCell>
                         </TableRow>
                       ))
                     ) : (
@@ -711,8 +787,6 @@ const Manage = () => {
                       </Grid>
                     </Grid>
                     <Grid container spacing={3}>
-                      {/* {dataPreregis.map((value) => ( */}
-                      {/* <React.Fragment key={value.id}> */}
                       <Grid item xs={12} md={6}>
                         <Typography variant="h6">Semester</Typography>
                         <Typography variant="h6" sx={textStyle}>
@@ -771,8 +845,6 @@ const Manage = () => {
                           )}
                         </Typography>
                       </Grid>
-                      {/* </React.Fragment> */}
-                      {/* ))} */}
                       <Grid item xs={12} md={6}>
                         <Button
                           variant="outlined"
@@ -972,7 +1044,7 @@ const Manage = () => {
                       setLoading(true);
                       values.semester = values.semester;
                       values.semester_period = values.semester_period;
-                      values.major = values.major;
+                      values.major = major;
                       values.due_date = values.due_date;
                       values.employeeNik = nik;
                       try {
@@ -989,7 +1061,7 @@ const Manage = () => {
                         );
 
                         setLoading(false);
-
+                        console.log("ini isi values grade", values);
                         resetForm();
                         GradeModalClose();
                         handleOpenSuccessModal();
@@ -1040,25 +1112,6 @@ const Manage = () => {
                             />
                           </Grid>
                           <Grid xs={12} item>
-                            <JumboSelectField
-                              name="major"
-                              label="Major"
-                              sx={{ margin: "0 0 20px 0", width: "480px" }}
-                              options={[
-                                { value: "", label: "None" },
-                                { value: "IF", label: "Informatics" },
-                                { value: "SI", label: "Information System" },
-                                {
-                                  value: "DKV",
-                                  label: "Information Technology",
-                                },
-                              ]}
-                              onChange={(event) => {
-                                setFieldValue("major", event.target.value);
-                              }}
-                            />
-                          </Grid>
-                          <Grid xs={12} item>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                               <DesktopDatePicker
                                 sx={{
@@ -1094,7 +1147,7 @@ const Manage = () => {
                                 backgroundColor: "#006AF5",
                               }}
                               onClick={() => {
-                                console.log("Button clicked");
+                                console.log("Button clicked submit");
                                 handleSubmit();
                               }}
                             >
@@ -1130,6 +1183,7 @@ const Manage = () => {
                       <TableCell>Year</TableCell>
                       <TableCell>Due Date Estimation</TableCell>
                       <TableCell>Status</TableCell>
+                      <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -1210,6 +1264,34 @@ const Manage = () => {
                           >
                             {value.isOpen ? "Open" : "Closed"}
                           </TableCell>
+                          <TableCell>
+                            <MoreVert
+                              aria-describedby={value.id}
+                              onClick={(e) => {
+                                setAnchorEl(e.currentTarget);
+                                setOpen(true);
+                              }}
+                            />
+                            <Popover
+                              id={value.id}
+                              anchorEl={anchorEl}
+                              open={open}
+                              onClose={() => setOpen(false)}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                            >
+                              <Button
+                                onClick={() => {
+                                  handleCloseGrade(value.id);
+                                  console.log("Button Clicked grade");
+                                }}
+                              >
+                                Close
+                              </Button>
+                            </Popover>
+                          </TableCell>
                         </TableRow>
                       ))
                     ) : (
@@ -1243,80 +1325,18 @@ const Manage = () => {
         </div>
       </TabPanel>
 
-      <Modal
+      <SuccessOrError
         open={openSuccessModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div style={styleResponseModal}>
-          <IconButton
-            edge="end"
-            color="#D9D9D9"
-            onClick={handleCloseSuccessModal}
-            aria-label="close"
-            sx={{
-              position: "absolute",
-              top: "10px",
-              right: "20px",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <Typography
-            id="modal-modal-title"
-            variant="h4"
-            component="h2"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            Success creating submission form!
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            style={{ marginTop: "16px", marginBottom: "20px" }}
-          >
-            You have successfully creating a form for {formType} submission.
-          </Typography>
-        </div>
-      </Modal>
-      <Modal
+        handleClose={handleCloseSuccessModal}
+        title="Success creating submission form!"
+        description={`You have successfully creating a form for ${formType} submission. Please refresh your page.`}
+      />
+      <SuccessOrError
         open={openErrorModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div style={styleResponseModal}>
-          <IconButton
-            edge="end"
-            color="#D9D9D9"
-            onClick={handleCloseErrorModal}
-            aria-label="close"
-            sx={{
-              position: "absolute",
-              top: "10px",
-              right: "20px",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <Typography
-            id="modal-modal-title"
-            variant="h4"
-            component="h2"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            Error Submission!
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            style={{ marginTop: "16px", marginBottom: "20px" }}
-          >
-            Error: Failed to creating form submission. Please try again.
-          </Typography>
-        </div>
-      </Modal>
+        handleClose={handleCloseErrorModal}
+        title="Error Submission!"
+        description="Error: Failed to creating form submission. Please try again."
+      />
     </div>
   );
 };

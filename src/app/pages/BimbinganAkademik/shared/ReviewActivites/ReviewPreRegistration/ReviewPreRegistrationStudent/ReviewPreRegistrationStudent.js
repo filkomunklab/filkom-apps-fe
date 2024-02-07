@@ -20,8 +20,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const style = {
   position: "absolute",
@@ -44,13 +43,17 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const ReviewPreRegistrationStudent = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isReject, setIsReject] = useState(false);
   const [isApprove, setIsApprove] = useState(false);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
   const [commentText, setCommentText] = useState("");
 
   const { state } = useLocation();
@@ -76,7 +79,10 @@ const ReviewPreRegistrationStudent = () => {
         comments: commentText || null,
         approveDate: currentDate,
       };
-      await axios.patch(`${BASE_URL_API}/pre-regist/approval/${id}`, bodyData);
+      await jwtAuthAxios.patch(`/pre-regist/approval/${id}`, bodyData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
       setLoading(false);
       const { role } = JSON.parse(localStorage.getItem("user"));
       let path = "";
@@ -92,7 +98,20 @@ const ReviewPreRegistrationStudent = () => {
       navigate(path);
     } catch (error) {
       setLoading(false);
-      console.error("Error completing status:", error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -173,7 +192,7 @@ const ReviewPreRegistrationStudent = () => {
       path =
         "/bimbingan-akademik/dosen-pembimbing/review-activities/pre-registration";
     }
-    return <StyledLink to={path}>Review Certificate</StyledLink>;
+    return <StyledLink to={path}>Review Pre-registration</StyledLink>;
   };
 
   return (
@@ -289,19 +308,19 @@ const ReviewPreRegistrationStudent = () => {
                   <TableRow key={index}>
                     <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
                     <TableCell sx={{ width: "40px" }}>
-                      {data.subject.code}
+                      {data.subject?.code}
                     </TableCell>
                     <TableCell sx={{ width: "400px" }}>
-                      {data.subject.name}
+                      {data.subject?.name}
                     </TableCell>
                     <TableCell sx={{ width: "40px" }}>
-                      {data.subject.credits}
+                      {data.subject?.credits}
                     </TableCell>
                     <TableCell sx={{ width: "200px" }}>
-                      {data.subject.type}
+                      {data.subject?.type}
                     </TableCell>
                     <TableCell sx={{ width: "380px" }}>
-                      {data.subject.prerequisite}
+                      {data.subject?.prerequisite}
                     </TableCell>
                   </TableRow>
                 ))}

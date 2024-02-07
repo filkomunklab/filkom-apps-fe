@@ -10,13 +10,10 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
 } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
-import Modal from "@mui/material/Modal";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
-import SendIcon from "@mui/icons-material/Send";
 import { format } from "date-fns";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -41,10 +38,13 @@ const style = {
 };
 
 const Consultation = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [status, setStatus] = useState("");
   const [messages, setMessages] = useState([]);
-  const [openFirstModal, setOpenFirstModal] = React.useState(false);
-  const [openSecondModal, setOpenSecondModal] = React.useState(false);
 
   const { state } = useLocation();
   const consultationDetails = state ? state.consultationDetails : {};
@@ -59,111 +59,67 @@ const Consultation = () => {
     id,
   } = consultationDetails;
 
-  const handleOpenFirstModal = () => setOpenFirstModal(true);
-  const handleCloseFirstModal = () => setOpenFirstModal(false);
-  const handleOpenSecondModal = () => setOpenSecondModal(true);
-  const handleCloseSecondModal = () => setOpenSecondModal(false);
-
-  const [inputValue, setInputValue] = useState("");
-  const [submittedValue, setSubmittedValue] = useState("");
-
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSubmit();
-    }
-  };
-  const handleIconClick = () => {
-    handleSubmit();
-  };
-
-  const handleSubmit = () => {
-    const trimmedValue = inputValue.trim();
-    if (trimmedValue !== "") {
-      postMessage(trimmedValue);
-      setInputValue("");
-    } else {
-      alert("Input tidak valid. Mohon masukkan pesan yang valid.");
-    }
-  };
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleCloseSecondModal();
-    }, 5000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [handleOpenSecondModal]);
-
   useEffect(() => {
     getCurrentStatus();
     getMessage();
   }, [messages]);
 
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (
+      error.response &&
+      error.response.status >= 401 &&
+      error.response.status <= 403
+    ) {
+      console.log("You don't have permission to access this page");
+      navigate(`/`);
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
+
   const getCurrentStatus = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/academic-consultation/detail/${id}`
+      const response = await jwtAuthAxios.get(
+        `/academic-consultation/detail/${id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
       setStatus(response.data.data.status);
     } catch (error) {
-      console.log("error", error);
+      handleError(error);
     }
   };
 
   const getMessage = async () => {
     try {
-      const response = await axios.get(`${BASE_URL_API}/message/${id}`);
+      const response = await jwtAuthAxios.get(`/message/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
       setMessages(response.data.data);
     } catch (error) {
-      console.log("error", error);
+      handleError(error);
     }
   };
 
-  const postMessage = async (content) => {
-    try {
-      const response = await axios.post(`${BASE_URL_API}/message`, {
-        academic_consultation_id: id,
-        content,
-        sender_name: `${JSON.parse(localStorage.getItem("user")).name}`,
-      });
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
-  const handleSubmitFirstModal = async () => {
-    try {
-      handleCloseFirstModal();
-      await axios.patch(
-        `${BASE_URL_API}/academic-consultation/${id}/status/complete`
-      );
-      handleOpenSecondModal();
-    } catch (error) {
-      console.error("ini error complete status:", error);
-    }
-  };
-  const handleBreadcrumbsClick = () => {
-    const { role } = JSON.parse(localStorage.getItem("user"));
-    let path = "";
-
-    if (role.includes("DEKAN")) {
-      path = "/bimbingan-akademik/dekan/history/";
-    } else if (role.includes("KAPRODI")) {
-      path = "/bimbingan-akademik/kaprodi/history/";
-    } else {
-      path = "/bimbingan-akademik/dosen-pembimbing/history/";
-    }
-    return <StyledLink to={path}>History</StyledLink>;
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigate(-1);
   };
 
   return (
     <Div>
-      <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
-        {handleBreadcrumbsClick()}
-        <Typography color="text.primary">Consultation</Typography>
-      </Breadcrumbs>
+      <div onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
+          <Typography color="text.primary">History</Typography>
+          <Typography color="text.primary">Consultation</Typography>
+        </Breadcrumbs>
+      </div>
       <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
         Consultation
       </Typography>
@@ -340,113 +296,6 @@ const Consultation = () => {
                       <Typography variant="body1">{value.content}</Typography>
                     </Paper>
                   ))}
-
-                {status !== "Complete" && (
-                  <>
-                    <TextField
-                      size="small"
-                      id="outlined-basic"
-                      variant="outlined"
-                      placeholder="Enter Message..."
-                      fullWidth
-                      multiline
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                      InputProps={{
-                        endAdornment: (
-                          <IconButton onClick={handleIconClick}>
-                            <SendIcon style={{ color: "#9E9E9E" }} />
-                          </IconButton>
-                        ),
-                      }}
-                      onKeyPress={handleKeyPress}
-                    />
-                    <Grid
-                      container
-                      spacing={1}
-                      sx={{ paddingTop: "20px" }}
-                      justifyContent="flex-end"
-                    >
-                      <Button
-                        onClick={handleOpenFirstModal}
-                        sx={{
-                          backgroundColor: "#006AF5",
-                          borderRadius: "5px",
-                          boxShadow: 4,
-                          color: "white",
-                          whiteSpace: "nowrap",
-                          "&:hover": {
-                            backgroundColor: "#025ED8",
-                          },
-                        }}
-                      >
-                        End Conversation
-                      </Button>
-                      <Modal
-                        open={openFirstModal}
-                        onClose={handleCloseFirstModal}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                      >
-                        <div style={style}>
-                          <Typography
-                            id="modal-modal-title"
-                            variant="h4"
-                            component="h2"
-                            sx={{
-                              fontWeight: 600,
-                            }}
-                          >
-                            End Session?
-                          </Typography>
-                          <Typography
-                            id="modal-modal-description"
-                            style={{ marginTop: "16px", marginBottom: "20px" }}
-                          >
-                            Are you sure you want to end the Conversation?
-                          </Typography>
-
-                          <Grid container spacing={1} justifyContent="flex-end">
-                            <Grid item>
-                              <Button
-                                onClick={handleCloseFirstModal}
-                                sx={{
-                                  backgroundColor: "white",
-                                  borderRadius: "5px",
-                                  boxShadow: 4,
-                                  color: "black",
-                                  whiteSpace: "nowrap",
-                                  "&:hover": {
-                                    backgroundColor: "lightgrey",
-                                  },
-                                }}
-                              >
-                                Cancel
-                              </Button>
-                            </Grid>
-                            <Grid item>
-                              <Button
-                                onClick={handleSubmitFirstModal}
-                                sx={{
-                                  backgroundColor: "#006AF5",
-                                  borderRadius: "5px",
-                                  boxShadow: 4,
-                                  color: "white",
-                                  whiteSpace: "nowrap",
-                                  "&:hover": {
-                                    backgroundColor: "#025ED8",
-                                  },
-                                }}
-                              >
-                                Yes
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        </div>
-                      </Modal>
-                    </Grid>
-                  </>
-                )}
 
                 {status === "Complete" && (
                   <Typography

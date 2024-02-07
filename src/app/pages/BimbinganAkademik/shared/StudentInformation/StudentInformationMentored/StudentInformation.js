@@ -2,13 +2,8 @@ import Div from "@jumbo/shared/Div";
 import {
   Button,
   Chip,
-  FormControl,
   Grid,
-  InputLabel,
-  ListSubheader,
-  MenuItem,
   Paper,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -17,20 +12,32 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  TextField,
+  InputAdornment,
+  MenuItem,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import SearchIcon from "@mui/icons-material/Search";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { json, useNavigate } from "react-router-dom";
-import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { useNavigate } from "react-router-dom";
 
 const StudentInformationMentored = () => {
-  const [filter, setFilter] = useState([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [dataStudent, setDataStudent] = useState([]);
+  //abort
   const controller = new AbortController();
   const signal = controller.signal;
+  const navigate = useNavigate();
+
+  //search dan filter
+  const [searchFilteredData, setSearchFilteredData] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
+  const [resultData, setResultData] = useState([]);
+  const [originalDataStudent, setOriginalDataStudent] = useState([]);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
@@ -39,13 +46,10 @@ const StudentInformationMentored = () => {
   const getDataStudent = async () => {
     const { guidanceClassId } = JSON.parse(localStorage.getItem("user"));
     try {
-      // const { nik } = JSON.parse(localStorage.getItem("user"));
-      // const result = await axios.get(`${BASE_URL_API}/student/dosen/${nik}`, {
-      //   cancelToken: source.token,
-      // });
-      const result = await axios.get(
-        `${BASE_URL_API}/guidance-class/${guidanceClassId}`,
+      const result = await jwtAuthAxios.get(
+        `/guidance-class/${guidanceClassId}`,
         {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
         }
       );
@@ -54,21 +58,74 @@ const StudentInformationMentored = () => {
 
       if (status === "OK") {
         console.log("ini isi result.data dalam status ok mentored", result);
-        setDataStudent(data.GuidanceClassMember);
+        setResultData(data.GuidanceClassMember);
       } else {
         console.error("error, ini data result: ", result);
       }
     } catch (error) {
-      console.error("Error fetching data: ", error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
-
-  useEffect(() => console.log("tes", dataStudent), [dataStudent]);
 
   useEffect(() => {
     getDataStudent();
     return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    setOriginalDataStudent(resultData);
+  }, [resultData]);
+
+  useEffect(() => {
+    filterAndSetStudents();
+  }, [search, filter, originalDataStudent]);
+
+  const filterAndSetStudents = () => {
+    const filteredData = originalDataStudent.filter((item) => {
+      const nameMatches =
+        (item.student.firstName &&
+          item.student.firstName
+            .toLowerCase()
+            .includes(search.toLowerCase())) ||
+        (item.student.lastName &&
+          item.student.lastName.toLowerCase().includes(search.toLowerCase()));
+      const nimMatches =
+        item.student.nim &&
+        item.student.nim.toLowerCase().includes(search.toLowerCase());
+      const majorMatches =
+        filter === "" ||
+        (item.student.status && item.student.status === filter);
+      console.log("ini isi item", item);
+      return (nameMatches || nimMatches) && majorMatches;
+    });
+
+    setSearchFilteredData(filteredData);
+  };
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+  };
+
+  const handleFilter = (event) => {
+    if (event.target.value === "All Status") {
+      setFilter("");
+    } else {
+      setFilter(event.target.value);
+    }
+  };
 
   return (
     <Div>
@@ -106,56 +163,150 @@ const StudentInformationMentored = () => {
             List of mentored students
           </Typography>
         </Grid>
-        <Grid item xs={12}>
-          <TableContainer sx={{ maxHeight: 540 }} component={Paper}>
-            <Table stickyHeader>
-              <TableHead>
-                <TableHeading />
-              </TableHead>
-              <TableBody>
-                {dataStudent.length > 0 &&
-                  dataStudent
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((item, index) => (
-                      <TableItem item={item} index={index} key={index} />
-                    ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
+      </Grid>
+
+      <Grid container paddingTop={2} paddingBottom={3.5} spacing={2}>
+        <Grid item xs={12} sm={6} md={3.5}>
+          <TextField
+            size="small"
+            placeholder="Search by Name or NIM"
+            variant="outlined"
+            id="search-field"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "#1C304A85" }} />
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "65px",
+              },
+            }}
             sx={{
               width: "100%",
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+              marginBottom: { xs: 2, md: 0 },
             }}
-            rowsPerPageOptions={[10, 25, 50, 100]}
-            component={"div"}
-            count={dataStudent.length || 0}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={(_, newPage) => setPage(newPage)}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+            value={search}
+            onChange={handleSearch}
+            // value={search}
+            // onChange={handleSearch}
           />
         </Grid>
+
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            size="small"
+            fullWidth
+            id="outlined-select-currency"
+            select
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start" sx={{ zIndex: -2 }}>
+                  <FilterListIcon sx={{ color: "#1C304A85" }} />
+
+                  <Typography sx={{ marginLeft: "16px", color: "#1C304A85" }}>
+                    Filter:
+                  </Typography>
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "65px",
+                borderColor: "#E0E0E0",
+              },
+            }}
+            sx={{
+              m: 0,
+              borderRadius: "65px",
+              width: "100%",
+              borderColor: "#E0E0E0",
+            }}
+            value={filter ? filter : "All Status"}
+            onChange={handleFilter}
+          >
+            <Typography
+              sx={{
+                fontWeight: "600",
+                paddingLeft: "12px",
+                marginBottom: "10px",
+                marginTop: "10px",
+              }}
+            >
+              Status
+            </Typography>
+            <MenuItem key={"All Status"} value={"All Status"}>
+              All Status
+            </MenuItem>
+            <MenuItem key={"ACTIVE"} value={"ACTIVE"}>
+              Active
+            </MenuItem>
+            <MenuItem key={"INACTIVE"} value={"INACTIVE"}>
+              Inactive
+            </MenuItem>
+          </TextField>
+        </Grid>
+      </Grid>
+
+      <Grid container xs={12}>
+        <TableContainer sx={{ maxHeight: 540 }} component={Paper}>
+          <Table>
+            <TableHead
+              sx={{
+                position: "-webkit-sticky",
+                position: "sticky",
+                top: 0,
+                backgroundColor: "#e8ecf2",
+                zIndex: 1,
+              }}
+            >
+              <TableHeading />
+            </TableHead>
+            <TableBody>
+              {searchFilteredData && searchFilteredData.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8}>No data available</TableCell>
+                </TableRow>
+              ) : (
+                searchFilteredData
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+          }}
+          rowsPerPageOptions={[10, 25, 50, 100]}
+          component={"div"}
+          count={searchFilteredData.length || 0}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={(_, newPage) => setPage(newPage)}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </Grid>
     </Div>
   );
 };
 
-const TableHeading = ({ index }) => {
-  const style = { fontWeight: 400 };
+const TableHeading = ({}) => {
   return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={[style]}>No</TableCell>
-      <TableCell sx={[style]}>NIM</TableCell>
-      <TableCell sx={[style]}>Student Name</TableCell>
-      <TableCell sx={[style]}>Program Studi</TableCell>
-      <TableCell sx={[style]}>Tahun Masuk</TableCell>
-      <TableCell sx={[style]}>Nilai</TableCell>
-      <TableCell sx={[style]}>Sertifikat</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
+    <TableRow>
+      <TableCell sx={{ textAlign: "center" }}>No</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>NIM</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>Student Name</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>Major</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>Arrival Year</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>Grade</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>Certificate</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>Status</TableCell>
     </TableRow>
   );
 };
@@ -180,40 +331,28 @@ const TableItem = ({ item, index }) => {
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    // navigate(
-    //   `/bimbingan-akademik/kaprodi/student-information/mentored-student/${item.nim}`
-    // );
 
     switch (name) {
       case "profile":
-        navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/mentored-student/${nim}`,
-          { state: { studentNim: nim } }
-        );
+        navigate(`${nim}`, { state: { studentNim: nim } });
         break;
       case "grade":
-        navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/mentored-student/${nim}/grade`,
-          {
-            state: {
-              studentNim: nim,
-              firstName: firstName,
-              lastName: lastName,
-            },
-          }
-        );
+        navigate(`${nim}/grade`, {
+          state: {
+            studentNim: nim,
+            firstName: firstName,
+            lastName: lastName,
+          },
+        });
         break;
       case "certificate":
-        navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/mentored-student/${nim}/certificate`,
-          {
-            state: {
-              studentNim: nim,
-              firstName: firstName,
-              lastName: lastName,
-            },
-          }
-        );
+        navigate(`${nim}/certificate`, {
+          state: {
+            studentNim: nim,
+            firstName: firstName,
+            lastName: lastName,
+          },
+        });
         break;
 
       default:
@@ -227,21 +366,24 @@ const TableItem = ({ item, index }) => {
 
   return (
     <TableRow>
-      <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{nim}</TableCell>
+      <TableCell sx={[rowStyle, { textAlign: "center" }]}>
+        {index + 1}
+      </TableCell>
+      <TableCell sx={[rowStyle, { textAlign: "center" }]}>{nim}</TableCell>
       <TableCell>
         <Button
           name="profile"
           sx={{
             "@media (max-width: 650px)": { fontSize: "11px" },
             textTransform: "capitalize",
+            width: "100%",
           }}
           onClick={handleButtonNavigate}
         >
           {lastName}, {firstName}
         </Button>
       </TableCell>
-      <TableCell sx={[rowStyle]}>
+      <TableCell sx={[rowStyle, { textAlign: "center" }]}>
         {major === "IF"
           ? "Informatics"
           : major === "SI"
@@ -250,7 +392,9 @@ const TableItem = ({ item, index }) => {
           ? "Information Technology"
           : "-"}
       </TableCell>
-      <TableCell sx={[rowStyle]}>{arrivalYear}</TableCell>
+      <TableCell sx={[rowStyle, { textAlign: "center" }]}>
+        {arrivalYear}
+      </TableCell>
 
       <TableCell>
         <Button
@@ -258,6 +402,7 @@ const TableItem = ({ item, index }) => {
           onClick={handleButtonNavigate}
           sx={{
             "@media (max-width: 650px)": { fontSize: "11px" },
+            width: "100%",
             textTransform: "capitalize",
           }}
         >
@@ -270,13 +415,14 @@ const TableItem = ({ item, index }) => {
           onClick={handleButtonNavigate}
           sx={{
             "@media (max-width: 650px)": { fontSize: "11px" },
+            width: "100%",
             textTransform: "capitalize",
           }}
         >
           View Certificates
         </Button>
       </TableCell>
-      <TableCell sx={[rowStyle]}>
+      <TableCell sx={[rowStyle, { textAlign: "center" }]}>
         <Chip
           label={status}
           variant="filled"

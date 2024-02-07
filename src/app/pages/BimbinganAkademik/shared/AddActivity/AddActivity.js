@@ -8,26 +8,21 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  FormGroup,
-  FormControlLabel,
-  Switch,
   Button,
   IconButton,
   Autocomplete,
   Checkbox,
   Modal,
-  Alert,
   Backdrop,
   CircularProgress,
 } from "@mui/material";
 import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import CloseIcon from "@mui/icons-material/Close";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
-import { newDate } from "date-fns-jalali";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
+import { useNavigate } from "react-router-dom";
 
 const requiredStyle = {
   color: "red",
@@ -62,23 +57,17 @@ const style = {
   },
 };
 
-const style2 = {
-  position: "fixed",
-  top: "15%",
-  right: "2%",
-  width: 400,
-  padding: 24,
-  backgroundColor: "white",
-  borderRadius: 10,
-};
-
 const AddActivity = () => {
-  const prevSelectedStudentRef = useRef();
+  //abort
   const controller = new AbortController();
   const signal = controller.signal;
+  const navigate = useNavigate();
+
   const role = Boolean(localStorage.getItem("user"))
     ? JSON.parse(localStorage.getItem("user")).role
     : [];
+
+  //inisialisasi
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState(null);
@@ -90,19 +79,26 @@ const AddActivity = () => {
   const [time, setTime] = useState("00:00");
   const [showLabel, setShowLabel] = useState(true);
   const [showLabel2, setShowLabel2] = useState(true);
-  const [openFirstModal, setOpenFirstModal] = useState(false);
-  const [openSecondModal, setOpenSecondModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const prevSelectedStudentRef = useRef();
   prevSelectedStudentRef.current = selectedStudent;
+
+  //modal
+  const [openFirstModal, setOpenFirstModal] = useState(false);
+  const [openSuccessModal, setOpenSuccessModal] = useState(false);
+  const [openErrorModal, setOpenErrorModal] = useState(false);
+  const handleOpenFirstModal = () => setOpenFirstModal(true);
+  const handleCloseFirstModal = () => setOpenFirstModal(false);
+  const handleOpenSuccessModal = () => setOpenSuccessModal(true);
+  const handleCloseSuccessModal = () => setOpenSuccessModal(false);
+  const handleOpenErrorModal = () => setOpenErrorModal(true);
+  const handleCloseErrorModal = () => setOpenErrorModal(false);
 
   const getRole = () => {
     const filter = role.includes("KAPRODI")
       ? "kaprodi"
       : role.includes("DEKAN")
       ? "dekan"
-      : role.includes("OPERATOR_FAKULTAS")
-      ? "sekretaris"
       : "dosen-pembimbing";
 
     return filter;
@@ -119,45 +115,36 @@ const AddActivity = () => {
   };
 
   const handleSubmitFirstModal = () => {
-    setOpenFirstModal(false);
-    setOpenSecondModal(true);
+    handleCloseFirstModal();
+    handleOpenSuccessModal();
   };
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setOpenSecondModal(false);
-    }, 5000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [openSecondModal === true]);
 
   const getStudentList = async () => {
     try {
       const { guidanceClassId } = JSON.parse(localStorage.getItem("user"));
-      const token = localStorage.getItem("token");
-      console.log("ini token", token);
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
 
       let response, responseMajor;
 
       if (valueStudent === "GUIDANCE_CLASS") {
-        response = await axios.get(
-          `${BASE_URL_API}/guidance-class/${guidanceClassId}`,
-          { signal }
+        response = await jwtAuthAxios.get(
+          `/guidance-class/${guidanceClassId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            signal,
+          }
         );
       } else {
         const { id } = JSON.parse(localStorage.getItem("user"));
-
-        responseMajor = await axios.get(`${BASE_URL_API}/employee/${id}`, {
+        responseMajor = await jwtAuthAxios.get(`/employee/${id}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
-          headers,
         });
-        response = await axios.get(`${BASE_URL_API}/Student`, { signal });
+        response = await jwtAuthAxios.get(`/Student`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        });
       }
 
       const { status, data } = response.data;
@@ -189,7 +176,22 @@ const AddActivity = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        handleOpenErrorModal();
+        setIsLoading(false);
+        return;
+      }
     }
   };
 
@@ -199,12 +201,8 @@ const AddActivity = () => {
       if (validation()) {
         const { nik } = JSON.parse(localStorage.getItem("user"));
 
-        const headers = {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        };
-        const response = await axios.post(
-          `${BASE_URL_API}/activity`,
+        const response = await jwtAuthAxios.post(
+          `/activity`,
           {
             title: title,
             description: description ? description : "-",
@@ -216,8 +214,12 @@ const AddActivity = () => {
               .filter((item) => item !== "All students")
               .map((item) => ({ studentNim: item.nim })),
           },
-          { signal }
-          // {headers}
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            signal,
+          }
         );
         console.log("ini itu", response);
 
@@ -243,8 +245,22 @@ const AddActivity = () => {
       }
       setIsLoading(false);
     } catch (error) {
-      setIsLoading(false);
-      console.log(error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        handleOpenErrorModal();
+        setIsLoading(false);
+        return;
+      }
     }
   };
 
@@ -285,15 +301,11 @@ const AddActivity = () => {
       return null; // atau nilai default yang sesuai
     }
 
-    // const dateString = date.toISOString().split("T")[0];
-    // const combine = new Date(dateString + " " + time);
-    // console.log("yoho", combine);
-    // setDueDate(new Date(dateString + " " + time));
     const combinedDateTime = new Date(date);
     const [hours, minutes] = time.split(":");
 
-    console.log("rrrrrrrrrrrrrrrr", hours);
-    console.log("ddddddddddd", minutes);
+    console.log("isi hours", hours);
+    console.log("isi minutes", minutes);
 
     combinedDateTime.setHours(hours);
     combinedDateTime.setMinutes(minutes);
@@ -590,43 +602,18 @@ const AddActivity = () => {
           </Grid>
         </div>
       </Modal>
-      <Modal
-        open={openSecondModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div style={style2}>
-          <IconButton
-            edge="end"
-            color="#D9D9D9"
-            onClick={() => setOpenSecondModal(false)}
-            aria-label="close"
-            sx={{
-              position: "absolute",
-              top: "10px",
-              right: "20px",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <Typography
-            id="modal-modal-title"
-            variant="h4"
-            component="h2"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            Successful Submission!
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            style={{ marginTop: "16px", marginBottom: "20px" }}
-          >
-            You have successfully preregistered for the course.
-          </Typography>
-        </div>
-      </Modal>
+      <SuccessOrError
+        open={openSuccessModal}
+        handleClose={handleCloseSuccessModal}
+        title="Successful Submission!"
+        description="You have successfully create activity."
+      />
+      <SuccessOrError
+        open={openErrorModal}
+        handleClose={handleCloseErrorModal}
+        title="Error Submission!"
+        description="Error: Failed to submit the certificate. Please try again."
+      />
     </div>
   );
 };

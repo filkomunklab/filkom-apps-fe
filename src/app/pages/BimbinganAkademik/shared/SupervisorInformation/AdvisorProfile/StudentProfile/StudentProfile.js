@@ -20,11 +20,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import { useLocation, useNavigate } from "react-router-dom";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-import { update } from "immutable";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const role = Boolean(localStorage.getItem("user"))
@@ -32,37 +29,49 @@ const role = Boolean(localStorage.getItem("user"))
   : [];
 
 const StudentProfile = () => {
+  //abort
   const navigate = useNavigate();
-  const location = useLocation();
   const controller = new AbortController();
   const signal = controller.signal;
+
+  const location = useLocation();
   const { studentNim } = location.state || "-";
   const [advisorProfileData, setAdvisorProfileData] = useState([]);
   const [studentProfileData, setStudentProfileData] = useState([]);
-  // const [updateStatus, setUpdateStatus] = useState("");
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // useEffect(() => console.log("ini status", updateStatus), [updateStatus]);
-  console.log("ini nim", studentNim);
   const getProfile = async () => {
     try {
       const resultStudent = await jwtAuthAxios.get(
         `/student/view/biodata/${studentNim}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
 
       console.log("ini isi student", resultStudent);
-      // console.log(resultStudent);
       setStudentProfileData(resultStudent.data.data);
       setAdvisorProfileData(
         resultStudent.data.data.GuidanceClassMember.gudianceClass.teacher
       );
     } catch (error) {
-      console.log(error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -70,8 +79,8 @@ const StudentProfile = () => {
     try {
       setIsLoading(true);
       handleClosePopover();
-      const response = await axios.patch(
-        `${BASE_URL_API}/employee/biodataStudent/status/${studentNim}`,
+      const response = await jwtAuthAxios.patch(
+        `/employee/biodataStudent/status/${studentNim}`,
         { status: value },
         {
           signal,
@@ -79,7 +88,6 @@ const StudentProfile = () => {
         }
       );
 
-      console.log("response update status", response);
       const { status, data } = response.data;
       if (status === "OK") {
         getProfile();
@@ -87,7 +95,20 @@ const StudentProfile = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.log("error patch status", error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -95,10 +116,6 @@ const StudentProfile = () => {
     getProfile();
     return () => controller.abort();
   }, []);
-
-  // useEffect(() => {
-  //   changeStatus();
-  // }, [updateStatus]);
 
   const handleOpenPopover = (event) => {
     setAnchorEl(event.currentTarget);
