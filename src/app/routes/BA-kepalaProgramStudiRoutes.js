@@ -4,8 +4,8 @@ import VisionMisionGoals from "app/pages/BimbinganAkademik/shared/VisionMisionGo
 import Curriculum from "app/pages/BimbinganAkademik/shared/Curriculum/Curriculum";
 import AddActivity from "app/pages/BimbinganAkademik/shared/AddActivity";
 import Manage from "app/pages/BimbinganAkademik/shared/Manage/Manage";
-import Dashboard from "app/pages/BimbinganAkademik/shared/Dashboard/Dashboard.";
-import History from "app/pages/BimbinganAkademik/shared/History";
+import Dashboard from "app/pages/BimbinganAkademik/shared/Dashboard/DashboardKaprodi";
+import History from "app/pages/BimbinganAkademik/shared/History/HistoryKaprodi";
 import StudentInformationMentored from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationMentored";
 import StudentInformationFaculty from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty";
 import StudentInformationFacultyPerMajor from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty/StudentPerMajor";

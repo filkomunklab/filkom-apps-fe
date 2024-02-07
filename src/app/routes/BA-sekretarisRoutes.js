@@ -9,7 +9,7 @@ import StudentCertificate from "app/pages/BimbinganAkademik/shared/StudentInform
 import CertificateDetail from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentCertificate/CertificateDetail";
 import StudentGradeDashboard from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard";
 import Profile from "app/pages/BimbinganAkademik/shared/Profile/Profile";
-import SupervisorInformation from "app/pages/BimbinganAkademik/shared/SupervisorInformation/SupervisorInformation";
+import SupervisorInformation from "app/pages/BimbinganAkademik/shared/SupervisorInformation/SekretarisSupervisorInformation";
 import AdvisorProfile from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorProfile/AdvisorProfile";
 import AdvisorStudentProfile from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorProfile/StudentProfile";
 import AdvisorStudentGrade from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorProfile/StudentGradeDashboard";
@@ -19,12 +19,6 @@ import AdvisorStudentCertificate2 from "app/pages/BimbinganAkademik/shared/Super
 import EditStudent from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorProfile/EditStudent";
 import AddSupervisor from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AddSupervisor";
 import StudentList from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AddSupervisor/AddStudent";
-import AdvisorHistory from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorHistory";
-import HistoryActivityAdvisor from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorHistory/HIstoryActivity";
-import HistoryGradeAdvisor from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorHistory/HistoryGrade";
-import HistoryPreRegistrationAdvisor from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorHistory/HistoryPreRegis";
-import HistoryCertificateAdvisor from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorHistory/HistoryCertificate";
-import HistoryConsultationAdvisor from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorHistory/HistoryConsultation";
 
 const { default: Page } = require("@jumbo/shared/Page");
 
@@ -180,30 +174,6 @@ const sekDekanRoutes = [
   {
     path: "/bimbingan-akademik/sekretaris/supervisor-information/advisor-profile/:id/student-certificate/:id",
     element: <Page component={AdvisorStudentCertificate2} />,
-  },
-  {
-    path: "/bimbingan-akademik/sekretaris/supervisor-information/advisor-history/:id",
-    element: <Page component={AdvisorHistory} />,
-  },
-  {
-    path: "/bimbingan-akademik/sekretaris/supervisor-information/advisor-history/:id/history-activity",
-    element: <Page component={HistoryActivityAdvisor} />,
-  },
-  {
-    path: "/bimbingan-akademik/sekretaris/supervisor-information/advisor-history/:id/history-grade",
-    element: <Page component={HistoryGradeAdvisor} />,
-  },
-  {
-    path: "/bimbingan-akademik/sekretaris/supervisor-information/advisor-history/:id/history-preregistration",
-    element: <Page component={HistoryPreRegistrationAdvisor} />,
-  },
-  {
-    path: "/bimbingan-akademik/sekretaris/supervisor-information/advisor-history/:id/history-certificate",
-    element: <Page component={HistoryCertificateAdvisor} />,
-  },
-  {
-    path: "/bimbingan-akademik/sekretaris/supervisor-information/advisor-history/:id/history-consultation",
-    element: <Page component={HistoryConsultationAdvisor} />,
   },
   {
     path: "/bimbingan-akademik/sekretaris/supervisor-information/add-supervisor/student-list",

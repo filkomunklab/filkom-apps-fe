@@ -23,10 +23,15 @@ import ViewActivity from "app/pages/BimbinganAkademik/shared/CurrentActivities/V
 import ViewConsultation from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewConsultation/ViewConsultation";
 import AddActivity from "app/pages/BimbinganAkademik/shared/AddActivity";
 import Profile from "app/pages/BimbinganAkademik/shared/Profile/Profile";
+import Dashboard from "app/pages/BimbinganAkademik/shared/Dashboard/DashboardDospem";
 
 const { default: Page } = require("@jumbo/shared/Page");
 
 const dosenPembimbingRoutes = [
+  {
+    path: "/bimbingan-akademik/dosen-pembimbing/dashboard",
+    element: <Page component={Dashboard} />,
+  },
   {
     path: "/bimbingan-akademik/dosen-pembimbing/academic-guide",
     element: <Page component={AcademicGuide} />,
