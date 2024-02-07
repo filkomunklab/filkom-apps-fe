@@ -1,4 +1,3 @@
-import { BASE_URL_API } from "@jumbo/config/env";
 import Div from "@jumbo/shared/Div";
 import {
   Button,
@@ -15,11 +14,17 @@ import {
   experimentalStyled as styled,
   TableContainer,
   Paper,
+  TextField,
+  InputAdornment,
+  MenuItem,
 } from "@mui/material";
-import axios from "axios";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -28,98 +33,69 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const yearList = [
-  {
-    value: "2017",
-    label: "2017",
-  },
-  {
-    value: "2018",
-    label: "2018",
-  },
-  {
-    value: "2019",
-    label: "2019",
-  },
-  {
-    value: "2020",
-    label: "2020",
-  },
-  {
-    value: "2021",
-    label: "2021",
-  },
-  {
-    value: "2022",
-    label: "2022",
-  },
-  {
-    value: "2023",
-    label: "2023",
-  },
-];
-
-const prodiList = [
-  {
-    value: "informatika",
-    label: "Informatika",
-  },
-  {
-    value: "dkv",
-    label: "DKV",
-  },
-  {
-    value: "si",
-    label: "SI",
-  },
-];
-
-const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nim: `105022010000`,
-  name: `Yuhu, Christopher Darell`,
-  prodi: `Informatika`,
-  year: `2021`,
-  status: `Active`,
-}));
-
 const role = Boolean(localStorage.getItem("user"))
   ? JSON.parse(localStorage.getItem("user")).role
   : [];
 
 const StudentPerMajor = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { major } = location.state ? location.state : "";
+  //abort
   const controller = new AbortController();
   const signal = controller.signal;
-  const [filter, setFilter] = useState([]);
+  const navigate = useNavigate();
+
+  //search dan filter
+  const [searchFilteredData, setSearchFilteredData] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
+  const [resultData, setResultData] = useState([]);
+  const [originalDataStudent, setOriginalDataStudent] = useState([]);
+
+  const location = useLocation();
+  const { major } = location.state ? location.state : "";
+
+  //pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [studentList, setStudentList] = useState([]);
 
-  const getStudentList = async () => {
+  const getDataStudent = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/student/major/${major}`,
-        { signal }
+      const response = await jwtAuthAxios.get(`/student/major/${major}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
+      setResultData(
+        response.data.data.filter((item) => item.status !== "GRADUATE")
       );
-      console.log("response", response);
-
-      const { status, data } = response.data;
-      if (status === "OK") {
-        setStudentList(data);
-      } else {
-        console.log("gagal");
-      }
     } catch (error) {
-      console.log(error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
   useEffect(() => {
-    getStudentList();
+    getDataStudent();
     return () => controller.abort();
-  }, []);
+  }, [major]);
+
+  useEffect(() => {
+    setOriginalDataStudent(resultData);
+  }, [resultData]);
+
+  useEffect(() => {
+    filterAndSetStudents();
+  }, [search, filter, originalDataStudent]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -137,15 +113,37 @@ const StudentPerMajor = () => {
 
   useEffect(() => console.log("location: ", location), []);
 
+  const filterAndSetStudents = () => {
+    const filteredData = originalDataStudent.filter((item) => {
+      const nameMatches =
+        item.firstName.toLowerCase().includes(search.toLowerCase()) ||
+        item.lastName.toLowerCase().includes(search.toLowerCase());
+      const nimMatches = item.nim.toLowerCase().includes(search.toLowerCase());
+      const majorMatches = filter === "" || item.status === filter;
+
+      return (nameMatches || nimMatches) && majorMatches;
+    });
+
+    setSearchFilteredData(filteredData);
+  };
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+  };
+
+  const handleFilter = (event) => {
+    if (event.target.value === "All Status") {
+      setFilter("");
+    } else {
+      setFilter(event.target.value);
+    }
+  };
+
   return (
     <Div>
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink
-          // to={`/bimbingan-akademik/${getRole()}/student-information/faculty-student`}
-          >
-            Faculty Student
-          </StyledLink>
+          <StyledLink>Faculty Student</StyledLink>
           <Typography color="text.primary">
             {major === "IF"
               ? "Informatics"
@@ -157,8 +155,14 @@ const StudentPerMajor = () => {
           </Typography>
         </Breadcrumbs>
       </div>
-      <Grid container spacing={2} paddingTop={1}>
-        <Grid display={"flex"} alignItems={"flex-end"} item md={6}>
+      <Grid paddingTop={3.5} container spacing={2}>
+        <Grid
+          paddingBottom={1}
+          display={"flex"}
+          alignItems={"flex-end"}
+          item
+          md={6}
+        >
           <Typography variant="h2" fontWeight={500}>
             {major === "IF"
               ? "Informatics"
@@ -170,111 +174,134 @@ const StudentPerMajor = () => {
             Students List
           </Typography>
         </Grid>
-        {/* <Grid item xs={12} sm={8} md={3}>
-          <SearchGlobal sx={{ height: "100%" }} />
-        </Grid>
-        <Grid item xs={12} sm={4} md={3}>
-          <FormControl
+      </Grid>
+
+      <Grid container paddingTop={1} paddingBottom={3.5} spacing={2}>
+        <Grid item xs={12} sm={6} md={3.5}>
+          <TextField
+            size="small"
+            placeholder="Search by Name or NIM"
+            variant="outlined"
+            id="search-field"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "#1C304A85" }} />
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "65px",
+              },
+            }}
             sx={{
               width: "100%",
+              marginBottom: { xs: 2, md: 0 },
             }}
-          >
-            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
-            <Select
-              sx={{ borderRadius: 50 }}
-              multiple
-              value={filter}
-              label="Grouping"
-              renderValue={(selected) => selected.join(", ")}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: "37%",
-                  },
-                },
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Status
-              </ListSubheader>
-              <MenuItem value={"activeStudent"}>Active</MenuItem>
-              <MenuItem value={"nonactiveStudent"}>Nonactive</MenuItem>
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Tahun Masuk
-              </ListSubheader>
-              {yearList.map((item) => (
-                <MenuItem
-                  key={item.value}
-                  value={item.value}
-                  sx={{
-                    backgroundColor: "#FAFAFA",
-                    borderRadius: "5px",
-                    margin: "5px",
-                  }}
-                >
-                  {item.label}
-                </MenuItem>
-              ))}
-              <Div>
-                <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                  Prodi
-                </ListSubheader>
-                {prodiList.map((item) => (
-                  <MenuItem
-                    key={item.value}
-                    onChange={(event) => console.log(event.currentTarget.value)}
-                    value={item.value}
-                    sx={{
-                      backgroundColor: "#FAFAFA",
-                      borderRadius: "5px",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Div>
-            </Select>
-          </FormControl>
-        </Grid> */}
-        <Grid item xs={12}>
-          <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
-            <Table stickyHeader>
-              <TableHead>
-                <TableHeading />
-              </TableHead>
-              <TableBody>
-                {studentList
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .filter((item) => item.status !== "GRADUATE")
-                  .map((item, index) => (
-                    <TableItem item={item} index={index} key={index} />
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              "@media (max-width: 650px)": { justifyContent: "flex-start" },
-            }}
-            rowsPerPageOptions={[10, 25, 50, 100]}
-            component={"div"}
-            count={
-              studentList.filter((item) => item.status !== "GRADUATE").length
-            }
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+            value={search}
+            onChange={handleSearch}
+            // value={search}
+            // onChange={handleSearch}
           />
         </Grid>
+
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            size="small"
+            fullWidth
+            id="outlined-select-currency"
+            select
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start" sx={{ zIndex: -2 }}>
+                  <FilterListIcon sx={{ color: "#1C304A85" }} />
+
+                  <Typography sx={{ marginLeft: "16px", color: "#1C304A85" }}>
+                    Filter:
+                  </Typography>
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "65px",
+                borderColor: "#E0E0E0",
+              },
+            }}
+            sx={{
+              m: 0,
+              borderRadius: "65px",
+              width: "100%",
+              borderColor: "#E0E0E0",
+            }}
+            value={filter ? filter : "All Status"}
+            onChange={handleFilter}
+          >
+            <Typography
+              sx={{
+                fontWeight: "600",
+                paddingLeft: "12px",
+                marginBottom: "10px",
+                marginTop: "10px",
+              }}
+            >
+              Status
+            </Typography>
+            <MenuItem key={"All Status"} value={"All Status"}>
+              All Status
+            </MenuItem>
+            <MenuItem key={"ACTIVE"} value={"ACTIVE"}>
+              Active
+            </MenuItem>
+            <MenuItem key={"INACTIVE"} value={"INACTIVE"}>
+              Inactive
+            </MenuItem>
+          </TextField>
+        </Grid>
+      </Grid>
+
+      <Grid container>
+        <TableContainer sx={{ maxHeight: 480 }} component={Paper}>
+          <Table>
+            <TableHead
+              sx={{
+                position: "-webkit-sticky",
+                position: "sticky",
+                top: 0,
+                backgroundColor: "#e8ecf2",
+                zIndex: 1,
+              }}
+            >
+              <TableHeading />
+            </TableHead>
+            <TableBody>
+              {searchFilteredData && searchFilteredData.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8}>No data available</TableCell>
+                </TableRow>
+              ) : (
+                searchFilteredData
+                  .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+                  .map((item, index) => (
+                    <TableItem item={item} index={index} key={index} />
+                  ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+          }}
+          rowsPerPageOptions={[10, 25, 50, 100]}
+          component={"div"}
+          count={searchFilteredData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </Grid>
     </Div>
   );
@@ -286,16 +313,20 @@ const getRole = () => {
     : role.includes("DEKAN")
     ? "dekan"
     : role.includes("OPERATOR_FAKULTAS")
-    ? "sek-dekan"
+    ? "sekretaris"
     : "dosen-pembimbing";
 
   return filter;
 };
 
-const TableHeading = ({ index }) => {
-  const style = { fontWeight: 400 };
+console.log("ini getrole", getRole());
+
+const TableHeading = ({}) => {
+  const style = {
+    textAlign: "center",
+  };
   return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
+    <TableRow>
       <TableCell sx={[style]}>No</TableCell>
       <TableCell sx={[style]}>NIM</TableCell>
       <TableCell sx={[style]}>Student Name</TableCell>
@@ -372,6 +403,7 @@ const TableItem = ({ item, index }) => {
 
   const rowStyle = {
     "@media (max-width: 650px)": { fontSize: "11px" },
+    textAlign: "center",
   };
 
   return (
@@ -383,6 +415,7 @@ const TableItem = ({ item, index }) => {
           name="profile"
           sx={{
             "@media (max-width: 650px)": { fontSize: "11px" },
+            width: "100%",
             textTransform: "capitalize",
           }}
           onClick={handleButtonNavigate}
@@ -407,6 +440,7 @@ const TableItem = ({ item, index }) => {
           onClick={handleButtonNavigate}
           sx={{
             "@media (max-width: 650px)": { fontSize: "11px" },
+            width: "100%",
             textTransform: "capitalize",
           }}
         >
@@ -419,6 +453,7 @@ const TableItem = ({ item, index }) => {
           onClick={handleButtonNavigate}
           sx={{
             "@media (max-width: 650px)": { fontSize: "11px" },
+            width: "100%",
             textTransform: "capitalize",
           }}
         >

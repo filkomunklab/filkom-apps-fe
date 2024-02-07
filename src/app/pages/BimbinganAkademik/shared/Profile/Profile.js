@@ -1,30 +1,46 @@
 import React, { useEffect, useState } from "react";
 import Div from "@jumbo/shared/Div";
 import { Typography, Paper, Grid } from "@mui/material";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const [dataProfile, setDataProfile] = useState([]);
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    getProfile();
-  }, []);
+  const [dataProfile, setDataProfile] = useState([]);
 
   const getProfile = async () => {
     try {
       const { id } = JSON.parse(localStorage.getItem("user"));
-      const result = await axios.get(`${BASE_URL_API}/employee/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+      const result = await jwtAuthAxios.get(`/employee/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
       });
       console.log("ini isi result.data", result.data.data);
       setDataProfile(result.data.data);
     } catch (error) {
-      console.log(error.message);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+      } else {
+        console.log("ini error: ", error);
+      }
     }
   };
+
+  useEffect(() => {
+    getProfile();
+    return () => controller.abort();
+  }, []);
 
   return (
     <Div>

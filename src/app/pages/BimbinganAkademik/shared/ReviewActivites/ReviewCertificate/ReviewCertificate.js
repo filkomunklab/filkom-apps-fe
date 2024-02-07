@@ -19,11 +19,15 @@ import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const ReviewCertificate = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState("");
   const [dataWaiting, setDataWaiting] = useState([]);
-  const navigate = useNavigate();
 
   const getDataWaiting = async () => {
     try {
@@ -32,6 +36,7 @@ const ReviewCertificate = () => {
         `/certificate/waitingList/dosen/${guidanceClassId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
 
@@ -44,11 +49,26 @@ const ReviewCertificate = () => {
 
       setDataWaiting(filteredData);
     } catch (error) {
-      console.log(error.message);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
+
   useEffect(() => {
     getDataWaiting();
+    return () => controller.abort();
   }, [searchValue]);
 
   const handleChangePage = (event, newPage) => {
@@ -66,6 +86,7 @@ const ReviewCertificate = () => {
         `/certificate/student/${value.id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
 
@@ -100,9 +121,9 @@ const ReviewCertificate = () => {
               firstName: student.firstName,
               lastName: student.lastName,
               SupervisorFirstName:
-                student.GuidanceClassMember.gudianceClass.teacher.firstName,
+                student.GuidanceClassMember?.gudianceClass?.teacher?.firstName,
               SupervisorLastName:
-                student.GuidanceClassMember.gudianceClass.teacher.lastName,
+                student.GuidanceClassMember?.gudianceClass?.teacher?.lastName,
               submissionDate: submitDate,
               pathFile: path,
               category: category,
@@ -116,7 +137,20 @@ const ReviewCertificate = () => {
         console.log("ini pathFile", path)
       );
     } catch (error) {
-      console.log(error.message);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -169,39 +203,6 @@ const ReviewCertificate = () => {
             }}
           />
         </Grid>
-        {/* <Grid item xs={12} sm={4} md={4} xl={3}>
-          <FormControl
-            sx={{ width: "100%", height: "100%", marginTop: "20px" }}
-            size="small"
-          >
-            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
-            <Select
-              style={{ borderRadius: "25px" }}
-              multiple
-              value={filter}
-              label="Grouping"
-              renderValue={(selected) => selected.join(", ")}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: "37%",
-                  },
-                },
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Category
-              </ListSubheader>
-              <MenuItem value={"local"}>Local</MenuItem>
-              <MenuItem value={"national"}>National</MenuItem>
-              <MenuItem value={"international"}>International</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid> */}
       </Grid>
       <Grid item xs={12}>
         <TableContainer component={Paper}>
@@ -254,7 +255,7 @@ const ReviewCertificate = () => {
                       })}
                     </TableCell>
                     <TableCell sx={{ width: "200px" }}>
-                      {value.student.lastName}, {value.student.firstName}
+                      {value.student?.lastName}, {value.student?.firstName}
                     </TableCell>
                     <TableCell
                       sx={{

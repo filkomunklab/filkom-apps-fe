@@ -36,7 +36,6 @@ const CertificateDetail = () => {
     title,
     comments,
     approvalDate,
-    id,
   } = certificateDetails;
   const pdfURL = pathFile;
 

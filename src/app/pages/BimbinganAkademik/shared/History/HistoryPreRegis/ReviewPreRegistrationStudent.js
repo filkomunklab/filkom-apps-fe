@@ -14,7 +14,7 @@ import {
   experimentalStyled as styled,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -46,25 +46,18 @@ const ReviewPreRegistrationStudent = () => {
     totalCredit += data.subject.credits;
   }
 
-  const handleBreadcrumbsClick = () => {
-    const { role } = JSON.parse(localStorage.getItem("user"));
-    let path = "";
+  const navigate = useNavigate();
 
-    if (role.includes("DEKAN")) {
-      path = "/bimbingan-akademik/dekan/history";
-    } else if (role.includes("KAPRODI")) {
-      path = "/bimbingan-akademik/kaprodi/history";
-    } else {
-      path = "/bimbingan-akademik/dosen-pembimbing/history";
-    }
-    return <StyledLink to={path}>History</StyledLink>;
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigate(-1);
   };
 
   return (
     <Div>
-      <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
-        {handleBreadcrumbsClick()}
-        <Typography color="text.primary">Certificate</Typography>
+      <Breadcrumbs onClick={handleClick} aria-label="breadcrumb">
+        <StyledLink>History</StyledLink>
+        <Typography color="text.primary">Pre-registration</Typography>
       </Breadcrumbs>
       <Typography
         fontSize={"24px"}
@@ -160,7 +153,9 @@ const ReviewPreRegistrationStudent = () => {
                       : "#005FDB",
                 }}
               >
-                {status.charAt(0) + status.slice(1).toLowerCase()}
+                {status
+                  ? status.charAt(0) + status.slice(1).toLowerCase()
+                  : "-"}
               </Typography>
             </Grid>
           </Grid>

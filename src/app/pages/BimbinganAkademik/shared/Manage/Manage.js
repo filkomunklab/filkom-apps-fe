@@ -5,7 +5,6 @@ import {
   Tabs,
   Typography,
   Grid,
-  Popover,
   TextField,
   Button,
   IconButton,
@@ -18,14 +17,15 @@ import {
   TableRow,
   Paper,
   Modal,
+  Popover,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
 import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import AddIcon from "@mui/icons-material/Add";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -33,8 +33,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import CircularProgress from "@mui/material/CircularProgress";
-import { MoreVert } from "@mui/icons-material";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
+import { MoreVert } from "@mui/icons-material";
 
 const styleModal = {
   position: "absolute",
@@ -46,7 +47,7 @@ const styleModal = {
   boxShadow: 24,
   padding: 35,
   backgroundColor: "white",
-  borderRadius: 10,
+  borderRadius: 8,
   maxWidth: "90%",
   "@media (maxWidth: 768px)": {
     maxWidth: "80%",
@@ -56,21 +57,11 @@ const styleModal = {
   },
 };
 
-const styleResponseModal = {
-  position: "fixed",
-  top: "15%",
-  right: "2%",
-  width: 420,
-  padding: 24,
-  backgroundColor: "white",
-  borderRadius: 10,
-};
-
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <p
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -82,7 +73,7 @@ function TabPanel(props) {
           <Typography>{children}</Typography>
         </div>
       )}
-    </div>
+    </p>
   );
 }
 
@@ -101,7 +92,6 @@ const preregisSchema = Yup.object({
       'Invalid format. Please use "YYYY/YYYY".'
     )
     .required("Semester Period is required"),
-  major: Yup.string("Select Major").required("Major is required"),
   dueDate: Yup.date("Choose DueDate").required("DueDate is required"),
 });
 
@@ -113,10 +103,13 @@ const gradeSchema = Yup.object({
       'Invalid format. Please use "YYYY/YYYY".'
     )
     .required("Semester Period is required"),
-  major: Yup.string("Select Major").required("Major is required"),
   due_date: Yup.date("Choose DueDate").required("DueDate is required"),
 });
+
 const Manage = () => {
+  const navigate = useNavigate();
+
+  //inisialisasi
   const [formType, setFormType] = useState("");
   const [loading, setLoading] = useState(false);
   const [dataGrades, setDataGrades] = useState([]);
@@ -127,84 +120,124 @@ const Manage = () => {
   const [gradeModalOpen, setGradeModalOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
-  const [openSuccessModal, setOpenSuccessModal] = React.useState(false);
-  const [openErrorModal, setOpenErrorModal] = React.useState(false);
+  const [major, setMajor] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  //modal
+  const [openSuccessModal, setOpenSuccessModal] = useState(false);
+  const [openErrorModal, setOpenErrorModal] = useState(false);
   const handleOpenSuccessModal = () => setOpenSuccessModal(true);
   const handleCloseSuccessModal = () => setOpenSuccessModal(false);
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
-  const [major, setMajor] = useState([]);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [open, setOpen] = React.useState(false);
 
-  // const getMajor = async () => {
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     const headers = { Authorization: `Bearer ${token}` };
-  //     const { id } = JSON.parse(localStorage.getItem("user"));
-  //     const response = await axios.get(`${BASE_URL_API}/employee/${id}`, {
-  //       headers,
-  //     });
-
-  //     const { status, data } = response.data;
-
-  //     if (status === "OK") {
-  //       setMajor(data.major);
-  //     } else {
-  //       console.log("ini response :", response);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  const getMajor = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const headers = { Authorization: `Bearer ${token}` };
-      const { id } = JSON.parse(localStorage.getItem("user"));
-
-      const response = await axios.get(`${BASE_URL_API}/employee/${id}`, {
-        headers,
-      });
-
-      const { status, data } = response.data;
-
-      if (status === "OK") {
-        return { major: data.major };
-      } else {
-        console.error("Error fetching data:", response);
-        return { error: response.data.message };
-      }
-    } catch (error) {
-      console.error("An error occurred:", error.message);
-      return { error: error.message };
+  //handle error
+  const handleError = (error) => {
+    if (
+      error.response &&
+      error.response.status >= 401 &&
+      error.response.status <= 403
+    ) {
+      console.log("You don't have permission to access this page");
+      navigate(`/`);
+    } else {
+      console.log("ini error: ", error);
     }
   };
 
-  const getDataGrades = async () => {
-    try {
-      const { major } = await getMajor();
+  useEffect(() => {
+    const getData = async () => {
+      await getMajor();
+    };
 
-      const result = await jwtAuthAxios.get(
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (major) {
+      getGradeAndPreregis();
+    }
+  }, [major, searchValue]);
+
+  const getMajor = async () => {
+    try {
+      const { id } = JSON.parse(localStorage.getItem("user"));
+      const response = await jwtAuthAxios.get(`/employee/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+
+      setMajor(response.data.data.major);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const getGradeAndPreregis = async () => {
+    try {
+      const gradesPromise = jwtAuthAxios.get(
         `/access/list/gradesAccess/${major}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
 
-      const filteredData = result.data.data.filter((item) => {
+      const preregisPromise = jwtAuthAxios.get(`/pre-regist?major=${major}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+
+      const [gradesResult, preregisResult] = await Promise.all([
+        gradesPromise,
+        preregisPromise,
+      ]);
+
+      const filteredGrades = gradesResult.data.data.filter((item) => {
         const isOpenText = item.isOpen ? "Open" : "Closed";
         return isOpenText.toLowerCase().includes(searchValue.toLowerCase());
       });
 
-      setDataGrades(filteredData);
+      const filteredPreregis = preregisResult.data.data.filter((item) => {
+        const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
+        return employeeFullName
+          .toLowerCase()
+          .includes(searchValue.toLowerCase());
+      });
+
+      setDataGrades(filteredGrades);
+      setDataPreregis(filteredPreregis);
     } catch (error) {
-      console.log(error.message);
+      handleError(error);
     }
   };
-  const handleClose = async (id) => {
+
+  const handleClosePreregis = async (id) => {
+    try {
+      setLoading(true);
+      const currentItem = dataPreregis.find((item) => item.id === id);
+
+      if (currentItem && currentItem.isOpen === false) {
+        setLoading(false);
+        alert("Already closed");
+        return;
+      }
+
+      const response = await jwtAuthAxios.patch(
+        `/pre-regist/close-access/${id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      console.log("response close prereg", response);
+
+      getGradeAndPreregis();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
+  const handleCloseGrade = async (id) => {
     try {
       setLoading(true);
       const currentItem = dataGrades.find((item) => item.id === id);
@@ -218,9 +251,9 @@ const Manage = () => {
       const response = await jwtAuthAxios.patch(`/access/close/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      console.log("hehe", response);
+      console.log("response close prereg", response);
 
-      getDataGrades();
+      getGradeAndPreregis();
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -228,50 +261,23 @@ const Manage = () => {
     }
   };
 
-  const getDataPreregis = async () => {
-    try {
-      const { major } = await getMajor();
+  //handle
+  const handlePreregisModalOpen = () => setPreregisModalOpen(true);
+  const PreregisModalClose = () => setPreregisModalOpen(false);
+  const handleGradeModalOpen = () => setGradeModalOpen(true);
+  const GradeModalClose = () => setGradeModalOpen(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [listPreregisModalOpen, setListPreregisModalOpen] = useState(false);
 
-      const result = await jwtAuthAxios.get(`/pre-regist?major=${major}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-
-      const filteredData = result.data.data.filter((item) => {
-        const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
-        return employeeFullName
-          .toLowerCase()
-          .includes(searchValue.toLowerCase());
-      });
-
-      setDataPreregis(filteredData);
-    } catch (error) {
-      console.log(error.message);
-    }
+  const handleTableRowClick = (rowData) => {
+    console.log("ahaha", rowData);
+    setSelectedRow(rowData);
+    setListPreregisModalOpen(true);
   };
 
-  useEffect(() => {
-    getDataGrades();
-    getDataPreregis();
-  }, [searchValue]);
-
-  console.log("ini isi major", major);
-  console.log("ini isi dataPreregis", dataPreregis);
-  console.log("ini isi dataGrades ", dataGrades);
-
-  const handlePreregisModalOpen = () => {
-    setPreregisModalOpen(true);
-  };
-
-  const PreregisModalClose = () => {
-    setPreregisModalOpen(false);
-  };
-
-  const handleGradeModalOpen = () => {
-    setGradeModalOpen(true);
-  };
-
-  const GradeModalClose = () => {
-    setGradeModalOpen(false);
+  const ListPreregisModalClose = () => {
+    setSelectedRow(null);
+    setListPreregisModalOpen(false);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -285,6 +291,10 @@ const Manage = () => {
   useEffect(() => {
     localStorage.setItem("historyTabValue", value);
   }, [value]);
+
+  useEffect(() => {
+    getMajor();
+  }, []);
 
   return (
     <div>
@@ -454,13 +464,20 @@ const Manage = () => {
                     onSubmit={async (values, { resetForm, setSubmitting }) => {
                       const { nik } = JSON.parse(localStorage.getItem("user"));
                       setLoading(true);
-                      console.log("Submitting form with data:", values);
-                      console.log("ini itu kaprodi pe:", nik);
+
+                      // buat dueDate ke WITA
+                      const dueDateWITA = new Date(
+                        values.dueDate
+                      ).toLocaleString("en-US", {
+                        timeZone: "Asia/Makassar",
+                      });
+
                       values.semester = values.semester;
                       values.semesterPeriod = values.semesterPeriod;
-                      values.major = values.major;
-                      values.dueDate = values.dueDate;
+                      values.major = major;
+                      values.dueDate = new Date(dueDateWITA);
                       values.employeeNik = nik;
+
                       try {
                         const response = await jwtAuthAxios.post(
                           `/pre-regist/create`,
@@ -473,18 +490,29 @@ const Manage = () => {
                             },
                           }
                         );
-                        console.log(
-                          "ini response.data di preregis: ",
-                          response.data
-                        );
+
+                        console.log("ini isi values preregis", values);
+
                         setLoading(false);
                         resetForm();
                         PreregisModalClose();
                         handleOpenSuccessModal();
                         setSubmitting(false);
-                        setFormType("preregistration");
+                        setFormType("pre-registration");
                       } catch (error) {
-                        console.log(error);
+                        console.log("Error submitting form:", error);
+
+                        if (error.response) {
+                          console.log(
+                            "Server responded with status:",
+                            error.response.status
+                          );
+                          console.log(
+                            "Server responded with data:",
+                            error.response.data
+                          );
+                        }
+
                         setLoading(false);
                         PreregisModalClose();
                         handleOpenErrorModal();
@@ -533,25 +561,6 @@ const Manage = () => {
                             />
                           </Grid>
                           <Grid xs={12} item>
-                            <JumboSelectField
-                              name="major"
-                              label="Major"
-                              sx={{ width: "480px" }}
-                              options={[
-                                { value: "", label: "None" },
-                                { value: "IF", label: "Informatics" },
-                                { value: "SI", label: "Information System" },
-                                {
-                                  value: "DKV",
-                                  label: "Information Technology",
-                                },
-                              ]}
-                              onChange={(event) => {
-                                setFieldValue("major", event.target.value);
-                              }}
-                            />
-                          </Grid>
-                          <Grid xs={12} item>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                               <DesktopDatePicker
                                 sx={{
@@ -573,20 +582,18 @@ const Manage = () => {
                             item
                             sx={{
                               display: "flex",
-                              justifyContent: "flex-end",
+                              justifyContent: "flex-start",
                             }}
                           >
                             <LoadingButton
                               loading={isSubmitting}
                               type="submit"
                               variant="contained"
-                              fullWidth
                               sx={{
                                 textTransform: "capitalize",
                                 backgroundColor: "#006AF5",
                               }}
                               onClick={handleSubmit}
-                              // aria-disabled={isSubmitting}
                             >
                               Submit
                             </LoadingButton>
@@ -619,6 +626,7 @@ const Manage = () => {
                       <TableCell>Year</TableCell>
                       <TableCell>Due Date Estimation</TableCell>
                       <TableCell>Status</TableCell>
+                      <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -626,7 +634,7 @@ const Manage = () => {
                       dataPreregis.map((value, index) => (
                         <TableRow
                           key={value.id}
-                          // onClick={() => handleNavigate(value)}
+                          onClick={() => handleTableRowClick(value)}
                           sx={{
                             ":hover": {
                               cursor: "pointer",
@@ -699,6 +707,34 @@ const Manage = () => {
                           >
                             {value.isOpen ? "Open" : "Closed"}
                           </TableCell>
+                          <TableCell>
+                            <MoreVert
+                              aria-describedby={value.id}
+                              onClick={(e) => {
+                                setAnchorEl(e.currentTarget);
+                                setOpen(true);
+                              }}
+                            />
+                            <Popover
+                              id={value.id}
+                              anchorEl={anchorEl}
+                              open={open}
+                              onClose={() => setOpen(false)}
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "left",
+                              }}
+                            >
+                              <Button
+                                onClick={() => {
+                                  handleClosePreregis(value.id);
+                                  console.log("Button Clicked prereg");
+                                }}
+                              >
+                                Close
+                              </Button>
+                            </Popover>
+                          </TableCell>
                         </TableRow>
                       ))
                     ) : (
@@ -708,6 +744,166 @@ const Manage = () => {
                     )}
                   </TableBody>
                 </Table>
+                <Modal
+                  open={listPreregisModalOpen}
+                  onClose={ListPreregisModalClose}
+                >
+                  <Box
+                    style={{
+                      ...styleModal,
+                      overflow: "auto",
+                      maxHeight: "80vh",
+                    }}
+                  >
+                    <IconButton
+                      edge="end"
+                      color="#D9D9D9"
+                      onClick={ListPreregisModalClose}
+                      aria-label="close"
+                      sx={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "20px",
+                      }}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                    <Grid container>
+                      <Grid item md={8} xs={8}>
+                        <Typography
+                          id="modal-modal-title"
+                          variant="h4"
+                          component="h2"
+                          sx={{
+                            fontWeight: 600,
+                            paddingBottom: 3,
+                            "@media (max-width: 390px)": {
+                              fontSize: "15px",
+                            },
+                          }}
+                        >
+                          Pre-registration Submission
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="h6">Semester</Typography>
+                        <Typography variant="h6" sx={textStyle}>
+                          {selectedRow?.semester}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="h6">Year</Typography>
+                        <Typography variant="h6" sx={textStyle}>
+                          {selectedRow?.semesterPeriod}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="h6">To Major</Typography>
+                        <Typography variant="h6" sx={textStyle}>
+                          {selectedRow?.major === "IF"
+                            ? "Informatics"
+                            : selectedRow?.major === "SI"
+                            ? "Information System"
+                            : selectedRow?.major === "DKV"
+                            ? "Information Technology"
+                            : selectedRow?.major}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="h6">Status</Typography>
+                        <Typography variant="h6" sx={textStyle}>
+                          {selectedRow?.isOpen ? "Open" : "Closed"}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="h6">Create Date</Typography>
+                        <Typography variant="h6" sx={textStyle}>
+                          {new Date(selectedRow?.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            }
+                          )}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="h6">
+                          Due Date Estimation
+                        </Typography>
+                        <Typography variant="h6" sx={textStyle}>
+                          {new Date(selectedRow?.dueDate).toLocaleDateString(
+                            "en-US",
+                            {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            }
+                          )}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          onClick={() =>
+                            navigate(
+                              `/bimbingan-akademik/kaprodi/manage/list-student/${selectedRow?.id}`
+                            )
+                          }
+                          sx={{
+                            backgroundColor: "#006AF5",
+                            borderRadius: "15px",
+                            color: "white",
+                            fontSize: "12px",
+                            padding: "7px",
+                            paddingLeft: "9px",
+                            paddingRight: "13px",
+                            gap: "5px",
+                            "&:hover": {
+                              backgroundColor: "#025ED8",
+                            },
+                          }}
+                        >
+                          <PeopleAltIcon sx={{ fontSize: "14px" }} />
+                          View List Student
+                        </Button>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          onClick={() =>
+                            navigate(
+                              `/bimbingan-akademik/kaprodi/manage/list-courses/${selectedRow?.id}`
+                            )
+                          }
+                          sx={{
+                            backgroundColor: "#006AF5",
+                            borderRadius: "15px",
+                            color: "white",
+                            fontSize: "12px",
+                            padding: "7px",
+                            paddingLeft: "9px",
+                            paddingRight: "13px",
+                            gap: "5px",
+                            "&:hover": {
+                              backgroundColor: "#025ED8",
+                            },
+                          }}
+                        >
+                          <ViewListIcon sx={{ fontSize: "14px" }} />
+                          View List Courses
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Modal>
               </TableContainer>
               <TablePagination
                 sx={{
@@ -848,7 +1044,7 @@ const Manage = () => {
                       setLoading(true);
                       values.semester = values.semester;
                       values.semester_period = values.semester_period;
-                      values.major = values.major;
+                      values.major = major;
                       values.due_date = values.due_date;
                       values.employeeNik = nik;
                       try {
@@ -865,7 +1061,7 @@ const Manage = () => {
                         );
 
                         setLoading(false);
-
+                        console.log("ini isi values grade", values);
                         resetForm();
                         GradeModalClose();
                         handleOpenSuccessModal();
@@ -916,25 +1112,6 @@ const Manage = () => {
                             />
                           </Grid>
                           <Grid xs={12} item>
-                            <JumboSelectField
-                              name="major"
-                              label="Major"
-                              sx={{ margin: "0 0 20px 0", width: "480px" }}
-                              options={[
-                                { value: "", label: "None" },
-                                { value: "IF", label: "Informatics" },
-                                { value: "SI", label: "Information System" },
-                                {
-                                  value: "DKV",
-                                  label: "Information Technology",
-                                },
-                              ]}
-                              onChange={(event) => {
-                                setFieldValue("major", event.target.value);
-                              }}
-                            />
-                          </Grid>
-                          <Grid xs={12} item>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                               <DesktopDatePicker
                                 sx={{
@@ -970,7 +1147,7 @@ const Manage = () => {
                                 backgroundColor: "#006AF5",
                               }}
                               onClick={() => {
-                                console.log("Button clicked");
+                                console.log("Button clicked submit");
                                 handleSubmit();
                               }}
                             >
@@ -1107,8 +1284,8 @@ const Manage = () => {
                             >
                               <Button
                                 onClick={() => {
-                                  handleClose(value.id);
-                                  console.log("Button Clicked");
+                                  handleCloseGrade(value.id);
+                                  console.log("Button Clicked grade");
                                 }}
                               >
                                 Close
@@ -1148,82 +1325,29 @@ const Manage = () => {
         </div>
       </TabPanel>
 
-      <Modal
+      <SuccessOrError
         open={openSuccessModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div style={styleResponseModal}>
-          <IconButton
-            edge="end"
-            color="#D9D9D9"
-            onClick={handleCloseSuccessModal}
-            aria-label="close"
-            sx={{
-              position: "absolute",
-              top: "10px",
-              right: "20px",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <Typography
-            id="modal-modal-title"
-            variant="h4"
-            component="h2"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            Success creating submission form!
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            style={{ marginTop: "16px", marginBottom: "20px" }}
-          >
-            You have successfully creating a form for {formType} submission.
-          </Typography>
-        </div>
-      </Modal>
-      <Modal
+        handleClose={handleCloseSuccessModal}
+        title="Success creating submission form!"
+        description={`You have successfully creating a form for ${formType} submission. Please refresh your page.`}
+      />
+      <SuccessOrError
         open={openErrorModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div style={styleResponseModal}>
-          <IconButton
-            edge="end"
-            color="#D9D9D9"
-            onClick={handleCloseErrorModal}
-            aria-label="close"
-            sx={{
-              position: "absolute",
-              top: "10px",
-              right: "20px",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <Typography
-            id="modal-modal-title"
-            variant="h4"
-            component="h2"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            Error Submission!
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            style={{ marginTop: "16px", marginBottom: "20px" }}
-          >
-            Error: Failed to creating form submission. Please try again.
-          </Typography>
-        </div>
-      </Modal>
+        handleClose={handleCloseErrorModal}
+        title="Error Submission!"
+        description="Error: Failed to creating form submission. Please try again."
+      />
     </div>
   );
+};
+
+const textStyle = {
+  borderWidth: 1,
+  borderColor: "#00000029",
+  borderStyle: "solid",
+  paddingX: "24px",
+  paddingY: "13px",
+  borderRadius: "4px",
 };
 
 export default Manage;

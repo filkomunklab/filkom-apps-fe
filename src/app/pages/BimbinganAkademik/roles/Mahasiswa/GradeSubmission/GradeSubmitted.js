@@ -1,31 +1,53 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Paper } from "@mui/material";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { useNavigate } from "react-router-dom";
 
 const GradeSubmitted = () => {
-  const [dataPreregis, setDataPreregis] = useState([]);
-  const getDataPreregis = async () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
+  //get data
+  const [dataGrade, setDataGrade] = useState([]);
+  const getDataGrade = async () => {
     try {
       const nim = JSON.parse(localStorage.getItem("user")).nim;
       const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
       });
       const major = studentData.data.data.major;
-      const result = await jwtAuthAxios.get(
-        `/pre-regist/status/${major}/${nim}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const result = await jwtAuthAxios.get(`/access/isOpen/${major}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
 
-      setDataPreregis(result.data.data);
+      const gradeData = result.data.data;
+      setDataGrade(gradeData);
+
+      console.log("ini panjang gradedata", result);
     } catch (error) {
-      console.log(error.message);
-      console.log("ini error: ", error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
   useEffect(() => {
-    getDataPreregis();
+    getDataGrade();
+    return () => controller.abort();
   }, []);
   return (
     <div>
@@ -46,13 +68,13 @@ const GradeSubmitted = () => {
           <br />
           <br />
           Date of Grade Filling:{" "}
-          {new Date(dataPreregis.createdAt).toLocaleDateString("en-US", {
+          {new Date(dataGrade.createdAt).toLocaleDateString("en-US", {
             month: "long",
             day: "2-digit",
             year: "numeric",
           })}{" "}
           -{" "}
-          {new Date(dataPreregis.dueDate).toLocaleDateString("en-US", {
+          {new Date(dataGrade.due_date).toLocaleDateString("en-US", {
             month: "long",
             day: "2-digit",
             year: "numeric",

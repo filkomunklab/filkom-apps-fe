@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Stack,
@@ -6,13 +6,9 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
   Paper,
-  FormControlLabel,
-  FormGroup,
-  Switch,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -24,42 +20,58 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const Activity = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
   const navigate = useNavigate();
-  const [isPreRegistration, setIsPreRegistration] = useState(false);
-  const [isGradeSubmission, setIsGradeSubmission] = useState(true);
 
-  const getActivity = async () => {
+  const location = useLocation();
+  console.log("loca", location);
+  const { activityId } = location?.state || "-";
+  const [activityDetail, setActivityDetail] = useState("");
+
+  const getActivityDetail = async () => {
     try {
-      const headers = {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer token_apa`,
-      };
-
-      const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`, {
-        headers,
-      });
-
-      const { status, message, data, code } = response.data;
-
+      const response = await jwtAuthAxios.get(
+        `/activity/detail/${activityId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
+      const { status, data } = response.data;
       if (status === "OK") {
-        //isi status atau code tergantung API
-        //simpan dalam usestate contoh:
-        //setActivity = data
-        //tambahkan handle lain jika perlu (grade, attendance, dll)
+        setActivityDetail(data);
       } else {
-        //tambah handler jika respon lain, kalau tidak perlu hapus saja
-        console.log(response);
+        console.log("status result tidak ok", response);
       }
     } catch (error) {
-      console.log(error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
+
+  useEffect(() => {
+    getActivityDetail();
+    return () => controller.abort();
+  }, []);
 
   const handleClick = (event) => {
     event.preventDefault();
     navigate(-1);
   };
-
   return (
     <div>
       <div role="presentation" onClick={handleClick}>
@@ -75,104 +87,80 @@ const Activity = () => {
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Stack spacing={2} sx={{ paddingTop: 3 }}>
-            <Grid sx={{ display: "flex", direction: "row" }}>
+          <Stack spacing={2} sx={{ paddingTop: 1 }}>
+            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
               <Typography>Title</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 1 }}>
-                PENGUMPULAN KARTU RENCANA STUDI SEMESTER GANJIL TAHUN 2022/2023
-                GELOMBANG 1
+                {activityDetail?.title}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
         <Grid item xs={12}>
           <Stack spacing={2}>
-            <Grid sx={{ display: "flex", direction: "row" }}>
+            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
               <Typography>Descriptions</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                Diinfokan untuk semua mahasiswa yang akan mendaftar kuliah
-                semester depan semester I 2023/2024 WAJIB untuk mengisi
-                PreRegistration segera. Mohon memperhatikan tahun kurikulum anda
-                agar dapat mengisi pada form yang benar. Perhatikan due-date
-                yang ada. <br />
-                <br />
-                Note: Jika tidak mengisi, maka anda tidak bisa untuk kontrak
-                mata kuliah di semester yang akan datang. Terima Kasih.
+                {activityDetail?.description}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Stack spacing={2}>
-            <Grid sx={{ display: "flex", direction: "row" }}>
-              <Typography>Due Date</Typography>
+            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
+              <Typography>Date</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                Senin, 22 September 2023
+                {new Date(activityDetail?.dueDate).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Stack spacing={2}>
-            <Grid sx={{ display: "flex", direction: "row" }}>
+            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
               <Typography>Clock (optional)</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
               <Typography variant="body1" sx={{ p: 2 }}>
-                18:00
+                {new Date(activityDetail.dueDate).toLocaleString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
-        <Grid container paddingTop={4} paddingLeft={2} gap={3}>
-          {/* <Grid item xs={12} md={6} xl={4}> */}
-          {isPreRegistration && (
-            <FormGroup sx={{ paddingLeft: "9px" }}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    defaultChecked
-                    size="small"
-                    color="primary"
-                    disabled
-                  />
-                }
-                label="Add Pre-registration Page"
-                sx={{ whiteSpace: "nowrap", gap: 2 }}
-              />
-            </FormGroup>
-          )}
-          {/* </Grid> */}
-          {/* <Grid item xs={12} md={6} xl={4}> */}
-          {isGradeSubmission && (
-            <FormGroup sx={{ paddingLeft: "9px" }}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    defaultChecked
-                    size="small"
-                    color="primary"
-                    disabled
-                  />
-                }
-                label="Add Grade Submission Page"
-                sx={{ whiteSpace: "nowrap", gap: 2 }}
-              />
-            </FormGroup>
-          )}
-          {/* </Grid> */}
+
+        <Grid item xs={12} md={4}>
+          <Stack spacing={2}>
+            <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
+              <Typography>Form Attendance</Typography>
+            </Grid>
+
+            <Paper elevation={0} variant="outlined" fullWidth>
+              <Typography variant="body1" sx={{ p: 2 }}>
+                {activityDetail?.isAttendance === true ? "Yes" : "No"}
+              </Typography>
+            </Paper>
+          </Stack>
         </Grid>
       </Grid>
     </div>

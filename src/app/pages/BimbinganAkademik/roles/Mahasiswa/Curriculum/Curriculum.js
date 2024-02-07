@@ -10,10 +10,15 @@ import {
   Paper,
   Grid,
 } from "@mui/material";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import { useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const Curriculum = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [curriculumDetails, setCurriculumDetails] = useState({
     name: "",
     year: "",
@@ -22,11 +27,15 @@ const Curriculum = () => {
 
   useEffect(() => {
     getCurriculumDetails();
+    return () => controller.abort();
   }, []);
 
   const getCurriculumDetails = async () => {
     try {
-      const curriculumResult = await axios.get(`${BASE_URL_API}/curriculum`);
+      const curriculumResult = await jwtAuthAxios.get(`/curriculum`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
       if (curriculumResult.data.status === "OK") {
         const firstCurriculum = curriculumResult.data.data[0];
 
@@ -35,8 +44,14 @@ const Curriculum = () => {
           year: firstCurriculum.year,
         });
 
-        const result = await axios.get(
-          `${BASE_URL_API}/subject/${firstCurriculum.id}`
+        const result = await jwtAuthAxios.get(
+          `/subject/${firstCurriculum.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            signal,
+          }
         );
 
         if (result.data.status === "OK") {
@@ -44,7 +59,20 @@ const Curriculum = () => {
         }
       }
     } catch (error) {
-      console.error("Ini error:", error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -104,8 +132,6 @@ const Curriculum = () => {
 
     return rows;
   };
-  console.log("ini result curriculumResult", curriculumDetails);
-  console.log("ini result listSubject", listSubject);
 
   return (
     <div>
@@ -135,14 +161,14 @@ const Curriculum = () => {
         <Grid container>
           <div>
             <Typography
-              sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "15px" }}
+              sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "10px" }}
             >
               Curriculum
               {` ${curriculumDetails.name} - ${curriculumDetails.year}`}
             </Typography>
           </div>
           <Grid container pt={2}>
-            <TableContainer sx={{ maxHeight: 530 }} component={Paper}>
+            <TableContainer sx={{ maxHeight: "70vh" }} component={Paper}>
               <Table>
                 <TableHead
                   sx={{

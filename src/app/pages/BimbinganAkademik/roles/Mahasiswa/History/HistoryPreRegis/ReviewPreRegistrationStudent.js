@@ -31,7 +31,6 @@ const ReviewPreRegistrationStudent = () => {
   const { state } = useLocation();
   const preregisDetails = state ? state.preregisDetails : {};
   const {
-    id,
     studentName,
     supervisorName,
     submitDate,

@@ -20,8 +20,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import { useLocation, useNavigate } from "react-router-dom";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
@@ -31,37 +29,65 @@ const role = Boolean(localStorage.getItem("user"))
   : [];
 
 const StudentProfile = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  //abort
   const controller = new AbortController();
   const signal = controller.signal;
+  const navigate = useNavigate();
+
+  const location = useLocation();
   const { studentNim } = location.state || "-";
   const [advisorProfileData, setAdvisorProfileData] = useState([]);
   const [studentProfileData, setStudentProfileData] = useState([]);
-  // const [updateStatus, setUpdateStatus] = useState("");
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const dosenGuidanceClass = JSON.parse(
+    localStorage.getItem("user")
+  ).guidanceClassId;
 
-  // useEffect(() => console.log("ini status", updateStatus), [updateStatus]);
-  console.log("ini nim", studentNim);
   const getProfile = async () => {
     try {
       const resultStudent = await jwtAuthAxios.get(
         `/student/view/biodata/${studentNim}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
 
       console.log("ini isi student", resultStudent);
-      // console.log(resultStudent);
       setStudentProfileData(resultStudent.data.data);
       setAdvisorProfileData(
-        resultStudent.data.data.GuidanceClassMember.gudianceClass.teacher
+        resultStudent.data.data.GuidanceClassMember?.gudianceClass?.teacher
       );
+      // console.log(
+      //   "isi advisor gudiance",
+      //   resultStudent.data.data.GuidanceClassMember?.gudianceClass?.teacher
+      // );
+      // console.log("dosenGuidanceClass:", dosenGuidanceClass);
+      // console.log(
+      //   "studentProfileData?.GuidanceClassMember?.guidanceClass?.id:",
+      //   resultStudent.data.data.GuidanceClassMember?.gudianceClass
+      // );
+      // console.log(
+      //   "studentProfileData?.GuidanceClassMember?.guidanceClass?.id:",
+      //   resultStudent.data.data.GuidanceClassMember
+      // );
     } catch (error) {
-      console.log(error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -69,8 +95,8 @@ const StudentProfile = () => {
     try {
       setIsLoading(true);
       handleClosePopover();
-      const response = await axios.patch(
-        `${BASE_URL_API}/employee/biodataStudent/status/${studentNim}`,
+      const response = await jwtAuthAxios.patch(
+        `/employee/biodataStudent/status/${studentNim}`,
         { status: value },
         {
           signal,
@@ -78,7 +104,6 @@ const StudentProfile = () => {
         }
       );
 
-      console.log("response update status", response);
       const { status, data } = response.data;
       if (status === "OK") {
         getProfile();
@@ -86,7 +111,20 @@ const StudentProfile = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.log("error patch status", error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -94,10 +132,6 @@ const StudentProfile = () => {
     getProfile();
     return () => controller.abort();
   }, []);
-
-  // useEffect(() => {
-  //   changeStatus();
-  // }, [updateStatus]);
 
   const handleOpenPopover = (event) => {
     setAnchorEl(event.currentTarget);
@@ -185,9 +219,18 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Stack direction={"row"} gap={1} justifyContent={"space-between"}>
                 <Typography variant="h5">Student Status</Typography>
-                <IconButton size="small" onClick={handleOpenPopover}>
-                  <BorderColorIcon fontSize="inherit" />
-                </IconButton>
+                {console.log("dosenGuidanceClass", dosenGuidanceClass)}
+                {console.log(
+                  "studentGuidanceClass",
+                  studentProfileData?.GuidanceClassMember?.gudianceClass?.id
+                )}
+                {dosenGuidanceClass ===
+                  studentProfileData?.GuidanceClassMember?.gudianceClass
+                    ?.id && (
+                  <IconButton size="small" onClick={handleOpenPopover}>
+                    <BorderColorIcon fontSize="inherit" />
+                  </IconButton>
+                )}
               </Stack>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.status ?? "-"}
@@ -312,7 +355,7 @@ const StudentProfile = () => {
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
               // defaultValue={status}
-              value={studentProfileData.status}
+              value={studentProfileData?.status}
               onChange={(e) => changeStatus(e.target.value)}
             >
               <FormControlLabel
@@ -445,7 +488,7 @@ const getRole = () => {
     : role.includes("DEKAN")
     ? "dekan"
     : role.includes("OPERATOR_FAKULTAS")
-    ? "sek-dekan"
+    ? "sekretaris"
     : "dosen-pembimbing";
 
   return filter;

@@ -10,7 +10,7 @@ import operatorRoutes from "./operatorRoutes";
 import dosenPembimbingRoutes from "./dosenPembimbingRoutes";
 import dekanRoutes from "./dekanRoutes";
 import kepalaProgramStudiRoutes from "./kepalaProgramStudiRoutes";
-import sekDekanRoutes from "./sekDekanRoutes";
+import sekDekanRoutes from "./sekretarisRoutes";
 import skripsiAppDekanRoutes from "./skripsi_app_dekan_routes";
 import skripsiAppKaprodiRoutes from "./skripsi_app_kaprodi_routes";
 import skripsiAppDosenRoutes from "./skripsi_app_dosen_routes";

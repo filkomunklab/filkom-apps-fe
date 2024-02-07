@@ -8,8 +8,7 @@ import {
   Paper,
   Breadcrumbs,
 } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -44,12 +43,32 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const StudentGradeDashboard = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
+  const [semesterData, setSemesterData] = useState([]);
   const location = useLocation();
   const { studentNim, firstName, lastName } = location.state
     ? location.state
     : "";
-  const navigate = useNavigate();
-  const [semesterData, setSemesterData] = useState([]);
+
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (
+      error.response &&
+      error.response.status >= 401 &&
+      error.response.status <= 403
+    ) {
+      console.log("You don't have permission to access this page");
+      navigate(`/`);
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
 
   const getDataGrade = async () => {
     try {
@@ -57,10 +76,11 @@ const StudentGradeDashboard = () => {
         `/transaction/semesterList/${studentNim}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
 
-      console.log("ini respnse", response);
+      //menampilkan semester yang paling terbaru secara berurut
       const sortedData = response.data.data.sort((a, b) =>
         a.semester.localeCompare(b.semester, undefined, { numeric: true })
       );
@@ -69,22 +89,22 @@ const StudentGradeDashboard = () => {
 
       setSemesterData(reversedData);
     } catch (error) {
-      console.log(error.message);
-      console.log("ini error: ", error);
+      handleError(error);
     }
   };
 
   useEffect(() => {
     getDataGrade();
+    return () => controller.abort();
   }, []);
-  console.log("ini yg mo loop", semesterData);
 
-  const handleNavigateGrade = async (value, studentNim) => {
+  const handleNavigateGrade = async (value) => {
     try {
       const gradeDetailsResult = await jwtAuthAxios.get(
         `/grades/detailGrades/${value.id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
 
@@ -102,7 +122,7 @@ const StudentGradeDashboard = () => {
         },
       });
     } catch (error) {
-      console.log(error.message);
+      handleError();
     }
   };
 

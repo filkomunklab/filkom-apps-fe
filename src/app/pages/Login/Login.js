@@ -74,6 +74,7 @@ const Login = () => {
   const [openModal, setOpenModal] = useState(false);
   const [profileMahasiswa, setProfileMahasiswa] = useState([]);
   const [userLogin, setUserLogin] = useState("");
+  const [tokenUser, setTokenUser] = useState("");
   const style = useStyles();
   const maxWidth515 = useMediaQuery("(max-width: 515px)");
 
@@ -307,6 +308,7 @@ const Login = () => {
         setOpenModal={setOpenModal}
         profileMahasiswa={profileMahasiswa}
         userLogin={userLogin}
+        tokenUser={tokenUser}
       />
     </Div>
   );

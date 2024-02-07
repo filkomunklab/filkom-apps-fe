@@ -43,13 +43,17 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const GradeStudent = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isReject, setIsReject] = useState(false);
   const [isApprove, setIsApprove] = useState(false);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
   const [commentText, setCommentText] = useState("");
 
   const { state } = useLocation();
@@ -84,13 +88,27 @@ const GradeStudent = () => {
       };
       await jwtAuthAxios.put(`/transaction/grades/approval/${id}`, bodyData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
       });
       setLoading(false);
       let path = "/bimbingan-akademik/kaprodi/review-activities/grade";
       navigate(path);
     } catch (error) {
       setLoading(false);
-      console.error("Error completing status:", error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 

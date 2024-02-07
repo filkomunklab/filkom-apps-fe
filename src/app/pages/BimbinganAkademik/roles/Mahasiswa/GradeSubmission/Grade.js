@@ -2,8 +2,14 @@ import React, { useEffect, useState } from "react";
 import GradeSubmission from "./GradeSubmission";
 import GradeSubmissionClosed from "./GradeSubmissionClosed";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { useNavigate } from "react-router-dom";
 
 const Grade = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [dataGrade, setDataGrade] = useState(null);
 
   const getDataGrade = async () => {
@@ -11,29 +17,39 @@ const Grade = () => {
       const nim = JSON.parse(localStorage.getItem("user")).nim;
       const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
       });
       const major = studentData.data.data.major;
-      const result = await jwtAuthAxios.get(
-        `/access/list/gradesAccess/${major}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const result = await jwtAuthAxios.get(`/access/isOpen/${major}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
 
       const gradeData = result.data.data;
-      // const result = await axios.get(`${BASE_URL_API}/access/isOpen/${major}/`);
-      // const gradeData = result.data.data.isOpen;
       setDataGrade(gradeData);
 
-      console.log("ini panjang gradedata", gradeData);
+      console.log("ini panjang gradedata", result);
     } catch (error) {
-      console.log(error.message);
-      console.log("ini error: ", error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
   useEffect(() => {
     getDataGrade();
+    return () => controller.abort();
   }, []);
 
   return (

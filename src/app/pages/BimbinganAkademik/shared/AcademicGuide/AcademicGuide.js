@@ -39,7 +39,7 @@ const AcademicGuide = () => {
         Academic Guide
       </Typography>
       <div sx={{ flex: 1 }}>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             sx={{ paddingLeft: "24px" }}
             expandIcon={<ExpandMoreIcon />}
@@ -103,7 +103,7 @@ const AcademicGuide = () => {
             </Typography>
           </AccordionDetails>
         </Accordion>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             sx={{ paddingLeft: "24px" }}
             expandIcon={<ExpandMoreIcon />}
@@ -171,7 +171,7 @@ const AcademicGuide = () => {
             </Typography>
           </AccordionDetails>
         </Accordion>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             sx={{ paddingLeft: "24px" }}
             expandIcon={<ExpandMoreIcon />}
@@ -236,7 +236,7 @@ const AcademicGuide = () => {
             </Typography>
           </AccordionDetails>
         </Accordion>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             sx={{ paddingLeft: "24px" }}
             expandIcon={<ExpandMoreIcon />}
@@ -290,7 +290,7 @@ const AcademicGuide = () => {
             </Typography>
           </AccordionDetails>
         </Accordion>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             sx={{ paddingLeft: "24px" }}
             expandIcon={<ExpandMoreIcon />}
@@ -343,7 +343,7 @@ const AcademicGuide = () => {
             </Typography>
           </AccordionDetails>
         </Accordion>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             sx={{ paddingLeft: "24px" }}
             expandIcon={<ExpandMoreIcon />}
@@ -381,7 +381,7 @@ const AcademicGuide = () => {
             </Typography>
           </AccordionDetails>
         </Accordion>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             sx={{ paddingLeft: "24px" }}
             expandIcon={<ExpandMoreIcon />}

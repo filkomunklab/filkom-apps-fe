@@ -172,7 +172,7 @@ const SidebarHeader = () => {
         return "dekan";
       case ROLES.OPERATOR_FAKULTAS:
       case ROLES.SEKRETARIS:
-        return "sek-dekan";
+        return "sekretaris";
       default:
         return "unknown";
     }

@@ -34,7 +34,6 @@ const HistoryCertificate = () => {
     title,
     comments,
     approvalDate,
-    id,
   } = certificateDetails;
   const pdfURL = pathFile;
 
