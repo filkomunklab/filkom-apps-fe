@@ -9,7 +9,6 @@ import {
   TableRow,
   Breadcrumbs,
   experimentalStyled as styled,
-  Box,
   Grid,
   Stack,
   Paper,

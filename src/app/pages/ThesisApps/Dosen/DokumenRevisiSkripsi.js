@@ -17,7 +17,6 @@ import {
   TableRow,
   Typography,
   TextareaAutosize,
-  Paper,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -66,9 +65,7 @@ const DokumenRevisiSkripsi = () => {
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
 
   const [open, setOpen] = useState(false);
-  const [tanggal, setTanggal] = useState("");
   const [konfirmasiOpen, setKonfirmasiOpen] = useState(false);
-  const [showTanggal, setShowTanggal] = useState(false);
 
   const [advisorAndCoAdvisor, setAdvisorAndCoAdvisor] = useState();
 
@@ -170,12 +167,6 @@ const DokumenRevisiSkripsi = () => {
 
   const handleKonfirmasiClose = () => {
     setKonfirmasiOpen(false);
-  };
-
-  const handleKonfirmasiSimpan = () => {
-    setOpen(false);
-    setKonfirmasiOpen(false);
-    setShowTanggal(true);
   };
 
   // // mengatur tanggal

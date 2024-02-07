@@ -24,10 +24,6 @@ import Profile from "app/pages/BimbinganAkademik/roles/Mahasiswa/Profile";
 import StudentGrade from "app/pages/BimbinganAkademik/roles/Mahasiswa/Grades/StudentGrade";
 
 const mahasiswaRoutes = [
-  // {
-  //   path: "/klabat-bridge/daftar-alumni",
-  //   element: <Page component={DaftarAlumni} />,
-  // },
   {
     path: "/bimbingan-akademik/academic-guide",
     element: <Page component={AcademicGuide} />,

@@ -1,5 +1,4 @@
 import Page from "@jumbo/shared/Page";
-import AccountManagement from "app/pages/Global/AccountManagement";
 import EmployeeManagement from "app/pages/Global/EmployeeManagement";
 import StudentManagement from "app/pages/Global/StudentManagement";
 

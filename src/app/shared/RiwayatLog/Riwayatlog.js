@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
-  Button,
   Step,
   StepContent,
   StepLabel,
@@ -14,16 +13,12 @@ const Riwayatlog = ({ value: groupId, riwayatData = () => {} }) => {
   const [riwayat, setRiwayat] = useState([]);
   const [timPembimbing, setTimPembimbing] = useState();
   const [activeStep, setActiveStep] = React.useState(0);
-  const [selectedStep, setSelectedStep] = React.useState(0);
-  // const [steps, setSteps] = useState([]);
 
   const handleStepClick = (index) => {
-    setSelectedStep(index); // Memperbarui langkah terpilih
     setActiveStep(index);
   };
 
   const token = localStorage.getItem("token");
-  // console.log("token", token);
   console.log("GroupId di komponen riwayatlog", groupId);
 
   useEffect(() => {

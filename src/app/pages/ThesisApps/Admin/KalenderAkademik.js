@@ -21,8 +21,6 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import WarningIcon from "@mui/icons-material/Warning";
 import axios from "axios";
 
@@ -33,12 +31,6 @@ const KalenderAkademik = () => {
   // const [kelasId, setKelasId] = useState(); // menyimpan id kelas yang dipilih
   const [selectedClass, setSelectedClass] = useState(null); // menyimpan index daftarSemuaKelas
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false); // buka/tutup konfirmasi hapus kelas
-  const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
-  const [confirmDeleteClass, setConfirmDeleteClass] = useState(false);
-  const [addStudentOpen, setAddStudentOpen] = useState(false); // buka/tutup tambah mahasiswa
-  const [searchNIMs, setSearchNIMs] = useState(""); // menyimpan nim yang dimasukkan
-  // const [studentId, setStudentId] = useState(); // menyimpan id student yang dipilih dalam kelas
-  // state - akademik
   const [daftarAkademik, setDaftarAkademik] = useState([]);
   const [openAddAkademik, setOpenAddAkademik] = useState(false);
   const [openUpdateAkademik, setOpenUpdateAkademik] = useState(false); // buka/tutup perbarui akademik

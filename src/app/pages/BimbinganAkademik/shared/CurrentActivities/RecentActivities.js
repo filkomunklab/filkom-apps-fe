@@ -6,7 +6,6 @@ import {
   ListItemText,
   Typography,
   Divider,
-  experimentalStyled as styled,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Button,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -45,7 +44,6 @@ const DaftarPegawai = () => {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedEditPegawai, setSelectedEditPegawai] = useState(null);
-  const [editingPegawai, setEditingPegawai] = useState(null);
 
   const handleTambahPegawai = () => {
     let hasError = false;

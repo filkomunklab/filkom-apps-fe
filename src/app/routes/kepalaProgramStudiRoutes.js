@@ -249,10 +249,6 @@ const kepalaProgramStudiRoutes = [
     path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/:id/edit-student",
     element: <Page component={EditStudent} />,
   },
-  // {
-  //   path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/",
-  //   element: <Page component={AdvisorProfileFaculty} />,
-  // },
   {
     path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/:id/student-profile",
     element: <Page component={AdvisorStudentProfile} />,
@@ -301,14 +297,6 @@ const kepalaProgramStudiRoutes = [
     path: "/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor/student-list",
     element: <Page component={StudentList} />,
   },
-  // {
-  //   path: "/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor/information-system",
-  //   element: <Page component={InformationSytemLS} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor/information-technology",
-  //   element: <Page component={InformationTechnologyLS} />,
-  // },
 
   {
     path: "/bimbingan-akademik/kaprodi/current-activities",

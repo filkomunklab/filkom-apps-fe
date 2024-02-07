@@ -2,7 +2,6 @@ import Dashboard from "app/pages/BimbinganAkademik/shared/Dashboard/DashboardDek
 import AcademicGuide from "app/pages/BimbinganAkademik/shared/AcademicGuide/AcademicGuide";
 import VisionMisionGoals from "app/pages/BimbinganAkademik/shared/VisionMisionGoals/VisionMissionGoals";
 import Curriculum from "app/pages/BimbinganAkademik/shared/Curriculum/Curriculum";
-// import StudentInformation from "../pages/BimbinganAkademik/roles/Dekan/StudentInformation";
 import StudentInformationMentored from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationMentored";
 import StudentInformationFaculty from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty";
 import StudentInformationFacultyPerMajor from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty/StudentPerMajor";
@@ -27,7 +26,6 @@ import ViewActivity from "app/pages/BimbinganAkademik/shared/CurrentActivities/V
 import ViewConsultation from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewConsultation/ViewConsultation";
 import AddActivity from "app/pages/BimbinganAkademik/shared/AddActivity";
 import Manage from "app/pages/BimbinganAkademik/shared/Manage/ManageDekan";
-
 import SupervisorInformation from "app/pages/BimbinganAkademik/shared/SupervisorInformation";
 import AdvisorProfile from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorProfile/AdvisorProfile";
 import AdvisorStudentProfile from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorProfile/StudentProfile";
@@ -215,58 +213,6 @@ const dekanRoutes = [
     path: "/bimbingan-akademik/dekan/review-activities/consultation/:id",
     element: <Page component={ReplyConsultation} />,
   },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information",
-  //   element: <Page component={SupervisorInformation} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor",
-  //   element: <Page component={AddSupervisor} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id",
-  //   element: <Page component={AdvisorProfile} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id/edit-student",
-  //   element: <Page component={EditStudent} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id",
-  //   element: <Page component={AdvisorHistory} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-activity",
-  //   element: <Page component={HistoryActivityAdvisor} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-grade",
-  //   element: <Page component={HistoryGradeAdvisor} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-preregistration",
-  //   element: <Page component={HistoryPreRegistrationAdvisor} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-certificate",
-  //   element: <Page component={HistoryCertificateAdvisor} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/history-consultation",
-  //   element: <Page component={HistoryConsultationAdvisor} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/informatics",
-  //   element: <Page component={InformaticsLS} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/information-system",
-  //   element: <Page component={InformationSytemLS} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/information-technology",
-  //   element: <Page component={InformationTechnologyLS} />,
-  // },
   {
     path: "/bimbingan-akademik/dekan/history",
     element: <Page component={History} />,
@@ -275,22 +221,6 @@ const dekanRoutes = [
     path: "/bimbingan-akademik/dekan/history/activity",
     element: <Page component={HistoryActivity} />,
   },
-  // {
-  //   path: "/bimbingan-akademik/dekan/history/activity/list-courses/",
-  //   element: <Page component={ListCourses} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/history/activity/list-courses/list-student/:id",
-  //   element: <Page component={ListStudent} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/history/activity/list-courses/list-student/:id/student-preregistration",
-  //   element: <Page component={StudentPreRegis} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/history/activity/list-student-not-preregistration",
-  //   element: <Page component={ListStudentNotPreRegis} />,
-  // },
   {
     path: "/bimbingan-akademik/dekan/history/pre-registration/:id",
     element: <Page component={HistoryPreRegistration} />,
@@ -299,10 +229,6 @@ const dekanRoutes = [
     path: "/bimbingan-akademik/dekan/history/certificate/:id",
     element: <Page component={HistoryCertificate} />,
   },
-  // {
-  //   path: "/bimbingan-akademik/dekan/history/grade",
-  //   element: <Page component={HistoryGrade} />,
-  // },
   {
     path: "/bimbingan-akademik/dekan/history/consultation/:id",
     element: <Page component={HistoryConsultationComplete} />,
@@ -331,15 +257,6 @@ const dekanRoutes = [
     path: "/bimbingan-akademik/dekan/profile",
     element: <Page component={Profile} />,
   },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/list-student/information-system",
-  //   element: <Page component={AddSupervisor} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/list-student/information-technology",
-  //   element: <Page component={AddSupervisor} />,
-  // },
-
   {
     path: "/bimbingan-akademik/dekan/supervisor-information",
     element: <Page component={SupervisorInformation} />,
@@ -356,10 +273,6 @@ const dekanRoutes = [
     path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id/edit-student",
     element: <Page component={EditStudent} />,
   },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/",
-  //   element: <Page component={AdvisorProfileFaculty} />,
-  // },
   {
     path: "/bimbingan-akademik/dekan/supervisor-information/advisor-profile/:id/student-profile",
     element: <Page component={AdvisorStudentProfile} />,
@@ -408,14 +321,6 @@ const dekanRoutes = [
     path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/student-list",
     element: <Page component={StudentList} />,
   },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/information-system",
-  //   element: <Page component={InformationSytemLS} />,
-  // },
-  // {
-  //   path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/information-technology",
-  //   element: <Page component={InformationTechnologyLS} />,
-  // },
 ];
 
 export default dekanRoutes;

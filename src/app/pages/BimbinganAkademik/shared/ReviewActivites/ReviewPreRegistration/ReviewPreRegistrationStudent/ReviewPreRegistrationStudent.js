@@ -6,7 +6,6 @@ import {
   Grid,
   Modal,
   Paper,
-  Stack,
   Table,
   TableBody,
   TableCell,

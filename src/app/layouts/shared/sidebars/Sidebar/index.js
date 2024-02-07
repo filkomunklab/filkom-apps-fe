@@ -24,7 +24,6 @@ import {
   registerMenus,
   sekretarisMenus,
 } from "./menus";
-import { Rocket } from "@mui/icons-material";
 
 const roleCheck = () => {
   const roles = JSON.parse(localStorage.getItem("user"))?.role;

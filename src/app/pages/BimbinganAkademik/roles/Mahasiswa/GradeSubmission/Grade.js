@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import GradeSubmission from "./GradeSubmission";
 import GradeSubmissionClosed from "./GradeSubmissionClosed";
-import GradeSubmitted from "./GradeSubmitted";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import { useNavigate } from "react-router-dom";
 
@@ -12,7 +11,6 @@ const Grade = () => {
   const navigate = useNavigate();
 
   const [dataGrade, setDataGrade] = useState(null);
-  const [submissionStatus, setSubmissionStatus] = useState("");
 
   const getDataGrade = async () => {
     try {

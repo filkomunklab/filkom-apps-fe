@@ -12,7 +12,6 @@ import {
   Typography,
   FormControl,
   InputLabel,
-  Pagination,
   Grid,
   Box,
   Paper,
@@ -20,23 +19,17 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
-  DialogTitle,
   TextField,
   Divider,
   Checkbox,
   IconButton,
   TablePagination,
+  DialogTitle,
 } from "@mui/material";
-import ActionButton from "app/shared/ActionButton";
-import SearchGlobal from "app/shared/SearchGlobal";
 import React, { useEffect, useState } from "react";
-import CreateIcon from "@mui/icons-material/Create";
 import MarkunreadIcon from "@mui/icons-material/Markunread";
 import SearchIcon from "@mui/icons-material/Search";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import axios from "axios";
-import { DataArrayRounded } from "@mui/icons-material";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const DaftarAlumni = () => {
@@ -47,9 +40,6 @@ const DaftarAlumni = () => {
   const [filterValue, setFilterValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [searchBtn, setSearchBtn] = useState(false);
-
-  // pagination
-  const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 

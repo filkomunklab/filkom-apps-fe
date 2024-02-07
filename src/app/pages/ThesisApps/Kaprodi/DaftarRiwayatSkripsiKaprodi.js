@@ -160,27 +160,7 @@ const RiwayatSkripsiKaprodi = () => {
             gap: "16px",
             flexShrink: 0,
           }}
-        >
-          {/* <FormControl>
-            <Select
-              size="small"
-              labelId="dropdown-label"
-              id="dropdown"
-              value={selectedValue}
-              onChange={handleChange}
-              sx={{
-                height: "30px",
-                width: "250px",
-                boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
-              }}
-            >
-              <MenuItem value="Kelas">Kelas</MenuItem>{" "}
-              <MenuItem value="option1">Opsi 1</MenuItem>
-              <MenuItem value="option2">Opsi 2</MenuItem>
-              <MenuItem value="option3">Opsi 3</MenuItem>
-            </Select>
-          </FormControl> */}
-        </Div>
+        ></Div>
         <Div
           sx={{
             flexDirection: "row",

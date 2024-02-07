@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Paper } from "@mui/material";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import { useNavigate } from "react-router-dom";
 

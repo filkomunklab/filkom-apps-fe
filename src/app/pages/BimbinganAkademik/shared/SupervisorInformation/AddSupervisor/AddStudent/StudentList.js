@@ -34,15 +34,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nim: `105022010000`,
-  name: `Awuy, Diany Mariska`,
-  prodi: `Teknologi Informasi`,
-  year: `2020`,
-  status: `Active`,
-  dospem: `-`,
-}));
-
 const CountStudent = ({ selected, totalStudents }) => {
   return (
     <Typography sx={{ fontSize: "16px" }}>
