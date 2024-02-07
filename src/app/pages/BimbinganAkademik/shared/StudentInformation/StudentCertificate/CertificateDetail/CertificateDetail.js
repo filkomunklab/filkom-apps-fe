@@ -1,4 +1,3 @@
-import Div from "@jumbo/shared/Div";
 import {
   Box,
   Grid,
@@ -7,7 +6,7 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({

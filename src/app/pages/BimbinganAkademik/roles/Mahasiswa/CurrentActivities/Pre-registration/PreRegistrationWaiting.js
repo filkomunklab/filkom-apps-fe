@@ -1,6 +1,5 @@
 import {
   Grid,
-  Stack,
   Typography,
   Table,
   TableBody,
@@ -13,9 +12,7 @@ import {
   Paper,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import { Link, useLocation } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",

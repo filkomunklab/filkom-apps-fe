@@ -83,15 +83,6 @@ const PDFViewerSourceCode = ({ sourceCode, isUploading }) => {
   );
 };
 
-const formatIndonesianDate = (date) => {
-  const day = date.getDate();
-  const month = date.getMonth() + 1; // Perhatikan bahwa bulan dimulai dari 0
-  const year = date.getFullYear();
-
-  const formattedDate = `${day}/${month}/${year}`;
-  return formattedDate;
-};
-
 const ArsipDocument = () => {
   // state - menyimpan request data
   const [HKI, setHKI] = useState();

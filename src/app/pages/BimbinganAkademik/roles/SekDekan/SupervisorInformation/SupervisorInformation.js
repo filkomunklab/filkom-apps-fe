@@ -1,14 +1,8 @@
 import Div from "@jumbo/shared/Div";
 import {
   Button,
-  Chip,
-  FormControl,
   Grid,
   Paper,
-  InputLabel,
-  ListSubheader,
-  MenuItem,
-  Select,
   TableContainer,
   Table,
   TableBody,
@@ -17,60 +11,11 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  Card,
-  CardHeader,
-  CardContent,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
-
-const yearList = [
-  {
-    value: "2017",
-    label: "2017",
-  },
-  {
-    value: "2018",
-    label: "2018",
-  },
-  {
-    value: "2019",
-    label: "2019",
-  },
-  {
-    value: "2020",
-    label: "2020",
-  },
-  {
-    value: "2021",
-    label: "2021",
-  },
-  {
-    value: "2022",
-    label: "2022",
-  },
-  {
-    value: "2023",
-    label: "2023",
-  },
-];
-
-const prodiList = [
-  {
-    value: "informatika",
-    label: "Informatika",
-  },
-  {
-    value: "dkv",
-    label: "DKV",
-  },
-  {
-    value: "si",
-    label: "SI",
-  },
-];
 
 const data = Array.from(Array(15).keys()).map((item, index) => ({
   nidn: `022407712`,
@@ -81,10 +26,8 @@ const data = Array.from(Array(15).keys()).map((item, index) => ({
 }));
 
 const SupervisorInformation = () => {
-  const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

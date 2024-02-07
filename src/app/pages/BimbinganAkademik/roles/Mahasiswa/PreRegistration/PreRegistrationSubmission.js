@@ -24,7 +24,6 @@ import { BASE_URL_API } from "@jumbo/config/env";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import CloseIcon from "@mui/icons-material/Close";
-import PreRegistrationSubmitted from "./PreRegistrationSubmitted";
 import { useNavigate } from "react-router-dom";
 
 const style = {

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Grid } from "@mui/material";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 import PreRegistrationClosedCase from "./PreRegistrationClosedCase";

@@ -2,13 +2,8 @@ import Div from "@jumbo/shared/Div";
 import {
   Button,
   Chip,
-  FormControl,
   Grid,
-  InputLabel,
-  ListSubheader,
-  MenuItem,
   Paper,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -18,14 +13,12 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { json, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BASE_URL_API } from "@jumbo/config/env";
 
 const StudentInformationMentored = () => {
-  const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dataStudent, setDataStudent] = useState([]);

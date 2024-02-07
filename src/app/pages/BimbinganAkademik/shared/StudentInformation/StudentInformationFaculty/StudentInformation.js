@@ -2,12 +2,7 @@ import Div from "@jumbo/shared/Div";
 import {
   Button,
   Chip,
-  FormControl,
   Grid,
-  InputLabel,
-  ListSubheader,
-  MenuItem,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -21,10 +16,7 @@ import {
   TableContainer,
   Paper,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 

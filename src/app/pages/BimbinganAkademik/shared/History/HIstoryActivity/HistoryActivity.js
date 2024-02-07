@@ -10,7 +10,6 @@ import {
   Table,
   TableHead,
   TableRow,
-  Checkbox,
   TableCell,
   TableBody,
   Chip,
@@ -38,11 +37,6 @@ const ViewActivity = () => {
 
   const getActivityDetail = async () => {
     try {
-      const headers = {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer token_apa`,
-      };
-
       const response = await axios.get(
         `${BASE_URL_API}/activity/detail/${activityId}`,
         { signal }

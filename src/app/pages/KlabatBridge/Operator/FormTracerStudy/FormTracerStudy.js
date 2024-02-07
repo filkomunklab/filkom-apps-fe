@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import React, { useState } from "react";
+import Select from "@mui/material/Select";
 import {
   TextField,
   Radio,
@@ -12,17 +12,9 @@ import {
   Typography,
   Box,
   InputLabel,
-  Paper,
-  Stack,
-  Form,
   Checkbox,
   FormGroup,
   InputAdornment,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  FormLabel,
   TableCell,
   TableBody,
   TableRow,
@@ -36,21 +28,14 @@ import {
   DialogTitle,
 } from "@mui/material";
 import Div from "@jumbo/shared/Div";
-import JumboDemoCard from "@jumbo/components/JumboDemoCard";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import axios from "axios";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const FormTracerStudy = () => {
   const navigate = useNavigate();
-  //checkbox
-  const [isChecked, setIsChecked] = useState(false);
-  // const handleCheckboxChange = () => {
-  //   setIsChecked((prevChecked) => !prevChecked);
-  // };
 
   //for date pickers
   const [selectedDate, setSelectedDate] = useState(null);
@@ -330,17 +315,6 @@ const FormTracerStudy = () => {
       [event.target.name]: event.target.value,
     });
   };
-
-  // const handleQuestionnaireChange = (event) => {
-  //   setQuestionnaireData({
-  //     ...questionnaireData,
-  //     [event.target.name]: event.target.value,
-  //   });
-
-  // };
-
-  // Error statement
-  const [error, setError] = useState("");
 
   const handleCheckboxChange = (name) => (event) => {
     const newValue = event.target.checked ? "1" : "0";

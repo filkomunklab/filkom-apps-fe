@@ -29,7 +29,6 @@ import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
 const BuatKonsultasi = () => {
   // state - simpan request konsultasi
   const [konsultasi, setKonsultasi] = useState();
-  const createdConsultations = konsultasi?.constultation || [];
 
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);

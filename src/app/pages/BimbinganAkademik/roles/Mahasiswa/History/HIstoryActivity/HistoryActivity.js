@@ -6,7 +6,6 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
   Paper,
-  FormControl,
   FormControlLabel,
   FormGroup,
   Switch,

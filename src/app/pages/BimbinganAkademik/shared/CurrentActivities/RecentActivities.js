@@ -6,7 +6,6 @@ import {
   ListItemText,
   Typography,
   Divider,
-  experimentalStyled as styled,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL_API } from "@jumbo/config/env";

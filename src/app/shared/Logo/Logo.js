@@ -1,6 +1,5 @@
 import React from "react";
 import Div from "@jumbo/shared/Div";
-import Link from "@mui/material/Link";
 import { ASSET_IMAGES } from "../../utils/constants/paths";
 
 const Logo = ({ mini, mode, sx }) => {

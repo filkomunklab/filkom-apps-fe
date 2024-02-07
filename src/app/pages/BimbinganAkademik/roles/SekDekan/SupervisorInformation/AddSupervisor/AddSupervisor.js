@@ -17,7 +17,7 @@ import {
   Chip,
   TableContainer,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 
 const StyledLink = styled(Link)(({ theme }) => ({

@@ -18,8 +18,6 @@ import {
   TableRow,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";

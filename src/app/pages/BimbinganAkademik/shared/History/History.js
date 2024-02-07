@@ -9,7 +9,6 @@ import {
   ListItemText,
   Stack,
   Divider,
-  Grid,
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import { Link } from "react-router-dom";
@@ -110,9 +109,8 @@ const History = (props) => {
       );
 
       const resultGrade = await axios.get(
- 
         `${BASE_URL_API}/transaction/hisotry/kaprodi/${major}`,
-        { headers } 
+        { headers }
       );
 
       const { status: activityStatus, data: activityData } =

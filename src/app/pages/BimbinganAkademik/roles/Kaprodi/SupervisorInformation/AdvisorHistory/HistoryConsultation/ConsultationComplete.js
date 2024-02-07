@@ -24,10 +24,6 @@ const ConsultationComplete = () => {
     event.preventDefault();
     navigate(step);
   };
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedFileName, setSelectedFileName] = useState("");
-
-  const [openFirstModal, setOpenFirstModal] = React.useState(false);
   const [openSecondModal, setOpenSecondModal] = React.useState(false);
 
   const handleOpenSecondModal = () => setOpenSecondModal(true);

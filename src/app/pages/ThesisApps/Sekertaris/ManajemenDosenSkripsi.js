@@ -91,15 +91,12 @@ const ManajemenDosenSkripsi = () => {
 
   const [deleteConfirmationDialogOpen, setDeleteConfirmationDialogOpen] =
     useState(false);
-  const [selectedDosenToDelete, setSelectedDosenToDelete] = useState(null);
 
   const handleOpenDeleteConfirmationDialog = (dosenId) => {
-    setSelectedDosenToDelete(dosenId);
     setDeleteConfirmationDialogOpen(true);
   };
 
   const handleCloseDeleteConfirmationDialog = () => {
-    setSelectedDosenToDelete(null);
     setDeleteConfirmationDialogOpen(false);
   };
 

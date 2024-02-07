@@ -21,7 +21,6 @@ import { BASE_URL_API } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const ReviewGrade = () => {
-  const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dataWaiting, setDataWaiting] = useState([]);

@@ -13,52 +13,10 @@ import {
 } from "@mui/material";
 
 const DaftarPengajuanProposalDekan = () => {
-  // State untuk melacak panel accordion yang terbuka
-  const [expanded, setExpanded] = useState(false);
-
-  // state Pencarian
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-
-  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
-  const handleChange = (panel) => (event, isExpanded) => {
-    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
-    setExpanded(isExpanded ? panel : false);
-  };
-
   const [daftarSkripsi, setDaftarSkripsi] = useState();
 
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
-  console.log("token", token);
-
-  // Fungsi untuk menangani pencarian
-  const handleSearch = () => {
-    const results = daftarSkripsi.semesterData.flatMap((semesterData) =>
-      semesterData.proposals.filter((proposal) => {
-        const studentNames = proposal.students.map((student) =>
-          student.fullName.toLowerCase()
-        );
-        return (
-          studentNames.some((name) =>
-            name.includes(searchKeyword.toLowerCase())
-          ) ||
-          proposal.title.toLowerCase().includes(searchKeyword.toLowerCase())
-        );
-      })
-    );
-
-    setSearchResults(results);
-    setSearchQuery(searchKeyword);
-    setIsSearchModalOpen(true);
-  };
-
-  // Fungsi untuk menutup modal pencarian
-  const handleCloseSearchModal = () => {
-    setIsSearchModalOpen(false);
-  };
 
   useEffect(() => {
     const fetchDaftarSkripsiData = async () => {

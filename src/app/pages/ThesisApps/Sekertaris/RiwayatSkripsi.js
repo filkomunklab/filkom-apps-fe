@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Div from "@jumbo/shared/Div";
 import {
-  Button,
   Table,
   TableBody,
   TableCell,
@@ -39,7 +38,6 @@ const DaftarRiwayatSkripsi = () => {
     ];
 
     // Menentukan puluhan dan satuan pada jam
-    const tenHour = Math.floor(hour / 10);
     const unitHour = hour % 10;
 
     // Menentukan puluhan dan satuan pada menit

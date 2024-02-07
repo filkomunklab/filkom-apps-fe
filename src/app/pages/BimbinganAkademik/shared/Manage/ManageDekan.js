@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
-  Box,
   Tab,
   Tabs,
   Typography,
   Grid,
   TextField,
-  Button,
   IconButton,
   TableContainer,
   Table,
@@ -16,11 +14,8 @@ import {
   TablePagination,
   TableRow,
   Paper,
-  Modal,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import SearchIcon from "@mui/icons-material/Search";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 

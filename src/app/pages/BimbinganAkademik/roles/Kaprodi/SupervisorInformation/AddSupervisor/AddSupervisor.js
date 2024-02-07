@@ -16,14 +16,12 @@ import {
   MenuItem,
   Chip,
   TableContainer,
-  Select,
   TablePagination,
   Backdrop,
   CircularProgress,
 } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
-import { width } from "@mui/system";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
 
@@ -34,14 +32,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
   "&:hover": {
     textDecoration: "underline",
   },
-}));
-
-const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nim: `105022010000`,
-  name: `Yuhu, Christopher Darell`,
-  prodi: `Informatika`,
-  year: `2021`,
-  status: `Active`,
 }));
 
 const AddSupervisor = () => {
@@ -63,7 +53,6 @@ const AddSupervisor = () => {
   const getSupervisor = async () => {
     try {
       const token = localStorage.getItem("token");
-      const headers = { Authorization: `Bearer ${token}` };
 
       const response = await axios.get(
         `${BASE_URL_API}/guidance-class/get-all-unassigned-teacher/list`,

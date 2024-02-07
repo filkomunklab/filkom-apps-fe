@@ -6,10 +6,6 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
   Paper,
-  Switch,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
 } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";

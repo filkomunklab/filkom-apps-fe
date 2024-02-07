@@ -2,11 +2,6 @@ import {
   Paper,
   Typography,
   Grid,
-  MenuItem,
-  Select,
-  FormControl,
-  ListSubheader,
-  InputLabel,
   Table,
   TableCell,
   TableRow,
@@ -27,9 +22,7 @@ import Div from "@jumbo/shared/Div";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
-import SearchLocal from "app/shared/SearchLocal";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { display } from "@mui/system";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",

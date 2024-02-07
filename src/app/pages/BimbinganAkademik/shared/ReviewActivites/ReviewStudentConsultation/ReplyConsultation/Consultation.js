@@ -65,7 +65,6 @@ const Consultation = () => {
   const handleCloseSecondModal = () => setOpenSecondModal(false);
 
   const [inputValue, setInputValue] = useState("");
-  const [submittedValue, setSubmittedValue] = useState("");
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {

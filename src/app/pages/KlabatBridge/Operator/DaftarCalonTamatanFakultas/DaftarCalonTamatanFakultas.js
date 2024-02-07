@@ -12,87 +12,24 @@ import {
   Typography,
   FormControl,
   InputLabel,
-  Pagination,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   Box,
-  Modal,
   TextField,
   Chip,
   Grid,
   Paper,
   Divider,
-  FormControlLabel,
-  Checkbox,
   ListSubheader,
   TablePagination,
   IconButton,
 } from "@mui/material";
-import ActionButton from "app/shared/ActionButton";
-import SearchGlobal from "app/shared/SearchGlobal";
 import React, { useState } from "react";
-import CreateIcon from "@mui/icons-material/Create";
-import MarkunreadIcon from "@mui/icons-material/Markunread";
-import axios from "axios";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
-import { Document } from "react-pdf";
 import SearchIcon from "@mui/icons-material/Search";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 1000,
-  bgcolor: "background.paper",
-  //border: '2px solid #000',
-  borderRadius: "5px",
-  boxShadow: 24,
-  p: 4,
-};
-
-const rows = [
-  { id: 1, name: "Row 1", mk: "Robotics", sks: "3", keterangan: "Summer 2023" },
-  {
-    id: 2,
-    name: "Row 2",
-    mk: "Research Project 2",
-    sks: "3",
-    keterangan: "Summer 2023",
-  },
-  {
-    id: 3,
-    name: "Row 3",
-    mk: "Machine Learning",
-    sks: "3",
-    keterangan: "Semester 1 2023/2024",
-  },
-  {
-    id: 4,
-    name: "Row 4",
-    mk: "ITPM",
-    sks: "3",
-    keterangan: "Semester 1 2023/2024",
-  },
-  {
-    id: 5,
-    name: "Row 5",
-    mk: "DevOps",
-    sks: "3",
-    keterangan: "Semester 1 2023/2024",
-  },
-  {
-    id: 6,
-    name: "Row 6",
-    mk: "Internet of Things",
-    sks: "3",
-    keterangan: "Semester 1 2023/2024",
-  },
-  // Add more rows as needed
-];
 
 const DaftarCalonTamatan = () => {
   const [data, setData] = useState([]);
@@ -102,16 +39,11 @@ const DaftarCalonTamatan = () => {
   const [filterValue, setFilterValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [searchBtn, setSearchBtn] = useState(false);
-  // const [filterBy, setFilterBy] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
-  const [dataRemainingClasses, setDataRemainingClasses] = useState([]);
-
-  // pagination
-  const [filter, setFilter] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_, newPage) => {
     setPage(newPage);
   };
 
@@ -526,8 +458,6 @@ const DaftarCalonTamatan = () => {
         // console.log(uniqueGraduatePlan);
       });
   }, [searchBtn]);
-
-  const getData = async () => {};
 
   function filterData() {
     // return data.filter(item => item["graduate_year"] === filterValue || item["major"] === filterValue);

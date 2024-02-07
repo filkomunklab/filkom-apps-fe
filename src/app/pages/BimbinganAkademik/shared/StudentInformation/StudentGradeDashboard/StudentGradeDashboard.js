@@ -9,8 +9,6 @@ import {
   Breadcrumbs,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 

@@ -11,11 +11,9 @@ import {
   Divider,
   Breadcrumbs,
   experimentalStyled as styled,
-  Grid,
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import SearchLocal from "./SearchLocal/SearchLocal";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",

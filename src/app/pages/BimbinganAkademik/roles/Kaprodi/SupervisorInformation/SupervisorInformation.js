@@ -11,17 +11,14 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  TextField,
-  IconButton,
   Popover,
   Backdrop,
   CircularProgress,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL_API } from "@jumbo/config/env";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { MoreVert } from "@mui/icons-material";
 
@@ -42,9 +39,6 @@ const SupervisorInformation = () => {
 
   const getDataSupervisor = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const headers = { Authorization: `Bearer ${token}` };
-
       const response = await axios.get(`${BASE_URL_API}/guidance-class`, {
         signal,
       });

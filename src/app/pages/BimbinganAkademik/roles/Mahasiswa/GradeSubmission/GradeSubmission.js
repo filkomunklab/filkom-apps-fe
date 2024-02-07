@@ -22,10 +22,8 @@ import {
 } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
-import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import { BASE_URL_API } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const style = {
