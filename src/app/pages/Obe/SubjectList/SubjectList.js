@@ -21,79 +21,53 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-function createData(
-  kurikulum,
-  totalMK,
-  programStudi,
-  tahunKurikulum,
-  ketuaProgramStudi
-) {
+function createData(namaMataKuliah, kodeMK, prodi, cpl) {
   return {
-    kurikulum,
-    totalMK,
-    programStudi,
-    tahunKurikulum,
-    ketuaProgramStudi
+    namaMataKuliah,
+    kodeMK,
+    prodi,
+    cpl
   };
 }
 
 const rows = [
   createData(
-    'Kurikulum 2020',
-    54,
+    'Business Process Reengineering / Rekayasa Proses Bisnis',
+    'IS3155',
     'Sistem Informasi',
-    2020,
-    'Stenly R. Pungus, MT, PhD'
+    ['S10', 'P12', 'P12', 'KU7', 'KU13', 'KK3']
   ),
   createData(
-    'Kurikulum 2018',
-    33,
+    'Business Process Reengineering / Rekayasa Proses Bisnis',
+    'IS3155',
     'Sistem Informasi',
-    2019,
-    'Stenly R. Pungus, MT, PhD'
+    ['S10', 'P12', 'P12', 'KU7', 'KU13', 'KK3']
   ),
   createData(
-    'Kurikulum 2020',
-    21,
-    'Informatika',
-    2020,
-    'Green Mandias, SKom, MCs'
-  ),
-  createData(
-    'Kurikulum 2018',
-    59,
-    'Informatika',
-    2018,
-    'Green Mandias, SKom, MCs'
-  ),
-  createData(
-    'Kurikulum 2020',
-    44,
-    'Teknologi Informasi',
-    2020,
-    'Oktoverano H. Lengkong, SKom, MDs, MM'
-  ),
-  createData(
-    'Kurikulum 2020',
-    54,
+    'Business Process Reengineering / Rekayasa Proses Bisnis',
+    'IS3155',
     'Sistem Informasi',
-    2020,
-    'Stenly R. Pungus, MT, PhD'
+    ['S10', 'P12', 'P12', 'KU7', 'KU13', 'KK3']
   ),
   createData(
-    'Kurikulum 2020',
-    54,
+    'Business Process Reengineering / Rekayasa Proses Bisnis',
+    'IS3155',
     'Sistem Informasi',
-    2020,
-    'Stenly R. Pungus, MT, PhD'
+    ['S10', 'P12', 'P12', 'KU7', 'KU13', 'KK3']
+  ),
+  createData(
+    'Business Process Reengineering / Rekayasa Proses Bisnis',
+    'IS3155',
+    'Sistem Informasi',
+    ['S10', 'P12', 'P12', 'KU7', 'KU13', 'KK3']
   )
 ];
 
-const CurriculumList = () => {
+const SubjectList = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const { major } = useParams();
+  const { major, kurikulum } = useParams();
   console.log(major);
   console.log(open);
 
@@ -182,7 +156,15 @@ const CurriculumList = () => {
       <div className='flex justify-between mb-3'>
         <div>
           <h1 className='text-2xl font-bold'>
-            LIST KURIKULUM FAKULTAS ILMU KOMPUTER
+            MATAKULIAH PRODI{' '}
+            {major === 'SI'
+              ? 'SISTEM INFORMASI'
+              : major === 'IF'
+              ? 'INFORMATIKA'
+              : major === 'TI'
+              ? 'TEKNOLOGI INFORMASI'
+              : ''}{' '}
+            - {kurikulum === '2020' ? 'KURIKULUM 2020' : 'KURIKULUM 2018'}
           </h1>
         </div>
         <div>
@@ -199,7 +181,7 @@ const CurriculumList = () => {
       </div>
       <div className='flex justify-between mb-3'>
         <div>
-          <h1 className='text-2xl font-bold'>List Kurikulum {major}</h1>
+          <h1 className='text-2xl font-bold'>List Data Matakuliah</h1>
         </div>
         <div>
           <TextField
@@ -219,27 +201,45 @@ const CurriculumList = () => {
             <TableHead>
               <TableRow>
                 <TableCell>No</TableCell>
-                <TableCell>Kurikulum</TableCell>
-                <TableCell>Total MK</TableCell>
-                <TableCell>Program Studi</TableCell>
-                <TableCell>Tahun Kurikulum</TableCell>
-                <TableCell>Ketua Program Studi</TableCell>
+                <TableCell>Nama Mata Kuliah</TableCell>
+                <TableCell>Kode MK</TableCell>
+                <TableCell>PRODI</TableCell>
+                <TableCell>CPL Terkait</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {rows.map((row, i) => (
                 <TableRow
-                  key={row.name}
+                  key={i}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                   <TableCell component='th' scope='row'>
                     {i + 1}
                   </TableCell>
-                  <TableCell>{row.kurikulum}</TableCell>
-                  <TableCell>{row.totalMK}</TableCell>
-                  <TableCell>{row.programStudi}</TableCell>
-                  <TableCell>{row.tahunKurikulum}</TableCell>
-                  <TableCell>{row.ketuaProgramStudi}</TableCell>
+                  <TableCell>{row.namaMataKuliah}</TableCell>
+                  <TableCell>{row.kodeMK}</TableCell>
+                  <TableCell>{row.prodi}</TableCell>
+                  <TableCell>
+                    <div className='flex gap-2'>
+                      {row.cpl.map((cpl, i) => (
+                        <span
+                          key={i}
+                          className={`!p-1 !rounded-md ${
+                            cpl[0] === 'S'
+                              ? 'bg-blue-200'
+                              : cpl[0] === 'P'
+                              ? 'bg-red-200'
+                              : cpl[0] === 'K' && cpl[1] === 'U'
+                              ? 'bg-green-200'
+                              : cpl[0] === 'K' && cpl[1] === 'K'
+                              ? 'bg-yellow-200'
+                              : ''
+                          }`}>
+                          {cpl}
+                        </span>
+                      ))}
+                    </div>
+                  </TableCell>
                   <TableCell>
                     <IconButton aria-label='delete' onClick={handleClick}>
                       <MoreVertIcon />
@@ -266,7 +266,7 @@ const CurriculumList = () => {
           </Table>
         </TableContainer>
       </div>
-      <div className='flex items-center justify-between'>
+      <div className='flex items-center justify-between mb-3'>
         <div>
           <span className='text-gray-400'>Showing 19 of 19</span>
         </div>
@@ -308,8 +308,51 @@ const CurriculumList = () => {
           </div>
         </div>
       </div>
+      <div className='mb-3 w-[600px]'>
+        <TableContainer>
+          <Table>
+            <TableHead className='bg-gray-200'>
+              <TableRow>
+                <TableCell>Warna</TableCell>
+                <TableCell>Variabel</TableCell>
+                <TableCell>Keterangan</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell>
+                  <div className='w-6 h-6 bg-blue-300 rounded-full' />
+                </TableCell>
+                <TableCell>S</TableCell>
+                <TableCell>SIKAP</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <div className='w-6 h-6 bg-red-300 rounded-full' />
+                </TableCell>
+                <TableCell>P</TableCell>
+                <TableCell>PENGETAHUAN</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <div className='w-6 h-6 bg-green-300 rounded-full' />
+                </TableCell>
+                <TableCell>KU</TableCell>
+                <TableCell>KETERAMPILAN UMUM</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <div className='w-6 h-6 bg-yellow-300 rounded-full' />
+                </TableCell>
+                <TableCell>KK</TableCell>
+                <TableCell>KETERAMPILAN KHUSUS</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
     </div>
   );
 };
 
-export default CurriculumList;
+export default SubjectList;
