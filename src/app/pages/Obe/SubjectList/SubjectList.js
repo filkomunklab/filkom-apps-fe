@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import { Button, TextField } from '@mui/material';
@@ -68,6 +68,7 @@ const SubjectList = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const { major, kurikulum } = useParams();
+  const navigate = useNavigate();
   console.log(major);
   console.log(open);
 
@@ -253,8 +254,13 @@ const SubjectList = () => {
                       MenuListProps={{
                         'aria-labelledby': 'basic-button'
                       }}>
-                      <MenuItem onClick={handleCloseMenu}>
-                        Lihat Mata Kuliah
+                      <MenuItem
+                        onClick={() =>
+                          navigate(
+                            `/obe/curriculum/list/${major}/${kurikulum}/mappingCPL/${row.kodeMK}`
+                          )
+                        }>
+                        Mapping CPL
                       </MenuItem>
                       <hr />
                       <MenuItem onClick={handleCloseMenu}>Delete</MenuItem>
