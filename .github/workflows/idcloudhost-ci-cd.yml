@@ -10,6 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      REACT_APP_IMAGES_PATH: ${{secrets.REACT_APP_IMAGES_PATH}}
+      REACT_APP_BASE_URL_API: ${{secrets.REACT_APP_BASE_URL_API}}
 
     steps:
       - name: Checkout
