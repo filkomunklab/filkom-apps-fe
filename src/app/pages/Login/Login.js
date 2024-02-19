@@ -1,19 +1,16 @@
 import {
-  Box,
   Button,
   Checkbox,
   CssBaseline,
   FormControlLabel,
   Grid,
-  TextField,
+  Stack,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@mui/styles";
 import Div from "@jumbo/shared/Div";
 import { ASSET_IMAGES } from "app/utils/constants/paths";
-import Logo from "app/shared/Logo";
-import { mainTheme } from "app/themes/main/default";
 import useJumboAuth from "@jumbo/hooks/useJumboAuth";
 import { useNavigate } from "react-router-dom";
 import authService from "app/services/Auth/auth.service";
@@ -21,6 +18,12 @@ import { Formik, Form } from "formik";
 import { LoadingButton } from "@mui/lab";
 import * as yup from "yup";
 import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
+import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
+import { useMediaQuery } from "@mui/material";
+
+import { FormAfterLoginStudent } from "./components";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import Swal from "sweetalert2";
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
@@ -29,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flex: 1,
     justifyContent: "space-between",
+    // overflow: "auto",
   },
   leftSide: {
     display: "flex",
@@ -48,26 +52,34 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.75)",
   },
+  "@media (max-width: 927px)": {
+    pageContainer: {
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    leftSide: {
+      display: "none",
+    },
+  },
 }));
 
 const signInSchema = yup.object({
   username: yup.string("Enter your username").required("Username is required"),
   password: yup.string("Enter your password").required("Password is required"),
+  loginAs: yup.string("Enter your password").required("Role is required"),
 });
 
 const Login = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [profileMahasiswa, setProfileMahasiswa] = useState([]);
+  const [userLogin, setUserLogin] = useState("");
+  const [tokenUser, setTokenUser] = useState("");
   const style = useStyles();
+  const maxWidth515 = useMediaQuery("(max-width: 515px)");
+
   const { setAuthToken } = useJumboAuth();
   const navigate = useNavigate();
-
-  const onSignIn = async (formdata) => {
-    const { accessToken, user } = await authService.signIn(formdata);
-    setAuthToken(accessToken);
-
-    localStorage.setItem("user", user.id);
-
-    navigate("/");
-  };
 
   return (
     <Div className={style.pageContainer}>
@@ -84,28 +96,96 @@ const Login = () => {
           validateOnChange={true}
           validationSchema={signInSchema}
           initialValues={{
-            username: "admin",
-            password: "123456",
+            username: "",
+            password: "",
+            loginAs: "",
           }}
-          onSubmit={(data, { setSubmitting }) => {
-            console.log(data);
+          onSubmit={async (data, { setSubmitting }) => {
             setSubmitting(true);
-            onSignIn(data);
-            setSubmitting(false);
+            try {
+              const { token, user } = await authService.signIn(data);
+
+              console.log(token, user);
+
+              if (user.role === "MAHASISWA") {
+                const response = await jwtAuthAxios.get(
+                  `student/biodata/check/${user.nim}`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  }
+                );
+
+                if (response.data.data.biodataCheck) {
+                  setAuthToken(token);
+
+                  console.log("ini user loh: ", user);
+                  localStorage.setItem("user", JSON.stringify(user));
+
+                  navigate("/");
+                } else {
+                  const response = await jwtAuthAxios.get(
+                    `student/${user.nim}`,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
+                  );
+                  const responseCurriculum = await jwtAuthAxios.get(
+                    `curriculum/${response.data.data.curriculumId}`,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
+                  );
+
+                  const data = {
+                    ...response.data.data,
+                    curriculum: responseCurriculum.data.data,
+                  };
+                  console.log("ini data: ", data);
+                  setProfileMahasiswa(data);
+                  setUserLogin(user);
+                  setOpenModal(true);
+                }
+              } else {
+                setAuthToken(token);
+
+                console.log("ini user loh: ", user);
+                localStorage.setItem("user", JSON.stringify(user));
+
+                navigate("/");
+              }
+            } catch (error) {
+              console.log(error);
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Username atau password salah",
+              });
+            } finally {
+              setSubmitting(false);
+            }
           }}
         >
           {({ isSubmitting }) => (
             <Form noValidate>
-              <Box
-                sx={{ backgroundColor: "white", width: "433px" }}
-                display={"flex"}
-                flexDirection={"column"}
-                gap={"30px"}
+              <Stack
+                sx={{
+                  backgroundColor: "white",
+                  width: maxWidth515 ? "275px" : "433px",
+                }}
               >
-                <Logo mini sx={{ height: "104px" }} />
                 <Typography
                   variant="h1"
-                  style={{ fontSize: "60px", fontWeight: 700 }}
+                  sx={{
+                    fontSize: maxWidth515 ? "40px" : "60px",
+                    fontWeight: 700,
+                    padding: maxWidth515 ? "15px 0 " : "5px 0",
+                  }}
                 >
                   Sign In
                 </Typography>
@@ -127,16 +207,42 @@ const Login = () => {
                       type="password"
                     />
                   </Grid>
+                  <Grid item>
+                    <JumboSelectField
+                      name="loginAs"
+                      label="Login as"
+                      sx={{
+                        width: maxWidth515 ? "275px" : "135px",
+                      }}
+                      options={[
+                        { value: "", label: "None" },
+                        { value: "admin", label: "Admin" },
+                        { value: "student", label: "Student" },
+                        { value: "employee", label: "Employee" },
+                      ]}
+                    />
+                  </Grid>
                   <Grid container justifyContent={"space-between"}>
                     <Grid item>
                       <FormControlLabel
                         control={<Checkbox />}
                         label={"Remember Me"}
+                        sx={{
+                          "& .MuiTypography-root": {
+                            fontSize: maxWidth515 ? "12px" : "15px",
+                            marginLeft: maxWidth515 ? "-4px" : "0px",
+                          },
+                        }}
                       />
                     </Grid>
                     <Grid item>
                       <Button
-                        sx={{ textTransform: "capitalize" }}
+                        sx={{
+                          fontSize: maxWidth515 ? "11px" : "14px",
+                          textTransform: "capitalize",
+                          paddingTop: maxWidth515 ? "11px" : "9px",
+                          paddingRight: maxWidth515 ? "0" : "0",
+                        }}
                         variant="text"
                       >
                         Forgot Password?
@@ -158,12 +264,28 @@ const Login = () => {
                     </LoadingButton>
                   </Grid>
                   <Grid item alignSelf={"center"}>
-                    <Button sx={{ textTransform: "capitalize" }} variant="text">
+                    <Button
+                      sx={{
+                        fontSize: maxWidth515 ? "12px" : "14px",
+                        textTransform: "capitalize",
+                      }}
+                      variant="text"
+                    >
                       Create an account
                     </Button>
                   </Grid>
+                  <Grid item alignSelf={"center"}>
+                    <a href="http://localhost:3000/">
+                      <Button
+                        sx={{ textTransform: "capitalize" }}
+                        variant="text"
+                      >
+                        Daftar Judul Skripsi
+                      </Button>
+                    </a>
+                  </Grid>
                 </Grid>
-              </Box>
+              </Stack>
             </Form>
           )}
         </Formik>
@@ -181,6 +303,13 @@ const Login = () => {
           />
         </Div>
       </Div>
+      <FormAfterLoginStudent
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        profileMahasiswa={profileMahasiswa}
+        userLogin={userLogin}
+        tokenUser={tokenUser}
+      />
     </Div>
   );
 };
