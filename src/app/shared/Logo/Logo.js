@@ -1,12 +1,11 @@
 import React from "react";
 import Div from "@jumbo/shared/Div";
-import Link from "@mui/material/Link";
 import { ASSET_IMAGES } from "../../utils/constants/paths";
 
 const Logo = ({ mini, mode, sx }) => {
   return (
     <Div sx={{ display: "inline-flex", ...sx }}>
-      <Link href={"/dashboards/misc"}>
+      <>
         {!mini ? (
           <img
             src={
@@ -26,7 +25,7 @@ const Logo = ({ mini, mode, sx }) => {
             alt="Jumbo React"
           />
         )}
-      </Link>
+      </>
     </Div>
   );
 };

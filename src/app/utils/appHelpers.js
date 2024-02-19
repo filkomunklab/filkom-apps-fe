@@ -7,18 +7,3 @@ export const getAssetPath = (url, size) => {
 
   return url;
 };
-
-const ACTION = {
-  GET: "get",
-  POST: "post",
-  PUT: "put",
-  DELETE: "delete",
-};
-
-// export const permissionCheck = (url) => {
-//     try {
-//         const programs = JSON.parse(localStorage.getItem('user')).role
-//     } catch (error) {
-
-//     }
-// }

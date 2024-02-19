@@ -57,7 +57,7 @@ export const mainTheme = {
     divider: "#DEE2E6",
     background: {
       paper: "#FFFFFF",
-      default: "#F5F7FA",
+      default: "#FFFFFF",
     },
     action: {
       active: "#475259",
@@ -94,7 +94,7 @@ export const mainTheme = {
     "0 5px 10px rgba(0, 0, 0, 0.175)",
   ],
   typography: {
-    fontFamily: "NoirPro, Arial",
+    fontFamily: "Inter, NoirPro, Arial",
     fontSize: 14,
     h1: {
       fontSize: "1.5rem",
