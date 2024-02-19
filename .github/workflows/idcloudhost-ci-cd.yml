@@ -44,6 +44,7 @@ jobs:
       - name: SSH and run deploy docker compose script
         uses: appleboy/ssh-action@master
         with:
+          command_timeout: 40m
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
