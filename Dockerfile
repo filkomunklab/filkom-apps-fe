@@ -16,8 +16,11 @@ COPY . .
 # Build the React app
 RUN yarn build
 
+# Install serve to run the app
+RUN yarn global add serve
+
 # Expose the port that the app will run on
 EXPOSE 3000
 
 # Define the command to run the app
-CMD ["yarn", "start"]
+CMD [ "serve", "-s", "build"]
