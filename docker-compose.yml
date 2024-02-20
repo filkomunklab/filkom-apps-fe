@@ -1,10 +1,12 @@
 version: "3"
 services:
   app:
+    env_file:
+      - .env
     image: darellyuhu/filkomapp-fe
     ports:
       - 3000:3000
     command: /bin/bash -c "yarn add global serve && serve -s build"
-    environment:
-      - REACT_APP_IMAGES_PATH=${REACT_APP_IMAGES_PATH}
-      - REACT_APP_API_URL=${REACT_APP_BASE_URL_API}
+    # environment:
+    #   - REACT_APP_IMAGES_PATH=${REACT_APP_IMAGES_PATH}
+    #   - REACT_APP_API_URL=${REACT_APP_BASE_URL_API}
