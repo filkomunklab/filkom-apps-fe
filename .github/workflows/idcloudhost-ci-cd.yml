@@ -18,14 +18,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build & push Docker image
-        uses: mr-smithers-excellent/docker-build-push@v6
-        with:
-          image: darellyuhu/filkomapp-fe
-          tags: latest
-          registry: docker.io
-          username: ${{secrets.DOCKER_USERNAME}}
-          password: ${{secrets.DOCKER_PASSWORD}}
+      - name: Build & push Docker image using compose
+        run: |
+          echo "REACT_APP_IMAGES_PATH=$REACT_APP_IMAGES_PATH" > .env
+          echo "REACT_APP_BASE_URL_API=$REACT_APP_BASE_URL_API" >> .env
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker comopse -f docker-compose.yml build
+          docker comopse -f docker-compose.yml push
+          rm .env
 
   deploy:
     runs-on: ubuntu-latest
