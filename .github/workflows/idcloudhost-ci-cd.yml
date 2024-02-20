@@ -56,6 +56,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           envs: REACT_APP_IMAGES_PATH, REACT_APP_BASE_URL_API
           script: |
+            cd ~
             rm .env
             touch .env
             echo "this is $REACT_APP_IMAGES_PATH"
