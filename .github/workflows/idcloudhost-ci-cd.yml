@@ -57,7 +57,9 @@ jobs:
           envs: REACT_APP_IMAGES_PATH, REACT_APP_BASE_URL_API
           script: |
             touch .env
-            echo "REACT_APP_IMAGES_PATH=$REACT_APP_IMAGES_PATH" > .env
+            echo "this is $REACT_APP_IMAGES_PATH"
+            echo "this is $REACT_APP_BASE_URL_API"
+            echo "REACT_APP_IMAGES_PATH=$REACT_APP_IMAGES_PATH" >> .env
             echo "REACT_APP_BASE_URL_API=$REACT_APP_BASE_URL_API" >> .env
             sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             sudo docker compose down
