@@ -5,7 +5,7 @@ services:
     image: darellyuhu/filkomapp-fe
     ports:
       - 3000:3000
-    command: /bin/bash -c "yarn add global serve && serve -s build"
+    command: /bin/bash -c "rm -rf node_modules && yarn install --frozen-lockfile && yarn build && yarn add global serve && serve -s build"
     # environment:
     #   - REACT_APP_IMAGES_PATH=${REACT_APP_IMAGES_PATH}
     #   - REACT_APP_API_URL=${REACT_APP_BASE_URL_API}
