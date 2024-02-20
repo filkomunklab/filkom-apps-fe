@@ -18,16 +18,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install Compose
-        uses: ndeloof/install-compose-action@v0.0.1
-
       - name: Build & push Docker image using compose
         run: |
           echo "REACT_APP_IMAGES_PATH=$REACT_APP_IMAGES_PATH" > .env
           echo "REACT_APP_BASE_URL_API=$REACT_APP_BASE_URL_API" >> .env
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker comopse --file docker-compose.yml build
-          docker comopse --file docker-compose.yml push
+          docker compose --file docker-compose.yml build
+          docker compose --file docker-compose.yml push
           rm .env
 
   deploy:
