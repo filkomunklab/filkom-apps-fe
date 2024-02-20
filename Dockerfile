@@ -1,6 +1,10 @@
 # Use an official Node.js runtime as the base image
 FROM node:18
 
+# Set the environment variable
+ENV REACT_APP_IMAGES_PATH=/images
+ENV REACT_APP_BASE_URL_API=http://103.193.177.131:3000/api/v1
+
 # Set the working directory in the container
 WORKDIR /app
 
