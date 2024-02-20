@@ -46,12 +46,19 @@ jobs:
 
       - name: SSH and run deploy docker compose script
         uses: appleboy/ssh-action@master
+        env:
+          REACT_APP_IMAGES_PATH: ${{secrets.REACT_APP_IMAGES_PATH}}
+          REACT_APP_BASE_URL_API: ${{secrets.REACT_APP_BASE_URL_API}}
         with:
           command_timeout: 60m
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
+          envs: REACT_APP_IMAGES_PATH, REACT_APP_BASE_URL_API
           script: |
+            touch .env
+            echo "REACT_APP_IMAGES_PATH=$REACT_APP_IMAGES_PATH" > .env
+            echo "REACT_APP_BASE_URL_API=$REACT_APP_BASE_URL_API" >> .env
             sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             sudo docker compose down
             sudo docker compose pull
