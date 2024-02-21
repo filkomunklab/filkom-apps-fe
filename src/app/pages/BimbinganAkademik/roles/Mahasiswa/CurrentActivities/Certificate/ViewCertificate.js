@@ -37,53 +37,6 @@ const CertificateWaiting = () => {
   const pdfURL = pathFile;
   console.log("ini pdf url", pdfURL);
 
-  //ini test for lgsg tarek dpe data dari server
-  {
-    /* const controller = new AbortController();
-  const signal = controller.signal;
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { id } = location?.state || "-";
-  const [certificateDetailsData, setCertificateDetailsData] = useState(null);
-
-  const getCertificateDetails = async () => {
-    try {
-      const response = await jwtAuthAxios.get(`/certificate/student/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal,
-      });
-
-      const { status, data } = response.data;
-      if (status === "OK") {
-        setCertificateDetailsData(data);
-      } else {
-        console.log("status result tidak ok", response);
-      }
-    } catch (error) {
-      if (error.code === "ERR_CANCELED") {
-        console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
-      } else {
-        console.log("ini error: ", error);
-        return;
-      }
-    }
-  };
-
-  useEffect(() => {
-    getCertificateDetails();
-    return () => controller.abort();
-  }, [id]);
-  const pdfURL = certificateDetailsData?.pathFile; */
-  }
-
   const handleClick = (event) => {
     navigate("/bimbingan-akademik/current-activities");
   };

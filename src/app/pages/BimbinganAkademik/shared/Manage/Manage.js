@@ -36,6 +36,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
 import { MoreVert } from "@mui/icons-material";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const styleModal = {
   position: "absolute",
@@ -134,13 +138,14 @@ const Manage = () => {
 
   //handle error
   const handleError = (error) => {
-    if (
-      error.response &&
-      error.response.status >= 401 &&
-      error.response.status <= 403
-    ) {
-      console.log("You don't have permission to access this page");
-      navigate(`/`);
+    if (error.response && error.response.status === 403) {
+      handlePermissionError();
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      return;
+    } else if (error.response && error.response.status === 401) {
+      handleAuthenticationError();
     } else {
       console.log("ini error: ", error);
     }
@@ -702,12 +707,16 @@ const Manage = () => {
                           </TableCell>
                           <TableCell
                             sx={{
-                              width: "200px",
+                              width: "150px",
                             }}
                           >
                             {value.isOpen ? "Open" : "Closed"}
                           </TableCell>
-                          <TableCell>
+                          <TableCell
+                            sx={{
+                              width: "150px",
+                            }}
+                          >
                             <MoreVert
                               aria-describedby={value.id}
                               onClick={(e) => {
@@ -1216,11 +1225,7 @@ const Manage = () => {
                               }
                             )}
                           </TableCell>
-                          <TableCell
-                            sx={{
-                              width: "200px",
-                            }}
-                          >
+                          <TableCell sx={{ width: "200px" }}>
                             {value.major === "IF"
                               ? "Informatics"
                               : value.major === "SI"
@@ -1229,25 +1234,13 @@ const Manage = () => {
                               ? "Information Technology"
                               : value.major}
                           </TableCell>
-                          <TableCell
-                            sx={{
-                              width: "130px",
-                            }}
-                          >
+                          <TableCell sx={{ width: "130px" }}>
                             {value.semester}
                           </TableCell>
-                          <TableCell
-                            sx={{
-                              width: "170px",
-                            }}
-                          >
+                          <TableCell sx={{ width: "170px" }}>
                             {value.semester_period}
                           </TableCell>
-                          <TableCell
-                            sx={{
-                              width: "200px",
-                            }}
-                          >
+                          <TableCell sx={{ width: "200px" }}>
                             {new Date(value.due_date).toLocaleDateString(
                               "en-US",
                               {
@@ -1257,14 +1250,10 @@ const Manage = () => {
                               }
                             )}
                           </TableCell>
-                          <TableCell
-                            sx={{
-                              width: "100px",
-                            }}
-                          >
+                          <TableCell sx={{ width: "150px" }}>
                             {value.isOpen ? "Open" : "Closed"}
                           </TableCell>
-                          <TableCell>
+                          <TableCell sx={{ width: "150px" }}>
                             <MoreVert
                               aria-describedby={value.id}
                               onClick={(e) => {

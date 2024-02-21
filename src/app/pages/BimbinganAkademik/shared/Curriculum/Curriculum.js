@@ -32,6 +32,10 @@ import FileSaver from "file-saver";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import SuccessOrError from "../../components/Modal/SuccessOrError";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const styleCurriculum = {
   position: "absolute",
@@ -141,14 +145,14 @@ const Curriculum = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         return;
@@ -252,14 +256,14 @@ const Curriculum = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         return;
@@ -280,14 +284,14 @@ const Curriculum = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         return;
@@ -335,13 +339,17 @@ const Curriculum = () => {
     const inputValue = event.target.value;
 
     if (!isNaN(Number(inputValue))) {
-      setSelectedYear(inputValue);
+      const formattedValue = inputValue.slice(0, 4);
+      setSelectedYear(formattedValue);
     }
   };
 
   const handleOpenFirstModal = (event) => {
     if (!selectedProdi || !selectedYear || !selectedFile) {
       alert("Please fill the field first");
+      return;
+    } else if (selectedYear.length !== 4) {
+      alert("Year must have exactly 4 digits");
       return;
     } else {
       setOpenFirstModal(true);
@@ -779,7 +787,7 @@ const Curriculum = () => {
           MenuProps={{
             PaperProps: {
               style: {
-                maxHeight: "40%",
+                maxHeight: "30vh",
               },
             },
           }}
@@ -907,7 +915,7 @@ const Curriculum = () => {
         {curriculum === "selectCurriculum" ? (
           ""
         ) : (
-          <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
+          <TableContainer sx={{ maxHeight: "55vh" }} component={Paper}>
             <Table>
               <TableHead
                 sx={{
