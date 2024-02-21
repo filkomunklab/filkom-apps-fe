@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as the base image
-FROM node:18
+FROM node:18 as build-stage
 
 # Set the environment variable
 ARG REACT_APP_IMAGES_PATH
@@ -26,8 +26,16 @@ RUN yarn build
 # Install serve to run the app
 RUN yarn global add serve
 
+FROM nginx:latest
+
+# Copy the build folder from the previous stage to the new stage
+COPY --from=build-stage /app/build /usr/share/nginx/html
+
+# Copy the nginx configuration file to the container
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Expose the port that the app will run on
-EXPOSE 3000
+EXPOSE 80
 
 # Define the command to run the app
-CMD serve -s build
+CMD ["nginx", "-g", "daemon off;"]
