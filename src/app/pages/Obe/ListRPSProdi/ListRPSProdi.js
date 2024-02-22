@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { Button } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
@@ -16,9 +18,18 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 
-const ListRPS = () => {
+const ListRPSProdi = () => {
   const { major } = useParams();
-  console.log(major);
+
+  let prodiName;
+
+  if (major === "IF") {
+    prodiName = "INFORMATIKA";
+  } else if (major === "SI") {
+    prodiName = "SISTEM INFORMASI";
+  } else if (major === "DKV") {
+    prodiName = "TEKNOLOGI INFORMASI";
+  }
 
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -69,7 +80,7 @@ const ListRPS = () => {
     { id: "kodeMK", label: "Kode MK", minWidth: 150 },
     { id: "prodi", label: "Prodi", minWidth: 150 },
     { id: "semester", label: "Semester", minWidth: 150 },
-    { id: "status", label: "Status", minWidth: 150 },
+    { id: "direvisi", label: "Direvisi", minWidth: 150 },
     { id: "action", label: "Action", minWidth: 150 },
   ];
 
@@ -80,7 +91,7 @@ const ListRPS = () => {
     kodeMK,
     prodi,
     semester,
-    status
+    direvisi
   ) {
     return {
       no,
@@ -89,7 +100,7 @@ const ListRPS = () => {
       kodeMK,
       prodi,
       semester,
-      status,
+      direvisi,
     };
   }
 
@@ -101,7 +112,7 @@ const ListRPS = () => {
       "IS3152",
       "Sistem Informasi",
       "5",
-      "Available"
+      "9/8/2023"
     ),
     createData(
       2,
@@ -110,7 +121,7 @@ const ListRPS = () => {
       "IS3154",
       "Sistem Informasi",
       "5",
-      "Available"
+      "9/8/2023"
     ),
     createData(
       3,
@@ -119,7 +130,7 @@ const ListRPS = () => {
       "IS3155",
       "Sistem Informasi",
       "5",
-      "Unvailable"
+      "9/8/2023"
     ),
     createData(
       4,
@@ -128,7 +139,7 @@ const ListRPS = () => {
       "IS3155",
       "Sistem Informasi",
       "5",
-      "Available"
+      "9/8/2023"
     ),
     createData(
       5,
@@ -137,7 +148,7 @@ const ListRPS = () => {
       "IS3155",
       "Sistem Informasi",
       "5",
-      "Unvailable"
+      "9/8/2023"
     ),
     createData(
       6,
@@ -146,7 +157,7 @@ const ListRPS = () => {
       "IS3155",
       "Sistem Informasi",
       "5",
-      "Available"
+      "9/8/2023"
     ),
     createData(
       7,
@@ -155,7 +166,7 @@ const ListRPS = () => {
       "IS3151",
       "Sistem Informasi",
       "5",
-      "Available"
+      "9/8/2023"
     ),
     // Add more rows as needed
   ];
@@ -179,32 +190,37 @@ const ListRPS = () => {
     setSelectedKodeMK(null);
   };
 
-  const handleViewReport = () => {
+  const handleView = () => {
     const currentPath = window.location.pathname;
-    const newPath = `${currentPath}/reportCPL/${selectedKodeMK}`;
+    const newPath = `${currentPath}/${selectedKodeMK}`;
     window.location.href = newPath;
   };
 
   return (
     <div className="">
-      <div className="flex flex-col mb-12">
-        <h1 className="text-3xl font-semibold">
-          RANCANGAN PEMBELAJARAN SEMESTER
-        </h1>
-        <h2 className="text-xl font-medium">PRODI {major} - KURIKULUM 2020</h2>
+      <div className="flex flex-row justify-between items-center mb-10">
+        <div>
+          <h1 className="text-3xl font-bold">
+            RANCANGAN PEMBELAJARAN SEMESTER
+          </h1>
+          <h2 className="text-2xl font-semibold">PRODI {prodiName}</h2>
+        </div>
+        <div>
+          <Button
+            variant="contained"
+            color="primary"
+            className="!rounded-xl"
+            size="large"
+            endIcon={<AddIcon />}
+          >
+            Buat RPS
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-row items-center justify-between mt-4 mb-6">
         <h1 className="text-3xl">Daftar Rancangan Pembelajaran Semester</h1>
         <div className="flex items-center">
-          <div>
-            <p className="text-lg font-medium ">
-              Total RPS :{" "}
-              <span className="font-extrabold text-blue-800">
-                {rows.length} RPS
-              </span>
-            </p>
-          </div>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -243,19 +259,7 @@ const ListRPS = () => {
                   <TableRow hover key={row.no}>
                     {columns.map((column) => (
                       <TableCell key={column.id} align="left">
-                        {column.id === "status" ? (
-                          <div
-                            className={`${
-                              row.status === "Available"
-                                ? "bg-green-500 bg-opacity-30"
-                                : "bg-red-500 bg-opacity-30"
-                            } rounded-full text-center text-${
-                              row.status === "Available" ? "green" : "red"
-                            }-800`}
-                          >
-                            {row[column.id]}
-                          </div>
-                        ) : column.id === "action" ? (
+                        {column.id === "action" ? (
                           <div>
                             <IconButton
                               aria-label="Action"
@@ -274,9 +278,7 @@ const ListRPS = () => {
                                 "aria-labelledby": "basic-button",
                               }}
                             >
-                              <MenuItem onClick={handleViewReport}>
-                                View Report CPL
-                              </MenuItem>
+                              <MenuItem onClick={handleView}>View</MenuItem>
                               <MenuItem onClick={handleMenuClose}>
                                 Edit
                               </MenuItem>
@@ -319,4 +321,4 @@ const ListRPS = () => {
   );
 };
 
-export default ListRPS;
+export default ListRPSProdi;

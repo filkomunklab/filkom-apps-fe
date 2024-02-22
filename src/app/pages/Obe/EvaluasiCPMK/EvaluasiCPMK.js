@@ -15,8 +15,9 @@ import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { func } from "prop-types";
 
-const ListRPS = () => {
+const EvaluasiCPMK = () => {
   const { major } = useParams();
   console.log(major);
 
@@ -65,10 +66,10 @@ const ListRPS = () => {
   const columns = [
     { id: "no", label: "No", minWidth: 50 },
     { id: "namaMataKuliah", label: "Nama Mata Kuliah", minWidth: 150 },
-    { id: "dosen", label: "Dosen", minWidth: 150 },
     { id: "kodeMK", label: "Kode MK", minWidth: 150 },
-    { id: "prodi", label: "Prodi", minWidth: 150 },
     { id: "semester", label: "Semester", minWidth: 150 },
+    { id: "prodi", label: "Program Studi", minWidth: 150 },
+    { id: "jumlahSiwwa", label: "Jumlah Siwwa", minWidth: 150 },
     { id: "status", label: "Status", minWidth: 150 },
     { id: "action", label: "Action", minWidth: 150 },
   ];
@@ -76,19 +77,19 @@ const ListRPS = () => {
   function createData(
     no,
     namaMataKuliah,
-    dosen,
     kodeMK,
-    prodi,
     semester,
+    prodi,
+    jumlahSiwwa,
     status
   ) {
     return {
       no,
       namaMataKuliah,
-      dosen,
       kodeMK,
-      prodi,
       semester,
+      prodi,
+      jumlahSiwwa,
       status,
     };
   }
@@ -96,68 +97,58 @@ const ListRPS = () => {
   const rows = [
     createData(
       1,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3152",
-      "Sistem Informasi",
+      "Pemrograman Berbasis Objek",
+      "TIK101",
       "5",
+      "Teknik Informatika",
+      40,
       "Available"
     ),
     createData(
       2,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3154",
-      "Sistem Informasi",
+      "Pemrograman Berbasis Web",
+      "TIK102",
       "5",
+      "Teknik Informatika",
+      40,
       "Available"
     ),
     createData(
       3,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3155",
-      "Sistem Informasi",
+      "Pemrograman Berbasis Mobile",
+      "TIK103",
       "5",
-      "Unvailable"
+      "Teknik Informatika",
+      40,
+      "Available"
     ),
     createData(
       4,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3155",
-      "Sistem Informasi",
+      "Pemrograman Berbasis Desktop",
+      "TIK104",
       "5",
+      "Teknik Informatika",
+      40,
       "Available"
     ),
     createData(
       5,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3155",
-      "Sistem Informasi",
+      "Pemrograman Berbasis Cloud",
+      "TIK105",
       "5",
-      "Unvailable"
+      "Teknik Informatika",
+      40,
+      "Available"
     ),
     createData(
       6,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3155",
-      "Sistem Informasi",
+      "Pemrograman Berbasis AI",
+      "TIK106",
       "5",
+      "Teknik Informatika",
+      40,
       "Available"
     ),
-    createData(
-      7,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3151",
-      "Sistem Informasi",
-      "5",
-      "Available"
-    ),
-    // Add more rows as needed
   ];
 
   const [page, setPage] = useState(0);
@@ -181,30 +172,54 @@ const ListRPS = () => {
 
   const handleViewReport = () => {
     const currentPath = window.location.pathname;
-    const newPath = `${currentPath}/reportCPL/${selectedKodeMK}`;
+    const newPath = `${currentPath}/reportCPMK/${selectedKodeMK}`;
     window.location.href = newPath;
   };
 
   return (
     <div className="">
-      <div className="flex flex-col mb-12">
+      <div className="flex flex-col mb-10">
         <h1 className="text-3xl font-semibold">
-          RANCANGAN PEMBELAJARAN SEMESTER
+          PENILAIAN EVALUASI CAPAIAN PEMBELAJARAN MATAKULIAH
         </h1>
-        <h2 className="text-xl font-medium">PRODI {major} - KURIKULUM 2020</h2>
+      </div>
+
+      <div className="bg-secondary rounded-lg p-5 flex flex-row mb-10">
+        <table className="w-full">
+          <tbody>
+            <tr>
+              <td className="text-lg font-semibold w-40">Dosen</td>
+              <td className="text-lg">: Andrew Tanny Liem, SSi., MT., PhD</td>
+            </tr>
+            <tr>
+              <td className="text-lg font-semibold w-40">Total SKS</td>
+              <td className="text-lg">: 18 SKS</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table className="w-full">
+          <tbody>
+            <tr>
+              <td className="text-lg font-semibold w-40">Total Mahasiswa</td>
+              <td className="text-lg">: 157 Mahasiswa</td>
+            </tr>
+            <tr>
+              <td className="text-lg font-semibold w-40">Total Matkul</td>
+              <td className="text-lg">: 6 Matakuliah</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <div className="flex flex-row items-center justify-between mt-4 mb-6">
-        <h1 className="text-3xl">Daftar Rancangan Pembelajaran Semester</h1>
+        <h1 className="text-3xl font-bold">
+          Daftar Matakuliah{" "}
+          <span className="text-2xl font-medium">
+            (Rancangan Pembelajaran Semester)
+          </span>
+        </h1>
         <div className="flex items-center">
-          <div>
-            <p className="text-lg font-medium ">
-              Total RPS :{" "}
-              <span className="font-extrabold text-blue-800">
-                {rows.length} RPS
-              </span>
-            </p>
-          </div>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -275,7 +290,7 @@ const ListRPS = () => {
                               }}
                             >
                               <MenuItem onClick={handleViewReport}>
-                                View Report CPL
+                                View Report CPMK
                               </MenuItem>
                               <MenuItem onClick={handleMenuClose}>
                                 Edit
@@ -319,4 +334,4 @@ const ListRPS = () => {
   );
 };
 
-export default ListRPS;
+export default EvaluasiCPMK;

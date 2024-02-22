@@ -586,6 +586,46 @@ export const dekanMenus = [
           },
         ],
       },
+      {
+        label: "Evaluasi CPL",
+        type: "collapsible",
+        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Informatics",
+            type: "nav-item",
+            uri: "/obe/evaluasi-cpl/list/IF",
+          },
+          {
+            label: "Information System",
+            type: "nav-item",
+            uri: "/obe/evaluasi-cpl/list/SI",
+          },
+          {
+            label: "Information Technology",
+            type: "nav-item",
+            uri: "/obe/evaluasi-cpl/list/DKV",
+          },
+        ],
+      },
+      {
+        label: "Evaluasi RPS",
+        type: "nav-item",
+        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+        uri: "/obe/evaluasi-rps",
+      },
+      {
+        label: "Evaluasi CPMK",
+        type: "nav-item",
+        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+        uri: "/obe/evaluasi-cpmk",
+      },
+      {
+        label: "List RPS",
+        type: "nav-item",
+        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+        uri: "/obe/list-rps",
+      },
     ],
   },
 ];
