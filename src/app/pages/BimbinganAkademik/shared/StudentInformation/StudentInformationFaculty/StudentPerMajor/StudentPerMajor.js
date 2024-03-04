@@ -203,8 +203,6 @@ const StudentPerMajor = () => {
             }}
             value={search}
             onChange={handleSearch}
-            // value={search}
-            // onChange={handleSearch}
           />
         </Grid>
 
@@ -369,7 +367,7 @@ const TableItem = ({ item, index }) => {
           `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${getMajorDisplayName(
             major
           )}/${nim}`,
-          { state: { studentNim: nim } }
+          { state: { studentNim: nim, major } }
         );
         break;
       case "grade":
@@ -382,6 +380,7 @@ const TableItem = ({ item, index }) => {
               studentNim: nim,
               firstName: firstName,
               lastName: lastName,
+              major,
             },
           }
         );
@@ -396,6 +395,7 @@ const TableItem = ({ item, index }) => {
               studentNim: nim,
               firstName: firstName,
               lastName: lastName,
+              major,
             },
           }
         );

@@ -61,12 +61,14 @@ const Certificate = () => {
   //inisialisasi
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
+  const [level, setLevel] = useState("");
   const [description, setDescription] = useState("");
   const [buffer, setBuffer] = useState("");
   const [selectedFileName, setSelectedFileName] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showLabel, setShowLabel] = useState(true);
+  const [showLabel2, setShowLabel2] = useState(true);
 
   //modal
   const [openFirstModal, setOpenFirstModal] = useState(false);
@@ -124,7 +126,7 @@ const Certificate = () => {
     const trimmedDescription = description.trim();
     setDescription(trimmedDescription);
 
-    if (!trimmedTitle || !category || !selectedFile) {
+    if (!trimmedTitle || !category || !level || !selectedFile) {
       alert("Please fill the field first.");
     } else {
       handleOpenFirstModal();
@@ -171,7 +173,8 @@ const Certificate = () => {
     };
     const data = {
       title,
-      category,
+      Certificate_Category: category,
+      Certificate_Level: level,
       description,
       certificateFile,
       employeeNik,
@@ -186,7 +189,9 @@ const Certificate = () => {
       if (result.data.status === "OK") {
         setTitle("");
         setCategory("");
+        setLevel("");
         setShowLabel(true);
+        setShowLabel2(true);
         setDescription("");
         setSelectedFile(null);
         setSelectedFileName("");
@@ -209,7 +214,9 @@ const Certificate = () => {
         handleOpenErrorModal();
         setTitle("");
         setCategory("");
+        setLevel("");
         setShowLabel(true);
+        setShowLabel2(true);
         setDescription("");
         setSelectedFile(null);
         setSelectedFileName("");
@@ -263,7 +270,7 @@ const Certificate = () => {
             />
           </Stack>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Stack spacing={2} sx={{ paddingBottom: 3 }}>
             <RTypography sx={{ paddingBottom: "5px" }}>Category</RTypography>
             <TextField
@@ -288,13 +295,54 @@ const Certificate = () => {
                 shrink: false,
               }}
             >
-              <MenuItem value="local">Local</MenuItem>
-              <MenuItem value="national">National</MenuItem>
-              <MenuItem value="international">International</MenuItem>
+              <MenuItem value="PENALARAN_KEILMUAN">
+                Reasoning and Scholarship
+              </MenuItem>
+              <MenuItem value="ORGANISASI_KEPEMIMPINAN">
+                Organization and Leadership
+              </MenuItem>
+              <MenuItem value="BAKAT_MINAT">Talents and Interests</MenuItem>
+              <MenuItem value="PENGABDIAN_MASYARAKAT">
+                Community Service
+              </MenuItem>
+              <MenuItem value="OTHER">Others</MenuItem>
             </TextField>
           </Stack>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
+          <Stack spacing={2} sx={{ paddingBottom: 3 }}>
+            <RTypography sx={{ paddingBottom: "5px" }}>Level</RTypography>
+            <TextField
+              sx={{ width: "100%", backgroundColor: "white" }}
+              id="outlined-select-level"
+              select
+              label={
+                showLabel2 ? (
+                  <span style={{ color: "#9E9E9E" }}>
+                    Select Certificate Level
+                  </span>
+                ) : (
+                  ""
+                )
+              }
+              value={level}
+              onChange={(event) => {
+                setLevel(event.target.value);
+                setShowLabel2(false);
+              }}
+              InputLabelProps={{
+                shrink: false,
+              }}
+            >
+              <MenuItem value="REGION">Region</MenuItem>
+              <MenuItem value="NATIONAL">National</MenuItem>
+              <MenuItem value="INTERNATIONAL">International</MenuItem>
+              <MenuItem value="UNIVERSITY">University</MenuItem>
+              <MenuItem value="MAJOR">Study Program</MenuItem>
+            </TextField>
+          </Stack>
+        </Grid>
+        <Grid item xs={12} md={4}>
           <Stack spacing={2} sx={{ paddingBottom: 3 }}>
             <RTypography sx={{ paddingBottom: "5px" }}>
               Certificate PDF

@@ -8,29 +8,32 @@ import Dashboard from "app/pages/BimbinganAkademik/shared/Dashboard/DashboardKap
 import History from "app/pages/BimbinganAkademik/shared/History/HistoryKaprodi";
 import StudentInformationMentored from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationMentored";
 import StudentInformationFaculty from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty";
-import StudentInformationFacultyPerMajor from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty/StudentPerMajor";
 import StudentProfile from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentProfile";
 import StudentCertificate from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentCertificate";
 import CertificateDetail from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentCertificate/CertificateDetail";
 import StudentGrade from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard/StudentGrade";
 import StudentGradeDashboard from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentGradeDashboard";
-import SupervisorInformation from "app/pages/BimbinganAkademik/shared/SupervisorInformation";
-import AdvisorProfile from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorProfile/AdvisorProfile";
-import AdvisorStudentProfile from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorProfile/StudentProfile";
-import AdvisorStudentGrade from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorProfile/StudentGradeDashboard";
-import AdvisorStudentGrade2 from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorProfile/StudentGradeDashboard/StudentGrade";
-import AdvisorStudentCertificate from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorProfile/StudentCertificate";
-import AdvisorStudentCertificate2 from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorProfile/StudentCertificate/CertificateDetail";
-import EditStudent from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorProfile/EditStudent";
-import AddSupervisor from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AddSupervisor";
-import StudentList from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AddSupervisor/AddStudent";
-import AdvisorHistory from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorHistory";
-import HistoryActivityAdvisor from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorHistory/HIstoryActivity";
-import HistoryGradeAdvisor from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorHistory/HistoryGrade";
-import HistoryPreRegistrationAdvisor from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorHistory/HistoryPreRegis";
-import HistoryCertificateAdvisor from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorHistory/HistoryCertificate";
-import HistoryConsultationAdvisor from "app/pages/BimbinganAkademik/shared/SupervisorInformation/AdvisorHistory/HistoryConsultation";
-
+import StudentInformationFacultyPerMajor from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty/StudentPerMajor";
+import StudentProfilePerMajor from "../pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty/StudentPerMajor/StudentProfile/StudentProfile";
+import StudentGradePerMajor from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty/StudentPerMajor/StudentGradeDashboard/StudentGrade/StudentGrade";
+import StudentCertificatePerMajor from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty/StudentPerMajor/StudentCertificate/StudentCertificate";
+import CertificateDetailPerMajor from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty/StudentPerMajor/StudentCertificate/CertificateDetail/CertificateDetail";
+import StudentGradeDashboardPerMajor from "app/pages/BimbinganAkademik/shared/StudentInformation/StudentInformationFaculty/StudentPerMajor/StudentGradeDashboard/StudentGradeDashboard";
+import SupervisorInformation from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/SupervisorInformation";
+import AdvisorProfile from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/AdvisorProfile";
+import AdvisorStudentProfile from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/StudentProfile";
+import AdvisorStudentGrade from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/StudentGradeDashboard";
+import AdvisorStudentGrade2 from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/StudentGradeDashboard/StudentGrade";
+import AdvisorStudentCertificate from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/StudentCertificate";
+import AdvisorStudentCertificate2 from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/StudentCertificate/CertificateDetail";
+import EditStudent from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorProfile/EditStudent";
+import AddSupervisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor";
+import StudentList from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor/AddStudent";
+import AdvisorHistory from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory";
+import HistoryActivityAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HIstoryActivity/HistoryActivity";
+import HistoryPreRegistrationAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HistoryPreRegis/ReviewPreRegistrationStudent";
+import HistoryCertificateAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HistoryCertificate/Certificate";
+import HistoryConsultationAdvisor from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AdvisorHistory/HistoryConsultation/ConsultationComplete";
 import CurrentActivities from "app/pages/BimbinganAkademik/shared/CurrentActivities";
 import ViewActivity from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewActivity/ViewActivity";
 import ViewConsultation from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewConsultation/ViewConsultation";
@@ -124,23 +127,23 @@ const kepalaProgramStudiRoutes = [
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/informatics/:id",
-    element: <Page component={StudentProfile} />,
+    element: <Page component={StudentProfilePerMajor} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/informatics/:id/grade",
-    element: <Page component={StudentGradeDashboard} />,
+    element: <Page component={StudentGradeDashboardPerMajor} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/informatics/:id/grade/:id",
-    element: <Page component={StudentGrade} />,
+    element: <Page component={StudentGradePerMajor} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/informatics/:id/certificate",
-    element: <Page component={StudentCertificate} />,
+    element: <Page component={StudentCertificatePerMajor} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/informatics/:id/certificate/:id",
-    element: <Page component={CertificateDetail} />,
+    element: <Page component={CertificateDetailPerMajor} />,
   },
 
   {
@@ -149,23 +152,23 @@ const kepalaProgramStudiRoutes = [
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-system/:id",
-    element: <Page component={StudentProfile} />,
+    element: <Page component={StudentProfilePerMajor} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-system/:id/grade",
-    element: <Page component={StudentGradeDashboard} />,
+    element: <Page component={StudentGradeDashboardPerMajor} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-system/:id/grade/:id",
-    element: <Page component={StudentGrade} />,
+    element: <Page component={StudentGradePerMajor} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-system/:id/certificate",
-    element: <Page component={StudentCertificate} />,
+    element: <Page component={StudentCertificatePerMajor} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-system/:id/certificate/:id",
-    element: <Page component={CertificateDetail} />,
+    element: <Page component={CertificateDetailPerMajor} />,
   },
 
   {
@@ -174,24 +177,25 @@ const kepalaProgramStudiRoutes = [
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-technology/:id",
-    element: <Page component={StudentProfile} />,
+    element: <Page component={StudentProfilePerMajor} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-technology/:id/grade",
-    element: <Page component={StudentGradeDashboard} />,
+    element: <Page component={StudentGradeDashboardPerMajor} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-technology/:id/grade/:id",
-    element: <Page component={StudentGrade} />,
+    element: <Page component={StudentGradePerMajor} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-technology/:id/certificate",
-    element: <Page component={StudentCertificate} />,
+    element: <Page component={StudentCertificatePerMajor} />,
   },
   {
     path: "/bimbingan-akademik/kaprodi/student-information/faculty-student/information-technology/:id/certificate/:id",
-    element: <Page component={CertificateDetail} />,
+    element: <Page component={CertificateDetailPerMajor} />,
   },
+
   {
     path: "/bimbingan-akademik/kaprodi/history",
     element: <Page component={History} />,
@@ -274,23 +278,19 @@ const kepalaProgramStudiRoutes = [
     element: <Page component={AdvisorHistory} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/:id/history-activity",
+    path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/:id/:id/history-activity",
     element: <Page component={HistoryActivityAdvisor} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/:id/history-grade",
-    element: <Page component={HistoryGradeAdvisor} />,
-  },
-  {
-    path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/:id/history-preregistration",
+    path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/:id/:id/history-preregistration",
     element: <Page component={HistoryPreRegistrationAdvisor} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/:id/history-certificate",
+    path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/:id/:id/history-certificate",
     element: <Page component={HistoryCertificateAdvisor} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/:id/history-consultation",
+    path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-history/:id/:id/history-consultation",
     element: <Page component={HistoryConsultationAdvisor} />,
   },
   {

@@ -64,31 +64,33 @@ const Profile = () => {
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Full Name</Typography>
             <Typography variant="h6" sx={textSyle}>
-              {`${dataProfile?.lastName}, ${dataProfile?.firstName}`}
+              {dataProfile?.lastName
+                ? `${dataProfile.lastName}, ${dataProfile.firstName}`
+                : "-"}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">NIDN</Typography>
             <Typography variant="h6" sx={textSyle}>
-              {dataProfile?.nidn}
+              {dataProfile?.nidn || "-"}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Email</Typography>
             <Typography variant="h6" sx={textSyle}>
-              {dataProfile?.email}
+              {dataProfile?.email || "-"}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Phone</Typography>
             <Typography variant="h6" sx={textSyle}>
-              {dataProfile?.phoneNum}
+              {dataProfile?.phoneNum || "-"}
             </Typography>
           </Grid>
           <Grid item xs={12} md={12}>
             <Typography variant="h6">Address</Typography>
             <Typography variant="h6" sx={textSyle}>
-              {dataProfile?.Address}
+              {dataProfile?.Address || "-"}
             </Typography>
           </Grid>
         </Grid>

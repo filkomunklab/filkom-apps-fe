@@ -8,14 +8,25 @@ import {
   ListItem,
   ListItemText,
   Divider,
+  Breadcrumbs,
+  experimentalStyled as styled,
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import {
   handlePermissionError,
   handleAuthenticationError,
 } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  color: "rgba(27, 43, 65, 0.69)",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -50,6 +61,8 @@ const History = (props) => {
   const controller = new AbortController();
   const signal = controller.signal;
 
+  const location = useLocation();
+  const { classID, nik, major, id } = location.state || {};
   const [value, setValue] = useState(0);
   const [dataActivity, setDataActivity] = useState([]);
   const [dataConsultation, setDataConsultation] = useState([]);
@@ -65,6 +78,7 @@ const History = (props) => {
 
   useEffect(() => {
     localStorage.setItem("historyTabValue", value);
+    console.log("Value:", value);
   }, [value]);
 
   //handle error
@@ -86,10 +100,6 @@ const History = (props) => {
 
   const getHistory = async () => {
     try {
-      const { nik, guidanceClassId, id } = JSON.parse(
-        localStorage.getItem("user")
-      );
-
       const resultActivity = await jwtAuthAxios.get(
         `/activity/history-for-advisor/${nik}`,
         {
@@ -107,7 +117,7 @@ const History = (props) => {
       );
 
       const resultCertificate = await jwtAuthAxios.get(
-        `/certificate/dosen/${guidanceClassId}`,
+        `/certificate/dosen/${classID}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -115,7 +125,7 @@ const History = (props) => {
       );
 
       const resultPreregis = await jwtAuthAxios.get(
-        `/pre-regist/history-for-advisor/${guidanceClassId}`,
+        `/pre-regist/history-for-advisor/${classID}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -131,7 +141,10 @@ const History = (props) => {
       const { status: preregisStatus, data: preregisData } =
         resultPreregis.data;
 
-      console.log("response result activity", resultActivity);
+      console.log("response result activityData", activityData);
+      console.log("response result consultationData", consultationData);
+      console.log("response result certificateData", certificateData);
+      console.log("response result preregisData", preregisData);
 
       if (activityStatus === "OK") {
         setDataActivity(activityData);
@@ -252,7 +265,7 @@ const History = (props) => {
   };
 
   const handleNavigateActivity = (value) => {
-    navigate(`activity`, { state: { activityId: value } });
+    navigate(`${value.id}/history-activity`, { state: { activityId: value } });
   };
 
   const handleNavigateConsultation = async (value) => {
@@ -265,17 +278,7 @@ const History = (props) => {
         }
       );
 
-      const { role } = JSON.parse(localStorage.getItem("user"));
-      let path = "";
-      if (role.includes("DEKAN")) {
-        path = "/bimbingan-akademik/dekan/history/consultation/";
-      } else if (role.includes("KAPRODI")) {
-        path = "/bimbingan-akademik/kaprodi/history/consultation/";
-      } else {
-        path = "/bimbingan-akademik/dosen-pembimbing/history/consultation/";
-      }
-
-      navigate(`${path}${value.id}`, {
+      navigate(`${value.id}/history-consultation`, {
         state: {
           consultationDetails: {
             studentName: consultationDetailsResult.data.data.student_name,
@@ -304,16 +307,6 @@ const History = (props) => {
         }
       );
 
-      const { role } = JSON.parse(localStorage.getItem("user"));
-      let pathh = "";
-      if (role.includes("DEKAN")) {
-        pathh = "/bimbingan-akademik/dekan/history/certificate/";
-      } else if (role.includes("KAPRODI")) {
-        pathh = "/bimbingan-akademik/kaprodi/history/certificate/";
-      } else {
-        pathh = "/bimbingan-akademik/dosen-pembimbing/history/certificate/";
-      }
-
       const {
         student,
         submitDate,
@@ -327,7 +320,7 @@ const History = (props) => {
         comments,
       } = certificateDetailsResult.data.data;
       navigate(
-        `${pathh}${value.id}`,
+        `${value.id}/history-certificate`,
         {
           state: {
             certificateDetails: {
@@ -366,18 +359,7 @@ const History = (props) => {
         }
       );
       const detail = preregisDetailsResult.data.data;
-      const { role } = JSON.parse(localStorage.getItem("user"));
-      let path = "";
-      console.log("hai ini role KAPRODI", role.includes("KAPRODI"));
-      console.log("hai ini role DEKAN", role.includes("DEKAN"));
-      if (role.includes("DEKAN")) {
-        path = "/bimbingan-akademik/dekan/history/pre-registration/";
-      } else if (role.includes("KAPRODI")) {
-        path = "/bimbingan-akademik/kaprodi/history/pre-registration/";
-      } else {
-        path = "/bimbingan-akademik/dosen-pembimbing/history/pre-registration/";
-      }
-      navigate(`${path}${value.id}`, {
+      navigate(`${value.id}/history-preregistration`, {
         state: {
           preregisDetails: {
             id: detail.id,
@@ -400,7 +382,17 @@ const History = (props) => {
 
   return (
     <div>
-      <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
+      <div role="presentation" sx={{ paddingBottom: "15px" }}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink to="/bimbingan-akademik/kaprodi/supervisor-information/">
+            Supervisor Information
+          </StyledLink>
+          <Typography color="text.primary">History</Typography>
+        </Breadcrumbs>
+      </div>
+      <Typography
+        sx={{ fontSize: "24px", fontWeight: 500, paddingTop: "20px" }}
+      >
         History
       </Typography>
       <Typography
@@ -478,7 +470,7 @@ const History = (props) => {
                       key={index}
                       sx={{
                         width: "100%",
-
+                        maxWidth: 2000,
                         bgcolor: "background.paper",
                         paddingTop: "0px",
                         paddingBottom: "0px",
@@ -614,7 +606,7 @@ const History = (props) => {
                       key={index}
                       sx={{
                         width: "100%",
-
+                        maxWidth: 2000,
                         bgcolor: "background.paper",
                         paddingTop: "0px",
                         paddingBottom: "0px",
@@ -754,7 +746,7 @@ const History = (props) => {
                         key={index}
                         sx={{
                           width: "100%",
-
+                          maxWidth: 2000,
                           bgcolor: "background.paper",
                           paddingTop: "0px",
                           paddingBottom: "0px",
@@ -892,7 +884,7 @@ const History = (props) => {
                         key={index}
                         sx={{
                           width: "100%",
-
+                          maxWidth: 2000,
                           bgcolor: "background.paper",
                           paddingTop: "0px",
                           paddingBottom: "0px",

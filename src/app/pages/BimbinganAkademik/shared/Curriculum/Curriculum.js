@@ -76,17 +76,6 @@ const style = {
   },
 };
 
-const style2 = {
-  position: "fixed",
-  top: "15%",
-  right: "2%",
-  width: 400,
-  boxShadow: 24,
-  padding: 24,
-  backgroundColor: "white",
-  borderRadius: 10,
-};
-
 const Curriculum = () => {
   //abort
   const controller = new AbortController();
@@ -843,7 +832,7 @@ const Curriculum = () => {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <div style={style2}>
+          <div style={style}>
             <IconButton
               edge="end"
               color="#D9D9D9"

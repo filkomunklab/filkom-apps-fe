@@ -496,7 +496,7 @@ const getRole = () => {
   return filter;
 };
 
-const TableHeading = ({ index }) => {
+const TableHeading = () => {
   return (
     <TableRow>
       <TableCell sx={{ textAlign: "center" }}>No</TableCell>
