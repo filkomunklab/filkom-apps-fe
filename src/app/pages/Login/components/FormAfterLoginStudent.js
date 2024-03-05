@@ -212,7 +212,9 @@ const FormAfterLoginStudent = ({
 
       console.log("ini waktu iso loh: ", waktuISO8601);
       await axios.patch(
-        `${BASE_URL_API}/student/biodata/${profileMahasiswa.nim}`,
+        `${BASE_URL_API}/student/biodata/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           bloodType,
           password: newPassword,

@@ -78,7 +78,9 @@ const StudentGradeDashboard = () => {
   const getDataGrade = async () => {
     try {
       const response = await jwtAuthAxios.get(
-        `/transaction/semesterList/${studentNim}`,
+        `/transaction/semesterList/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,

@@ -52,7 +52,7 @@ const StudentProfile = () => {
   const getProfile = async () => {
     try {
       const resultStudent = await jwtAuthAxios.get(
-        `/student/view/biodata/${studentNim}`,
+        `/student/view/biodata/${JSON.parse(localStorage.getItem("user")).id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,

@@ -94,7 +94,9 @@ const History = () => {
       const { nim } = JSON.parse(localStorage.getItem("user"));
 
       const resultConsultation = await jwtAuthAxios.get(
-        `/academic-consultation/student/${nim}`,
+        `/academic-consultation/student/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -110,7 +112,9 @@ const History = () => {
       );
 
       const resultCertificate = await jwtAuthAxios.get(
-        `/certificate/history/student/${nim}`,
+        `/certificate/history/student/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -126,7 +130,9 @@ const History = () => {
       );
 
       const resultGrade = await jwtAuthAxios.get(
-        `/transaction/student/history/${nim}`,
+        `/transaction/student/history/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,

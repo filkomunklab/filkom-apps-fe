@@ -109,7 +109,9 @@ const Login = () => {
 
               if (user.role === "MAHASISWA") {
                 const response = await jwtAuthAxios.get(
-                  `student/biodata/check/${user.nim}`,
+                  `student/biodata/check/${
+                    JSON.parse(localStorage.getItem("user")).id
+                  }`,
                   {
                     headers: {
                       Authorization: `Bearer ${token}`,

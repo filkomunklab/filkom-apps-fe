@@ -95,7 +95,6 @@ const History = (props) => {
 
       const resultActivity = await jwtAuthAxios.get(
         `/activity/history-for-advisor/${nik}`,
-        // `/academic-consultation/employee/${nik}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -103,7 +102,9 @@ const History = (props) => {
       );
 
       const resultConsultation = await jwtAuthAxios.get(
-        `/academic-consultation/employee/${nik}`,
+        `/academic-consultation/employee/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -111,7 +112,6 @@ const History = (props) => {
       );
 
       const resultCertificate = await jwtAuthAxios.get(
-        // `/academic-consultation/employee/${nik}`,
         `/certificate/dosen/${guidanceClassId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -120,7 +120,6 @@ const History = (props) => {
       );
 
       const resultPreregis = await jwtAuthAxios.get(
-        // `/academic-consultation/employee/${nik}`,
         `/pre-regist/history-for-advisor/${guidanceClassId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },

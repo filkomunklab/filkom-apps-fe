@@ -103,7 +103,9 @@ const CurrentActivities = () => {
       );
 
       const resultConsultation = await jwtAuthAxios.get(
-        `/academic-consultation/student/${nim}`,
+        `/academic-consultation/student/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -111,7 +113,9 @@ const CurrentActivities = () => {
       );
 
       const resultCertificate = await jwtAuthAxios.get(
-        `/certificate/current/student/${nim}`,
+        `/certificate/current/student/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -127,7 +131,9 @@ const CurrentActivities = () => {
       );
 
       const resultGrade = await jwtAuthAxios.get(
-        `/transaction/student/currentGrades/${nim}`,
+        `/transaction/student/currentGrades/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,

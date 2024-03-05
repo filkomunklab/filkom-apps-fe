@@ -182,9 +182,13 @@ const Certificate = () => {
 
     //post certificate
     try {
-      const result = await jwtAuthAxios.post(`/certificate/${nim}`, data, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const result = await jwtAuthAxios.post(
+        `/certificate/${JSON.parse(localStorage.getItem("user")).id}`,
+        data,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
 
       if (result.data.status === "OK") {
         setTitle("");

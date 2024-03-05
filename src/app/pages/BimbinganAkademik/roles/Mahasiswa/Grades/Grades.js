@@ -46,7 +46,9 @@ const Grades = () => {
     try {
       const nim = JSON.parse(localStorage.getItem("user")).nim;
       const response = await jwtAuthAxios.get(
-        `/transaction/semesterList/${nim}`,
+        `/transaction/semesterList/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,

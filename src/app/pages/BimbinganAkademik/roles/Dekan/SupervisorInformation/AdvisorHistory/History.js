@@ -109,7 +109,9 @@ const History = (props) => {
       );
 
       const resultConsultation = await jwtAuthAxios.get(
-        `/academic-consultation/employee/${nik}`,
+        `/academic-consultation/employee/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,

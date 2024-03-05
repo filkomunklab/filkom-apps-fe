@@ -163,7 +163,7 @@ const GradeSubmission = () => {
       console.log("Request Body:", requestBody);
 
       const response = await jwtAuthAxios.post(
-        `/transaction/grades/${nim}`,
+        `/transaction/grades/${JSON.parse(localStorage.getItem("user")).id}`,
         requestBody,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },

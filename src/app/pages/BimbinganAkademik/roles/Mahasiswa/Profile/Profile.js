@@ -30,7 +30,7 @@ const StudentProfile = () => {
     try {
       const { nim } = JSON.parse(localStorage.getItem("user"));
       const resultStudent = await jwtAuthAxios.get(
-        `/student/view/biodata/${nim}`,
+        `/student/view/biodata/${JSON.parse(localStorage.getItem("user")).id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,

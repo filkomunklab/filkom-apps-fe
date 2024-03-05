@@ -64,10 +64,13 @@ const StudentCertificate = () => {
 
   const getDataWaiting = async () => {
     try {
-      const result = await jwtAuthAxios.get(`/certificate/all/${studentNim}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal,
-      });
+      const result = await jwtAuthAxios.get(
+        `/certificate/all/${JSON.parse(localStorage.getItem("user")).id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
 
       console.log("ini isi result data di certi", result);
 
