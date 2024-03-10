@@ -28,6 +28,7 @@ import {
 import { Link } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SearchIcon from "@mui/icons-material/Search";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const DaftarKomiteJudulDosen = () => {
   // State untuk melacak panel accordion yang terbuka
@@ -81,7 +82,7 @@ const DaftarKomiteJudulDosen = () => {
     const fetchDaftarKomiteJudulData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/committee-list",
+          `${BASE_URL_API}/group/committee-list`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

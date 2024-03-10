@@ -26,6 +26,7 @@ import {
 } from "@mui/material";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const PerbaruiJadwalSidangProposal = () => {
   // state - daftar jadwal
@@ -66,7 +67,7 @@ const PerbaruiJadwalSidangProposal = () => {
       const fetchJadwalProposalData = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:2000/api/v1/proposal/schedule/${proposalId}`,
+            `${BASE_URL_API}/proposal/schedule/${proposalId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -89,7 +90,7 @@ const PerbaruiJadwalSidangProposal = () => {
       const fetchJadwalSkripsiData = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:2000/api/v1/skripsi/schedule/${skripsiId}`,
+            `${BASE_URL_API}/skripsi/schedule/${skripsiId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -110,14 +111,11 @@ const PerbaruiJadwalSidangProposal = () => {
 
     const fetchDaftarDosen = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/group/dosen-list",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${BASE_URL_API}/group/dosen-list`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         // Atur state 'setDaftarDosen' dengan data dari respons
         setDaftarDosen(response.data.data);
         console.log("Request Daftar Dosen", response.data.data);
@@ -268,15 +266,11 @@ const PerbaruiJadwalSidangProposal = () => {
       };
       console.log("jadwal yang akan dikirim: ", jadwalBaru);
       axios
-        .put(
-          `http://localhost:2000/api/v1/proposal/schedule/${proposalId}`,
-          jadwalBaru,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        .put(`${BASE_URL_API}/proposal/schedule/${proposalId}`, jadwalBaru, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((response) => {
           console.log("Berhasil memperbarui jadwal:", response.data);
 
@@ -295,7 +289,7 @@ const PerbaruiJadwalSidangProposal = () => {
           const fetchJadwalProposalData = async () => {
             try {
               const response = await axios.get(
-                `http://localhost:2000/api/v1/proposal/schedule/${proposalId}`,
+                `${BASE_URL_API}/proposal/schedule/${proposalId}`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -335,7 +329,7 @@ const PerbaruiJadwalSidangProposal = () => {
           const fetchDaftarDosen = async () => {
             try {
               const response = await axios.get(
-                "http://localhost:2000/api/v1/group/dosen-list",
+                `${BASE_URL_API}/group/dosen-list`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`,
@@ -371,15 +365,11 @@ const PerbaruiJadwalSidangProposal = () => {
       };
       console.log("jadwal yang akan dikirim: ", jadwalBaru);
       axios
-        .put(
-          `http://localhost:2000/api/v1/skripsi/schedule/${skripsiId}`,
-          jadwalBaru,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        .put(`${BASE_URL_API}/skripsi/schedule/${skripsiId}`, jadwalBaru, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((response) => {
           console.log("Berhasil memperbarui jadwal:", response.data);
 
@@ -395,7 +385,7 @@ const PerbaruiJadwalSidangProposal = () => {
           const fetchJadwalSkripsiData = async () => {
             try {
               const response = await axios.get(
-                `http://localhost:2000/api/v1/skripsi/schedule/${skripsiId}`,
+                `${BASE_URL_API}/skripsi/schedule/${skripsiId}`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -435,7 +425,7 @@ const PerbaruiJadwalSidangProposal = () => {
           const fetchDaftarDosen = async () => {
             try {
               const response = await axios.get(
-                "http://localhost:2000/api/v1/group/dosen-list",
+                `${BASE_URL_API}/group/dosen-list`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`,

@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const PerubahanProposalCoAvisor = () => {
   // state - menyimpan request data
@@ -40,7 +41,7 @@ const PerubahanProposalCoAvisor = () => {
     const fetchPerubahanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-changes/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -81,7 +82,7 @@ const PerubahanProposalCoAvisor = () => {
     };
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-changes/${proposalId}`,
         perubahan,
         {
           headers: {
@@ -102,7 +103,7 @@ const PerubahanProposalCoAvisor = () => {
         const fetchPerubahanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-changes/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai

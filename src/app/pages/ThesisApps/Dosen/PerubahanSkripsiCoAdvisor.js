@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const PerubahanSkripsiCoAvisor = () => {
   // state - menyimpan request data
@@ -40,7 +41,7 @@ const PerubahanSkripsiCoAvisor = () => {
     const fetchPerubahanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-changes/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -80,15 +81,11 @@ const PerubahanSkripsiCoAvisor = () => {
       changes: coAdvisorChange,
     };
     axios
-      .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
-        perubahan,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .put(`${BASE_URL_API}/skripsi/skripsi-changes/${skripsiId}`, perubahan, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         console.log("Berhasil mengisi perubahan:", response.data);
 
@@ -102,7 +99,7 @@ const PerubahanSkripsiCoAvisor = () => {
         const fetchPerubahanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-changes/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai

@@ -25,6 +25,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuAdvisor from "app/shared/MenuHorizontal/MenuAdvisor";
 import MenuCoAdvisor from "app/shared/MenuHorizontal/MenuCoAdvisor";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const BuatKonsultasi = () => {
   // state - simpan request konsultasi
@@ -49,7 +50,7 @@ const BuatKonsultasi = () => {
     const fetchKonsultasiData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/consultation/${groupId}`,
+          `${BASE_URL_API}/consultation/${groupId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -106,7 +107,7 @@ const BuatKonsultasi = () => {
       };
       console.log(data);
       axios
-        .post(`http://localhost:2000/api/v1/consultation`, data, {
+        .post(`${BASE_URL_API}/consultation`, data, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -120,7 +121,7 @@ const BuatKonsultasi = () => {
           const fetchKonsultasiData = async () => {
             try {
               const response = await axios.get(
-                `http://localhost:2000/api/v1/consultation/${groupId}`,
+                `${BASE_URL_API}/consultation/${groupId}`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`,

@@ -12,6 +12,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const BerandaSkripsiMahasiswa = ({
   value: groupId,
@@ -27,7 +28,7 @@ const BerandaSkripsiMahasiswa = ({
     const fetchDetailsData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/group/submission_details/${groupId}`,
+          `${BASE_URL_API}/group/submission_details/${groupId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

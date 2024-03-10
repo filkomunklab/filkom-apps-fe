@@ -33,6 +33,7 @@ import MenuKetuaPanelis from "app/shared/MenuHorizontal/MenuKetuaPanelis";
 import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
 import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
 import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 // View Document Revisi
 const PDFViewerSkripsi = ({ dokumenRevisi }) => {
@@ -89,7 +90,7 @@ const DokumenRevisiSkripsi = () => {
     const fetchDokumenSkripsiData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-revision-document/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -108,7 +109,7 @@ const DokumenRevisiSkripsi = () => {
     const fetchPerubahanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-changes/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -127,7 +128,7 @@ const DokumenRevisiSkripsi = () => {
     const fetchTanggalData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/submission-dateline/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/submission-dateline/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -193,7 +194,7 @@ const DokumenRevisiSkripsi = () => {
     console.log("Tanggal batas revisi yang akan dikirim: ", batasRevisi);
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/submission-dateline/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/submission-dateline/${skripsiId}`,
         batasRevisi,
         {
           headers: {
@@ -213,7 +214,7 @@ const DokumenRevisiSkripsi = () => {
         const fetchTanggalData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/submission-dateline/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/submission-dateline/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -387,7 +388,7 @@ const DokumenRevisiSkripsi = () => {
   const handleApprove = () => {
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/approve/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/skripsi-revision-document/approve/${skripsiId}`,
         {},
         {
           headers: {
@@ -415,7 +416,7 @@ const DokumenRevisiSkripsi = () => {
         const fetchDokumenSkripsiData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-revision-document/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -451,7 +452,7 @@ const DokumenRevisiSkripsi = () => {
     };
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/reject/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/skripsi-revision-document/reject/${skripsiId}`,
         data,
         {
           headers: {
@@ -481,7 +482,7 @@ const DokumenRevisiSkripsi = () => {
         const fetchDokumenSkripsiData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-revision-document/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai

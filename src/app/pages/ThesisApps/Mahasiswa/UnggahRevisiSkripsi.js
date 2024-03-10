@@ -26,6 +26,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 // View Document Skripsi
 const PDFViewerRevisiSkripsi = ({ dokumenRevisi, isUploading }) => {
@@ -90,7 +91,7 @@ const UploadRevisiSkripsi = () => {
     const fetchTanggalData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/submission-dateline/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/submission-dateline/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -109,7 +110,7 @@ const UploadRevisiSkripsi = () => {
     const fetchDokumenRevisiData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-revision-document/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -128,7 +129,7 @@ const UploadRevisiSkripsi = () => {
     const fetchPerubahanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-changes/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -210,7 +211,7 @@ const UploadRevisiSkripsi = () => {
     console.log("Dokumen skripsi yang akan diunggah: ", data);
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/skripsi-revision-document/${skripsiId}`,
         data,
         {
           headers: {
@@ -225,7 +226,7 @@ const UploadRevisiSkripsi = () => {
         const fetchDokumenRevisiData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-revision-document/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -271,7 +272,7 @@ const UploadRevisiSkripsi = () => {
 
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/delete/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/skripsi-revision-document/delete/${skripsiId}`,
         {},
         {
           headers: {
@@ -289,7 +290,7 @@ const UploadRevisiSkripsi = () => {
         const fetchDokumenRevisiData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-revision-document/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-revision-document/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai

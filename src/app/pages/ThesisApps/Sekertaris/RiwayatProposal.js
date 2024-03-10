@@ -20,6 +20,7 @@ import "regenerator-runtime/runtime";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PrintBeritaAcaraProposal from "./PrintBeritaAcaraProposal";
 import { useReactToPrint } from "react-to-print";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const DaftarRiwayatProposal = () => {
   // Fungsi untuk mengonversi jam ke dalam format teks
@@ -129,7 +130,7 @@ const DaftarRiwayatProposal = () => {
     const fetchTimPanelisData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/proposal-history-list-sekretaris",
+          `${BASE_URL_API}/group/proposal-history-list-sekretaris`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

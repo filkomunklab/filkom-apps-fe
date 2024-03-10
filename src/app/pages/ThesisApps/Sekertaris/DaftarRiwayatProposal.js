@@ -21,6 +21,7 @@ import "regenerator-runtime/runtime";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PrintBeritaAcaraProposal from "./PrintBeritaAcaraProposal";
 import { useReactToPrint } from "react-to-print";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const DaftarRiwayatProposal = () => {
   // State untuk melacak panel accordion yang terbuka
@@ -51,14 +52,11 @@ const DaftarRiwayatProposal = () => {
   useEffect(() => {
     const fetchDaftarJadwalProposal = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/proposal/schedule",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${BASE_URL_API}/proposal/schedule`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         // Atur state 'setDaftarJadwal' dengan data dari respons
         setDaftarJadwal(response.data.data);
         console.log("Request Daftar Jadwal Proposal", response.data.data);
@@ -68,14 +66,11 @@ const DaftarRiwayatProposal = () => {
     };
     const fetchDaftarDosen = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/group/dosen-list",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${BASE_URL_API}/group/dosen-list`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         // Atur state 'setDaftarDosen' dengan data dari respons
         setDaftarDosen(response.data.data);
         console.log("Request Daftar Dosen", response.data.data);

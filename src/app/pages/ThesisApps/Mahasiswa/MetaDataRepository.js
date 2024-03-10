@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const keywords = [
   "informatika",
@@ -47,7 +48,7 @@ const MetaDataRepository = () => {
     const fetchMetadata = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1//group/metadata/${groupId}`,
+          `${BASE_URL_API}//group/metadata/${groupId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -148,7 +149,7 @@ const MetaDataRepository = () => {
     };
     console.log("Metadata yang akan diunggah: ", metadata);
     axios
-      .put(`http://localhost:2000/api/v1/group/metadata/${groupId}`, metadata, {
+      .put(`${BASE_URL_API}/group/metadata/${groupId}`, metadata, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -166,7 +167,7 @@ const MetaDataRepository = () => {
         const fetchMetadata = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1//group/metadata/${groupId}`,
+              `${BASE_URL_API}//group/metadata/${groupId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai

@@ -14,6 +14,7 @@ import {
   Paper,
 } from "@mui/material";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 // View Document pengajuan judul
 const PDFViewerPengajuanJudul = ({ pengajuanJudulFile }) => {
@@ -49,7 +50,7 @@ const PengajuanJudul = () => {
     const fetchPengajuanJudulData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/submission/${submissionId}`,
+          `${BASE_URL_API}/submission/${submissionId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -67,14 +68,11 @@ const PengajuanJudul = () => {
     };
     const fetchDaftarDosenData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:2000/api/v1/group/dosen-list`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
-            },
-          }
-        );
+        const response = await axios.get(`${BASE_URL_API}/group/dosen-list`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+          },
+        });
         setDaftarDosen(response.data.data);
         console.log("Request Get daftar dosen: ", response.data.data);
       } catch (error) {

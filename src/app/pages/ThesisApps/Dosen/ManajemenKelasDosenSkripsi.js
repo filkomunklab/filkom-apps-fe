@@ -28,6 +28,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import WarningIcon from "@mui/icons-material/Warning";
 import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const ManajemenKelasDosenSkripsi = () => {
   // state - kelas
@@ -97,14 +98,11 @@ const ManajemenKelasDosenSkripsi = () => {
 
   const fetchDaftarSemuaKelasData = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:2000/api/v1/classroom",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${BASE_URL_API}/classroom`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       // Atur state 'setDaftarSemuaKelas' dengan data dari respons
       setDaftarSemuaKelas(response.data.data);
       console.log(
@@ -120,14 +118,11 @@ const ManajemenKelasDosenSkripsi = () => {
   };
   const fetchDaftarPilihanKelasData = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:2000/api/v1/classroom",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${BASE_URL_API}/classroom`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       // Atur state 'setDaftarPilihanKelas' dengan data dari respons
       setDaftarPilihanKelas(response.data.data);
       console.log(
@@ -143,14 +138,11 @@ const ManajemenKelasDosenSkripsi = () => {
   };
   const fetchDaftarAkademikData = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:2000/api/v1/academic-calendar",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${BASE_URL_API}/academic-calendar`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const sortedAkademikData = response.data.data.sort((a, b) => {
         const semesterA = a.semester + a.year;
         const semesterB = b.semester + b.year;
@@ -179,14 +171,11 @@ const ManajemenKelasDosenSkripsi = () => {
         setShowDeleteConfirmation(true);
       } else {
         axios
-          .delete(
-            `http://localhost:2000/api/v1/classroom/${daftarSemuaKelasData.id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
+          .delete(`${BASE_URL_API}/classroom/${daftarSemuaKelasData.id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
           .then((response) => {
             deleteClass(selectedClass);
             fetchDaftarSemuaKelasData();
@@ -264,15 +253,11 @@ const ManajemenKelasDosenSkripsi = () => {
       console.log("mahasiswa yang akan ditambahkan:", newStudents);
 
       axios
-        .post(
-          `http://localhost:2000/api/v1/classroom/insert-student`,
-          newStudents,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        .post(`${BASE_URL_API}/classroom/insert-student`, newStudents, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((response) => {
           // request data
           fetchDaftarSemuaKelasData();
@@ -290,14 +275,11 @@ const ManajemenKelasDosenSkripsi = () => {
   // fungsi - menghapus mahasiswa yang dipilih
   const handleDeleteStudent = (studentId) => {
     axios
-      .delete(
-        `http://localhost:2000/api/v1/classroom/delete-student/${studentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .delete(`${BASE_URL_API}/classroom/delete-student/${studentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         // request data
         fetchDaftarSemuaKelasData();
@@ -353,7 +335,7 @@ const ManajemenKelasDosenSkripsi = () => {
     setSelectedAkademikToDelete(akademik);
     // Melakukan DELETE request ke API
     axios
-      .delete(`http://localhost:2000/api/v1/academic-calendar/${akademik.id}`, {
+      .delete(`${BASE_URL_API}/academic-calendar/${akademik.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -403,7 +385,7 @@ const ManajemenKelasDosenSkripsi = () => {
 
         axios
           .put(
-            `http://localhost:2000/api/v1/academic-calendar/${selectedAkademikData.id}`,
+            `${BASE_URL_API}/academic-calendar/${selectedAkademikData.id}`,
             updatedData,
             {
               headers: {
@@ -469,15 +451,11 @@ const ManajemenKelasDosenSkripsi = () => {
         };
 
         axios
-          .post(
-            "http://localhost:2000/api/v1/academic-calendar",
-            newAkademikData,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
+          .post(`${BASE_URL_API}/academic-calendar`, newAkademikData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
           .then((response) => {
             if (response.status === 201) {
               console.log("Akademik Berhasil ditambahkan:", response.data);
@@ -552,7 +530,7 @@ const ManajemenKelasDosenSkripsi = () => {
       console.log(newClass);
 
       axios
-        .post(`http://localhost:2000/api/v1/classroom`, newClass, {
+        .post(`${BASE_URL_API}/classroom`, newClass, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

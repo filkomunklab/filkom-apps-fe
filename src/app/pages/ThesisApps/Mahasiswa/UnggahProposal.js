@@ -17,6 +17,7 @@ import {
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 // View Document Proposal
 const PDFViewerProposal = ({ dokumenProposal, isUploading }) => {
@@ -140,7 +141,7 @@ const UnggahProposal = () => {
     const fetchDokumenProposalData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-document/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-document/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -159,7 +160,7 @@ const UnggahProposal = () => {
     const fetchBuktiPembayaranData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-payment/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-payment/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -178,7 +179,7 @@ const UnggahProposal = () => {
     const fetchHasilCekPlagiatData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-plagiarism-check/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-plagiarism-check/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -259,15 +260,11 @@ const UnggahProposal = () => {
   const sendDokumenProposalToServer = (data) => {
     console.log("Dokumen proposal yang akan diunggah: ", data);
     axios
-      .put(
-        `http://localhost:2000/api/v1/proposal/proposal-document/${proposalId}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .put(`${BASE_URL_API}/proposal/proposal-document/${proposalId}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         console.log("Berhasil unggah dokumen proposal: ", response.data.data);
 
@@ -275,7 +272,7 @@ const UnggahProposal = () => {
         const fetchDokumenProposalData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-document/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-document/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -364,15 +361,11 @@ const UnggahProposal = () => {
   const sendBuktiPembayaranToServer = (data) => {
     console.log("Bukti pembayaran yang akan diunggah: ", data);
     axios
-      .put(
-        `http://localhost:2000/api/v1/proposal/proposal-payment/${proposalId}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .put(`${BASE_URL_API}/proposal/proposal-payment/${proposalId}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         console.log("Berhasil unggah bukti pembayaran: ", response.data.data);
 
@@ -380,7 +373,7 @@ const UnggahProposal = () => {
         const fetchBuktiPembayaranData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-payment/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-payment/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -470,7 +463,7 @@ const UnggahProposal = () => {
     console.log("Hasil cek plagiat yang akan diunggah: ", data);
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-plagiarism-check/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-plagiarism-check/${proposalId}`,
         data,
         {
           headers: {
@@ -485,7 +478,7 @@ const UnggahProposal = () => {
         const fetchHasilCekPlagiatData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-plagiarism-check/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-plagiarism-check/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -520,7 +513,7 @@ const UnggahProposal = () => {
 
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-document/delete/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-document/delete/${proposalId}`,
         {},
         {
           headers: {
@@ -538,7 +531,7 @@ const UnggahProposal = () => {
         const fetchDokumenProposalData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-document/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-document/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -574,7 +567,7 @@ const UnggahProposal = () => {
 
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-payment/delete/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-payment/delete/${proposalId}`,
         {},
         {
           headers: {
@@ -592,7 +585,7 @@ const UnggahProposal = () => {
         const fetchBuktiPembayaranData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-payment/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-payment/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -628,7 +621,7 @@ const UnggahProposal = () => {
 
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-plagiarism-check/delete/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-plagiarism-check/delete/${proposalId}`,
         {},
         {
           headers: {
@@ -646,7 +639,7 @@ const UnggahProposal = () => {
         const fetchHasilCekPlagiatData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-plagiarism-check/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-plagiarism-check/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai

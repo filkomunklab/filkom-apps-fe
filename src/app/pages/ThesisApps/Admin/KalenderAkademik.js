@@ -23,6 +23,7 @@ import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import WarningIcon from "@mui/icons-material/Warning";
 import axios from "axios";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const KalenderAkademik = () => {
   // state - kelas
@@ -56,14 +57,11 @@ const KalenderAkademik = () => {
 
   const fetchDaftarSemuaKelasData = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:2000/api/v1/classroom",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${BASE_URL_API}/classroom`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       // Atur state 'setDaftarSemuaKelas' dengan data dari respons
       setDaftarSemuaKelas(response.data.data);
       console.log(
@@ -79,14 +77,11 @@ const KalenderAkademik = () => {
   };
   const fetchDaftarPilihanKelasData = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:2000/api/v1/classroom",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${BASE_URL_API}/classroom`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       // Atur state 'setDaftarPilihanKelas' dengan data dari respons
       setDaftarPilihanKelas(response.data.data);
       console.log(
@@ -102,14 +97,11 @@ const KalenderAkademik = () => {
   };
   const fetchDaftarAkademikData = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:2000/api/v1/academic-calendar",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${BASE_URL_API}/academic-calendar`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const sortedAkademikData = response.data.data.sort((a, b) => {
         const semesterA = a.semester + a.year;
         const semesterB = b.semester + b.year;
@@ -167,7 +159,7 @@ const KalenderAkademik = () => {
     setSelectedAkademikToDelete(akademik);
     // Melakukan DELETE request ke API
     axios
-      .delete(`http://localhost:2000/api/v1/academic-calendar/${akademik.id}`, {
+      .delete(`${BASE_URL_API}/academic-calendar/${akademik.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -217,7 +209,7 @@ const KalenderAkademik = () => {
 
         axios
           .put(
-            `http://localhost:2000/api/v1/academic-calendar/${selectedAkademikData.id}`,
+            `${BASE_URL_API}/academic-calendar/${selectedAkademikData.id}`,
             updatedData,
             {
               headers: {
@@ -278,15 +270,11 @@ const KalenderAkademik = () => {
         };
 
         axios
-          .post(
-            "http://localhost:2000/api/v1/academic-calendar",
-            newAkademikData,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
+          .post(`${BASE_URL_API}/academic-calendar`, newAkademikData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
           .then((response) => {
             if (response.status === 201) {
               console.log("Akademik Berhasil ditambahkan:", response.data);

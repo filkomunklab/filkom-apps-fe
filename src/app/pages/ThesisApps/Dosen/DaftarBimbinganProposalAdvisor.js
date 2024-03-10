@@ -31,6 +31,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { Link } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SearchIcon from "@mui/icons-material/Search";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const DaftarBimbinganProposalAdvisor = () => {
   // State untuk melacak panel accordion yang terbuka
@@ -94,7 +95,7 @@ const DaftarBimbinganProposalAdvisor = () => {
     const fetchDaftarBimbinganProposalData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/proposal-list-advisor",
+          `${BASE_URL_API}/group/proposal-list-advisor`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

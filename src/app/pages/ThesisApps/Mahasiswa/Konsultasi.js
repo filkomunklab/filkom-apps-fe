@@ -20,6 +20,7 @@ import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
 import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const Konsultasi = () => {
   // state - simpan request konsultasi
@@ -41,7 +42,7 @@ const Konsultasi = () => {
     const fetchKonsultasiData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/consultation/${groupId}`,
+          `${BASE_URL_API}/consultation/${groupId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

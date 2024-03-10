@@ -24,6 +24,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import Div from "@jumbo/shared/Div";
 import WarningIcon from "@mui/icons-material/Warning";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const ManajemenDosenSkripsi = () => {
   // state - menyimpan hasil request data
@@ -49,7 +50,7 @@ const ManajemenDosenSkripsi = () => {
     const fetchDosenSkripsiData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/employee/dosen-skripsi`,
+          `${BASE_URL_API}/employee/dosen-skripsi`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -68,14 +69,11 @@ const ManajemenDosenSkripsi = () => {
     // daftar dosen yang bukan dosen skripsi
     const fetchDaftarDosenData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:2000/api/v1/employee/dosen`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
-            },
-          }
-        );
+        const response = await axios.get(`${BASE_URL_API}/employee/dosen`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+          },
+        });
         setDaftarDosen(response.data.data);
         console.log("Request Get daftar dosen: ", response.data.data);
       } catch (error) {
@@ -115,7 +113,7 @@ const ManajemenDosenSkripsi = () => {
       };
       console.log("dosen yang akan dikirim: ", dosen);
       axios
-        .post(`http://localhost:2000/api/v1/employee/dosen-skripsi`, dosen, {
+        .post(`${BASE_URL_API}/employee/dosen-skripsi`, dosen, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -130,7 +128,7 @@ const ManajemenDosenSkripsi = () => {
           const fetchDosenSkripsiData = async () => {
             try {
               const response = await axios.get(
-                `http://localhost:2000/api/v1/employee/dosen-skripsi`,
+                `${BASE_URL_API}/employee/dosen-skripsi`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -153,7 +151,7 @@ const ManajemenDosenSkripsi = () => {
           const fetchDaftarDosenData = async () => {
             try {
               const response = await axios.get(
-                `http://localhost:2000/api/v1/employee/dosen`,
+                `${BASE_URL_API}/employee/dosen`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -183,14 +181,11 @@ const ManajemenDosenSkripsi = () => {
 
   const handleDeleteDosen = () => {
     axios
-      .delete(
-        `http://localhost:2000/api/v1/employee/dosen-skripsi/${selectedUserId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .delete(`${BASE_URL_API}/employee/dosen-skripsi/${selectedUserId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         // bersihkan user id yang dipilih
         setSelectedUserId("");
@@ -203,7 +198,7 @@ const ManajemenDosenSkripsi = () => {
         const fetchDosenSkripsiData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/employee/dosen-skripsi`,
+              `${BASE_URL_API}/employee/dosen-skripsi`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -225,14 +220,11 @@ const ManajemenDosenSkripsi = () => {
         // daftar dosen yang bukan dosen skripsi
         const fetchDaftarDosenData = async () => {
           try {
-            const response = await axios.get(
-              `http://localhost:2000/api/v1/employee/dosen`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
-                },
-              }
-            );
+            const response = await axios.get(`${BASE_URL_API}/employee/dosen`, {
+              headers: {
+                Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+              },
+            });
             setDaftarDosen(response.data.data);
             console.log("Request Get daftar dosen: ", response.data.data);
           } catch (error) {

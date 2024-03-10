@@ -25,6 +25,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SearchIcon from "@mui/icons-material/Search";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const RiwayatPengujianAnggota = () => {
   // State untuk melacak panel accordion yang terbuka
@@ -78,7 +79,7 @@ const RiwayatPengujianAnggota = () => {
     const fetchDaftarRiwayat = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/history-list-member",
+          `${BASE_URL_API}/group/history-list-member`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

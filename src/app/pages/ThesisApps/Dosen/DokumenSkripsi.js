@@ -28,6 +28,7 @@ import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
 import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
 import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 // View Document Proposal
 const PDFViewerSkripsi = ({ dokumenSkripsi }) => {
@@ -141,7 +142,7 @@ const DokumenSkripsi = () => {
     const fetchDokumenSkripsiData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-document/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-document/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -160,7 +161,7 @@ const DokumenSkripsi = () => {
     const fetchBuktiPembayaranData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-payment/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-payment/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -179,7 +180,7 @@ const DokumenSkripsi = () => {
     const fetchHasilCekPlagiatData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-plagiarism-check/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -198,7 +199,7 @@ const DokumenSkripsi = () => {
     const fetchJurnalData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/journal/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -384,7 +385,7 @@ const DokumenSkripsi = () => {
   const handleApprove = () => {
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-document/approve/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/skripsi-document/approve/${skripsiId}`,
         {},
         {
           headers: {
@@ -412,7 +413,7 @@ const DokumenSkripsi = () => {
         const fetchDokumenSkripsiData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-document/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-document/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -442,7 +443,7 @@ const DokumenSkripsi = () => {
   const handleReject = () => {
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-document/reject/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/skripsi-document/reject/${skripsiId}`,
         {},
         {
           headers: {
@@ -470,7 +471,7 @@ const DokumenSkripsi = () => {
         const fetchDokumenSkripsiData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-document/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-document/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai

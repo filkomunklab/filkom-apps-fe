@@ -31,6 +31,7 @@ import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import { Mail } from "@mui/icons-material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SearchIcon from "@mui/icons-material/Search";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const DaftarPengajuanJudulDosenSkripsi = () => {
   // State untuk melacak panel accordion yang terbuka
@@ -92,7 +93,7 @@ const DaftarPengajuanJudulDosenSkripsi = () => {
     const fetchDaftarPengajuanJudulData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/submission-list-mk",
+          `${BASE_URL_API}/group/submission-list-mk`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

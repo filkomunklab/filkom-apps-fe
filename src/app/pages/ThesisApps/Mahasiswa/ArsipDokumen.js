@@ -22,6 +22,7 @@ import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 import AddIcon from "@mui/icons-material/Add";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 // View Document HKI
 const PDFViewerHKI = ({ HKI, isUploading }) => {
@@ -110,7 +111,7 @@ const ArsipDocument = () => {
     const fetchHKIData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/hki/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/hki/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -126,7 +127,7 @@ const ArsipDocument = () => {
     const fetchSourceCodeData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/source-code/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/source-code/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -142,7 +143,7 @@ const ArsipDocument = () => {
     const fetchLinkData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/group/skripsi/all-link/${groupId}`,
+          `${BASE_URL_API}/group/skripsi/all-link/${groupId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -187,7 +188,7 @@ const ArsipDocument = () => {
     };
     console.log("link yang akan diunggah: ", linkData);
     axios
-      .post(`http://localhost:2000/api/v1/group/skripsi/link/`, linkData, {
+      .post(`${BASE_URL_API}/group/skripsi/link/`, linkData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -203,7 +204,7 @@ const ArsipDocument = () => {
         const fetchLinkData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/group/skripsi/all-link/${groupId}`,
+              `${BASE_URL_API}/group/skripsi/all-link/${groupId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -244,15 +245,11 @@ const ArsipDocument = () => {
     };
     console.log("link yang akan diperbarui: ", linkData);
     axios
-      .put(
-        `http://localhost:2000/api/v1/group/skripsi/link/${selectedLinkId}`,
-        linkData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .put(`${BASE_URL_API}/group/skripsi/link/${selectedLinkId}`, linkData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         // membersihkan kotak link
         setUpdateLink();
@@ -264,7 +261,7 @@ const ArsipDocument = () => {
         const fetchLinkData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/group/skripsi/all-link/${groupId}`,
+              `${BASE_URL_API}/group/skripsi/all-link/${groupId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -293,7 +290,7 @@ const ArsipDocument = () => {
   const handleDeleteLink = (linkId) => {
     console.log("link id yang akan dihapus: ", linkId);
     axios
-      .delete(`http://localhost:2000/api/v1/group/skripsi/link/${linkId}`, {
+      .delete(`${BASE_URL_API}/group/skripsi/link/${linkId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -305,7 +302,7 @@ const ArsipDocument = () => {
         const fetchLinkData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/group/skripsi/all-link/${groupId}`,
+              `${BASE_URL_API}/group/skripsi/all-link/${groupId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -386,7 +383,7 @@ const ArsipDocument = () => {
   const sendHKIToServer = (data) => {
     console.log("HKI yang akan diunggah: ", data);
     axios
-      .put(`http://localhost:2000/api/v1/skripsi/hki/${skripsiId}`, data, {
+      .put(`${BASE_URL_API}/skripsi/hki/${skripsiId}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -398,7 +395,7 @@ const ArsipDocument = () => {
         const fetchHKIData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/hki/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/hki/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -486,15 +483,11 @@ const ArsipDocument = () => {
   const sendCodeToServer = (data) => {
     console.log("Source Code yang akan diunggah: ", data);
     axios
-      .put(
-        `http://localhost:2000/api/v1/skripsi/source-code/${skripsiId}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .put(`${BASE_URL_API}/skripsi/source-code/${skripsiId}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         console.log("Berhasil unggah Source Code: ", response.data.data);
 
@@ -502,7 +495,7 @@ const ArsipDocument = () => {
         const fetchSourceCodeData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/source-code/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/source-code/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -544,7 +537,7 @@ const ArsipDocument = () => {
       };
       axios
         .put(
-          `http://localhost:2000/api/v1/skripsi/link-source-code/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/link-source-code/${skripsiId}`,
           linkData,
           {
             headers: {
@@ -562,7 +555,7 @@ const ArsipDocument = () => {
           const fetchLinkSourceCodeData = async () => {
             try {
               const response = await axios.get(
-                `http://localhost:2000/api/v1/skripsi/link-source-code/${skripsiId}`,
+                `${BASE_URL_API}/skripsi/link-source-code/${skripsiId}`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -600,7 +593,7 @@ const ArsipDocument = () => {
 
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/hki/delete/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/hki/delete/${skripsiId}`,
         {},
         {
           headers: {
@@ -615,7 +608,7 @@ const ArsipDocument = () => {
         const fetchHKIData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/hki/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/hki/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -648,7 +641,7 @@ const ArsipDocument = () => {
 
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/source-code/delete/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/source-code/delete/${skripsiId}`,
         {},
         {
           headers: {
@@ -663,7 +656,7 @@ const ArsipDocument = () => {
         const fetchSourceCodeData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/source-code/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/source-code/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -699,7 +692,7 @@ const ArsipDocument = () => {
 
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/link-source-code/delete/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/link-source-code/delete/${skripsiId}`,
         {},
         {
           headers: {
@@ -717,7 +710,7 @@ const ArsipDocument = () => {
         const fetchLinkSourceCodeData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/link-source-code/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/link-source-code/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai

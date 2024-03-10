@@ -31,6 +31,7 @@ import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SearchIcon from "@mui/icons-material/Search";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const DaftarPengujianProposalKetuaPenelis = () => {
   // State untuk melacak panel accordion yang terbuka
@@ -94,7 +95,7 @@ const DaftarPengujianProposalKetuaPenelis = () => {
     const fetchDaftarPengujianProposalData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/proposal-list-chairman",
+          `${BASE_URL_API}/group/proposal-list-chairman`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

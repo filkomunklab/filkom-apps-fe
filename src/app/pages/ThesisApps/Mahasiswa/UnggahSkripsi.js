@@ -17,6 +17,7 @@ import {
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 // View Document Skripsi
 const PDFViewerSkripsi = ({ dokumenSkripsi, isUploading }) => {
@@ -172,7 +173,7 @@ const UploadSkipsi = () => {
     const fetchDokumenSkripsiData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-document/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-document/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -191,7 +192,7 @@ const UploadSkipsi = () => {
     const fetchBuktiPembayaranData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-payment/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-payment/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -210,7 +211,7 @@ const UploadSkipsi = () => {
     const fetchHasilCekPlagiatData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-plagiarism-check/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -229,7 +230,7 @@ const UploadSkipsi = () => {
     const fetchJurnalData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/journal/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -308,15 +309,11 @@ const UploadSkipsi = () => {
   const sendDokumenSkripsiToServer = (data) => {
     console.log("Dokumen skripsi yang akan diunggah: ", data);
     axios
-      .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-document/${skripsiId}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .put(`${BASE_URL_API}/skripsi/skripsi-document/${skripsiId}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         console.log("Berhasil unggah dokumen skripsi: ", response.data.data);
 
@@ -324,7 +321,7 @@ const UploadSkipsi = () => {
         const fetchDokumenSkripsiData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-document/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-document/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -413,15 +410,11 @@ const UploadSkipsi = () => {
   const sendBuktiPembayaranToServer = (data) => {
     console.log("Bukti pembayaran yang akan diunggah: ", data);
     axios
-      .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-payment/${skripsiId}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .put(`${BASE_URL_API}/skripsi/skripsi-payment/${skripsiId}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         console.log("Berhasil unggah bukti pembayaran: ", response.data.data);
 
@@ -429,7 +422,7 @@ const UploadSkipsi = () => {
         const fetchBuktiPembayaranData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-payment/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-payment/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -519,7 +512,7 @@ const UploadSkipsi = () => {
     console.log("Hasil cek plagiat yang akan diunggah: ", data);
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/skripsi-plagiarism-check/${skripsiId}`,
         data,
         {
           headers: {
@@ -534,7 +527,7 @@ const UploadSkipsi = () => {
         const fetchHasilCekPlagiatData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-plagiarism-check/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -624,7 +617,7 @@ const UploadSkipsi = () => {
   const sendJurnalToServer = (data) => {
     console.log("Jurnal yang akan diunggah: ", data);
     axios
-      .put(`http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`, data, {
+      .put(`${BASE_URL_API}/skripsi/journal/${skripsiId}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -636,7 +629,7 @@ const UploadSkipsi = () => {
         const fetchJurnalData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/journal/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -668,7 +661,7 @@ const UploadSkipsi = () => {
 
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-document/delete/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/skripsi-document/delete/${skripsiId}`,
         {},
         {
           headers: {
@@ -683,7 +676,7 @@ const UploadSkipsi = () => {
         const fetchDokumenSkripsiData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-document/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-document/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -719,7 +712,7 @@ const UploadSkipsi = () => {
 
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-payment/delete/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/skripsi-payment/delete/${skripsiId}`,
         {},
         {
           headers: {
@@ -737,7 +730,7 @@ const UploadSkipsi = () => {
         const fetchBuktiPembayaranData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-payment/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-payment/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -773,7 +766,7 @@ const UploadSkipsi = () => {
 
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/delete/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/skripsi-plagiarism-check/delete/${skripsiId}`,
         {},
         {
           headers: {
@@ -791,7 +784,7 @@ const UploadSkipsi = () => {
         const fetchHasilCekPlagiatData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-plagiarism-check/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-plagiarism-check/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -827,7 +820,7 @@ const UploadSkipsi = () => {
 
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/journal/delete/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/journal/delete/${skripsiId}`,
         {},
         {
           headers: {
@@ -842,7 +835,7 @@ const UploadSkipsi = () => {
         const fetchJurnalData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/journal/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/journal/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai

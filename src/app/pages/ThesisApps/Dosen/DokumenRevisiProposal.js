@@ -33,6 +33,7 @@ import MenuKetuaPanelis from "app/shared/MenuHorizontal/MenuKetuaPanelis";
 import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
 import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
 import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 // View Document Revisi
 const PDFViewerProposal = ({ dokumenRevisi }) => {
@@ -125,7 +126,7 @@ const DokumenRevisiProposal = () => {
     const fetchDokumenProposalData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-revision-document/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -147,7 +148,7 @@ const DokumenRevisiProposal = () => {
     const fetchPerubahanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-changes/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -166,7 +167,7 @@ const DokumenRevisiProposal = () => {
     const fetchTanggalData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/submission-dateline/${proposalId}`,
+          `${BASE_URL_API}/proposal/submission-dateline/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -201,7 +202,7 @@ const DokumenRevisiProposal = () => {
     console.log("Tanggal batas revisi yang akan dikirim: ", batasRevisi);
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/submission-dateline/${proposalId}`,
+        `${BASE_URL_API}/proposal/submission-dateline/${proposalId}`,
         batasRevisi,
         {
           headers: {
@@ -224,7 +225,7 @@ const DokumenRevisiProposal = () => {
         const fetchTanggalData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/submission-dateline/${proposalId}`,
+              `${BASE_URL_API}/proposal/submission-dateline/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -398,7 +399,7 @@ const DokumenRevisiProposal = () => {
   const handleApprove = () => {
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-revision-document/approve/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-revision-document/approve/${proposalId}`,
         {},
         {
           headers: {
@@ -426,7 +427,7 @@ const DokumenRevisiProposal = () => {
         const fetchDokumenProposalData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-revision-document/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -462,7 +463,7 @@ const DokumenRevisiProposal = () => {
     };
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-revision-document/reject/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-revision-document/reject/${proposalId}`,
         data,
         {
           headers: {
@@ -492,7 +493,7 @@ const DokumenRevisiProposal = () => {
         const fetchDokumenProposalData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-revision-document/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai

@@ -35,6 +35,7 @@ import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
 import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
 import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const TestBeritaAcaraProposal = () => {
   // state - menyimpan request data
@@ -85,7 +86,7 @@ const TestBeritaAcaraProposal = () => {
     const fetchIsOpenData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-report/open-access/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-report/open-access/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -104,7 +105,7 @@ const TestBeritaAcaraProposal = () => {
     const fetchPenilaianData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-assessment/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-assessment/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -120,7 +121,7 @@ const TestBeritaAcaraProposal = () => {
     const fetchPerubahanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-changes/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -136,7 +137,7 @@ const TestBeritaAcaraProposal = () => {
     const fetchBeritaAcaraData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-report/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-report/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -152,7 +153,7 @@ const TestBeritaAcaraProposal = () => {
     const fetchKesimpulanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-report/conclusion/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-report/conclusion/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -240,7 +241,7 @@ const TestBeritaAcaraProposal = () => {
     console.log("Kesimpulan yang akan dikirim: ", kesimpulan);
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-report/conclusion/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-report/conclusion/${proposalId}`,
         kesimpulan,
         {
           headers: {
@@ -261,7 +262,7 @@ const TestBeritaAcaraProposal = () => {
         const fetchKesimpulanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-report/conclusion/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-report/conclusion/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -280,7 +281,7 @@ const TestBeritaAcaraProposal = () => {
         const fetchIsOpenData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-report/open-access/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-report/open-access/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -317,7 +318,7 @@ const TestBeritaAcaraProposal = () => {
     if (!isSigned) {
       axios
         .put(
-          `http://localhost:2000/api/v1/proposal/proposal-report/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-report/${proposalId}`,
           {},
           {
             headers: {
@@ -336,7 +337,7 @@ const TestBeritaAcaraProposal = () => {
           const fetchBeritaAcaraData = async () => {
             try {
               const response = await axios.get(
-                `http://localhost:2000/api/v1/proposal/proposal-report/${proposalId}`,
+                `${BASE_URL_API}/proposal/proposal-report/${proposalId}`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -376,7 +377,7 @@ const TestBeritaAcaraProposal = () => {
     const fetchPerubahanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-changes/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -436,7 +437,7 @@ const TestBeritaAcaraProposal = () => {
     console.log("nilai yang akan dikirim: ", nilai);
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-assessment/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-assessment/${proposalId}`,
         nilai,
         {
           headers: {
@@ -473,7 +474,7 @@ const TestBeritaAcaraProposal = () => {
         const fetchPenilaianData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-assessment/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-assessment/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -595,7 +596,7 @@ const TestBeritaAcaraProposal = () => {
     };
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-changes/${proposalId}`,
         perubahan,
         {
           headers: {
@@ -614,7 +615,7 @@ const TestBeritaAcaraProposal = () => {
         const fetchPerubahanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-changes/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -650,7 +651,7 @@ const TestBeritaAcaraProposal = () => {
   const handleBukaKonfirmasi = () => {
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-report/open-access/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-report/open-access/${proposalId}`,
         {},
         {
           headers: {
@@ -667,7 +668,7 @@ const TestBeritaAcaraProposal = () => {
         const fetchIsOpenData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-report/open-access/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-report/open-access/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -686,7 +687,7 @@ const TestBeritaAcaraProposal = () => {
         const fetchPenilaianData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-assessment/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-assessment/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -702,7 +703,7 @@ const TestBeritaAcaraProposal = () => {
         const fetchPerubahanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-changes/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -718,7 +719,7 @@ const TestBeritaAcaraProposal = () => {
         const fetchBeritaAcaraData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-report/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-report/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -737,7 +738,7 @@ const TestBeritaAcaraProposal = () => {
         const fetchKesimpulanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-report/conclusion/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-report/conclusion/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai

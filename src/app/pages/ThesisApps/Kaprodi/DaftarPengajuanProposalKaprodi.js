@@ -38,6 +38,7 @@ import {
 } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const DaftarPengajuanProposalKaprodi = () => {
   // ======================== STATE ===========================
@@ -82,7 +83,7 @@ const DaftarPengajuanProposalKaprodi = () => {
 
   const fetchDaftarPengajuanProposalData = async () => {
     const response = await jwtAuthAxios
-      .get("http://localhost:2000/api/v1/group/proposal-list-kaprodi", {
+      .get(`${BASE_URL_API}/group/proposal-list-kaprodi`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

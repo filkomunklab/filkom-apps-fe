@@ -26,6 +26,7 @@ import {
 } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const DaftarPengajuanProposalSekertaris = () => {
   // ======================== STATE ===========================
@@ -63,7 +64,7 @@ const DaftarPengajuanProposalSekertaris = () => {
 
   const fetchDaftarPengajuanProposalData = async () => {
     jwtAuthAxios
-      .get("http://localhost:2000/api/v1/group/proposal-list-sekretaris", {
+      .get(`${BASE_URL_API}/group/proposal-list-sekretaris`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

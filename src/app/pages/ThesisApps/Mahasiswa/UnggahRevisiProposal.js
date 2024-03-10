@@ -26,6 +26,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 import Riwayatlog from "app/shared/RiwayatLog/Riwayatlog";
 import MenuMahasiswa from "app/shared/MenuHorizontal/menuMahasiswa";
 import AttachmentIcon from "@mui/icons-material/Attachment";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 // View Document Proposal
 const PDFViewerRevisiProposal = ({ dokumenRevisi, isUploading }) => {
@@ -90,7 +91,7 @@ const UploadRevisiProposal = () => {
     const fetchTanggalData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/submission-dateline/${proposalId}`,
+          `${BASE_URL_API}/proposal/submission-dateline/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -109,7 +110,7 @@ const UploadRevisiProposal = () => {
     const fetchDokumenRevisiData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-revision-document/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -131,7 +132,7 @@ const UploadRevisiProposal = () => {
     const fetchPerubahanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-changes/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-changes/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -213,7 +214,7 @@ const UploadRevisiProposal = () => {
     console.log("Dokumen proposal yang akan diunggah: ", data);
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-revision-document/${proposalId}`,
         data,
         {
           headers: {
@@ -228,7 +229,7 @@ const UploadRevisiProposal = () => {
         const fetchDokumenRevisiData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-revision-document/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -274,7 +275,7 @@ const UploadRevisiProposal = () => {
 
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-revision-document/delete/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-revision-document/delete/${proposalId}`,
         {},
         {
           headers: {
@@ -292,7 +293,7 @@ const UploadRevisiProposal = () => {
         const fetchDokumenRevisiData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-revision-document/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-revision-document/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai

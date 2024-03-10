@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const SkripsiFakultasIlmuKomputer = () => {
   // stete - menyimpan hasil request
@@ -34,7 +35,7 @@ const SkripsiFakultasIlmuKomputer = () => {
     const fetchDaftarSkripsiData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/skripsi-filkom"
+          `${BASE_URL_API}/group/skripsi-filkom`
         );
         setDaftarSkripsi(response.data.data);
         console.log(

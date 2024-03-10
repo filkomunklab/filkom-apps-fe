@@ -11,6 +11,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const DaftarPengajuanProposalDekan = () => {
   const [daftarSkripsi, setDaftarSkripsi] = useState();
@@ -22,7 +23,7 @@ const DaftarPengajuanProposalDekan = () => {
     const fetchDaftarSkripsiData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/skripsi-filkom",
+          `${BASE_URL_API}/group/skripsi-filkom`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

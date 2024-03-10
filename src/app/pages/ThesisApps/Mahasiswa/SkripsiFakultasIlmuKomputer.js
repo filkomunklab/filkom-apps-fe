@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import SearchGlobal from "app/shared/SearchGlobal";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const SkripsiFakultasIlmuKomputer = () => {
   // fungsi untuk mendapatkan token JWT
@@ -22,7 +23,7 @@ const SkripsiFakultasIlmuKomputer = () => {
     const fetchDaftarBimbinganProposalData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/proposal-list-advisor",
+          `${BASE_URL_API}/group/proposal-list-advisor`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -20,6 +20,7 @@ import "regenerator-runtime/runtime";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PrintBeritaAcaraSkripsi from "./PrintBeritaAcaraSkripsi";
 import { useReactToPrint } from "react-to-print";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const DaftarRiwayatSkripsi = () => {
   // Fungsi untuk mengonversi jam ke dalam format teks
@@ -129,7 +130,7 @@ const DaftarRiwayatSkripsi = () => {
     const fetchTimPanelisData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/skripsi-history-list-sekretaris",
+          `${BASE_URL_API}/group/skripsi-history-list-sekretaris`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

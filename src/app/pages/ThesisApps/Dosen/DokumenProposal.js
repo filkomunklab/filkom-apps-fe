@@ -28,6 +28,7 @@ import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
 import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
 import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
 import MenuSekertaris from "app/shared/MenuHorizontal/MenuSekertaris";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 // View Document Proposal
 const PDFViewerProposal = ({ dokumenProposal }) => {
@@ -110,7 +111,7 @@ const DokumenProposal = () => {
     const fetchDokumenProposalData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-document/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-document/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -129,7 +130,7 @@ const DokumenProposal = () => {
     const fetchBuktiPembayaranData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-payment/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-payment/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -148,7 +149,7 @@ const DokumenProposal = () => {
     const fetchHasilCekPlagiatData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/proposal/proposal-plagiarism-check/${proposalId}`,
+          `${BASE_URL_API}/proposal/proposal-plagiarism-check/${proposalId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -336,7 +337,7 @@ const DokumenProposal = () => {
   const handleApprove = () => {
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-document/approve/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-document/approve/${proposalId}`,
         {},
         {
           headers: {
@@ -364,7 +365,7 @@ const DokumenProposal = () => {
         const fetchDokumenProposalData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-document/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-document/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -394,7 +395,7 @@ const DokumenProposal = () => {
   const handleReject = () => {
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/proposal-document/reject/${proposalId}`,
+        `${BASE_URL_API}/proposal/proposal-document/reject/${proposalId}`,
         {},
         {
           headers: {
@@ -422,7 +423,7 @@ const DokumenProposal = () => {
         const fetchDokumenProposalData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/proposal/proposal-document/${proposalId}`,
+              `${BASE_URL_API}/proposal/proposal-document/${proposalId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai

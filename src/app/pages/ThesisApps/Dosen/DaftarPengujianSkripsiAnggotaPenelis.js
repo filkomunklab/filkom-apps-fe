@@ -31,6 +31,7 @@ import DownloadDoneIcon from "@mui/icons-material/DownloadDone";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SearchIcon from "@mui/icons-material/Search";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const DaftarPengujianSkripsiAnggotaPenelis = () => {
   // State untuk melacak panel accordion yang terbuka
@@ -94,7 +95,7 @@ const DaftarPengujianSkripsiAnggotaPenelis = () => {
     const fetchDaftarPengujianSkripsiData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:2000/api/v1/group/skripsi-list-member",
+          `${BASE_URL_API}/group/skripsi-list-member`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

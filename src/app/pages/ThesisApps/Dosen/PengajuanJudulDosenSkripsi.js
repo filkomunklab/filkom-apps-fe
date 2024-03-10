@@ -29,6 +29,7 @@ import MenuDosen from "app/shared/MenuHorizontal/MenuDosen";
 import MenuDosenSkripsi from "app/shared/MenuHorizontal/MenuDosenSkripsi";
 import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
 import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const PDFViewerJudul = ({ pengajuanJudul }) => {
   const viewPDFJudul = () => {
@@ -71,7 +72,7 @@ const PengajuanJudulDosenSkripsi = () => {
     const fetchPengajuanJudulData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/submission/${submissionId}`,
+          `${BASE_URL_API}/submission/${submissionId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -98,14 +99,11 @@ const PengajuanJudulDosenSkripsi = () => {
     };
     const fetchDaftarDosenData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:2000/api/v1/group/dosen-list`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
-            },
-          }
-        );
+        const response = await axios.get(`${BASE_URL_API}/group/dosen-list`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
+          },
+        });
         setDaftarDosen(response.data.data);
         console.log("Request Get daftar dosen: ", response.data.data);
       } catch (error) {
@@ -147,7 +145,7 @@ const PengajuanJudulDosenSkripsi = () => {
     console.log("token di handle tolak: ", token);
     axios
       .put(
-        `http://localhost:2000/api/v1/submission/reject/${submissionId}`,
+        `${BASE_URL_API}/submission/reject/${submissionId}`,
         {},
         {
           headers: {
@@ -164,7 +162,7 @@ const PengajuanJudulDosenSkripsi = () => {
         const fetchPengajuanJudulData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/submission/${submissionId}`,
+              `${BASE_URL_API}/submission/${submissionId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -205,7 +203,7 @@ const PengajuanJudulDosenSkripsi = () => {
     setConfirmTerimaOpen(false);
     axios
       .put(
-        `http://localhost:2000/api/v1/submission/approve/${submissionId}`,
+        `${BASE_URL_API}/submission/approve/${submissionId}`,
         {},
         {
           headers: {
@@ -222,7 +220,7 @@ const PengajuanJudulDosenSkripsi = () => {
         const fetchPengajuanJudulData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/submission/${submissionId}`,
+              `${BASE_URL_API}/submission/${submissionId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -304,7 +302,7 @@ const PengajuanJudulDosenSkripsi = () => {
     console.log(data);
     axios
       .put(
-        `http://localhost:2000/api/v1/submission/advisor-and-co-advisor/${submissionId}`,
+        `${BASE_URL_API}/submission/advisor-and-co-advisor/${submissionId}`,
         data,
         {
           headers: {
@@ -318,7 +316,7 @@ const PengajuanJudulDosenSkripsi = () => {
         const fetchPengajuanJudulData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/submission/${submissionId}`,
+              `${BASE_URL_API}/submission/${submissionId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,

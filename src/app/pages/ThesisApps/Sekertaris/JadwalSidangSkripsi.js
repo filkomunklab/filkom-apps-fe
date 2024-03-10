@@ -27,6 +27,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const JadwalSidangSkripsi = () => {
   // State untuk melacak panel accordion yang terbuka
@@ -65,14 +66,11 @@ const JadwalSidangSkripsi = () => {
   useEffect(() => {
     const fetchDaftarJadwalSkripsi = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/skripsi/schedule",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${BASE_URL_API}/skripsi/schedule`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         // Atur state 'setDaftarJadwal' dengan data dari respons
         setDaftarJadwal(response.data.data);
         console.log("Request Daftar Jadwal Skripsi", response.data.data);
@@ -82,14 +80,11 @@ const JadwalSidangSkripsi = () => {
     };
     const fetchDaftarDosen = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/group/dosen-list",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${BASE_URL_API}/group/dosen-list`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         // Atur state 'setDaftarDosen' dengan data dari respons
         setDaftarDosen(response.data.data);
         console.log("Request Daftar Dosen", response.data.data);
@@ -218,7 +213,7 @@ const JadwalSidangSkripsi = () => {
     console.log("skripsi_id: ", selectedSkripsiId);
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/schedule/${selectedSkripsiId}`,
+        `${BASE_URL_API}/skripsi/schedule/${selectedSkripsiId}`,
         jadwalBaru,
         {
           headers: {
@@ -247,7 +242,7 @@ const JadwalSidangSkripsi = () => {
         const fetchDaftarJadwalSkripsi = async () => {
           try {
             const response = await axios.get(
-              "http://localhost:2000/api/v1/skripsi/schedule",
+              `${BASE_URL_API}/skripsi/schedule`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,

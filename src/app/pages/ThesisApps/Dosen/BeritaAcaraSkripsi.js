@@ -34,6 +34,7 @@ import MenuKetuaPanelis from "app/shared/MenuHorizontal/MenuKetuaPanelis";
 import MenuAnggotaPanelis from "app/shared/MenuHorizontal/MenuAnggotaPanelis";
 import MenuDekan from "app/shared/MenuHorizontal/MenuDekan";
 import MenuKaprodi from "app/shared/MenuHorizontal/MenuKaprodi";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const BeritaAcara = () => {
   // state - menyimpan request data
@@ -83,7 +84,7 @@ const BeritaAcara = () => {
     const fetchIsOpenData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-report/open-access/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-report/open-access/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -102,7 +103,7 @@ const BeritaAcara = () => {
     const fetchPenilaianData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-assessment/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -129,7 +130,7 @@ const BeritaAcara = () => {
     const fetchPerubahanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-changes/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -145,7 +146,7 @@ const BeritaAcara = () => {
     const fetchBeritaAcaraData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-report/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-report/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -161,7 +162,7 @@ const BeritaAcara = () => {
     const fetchKesimpulanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-report/conclusion/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -177,7 +178,7 @@ const BeritaAcara = () => {
     const fetchNilaiKesimpulanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion-value/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-report/conclusion-value/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -276,7 +277,7 @@ const BeritaAcara = () => {
       console.log("Nilai kesimpulan yang akan dikirim: ", nilaiKesimpulan);
       axios
         .put(
-          `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion-value/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-report/conclusion-value/${skripsiId}`,
           nilaiKesimpulan,
           {
             headers: {
@@ -304,7 +305,7 @@ const BeritaAcara = () => {
     console.log("Tanggal batas revisi yang akan dikirim: ", batasRevisi);
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/submission-dateline/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/submission-dateline/${skripsiId}`,
         batasRevisi,
         {
           headers: {
@@ -330,7 +331,7 @@ const BeritaAcara = () => {
     console.log("Kesimpulan yang akan dikirim: ", kesimpulan);
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/skripsi-report/conclusion/${skripsiId}`,
         kesimpulan,
         {
           headers: {
@@ -348,7 +349,7 @@ const BeritaAcara = () => {
         const fetchKesimpulanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-report/conclusion/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -367,7 +368,7 @@ const BeritaAcara = () => {
         const fetchIsOpenData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-report/open-access/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-report/open-access/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -386,7 +387,7 @@ const BeritaAcara = () => {
         const fetchPenilaianData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-assessment/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -421,7 +422,7 @@ const BeritaAcara = () => {
     if (!isSigned) {
       axios
         .put(
-          `http://localhost:2000/api/v1/skripsi/skripsi-report/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-report/${skripsiId}`,
           {},
           {
             headers: {
@@ -440,7 +441,7 @@ const BeritaAcara = () => {
           const fetchBeritaAcaraData = async () => {
             try {
               const response = await axios.get(
-                `http://localhost:2000/api/v1/skripsi/skripsi-report/${skripsiId}`,
+                `${BASE_URL_API}/skripsi/skripsi-report/${skripsiId}`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -480,7 +481,7 @@ const BeritaAcara = () => {
     const fetchPerubahanData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
+          `${BASE_URL_API}/skripsi/skripsi-changes/${skripsiId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -538,15 +539,11 @@ const BeritaAcara = () => {
       value: total.toString(),
     };
     axios
-      .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
-        nilai,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .put(`${BASE_URL_API}/skripsi/skripsi-assessment/${skripsiId}`, nilai, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         // Set nilai scoreSubmitted menjadi true untuk menampilkan nilai di tabel
         setScoreSubmitted(true);
@@ -576,7 +573,7 @@ const BeritaAcara = () => {
         const fetchPenilaianData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-assessment/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -725,15 +722,11 @@ const BeritaAcara = () => {
       other: lainnya,
     };
     axios
-      .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
-        perubahan,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .put(`${BASE_URL_API}/skripsi/skripsi-changes/${skripsiId}`, perubahan, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         // Setelah tindakan selesai, tutup dialog revisi
         handleCloseRevisionDialog();
@@ -745,7 +738,7 @@ const BeritaAcara = () => {
         const fetchPerubahanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-changes/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -781,7 +774,7 @@ const BeritaAcara = () => {
   const handleBukaKonfirmasi = () => {
     axios
       .put(
-        `http://localhost:2000/api/v1/skripsi/skripsi-report/open-access/${skripsiId}`,
+        `${BASE_URL_API}/skripsi/skripsi-report/open-access/${skripsiId}`,
         {},
         {
           headers: {
@@ -798,7 +791,7 @@ const BeritaAcara = () => {
         const fetchIsOpenData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-report/open-access/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-report/open-access/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -817,7 +810,7 @@ const BeritaAcara = () => {
         const fetchPenilaianData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-assessment/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-assessment/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -833,7 +826,7 @@ const BeritaAcara = () => {
         const fetchPerubahanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-changes/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-changes/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -849,7 +842,7 @@ const BeritaAcara = () => {
         const fetchBeritaAcaraData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-report/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-report/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai
@@ -868,7 +861,7 @@ const BeritaAcara = () => {
         const fetchKesimpulanData = async () => {
           try {
             const response = await axios.get(
-              `http://localhost:2000/api/v1/skripsi/skripsi-report/conclusion/${skripsiId}`,
+              `${BASE_URL_API}/skripsi/skripsi-report/conclusion/${skripsiId}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gantilah 'token' dengan nilai token yang sesuai

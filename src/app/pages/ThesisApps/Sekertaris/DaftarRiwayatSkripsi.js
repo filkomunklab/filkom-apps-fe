@@ -17,6 +17,7 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const DaftarRiwayatSkripsi = () => {
   // State untuk melacak panel accordion yang terbuka
@@ -42,14 +43,11 @@ const DaftarRiwayatSkripsi = () => {
   useEffect(() => {
     const fetchDaftarJadwalSkripsi = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/skripsi/schedule",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${BASE_URL_API}/skripsi/schedule`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         // Atur state 'setDaftarJadwal' dengan data dari respons
         setDaftarJadwal(response.data.data);
         console.log("Request Daftar Jadwal Skripsi", response.data.data);
@@ -59,14 +57,11 @@ const DaftarRiwayatSkripsi = () => {
     };
     const fetchDaftarDosen = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/group/dosen-list",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${BASE_URL_API}/group/dosen-list`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         // Atur state 'setDaftarDosen' dengan data dari respons
         setDaftarDosen(response.data.data);
         console.log("Request Daftar Dosen", response.data.data);

@@ -33,6 +33,7 @@ import { Link } from "react-router-dom";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { BASE_URL_API } from "@jumbo/config/env";
 
 const JadwalSidangProposal = () => {
   // State untuk melacak panel accordion yang terbuka
@@ -78,14 +79,11 @@ const JadwalSidangProposal = () => {
   useEffect(() => {
     const fetchDaftarJadwalProposal = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/proposal/schedule",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${BASE_URL_API}/proposal/schedule`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         // Atur state 'setDaftarJadwal' dengan data dari respons
         setDaftarJadwal(response.data.data);
         console.log("Request Daftar Jadwal Proposal", response.data.data);
@@ -95,14 +93,11 @@ const JadwalSidangProposal = () => {
     };
     const fetchDaftarDosen = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:2000/api/v1/group/dosen-list",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${BASE_URL_API}/group/dosen-list`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         // Atur state 'setDaftarDosen' dengan data dari respons
         setDaftarDosen(response.data.data);
         console.log("Request Daftar Dosen", response.data.data);
@@ -219,7 +214,7 @@ const JadwalSidangProposal = () => {
     console.log("proposal_id: ", selectedProposalId);
     axios
       .put(
-        `http://localhost:2000/api/v1/proposal/schedule/${selectedProposalId}`,
+        `${BASE_URL_API}/proposal/schedule/${selectedProposalId}`,
         jadwalBaru,
         {
           headers: {
@@ -250,7 +245,7 @@ const JadwalSidangProposal = () => {
         const fetchDaftarJadwalProposal = async () => {
           try {
             const response = await axios.get(
-              "http://localhost:2000/api/v1/proposal/schedule",
+              `${BASE_URL_API}/proposal/schedule`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -270,7 +265,7 @@ const JadwalSidangProposal = () => {
         const fetchDaftarDosen = async () => {
           try {
             const response = await axios.get(
-              "http://localhost:2000/api/v1/group/dosen-list",
+              `${BASE_URL_API}/group/dosen-list`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
