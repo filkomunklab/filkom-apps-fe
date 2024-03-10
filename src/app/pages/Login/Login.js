@@ -21,8 +21,8 @@ import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
 import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
 import { useMediaQuery } from "@mui/material";
 
-import { FormAfterLoginStudent } from "./components";
-import jwtAuthAxios from "app/services/Auth/jwtAuth";
+// import { FormAfterLoginStudent } from "./components";
+// import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import Swal from "sweetalert2";
 
 const useStyles = makeStyles((theme) => ({
@@ -71,10 +71,10 @@ const signInSchema = yup.object({
 });
 
 const Login = () => {
-  const [openModal, setOpenModal] = useState(false);
-  const [profileMahasiswa, setProfileMahasiswa] = useState([]);
-  const [userLogin, setUserLogin] = useState("");
-  const [tokenUser, setTokenUser] = useState("");
+  // const [openModal, setOpenModal] = useState(false);
+  // const [profileMahasiswa, setProfileMahasiswa] = useState([]);
+  // const [userLogin, setUserLogin] = useState("");
+  // const [tokenUser, setTokenUser] = useState("");
   const style = useStyles();
   const maxWidth515 = useMediaQuery("(max-width: 515px)");
 
@@ -107,58 +107,64 @@ const Login = () => {
 
               console.log(token, user);
 
-              if (user.role === "MAHASISWA") {
-                const response = await jwtAuthAxios.get(
-                  `student/biodata/check/${user.nim}`,
-                  {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
-                  }
-                );
+              // if (user.role === "MAHASISWA") {
+              //   const response = await jwtAuthAxios.get(
+              //     `student/biodata/check/${user.nim}`,
+              //     {
+              //       headers: {
+              //         Authorization: `Bearer ${token}`,
+              //       },
+              //     }
+              //   );
 
-                if (response.data.data.biodataCheck) {
-                  setAuthToken(token);
+              //   if (response.data.data.biodataCheck) {
+              //     setAuthToken(token);
 
-                  console.log("ini user loh: ", user);
-                  localStorage.setItem("user", JSON.stringify(user));
+              //     console.log("ini user loh: ", user);
+              //     localStorage.setItem("user", JSON.stringify(user));
 
-                  navigate("/");
-                } else {
-                  const response = await jwtAuthAxios.get(
-                    `student/${user.nim}`,
-                    {
-                      headers: {
-                        Authorization: `Bearer ${token}`,
-                      },
-                    }
-                  );
-                  const responseCurriculum = await jwtAuthAxios.get(
-                    `curriculum/${response.data.data.curriculumId}`,
-                    {
-                      headers: {
-                        Authorization: `Bearer ${token}`,
-                      },
-                    }
-                  );
+              //     navigate("/");
+              //   } else {
+              //     const response = await jwtAuthAxios.get(
+              //       `student/${user.nim}`,
+              //       {
+              //         headers: {
+              //           Authorization: `Bearer ${token}`,
+              //         },
+              //       }
+              //     );
+              //     const responseCurriculum = await jwtAuthAxios.get(
+              //       `curriculum/${response.data.data.curriculumId}`,
+              //       {
+              //         headers: {
+              //           Authorization: `Bearer ${token}`,
+              //         },
+              //       }
+              //     );
 
-                  const data = {
-                    ...response.data.data,
-                    curriculum: responseCurriculum.data.data,
-                  };
-                  console.log("ini data: ", data);
-                  setProfileMahasiswa(data);
-                  setUserLogin(user);
-                  setOpenModal(true);
-                }
-              } else {
-                setAuthToken(token);
+              //     const data = {
+              //       ...response.data.data,
+              //       curriculum: responseCurriculum.data.data,
+              //     };
+              //     console.log("ini data: ", data);
+              //     setProfileMahasiswa(data);
+              //     setUserLogin(user);
+              //     setOpenModal(true);
+              //   }
+              // } else {
+              //   setAuthToken(token);
 
-                console.log("ini user loh: ", user);
-                localStorage.setItem("user", JSON.stringify(user));
+              //   console.log("ini user loh: ", user);
+              //   localStorage.setItem("user", JSON.stringify(user));
 
-                navigate("/");
-              }
+              //   navigate("/");
+              // }
+              setAuthToken(token);
+
+              console.log("ini user loh: ", user);
+              localStorage.setItem("user", JSON.stringify(user));
+
+              navigate("/");
             } catch (error) {
               console.log(error);
               Swal.fire({
@@ -303,13 +309,13 @@ const Login = () => {
           />
         </Div>
       </Div>
-      <FormAfterLoginStudent
+      {/* <FormAfterLoginStudent
         openModal={openModal}
         setOpenModal={setOpenModal}
         profileMahasiswa={profileMahasiswa}
         userLogin={userLogin}
         tokenUser={tokenUser}
-      />
+      /> */}
     </Div>
   );
 };
