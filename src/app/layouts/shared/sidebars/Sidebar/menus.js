@@ -132,104 +132,104 @@ export const sekretarisMenus = [
 ];
 
 export const mahasiswaMenus = [
-  {
-    label: "Klabat Bridge",
-    type: "section",
-    children: [
-      // CALON TAMATAN ===============
-      {
-        label: "Dashboard",
-        type: "nav-item",
-        icon: <DashboardIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/dashboard",
-      },
-      {
-        label: "SPT Form",
-        type: "nav-item",
-        icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
-        uri: "/klabat-bridge/home-calon-tamatan",
-      },
+  // {
+  //   label: "Klabat Bridge",
+  //   type: "section",
+  //   children: [
+  //     // CALON TAMATAN ===============
+  //     {
+  //       label: "Dashboard",
+  //       type: "nav-item",
+  //       icon: <DashboardIcon sx={{ fontSize: 20 }} />,
+  //       uri: "/klabat-bridge/dashboard",
+  //     },
+  //     {
+  //       label: "SPT Form",
+  //       type: "nav-item",
+  //       icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
+  //       uri: "/klabat-bridge/home-calon-tamatan",
+  //     },
 
-      // {
-      //   label: "SPT Form",
-      //   type: "nav-item",
-      //   icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
-      //   uri: "/klabat-bridge/pengisian-spt",
-      // },
-    ],
-  },
-  {
-    label: "Bimbingan Akademik",
-    type: "section",
-    children: [
-      {
-        label: "Academic Guide",
-        type: "nav-item",
-        icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/academic-guide",
-      },
-      {
-        label: "Vision Mission Goals",
-        type: "nav-item",
-        icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/vision-mission-goals",
-      },
-      {
-        label: "Curriculum",
-        type: "nav-item",
-        icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/curriculum",
-      },
-      {
-        label: "Grades",
-        type: "nav-item",
-        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/student-grade",
-      },
-      {
-        label: "Certificates",
-        type: "nav-item",
-        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/certificates",
-      },
-      {
-        label: "Current Activities",
-        type: "nav-item",
-        icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/current-activities",
-      },
-      {
-        label: "History",
-        type: "nav-item",
-        icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/history",
-      },
-      {
-        label: "Grade Submission",
-        type: "nav-item",
-        icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/grade-submission",
-      },
-      {
-        label: "Pre-registration",
-        type: "nav-item",
-        icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/pre-registration",
-      },
-      {
-        label: "Consultation",
-        type: "nav-item",
-        icon: <PermContactCalendarIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/consultation",
-      },
-      {
-        label: "Profile",
-        type: "nav-item",
-        icon: <PersonIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/profile",
-      },
-    ],
-  },
+  //     // {
+  //     //   label: "SPT Form",
+  //     //   type: "nav-item",
+  //     //   icon: <FormatListBulletedIcon sx={{ fontSize: 20 }} />,
+  //     //   uri: "/klabat-bridge/pengisian-spt",
+  //     // },
+  //   ],
+  // },
+  // {
+  //   label: "Bimbingan Akademik",
+  //   type: "section",
+  //   children: [
+  //     {
+  //       label: "Academic Guide",
+  //       type: "nav-item",
+  //       icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
+  //       uri: "/bimbingan-akademik/academic-guide",
+  //     },
+  //     {
+  //       label: "Vision Mission Goals",
+  //       type: "nav-item",
+  //       icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
+  //       uri: "/bimbingan-akademik/vision-mission-goals",
+  //     },
+  //     {
+  //       label: "Curriculum",
+  //       type: "nav-item",
+  //       icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
+  //       uri: "/bimbingan-akademik/curriculum",
+  //     },
+  //     {
+  //       label: "Grades",
+  //       type: "nav-item",
+  //       icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+  //       uri: "/bimbingan-akademik/student-grade",
+  //     },
+  //     {
+  //       label: "Certificates",
+  //       type: "nav-item",
+  //       icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+  //       uri: "/bimbingan-akademik/certificates",
+  //     },
+  //     {
+  //       label: "Current Activities",
+  //       type: "nav-item",
+  //       icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
+  //       uri: "/bimbingan-akademik/current-activities",
+  //     },
+  //     {
+  //       label: "History",
+  //       type: "nav-item",
+  //       icon: <FileCopyIcon sx={{ fontSize: 20 }} />,
+  //       uri: "/bimbingan-akademik/history",
+  //     },
+  //     {
+  //       label: "Grade Submission",
+  //       type: "nav-item",
+  //       icon: <LibraryAddIcon sx={{ fontSize: 20 }} />,
+  //       uri: "/bimbingan-akademik/grade-submission",
+  //     },
+  //     {
+  //       label: "Pre-registration",
+  //       type: "nav-item",
+  //       icon: <LibraryBooksIcon sx={{ fontSize: 20 }} />,
+  //       uri: "/bimbingan-akademik/pre-registration",
+  //     },
+  //     {
+  //       label: "Consultation",
+  //       type: "nav-item",
+  //       icon: <PermContactCalendarIcon sx={{ fontSize: 20 }} />,
+  //       uri: "/bimbingan-akademik/consultation",
+  //     },
+  //     {
+  //       label: "Profile",
+  //       type: "nav-item",
+  //       icon: <PersonIcon sx={{ fontSize: 20 }} />,
+  //       uri: "/bimbingan-akademik/profile",
+  //     },
+  //   ],
+  // },
   {
     label: "Sistem Informasi Skripsi",
     type: "section",
