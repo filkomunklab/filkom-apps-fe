@@ -202,7 +202,7 @@ const SidebarHeader = () => {
             cursor: "pointer",
           },
         }}
-        onClick={handleClick}
+        // onClick={handleClick}
       >
         <Avatar
           src={accessRole === "MAHASISWA" ? studentProfileData.path : undefined}
