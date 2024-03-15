@@ -31,10 +31,6 @@ import {
   handleAuthenticationError,
 } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
-const role = Boolean(localStorage.getItem("user"))
-  ? JSON.parse(localStorage.getItem("user")).role
-  : [];
-
 const style = {
   position: "absolute",
   top: "50%",
@@ -121,7 +117,6 @@ const StudentProfile = () => {
   };
 
   const changeStatus = async (value) => {
-    console.log("Change status to:", value);
     try {
       setIsLoading(true);
       handleClosePopover();
@@ -168,10 +163,6 @@ const StudentProfile = () => {
 
   useEffect(() => {
     getProfile();
-    console.log(
-      "ini isi student id studentinformation profil faculty",
-      studentId
-    );
     return () => controller.abort();
   }, []);
 
@@ -410,13 +401,13 @@ const StudentProfile = () => {
                     paddingTop: 2,
                   }}
                 >
-                  Change Status Student?
+                  Change Student Status?
                 </Typography>
                 <Typography
                   id="modal-modal-description"
                   style={{ marginTop: "16px", marginBottom: "20px" }}
                 >
-                  Are you sure you want to change status student?
+                  Are you sure you want to change student status?
                 </Typography>
 
                 <Grid container spacing={1} justifyContent="flex-end">
@@ -541,18 +532,6 @@ const StudentProfile = () => {
       </Accordion>
     </Div>
   );
-};
-
-const getRole = () => {
-  const filter = role.includes("KAPRODI")
-    ? "kaprodi"
-    : role.includes("DEKAN")
-    ? "dekan"
-    : role.includes("OPERATOR_FAKULTAS")
-    ? "sekretaris"
-    : "dosen-pembimbing";
-
-  return filter;
 };
 
 const textStyle = {
