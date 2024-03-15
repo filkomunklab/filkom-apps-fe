@@ -24,6 +24,7 @@ import { useMediaQuery } from "@mui/material";
 import { FormAfterLoginStudent } from "./components";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import Swal from "sweetalert2";
+import { cleanDigitSectionValue } from "@mui/x-date-pickers/internals/hooks/useField/useField.utils";
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
@@ -52,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.75)",
   },
-  "@media (max-width: 927px)": {
+  "@media (maxWidth: 927px)": {
     pageContainer: {
       flexDirection: "column",
       alignItems: "center",
@@ -76,10 +77,14 @@ const Login = () => {
   const [userLogin, setUserLogin] = useState("");
   const [tokenUser, setTokenUser] = useState("");
   const style = useStyles();
-  const maxWidth515 = useMediaQuery("(max-width: 515px)");
+  const maxWidth515 = useMediaQuery("(maxWidth: 515px)");
 
   const { setAuthToken } = useJumboAuth();
   const navigate = useNavigate();
+
+  const blueTheme = {
+    confirmButtonColor: "#007BFF",
+  };
 
   return (
     <Div className={style.pageContainer}>
@@ -106,19 +111,16 @@ const Login = () => {
               const { token, user } = await authService.signIn(data);
 
               console.log(token, user);
-
               if (user.role === "MAHASISWA") {
                 const response = await jwtAuthAxios.get(
-                  `student/biodata/check/${
-                    JSON.parse(localStorage.getItem("user")).id
-                  }`,
+                  `student/biodata/check/${user.id}`,
                   {
                     headers: {
                       Authorization: `Bearer ${token}`,
                     },
                   }
                 );
-
+                console.log("ini response: ", response);
                 if (response.data.data.biodataCheck) {
                   setAuthToken(token);
 
@@ -167,6 +169,7 @@ const Login = () => {
                 icon: "error",
                 title: "Oops...",
                 text: "Username atau password salah",
+                ...blueTheme,
               });
             } finally {
               setSubmitting(false);
