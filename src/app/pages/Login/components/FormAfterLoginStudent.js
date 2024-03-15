@@ -32,30 +32,12 @@ const formSchema = Yup.object().shape({
   guardianEmail: Yup.string()
     .email()
     .required("Parent / Guardian Email is Required"),
-  guardianStatus: Yup.string().required(
-    "Parent / Guardian Mariage Status is Required"
-  ),
-  guardianEducation: Yup.string().required(
-    "Parent / Guardian Level of Education is Required"
-  ),
-  currentAddress: Yup.string()
-    .min(3, "Current Address must be at least 3 digits")
-    .max(100, "Current Address cannot be more than 100 digits")
-    .required("Current Address is Required"),
-  highSchoolGrad: Yup.string()
-    .min(3, "Prev High School must be at least 3 digits")
-    .max(100, "Prev High School cannot be more than 100 digits")
-    .required("Prev High School is Required"),
-  AreaOfConcentration: Yup.string().required(
-    "Area of Concentration is Required"
-  ),
   phoneNo: Yup.string()
     .matches(/^\d+$/, "Student phone number must only contain digits")
     .min(10, "Student Phone No must be at least 10 digits")
     .max(13, "Studnet Phone No cannot be more than 13 digits")
     .required("Student Phone Number is Required"),
   dateOfBirth: Yup.string().required("Date of Birth is Required"),
-  bloodType: Yup.string().required("Blood Type is Required"),
   base64Image: Yup.string().nullable(false).required("Image is Required"),
   confirmNewPassword: Yup.string()
     .trim("Confirm New Password cannot include leading and trailing spaces")
@@ -91,12 +73,9 @@ const FormAfterLoginStudent = ({
   });
 
   const navigate = useNavigate();
-  const [showLabelBloodType, setShowLabelBloodType] = useState(true);
   const [showLabelAreaOfConcentration, setShowLabelAreaOfConcentration] =
     useState(true);
-  const [showLabelLevelOfEducation, setShowLabelLevelOfEducation] =
-    useState(true);
-  const [showLabelMarriageStatus, setShowLabelMarriageStatus] = useState(true);
+  useState(true);
   const [loading, setLoading] = useState(false);
   const [openFirstModal, setOpenFirstModal] = useState(false);
   const handleOpenFirstModal = () => setOpenFirstModal(true);
@@ -108,15 +87,10 @@ const FormAfterLoginStudent = ({
   const [fileName, setFileName] = useState("");
   const [base64Image, setBase64Image] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [bloodType, setBloodType] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
   const [AreaOfConcentration, setAreaOfConcentration] = useState("");
-  const [highSchoolGrad, setHighSchoolGrad] = useState("");
-  const [currentAddress, setCurrentAddress] = useState("");
 
   // field input parent / guardian
-  const [guardianEducation, setGuardianEducation] = useState("");
-  const [guardianStatus, setGuardianStatus] = useState("");
   const [guardianEmail, setGuardianEmail] = useState("");
   const [guardianPhoneNo, setGuardianPhoneNo] = useState("");
 
@@ -161,14 +135,9 @@ const FormAfterLoginStudent = ({
           newPassword,
           confirmNewPassword,
           base64Image,
-          bloodType,
           dateOfBirth,
           phoneNo,
           AreaOfConcentration,
-          highSchoolGrad,
-          currentAddress,
-          guardianEducation,
-          guardianStatus,
           guardianEmail,
           guardianPhoneNo,
         },
@@ -212,17 +181,12 @@ const FormAfterLoginStudent = ({
 
       console.log("ini waktu iso loh: ", waktuISO8601);
       await axios.patch(
-        `${BASE_URL_API}/student/biodata/${profileMahasiswa.nim}`,
+        `${BASE_URL_API}/student/biodata/${profileMahasiswa.id}`,
         {
-          bloodType,
           password: newPassword,
           dateOfBirth: waktuISO8601,
           phoneNo: phoneNo.trim(),
-          AreaOfConcentration,
-          highSchoolGrad: highSchoolGrad.trim(),
-          currentAddress: currentAddress.trim(),
-          guardianEducation,
-          guardianStatus,
+          areaOfConcentration: AreaOfConcentration,
           guardianEmail: guardianEmail.trim(),
           guardianPhoneNo: guardianPhoneNo.trim(),
           studentImage: {
@@ -386,6 +350,7 @@ const FormAfterLoginStudent = ({
                       placeholder="Enter New Password..."
                       fullWidth
                       value={newPassword}
+                      type="password"
                       onChange={(event) => setNewPassword(event.target.value)}
                       size="small"
                       sx={{
@@ -405,6 +370,7 @@ const FormAfterLoginStudent = ({
                     <TextField
                       id="outlined-basic-1"
                       variant="outlined"
+                      type="password"
                       placeholder="Enter Confirmation New Password..."
                       fullWidth
                       value={confirmNewPassword}
@@ -486,49 +452,6 @@ const FormAfterLoginStudent = ({
                       {profileMahasiswa?.religion || "-"}
                     </Typography>
                   </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <RTypography variant="h5">Blood Type</RTypography>
-                    <FormControl
-                      size="small"
-                      sx={{ backgroundColor: "white" }}
-                      fullWidth
-                    >
-                      <InputLabel shrink={false}>
-                        {showLabelBloodType ? "Select Option" : ""}
-                      </InputLabel>
-                      <Select
-                        sx={{
-                          padding: 0.5,
-                        }}
-                        value={bloodType}
-                        onChange={(event) => {
-                          setBloodType(event.target.value);
-                          setShowLabelBloodType(false);
-                        }}
-                        MenuProps={{
-                          PaperProps: {
-                            style: {
-                              maxHeight: "37%",
-                            },
-                          },
-                        }}
-                      >
-                        <MenuItem value="A">A</MenuItem>
-                        <MenuItem value="B">B</MenuItem>
-                        <MenuItem value="AB">AB</MenuItem>
-                        <MenuItem value="O">O</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <Typography variant="h5">Marital Status</Typography>
-                    <Typography variant="h6" sx={textStyle}>
-                      {profileMahasiswa?.MaritalStatus || "-"}
-                    </Typography>
-                  </Grid>
-
                   <Grid item xs={12} md={6}>
                     <Typography variant="h5">Student Email</Typography>
                     <Typography variant="h6" sx={textStyle}>
@@ -590,13 +513,13 @@ const FormAfterLoginStudent = ({
                           },
                         }}
                       >
-                        <MenuItem value="Object Programmer">
+                        <MenuItem value="OBJECT_PROGRAMMER">
                           Object Programmer
                         </MenuItem>
-                        <MenuItem value="Competitive Intelligent Analysis">
+                        <MenuItem value="COMPETITIVE_INTELEGENT_ANALYSIS">
                           Competitive Intelligent Analysis
                         </MenuItem>
-                        <MenuItem value="Network Administrator">
+                        <MenuItem value="NETWORK_ADMINISTRATOR">
                           Network Administrator
                         </MenuItem>
                       </Select>
@@ -604,48 +527,10 @@ const FormAfterLoginStudent = ({
                   </Grid>
 
                   <Grid item xs={12} md={6}>
-                    <RTypography variant="h5">Previous High School</RTypography>
-                    <TextField
-                      id="outlined-basic-1"
-                      variant="outlined"
-                      placeholder="Enter Previous High School..."
-                      fullWidth
-                      value={highSchoolGrad}
-                      onChange={(event) =>
-                        setHighSchoolGrad(event.target.value)
-                      }
-                      size="small"
-                      sx={{
-                        backgroundColor: "white",
-                        "& input": { padding: 1.5 },
-                      }}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
                     <Typography variant="h5">Address</Typography>
                     <Typography variant="h6" sx={textStyle}>
                       {profileMahasiswa?.address || "-"}
                     </Typography>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <RTypography variant="h5">Current Address</RTypography>
-                    <TextField
-                      id="outlined-basic-1"
-                      variant="outlined"
-                      placeholder="Enter address..."
-                      fullWidth
-                      value={currentAddress}
-                      onChange={(event) =>
-                        setCurrentAddress(event.target.value)
-                      }
-                      size="small"
-                      sx={{
-                        backgroundColor: "white",
-                        "& input": { padding: 1.5 },
-                      }}
-                    />
                   </Grid>
 
                   <Grid item xs={12} md={6}>
@@ -676,90 +561,6 @@ const FormAfterLoginStudent = ({
                     </Typography>
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <RTypography variant="h5">Level of Education</RTypography>
-                    <FormControl
-                      size="small"
-                      sx={{ backgroundColor: "white" }}
-                      fullWidth
-                    >
-                      <InputLabel shrink={false}>
-                        {showLabelLevelOfEducation ? "Select Option" : ""}
-                      </InputLabel>
-                      <Select
-                        sx={{
-                          padding: 0.5,
-                        }}
-                        value={guardianEducation}
-                        onChange={(event) => {
-                          setGuardianEducation(event.target.value);
-                          setShowLabelLevelOfEducation(false);
-                        }}
-                        MenuProps={{
-                          PaperProps: {
-                            style: {
-                              maxHeight: "37%",
-                            },
-                          },
-                        }}
-                      >
-                        <MenuItem value="S1">S3</MenuItem>
-                        <MenuItem value="S2">S2</MenuItem>
-                        <MenuItem value="S3">S1</MenuItem>
-                        <MenuItem value="D3">D3</MenuItem>
-                        <MenuItem value="D2">D2</MenuItem>
-                        <MenuItem value="D1">D1</MenuItem>
-                        <MenuItem value="SMA/SMK Sederajat">
-                          SMA/SMK Sederajat
-                        </MenuItem>
-                        <MenuItem value="Lainnya">Lainnya</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Typography variant="h5">Religion</Typography>
-                    <Typography variant="h6" sx={textStyle}>
-                      {profileMahasiswa?.guardianReligion || "-"}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <RTypography variant="h5">Marriage Status</RTypography>
-                    <FormControl
-                      size="small"
-                      sx={{ backgroundColor: "white" }}
-                      fullWidth
-                    >
-                      <InputLabel shrink={false}>
-                        {showLabelMarriageStatus ? "Select Option" : ""}
-                      </InputLabel>
-                      <Select
-                        sx={{
-                          padding: 0.5,
-                        }}
-                        value={guardianStatus}
-                        onChange={(event) => {
-                          setGuardianStatus(event.target.value);
-                          setShowLabelMarriageStatus(false);
-                        }}
-                        MenuProps={{
-                          PaperProps: {
-                            style: {
-                              maxHeight: "37%",
-                            },
-                          },
-                        }}
-                      >
-                        <MenuItem value="Belum Menikah">Belum Menikah</MenuItem>
-                        <MenuItem value="Menikah">Menikah</MenuItem>
-                        <MenuItem
-                          value="Cerai Hidup / Cerai
-                         Mati"
-                        >
-                          Lainnya
-                        </MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
                     <Typography variant="h5">Family Relationship</Typography>
                     <Typography variant="h6" sx={textStyle}>
                       {profileMahasiswa?.familyRelation || "-"}
@@ -782,7 +583,7 @@ const FormAfterLoginStudent = ({
                     />
                   </Grid>
 
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={12}>
                     <RTypography variant="h5">Phone</RTypography>
                     <TextField
                       id="outlined-basic-1"
@@ -799,12 +600,6 @@ const FormAfterLoginStudent = ({
                         "& input": { padding: 1.5 },
                       }}
                     />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="h5">Address</Typography>
-                    <Typography variant="h6" sx={textStyle}>
-                      {profileMahasiswa?.guardianAddress || "-"}
-                    </Typography>
                   </Grid>
                 </Grid>
               </Box>

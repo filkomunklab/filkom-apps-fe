@@ -36,6 +36,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
 import { MoreVert } from "@mui/icons-material";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const styleModal = {
   position: "absolute",
@@ -97,13 +101,13 @@ const preregisSchema = Yup.object({
 
 const gradeSchema = Yup.object({
   semester: Yup.string("Select Semester").required("Semester is required"),
-  semester_period: Yup.string()
+  semesterPeriod: Yup.string()
     .matches(
       /^(19|20)\d{2}\/(19|20)\d{2}$/,
       'Invalid format. Please use "YYYY/YYYY".'
     )
     .required("Semester Period is required"),
-  due_date: Yup.date("Choose DueDate").required("DueDate is required"),
+  dueDate: Yup.date("Choose DueDate").required("DueDate is required"),
 });
 
 const Manage = () => {
@@ -134,13 +138,14 @@ const Manage = () => {
 
   //handle error
   const handleError = (error) => {
-    if (
-      error.response &&
-      error.response.status >= 401 &&
-      error.response.status <= 403
-    ) {
-      console.log("You don't have permission to access this page");
-      navigate(`/`);
+    if (error.response && error.response.status === 403) {
+      handlePermissionError();
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      return;
+    } else if (error.response && error.response.status === 401) {
+      handleAuthenticationError();
     } else {
       console.log("ini error: ", error);
     }
@@ -442,7 +447,7 @@ const Manage = () => {
                         sx={{
                           fontWeight: 600,
                           paddingBottom: 3,
-                          "@media (max-width: 390px)": {
+                          "@media (maxWidth: 390px)": {
                             fontSize: "15px",
                           },
                         }}
@@ -457,12 +462,12 @@ const Manage = () => {
                       semesterPeriod: "",
                       major: "",
                       dueDate: null,
-                      employeeNik:
-                        JSON.parse(localStorage.getItem("user"))?.nik || "",
+                      employeeId:
+                        JSON.parse(localStorage.getItem("user"))?.id || "",
                     }}
                     validationSchema={preregisSchema}
                     onSubmit={async (values, { resetForm, setSubmitting }) => {
-                      const { nik } = JSON.parse(localStorage.getItem("user"));
+                      const { id } = JSON.parse(localStorage.getItem("user"));
                       setLoading(true);
 
                       // buat dueDate ke WITA
@@ -476,7 +481,7 @@ const Manage = () => {
                       values.semesterPeriod = values.semesterPeriod;
                       values.major = major;
                       values.dueDate = new Date(dueDateWITA);
-                      values.employeeNik = nik;
+                      values.employeeId = id;
 
                       try {
                         const response = await jwtAuthAxios.post(
@@ -616,6 +621,7 @@ const Manage = () => {
                       position: "sticky",
                       top: 0,
                       backgroundColor: "rgba(26, 56, 96, 0.1)",
+                      zIndex: 1,
                     }}
                   >
                     <TableRow>
@@ -626,7 +632,7 @@ const Manage = () => {
                       <TableCell>Year</TableCell>
                       <TableCell>Due Date Estimation</TableCell>
                       <TableCell>Status</TableCell>
-                      <TableCell>Action</TableCell>
+                      {/* <TableCell>Action</TableCell> */}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -702,12 +708,16 @@ const Manage = () => {
                           </TableCell>
                           <TableCell
                             sx={{
-                              width: "200px",
+                              width: "150px",
                             }}
                           >
                             {value.isOpen ? "Open" : "Closed"}
                           </TableCell>
-                          <TableCell>
+                          {/* <TableCell
+                            sx={{
+                              width: "150px",
+                            }}
+                          >
                             <MoreVert
                               aria-describedby={value.id}
                               onClick={(e) => {
@@ -734,7 +744,7 @@ const Manage = () => {
                                 Close
                               </Button>
                             </Popover>
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
                       ))
                     ) : (
@@ -777,7 +787,7 @@ const Manage = () => {
                           sx={{
                             fontWeight: 600,
                             paddingBottom: 3,
-                            "@media (max-width: 390px)": {
+                            "@media (maxWidth: 390px)": {
                               fontSize: "15px",
                             },
                           }}
@@ -911,7 +921,7 @@ const Manage = () => {
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  "@media (max-width: 650px)": { justifyContent: "flex-start" },
+                  "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
                 }}
                 rowsPerPageOptions={[10, 25, 50, 100]}
                 component="div"
@@ -1020,7 +1030,7 @@ const Manage = () => {
                         sx={{
                           fontWeight: 600,
                           paddingBottom: 3,
-                          "@media (max-width: 390px)": {
+                          "@media (maxWidth: 390px)": {
                             fontSize: "15px",
                           },
                         }}
@@ -1032,21 +1042,21 @@ const Manage = () => {
                   <Formik
                     initialValues={{
                       semester: "",
-                      semester_period: "",
+                      semesterPeriod: "",
                       major: "",
-                      due_date: null,
-                      employeeNik:
-                        JSON.parse(localStorage.getItem("user"))?.nik || "",
+                      dueDate: null,
+                      employeeId:
+                        JSON.parse(localStorage.getItem("user"))?.id || "",
                     }}
                     validationSchema={gradeSchema}
                     onSubmit={async (values, { resetForm, setSubmitting }) => {
-                      const { nik } = JSON.parse(localStorage.getItem("user"));
+                      const { id } = JSON.parse(localStorage.getItem("user"));
                       setLoading(true);
                       values.semester = values.semester;
-                      values.semester_period = values.semester_period;
+                      values.semesterPeriod = values.semesterPeriod;
                       values.major = major;
-                      values.due_date = values.due_date;
-                      values.employeeNik = nik;
+                      values.dueDate = values.dueDate;
+                      values.employeeId = id;
                       try {
                         const result = await jwtAuthAxios.post(
                           `/access/open/grades`,
@@ -1103,7 +1113,7 @@ const Manage = () => {
                           </Grid>
                           <Grid xs={12} item>
                             <JumboTextField
-                              name="semester_period"
+                              name="semesterPeriod"
                               variant="outlined"
                               label="Semester Period (e.g., 2023/2024)"
                               sx={{ margin: "0 0 20px 0" }}
@@ -1120,9 +1130,9 @@ const Manage = () => {
                                   margin: "0 0 20px 0",
                                 }}
                                 label="Choose Due Date"
-                                value={values.due_date || null}
+                                value={values.dueDate || null}
                                 onChange={(date) =>
-                                  setFieldValue("due_date", date)
+                                  setFieldValue("dueDate", date)
                                 }
                                 TextField={(params) => (
                                   <TextField {...params} />
@@ -1173,6 +1183,7 @@ const Manage = () => {
                       position: "sticky",
                       top: 0,
                       backgroundColor: "rgba(26, 56, 96, 0.1)",
+                      zIndex: 1,
                     }}
                   >
                     <TableRow>
@@ -1183,26 +1194,13 @@ const Manage = () => {
                       <TableCell>Year</TableCell>
                       <TableCell>Due Date Estimation</TableCell>
                       <TableCell>Status</TableCell>
-                      <TableCell>Action</TableCell>
+                      {/* <TableCell>Action</TableCell> */}
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {dataGrades && dataGrades.length > 0 ? (
                       dataGrades.map((value, index) => (
-                        <TableRow
-                          key={value.id}
-                          // onClick={() => handleNavigate(value)}
-                          sx={{
-                            ":hover": {
-                              cursor: "pointer",
-                              backgroundColor: "#338CFF21",
-                              transition: "0.3s",
-                              transitionTimingFunction: "ease-in-out",
-                              transitionDelay: "0s",
-                              transitionProperty: "all",
-                            },
-                          }}
-                        >
+                        <TableRow key={value.id}>
                           <TableCell sx={{ width: "80px" }}>
                             {index + 1}
                           </TableCell>
@@ -1216,11 +1214,7 @@ const Manage = () => {
                               }
                             )}
                           </TableCell>
-                          <TableCell
-                            sx={{
-                              width: "200px",
-                            }}
-                          >
+                          <TableCell sx={{ width: "200px" }}>
                             {value.major === "IF"
                               ? "Informatics"
                               : value.major === "SI"
@@ -1229,26 +1223,14 @@ const Manage = () => {
                               ? "Information Technology"
                               : value.major}
                           </TableCell>
-                          <TableCell
-                            sx={{
-                              width: "130px",
-                            }}
-                          >
+                          <TableCell sx={{ width: "130px" }}>
                             {value.semester}
                           </TableCell>
-                          <TableCell
-                            sx={{
-                              width: "170px",
-                            }}
-                          >
-                            {value.semester_period}
+                          <TableCell sx={{ width: "170px" }}>
+                            {value.semesterPeriod}
                           </TableCell>
-                          <TableCell
-                            sx={{
-                              width: "200px",
-                            }}
-                          >
-                            {new Date(value.due_date).toLocaleDateString(
+                          <TableCell sx={{ width: "200px" }}>
+                            {new Date(value.dueDate).toLocaleDateString(
                               "en-US",
                               {
                                 day: "numeric",
@@ -1257,14 +1239,10 @@ const Manage = () => {
                               }
                             )}
                           </TableCell>
-                          <TableCell
-                            sx={{
-                              width: "100px",
-                            }}
-                          >
+                          <TableCell sx={{ width: "150px" }}>
                             {value.isOpen ? "Open" : "Closed"}
                           </TableCell>
-                          <TableCell>
+                          {/* <TableCell sx={{ width: "150px" }}>
                             <MoreVert
                               aria-describedby={value.id}
                               onClick={(e) => {
@@ -1291,7 +1269,7 @@ const Manage = () => {
                                 Close
                               </Button>
                             </Popover>
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
                       ))
                     ) : (
@@ -1308,7 +1286,7 @@ const Manage = () => {
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  "@media (max-width: 650px)": { justifyContent: "flex-start" },
+                  "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
                 }}
                 rowsPerPageOptions={[10, 25, 50, 100]}
                 component="div"

@@ -16,6 +16,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StudentConsultation = () => {
   //abort
@@ -32,7 +36,9 @@ const StudentConsultation = () => {
     try {
       const { nik } = JSON.parse(localStorage.getItem("user"));
       const result = await jwtAuthAxios.get(
-        `/academic-consultation/employee/${nik}`,
+        `/academic-consultation/employee/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -53,14 +59,14 @@ const StudentConsultation = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         return;
@@ -122,14 +128,14 @@ const StudentConsultation = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         return;
@@ -193,6 +199,7 @@ const StudentConsultation = () => {
                 position: "sticky",
                 top: 0,
                 backgroundColor: "rgba(26, 56, 96, 0.1)",
+                zIndex: 1,
               }}
             >
               <TableRow>
@@ -273,7 +280,7 @@ const StudentConsultation = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"

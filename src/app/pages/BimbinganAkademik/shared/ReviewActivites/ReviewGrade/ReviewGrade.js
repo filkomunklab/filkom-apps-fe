@@ -16,9 +16,11 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const ReviewGrade = () => {
   //abort
@@ -56,14 +58,14 @@ const ReviewGrade = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         return;
@@ -117,14 +119,14 @@ const ReviewGrade = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         return;
@@ -191,12 +193,12 @@ const ReviewGrade = () => {
                 position: "sticky",
                 top: 0,
                 backgroundColor: "rgba(26, 56, 96, 0.1)",
+                zIndex: 1,
               }}
             >
               <TableRow>
                 <TableCell>Number</TableCell>
                 <TableCell>Submission Date</TableCell>
-                <TableCell>NIM</TableCell>
                 <TableCell>Student Name</TableCell>
                 <TableCell>Supervisor Name</TableCell>
                 <TableCell>Major</TableCell>
@@ -233,7 +235,6 @@ const ReviewGrade = () => {
                         }
                       )}
                     </TableCell>
-                    <TableCell>{value.Student.nim}</TableCell>
                     <TableCell>
                       {value.Student.lastName}, {value.Student.firstName}
                     </TableCell>
@@ -283,7 +284,7 @@ const ReviewGrade = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"

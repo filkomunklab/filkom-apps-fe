@@ -93,8 +93,6 @@ const statusColor = (status) => {
 
 const Dashboard = () => {
   const [distributionData, setDistributionData] = useState([]);
-  const [myMajor, setMyMajor] = useState("");
-  const [majorStudent, setMajorStudent] = useState([]);
   const [facultyStudent, setFacultyStudent] = useState(0);
   const [activeStudentStatus, setActiveStudentStatus] = useState([]);
   const [inActiveStudentStatus, setInActiveStudentStatus] = useState([]);
@@ -103,33 +101,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     getDataDistributionStudent();
-    getMajorStudent();
     getFacultyStudent();
-    getMyDataProfile();
     getActiveStudentStatus();
     getInactiveStudentStatus();
     getCertificateData();
   }, []);
 
   useEffect(() => {}, [distributionData]);
-  const getMyDataProfile = async () => {
-    try {
-      const response = await axios.get(
-        `${BASE_URL_API}/employee/${
-          JSON.parse(localStorage.getItem("user")).id
-        }`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      setMyMajor(response.data.data.major);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
   const getCertificateData = async () => {
     try {
@@ -158,23 +136,6 @@ const Dashboard = () => {
       const apiData = response.data.data;
 
       setDistributionData(response.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getMajorStudent = async () => {
-    try {
-      const response = await jwtAuthAxios.get(
-        `/dashboard/statistic/majorStudent/`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
-
-      console.log(response.data);
-
-      setMajorStudent(response.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -322,275 +283,77 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-        {role.includes("DEKAN") ? (
-          <Grid item container spacing={2} xs={12} sm={12} md={12} xl={12}>
-            <Grid item xs={12} sm={6} md={6} xl={6}>
-              <Card sx={{ height: "100%" }}>
-                <CardHeader title="Number of Faculty Students" />
-                <CardContent
-                  sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
+
+        <Grid item container spacing={2} xs={12} sm={12} md={12} xl={12}>
+          <Grid item xs={12} sm={6} md={6} xl={6}>
+            <Card sx={{ height: "100%" }}>
+              <CardHeader title="Number of Faculty Students" />
+              <CardContent
+                sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: { xs: 38, md: 40, lg: 38, xl: 50 },
+                    color: "#006AF5",
+                  }}
                 >
-                  <Typography
-                    sx={{
-                      fontSize: { xs: 38, md: 40, lg: 38, xl: 50 },
-                      color: "#006AF5",
-                    }}
-                  >
-                    {`${facultyStudent} people`}
-                  </Typography>
-                  <PeopleOutlinedIcon
-                    sx={{
-                      position: "absolute",
-                      right: 0,
-                      fontSize: 40,
-                      bottom: 0,
-                      color: "#006AF5",
-                    }}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={6} xl={6}>
-              <Card sx={{ height: "100%" }}>
-                <CardHeader title="Student Status" />
-                <CardContent
-                  sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
-                >
-                  <Typography variant="body1">{`Active`}</Typography>
-                  <LinearProgressWithLabel
-                    value={(() => {
-                      const result =
-                        (activeStudentStatus / facultyStudent) * 100;
-                      // console.log("ini result e: ", result);
-
-                      // Memeriksa apakah hasil kalkulasi adalah NaN
-                      const finalResult = isNaN(result) ? 0 : result;
-
-                      return finalResult;
-                    })()}
-                    color="success"
-                  />
-                  <Typography variant="body1">{`Non-active`}</Typography>
-                  <LinearProgressWithLabel
-                    value={(() => {
-                      const result =
-                        (inActiveStudentStatus / facultyStudent) * 100;
-
-                      // Memeriksa apakah hasil kalkulasi adalah NaN
-                      const finalResult = isNaN(result) ? 0 : result;
-                      // console.log("ini result e: ", result);
-
-                      return finalResult;
-                    })()}
-                    color="warning"
-                  />
-                  <BubbleChartIcon
-                    sx={{
-                      position: "absolute",
-                      right: 0,
-                      fontSize: 40,
-                      bottom: 0,
-                      color: "#006AF5",
-                    }}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
+                  {`${facultyStudent} people`}
+                </Typography>
+                <PeopleOutlinedIcon
+                  sx={{
+                    position: "absolute",
+                    right: 0,
+                    fontSize: 40,
+                    bottom: 0,
+                    color: "#006AF5",
+                  }}
+                />
+              </CardContent>
+            </Card>
           </Grid>
-        ) : role.includes("KAPRODI") ? (
-          <Grid item container spacing={2} xs={12} sm={12} md={12} xl={12}>
-            <Grid item xs={12} sm={6} md={6} xl={6}>
-              <Card sx={{ height: "100%" }}>
-                <CardHeader title="Number of Study Program Students" />
-                <CardContent
-                  sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
-                >
-                  <Typography
-                    sx={{
-                      fontSize: { xs: 38, md: 40, lg: 38, xl: 50 },
-                      color: "#006AF5",
-                    }}
-                  >
-                    {`${
-                      (majorStudent &&
-                        majorStudent.find((major) => major.major === myMajor)
-                          ?.count) ||
-                      0
-                    } peoples`}
-                  </Typography>
-                  <PeopleOutlinedIcon
-                    sx={{
-                      position: "absolute",
-                      right: 0,
-                      fontSize: 40,
-                      bottom: 0,
-                      color: "#006AF5",
-                    }}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={6} xl={6}>
-              <Card sx={{ height: "100%" }}>
-                <CardHeader title="Student Status" />
-                <CardContent
-                  sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
-                >
-                  <Typography variant="body1">{`Active`}</Typography>
-                  <LinearProgressWithLabel
-                    value={(() => {
-                      const studentActiveCount = activeStudentStatus.find(
-                        (item) => item.major === myMajor
-                      );
-                      const allStudentCount = majorStudent.find(
-                        (item) => item.major === myMajor
-                      );
+          <Grid item xs={12} sm={6} md={6} xl={6}>
+            <Card sx={{ height: "100%" }}>
+              <CardHeader title="Student Status" />
+              <CardContent
+                sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
+              >
+                <Typography variant="body1">{`Active`}</Typography>
+                <LinearProgressWithLabel
+                  value={(() => {
+                    const result = (activeStudentStatus / facultyStudent) * 100;
 
-                      const result =
-                        (studentActiveCount?.count / allStudentCount?.count) *
-                        100;
-                      // console.log("ini result e: ", result);
+                    const finalResult = isNaN(result) ? 0 : result;
 
-                      // Memeriksa apakah hasil kalkulasi adalah NaN
-                      const finalResult = isNaN(result) ? 0 : result;
+                    return finalResult;
+                  })()}
+                  color="success"
+                />
+                <Typography variant="body1">{`Non-active`}</Typography>
+                <LinearProgressWithLabel
+                  value={(() => {
+                    const result =
+                      (inActiveStudentStatus / facultyStudent) * 100;
 
-                      return finalResult;
-                    })()}
-                    color="success"
-                  />
-                  <Typography variant="body1">{`Non-active`}</Typography>
-                  <LinearProgressWithLabel
-                    value={(() => {
-                      const studentInActiveCount = inActiveStudentStatus.find(
-                        (item) => item.major === myMajor
-                      );
-                      const allStudentCount = majorStudent.find(
-                        (item) => item.major === myMajor
-                      );
+                    const finalResult = isNaN(result) ? 0 : result;
+                    // console.log("ini result e: ", result);
 
-                      const result =
-                        (studentInActiveCount?.count / allStudentCount?.count) *
-                        100;
-
-                      // Memeriksa apakah hasil kalkulasi adalah NaN
-                      const finalResult = isNaN(result) ? 0 : result;
-                      // console.log("ini result e: ", result);
-
-                      return finalResult;
-                    })()}
-                    color="warning"
-                  />
-                  <BubbleChartIcon
-                    sx={{
-                      position: "absolute",
-                      right: 0,
-                      fontSize: 40,
-                      bottom: 0,
-                      color: "#006AF5",
-                    }}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
+                    return finalResult;
+                  })()}
+                  color="warning"
+                />
+                <BubbleChartIcon
+                  sx={{
+                    position: "absolute",
+                    right: 0,
+                    fontSize: 40,
+                    bottom: 0,
+                    color: "#006AF5",
+                  }}
+                />
+              </CardContent>
+            </Card>
           </Grid>
-        ) : (
-          <div>setang</div>
-        )}
-        {/* <Grid item container spacing={2} xs={12} sm={12} md={12} xl={12}>
-            <Grid item xs={12} sm={6} md={6} xl={6}>
-              <Card sx={{ height: "100%" }}>
-                <CardHeader title="Number of Study Program Students" />
-                <CardContent
-                  sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
-                >
-                  <Typography
-                    sx={{
-                      fontSize: { xs: 38, md: 40, lg: 38, xl: 50 },
-                      color: "#006AF5",
-                    }}
-                  >
-                    {`${
-                      (majorStudent &&
-                        majorStudent.find((major) => major.major === myMajor)
-                          ?.count) ||
-                      0
-                    } peoples`}
-                  </Typography>
-                  <PeopleOutlinedIcon
-                    sx={{
-                      position: "absolute",
-                      right: 0,
-                      fontSize: 40,
-                      bottom: 0,
-                      color: "#006AF5",
-                    }}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={6} xl={6}>
-              <Card sx={{ height: "100%" }}>
-                <CardHeader title="Student Status" />
-                <CardContent
-                  sx={{ position: "relative", padding: 2, pl: 3, pr: 3 }}
-                >
-                  <Typography variant="body1">{`Active`}</Typography>
-                  <LinearProgressWithLabel
-                    value={(() => {
-                      const studentActiveCount = activeStudentStatus.find(
-                        (item) => item.major === myMajor
-                      );
-                      const allStudentCount = majorStudent.find(
-                        (item) => item.major === myMajor
-                      );
-
-                      const result =
-                        (studentActiveCount?.count / allStudentCount?.count) *
-                        100;
-                      console.log("ini result e: ", result);
-
-                      // Memeriksa apakah hasil kalkulasi adalah NaN
-                      const finalResult = isNaN(result) ? 0 : result;
-
-                      return finalResult;
-                    })()}
-                    color="success"
-                  />
-                  <Typography variant="body1">{`Non-active`}</Typography>
-                  <LinearProgressWithLabel
-                    value={(() => {
-                      const studentInActiveCount = inActiveStudentStatus.find(
-                        (item) => item.major === myMajor
-                      );
-                      const allStudentCount = majorStudent.find(
-                        (item) => item.major === myMajor
-                      );
-
-                      const result =
-                        (studentInActiveCount?.count / allStudentCount?.count) *
-                        100;
-
-                      // Memeriksa apakah hasil kalkulasi adalah NaN
-                      const finalResult = isNaN(result) ? 0 : result;
-                      console.log("ini result e: ", result);
-
-                      return finalResult;
-                    })()}
-                    color="warning"
-                  />
-                  <BubbleChartIcon
-                    sx={{
-                      position: "absolute",
-                      right: 0,
-                      fontSize: 40,
-                      bottom: 0,
-                      color: "#006AF5",
-                    }}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid> */}
+        </Grid>
       </Grid>
     </Div>
   );

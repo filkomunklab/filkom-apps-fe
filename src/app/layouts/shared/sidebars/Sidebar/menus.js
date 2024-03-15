@@ -26,7 +26,7 @@ import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 
 export const sekretarisMenus = [
   {
-    label: "Bimbingan Akademik",
+    label: "Fi-SAH",
     type: "section",
     children: [
       {
@@ -159,7 +159,7 @@ export const mahasiswaMenus = [
     ],
   },
   {
-    label: "Bimbingan Akademik",
+    label: "Fi-SAH",
     type: "section",
     children: [
       {
@@ -277,7 +277,7 @@ export const dekanMenus = [
     ],
   },
   {
-    label: "Bimbingan Akademik",
+    label: "Fi-SAH",
     type: "section",
     children: [
       {
@@ -564,7 +564,7 @@ export const dekanMenus = [
 
 export const dosenMenus = [
   {
-    label: "Bimbingan Akademik",
+    label: "Fi-SAH",
     type: "section",
     children: [
       {
@@ -944,7 +944,7 @@ export const kaprodiMenus = [
     ],
   },
   {
-    label: "Bimbingan Akademik",
+    label: "Fi-SAH",
     type: "section",
     children: [
       {

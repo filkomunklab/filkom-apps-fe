@@ -13,6 +13,10 @@ import {
 import Div from "@jumbo/shared/Div";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const style = {
   position: "absolute",
@@ -51,7 +55,7 @@ const CertificateWaiting = () => {
     try {
       setIsModalVisible(!isModalVisible);
       const bodyData = {
-        approval_status: isApprove ? "APPROVED" : "REJECTED",
+        approvalStatus: isApprove ? "APPROVED" : "REJECTED",
         comments: commentText || null,
       };
       await jwtAuthAxios.put(`/certificate/approval/status/${id}`, bodyData, {
@@ -76,14 +80,14 @@ const CertificateWaiting = () => {
       setLoading(false);
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         return;
@@ -108,12 +112,47 @@ const CertificateWaiting = () => {
     submissionDate,
     pathFile,
     category,
+    level,
     description,
     status,
     title,
     id,
   } = certificateDetails;
   const pdfURL = pathFile;
+
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case "PENALARAN_KEILMUAN":
+        return "Reasoning and Scholarship";
+      case "ORGANISASI_KEPEMIMPINAN":
+        return "Organization and Leadership";
+      case "BAKAT_MINAT":
+        return "Talents and Interests";
+      case "PENGABDIAN_MASYARAKAT":
+        return "Community Service";
+      case "OTHER":
+        return "Others";
+      default:
+        return category;
+    }
+  };
+
+  const getLevelLabel = (level) => {
+    switch (level) {
+      case "REGION":
+        return "Region";
+      case "NATIONAL":
+        return "National";
+      case "INTERNATIONAL":
+        return "International";
+      case "UNIVERSITY":
+        return "University";
+      case "MAJOR":
+        return "Study Program";
+      default:
+        return level;
+    }
+  };
 
   const handleBreadcrumbsClick = () => {
     const { role } = JSON.parse(localStorage.getItem("user"));
@@ -240,8 +279,21 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5">
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                  {getCategoryLabel(category)}
                 </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={4} xl={3} pb={1}>
+                <Typography variant="h5">Level</Typography>
+              </Grid>
+              <Grid item xs={1} xl={0.5}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                <Typography variant="h5">{getLevelLabel(level)}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -349,7 +401,6 @@ const CertificateWaiting = () => {
                       display: "flex",
                       columnGap: 2,
                       justifyContent: "flex-end",
-                      bgcolor: "#F5F5F5",
                       px: 2,
                       py: 1,
                     }}
@@ -407,7 +458,6 @@ const CertificateWaiting = () => {
                       display: "flex",
                       columnGap: 2,
                       justifyContent: "flex-end",
-                      bgcolor: "#F5F5F5",
                       px: 2,
                       py: 1,
                     }}

@@ -4,6 +4,10 @@ import PreRegistrationSubmission from "./PreRegistrationSubmission";
 import PreRegistrationSubmitted from "./PreRegistrationSubmitted";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const PreRegistration = () => {
   //abort
@@ -16,7 +20,7 @@ const PreRegistration = () => {
 
   const getDataPreregis = async () => {
     try {
-      const nim = JSON.parse(localStorage.getItem("user")).nim;
+      const { nim, id } = JSON.parse(localStorage.getItem("user"));
       const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
@@ -24,7 +28,7 @@ const PreRegistration = () => {
       const major = studentData.data.data.major;
 
       const result = await jwtAuthAxios.get(
-        `/pre-regist/status/${major}/${nim}`,
+        `/pre-regist/status/${major}/${id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -43,14 +47,14 @@ const PreRegistration = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         return;

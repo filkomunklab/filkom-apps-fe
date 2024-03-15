@@ -17,6 +17,10 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const ReviewCertificate = () => {
   //abort
@@ -40,7 +44,10 @@ const ReviewCertificate = () => {
         }
       );
 
-      const filteredData = result.data.data.filter((item) => {
+      console.log("result", result);
+      const dataArray = Array.isArray(result.data.data) ? result.data.data : [];
+
+      const filteredData = dataArray.filter((item) => {
         const studentFullName = `${item.Student?.lastName}, ${item.Student?.firstName}`;
         return studentFullName
           .toLowerCase()
@@ -51,14 +58,14 @@ const ReviewCertificate = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         return;
@@ -108,8 +115,9 @@ const ReviewCertificate = () => {
         submitDate,
         path,
         category,
+        level,
         description,
-        approval_status,
+        approvalStatus,
         title,
         id,
       } = certificateDetailsResult.data.data;
@@ -127,8 +135,9 @@ const ReviewCertificate = () => {
               submissionDate: submitDate,
               pathFile: path,
               category: category,
+              level: level,
               description: description,
-              status: approval_status,
+              status: approvalStatus,
               title: title,
               id: id,
             },
@@ -139,18 +148,35 @@ const ReviewCertificate = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         return;
       }
+    }
+  };
+
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case "PENALARAN_KEILMUAN":
+        return "Reasoning and Scholarship";
+      case "ORGANISASI_KEPEMIMPINAN":
+        return "Organization and Leadership";
+      case "BAKAT_MINAT":
+        return "Talents and Interests";
+      case "PENGABDIAN_MASYARAKAT":
+        return "Community Service";
+      case "OTHER":
+        return "Others";
+      default:
+        return category;
     }
   };
 
@@ -213,6 +239,7 @@ const ReviewCertificate = () => {
                 position: "sticky",
                 top: 0,
                 backgroundColor: "rgba(26, 56, 96, 0.1)",
+                zIndex: 1,
               }}
             >
               <TableRow>
@@ -226,63 +253,66 @@ const ReviewCertificate = () => {
             </TableHead>
             <TableBody>
               {dataWaiting && dataWaiting.length > 0 ? (
-                dataWaiting.map((value, index) => (
-                  <TableRow
-                    key={value.id}
-                    onClick={() => handleNavigate(value)}
-                    sx={{
-                      ":hover": {
-                        cursor: "pointer",
-                        backgroundColor: "#338CFF21",
-                        transition: "0.3s",
-                        transitionTimingFunction: "ease-in-out",
-                        transitionDelay: "0s",
-                        transitionProperty: "all",
-                      },
-                    }}
-                  >
-                    <TableCell
-                      align="right"
-                      sx={{ width: "80px", paddingRight: "40px" }}
-                    >
-                      {index + 1}
-                    </TableCell>
-                    <TableCell sx={{ width: "180px", paddingLeft: "17px" }}>
-                      {new Date(value.submitDate).toLocaleDateString("en-US", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </TableCell>
-                    <TableCell sx={{ width: "200px" }}>
-                      {value.student?.lastName}, {value.student?.firstName}
-                    </TableCell>
-                    <TableCell
+                dataWaiting.map((value, index) => {
+                  console.log("ini isi value", value); // Move the console.log here
+                  return (
+                    <TableRow
+                      key={value.id}
+                      onClick={() => handleNavigate(value)}
                       sx={{
-                        maxWidth: "240px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
+                        ":hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#338CFF21",
+                          transition: "0.3s",
+                          transitionTimingFunction: "ease-in-out",
+                          transitionDelay: "0s",
+                          transitionProperty: "all",
+                        },
                       }}
                     >
-                      {value.title}
-                    </TableCell>
-                    <TableCell>
-                      {value.category.charAt(0).toUpperCase() +
-                        value.category.slice(1)}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        color: "#FFCC00",
-                        align: "left",
-                        width: "100px",
-                      }}
-                    >
-                      {value.approval_status.charAt(0) +
-                        value.approval_status.slice(1).toLowerCase()}
-                    </TableCell>
-                  </TableRow>
-                ))
+                      <TableCell
+                        align="right"
+                        sx={{ width: "80px", paddingRight: "40px" }}
+                      >
+                        {index + 1}
+                      </TableCell>
+                      <TableCell sx={{ width: "180px", paddingLeft: "17px" }}>
+                        {new Date(value.submitDate).toLocaleDateString(
+                          "en-US",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }
+                        )}
+                      </TableCell>
+                      <TableCell sx={{ width: "200px" }}>
+                        {value.student?.lastName}, {value.student?.firstName}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          maxWidth: "240px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {value.title}
+                      </TableCell>
+                      <TableCell>{getCategoryLabel(value.category)}</TableCell>
+                      <TableCell
+                        sx={{
+                          color: "#FFCC00",
+                          align: "left",
+                          width: "100px",
+                        }}
+                      >
+                        {value.approvalStatus?.charAt(0) +
+                          value.approvalStatus?.slice(1).toLowerCase()}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
                   <TableCell colSpan={8}>No data available</TableCell>
@@ -297,7 +327,7 @@ const ReviewCertificate = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"

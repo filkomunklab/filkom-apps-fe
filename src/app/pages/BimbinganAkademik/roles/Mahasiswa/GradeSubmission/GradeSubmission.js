@@ -26,7 +26,10 @@ import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
 import { useNavigate } from "react-router-dom";
-import { width } from "@mui/system";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const style = {
   position: "absolute",
@@ -81,15 +84,17 @@ const GradeSubmission = () => {
   const handleError = (error) => {
     if (error.code === "ERR_CANCELED") {
       console.log("request canceled");
-    } else if (
-      error.response &&
-      error.response.status >= 401 &&
-      error.response.status <= 403
-    ) {
-      console.log("You don't have permission to access this page");
-      navigate(`/`);
+    } else if (error.response && error.response.status === 403) {
+      handlePermissionError();
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      return;
+    } else if (error.response && error.response.status === 401) {
+      handleAuthenticationError();
     } else {
       console.log("ini error: ", error);
+      console.error("Error details:", error.response.data);
     }
   };
 
@@ -136,6 +141,7 @@ const GradeSubmission = () => {
   useEffect(() => {
     getCurriculum();
     getDataGrade();
+
     return () => controller.abort();
   }, []);
 
@@ -143,10 +149,9 @@ const GradeSubmission = () => {
     handleCloseFirstModal();
     setLoading(true);
     try {
-      const { nim } = JSON.parse(localStorage.getItem("user"));
+      const { id } = JSON.parse(localStorage.getItem("user"));
       const requestBody = {
         semester,
-        employeeNik: "1001",
         data: tableData.map((data, index) => ({
           grades: grades[index],
           lecturer: lecturers[index],
@@ -159,7 +164,7 @@ const GradeSubmission = () => {
       console.log("Request Body:", requestBody);
 
       const response = await jwtAuthAxios.post(
-        `/transaction/grades/${nim}`,
+        `/transaction/grades/${id}`,
         requestBody,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -167,7 +172,10 @@ const GradeSubmission = () => {
         }
       );
 
+      console.log("Response.data pe hasil:", response.data);
+
       if (response.data.status === "OK") {
+        window.location.reload();
         setSemester("");
         setRow();
         setSubjectNames(Array(row).fill(""));
@@ -181,15 +189,16 @@ const GradeSubmission = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
+        console.log("error: ", error);
         handleOpenErrorModal();
         setSemester("");
         setRow();
@@ -261,6 +270,15 @@ const GradeSubmission = () => {
 
   const tableData = generateTableData(row);
 
+  useEffect(() => {
+    console.log("Semester:", semester);
+    console.log("Row:", row);
+    console.log("Subject Names:", subjectNames);
+    console.log("Grades:", grades);
+    console.log("Lecturers:", lecturers);
+    console.log("Descriptions:", descriptions);
+  }, []);
+
   return (
     <div>
       {loading && (
@@ -312,7 +330,7 @@ const GradeSubmission = () => {
             year: "numeric",
           })}{" "}
           -{" "}
-          {new Date(dataGrade.due_date).toLocaleDateString("en-US", {
+          {new Date(dataGrade.dueDate).toLocaleDateString("en-US", {
             month: "long",
             day: "2-digit",
             year: "numeric",
@@ -406,6 +424,7 @@ const GradeSubmission = () => {
               top: 0,
               fontWeight: 400,
               backgroundColor: "#e8ecf2",
+              zIndex: 1,
             }}
           >
             <TableRow>

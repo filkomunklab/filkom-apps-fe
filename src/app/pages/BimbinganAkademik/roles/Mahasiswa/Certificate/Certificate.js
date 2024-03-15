@@ -16,6 +16,11 @@ import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
 import { useNavigate } from "react-router-dom";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+import CustomAlert from "app/pages/BimbinganAkademik/components/Alert/Alert";
 
 const requiredStyle = {
   color: "red",
@@ -57,12 +62,14 @@ const Certificate = () => {
   //inisialisasi
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
+  const [level, setLevel] = useState("");
   const [description, setDescription] = useState("");
   const [buffer, setBuffer] = useState("");
   const [selectedFileName, setSelectedFileName] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showLabel, setShowLabel] = useState(true);
+  const [showLabel2, setShowLabel2] = useState(true);
 
   //modal
   const [openFirstModal, setOpenFirstModal] = useState(false);
@@ -75,15 +82,14 @@ const Certificate = () => {
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleCloseSuccessModal();
-    }, 5000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [handleOpenSuccessModal]);
+  // Alert
+  const [alert, setAlert] = useState(null);
+  const showAlert = (message) => {
+    setAlert({ message });
+  };
+  const hideAlert = () => {
+    setAlert(null);
+  };
 
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
@@ -91,8 +97,15 @@ const Certificate = () => {
       return;
     }
 
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      showAlert("File size exceeds the limit of 5MB.");
+      event.target.value = null;
+      return;
+    }
+
     if (file.type !== "application/pdf") {
-      alert("Your certificate must be in PDF format.");
+      showAlert("Your certificate must be in PDF format.");
       event.target.value = null;
       return;
     }
@@ -120,8 +133,8 @@ const Certificate = () => {
     const trimmedDescription = description.trim();
     setDescription(trimmedDescription);
 
-    if (!trimmedTitle || !category || !selectedFile) {
-      alert("Please fill the field first.");
+    if (!trimmedTitle || !category || !level || !selectedFile) {
+      showAlert("Please fill the field first.");
     } else {
       handleOpenFirstModal();
     }
@@ -144,14 +157,14 @@ const Certificate = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         handleOpenErrorModal();
@@ -167,7 +180,8 @@ const Certificate = () => {
     };
     const data = {
       title,
-      category,
+      category: category,
+      level: level,
       description,
       certificateFile,
       employeeNik,
@@ -175,14 +189,21 @@ const Certificate = () => {
 
     //post certificate
     try {
-      const result = await jwtAuthAxios.post(`/certificate/${nim}`, data, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const result = await jwtAuthAxios.post(
+        `/certificate/${JSON.parse(localStorage.getItem("user")).id}`,
+        data,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
 
       if (result.data.status === "OK") {
+        hideAlert();
         setTitle("");
         setCategory("");
+        setLevel("");
         setShowLabel(true);
+        setShowLabel2(true);
         setDescription("");
         setSelectedFile(null);
         setSelectedFileName("");
@@ -192,19 +213,22 @@ const Certificate = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         handleOpenErrorModal();
         setTitle("");
         setCategory("");
+        setLevel("");
         setShowLabel(true);
+        setShowLabel2(true);
         setDescription("");
         setSelectedFile(null);
         setSelectedFileName("");
@@ -233,6 +257,11 @@ const Certificate = () => {
           <CircularProgress />
         </div>
       )}
+      {alert && (
+        <Grid paddingBottom={2}>
+          <CustomAlert message={alert.message} onClose={hideAlert} />
+        </Grid>
+      )}
       <Typography
         sx={{
           fontSize: { xs: "20px", md: "24px" },
@@ -242,7 +271,6 @@ const Certificate = () => {
       >
         Add Certificate
       </Typography>
-
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Stack spacing={2} sx={{ paddingBottom: 3 }}>
@@ -258,7 +286,7 @@ const Certificate = () => {
             />
           </Stack>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Stack spacing={2} sx={{ paddingBottom: 3 }}>
             <RTypography sx={{ paddingBottom: "5px" }}>Category</RTypography>
             <TextField
@@ -283,13 +311,54 @@ const Certificate = () => {
                 shrink: false,
               }}
             >
-              <MenuItem value="local">Local</MenuItem>
-              <MenuItem value="national">National</MenuItem>
-              <MenuItem value="international">International</MenuItem>
+              <MenuItem value="PENALARAN_KEILMUAN">
+                Reasoning and Scholarship
+              </MenuItem>
+              <MenuItem value="ORGANISASI_KEPEMIMPINAN">
+                Organization and Leadership
+              </MenuItem>
+              <MenuItem value="BAKAT_MINAT">Talents and Interests</MenuItem>
+              <MenuItem value="PENGABDIAN_MASYARAKAT">
+                Community Service
+              </MenuItem>
+              <MenuItem value="OTHER">Others</MenuItem>
             </TextField>
           </Stack>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
+          <Stack spacing={2} sx={{ paddingBottom: 3 }}>
+            <RTypography sx={{ paddingBottom: "5px" }}>Level</RTypography>
+            <TextField
+              sx={{ width: "100%", backgroundColor: "white" }}
+              id="outlined-select-level"
+              select
+              label={
+                showLabel2 ? (
+                  <span style={{ color: "#9E9E9E" }}>
+                    Select Certificate Level
+                  </span>
+                ) : (
+                  ""
+                )
+              }
+              value={level}
+              onChange={(event) => {
+                setLevel(event.target.value);
+                setShowLabel2(false);
+              }}
+              InputLabelProps={{
+                shrink: false,
+              }}
+            >
+              <MenuItem value="REGION">Region</MenuItem>
+              <MenuItem value="NATIONAL">National</MenuItem>
+              <MenuItem value="INTERNATIONAL">International</MenuItem>
+              <MenuItem value="UNIVERSITY">University</MenuItem>
+              <MenuItem value="MAJOR">Study Program</MenuItem>
+            </TextField>
+          </Stack>
+        </Grid>
+        <Grid item xs={12} md={4}>
           <Stack spacing={2} sx={{ paddingBottom: 3 }}>
             <RTypography sx={{ paddingBottom: "5px" }}>
               Certificate PDF

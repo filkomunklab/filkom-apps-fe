@@ -26,10 +26,10 @@ import SwapVertIcon from "@mui/icons-material/SwapVert";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
-
-const role = Boolean(localStorage.getItem("user"))
-  ? JSON.parse(localStorage.getItem("user")).role
-  : [];
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StudentInformationFaculty = () => {
   //abort
@@ -73,14 +73,14 @@ const StudentInformationFaculty = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         return;
@@ -294,7 +294,7 @@ const StudentInformationFaculty = () => {
         <Typography
           variant="h2"
           sx={{
-            "@media (max-width: 390px)": {
+            "@media (maxWidth: 390px)": {
               fontSize: "16px",
               fontWeight: 500,
             },
@@ -304,7 +304,7 @@ const StudentInformationFaculty = () => {
         </Typography>
       </Grid>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={12} md={4}>
           <TextField
             size="small"
             placeholder="Search by Name or NIM"
@@ -331,7 +331,7 @@ const StudentInformationFaculty = () => {
           />
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={6} sm={6} md={4}>
           <TextField
             size="small"
             fullWidth
@@ -402,15 +402,15 @@ const StudentInformationFaculty = () => {
           </TextField>
         </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={6} sm={6} md={1.5}>
           <IconButton
             onClick={handleSortClick}
             sx={{
               borderColor: "#d3d5d8fa",
-              borderWidth: "1px",
+              borderWidth: "1.5px",
               borderStyle: "solid",
               borderRadius: "30px",
-              width: "45px",
+              width: "100%",
               color: "#1C304A85",
               "&:hover": {
                 borderColor: "black",
@@ -420,6 +420,9 @@ const StudentInformationFaculty = () => {
             }}
           >
             <SwapVertIcon />
+            <Typography sx={{ marginLeft: "8px", color: "#1C304A85" }}>
+              Sort by NIM
+            </Typography>
           </IconButton>
         </Grid>
       </Grid>
@@ -465,7 +468,7 @@ const StudentInformationFaculty = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component={"div"}
@@ -480,19 +483,7 @@ const StudentInformationFaculty = () => {
   );
 };
 
-const getRole = () => {
-  const filter = role.includes("KAPRODI")
-    ? "kaprodi"
-    : role.includes("DEKAN")
-    ? "dekan"
-    : role.includes("OPERATOR_FAKULTAS")
-    ? "sekretaris"
-    : "dosen-pembimbing";
-
-  return filter;
-};
-
-const TableHeading = ({ index }) => {
+const TableHeading = () => {
   return (
     <TableRow>
       <TableCell sx={{ textAlign: "center" }}>No</TableCell>
@@ -509,14 +500,14 @@ const TableHeading = ({ index }) => {
 
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
-  const { nim, firstName, lastName, major, arrivalYear, status } = item;
+  const { nim, firstName, lastName, major, arrivalYear, status, id } = item;
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
 
     switch (name) {
       case "profile":
-        navigate(`${nim}`, { state: { studentNim: nim } });
+        navigate(`${nim}`, { state: { studentId: id, studentNim: nim } });
         break;
       case "grade":
         navigate(`${nim}/grade`, {
@@ -524,6 +515,7 @@ const TableItem = ({ item, index }) => {
             studentNim: nim,
             firstName: firstName,
             lastName: lastName,
+            studentId: id,
           },
         });
         break;
@@ -533,6 +525,7 @@ const TableItem = ({ item, index }) => {
             studentNim: nim,
             firstName: firstName,
             lastName: lastName,
+            studentId: id,
           },
         });
         break;
@@ -543,7 +536,7 @@ const TableItem = ({ item, index }) => {
   };
 
   const rowStyle = {
-    "@media (max-width: 650px)": { fontSize: "11px" },
+    "@media (maxWidth: 650px)": { fontSize: "11px" },
   };
 
   return (
@@ -556,7 +549,7 @@ const TableItem = ({ item, index }) => {
         <Button
           name="profile"
           sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}
@@ -582,7 +575,7 @@ const TableItem = ({ item, index }) => {
           name="grade"
           onClick={handleButtonNavigate}
           sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}
@@ -595,7 +588,7 @@ const TableItem = ({ item, index }) => {
           name="certificate"
           onClick={handleButtonNavigate}
           sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}

@@ -12,6 +12,10 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -71,13 +75,14 @@ const History = () => {
   const handleError = (error) => {
     if (error.code === "ERR_CANCELED") {
       console.log("request canceled");
-    } else if (
-      error.response &&
-      error.response.status >= 401 &&
-      error.response.status <= 403
-    ) {
-      console.log("You don't have permission to access this page");
-      navigate(`/`);
+    } else if (error.response && error.response.status === 403) {
+      handlePermissionError();
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      return;
+    } else if (error.response && error.response.status === 401) {
+      handleAuthenticationError();
     } else {
       console.log("ini error: ", error);
     }
@@ -89,7 +94,9 @@ const History = () => {
       const { nim } = JSON.parse(localStorage.getItem("user"));
 
       const resultConsultation = await jwtAuthAxios.get(
-        `/academic-consultation/student/${nim}`,
+        `/academic-consultation/student/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -105,7 +112,9 @@ const History = () => {
       );
 
       const resultCertificate = await jwtAuthAxios.get(
-        `/certificate/history/student/${nim}`,
+        `/certificate/history/student/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -121,7 +130,9 @@ const History = () => {
       );
 
       const resultGrade = await jwtAuthAxios.get(
-        `/transaction/student/history/${nim}`,
+        `/transaction/student/history/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -217,18 +228,22 @@ const History = () => {
     groupedDataConsultation[dateConsultation].push(value);
   });
 
-  dataCertificate.forEach((value) => {
-    const date = new Date(value.approvalDate).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
+  if (Array.isArray(dataCertificate)) {
+    dataCertificate.forEach((value) => {
+      const date = new Date(value.approvalDate).toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+      if (!groupedDataCertificate[date]) {
+        groupedDataCertificate[date] = [];
+      }
+      groupedDataCertificate[date].push(value);
     });
-    if (!groupedDataCertificate[date]) {
-      groupedDataCertificate[date] = [];
-    }
-    groupedDataCertificate[date].push(value);
-  });
+  } else {
+    console.error("dataCertificate bukan array");
+  }
 
   dataPreregis.forEach((value) => {
     const date = new Date(value.submitDate).toLocaleDateString("en-US", {
@@ -332,7 +347,8 @@ const History = () => {
         path,
         category,
         description,
-        approval_status,
+        level,
+        approvalStatus,
         approvalDate,
         title,
         id,
@@ -352,8 +368,9 @@ const History = () => {
               submissionDate: submitDate,
               pathFile: path,
               category: category,
+              level: level,
               description: description,
-              status: approval_status,
+              status: approvalStatus,
               title: title,
               id: id,
               approvalDate: approvalDate,
@@ -523,7 +540,7 @@ const History = () => {
                       key={index}
                       sx={{
                         width: "100%",
-                        maxWidth: 2000,
+
                         bgcolor: "background.paper",
                         paddingTop: "0px",
                         paddingBottom: "0px",
@@ -558,6 +575,9 @@ const History = () => {
                             <>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   color: "rgba(0, 0, 0, 1)",
                                   paddingLeft: "8px",
                                   paddingTop: "5px",
@@ -568,6 +588,9 @@ const History = () => {
                               </Typography>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   paddingLeft: "8px",
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
@@ -587,6 +610,7 @@ const History = () => {
                             secondary={
                               <Typography
                                 sx={{
+                                  width: "70px",
                                   fontSize: { xs: "10px", md: "14px" },
                                   color: "rgba(27, 43, 65, 0.69)",
                                 }}
@@ -658,7 +682,7 @@ const History = () => {
                       key={index}
                       sx={{
                         width: "100%",
-                        maxWidth: 2000,
+
                         bgcolor: "background.paper",
                         paddingTop: "0px",
                         paddingBottom: "0px",
@@ -693,6 +717,9 @@ const History = () => {
                             <>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   color: "rgba(0, 0, 0, 1)",
                                   paddingLeft: "8px",
                                   paddingTop: "5px",
@@ -704,6 +731,9 @@ const History = () => {
                               </Typography>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   paddingLeft: "8px",
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
@@ -725,6 +755,7 @@ const History = () => {
                             secondary={
                               <Typography
                                 sx={{
+                                  width: "70px",
                                   fontSize: { xs: "10px", md: "14px" },
                                   color: "rgba(27, 43, 65, 0.69)",
                                 }}
@@ -796,7 +827,7 @@ const History = () => {
                       <List
                         sx={{
                           width: "100%",
-                          maxWidth: 2000,
+
                           bgcolor: "background.paper",
                           paddingTop: "0px",
                           paddingBottom: "0px",
@@ -832,22 +863,27 @@ const History = () => {
                               <>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     color: "rgba(0, 0, 0, 1)",
                                     paddingLeft: "8px",
                                     paddingTop: "5px",
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
                                 >
-                                  {value.student.lastName},{" "}
-                                  {value.student.firstName}
+                                  {value.title}
                                 </Typography>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     paddingLeft: "8px",
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
                                 >
-                                  {value.title}
+                                  {value.category}
                                 </Typography>
                               </>
                             }
@@ -862,6 +898,7 @@ const History = () => {
                               secondary={
                                 <Typography
                                   sx={{
+                                    width: "70px",
                                     fontSize: { xs: "10px", md: "14px" },
                                     color: "rgba(27, 43, 65, 0.69)",
                                   }}
@@ -931,7 +968,7 @@ const History = () => {
                     <List
                       sx={{
                         width: "100%",
-                        maxWidth: 2000,
+
                         bgcolor: "background.paper",
                         paddingTop: "0px",
                         paddingBottom: "0px",
@@ -966,6 +1003,9 @@ const History = () => {
                             <>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   color: "rgba(0, 0, 0, 1)",
                                   paddingLeft: "8px",
                                   paddingTop: "5px",
@@ -977,6 +1017,9 @@ const History = () => {
                               </Typography>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   paddingLeft: "8px",
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
@@ -996,6 +1039,7 @@ const History = () => {
                             secondary={
                               <Typography
                                 sx={{
+                                  width: "70px",
                                   fontSize: { xs: "10px", md: "14px" },
                                   color: "rgba(27, 43, 65, 0.69)",
                                 }}
@@ -1067,7 +1111,7 @@ const History = () => {
                         <List
                           sx={{
                             width: "100%",
-                            maxWidth: 2000,
+
                             bgcolor: "background.paper",
                             paddingTop: "0px",
                             paddingBottom: "0px",
@@ -1102,6 +1146,9 @@ const History = () => {
                                 <>
                                   <Typography
                                     sx={{
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      whiteSpace: "nowrap",
                                       color: "rgba(0, 0, 0, 1)",
                                       paddingLeft: "8px",
                                       paddingTop: "5px",
@@ -1112,6 +1159,9 @@ const History = () => {
                                   </Typography>
                                   <Typography
                                     sx={{
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      whiteSpace: "nowrap",
                                       paddingLeft: "8px",
                                       fontSize: { xs: "12px", md: "14px" },
                                     }}
@@ -1135,6 +1185,7 @@ const History = () => {
                                 secondary={
                                   <Typography
                                     sx={{
+                                      width: "70px",
                                       fontSize: { xs: "10px", md: "14px" },
                                       color: "rgba(27, 43, 65, 0.69)",
                                     }}

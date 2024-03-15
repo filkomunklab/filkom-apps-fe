@@ -24,6 +24,10 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -69,14 +73,14 @@ const StudentPerMajor = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
         console.log("ini error: ", error);
         return;
@@ -199,8 +203,6 @@ const StudentPerMajor = () => {
             }}
             value={search}
             onChange={handleSearch}
-            // value={search}
-            // onChange={handleSearch}
           />
         </Grid>
 
@@ -292,7 +294,7 @@ const StudentPerMajor = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component={"div"}
@@ -306,20 +308,6 @@ const StudentPerMajor = () => {
     </Div>
   );
 };
-
-const getRole = () => {
-  const filter = role.includes("KAPRODI")
-    ? "kaprodi"
-    : role.includes("DEKAN")
-    ? "dekan"
-    : role.includes("OPERATOR_FAKULTAS")
-    ? "sekretaris"
-    : "dosen-pembimbing";
-
-  return filter;
-};
-
-console.log("ini getrole", getRole());
 
 const TableHeading = ({}) => {
   const style = {
@@ -341,60 +329,38 @@ const TableHeading = ({}) => {
 
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
-  const { nim, firstName, lastName, major, arrivalYear, status } = item;
-
-  const getMajorDisplayName = (major) => {
-    switch (major) {
-      case "IF":
-        return "informatics";
-      case "SI":
-        return "information-system";
-      case "DKV":
-        return "information-technology";
-      default:
-        return "-";
-    }
-  };
+  const { nim, firstName, lastName, major, arrivalYear, status, id } = item;
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
 
     switch (name) {
       case "profile":
-        navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${getMajorDisplayName(
-            major
-          )}/${nim}`,
-          { state: { studentNim: nim } }
-        );
+        navigate(`${nim}`, {
+          state: { studentNim: nim, studentId: id, major },
+        });
         break;
       case "grade":
-        navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${getMajorDisplayName(
-            major
-          )}/${nim}/grade`,
-          {
-            state: {
-              studentNim: nim,
-              firstName: firstName,
-              lastName: lastName,
-            },
-          }
-        );
+        navigate(`${nim}/grade`, {
+          state: {
+            studentNim: nim,
+            firstName: firstName,
+            lastName: lastName,
+            major,
+            studentId: id,
+          },
+        });
         break;
       case "certificate":
-        navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${getMajorDisplayName(
-            major
-          )}/${nim}/certificate`,
-          {
-            state: {
-              studentNim: nim,
-              firstName: firstName,
-              lastName: lastName,
-            },
-          }
-        );
+        navigate(`${nim}/certificate`, {
+          state: {
+            studentNim: nim,
+            firstName: firstName,
+            lastName: lastName,
+            major,
+            studentId: id,
+          },
+        });
         break;
       default:
         console.log("Path not found");
@@ -402,7 +368,7 @@ const TableItem = ({ item, index }) => {
   };
 
   const rowStyle = {
-    "@media (max-width: 650px)": { fontSize: "11px" },
+    "@media (maxWidth: 650px)": { fontSize: "11px" },
     textAlign: "center",
   };
 
@@ -414,7 +380,7 @@ const TableItem = ({ item, index }) => {
         <Button
           name="profile"
           sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}
@@ -439,7 +405,7 @@ const TableItem = ({ item, index }) => {
           name="grade"
           onClick={handleButtonNavigate}
           sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}
@@ -452,7 +418,7 @@ const TableItem = ({ item, index }) => {
           name="certificate"
           onClick={handleButtonNavigate}
           sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}

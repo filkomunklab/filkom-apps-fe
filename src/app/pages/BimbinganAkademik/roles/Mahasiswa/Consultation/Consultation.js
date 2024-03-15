@@ -14,6 +14,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const requiredStyle = {
   color: "red",
@@ -70,80 +74,89 @@ const Consultation = () => {
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleCloseSuccessModal();
-    }, 5000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [handleOpenSuccessModal]);
-
   const handleSubmitFirstModal = async () => {
-    //validasi
-    if (!topic || !receiver || !description) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-    const trimmedValue = description.trim();
-    if (trimmedValue !== "") {
-      handleCloseFirstModal();
-      setLoading(true);
-      const arrayReceiver = receiver.split("|");
-      const receiver_nik = arrayReceiver[0];
-      const receiver_name = arrayReceiver[1];
-      //bodyRequest
-      const consultationData = {
-        topic,
-        receiver_name,
-        receiver_nik,
-        student_arrival_year: informationStudent.arrivalYear,
-        student_major: informationStudent.major,
-        student_name: `${informationStudent.firstName} ${informationStudent.lastName}`,
-        student_nim: informationStudent.nim,
-        supervisor_name: `${supervisorData.teacher.firstName} ${supervisorData.teacher.lastName}`,
-        description: trimmedValue,
-      };
-
-      try {
-        const consultationResult = await jwtAuthAxios.post(
-          `/academic-consultation`,
-          consultationData,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-
-        if (consultationResult.data.status === "OK") {
-          handleOpenSuccessModal();
-          setTopic("");
-          setReceiver("");
-          setShowLabel(true);
-          setShowLabel2(true);
-          setDescription("");
-          setLoading(false);
-        }
-      } catch (error) {
-        if (error.code === "ERR_CANCELED") {
-          console.log("request canceled");
-        } else if (
-          error.response &&
-          error.response.status >= 401 &&
-          error.response.status <= 403
-        ) {
-          console.log("You don't have permission to access this page");
-          navigate(`/`);
-        } else {
-          console.log("ini error: ", error);
-          handleOpenErrorModal();
-          setLoading(false);
-        }
+    try {
+      //validasi
+      if (!topic || !receiver || !description) {
+        alert("Please fill in all required fields.");
+        return;
       }
-    } else {
-      alert("Input tidak valid. Mohon masukkan pesan yang valid.");
+      const { id } = JSON.parse(localStorage.getItem("user"));
+      const trimmedValue = description.trim();
+      if (trimmedValue !== "") {
+        handleCloseFirstModal();
+        setLoading(true);
+        const arrayReceiver = receiver.split("|");
+        console.log("receiver", receiver);
+        const receiverId = arrayReceiver[0];
+        const receiver_name = arrayReceiver[1];
+        //bodyRequest
+        const consultationData = {
+          topic,
+          receiver_name,
+          receiverId,
+          student_arrival_year: informationStudent.arrivalYear,
+          student_major: informationStudent.major,
+          student_name: `${informationStudent.firstName} ${informationStudent.lastName}`,
+          studentId: id,
+          supervisor_name: `${supervisorData.teacher.firstName} ${supervisorData.teacher.lastName}`,
+          description: trimmedValue,
+        };
+        console.log("ini isi consultationData", consultationData);
+        try {
+          const consultationResult = await jwtAuthAxios.post(
+            `/academic-consultation`,
+            consultationData,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+
+          if (consultationResult.data.status === "OK") {
+            handleOpenSuccessModal();
+            setTopic("");
+            setReceiver("");
+            setShowLabel(true);
+            setShowLabel2(true);
+            setDescription("");
+            setLoading(false);
+          }
+        } catch (error) {
+          if (error.code === "ERR_CANCELED") {
+            console.log("request canceled");
+          } else if (error.response && error.response.status === 403) {
+            handlePermissionError();
+            setTimeout(() => {
+              navigate(-1);
+            }, 2000);
+            return;
+          } else if (error.response && error.response.status === 401) {
+            handleAuthenticationError();
+          } else {
+            console.log("ini error: ", error);
+            handleOpenErrorModal();
+            setLoading(false);
+          }
+        }
+      } else {
+        alert("Input tidak valid. Mohon masukkan pesan yang valid.");
+      }
+      console.log("ini akhir dari handleSubmitFirstModal");
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -195,6 +208,9 @@ const Consultation = () => {
           console.log(response2);
         }
         setInformationStudent(result.data.data);
+        console.log("supervisorData", supervisorData);
+        console.log("kaprodiData", kaprodiData);
+        console.log("dekanData", dekanData);
       } else {
         console.log("status result tidak ok", result);
       }
@@ -361,21 +377,21 @@ const Consultation = () => {
                   <MenuItem
                     value={`${supervisorData?.teacherId}|${supervisorData?.teacher?.lastName}, ${supervisorData?.teacher?.firstName}`}
                   >
-                    {`${supervisorData?.teacher?.lastName}, ${supervisorData?.teacher?.firstName}`}
+                    Academic Supervisor
                   </MenuItem>
                 )
               ) : (
                 ""
               )}
               <MenuItem
-                value={`${kaprodiData?.nik}|${kaprodiData?.lastName}, ${kaprodiData?.firstName}`}
+                value={`${kaprodiData?.id}|${kaprodiData?.lastName}, ${kaprodiData?.firstName}`}
               >
-                {kaprodiData?.lastName}, {kaprodiData?.firstName}
+                Head of Program Study
               </MenuItem>
               <MenuItem
-                value={`${dekanData?.nik}|${dekanData?.lastName}, ${dekanData?.firstName}`}
+                value={`${dekanData?.id}|${dekanData?.lastName}, ${dekanData?.firstName}`}
               >
-                {dekanData?.lastName}, {dekanData?.firstName}
+                Faculty Dean
               </MenuItem>
             </TextField>
           </Stack>
