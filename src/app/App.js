@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import JumboApp from "@jumbo/components/JumboApp";
 import AppLayout from "./AppLayout";
 import JumboTheme from "@jumbo/components/JumboTheme";
