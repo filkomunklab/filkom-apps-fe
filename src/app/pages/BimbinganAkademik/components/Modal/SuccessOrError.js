@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Modal, Typography, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -14,6 +14,20 @@ const style = {
 };
 
 const SuccessOrError = ({ open, handleClose, title, description }) => {
+  useEffect(() => {
+    let timer;
+
+    if (open) {
+      timer = setTimeout(() => {
+        handleClose();
+      }, 5000);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [open, handleClose]);
+
   return (
     <Modal
       open={open}
