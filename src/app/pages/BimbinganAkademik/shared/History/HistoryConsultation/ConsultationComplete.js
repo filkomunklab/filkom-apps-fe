@@ -119,9 +119,13 @@ const Consultation = () => {
 
   return (
     <Div>
-      <div onClick={handleClick}>
-        <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
-          <Typography color="text.primary">History</Typography>
+      <div>
+        <Breadcrumbs
+          onClick={handleClick}
+          aria-label="breadcrumb"
+          sx={{ paddingBottom: 2 }}
+        >
+          <StyledLink>History</StyledLink>
           <Typography color="text.primary">Consultation</Typography>
         </Breadcrumbs>
       </div>

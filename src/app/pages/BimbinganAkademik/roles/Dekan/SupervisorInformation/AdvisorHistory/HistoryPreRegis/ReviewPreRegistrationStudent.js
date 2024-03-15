@@ -168,42 +168,86 @@ const ReviewPreRegistrationStudent = () => {
           component={Paper}
         >
           <Table stickyHeader>
-            <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+            <TableHead>
               <TableRow>
-                <TableCell sx={{ width: "40px" }}>Number</TableCell>
-                <TableCell sx={{ width: "40px" }}>Code</TableCell>
-                <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
-                <TableCell sx={{ width: "40px" }}>Credit(s)</TableCell>
-                <TableCell sx={{ width: "40px" }}>Grade</TableCell>
-                <TableCell>Type </TableCell>
-                <TableCell sx={{ width: "380px" }}>Prerequisite</TableCell>
-                <TableCell sx={{ width: "110px" }}>Status</TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Number
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Code
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "400px",
+                    textAlign: "center",
+                  }}
+                >
+                  Subject Name
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Credit(s)
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Type
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "380px",
+                    textAlign: "center",
+                  }}
+                >
+                  Prerequisite
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {listSubjectPreregis.map((data, index) => (
                 <TableRow key={index}>
-                  <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
-                  <TableCell sx={{ width: "40px" }}>
+                  <TableCell sx={{ textAlign: "center", width: "40px" }}>
+                    {index + 1}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center", width: "40px" }}>
                     {data.subject.code}
                   </TableCell>
-                  <TableCell sx={{ width: "400px" }}>
+                  <TableCell sx={{ textAlign: "center", width: "400px" }}>
                     {data.subject.name}
                   </TableCell>
-                  <TableCell sx={{ width: "40px" }}>
+                  <TableCell sx={{ textAlign: "center", width: "40px" }}>
                     {data.subject.credits}
                   </TableCell>
-                  <TableCell sx={{ width: "40px" }}>
-                    {/*ini kalo ada grade */}-
-                  </TableCell>
-                  <TableCell sx={{ width: "200px" }}>
+                  <TableCell sx={{ textAlign: "center", width: "200px" }}>
                     {data.subject.type}
                   </TableCell>
-                  <TableCell sx={{ width: "380px" }}>
-                    {data.subject.prerequisite}
-                  </TableCell>
-                  <TableCell sx={{ width: "110px" }}>
-                    {/*ini kalo ada status, pass ato nda */}-{" "}
+                  <TableCell sx={{ textAlign: "center", width: "380px" }}>
+                    {data.subject.prerequisite
+                      ? data.subject.prerequisite
+                      : "-"}
                   </TableCell>
                 </TableRow>
               ))}

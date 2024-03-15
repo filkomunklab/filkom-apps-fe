@@ -143,7 +143,7 @@ const StudentGradeDashboard = () => {
         >
           Supervisor Information
         </StyledLink>
-        <StyledLink onClick={() => navigate(-1)}>Advisor Profile</StyledLink>
+        <StyledLink onClick={() => navigate(-1)}>Supervisor Profile</StyledLink>
         <Typography color="text.primary">Student Grade</Typography>
       </Breadcrumbs>
       <Stack gap={3} paddingTop={3}>

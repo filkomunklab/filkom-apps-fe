@@ -43,8 +43,8 @@ const CurrentActivities = () => {
 
   const getActivity = async () => {
     try {
-      const { nik } = JSON.parse(localStorage.getItem("user"));
-      const result = await jwtAuthAxios.get(`/activity/current/${nik}`, {
+      const { id } = JSON.parse(localStorage.getItem("user"));
+      const result = await jwtAuthAxios.get(`/activity/current/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
       });
@@ -278,6 +278,9 @@ const CurrentActivities = () => {
                       <Typography
                         variant="body1"
                         sx={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
                           fontSize: { xs: "12px", md: "14px" },
                           "&:hover": {
                             textDecorationLine: ["none"],
@@ -314,6 +317,7 @@ const CurrentActivities = () => {
                       secondary={
                         <Typography
                           sx={{
+                            width: "70px",
                             fontSize: { xs: "10px", md: "14px" },
                             color: "rgba(27, 43, 65, 0.69)",
                           }}

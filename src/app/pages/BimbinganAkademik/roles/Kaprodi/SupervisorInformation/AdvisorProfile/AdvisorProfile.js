@@ -160,9 +160,8 @@ const AdvisorProfile = () => {
   }, []);
 
   const handleSelectAllClick = (event) => {
-    console.log(event);
     if (event.target.checked) {
-      const newSelected = studentOptions.map((item) => item.studentNim);
+      const newSelected = studentOptions.map((item) => item.studentId);
       setSelectedStudent(newSelected);
     } else {
       setSelectedStudent([]);
@@ -182,12 +181,12 @@ const AdvisorProfile = () => {
           <StyledLink to="/bimbingan-akademik/kaprodi/supervisor-information/">
             Supervisor Information
           </StyledLink>
-          <Typography color="text.primary">Advisor Profile</Typography>
+          <Typography color="text.primary">Supervisor Profile</Typography>
         </Breadcrumbs>
       </Div>
       <Div>
         <Typography variant="h1" fontWeight={500} sx={{ marginBottom: "25px" }}>
-          Advisor Profile
+          Supervisor Profile
         </Typography>
         <Typography
           variant="h6"
@@ -213,19 +212,13 @@ const AdvisorProfile = () => {
             padding: "16px",
           }}
         >
-          Academic Advisor Information
+          Academic Supervisor Information
         </Typography>
         <Grid container spacing={3} sx={{ padding: 2 }}>
           <Grid item xs={12} md={12}>
             <Typography variant="h6">Full Name</Typography>
             <Typography variant="h6" sx={textStyle}>
               {`${dataProfile.lastName}, ${dataProfile.firstName}`}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6">NIDN</Typography>
-            <Typography variant="h6" sx={textStyle}>
-              {dataProfile.nidn}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
@@ -266,7 +259,7 @@ const AdvisorProfile = () => {
             variant="h2"
             sx={{
               textAlign: "justify",
-              "@media (max-width: 390px)": {
+              "@media (maxWidth: 390px)": {
                 fontSize: "16px",
                 fontWeight: 500,
               },
@@ -395,8 +388,11 @@ const AdvisorProfile = () => {
             <Table stickyHeader>
               <TableHead>
                 {/* <TableHeading /> */}
-                <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-                  <TableCell padding="checkbox">
+                <TableRow>
+                  <TableCell
+                    sx={{ backgroundColor: "#e8ecf2" }}
+                    padding="checkbox"
+                  >
                     <Checkbox
                       indeterminate={
                         selectedStudent.length > 0 &&
@@ -409,14 +405,78 @@ const AdvisorProfile = () => {
                       onChange={handleSelectAllClick}
                     />
                   </TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>No</TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>NIM</TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>Student Name</TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>Program Studi</TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>Tahun Masuk</TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>Nilai</TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>Sertifikat</TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>Status</TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    No
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    NIM
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Student Name
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Program Studi
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Tahun Masuk
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Nilai
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Sertifikat
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Status
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -427,12 +487,14 @@ const AdvisorProfile = () => {
                       <TableItem
                         item={item}
                         index={index}
-                        key={item.studentNim}
-                        isSelected={selectedStudent.includes(item.studentNim)}
+                        key={item.studentId}
+                        isSelected={selectedStudent.includes(item.studentId)}
                         handleClick={(i) =>
                           setSelectedStudent(
                             selectedStudent.includes(i)
-                              ? selectedStudent.filter((nim) => nim !== i)
+                              ? selectedStudent.filter(
+                                  (studentId) => studentId !== i
+                                )
                               : [...selectedStudent, i]
                           )
                         }
@@ -452,7 +514,7 @@ const AdvisorProfile = () => {
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
-              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+              "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
             }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
@@ -492,13 +554,12 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
   const role = JSON.parse(localStorage.getItem("user")).role;
   console.log("test role", role);
 
-  const handleButtonNavigate = (event) => {
-    const { name } = event.currentTarget;
+  const handleButtonNavigate = (_, name) => {
     switch (name) {
       case "profile":
         navigate(
           `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nim}/student-profile`,
-          { state: { studentNim: nim } }
+          { state: { studentId: item.studentId, studentNim: nim } }
         );
         break;
       case "grade":
@@ -509,6 +570,7 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
               studentNim: nim,
               firstName: firstName,
               lastName: lastName,
+              studentId: item.studentId,
             },
           }
         );
@@ -521,6 +583,7 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
               studentNim: nim,
               firstName: firstName,
               lastName: lastName,
+              studentId: item.studentId,
             },
           }
         );
@@ -531,11 +594,12 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
     }
   };
   const rowStyle = {
-    "@media (max-width: 650px)": { fontSize: "11px" },
+    "@media (maxWidth: 650px)": { fontSize: "11px" },
+    textAlign: "center",
   };
   return (
     <TableRow
-      onClick={() => handleClick(nim)}
+      onClick={() => handleClick(item.studentId)}
       role="checkbox"
       aria-checked={isSelected}
       selected={isSelected}
@@ -546,16 +610,21 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
       <TableCell sx={[rowStyle]}>{nim}</TableCell>
       <TableCell>
-        <Button
-          name="profile"
-          sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+        <Typography
+          style={{
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             textTransform: "capitalize",
+            paddingX: 0,
+            color: "#006AF5",
+            textDecoration: "none",
+            width: "100%",
+            cursor: "pointer",
+            textAlign: "center",
           }}
-          onClick={handleButtonNavigate}
+          onClick={(e) => handleButtonNavigate(e, "profile")}
         >
           {lastName}, {firstName}
-        </Button>
+        </Typography>
       </TableCell>
       <TableCell sx={[rowStyle]}>
         {major === "IF"
@@ -569,28 +638,38 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
       <TableCell sx={[rowStyle]}>{arrivalYear}</TableCell>
 
       <TableCell>
-        <Button
-          name="grade"
-          onClick={handleButtonNavigate}
-          sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+        <Typography
+          onClick={(e) => handleButtonNavigate(e, "grade")}
+          style={{
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             textTransform: "capitalize",
+            paddingX: 0,
+            color: "#006AF5",
+            textDecoration: "none",
+            width: "100%",
+            cursor: "pointer",
+            textAlign: "center",
           }}
         >
           View Grades
-        </Button>
+        </Typography>
       </TableCell>
       <TableCell>
-        <Button
-          name="certificate"
-          onClick={handleButtonNavigate}
-          sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+        <Typography
+          onClick={(e) => handleButtonNavigate(e, "certificate")}
+          style={{
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             textTransform: "capitalize",
+            paddingX: 0,
+            color: "#006AF5",
+            textDecoration: "none",
+            width: "100%",
+            cursor: "pointer",
+            textAlign: "center",
           }}
         >
           View Certificates
-        </Button>
+        </Typography>
       </TableCell>
       <TableCell sx={[rowStyle]}>
         <Chip

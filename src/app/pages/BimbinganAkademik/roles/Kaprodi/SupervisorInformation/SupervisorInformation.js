@@ -147,12 +147,10 @@ const SupervisorInformation = () => {
       const nameMatches =
         item.teacher.firstName.toLowerCase().includes(search.toLowerCase()) ||
         item.teacher.lastName.toLowerCase().includes(search.toLowerCase());
-      const nidnMatches = item.teacher.nidn
-        .toLowerCase()
-        .includes(search.toLowerCase());
+
       const majorMatches = filter === "" || item.teacher.major === filter;
 
-      return (nameMatches || nidnMatches) && majorMatches;
+      return nameMatches && majorMatches;
     });
 
     setSearchFilteredData(filteredData);
@@ -223,7 +221,7 @@ const SupervisorInformation = () => {
         <Grid item xs={12} sm={6} md={3.5}>
           <TextField
             size="small"
-            placeholder="Search by Name or NIDN"
+            placeholder="Search by Name"
             variant="outlined"
             id="search-field"
             InputProps={{
@@ -318,7 +316,7 @@ const SupervisorInformation = () => {
             }}
           >
             <AddIcon sx={{ fontSize: "14px" }} />
-            Add Dosen
+            Add Supervisor
           </Button>
         </Grid>
       </Grid>
@@ -448,7 +446,6 @@ const TableHeading = () => {
   return (
     <TableRow>
       <TableCell sx={{ textAlign: "center" }}>No</TableCell>
-      <TableCell sx={{ textAlign: "center" }}>NIDN</TableCell>
       <TableCell sx={{ textAlign: "center" }}>Name</TableCell>
       <TableCell sx={{ textAlign: "center" }}>Major</TableCell>
       <TableCell sx={{ textAlign: "center" }}>History</TableCell>
@@ -463,7 +460,7 @@ const TableItem = ({ item, index, onDelete }) => {
   const [anchorEl, setAnchorE1] = useState(null);
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-  const { firstName, lastName, major, nidn, nik } = item.teacher;
+  const { firstName, lastName, major, nik } = item.teacher;
 
   const handleButtonNavigate = (_, name) => {
     switch (name) {
@@ -491,7 +488,6 @@ const TableItem = ({ item, index, onDelete }) => {
   return (
     <TableRow>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{nidn}</TableCell>
       <TableCell>
         <Typography
           onClick={(e) => handleButtonNavigate(e, "profile")}

@@ -28,6 +28,7 @@ const CertificateWaiting = () => {
     SupervisorLastName,
     submissionDate,
     pathFile,
+    level,
     category,
     description,
     status,
@@ -36,6 +37,40 @@ const CertificateWaiting = () => {
   } = certificateDetails;
   const pdfURL = pathFile;
   console.log("ini pdf url", pdfURL);
+
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case "PENALARAN_KEILMUAN":
+        return "Reasoning and Scholarship";
+      case "ORGANISASI_KEPEMIMPINAN":
+        return "Organization and Leadership";
+      case "BAKAT_MINAT":
+        return "Talents and Interests";
+      case "PENGABDIAN_MASYARAKAT":
+        return "Community Service";
+      case "OTHER":
+        return "Others";
+      default:
+        return category;
+    }
+  };
+
+  const getLevelLabel = (level) => {
+    switch (level) {
+      case "REGION":
+        return "Region";
+      case "NATIONAL":
+        return "National";
+      case "INTERNATIONAL":
+        return "International";
+      case "UNIVERSITY":
+        return "University";
+      case "MAJOR":
+        return "Study Program";
+      default:
+        return level;
+    }
+  };
 
   const handleClick = (event) => {
     navigate("/bimbingan-akademik/current-activities");
@@ -74,7 +109,7 @@ const CertificateWaiting = () => {
                   {/* {certificateDetailsData?.title.charAt(0).toUpperCase() +
                     certificateDetailsData?.title.slice(1)} */}
 
-                  {title.charAt(0).toUpperCase() + title.slice(1)}
+                  {title?.charAt(0).toUpperCase() + title?.slice(1)}
                 </Typography>
               </Grid>
             </Grid>
@@ -142,11 +177,22 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5">
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-
-                  {/* {certificateDetailsData?.category.charAt(0).toUpperCase() +
-                    certificateDetailsData?.category.slice(1)} */}
+                  {getCategoryLabel(category)}
                 </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={4} xl={3} pb={1}>
+                <Typography variant="h5">Level</Typography>
+              </Grid>
+              <Grid item xs={1} xl={0.5}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                <Typography variant="h5">{getLevelLabel(level)}</Typography>
               </Grid>
             </Grid>
           </Grid>

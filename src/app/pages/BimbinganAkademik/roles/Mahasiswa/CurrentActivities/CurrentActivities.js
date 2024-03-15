@@ -92,20 +92,15 @@ const CurrentActivities = () => {
   //get current activities
   const getCurrentActivities = async () => {
     try {
-      const { nim } = JSON.parse(localStorage.getItem("user"));
+      const { id } = JSON.parse(localStorage.getItem("user"));
 
-      const resultActivity = await jwtAuthAxios.get(
-        `/activity/current/${nim}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          signal,
-        }
-      );
+      const resultActivity = await jwtAuthAxios.get(`/activity/current/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
 
       const resultConsultation = await jwtAuthAxios.get(
-        `/academic-consultation/student/${
-          JSON.parse(localStorage.getItem("user")).id
-        }`,
+        `/academic-consultation/student/${id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -113,9 +108,7 @@ const CurrentActivities = () => {
       );
 
       const resultCertificate = await jwtAuthAxios.get(
-        `/certificate/current/student/${
-          JSON.parse(localStorage.getItem("user")).id
-        }`,
+        `/certificate/current/student/${id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -123,17 +116,13 @@ const CurrentActivities = () => {
       );
 
       const resultPreregis = await jwtAuthAxios.get(
-        `/pre-regist/current/student/${nim}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          signal,
-        }
+        `/pre-regist/current/student/${id}`
       );
 
+      console.log("ini resultPreregis", resultPreregis);
+
       const resultGrade = await jwtAuthAxios.get(
-        `/transaction/student/currentGrades/${
-          JSON.parse(localStorage.getItem("user")).id
-        }`,
+        `/transaction/student/currentGrades/${id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -223,11 +212,7 @@ const CurrentActivities = () => {
   };
   groupDataByDate(dataConsultation, "createdAt", groupedDataConsultation);
   groupDataByDate(dataActivity, "createdAt", groupedDataActivity);
-  groupDataByDate(
-    dataCertificate,
-    "Certificate.submitDate",
-    groupedDataCertificate
-  );
+  groupDataByDate(dataCertificate, "submitDate", groupedDataCertificate);
   groupDataByDate(dataPreregis, "submitDate", groupedDataPreregis);
   groupDataByDate(dataGrade, "submitedDate", groupedDataGrade);
 
@@ -262,7 +247,6 @@ const CurrentActivities = () => {
 
       const { status, data } = response.data;
       console.log("response navigate activity", response);
-      const path = "/bimbingan-akademik/current-activities/activity";
 
       if (status === "OK") {
         navigate("activity", {
@@ -295,8 +279,9 @@ const CurrentActivities = () => {
         submitDate,
         path,
         category,
+        level,
         description,
-        approval_status,
+        approvalStatus,
         title,
         id,
       } = certificateDetailsResult.data.data;
@@ -313,9 +298,10 @@ const CurrentActivities = () => {
                 student.GuidanceClassMember.gudianceClass.teacher.lastName,
               submissionDate: submitDate,
               pathFile: path,
+              level: level,
               category: category,
               description: description,
-              status: approval_status,
+              status: approvalStatus,
               title: title,
               id: id,
             },
@@ -548,6 +534,9 @@ const CurrentActivities = () => {
                               <>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     color: "rgba(0, 0, 0, 1)",
                                     paddingLeft: "8px",
                                     paddingTop: "5px",
@@ -558,6 +547,9 @@ const CurrentActivities = () => {
                                 </Typography>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     paddingLeft: "8px",
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
@@ -577,6 +569,7 @@ const CurrentActivities = () => {
                               secondary={
                                 <Typography
                                   sx={{
+                                    width: "70px",
                                     fontSize: { xs: "10px", md: "14px" },
                                     color: "rgba(27, 43, 65, 0.69)",
                                   }}
@@ -687,6 +680,9 @@ const CurrentActivities = () => {
                               <>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     color: "rgba(0, 0, 0, 1)",
                                     paddingLeft: "8px",
                                     paddingTop: "5px",
@@ -698,6 +694,9 @@ const CurrentActivities = () => {
                                 </Typography>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     paddingLeft: "8px",
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
@@ -718,6 +717,7 @@ const CurrentActivities = () => {
                               secondary={
                                 <Typography
                                   sx={{
+                                    width: "70px",
                                     fontSize: { xs: "10px", md: "14px" },
                                     color: "rgba(27, 43, 65, 0.69)",
                                   }}
@@ -748,26 +748,11 @@ const CurrentActivities = () => {
       <TabPanel value={value} index={2}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
-          {dataCertificate.length === 0 ? (
-            <Box
-              key="no-certificate-message"
-              sx={{
-                height: "50px",
-                backgroundColor: "rgba(235, 235, 235, 1)",
-                display: "flex",
-                alignItems: "center",
-                paddingLeft: "10px",
-              }}
-            >
-              <Typography
-                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
-              >
-                You don't have any current certificate
-              </Typography>
-            </Box>
-          ) : (
+          {console.log("ini dataCertificate", dataCertificate)}
+          {console.log("ini groupedDataCertificate", groupedDataCertificate)}
+          {dataCertificate.length > 0 ? (
             Object.entries(groupedDataCertificate).map(
-              ([date, dataCertificate, index]) => (
+              ([date, dataCertificateGroup], index) => (
                 <div key={`${index}-${date}`}>
                   <Box
                     sx={{
@@ -784,12 +769,12 @@ const CurrentActivities = () => {
                       {formatDate(date)}
                     </Typography>
                   </Box>
-                  {dataCertificate &&
-                    dataCertificate.map((value, index) => (
+                  {dataCertificateGroup &&
+                    dataCertificateGroup.map((value, index) => (
                       <List
+                        key={index}
                         sx={{
                           width: "100%",
-
                           bgcolor: "background.paper",
                           paddingTop: "0px",
                           paddingBottom: "0px",
@@ -825,22 +810,27 @@ const CurrentActivities = () => {
                               <>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     color: "rgba(0, 0, 0, 1)",
                                     paddingLeft: "8px",
                                     paddingTop: "5px",
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
                                 >
-                                  {value.student.lastName},{" "}
-                                  {value.student.firstName}
+                                  {value.title}
                                 </Typography>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     paddingLeft: "8px",
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
                                 >
-                                  {value.Certificate.title}
+                                  {value.category}
                                 </Typography>
                               </>
                             }
@@ -855,12 +845,13 @@ const CurrentActivities = () => {
                               secondary={
                                 <Typography
                                   sx={{
+                                    width: "70px",
                                     fontSize: { xs: "10px", md: "14px" },
                                     color: "rgba(27, 43, 65, 0.69)",
                                   }}
                                 >
                                   {new Date(
-                                    value.Certificate.submitDate
+                                    value.submitDate
                                   ).toLocaleTimeString("en-US", {
                                     hour: "numeric",
                                     minute: "numeric",
@@ -877,6 +868,23 @@ const CurrentActivities = () => {
                 </div>
               )
             )
+          ) : (
+            <Box
+              key="no-certificate-message"
+              sx={{
+                height: "50px",
+                backgroundColor: "rgba(235, 235, 235, 1)",
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "10px",
+              }}
+            >
+              <Typography
+                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+              >
+                You don't have any current certificate
+              </Typography>
+            </Box>
           )}
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>
@@ -960,6 +968,9 @@ const CurrentActivities = () => {
                             <>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   color: "rgba(0, 0, 0, 1)",
                                   paddingLeft: "8px",
                                   paddingTop: "5px",
@@ -971,6 +982,9 @@ const CurrentActivities = () => {
                               </Typography>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   paddingLeft: "8px",
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
@@ -990,6 +1004,7 @@ const CurrentActivities = () => {
                             secondary={
                               <Typography
                                 sx={{
+                                  width: "70px",
                                   fontSize: { xs: "10px", md: "14px" },
                                   color: "rgba(27, 43, 65, 0.69)",
                                 }}
@@ -1096,6 +1111,9 @@ const CurrentActivities = () => {
                               <>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     color: "rgba(0, 0, 0, 1)",
                                     paddingLeft: "8px",
                                     paddingTop: "5px",
@@ -1106,6 +1124,9 @@ const CurrentActivities = () => {
                                 </Typography>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     paddingLeft: "8px",
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
@@ -1129,6 +1150,7 @@ const CurrentActivities = () => {
                               secondary={
                                 <Typography
                                   sx={{
+                                    width: "70px",
                                     fontSize: { xs: "10px", md: "14px" },
                                     color: "rgba(27, 43, 65, 0.69)",
                                   }}

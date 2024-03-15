@@ -15,6 +15,7 @@ import {
   handlePermissionError,
   handleAuthenticationError,
 } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+import Swal from "sweetalert2";
 
 const StudentProfile = () => {
   //abort
@@ -28,9 +29,9 @@ const StudentProfile = () => {
 
   const getProfile = async () => {
     try {
-      const { nim } = JSON.parse(localStorage.getItem("user"));
+      const { id } = JSON.parse(localStorage.getItem("user"));
       const resultStudent = await jwtAuthAxios.get(
-        `/student/view/biodata/${JSON.parse(localStorage.getItem("user")).id}`,
+        `/student/view/biodata/${id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -52,7 +53,16 @@ const StudentProfile = () => {
         }, 2000);
         return;
       } else if (error.response && error.response.status === 401) {
-        handleAuthenticationError();
+        const blueTheme = {
+          confirmButtonColor: "#007BFF",
+        };
+        Swal.fire({
+          icon: "info",
+          title: "Please Sign In Again",
+          text: "You have successfully completed the data. Now, please sign in again.",
+          ...blueTheme,
+        });
+        navigate("/login");
       } else {
         console.log("ini error: ", error);
         return;
@@ -174,7 +184,15 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Area of Concentration</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.AreaOfConcentration || "-"}
+                {studentProfileData?.AreaOfConcentration === "OBJECT_PROGRAMMER"
+                  ? "Object Programmer"
+                  : studentProfileData?.AreaOfConcentration ===
+                    "COMPETITIVE_INTELEGENT_ANALYSIS"
+                  ? "Competitive Intelligent Analysis"
+                  : studentProfileData?.AreaOfConcentration ===
+                    "NETWORK_ADMINISTRATOR"
+                  ? "Network Administrator"
+                  : "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -199,45 +217,15 @@ const StudentProfile = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h5">Blood Type</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.bloodType || "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Marital Status</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.MaritalStatus || "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
               <Typography variant="h5">Phone Number</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.phoneNo || "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h5">Previous High School</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.highSchoolGrad || "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
               <Typography variant="h5">Current Residence Status</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.currentResidenceStatus || "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Current Address</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.currentAddress || "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="h5">Address</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.address || "-"}
               </Typography>
             </Grid>
           </Grid>
@@ -259,24 +247,6 @@ const StudentProfile = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h5">Level of Education</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianEducation || "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Religion</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianReligion || "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Married Status</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianStatus || "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
               <Typography variant="h5">Family Relationship</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.familyRelation || "-"}
@@ -288,16 +258,10 @@ const StudentProfile = () => {
                 {studentProfileData?.guardianEmail || "-"}
               </Typography>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={12}>
               <Typography variant="h5">Phone</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.guardianPhoneNo || "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="h5">Address</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianAddress || "-"}
               </Typography>
             </Grid>
           </Grid>
@@ -308,7 +272,7 @@ const StudentProfile = () => {
           expandIcon={<ExpandMoreIcon />}
           sx={{ backgroundColor: "#1A38601A" }}
         >
-          <Typography fontWeight={500}>Academic Advisor</Typography>
+          <Typography fontWeight={500}>Academic Supervisor</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3} sx={{ padding: 2 }}>

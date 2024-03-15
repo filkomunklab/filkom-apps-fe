@@ -70,12 +70,6 @@ const Profile = () => {
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Typography variant="h6">NIDN</Typography>
-            <Typography variant="h6" sx={textSyle}>
-              {dataProfile?.nidn || "-"}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={6}>
             <Typography variant="h6">Email</Typography>
             <Typography variant="h6" sx={textSyle}>
               {dataProfile?.email || "-"}

@@ -294,7 +294,7 @@ const StudentPerMajor = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component={"div"}
@@ -308,20 +308,6 @@ const StudentPerMajor = () => {
     </Div>
   );
 };
-
-const getRole = () => {
-  const filter = role.includes("KAPRODI")
-    ? "kaprodi"
-    : role.includes("DEKAN")
-    ? "dekan"
-    : role.includes("OPERATOR_FAKULTAS")
-    ? "sekretaris"
-    : "dosen-pembimbing";
-
-  return filter;
-};
-
-console.log("ini getrole", getRole());
 
 const TableHeading = ({}) => {
   const style = {
@@ -343,62 +329,38 @@ const TableHeading = ({}) => {
 
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
-  const { nim, firstName, lastName, major, arrivalYear, status } = item;
-
-  const getMajorDisplayName = (major) => {
-    switch (major) {
-      case "IF":
-        return "informatics";
-      case "SI":
-        return "information-system";
-      case "DKV":
-        return "information-technology";
-      default:
-        return "-";
-    }
-  };
+  const { nim, firstName, lastName, major, arrivalYear, status, id } = item;
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
 
     switch (name) {
       case "profile":
-        navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${getMajorDisplayName(
-            major
-          )}/${nim}`,
-          { state: { studentNim: nim, major } }
-        );
+        navigate(`${nim}`, {
+          state: { studentNim: nim, studentId: id, major },
+        });
         break;
       case "grade":
-        navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${getMajorDisplayName(
-            major
-          )}/${nim}/grade`,
-          {
-            state: {
-              studentNim: nim,
-              firstName: firstName,
-              lastName: lastName,
-              major,
-            },
-          }
-        );
+        navigate(`${nim}/grade`, {
+          state: {
+            studentNim: nim,
+            firstName: firstName,
+            lastName: lastName,
+            major,
+            studentId: id,
+          },
+        });
         break;
       case "certificate":
-        navigate(
-          `/bimbingan-akademik/${getRole()}/student-information/faculty-student/${getMajorDisplayName(
-            major
-          )}/${nim}/certificate`,
-          {
-            state: {
-              studentNim: nim,
-              firstName: firstName,
-              lastName: lastName,
-              major,
-            },
-          }
-        );
+        navigate(`${nim}/certificate`, {
+          state: {
+            studentNim: nim,
+            firstName: firstName,
+            lastName: lastName,
+            major,
+            studentId: id,
+          },
+        });
         break;
       default:
         console.log("Path not found");
@@ -406,7 +368,7 @@ const TableItem = ({ item, index }) => {
   };
 
   const rowStyle = {
-    "@media (max-width: 650px)": { fontSize: "11px" },
+    "@media (maxWidth: 650px)": { fontSize: "11px" },
     textAlign: "center",
   };
 
@@ -418,7 +380,7 @@ const TableItem = ({ item, index }) => {
         <Button
           name="profile"
           sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}
@@ -443,7 +405,7 @@ const TableItem = ({ item, index }) => {
           name="grade"
           onClick={handleButtonNavigate}
           sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}
@@ -456,7 +418,7 @@ const TableItem = ({ item, index }) => {
           name="certificate"
           onClick={handleButtonNavigate}
           sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}

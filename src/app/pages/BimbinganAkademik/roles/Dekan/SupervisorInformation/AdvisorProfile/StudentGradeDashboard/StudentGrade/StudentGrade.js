@@ -81,7 +81,9 @@ const StudentGrade = () => {
           >
             Supervisor Information
           </StyledLink>
-          <StyledLink onClick={() => navigate(-2)}>Advisor Profile</StyledLink>
+          <StyledLink onClick={() => navigate(-2)}>
+            Supervisor Profile
+          </StyledLink>
           <StyledLink onClick={() => navigate(-1)}>Student Grade</StyledLink>
           <Typography color="text.primary">Grade</Typography>
         </Breadcrumbs>

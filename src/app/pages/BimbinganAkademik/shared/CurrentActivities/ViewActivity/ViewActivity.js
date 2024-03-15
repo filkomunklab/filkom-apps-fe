@@ -46,20 +46,13 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (max-width: 768px)": {
+  "@media (maxWidth: 768px)": {
     maxWidth: "80%",
   },
-  "@media (max-width: 480px)": {
+  "@media (maxWidth: 480px)": {
     maxWidth: "80%",
   },
 };
-
-const studentsData = Array.from({ length: 29 }, (_, index) => ({
-  id: index + 1,
-  name: "Adzana, Shaliha Gracia",
-  nim: "105022010006",
-  prodi: "Informatika",
-}));
 
 const ViewActivity = () => {
   //abort
@@ -74,6 +67,7 @@ const ViewActivity = () => {
   const [selectedAll, setSelectedAll] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [hideCheckbox, setHideCheckbox] = useState(false);
+  const [hideButton, setHideButton] = useState(null);
 
   //modal
   const [openFirstModal, setOpenFirstModal] = useState(false);
@@ -161,6 +155,7 @@ const ViewActivity = () => {
         handleOpenSuccessModal();
         setLoading(false);
         setHideCheckbox(true);
+        setHideButton("");
         // navigate(-1);
       }
     } catch (error) {
@@ -188,7 +183,7 @@ const ViewActivity = () => {
     setSelectedStudents(
       selectedAll
         ? []
-        : activityDetail.ActivityMember.map((student) => student.studentNim)
+        : activityDetail.ActivityMember.map((student) => student.studentId)
     );
   };
 
@@ -197,7 +192,9 @@ const ViewActivity = () => {
       ? selectedStudents.filter((id) => id !== studentId)
       : [...selectedStudents, studentId];
 
-    setSelectedAll(updatedSelectedStudents.length === studentsData.length);
+    setSelectedAll(
+      updatedSelectedStudents.length === activityDetail?.ActivityMember?.length
+    );
     setSelectedStudents(updatedSelectedStudents);
   };
 
@@ -306,10 +303,9 @@ const ViewActivity = () => {
           </Stack>
         </Grid>
       </Grid>
-
       {activityDetail?.isAttendance === true && (
         <div>
-          <Typography sx={{ fontSize: "24px", mt: 2, mb: 2, fontWeight: 400 }}>
+          <Typography sx={{ fontSize: "24px", mt: 4, mb: 3, fontWeight: 400 }}>
             Attendance
           </Typography>
           <TableContainer
@@ -318,48 +314,79 @@ const ViewActivity = () => {
             }}
             component={Paper}
           >
-            <Table stickyHeader>
-              <TableHead
-                size="small"
-                sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}
-              >
+            <Table>
+              <TableHead>
                 <TableRow size="small">
                   {hideCheckbox ? null : (
-                    <TableCell>
+                    <TableCell
+                      sx={{
+                        backgroundColor: "rgba(26, 56, 96, 0.1)",
+                      }}
+                    >
                       <Checkbox
                         checked={selectedAll}
                         onChange={handleSelectAll}
                       />
                     </TableCell>
                   )}
-
-                  <TableCell>Number</TableCell>
-                  <TableCell>Student Name</TableCell>
-                  <TableCell>NIM</TableCell>
-                  <TableCell>Prodi</TableCell>
-                  {hideCheckbox ? <TableCell>Status</TableCell> : null}
+                  <TableCell
+                    sx={{
+                      backgroundColor: "rgba(26, 56, 96, 0.1)",
+                      width: "30px",
+                    }}
+                  >
+                    Number
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      backgroundColor: "rgba(26, 56, 96, 0.1)",
+                    }}
+                  >
+                    Student Name
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      backgroundColor: "rgba(26, 56, 96, 0.1)",
+                    }}
+                  >
+                    NIM
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      backgroundColor: "rgba(26, 56, 96, 0.1)",
+                    }}
+                  >
+                    Prodi
+                  </TableCell>
+                  {hideCheckbox ? (
+                    <TableCell
+                      sx={{
+                        backgroundColor: "rgba(26, 56, 96, 0.1)",
+                      }}
+                    >
+                      Status
+                    </TableCell>
+                  ) : null}
                 </TableRow>
               </TableHead>
               <TableBody>
                 {activityDetail.ActivityMember?.map((student, index) => (
-                  <TableRow key={student.studentNim}>
+                  <TableRow key={student.studentId}>
                     {hideCheckbox ? null : (
                       <TableCell sx={{ width: "40px" }}>
                         <Checkbox
-                          checked={selectedStudents.includes(
-                            student.studentNim
-                          )}
+                          checked={selectedStudents.includes(student.studentId)}
                           onChange={() =>
-                            handleSelectStudent(student.studentNim)
+                            handleSelectStudent(student.studentId)
                           }
                         />
                       </TableCell>
                     )}
-                    <TableCell>{index + 1}</TableCell>
+                    <TableCell sx={{ width: "30px" }}>{index + 1}</TableCell>
                     <TableCell>
                       {student.student.lastName}, {student.student.firstName}
                     </TableCell>
-                    <TableCell>{student.studentNim}</TableCell>
+                    <TableCell>{student.student.nim}</TableCell>
                     <TableCell>
                       {student.student.major === "IF"
                         ? "Informatika"
@@ -404,25 +431,27 @@ const ViewActivity = () => {
               paddingBottom: "60px",
             }}
           >
-            <Button
-              onClick={handleOpenFirstModal}
-              sx={{
-                backgroundColor: "#006AF5",
-                borderRadius: "24px",
-                color: "white",
-                whiteSpace: "nowrap",
-                minWidth: "132px",
-                fontSize: "12px",
-                padding: "10px",
-                gap: "6px",
+            {hideButton ? null : (
+              <Button
+                onClick={handleOpenFirstModal}
+                sx={{
+                  backgroundColor: "#006AF5",
+                  borderRadius: "24px",
+                  color: "white",
+                  whiteSpace: "nowrap",
+                  minWidth: "132px",
+                  fontSize: "12px",
+                  padding: "10px",
+                  gap: "6px",
 
-                "&:hover": {
-                  backgroundColor: "#025ED8",
-                },
-              }}
-            >
-              Submit Attendance
-            </Button>
+                  "&:hover": {
+                    backgroundColor: "#025ED8",
+                  },
+                }}
+              >
+                Submit Attendance
+              </Button>
+            )}
           </Grid>
         </div>
       )}
@@ -498,7 +527,7 @@ const ViewActivity = () => {
         open={openErrorModal}
         handleClose={handleCloseErrorModal}
         title="Error Submission!"
-        description="Error: Failed to submit the certificate. Please try again."
+        description="Error: Failed to enter the student attendance form. Please try again."
       />
     </div>
   );

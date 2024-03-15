@@ -199,6 +199,7 @@ const Curriculum = () => {
                     position: "sticky",
                     top: 0,
                     backgroundColor: "rgb(245, 247, 250)",
+                    zIndex: 1,
                   }}
                 >
                   <TableRow>

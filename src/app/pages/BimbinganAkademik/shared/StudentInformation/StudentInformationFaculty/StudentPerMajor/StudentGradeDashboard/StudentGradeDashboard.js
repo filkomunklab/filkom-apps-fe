@@ -152,15 +152,7 @@ const StudentGradeDashboard = () => {
   return (
     <Div>
       <Breadcrumbs aria-label="breadcrumb">
-        <StyledLink
-          onClick={() =>
-            navigate(
-              `/bimbingan-akademik/${getRole()}/student-information/faculty-student`
-            )
-          }
-        >
-          Faculty Student
-        </StyledLink>
+        <StyledLink onClick={() => navigate(-2)}>Faculty Student</StyledLink>
 
         <StyledLink onClick={() => navigate(-1)}>
           {major === "IF"

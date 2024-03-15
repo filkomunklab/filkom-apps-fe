@@ -128,12 +128,10 @@ const SupervisorInformation = () => {
       const nameMatches =
         item.teacher.firstName.toLowerCase().includes(search.toLowerCase()) ||
         item.teacher.lastName.toLowerCase().includes(search.toLowerCase());
-      const nidnMatches = item.teacher.nidn
-        .toLowerCase()
-        .includes(search.toLowerCase());
+
       const majorMatches = filter === "" || item.teacher.major === filter;
 
-      return (nameMatches || nidnMatches) && majorMatches;
+      return nameMatches && majorMatches;
     });
 
     setSearchFilteredData(filteredData);
@@ -204,7 +202,7 @@ const SupervisorInformation = () => {
         <Grid item xs={12} sm={6} md={3.5}>
           <TextField
             size="small"
-            placeholder="Search by Name or NIDN"
+            placeholder="Search by Name"
             variant="outlined"
             id="search-field"
             InputProps={{
@@ -341,7 +339,6 @@ const TableHeading = () => {
   return (
     <TableRow>
       <TableCell sx={{ textAlign: "center" }}>No</TableCell>
-      <TableCell sx={{ textAlign: "center" }}>NIDN</TableCell>
       <TableCell sx={{ textAlign: "center" }}>Name</TableCell>
       <TableCell sx={{ textAlign: "center" }}>Major</TableCell>
       <TableCell sx={{ textAlign: "center" }}>Number of Student</TableCell>
@@ -354,7 +351,7 @@ const TableItem = ({ item, index, handleDelete }) => {
   const [anchorEl, setAnchorE1] = useState(null);
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-  const { firstName, lastName, major, nidn, nik } = item.teacher;
+  const { firstName, lastName, major, nik } = item.teacher;
   console.log("ini isi item.techer", item.teacher);
 
   const handleButtonNavigate = (_, name) => {
@@ -378,7 +375,6 @@ const TableItem = ({ item, index, handleDelete }) => {
   return (
     <TableRow>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{nidn}</TableCell>
       <TableCell>
         <Typography
           onClick={(e) => handleButtonNavigate(e, "profile")}

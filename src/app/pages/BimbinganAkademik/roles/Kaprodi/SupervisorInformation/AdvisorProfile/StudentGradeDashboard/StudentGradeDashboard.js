@@ -52,7 +52,7 @@ const StudentGradeDashboard = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  const [semesterData, setSemesterData] = useState([]);
+  const [semesterData, setSemesterData, studentId] = useState([]);
   const location = useLocation();
   const { studentNim, firstName, lastName } = location.state
     ? location.state
@@ -78,9 +78,7 @@ const StudentGradeDashboard = () => {
   const getDataGrade = async () => {
     try {
       const response = await jwtAuthAxios.get(
-        `/transaction/semesterList/${
-          JSON.parse(localStorage.getItem("user")).id
-        }`,
+        `/transaction/semesterList/${studentId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -143,7 +141,7 @@ const StudentGradeDashboard = () => {
         >
           Supervisor Information
         </StyledLink>
-        <StyledLink onClick={() => navigate(-1)}>Advisor Profile</StyledLink>
+        <StyledLink onClick={() => navigate(-1)}>Supervisor Profile</StyledLink>
         <Typography color="text.primary">Student Grade</Typography>
       </Breadcrumbs>
       <Stack gap={3} paddingTop={3}>

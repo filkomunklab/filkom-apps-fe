@@ -18,11 +18,14 @@ import {
   RadioGroup,
   Backdrop,
   CircularProgress,
+  Button,
+  Modal,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useLocation, useNavigate } from "react-router-dom";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
 import {
   handlePermissionError,
   handleAuthenticationError,
@@ -32,6 +35,25 @@ const role = Boolean(localStorage.getItem("user"))
   ? JSON.parse(localStorage.getItem("user")).role
   : [];
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  padding: 24,
+  backgroundColor: "white",
+  borderRadius: 10,
+  maxWidth: "100%",
+  "@media (maxWidth: 768px)": {
+    maxWidth: "80%",
+  },
+  "@media (maxWidth: 480px)": {
+    maxWidth: "80%",
+  },
+};
+
 const StudentProfile = () => {
   //abort
   const controller = new AbortController();
@@ -39,20 +61,36 @@ const StudentProfile = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
-  const { studentNim } = location.state || "-";
+  const { studentId, studentNim } = location.state || "-";
   const [advisorProfileData, setAdvisorProfileData] = useState([]);
   const [studentProfileData, setStudentProfileData] = useState([]);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("");
   const dosenGuidanceClass = JSON.parse(
     localStorage.getItem("user")
   ).guidanceClassId;
 
+  //modal
+  const [openFirstModal, setOpenFirstModal] = useState(false);
+  const [openErrorModal, setOpenErrorModal] = useState(false);
+  const handleOpenFirstModal = () => {
+    if (selectedStatus) {
+      setOpenFirstModal(true);
+    }
+  };
+  const handleCloseFirstModal = () => setOpenFirstModal(false);
+  const handleOpenErrorModal = () => setOpenErrorModal(true);
+  const handleCloseErrorModal = () => {
+    setOpenErrorModal(false);
+    handleCloseFirstModal();
+  };
+
   const getProfile = async () => {
     try {
       const resultStudent = await jwtAuthAxios.get(
-        `/student/view/biodata/${JSON.parse(localStorage.getItem("user")).id}`,
+        `/student/view/biodata/${studentId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -64,19 +102,6 @@ const StudentProfile = () => {
       setAdvisorProfileData(
         resultStudent.data.data.GuidanceClassMember?.gudianceClass?.teacher
       );
-      // console.log(
-      //   "isi advisor gudiance",
-      //   resultStudent.data.data.GuidanceClassMember?.gudianceClass?.teacher
-      // );
-      // console.log("dosenGuidanceClass:", dosenGuidanceClass);
-      // console.log(
-      //   "studentProfileData?.GuidanceClassMember?.guidanceClass?.id:",
-      //   resultStudent.data.data.GuidanceClassMember?.gudianceClass
-      // );
-      // console.log(
-      //   "studentProfileData?.GuidanceClassMember?.guidanceClass?.id:",
-      //   resultStudent.data.data.GuidanceClassMember
-      // );
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
@@ -96,12 +121,13 @@ const StudentProfile = () => {
   };
 
   const changeStatus = async (value) => {
+    console.log("Change status to:", value);
     try {
       setIsLoading(true);
       handleClosePopover();
       const response = await jwtAuthAxios.patch(
         `/employee/biodataStudent/status/${studentNim}`,
-        { status: value },
+        { status: selectedStatus },
         {
           signal,
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -110,10 +136,13 @@ const StudentProfile = () => {
 
       const { status, data } = response.data;
       if (status === "OK") {
+        setOpenFirstModal(false);
         getProfile();
       }
       setIsLoading(false);
+      console.log("ini status", status);
     } catch (error) {
+      handleOpenErrorModal();
       setIsLoading(false);
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
@@ -132,8 +161,17 @@ const StudentProfile = () => {
     }
   };
 
+  const handleChangeStatus = (event) => {
+    handleOpenFirstModal();
+    setSelectedStatus(event.target.value);
+  };
+
   useEffect(() => {
     getProfile();
+    console.log(
+      "ini isi student id studentinformation profil faculty",
+      studentId
+    );
     return () => controller.abort();
   }, []);
 
@@ -264,25 +302,13 @@ const StudentProfile = () => {
                         day: "numeric",
                       }
                     )
-                  : "N/A"}
+                  : "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Religion</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.religion ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Blood Type</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.bloodType ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Marital Status</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.MaritalStatus ?? "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -300,7 +326,6 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Curriculum</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {/* {studentProfileData?.curriculum.major ?? "-"} */}
                 {studentProfileData?.curriculum?.major} -
                 {studentProfileData?.curriculum?.year}
               </Typography>
@@ -308,13 +333,15 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Area of Concentration</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.AreaOfConcentration ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Previous High School</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.highSchoolGrad ?? "-"}
+                {studentProfileData?.AreaOfConcentration === "OBJECT_PROGRAMMER"
+                  ? "Object Programmer"
+                  : studentProfileData?.AreaOfConcentration ===
+                    "COMPETITIVE_INTELEGENT_ANALYSIS"
+                  ? "Competitive Intelligent Analysis"
+                  : studentProfileData?.AreaOfConcentration ===
+                    "NETWORK_ADMINISTRATOR"
+                  ? "Network Administrator"
+                  : "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -324,19 +351,13 @@ const StudentProfile = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h5">Current Address</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.currentAddress ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
               <Typography variant="h5">Current Residence Status</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.currentResidenceStatus ?? "-"}
               </Typography>
             </Grid>
           </Grid>
-        </AccordionDetails>{" "}
+        </AccordionDetails>
         <Popover
           open={open}
           anchorEl={anchorEl}
@@ -358,9 +379,8 @@ const StudentProfile = () => {
               row
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
-              // defaultValue={status}
               value={studentProfileData?.status}
-              onChange={(e) => changeStatus(e.target.value)}
+              onChange={handleChangeStatus}
             >
               <FormControlLabel
                 value="ACTIVE"
@@ -374,6 +394,73 @@ const StudentProfile = () => {
                 label="Inactive"
               />
             </RadioGroup>
+            <Modal
+              open={openFirstModal}
+              onClose={() => setOpenFirstModal(false)}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <div style={style}>
+                <Typography
+                  id="modal-modal-title"
+                  variant="h4"
+                  component="h2"
+                  sx={{
+                    fontWeight: 600,
+                    paddingTop: 2,
+                  }}
+                >
+                  Change Status Student?
+                </Typography>
+                <Typography
+                  id="modal-modal-description"
+                  style={{ marginTop: "16px", marginBottom: "20px" }}
+                >
+                  Are you sure you want to change status student?
+                </Typography>
+
+                <Grid container spacing={1} justifyContent="flex-end">
+                  <Grid item>
+                    <Button
+                      onClick={() => setOpenFirstModal(false)}
+                      sx={{
+                        backgroundColor: "white",
+                        borderRadius: "5px",
+                        color: "black",
+                        whiteSpace: "nowrap",
+                        "&:hover": {
+                          backgroundColor: "lightgrey",
+                        },
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      onClick={changeStatus}
+                      sx={{
+                        backgroundColor: "#006AF5",
+                        borderRadius: "5px",
+                        color: "white",
+                        whiteSpace: "nowrap",
+                        "&:hover": {
+                          backgroundColor: "#025ED8",
+                        },
+                      }}
+                    >
+                      Submit
+                    </Button>
+                  </Grid>
+                </Grid>
+              </div>
+            </Modal>
+            <SuccessOrError
+              open={openErrorModal}
+              handleClose={handleCloseErrorModal}
+              title="Error Submission!"
+              description="Error: Failed to create activity. Please try again."
+            />
           </FormControl>
         </Popover>
       </Accordion>
@@ -393,24 +480,6 @@ const StudentProfile = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h5">Level of Education</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianEducation ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Religion</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianReligion ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Married Status</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianStatus ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
               <Typography variant="h5">Family Relationship</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.familyRelation ?? "-"}
@@ -422,16 +491,10 @@ const StudentProfile = () => {
                 {studentProfileData?.guardianEmail ?? "-"}
               </Typography>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={12}>
               <Typography variant="h5">Phone</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.guardianPhoneNo ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="h5">Address</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianAddress ?? "-"}
               </Typography>
             </Grid>
           </Grid>
@@ -442,7 +505,7 @@ const StudentProfile = () => {
           expandIcon={<ExpandMoreIcon />}
           sx={{ backgroundColor: "#1A38601A" }}
         >
-          <Typography fontWeight={500}>Academic Advisor</Typography>
+          <Typography fontWeight={500}>Academic Supervisor</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3} sx={{ padding: 2 }}>
@@ -453,12 +516,6 @@ const StudentProfile = () => {
                 advisorProfileData?.firstName !== undefined
                   ? `${advisorProfileData?.lastName}, ${advisorProfileData?.firstName}`
                   : "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">NIDN</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {advisorProfileData?.nidn ?? "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>

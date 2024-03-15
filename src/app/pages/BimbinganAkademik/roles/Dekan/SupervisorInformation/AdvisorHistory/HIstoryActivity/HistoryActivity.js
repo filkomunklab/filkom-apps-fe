@@ -181,7 +181,7 @@ const ViewActivity = () => {
         {activityDetail?.isAttendance === true && (
           <Grid container paddingLeft={2}>
             <Typography
-              sx={{ fontSize: "24px", mt: 2, mb: 2, fontWeight: 400 }}
+              sx={{ fontSize: "24px", mt: 4, mb: 3, fontWeight: 400 }}
             >
               Attendance
             </Typography>
@@ -191,31 +191,45 @@ const ViewActivity = () => {
               }}
               component={Paper}
             >
-              <Table stickyHeader>
-                <TableHead
-                  size="small"
-                  sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}
-                >
+              <Table>
+                <TableHead>
                   <TableRow size="small">
-                    <TableCell>Number</TableCell>
-                    <TableCell>Student Name</TableCell>
-                    <TableCell>NIM</TableCell>
-                    <TableCell>Prodi</TableCell>
-                    <TableCell>Status</TableCell>
+                    <TableCell sx={{ backgroundColor: "#dfe4eb" }}>
+                      Number
+                    </TableCell>
+                    <TableCell sx={{ backgroundColor: "#dfe4eb" }}>
+                      Student Name
+                    </TableCell>
+                    <TableCell sx={{ backgroundColor: "#dfe4eb" }}>
+                      NIM
+                    </TableCell>
+                    <TableCell sx={{ backgroundColor: "#dfe4eb" }}>
+                      Prodi
+                    </TableCell>
+                    <TableCell sx={{ backgroundColor: "#dfe4eb" }}>
+                      Status
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {activityDetail?.ActivityMember.map((student, index) => (
-                    <TableRow key={student?.studentNim}>
+                    <TableRow key={student.student?.nim}>
                       <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
                       <TableCell sx={{ width: "190px" }}>
-                        {student?.studentNim}
+                        {student.student?.lastName},{" "}
+                        {student.student?.firstName}
                       </TableCell>
                       <TableCell sx={{ width: "80px" }}>
-                        {student?.studentNim}
+                        {student.student?.nim}
                       </TableCell>
                       <TableCell sx={{ width: "80px" }}>
-                        {student?.studentNim}
+                        {student.student?.major === "IF"
+                          ? "Informatika"
+                          : student.student?.major === "SI"
+                          ? "Sistem Informasi"
+                          : student.student?.major === "DKV"
+                          ? "Teknologi Informasi"
+                          : student.student?.major}
                       </TableCell>
                       <TableCell sx={{ width: "80px" }}>
                         <Chip

@@ -214,6 +214,7 @@ const Manage = () => {
                       position: "-webkit-sticky",
                       position: "sticky",
                       top: 0,
+                      zIndex: 1,
                       backgroundColor: "rgba(26, 56, 96, 0.1)",
                     }}
                   >
@@ -326,7 +327,7 @@ const Manage = () => {
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  "@media (max-width: 650px)": { justifyContent: "flex-start" },
+                  "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
                 }}
                 rowsPerPageOptions={[10, 25, 50, 100]}
                 component="div"
@@ -388,6 +389,7 @@ const Manage = () => {
                       position: "-webkit-sticky",
                       position: "sticky",
                       top: 0,
+                      zIndex: 1,
                       backgroundColor: "rgba(26, 56, 96, 0.1)",
                     }}
                   >
@@ -405,20 +407,7 @@ const Manage = () => {
                   <TableBody>
                     {dataGrades && dataGrades.length > 0 ? (
                       dataGrades.map((value, index) => (
-                        <TableRow
-                          key={value.id}
-                          // onClick={() => handleNavigate(value)}
-                          sx={{
-                            ":hover": {
-                              cursor: "pointer",
-                              backgroundColor: "#338CFF21",
-                              transition: "0.3s",
-                              transitionTimingFunction: "ease-in-out",
-                              transitionDelay: "0s",
-                              transitionProperty: "all",
-                            },
-                          }}
-                        >
+                        <TableRow key={value.id}>
                           <TableCell sx={{ width: "80px" }}>
                             {index + 1}
                           </TableCell>
@@ -461,14 +450,14 @@ const Manage = () => {
                               width: "170px",
                             }}
                           >
-                            {value.semester_period}
+                            {value.semesterPeriod}
                           </TableCell>
                           <TableCell
                             sx={{
                               width: "200px",
                             }}
                           >
-                            {new Date(value.due_date).toLocaleDateString(
+                            {new Date(value.dueDate).toLocaleDateString(
                               "en-US",
                               {
                                 day: "numeric",
@@ -500,7 +489,7 @@ const Manage = () => {
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  "@media (max-width: 650px)": { justifyContent: "flex-start" },
+                  "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
                 }}
                 rowsPerPageOptions={[10, 25, 50, 100]}
                 component="div"

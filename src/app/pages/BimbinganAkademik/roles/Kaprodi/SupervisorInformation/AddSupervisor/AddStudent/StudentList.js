@@ -78,7 +78,10 @@ const StudentList = () => {
         }
       );
       setStudentOptions(
-        response.data.data.filter((item) => item.status !== "GRADUATE")
+        response.data.data.filter(
+          (item) => item.status !== "GRADUATE"
+          //  && major === item.major
+        )
       );
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
@@ -274,7 +277,7 @@ const StudentList = () => {
               }}
             >
               <TableRow>
-                <TableCell padding="checkbox">
+                <TableCell sx={{ textAlign: "center" }} padding="checkbox">
                   <Checkbox
                     indeterminate={
                       selectedStudent.length > 0 &&
@@ -287,12 +290,12 @@ const StudentList = () => {
                     onChange={handleSelectAllClick}
                   />
                 </TableCell>
-                <TableCell>No</TableCell>
-                <TableCell>NIM</TableCell>
-                <TableCell>Student Name</TableCell>
-                <TableCell>Major</TableCell>
-                <TableCell>Arrival Year</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>No</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>NIM</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Student Name</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Major</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Arrival Year</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -386,15 +389,15 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
       role="checkbox"
       aria-checked={isSelected}
     >
-      <TableCell padding="checkbox">
+      <TableCell sx={{ textAlign: "center" }} padding="checkbox">
         <Checkbox checked={isSelected} />
       </TableCell>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{item.nim}</TableCell>
-      <TableCell>
+      <TableCell sx={{ textAlign: "center" }}>{index + 1}</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>{item.nim}</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>
         {item.lastName}, {item.firstName}
       </TableCell>
-      <TableCell>
+      <TableCell sx={{ textAlign: "center" }}>
         {item.major === "IF"
           ? "Informatics"
           : item.major === "SI"
@@ -403,9 +406,13 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
           ? "Information Technology"
           : "-"}
       </TableCell>
-      <TableCell>{item.arrivalYear}</TableCell>
-      <TableCell>
-        <Chip label={item.status} variant="filled" color="success" />
+      <TableCell sx={{ textAlign: "center" }}>{item.arrivalYear}</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>
+        <Chip
+          label={item.status}
+          variant="filled"
+          color={item.status === "ACTIVE" ? "success" : "default"}
+        />
       </TableCell>
     </TableRow>
   );

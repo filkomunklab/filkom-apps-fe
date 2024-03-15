@@ -28,6 +28,8 @@ import {
   handlePermissionError,
   handleAuthenticationError,
 } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
+import CustomAlert from "app/pages/BimbinganAkademik/components/Alert/Alert";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -66,7 +68,7 @@ const AddSupervisor = () => {
   const location = useLocation();
   const { students, supervisor } = location.state || [];
   const [SupervisorOptions, setSupervisorOptions] = useState([]);
-  const [supervisorNik, setSupervisorNik] = useState("");
+  const [supervisorId, setSupervisorId] = useState("");
   const [selectedSupervisor, setSelectedSupervisor] = useState(
     supervisor || undefined
   );
@@ -75,6 +77,15 @@ const AddSupervisor = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
   const [openFirstModal, setOpenFirstModal] = useState(false);
+
+  // Alert
+  const [alert, setAlert] = useState(null);
+  const showAlert = (message) => {
+    setAlert({ message });
+  };
+  const hideAlert = () => {
+    setAlert(null);
+  };
 
   //handle error
   const handleError = (error) => {
@@ -115,19 +126,28 @@ const AddSupervisor = () => {
     }
   };
 
+  const [openErrorModal, setOpenErrorModal] = useState(false);
+  const handleOpenErrorModal = () => setOpenErrorModal(true);
+  const handleCloseErrorModal = () => {
+    setOpenErrorModal(false);
+    setOpenFirstModal(false);
+  };
+
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
       if (!students || students.length === 0) {
-        alert("No students to submit.");
+        showAlert(
+          "Make sure you have selected both the Supervisor and Student to be added."
+        );
         setIsLoading(false);
         return;
       }
       const response = await jwtAuthAxios.post(
-        `/guidance-class/create-new/${supervisor.nik}`,
+        `/guidance-class/create-new/${selectedSupervisor?.id}`,
         {
           studentList: students.map((item) => ({
-            studentNim: item.nim,
+            studentId: item.id,
           })),
         },
         {
@@ -145,12 +165,16 @@ const AddSupervisor = () => {
         console.log(response);
       }
     } catch (error) {
+      setIsLoading(false);
+      handleOpenErrorModal();
       handleError(error);
     }
   };
 
   useEffect(() => {
     getSupervisor();
+    console.log("ini student", students);
+    console.log("ini SupervisorOptions", SupervisorOptions);
     console.log("ini location :", location.state);
     return () => controller.abort();
   }, []);
@@ -191,7 +215,7 @@ const AddSupervisor = () => {
             padding: "16px",
           }}
         >
-          Academic Advisor Information
+          Academic Supervisor Information
         </Typography>
         <Grid container spacing={3} sx={{ padding: 2 }}>
           <Grid item xs={12} md={12}>
@@ -203,18 +227,18 @@ const AddSupervisor = () => {
                 select
                 label={showLabel && "Select"}
                 onChange={(e) => {
-                  setSupervisorNik(e.target.value);
+                  setSupervisorId(e.target.value);
                   setSelectedSupervisor(
                     SupervisorOptions.find(
-                      (supervisor) => supervisor.nik === e.target.value
+                      (supervisor) => supervisor.id === e.target.value
                     )
                   );
                   setShowLabel(false);
                   console.log("ini e", e.target.value);
                 }}
                 value={
-                  supervisorNik ||
-                  (SupervisorOptions?.length && supervisor?.nik) ||
+                  supervisorId ||
+                  (SupervisorOptions?.length && supervisor?.id) ||
                   ""
                 }
                 InputLabelProps={{
@@ -224,18 +248,12 @@ const AddSupervisor = () => {
                 {SupervisorOptions?.sort((a, b) =>
                   a.lastName.localeCompare(b.lastName)
                 ).map((item) => (
-                  <MenuItem value={item.nik || ""} key={item.id}>
+                  <MenuItem value={item.id || ""} key={item.id}>
                     {item.lastName}, {item.firstName}
                   </MenuItem>
                 ))}
               </TextField>
             </Stack>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6">NIDN</Typography>
-            <Paper variant="outlined" sx={{ padding: 1 }}>
-              {selectedSupervisor?.nidn || "-"}
-            </Paper>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Email</Typography>
@@ -261,7 +279,7 @@ const AddSupervisor = () => {
                 : "-"}
             </Paper>
           </Grid>
-          <Grid item xs={12} md={12}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h6">Address</Typography>
             <Paper variant="outlined" sx={{ padding: 1 }}>
               {selectedSupervisor?.Address || "-"}
@@ -366,7 +384,7 @@ const AddSupervisor = () => {
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
-              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+              "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
             }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component="div"
@@ -406,12 +424,17 @@ const AddSupervisor = () => {
           onClose={() => setOpenFirstModal(false)}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
+          disablePortal
         >
           <div style={style}>
+            {alert && (
+              <CustomAlert message={alert.message} onClose={hideAlert} />
+            )}
             <Typography
               id="modal-modal-title"
               variant="h4"
               component="h2"
+              paddingTop={2}
               sx={{ fontWeight: 600 }}
             >
               Add Supervisor?
@@ -441,7 +464,6 @@ const AddSupervisor = () => {
               <Grid item>
                 <Button
                   onClick={() => {
-                    setOpenFirstModal(false);
                     handleSubmit();
                   }}
                   sx={{
@@ -458,6 +480,12 @@ const AddSupervisor = () => {
             </Grid>
           </div>
         </Modal>
+        <SuccessOrError
+          open={openErrorModal}
+          handleClose={handleCloseErrorModal}
+          title="Error Submission!"
+          description="Error: Failed to add supervisor. Please try again."
+        />
       </Grid>
     </div>
   );
@@ -479,12 +507,12 @@ const TableHeading = () => {
 const TableItem = ({ item, index }) => {
   return (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{item.nim}</TableCell>
-      <TableCell>
+      <TableCell sx={{ textAlign: "center" }}>{index + 1}</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>{item.nim}</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>
         {item.lastName}, {item.firstName}
       </TableCell>
-      <TableCell>
+      <TableCell sx={{ textAlign: "center" }}>
         {item.major === "IF"
           ? "Informatics"
           : item.major === "SI"
@@ -493,10 +521,14 @@ const TableItem = ({ item, index }) => {
           ? "Information Technology"
           : "-"}
       </TableCell>
-      <TableCell>{item.arrivalYear}</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>{item.arrivalYear}</TableCell>
 
-      <TableCell>
-        <Chip label={item.status} variant="filled" color={"success"} />
+      <TableCell sx={{ textAlign: "center" }}>
+        <Chip
+          label={item.status}
+          variant="filled"
+          color={item.status === "ACTIVE" ? "success" : "default"}
+        />
       </TableCell>
     </TableRow>
   );

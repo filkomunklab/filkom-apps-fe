@@ -109,7 +109,10 @@ const EditStudent = () => {
       );
 
       setStudentOptions(
-        response.data.data.filter((item) => item.status !== "GRADUATE")
+        response.data.data.filter(
+          (item) => item.status !== "GRADUATE"
+          // && major === item.major
+        )
       );
     } catch (error) {
       handleError(error);
@@ -119,11 +122,17 @@ const EditStudent = () => {
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      const nimList = selectedStudent.map((nim) => ({ studentNim: nim }));
+
+      // Add this console log
+      console.log("Selected Students:", selectedStudent);
 
       const response = await jwtAuthAxios.post(
         `/guidance-class/add-student/${classID}`,
-        { studentList: nimList },
+        {
+          studentList: selectedStudent.map((id) => ({
+            studentId: id,
+          })),
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -132,9 +141,11 @@ const EditStudent = () => {
         }
       );
 
-      console.log("ahahaha :", response);
+      console.log("Response:", response);
+
       const { status } = response.data;
       setIsLoading(false);
+
       if (status === "OK") {
         navigate(
           `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}`,
@@ -167,7 +178,7 @@ const EditStudent = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = studentOptions.map((item) => item.nim);
+      const newSelected = studentOptions.map((item) => item.id);
       setSelectedStudent(newSelected);
     } else {
       setSelectedStudent([]);
@@ -218,7 +229,7 @@ const EditStudent = () => {
             state={location.state}
             to={`/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}`}
           >
-            Advisor Profile
+            Supervisor Profile
           </StyledLink>
           <Typography color="text.primary">Edit Student</Typography>
         </Breadcrumbs>
@@ -329,7 +340,10 @@ const EditStudent = () => {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
+                <TableCell
+                  sx={{ backgroundColor: "#e8ecf2" }}
+                  padding="checkbox"
+                >
                   <Checkbox
                     indeterminate={
                       selectedStudent.length > 0 &&
@@ -342,12 +356,54 @@ const EditStudent = () => {
                     onChange={handleSelectAllClick}
                   />
                 </TableCell>
-                <TableCell>No</TableCell>
-                <TableCell>NIM</TableCell>
-                <TableCell>Student Name</TableCell>
-                <TableCell>Program Studi</TableCell>
-                <TableCell>Tahun Masuk</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    textAlign: "center",
+                  }}
+                >
+                  No
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    textAlign: "center",
+                  }}
+                >
+                  NIM
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    textAlign: "center",
+                  }}
+                >
+                  Student Name
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    textAlign: "center",
+                  }}
+                >
+                  Program Studi
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    textAlign: "center",
+                  }}
+                >
+                  Tahun Masuk
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    textAlign: "center",
+                  }}
+                >
+                  Status
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -358,12 +414,12 @@ const EditStudent = () => {
                     item={item}
                     index={index}
                     key={item.nim}
-                    isSelected={selectedStudent.includes(item.nim)}
+                    isSelected={selectedStudent.includes(item.id)}
                     handleClick={(i) =>
                       setSelectedStudent(
-                        selectedStudent.includes(i.nim)
-                          ? selectedStudent.filter((nim) => nim !== i.nim)
-                          : [...selectedStudent, i.nim]
+                        selectedStudent.includes(i.id)
+                          ? selectedStudent.filter((id) => id !== i.id)
+                          : [...selectedStudent, i.id]
                       )
                     }
                   />
@@ -427,17 +483,54 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
       aria-checked={isSelected}
       selected={isSelected}
     >
-      <TableCell padding="checkbox">
+      <TableCell
+        sx={{
+          textAlign: "center",
+        }}
+        padding="checkbox"
+      >
         <Checkbox checked={isSelected} />
       </TableCell>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{item.nim}</TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        {index + 1}
+      </TableCell>
+      <TableCell
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        {item.nim}
+      </TableCell>
+      <TableCell
+        sx={{
+          textAlign: "center",
+        }}
+      >
         {item.lastName}, {item.firstName}
       </TableCell>
-      <TableCell>{majorLabel(item.major)}</TableCell>
-      <TableCell>{item.arrivalYear}</TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        {majorLabel(item.major)}
+      </TableCell>
+      <TableCell
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        {item.arrivalYear}
+      </TableCell>
+      <TableCell
+        sx={{
+          textAlign: "center",
+        }}
+      >
         <Chip
           label={item.status}
           variant="filled"

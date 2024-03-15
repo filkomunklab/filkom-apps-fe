@@ -32,6 +32,7 @@ const CertificateDetail = () => {
     submissionDate,
     pathFile,
     category,
+    level,
     description,
     status,
     title,
@@ -59,7 +60,7 @@ const CertificateDetail = () => {
               Supervisor Information
             </StyledLink>
             <StyledLink onClick={() => navigate(-2)}>
-              Advisor Profile
+              Supervisor Profile
             </StyledLink>
             <StyledLink onClick={() => navigate(-1)}>
               Student Certificate
@@ -170,8 +171,21 @@ const CertificateDetail = () => {
                 </Grid>
                 <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                   <Typography variant="h5">
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                    {getCategoryLabel(category)}
                   </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container>
+                <Grid item xs={4} md={4} xl={3} pb={1}>
+                  <Typography variant="h5">Level</Typography>
+                </Grid>
+                <Grid item xs={1} xl={0.5}>
+                  <Typography variant="h5">:</Typography>
+                </Grid>
+                <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                  <Typography variant="h5">{getLevelLabel(level)}</Typography>
                 </Grid>
               </Grid>
             </Grid>

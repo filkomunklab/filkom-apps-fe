@@ -89,12 +89,10 @@ const History = (props) => {
 
   const getHistory = async () => {
     try {
-      const { nik, guidanceClassId, id } = JSON.parse(
-        localStorage.getItem("user")
-      );
+      const { guidanceClassId, id } = JSON.parse(localStorage.getItem("user"));
 
       const resultActivity = await jwtAuthAxios.get(
-        `/activity/history-for-advisor/${nik}`,
+        `/activity/history-for-advisor/${id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -102,9 +100,7 @@ const History = (props) => {
       );
 
       const resultConsultation = await jwtAuthAxios.get(
-        `/academic-consultation/employee/${
-          JSON.parse(localStorage.getItem("user")).id
-        }`,
+        `/academic-consultation/employee/${id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -118,9 +114,9 @@ const History = (props) => {
           signal,
         }
       );
-
+      console.log("ini guidanceClassId", guidanceClassId);
       const resultPreregis = await jwtAuthAxios.get(
-        `/pre-regist/history-for-advisor/${guidanceClassId}`,
+        `/pre-regist/history-for-advisor/${id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -204,6 +200,7 @@ const History = (props) => {
   useEffect(() => {
     getHistory();
     getHistoryGrade();
+    console.log("ini isi dari data certificate", dataCertificate);
     return () => controller.abort();
   }, []);
 
@@ -242,18 +239,22 @@ const History = (props) => {
     groupedDataConsultation[dateConsultation].push(value);
   });
 
-  dataCertificate.forEach((value) => {
-    const date = new Date(value.approvalDate).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
+  if (Array.isArray(dataCertificate)) {
+    dataCertificate.forEach((value) => {
+      const date = new Date(value.approvalDate).toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+      if (!groupedDataCertificate[date]) {
+        groupedDataCertificate[date] = [];
+      }
+      groupedDataCertificate[date].push(value);
     });
-    if (!groupedDataCertificate[date]) {
-      groupedDataCertificate[date] = [];
-    }
-    groupedDataCertificate[date].push(value);
-  });
+  } else {
+    console.error("dataCertificate bukan array");
+  }
 
   dataPreregis.forEach((value) => {
     const date = new Date(value.submitDate).toLocaleDateString("en-US", {
@@ -371,7 +372,8 @@ const History = (props) => {
         path,
         category,
         description,
-        approval_status,
+        level,
+        approvalStatus,
         approvalDate,
         title,
         id,
@@ -392,7 +394,8 @@ const History = (props) => {
               pathFile: path,
               category: category,
               description: description,
-              status: approval_status,
+              level: level,
+              status: approvalStatus,
               title: title,
               id: id,
               approvalDate: approvalDate,
@@ -602,6 +605,9 @@ const History = (props) => {
                             <>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   color: "rgba(0, 0, 0, 1)",
                                   paddingLeft: "8px",
                                   paddingTop: "5px",
@@ -612,6 +618,9 @@ const History = (props) => {
                               </Typography>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   paddingLeft: "8px",
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
@@ -631,6 +640,7 @@ const History = (props) => {
                             secondary={
                               <Typography
                                 sx={{
+                                  width: "70px",
                                   fontSize: { xs: "10px", md: "14px" },
                                   color: "rgba(27, 43, 65, 0.69)",
                                 }}
@@ -738,6 +748,9 @@ const History = (props) => {
                             <>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   color: "rgba(0, 0, 0, 1)",
                                   paddingLeft: "8px",
                                   paddingTop: "5px",
@@ -749,6 +762,9 @@ const History = (props) => {
                               </Typography>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   paddingLeft: "8px",
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
@@ -770,6 +786,7 @@ const History = (props) => {
                             secondary={
                               <Typography
                                 sx={{
+                                  width: "70px",
                                   fontSize: { xs: "10px", md: "14px" },
                                   color: "rgba(27, 43, 65, 0.69)",
                                 }}
@@ -801,23 +818,7 @@ const History = (props) => {
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
 
-          {dataCertificate.length === 0 ? (
-            <Box
-              sx={{
-                height: "50px",
-                backgroundColor: "rgba(235, 235, 235, 1)",
-                display: "flex",
-                alignItems: "center",
-                paddingLeft: "10px",
-              }}
-            >
-              <Typography
-                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
-              >
-                You don't have any certificate history
-              </Typography>
-            </Box>
-          ) : (
+          {dataCertificate.length > 0 ? (
             Object.entries(groupedDataCertificate).map(
               ([date, dataCertificate]) => (
                 <div key={date}>
@@ -878,6 +879,9 @@ const History = (props) => {
                               <>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     color: "rgba(0, 0, 0, 1)",
                                     paddingLeft: "8px",
                                     paddingTop: "5px",
@@ -889,6 +893,9 @@ const History = (props) => {
                                 </Typography>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     paddingLeft: "8px",
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
@@ -908,6 +915,7 @@ const History = (props) => {
                               secondary={
                                 <Typography
                                   sx={{
+                                    width: "70px",
                                     fontSize: { xs: "10px", md: "14px" },
                                     color: "rgba(27, 43, 65, 0.69)",
                                   }}
@@ -930,6 +938,22 @@ const History = (props) => {
                 </div>
               )
             )
+          ) : (
+            <Box
+              sx={{
+                height: "50px",
+                backgroundColor: "rgba(235, 235, 235, 1)",
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: "10px",
+              }}
+            >
+              <Typography
+                sx={{ color: "rgba(0, 0, 0, 1)", paddingLeft: "25px" }}
+              >
+                You don't have any certificate history
+              </Typography>
+            </Box>
           )}
           <Typography sx={{ padding: "20px" }}></Typography>
         </div>
@@ -1013,6 +1037,9 @@ const History = (props) => {
                               <>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     color: "rgba(0, 0, 0, 1)",
                                     paddingLeft: "8px",
                                     paddingTop: "5px",
@@ -1023,6 +1050,9 @@ const History = (props) => {
                                 </Typography>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     paddingLeft: "8px",
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
@@ -1045,6 +1075,7 @@ const History = (props) => {
                               secondary={
                                 <Typography
                                   sx={{
+                                    width: "70px",
                                     fontSize: { xs: "10px", md: "14px" },
                                     color: "rgba(27, 43, 65, 0.69)",
                                   }}
@@ -1151,6 +1182,9 @@ const History = (props) => {
                             <>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   color: "rgba(0, 0, 0, 1)",
                                   paddingLeft: "8px",
                                   paddingTop: "5px",
@@ -1162,6 +1196,9 @@ const History = (props) => {
                               </Typography>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   paddingLeft: "8px",
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
@@ -1181,6 +1218,7 @@ const History = (props) => {
                             secondary={
                               <Typography
                                 sx={{
+                                  width: "70px",
                                   fontSize: { xs: "10px", md: "14px" },
                                   color: "rgba(27, 43, 65, 0.69)",
                                 }}

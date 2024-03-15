@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import GradeSubmission from "./GradeSubmission";
 import GradeSubmissionClosed from "./GradeSubmissionClosed";
+import GradeSubmitted from "./GradeSubmitted";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import { useNavigate } from "react-router-dom";
 import {
@@ -9,16 +10,16 @@ import {
 } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const Grade = () => {
-  //abort
   const controller = new AbortController();
   const signal = controller.signal;
   const navigate = useNavigate();
 
   const [dataGrade, setDataGrade] = useState(null);
+  const [submissionStatus, setSubmissionStatus] = useState("");
 
   const getDataGrade = async () => {
     try {
-      const nim = JSON.parse(localStorage.getItem("user")).nim;
+      const { nim, id } = JSON.parse(localStorage.getItem("user"));
       const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
@@ -33,6 +34,33 @@ const Grade = () => {
       setDataGrade(gradeData);
 
       console.log("ini panjang gradedata", result);
+
+      const resultCurrent = await jwtAuthAxios.get(
+        `/transaction/student/currentGrades/${id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
+      console.log("ini resultCurrent", resultCurrent);
+      console.log("ini resultCurrent", resultCurrent);
+
+      const transactionId = resultCurrent.data.data[0].id;
+      console.log("ini transactionId", transactionId);
+
+      const checkTransactionId = await jwtAuthAxios.get(
+        `/transaction/grades/check/${transactionId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
+      console.log("ini checkTransactionId", checkTransactionId);
+      if (checkTransactionId.data.data !== null) {
+        setSubmissionStatus("success");
+      } else {
+        setSubmissionStatus("error cuyy");
+      }
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
@@ -56,12 +84,14 @@ const Grade = () => {
     return () => controller.abort();
   }, []);
 
+  console.log("ini isi dari submissionStatus", submissionStatus);
+
   return (
     <div>
-      {console.log("ini isi dari dataGrade", dataGrade)}
-
       {dataGrade === null || dataGrade.length === 0 ? (
         <GradeSubmissionClosed />
+      ) : submissionStatus === "success" ? (
+        <GradeSubmitted />
       ) : (
         <GradeSubmission />
       )}

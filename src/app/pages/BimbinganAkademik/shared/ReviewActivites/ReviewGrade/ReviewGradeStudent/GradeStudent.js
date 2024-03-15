@@ -320,7 +320,6 @@ const GradeStudent = () => {
                 display: "flex",
                 columnGap: 2,
                 justifyContent: "flex-end",
-                bgcolor: "#F5F5F5",
                 px: 2,
                 py: 1,
               }}
@@ -371,7 +370,6 @@ const GradeStudent = () => {
                 display: "flex",
                 columnGap: 2,
                 justifyContent: "flex-end",
-                bgcolor: "#F5F5F5",
                 px: 2,
                 py: 1,
               }}

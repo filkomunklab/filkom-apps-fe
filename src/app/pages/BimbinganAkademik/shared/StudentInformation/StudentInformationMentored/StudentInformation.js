@@ -158,7 +158,7 @@ const StudentInformationMentored = () => {
             variant="h2"
             sx={{
               textAlign: "justify",
-              "@media (max-width: 390px)": {
+              "@media (maxWidth: 390px)": {
                 fontSize: "16px",
                 fontWeight: 500,
               },
@@ -250,7 +250,7 @@ const StudentInformationMentored = () => {
         </Grid>
       </Grid>
 
-      <Grid container xs={12}>
+      <Grid container>
         <TableContainer sx={{ maxHeight: 540 }} component={Paper}>
           <Table>
             <TableHead
@@ -285,7 +285,7 @@ const StudentInformationMentored = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component={"div"}
@@ -317,28 +317,17 @@ const TableHeading = ({}) => {
 
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
-  const { firstName, lastName, major, arrivalYear, nim, status } = item.student;
-  const role = JSON.parse(localStorage.getItem("user")).role;
-  console.log("test role", role);
-
-  const getRole = () => {
-    const filter = role.includes("KAPRODI")
-      ? "kaprodi"
-      : role.includes("DEKAN")
-      ? "dekan"
-      : role.includes("OPERATOR_FAKULTAS")
-      ? "sekretaris"
-      : "dosen-pembimbing";
-
-    return filter;
-  };
+  const { firstName, lastName, major, arrivalYear, nim, status, id } =
+    item.student;
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
 
     switch (name) {
       case "profile":
-        navigate(`${nim}`, { state: { studentNim: nim } });
+        navigate(`${nim}`, {
+          state: { studentNim: nim, studentId: id },
+        });
         break;
       case "grade":
         navigate(`${nim}/grade`, {
@@ -346,6 +335,7 @@ const TableItem = ({ item, index }) => {
             studentNim: nim,
             firstName: firstName,
             lastName: lastName,
+            studentId: id,
           },
         });
         break;
@@ -355,6 +345,7 @@ const TableItem = ({ item, index }) => {
             studentNim: nim,
             firstName: firstName,
             lastName: lastName,
+            studentId: id,
           },
         });
         break;
@@ -365,7 +356,7 @@ const TableItem = ({ item, index }) => {
   };
 
   const rowStyle = {
-    "@media (max-width: 650px)": { fontSize: "11px" },
+    "@media (maxWidth: 650px)": { fontSize: "11px" },
   };
 
   return (
@@ -378,7 +369,7 @@ const TableItem = ({ item, index }) => {
         <Button
           name="profile"
           sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             textTransform: "capitalize",
             width: "100%",
           }}
@@ -405,7 +396,7 @@ const TableItem = ({ item, index }) => {
           name="grade"
           onClick={handleButtonNavigate}
           sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}
@@ -418,7 +409,7 @@ const TableItem = ({ item, index }) => {
           name="certificate"
           onClick={handleButtonNavigate}
           sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}

@@ -97,12 +97,10 @@ const PreviewPopup = ({ open, onClose, previewRows, totalCredits }) => {
                       <TableCell>{data.code}</TableCell>
                       <TableCell>{data.name}</TableCell>
                       <TableCell>{data.credits}</TableCell>
-                      <TableCell>{data.grade ? data.grade : "-"}</TableCell>
                       <TableCell>{data.type}</TableCell>
                       <TableCell>
                         {data.prerequisite ? data.prerequisite : "-"}
                       </TableCell>
-                      <TableCell>{data.status ? data.status : "-"}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -367,7 +365,7 @@ const PreRegistrationSubmission = ({}) => {
 
       const listOfSubject = selectedRows.map((row) => ({ subjectId: row.id }));
       const requestBody = {
-        studentId: user.nim,
+        studentId: user.id,
         employeeId: employeeId,
         listOfSubject: listOfSubject,
         description: "",
@@ -488,7 +486,6 @@ const PreRegistrationSubmission = ({}) => {
           <TableCell>{value.code}</TableCell>
           <TableCell>{value.name}</TableCell>
           <TableCell>{value.credits}</TableCell>
-          <TableCell>{value.grade ? value.grade : "-"}</TableCell>
           <TableCell>{value.type}</TableCell>
           <TableCell sx={{ width: "400px" }}>
             {value.prerequisite === null || value.prerequisite === ""
@@ -506,7 +503,6 @@ const PreRegistrationSubmission = ({}) => {
                     </React.Fragment>
                   ))}
           </TableCell>
-          <TableCell>{value.status ? value.status : "-"}</TableCell>
         </TableRow>
       );
     });
@@ -613,20 +609,6 @@ const PreRegistrationSubmission = ({}) => {
           <Table stickyHeader>
             <TableHead>
               <TableHeading />
-              {/* <TableRow>
-                <TableCell sx={{ width: "80px" }}> </TableCell>
-                <TableCell sx={{ width: "80px" }}>Code</TableCell>
-                <TableCell sx={{ width: "400px" }}>Name</TableCell>
-                <TableCell sx={{ width: "80px", textAlign: "right" }}>
-                  Credit(s)
-                </TableCell>
-                <TableCell sx={{ width: "80px", lign: "right" }}>
-                  Grade
-                </TableCell>
-                <TableCell sx={{ width: "130px" }}>Type</TableCell>
-                <TableCell sx={{ width: "400px" }}>Prerequisite</TableCell>
-                <TableCell sx={{ width: "400px" }}>Status</TableCell>
-              </TableRow> */}
             </TableHead>
             <TableBody>{renderRows()}</TableBody>
           </Table>
@@ -724,7 +706,7 @@ const PreRegistrationSubmission = ({}) => {
             open={openErrorModal}
             handleClose={handleCloseErrorModal}
             title="Error Submission!"
-            description="Error: Failed to submit grade. Please try again."
+            description="Error: Failed to submit pre-registration. Please try again."
           />
         </Box>
       </Grid>
@@ -732,17 +714,15 @@ const PreRegistrationSubmission = ({}) => {
   );
 };
 const TableHeading = () => {
-  const style = { fontWeight: 500 };
+  const style = { fontWeight: 500, backgroundColor: "#dfe4eb" };
   return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
+    <TableRow>
       <TableCell sx={[style]}>No</TableCell>
       <TableCell sx={[style]}>Code</TableCell>
       <TableCell sx={[style]}>Subject Name</TableCell>
       <TableCell sx={[style]}>Credit(s)</TableCell>
-      <TableCell sx={[style]}>Grades</TableCell>
       <TableCell sx={[style]}>Type</TableCell>
       <TableCell sx={[style]}>Prerequisite</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
     </TableRow>
   );
 };

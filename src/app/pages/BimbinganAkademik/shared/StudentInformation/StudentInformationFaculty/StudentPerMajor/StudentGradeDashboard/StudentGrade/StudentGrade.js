@@ -89,15 +89,7 @@ const StudentGrade = () => {
     <Div>
       <Div role="presentation">
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink
-            onClick={() =>
-              navigate(
-                `/bimbingan-akademik/${getRole()}/student-information/faculty-student`
-              )
-            }
-          >
-            Faculty Student
-          </StyledLink>
+          <StyledLink onClick={() => navigate(-3)}>Faculty Student</StyledLink>
 
           <StyledLink onClick={() => navigate(-2)}>
             {major === "IF"

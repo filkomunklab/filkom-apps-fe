@@ -20,6 +20,7 @@ import {
   handlePermissionError,
   handleAuthenticationError,
 } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+import CustomAlert from "app/pages/BimbinganAkademik/components/Alert/Alert";
 
 const requiredStyle = {
   color: "red",
@@ -81,15 +82,14 @@ const Certificate = () => {
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleCloseSuccessModal();
-    }, 5000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [handleOpenSuccessModal]);
+  // Alert
+  const [alert, setAlert] = useState(null);
+  const showAlert = (message) => {
+    setAlert({ message });
+  };
+  const hideAlert = () => {
+    setAlert(null);
+  };
 
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
@@ -97,8 +97,15 @@ const Certificate = () => {
       return;
     }
 
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      showAlert("File size exceeds the limit of 5MB.");
+      event.target.value = null;
+      return;
+    }
+
     if (file.type !== "application/pdf") {
-      alert("Your certificate must be in PDF format.");
+      showAlert("Your certificate must be in PDF format.");
       event.target.value = null;
       return;
     }
@@ -127,7 +134,7 @@ const Certificate = () => {
     setDescription(trimmedDescription);
 
     if (!trimmedTitle || !category || !level || !selectedFile) {
-      alert("Please fill the field first.");
+      showAlert("Please fill the field first.");
     } else {
       handleOpenFirstModal();
     }
@@ -173,8 +180,8 @@ const Certificate = () => {
     };
     const data = {
       title,
-      Certificate_Category: category,
-      Certificate_Level: level,
+      category: category,
+      level: level,
       description,
       certificateFile,
       employeeNik,
@@ -191,6 +198,7 @@ const Certificate = () => {
       );
 
       if (result.data.status === "OK") {
+        hideAlert();
         setTitle("");
         setCategory("");
         setLevel("");
@@ -249,6 +257,11 @@ const Certificate = () => {
           <CircularProgress />
         </div>
       )}
+      {alert && (
+        <Grid paddingBottom={2}>
+          <CustomAlert message={alert.message} onClose={hideAlert} />
+        </Grid>
+      )}
       <Typography
         sx={{
           fontSize: { xs: "20px", md: "24px" },
@@ -258,7 +271,6 @@ const Certificate = () => {
       >
         Add Certificate
       </Typography>
-
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Stack spacing={2} sx={{ paddingBottom: 3 }}>

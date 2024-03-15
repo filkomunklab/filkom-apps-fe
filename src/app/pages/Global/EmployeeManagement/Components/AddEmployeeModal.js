@@ -47,10 +47,6 @@ const employeeArraySchema = Yup.array()
         .min(10, "must be at least 10 digits")
         .max(13, "cannot be more than 13 digits")
         .required(),
-      nidn: Yup.string()
-        .trim("NIK cannot include leading and trailing spaces")
-        .strict(true)
-        .matches(/^\d+$/, "nidn must only contain digits"),
       firstName: Yup.string()
         .trim("First Name cannot include leading and trailing spaces")
         .strict(true)
@@ -181,7 +177,6 @@ const AddEmployeeModal = ({
         const options = {
           header: [
             "nik",
-            "nidn",
             "firstName",
             "lastName",
             "degree",

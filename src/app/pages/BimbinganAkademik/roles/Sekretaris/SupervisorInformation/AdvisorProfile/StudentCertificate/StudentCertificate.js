@@ -107,7 +107,8 @@ const StudentCertificate = () => {
         path,
         category,
         description,
-        approval_status,
+        level,
+        approvalStatus,
         approvalDate,
         title,
         id,
@@ -127,8 +128,9 @@ const StudentCertificate = () => {
               submissionDate: submitDate,
               pathFile: path,
               category: category,
+              level: level,
               description: description,
-              status: approval_status,
+              status: approvalStatus,
               title: title,
               id: id,
               approvalDate: approvalDate,
@@ -152,6 +154,23 @@ const StudentCertificate = () => {
     setPage(0);
   };
 
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case "PENALARAN_KEILMUAN":
+        return "Reasoning and Scholarship";
+      case "ORGANISASI_KEPEMIMPINAN":
+        return "Organization and Leadership";
+      case "BAKAT_MINAT":
+        return "Talents and Interests";
+      case "PENGABDIAN_MASYARAKAT":
+        return "Community Service";
+      case "OTHER":
+        return "Others";
+      default:
+        return category;
+    }
+  };
+
   return (
     <Div>
       <Breadcrumbs aria-label="breadcrumb">
@@ -162,7 +181,7 @@ const StudentCertificate = () => {
         >
           Supervisor Information
         </StyledLink>
-        <StyledLink onClick={() => navigate(-1)}>Advisor Profile</StyledLink>
+        <StyledLink onClick={() => navigate(-1)}>Supervisor Profile</StyledLink>
         <Typography color="text.primary">Student Certificates</Typography>
       </Breadcrumbs>
       <Stack gap={3} paddingTop={3}>
@@ -185,7 +204,7 @@ const StudentCertificate = () => {
             {/* <SearchLocal
               sx={{
                 height: "100%",
-                "@media (max-width: 390px)": {
+                "@media (maxWidth: 390px)": {
                   height: "40px",
                 },
               }}
@@ -206,6 +225,7 @@ const StudentCertificate = () => {
                     position: "sticky",
                     top: 0,
                     backgroundColor: "rgba(26, 56, 96, 0.1)",
+                    zIndex: 1,
                   }}
                 >
                   <TableRow>
@@ -265,28 +285,26 @@ const StudentCertificate = () => {
                           {value.title}
                         </TableCell>
                         <TableCell>
-                          {value.category &&
-                            value.category.charAt(0).toUpperCase() +
-                              value.category.slice(1)}
+                          {getCategoryLabel(value.category)}
                         </TableCell>
                         <TableCell>{value.description}</TableCell>
                         <TableCell
                           sx={{
                             color:
-                              value.approval_status === "WAITING"
+                              value.approvalStatus === "WAITING"
                                 ? "#FFCC00"
-                                : value.approval_status === "APPROVED"
+                                : value.approvalStatus === "APPROVED"
                                 ? "#005FDB"
-                                : value.approval_status === "REJECTED"
+                                : value.approvalStatus === "REJECTED"
                                 ? "#E21D12"
                                 : "inherit",
                             align: "left",
                             width: "100px",
                           }}
                         >
-                          {value.approval_status &&
-                            value.approval_status.charAt(0) +
-                              value.approval_status.slice(1).toLowerCase()}
+                          {value.approvalStatus &&
+                            value.approvalStatus.charAt(0) +
+                              value.approvalStatus.slice(1).toLowerCase()}
                         </TableCell>
                       </TableRow>
                     ))
@@ -304,7 +322,7 @@ const StudentCertificate = () => {
                 display: "flex",
                 justifyContent: "flex-end",
                 alignItems: "center",
-                "@media (max-width: 650px)": { justifyContent: "flex-start" },
+                "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
               }}
               rowsPerPageOptions={[10, 25, 50, 100]}
               component="div"

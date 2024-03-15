@@ -31,6 +31,7 @@ const CertificateDetail = () => {
     submissionDate,
     pathFile,
     category,
+    level,
     description,
     status,
     title,
@@ -58,18 +59,46 @@ const CertificateDetail = () => {
     return filter;
   };
 
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case "PENALARAN_KEILMUAN":
+        return "Reasoning and Scholarship";
+      case "ORGANISASI_KEPEMIMPINAN":
+        return "Organization and Leadership";
+      case "BAKAT_MINAT":
+        return "Talents and Interests";
+      case "PENGABDIAN_MASYARAKAT":
+        return "Community Service";
+      case "OTHER":
+        return "Others";
+      default:
+        return category;
+    }
+  };
+
+  const getLevelLabel = (level) => {
+    switch (level) {
+      case "REGION":
+        return "Region";
+      case "NATIONAL":
+        return "National";
+      case "INTERNATIONAL":
+        return "International";
+      case "UNIVERSITY":
+        return "University";
+      case "MAJOR":
+        return "Study Program";
+      default:
+        return level;
+    }
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item md={6} id="detail-item">
         <Box style={{ height: "100%", overflowY: "auto" }}>
           <Breadcrumbs aria-label="breadcrumb">
-            <StyledLink
-              onClick={() =>
-                navigate(
-                  `/bimbingan-akademik/${getRole()}/student-information/faculty-student`
-                )
-              }
-            >
+            <StyledLink onClick={() => navigate(-3)}>
               Faculty Student
             </StyledLink>
 
@@ -194,14 +223,26 @@ const CertificateDetail = () => {
                 </Grid>
                 <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                   <Typography variant="h5">
-                    {category
-                      ? category.charAt(0).toUpperCase() +
-                        (category.slice(1) || "")
-                      : "-"}
+                    {getCategoryLabel(category)}
                   </Typography>
                 </Grid>
               </Grid>
             </Grid>
+
+            <Grid item xs={12}>
+              <Grid container>
+                <Grid item xs={4} md={4} xl={3} pb={1}>
+                  <Typography variant="h5">Level</Typography>
+                </Grid>
+                <Grid item xs={1} xl={0.5}>
+                  <Typography variant="h5">:</Typography>
+                </Grid>
+                <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                  <Typography variant="h5">{getLevelLabel(level)}</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+
             <Grid item xs={12}>
               <Grid container>
                 <Grid item xs={4} md={4} xl={3} pb={1}>

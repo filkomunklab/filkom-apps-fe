@@ -20,7 +20,7 @@ const PreRegistration = () => {
 
   const getDataPreregis = async () => {
     try {
-      const nim = JSON.parse(localStorage.getItem("user")).nim;
+      const { nim, id } = JSON.parse(localStorage.getItem("user"));
       const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
@@ -28,7 +28,7 @@ const PreRegistration = () => {
       const major = studentData.data.data.major;
 
       const result = await jwtAuthAxios.get(
-        `/pre-regist/status/${major}/${nim}`,
+        `/pre-regist/status/${major}/${id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }

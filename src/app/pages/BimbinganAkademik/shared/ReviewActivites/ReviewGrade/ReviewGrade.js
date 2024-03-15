@@ -193,12 +193,12 @@ const ReviewGrade = () => {
                 position: "sticky",
                 top: 0,
                 backgroundColor: "rgba(26, 56, 96, 0.1)",
+                zIndex: 1,
               }}
             >
               <TableRow>
                 <TableCell>Number</TableCell>
                 <TableCell>Submission Date</TableCell>
-                <TableCell>NIM</TableCell>
                 <TableCell>Student Name</TableCell>
                 <TableCell>Supervisor Name</TableCell>
                 <TableCell>Major</TableCell>
@@ -235,7 +235,6 @@ const ReviewGrade = () => {
                         }
                       )}
                     </TableCell>
-                    <TableCell>{value.Student.nim}</TableCell>
                     <TableCell>
                       {value.Student.lastName}, {value.Student.firstName}
                     </TableCell>
@@ -285,7 +284,7 @@ const ReviewGrade = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"

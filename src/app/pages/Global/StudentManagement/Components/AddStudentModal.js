@@ -275,7 +275,7 @@ const AddStudentModal = ({
 
         try {
           await jwtAuthAxios.post(
-            `/student-many`,
+            `/student-many/file`,
             {
               data,
             },

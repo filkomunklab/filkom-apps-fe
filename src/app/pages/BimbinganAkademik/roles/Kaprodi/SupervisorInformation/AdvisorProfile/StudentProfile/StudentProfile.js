@@ -39,7 +39,7 @@ const StudentProfile = () => {
   const signal = controller.signal;
 
   const location = useLocation();
-  const { studentNim } = location.state || "-";
+  const { studentId, studentNim } = location.state || "-";
   const [advisorProfileData, setAdvisorProfileData] = useState([]);
   const [studentProfileData, setStudentProfileData] = useState([]);
   const [open, setOpen] = useState(false);
@@ -48,11 +48,11 @@ const StudentProfile = () => {
   const dosenGuidanceClass = JSON.parse(
     localStorage.getItem("user")
   ).guidanceClassId;
-
+  console.log("ini studentId", studentId);
   const getProfile = async () => {
     try {
       const resultStudent = await jwtAuthAxios.get(
-        `/student/view/biodata/${JSON.parse(localStorage.getItem("user")).id}`,
+        `/student/view/biodata/${studentId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -150,7 +150,7 @@ const StudentProfile = () => {
         >
           Supervisor Information
         </StyledLink>
-        <StyledLink onClick={() => navigate(-1)}>Advisor Profile</StyledLink>
+        <StyledLink onClick={() => navigate(-1)}>Supervisor Profile</StyledLink>
         <Typography color="text.primary">Student Profile</Typography>
       </Breadcrumbs>
 
@@ -254,25 +254,13 @@ const StudentProfile = () => {
                         day: "numeric",
                       }
                     )
-                  : "N/A"}
+                  : "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Religion</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.religion ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Blood Type</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.bloodType ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Marital Status</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.MaritalStatus ?? "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -290,7 +278,6 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Curriculum</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {/* {studentProfileData?.curriculum.major ?? "-"} */}
                 {studentProfileData?.curriculum?.major} -
                 {studentProfileData?.curriculum?.year}
               </Typography>
@@ -298,13 +285,15 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Area of Concentration</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.AreaOfConcentration ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Previous High School</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.highSchoolGrad ?? "-"}
+                {studentProfileData?.AreaOfConcentration === "OBJECT_PROGRAMMER"
+                  ? "Object Programmer"
+                  : studentProfileData?.AreaOfConcentration ===
+                    "COMPETITIVE_INTELEGENT_ANALYSIS"
+                  ? "Competitive Intelligent Analysis"
+                  : studentProfileData?.AreaOfConcentration ===
+                    "NETWORK_ADMINISTRATOR"
+                  ? "Network Administrator"
+                  : "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -314,19 +303,13 @@ const StudentProfile = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h5">Current Address</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.currentAddress ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
               <Typography variant="h5">Current Residence Status</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.currentResidenceStatus ?? "-"}
               </Typography>
             </Grid>
           </Grid>
-        </AccordionDetails>{" "}
+        </AccordionDetails>
         <Popover
           open={open}
           anchorEl={anchorEl}
@@ -348,7 +331,6 @@ const StudentProfile = () => {
               row
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
-              // defaultValue={status}
               value={studentProfileData?.status}
               onChange={(e) => changeStatus(e.target.value)}
             >
@@ -383,24 +365,6 @@ const StudentProfile = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h5">Level of Education</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianEducation ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Religion</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianReligion ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Married Status</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianStatus ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
               <Typography variant="h5">Family Relationship</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.familyRelation ?? "-"}
@@ -412,16 +376,10 @@ const StudentProfile = () => {
                 {studentProfileData?.guardianEmail ?? "-"}
               </Typography>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={12}>
               <Typography variant="h5">Phone</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.guardianPhoneNo ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="h5">Address</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianAddress ?? "-"}
               </Typography>
             </Grid>
           </Grid>
@@ -432,7 +390,7 @@ const StudentProfile = () => {
           expandIcon={<ExpandMoreIcon />}
           sx={{ backgroundColor: "#1A38601A" }}
         >
-          <Typography fontWeight={500}>Academic Advisor</Typography>
+          <Typography fontWeight={500}>Academic Supervisor</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3} sx={{ padding: 2 }}>
@@ -443,12 +401,6 @@ const StudentProfile = () => {
                 advisorProfileData?.firstName !== undefined
                   ? `${advisorProfileData?.lastName}, ${advisorProfileData?.firstName}`
                   : "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">NIDN</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {advisorProfileData?.nidn ?? "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
