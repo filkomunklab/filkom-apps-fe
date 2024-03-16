@@ -100,6 +100,7 @@ const History = (props) => {
 
   const getHistory = async () => {
     try {
+      console.log("ini id activityData", id);
       const resultActivity = await jwtAuthAxios.get(
         `/activity/history-for-advisor/${id}`,
         {
@@ -141,7 +142,7 @@ const History = (props) => {
       const { status: preregisStatus, data: preregisData } =
         resultPreregis.data;
 
-      console.log("response result activityData", activityData);
+      console.log("response result resultActivity", resultActivity);
       console.log("response result consultationData", consultationData);
       console.log("response result certificateData", certificateData);
       console.log("response result preregisData", preregisData);
@@ -356,34 +357,11 @@ const History = (props) => {
   };
 
   const handleNavigatePreregis = async (value) => {
-    try {
-      const preregisDetailsResult = await jwtAuthAxios.get(
-        `/pre-regist/details/${value.id}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          signal,
-        }
-      );
-      const detail = preregisDetailsResult.data.data;
-      navigate(`${value.id}/history-preregistration`, {
-        state: {
-          preregisDetails: {
-            id: detail.id,
-            studentName:
-              detail.Student.lastName + ", " + detail.Student.firstName,
-            supervisorName:
-              detail.Employee.lastName + ", " + detail.Employee.firstName,
-            submitDate: detail.submitDate,
-            approveDate: detail.approveDate,
-            status: detail.status,
-            listSubjectPreregis: detail.ListOfRequest,
-            comments: detail.comments,
-          },
-        },
-      });
-    } catch (error) {
-      handleError(error);
-    }
+    navigate(`${value.id}/history-preregistration`, {
+      state: {
+        id: value.id,
+      },
+    });
   };
 
   return (
