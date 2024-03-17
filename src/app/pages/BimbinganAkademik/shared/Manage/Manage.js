@@ -40,6 +40,7 @@ import {
   handlePermissionError,
   handleAuthenticationError,
 } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+import { cleanDigitSectionValue } from "@mui/x-date-pickers/internals/hooks/useField/useField.utils";
 
 const styleModal = {
   position: "absolute",
@@ -180,21 +181,20 @@ const Manage = () => {
 
   const getGradeAndPreregis = async () => {
     try {
-      const gradesPromise = jwtAuthAxios.get(
+      console.log("ini major", major);
+      const gradesResult = await jwtAuthAxios.get(
         `/access/list/gradesAccess/${major}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
 
-      const preregisPromise = jwtAuthAxios.get(`/pre-regist?major=${major}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-
-      const [gradesResult, preregisResult] = await Promise.all([
-        gradesPromise,
-        preregisPromise,
-      ]);
+      const preregisResult = await jwtAuthAxios.get(
+        `/pre-regist?major=${major}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
 
       const filteredGrades = gradesResult.data.data.filter((item) => {
         const isOpenText = item.isOpen ? "Open" : "Closed";
@@ -357,8 +357,8 @@ const Manage = () => {
 
       <TabPanel value={value} index={0}>
         <div>
-          <Grid container pt={1} pb={2}>
-            <Grid
+          {/* <Grid container pt={1} pb={2}> */}
+          {/* <Grid
               item
               xs={12}
               sm={6}
@@ -388,229 +388,229 @@ const Manage = () => {
                   style: { borderRadius: "25px" },
                 }}
               />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
+            </Grid> */}
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            sx={{
+              padding: "1px",
+              // paddingLeft: "10px",
+              paddingBottom: "15px",
+              // paddingTop: "23px",
+              paddingTop: "10px",
+            }}
+          >
+            <Button
+              variant="outlined"
+              size="small"
               sx={{
-                padding: "1px",
-                paddingLeft: "10px",
-                paddingBottom: "15px",
-                paddingTop: "23px",
+                backgroundColor: "#006AF5",
+                borderRadius: "24px",
+                color: "white",
+                fontSize: "12px",
+                padding: "7px",
+                paddingLeft: "9px",
+                paddingRight: "13px",
+                minWidth: "110px",
+                gap: "5px",
+                "&:hover": {
+                  backgroundColor: "#025ED8",
+                },
               }}
+              onClick={handlePreregisModalOpen}
             >
-              <Button
-                variant="outlined"
-                size="small"
-                sx={{
-                  backgroundColor: "#006AF5",
-                  borderRadius: "24px",
-                  color: "white",
-                  fontSize: "12px",
-                  padding: "7px",
-                  paddingLeft: "9px",
-                  paddingRight: "13px",
-                  minWidth: "110px",
-                  gap: "5px",
-                  "&:hover": {
-                    backgroundColor: "#025ED8",
-                  },
-                }}
-                onClick={handlePreregisModalOpen}
-              >
-                <AddIcon sx={{ fontSize: "14px" }} />
-                Add Pre-regis Submission
-              </Button>
-              <Modal open={preregisModalOpen} onClose={PreregisModalClose}>
-                <Box style={styleModal}>
-                  <IconButton
-                    edge="end"
-                    color="#D9D9D9"
-                    onClick={PreregisModalClose}
-                    aria-label="close"
-                    sx={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "20px",
-                    }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                  <Grid container paddingTop={2}>
-                    <Grid item md={8} xs={8}>
-                      <Typography
-                        id="modal-modal-title"
-                        variant="h4"
-                        component="h2"
-                        sx={{
-                          fontWeight: 600,
-                          paddingBottom: 3,
-                          "@media (maxWidth: 390px)": {
-                            fontSize: "15px",
+              <AddIcon sx={{ fontSize: "14px" }} />
+              Add Pre-regis Submission
+            </Button>
+            <Modal open={preregisModalOpen} onClose={PreregisModalClose}>
+              <Box style={styleModal}>
+                <IconButton
+                  edge="end"
+                  color="#D9D9D9"
+                  onClick={PreregisModalClose}
+                  aria-label="close"
+                  sx={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "20px",
+                  }}
+                >
+                  <CloseIcon />
+                </IconButton>
+                <Grid container paddingTop={2}>
+                  <Grid item md={8} xs={8}>
+                    <Typography
+                      id="modal-modal-title"
+                      variant="h4"
+                      component="h2"
+                      sx={{
+                        fontWeight: 600,
+                        paddingBottom: 3,
+                        "@media (maxWidth: 390px)": {
+                          fontSize: "15px",
+                        },
+                      }}
+                    >
+                      Add Pre-registration Submission
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Formik
+                  initialValues={{
+                    semester: "",
+                    semesterPeriod: "",
+                    major: "",
+                    dueDate: null,
+                    employeeId:
+                      JSON.parse(localStorage.getItem("user"))?.id || "",
+                  }}
+                  validationSchema={preregisSchema}
+                  onSubmit={async (values, { resetForm, setSubmitting }) => {
+                    const { id } = JSON.parse(localStorage.getItem("user"));
+                    setLoading(true);
+
+                    // buat dueDate ke WITA
+                    const dueDateWITA = new Date(values.dueDate).toLocaleString(
+                      "en-US",
+                      {
+                        timeZone: "Asia/Makassar",
+                      }
+                    );
+
+                    values.semester = values.semester;
+                    values.semesterPeriod = values.semesterPeriod;
+                    values.major = major;
+                    values.dueDate = new Date(dueDateWITA);
+                    values.employeeId = id;
+
+                    try {
+                      const response = await jwtAuthAxios.post(
+                        `/pre-regist/create`,
+                        values,
+                        {
+                          headers: {
+                            Authorization: `Bearer ${localStorage.getItem(
+                              "token"
+                            )}`,
                           },
+                        }
+                      );
+
+                      console.log("ini isi values preregis", values);
+
+                      setLoading(false);
+                      resetForm();
+                      PreregisModalClose();
+                      handleOpenSuccessModal();
+                      setSubmitting(false);
+                      setFormType("pre-registration");
+                    } catch (error) {
+                      console.log("Error submitting form:", error);
+
+                      if (error.response) {
+                        console.log(
+                          "Server responded with status:",
+                          error.response.status
+                        );
+                        console.log(
+                          "Server responded with data:",
+                          error.response.data
+                        );
+                      }
+
+                      setLoading(false);
+                      PreregisModalClose();
+                      handleOpenErrorModal();
+                      setSubmitting(false);
+                      setFormType("");
+                    }
+                  }}
+                >
+                  {({
+                    isSubmitting,
+                    handleChange,
+                    handleSubmit,
+                    setFieldValue,
+                    values,
+                  }) => (
+                    <Form>
+                      <div
+                        style={{
+                          display: "flex",
+                          rowGap: "20px",
+                          flexDirection: "column",
                         }}
                       >
-                        Add Pre-registration Submission
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Formik
-                    initialValues={{
-                      semester: "",
-                      semesterPeriod: "",
-                      major: "",
-                      dueDate: null,
-                      employeeId:
-                        JSON.parse(localStorage.getItem("user"))?.id || "",
-                    }}
-                    validationSchema={preregisSchema}
-                    onSubmit={async (values, { resetForm, setSubmitting }) => {
-                      const { id } = JSON.parse(localStorage.getItem("user"));
-                      setLoading(true);
-
-                      // buat dueDate ke WITA
-                      const dueDateWITA = new Date(
-                        values.dueDate
-                      ).toLocaleString("en-US", {
-                        timeZone: "Asia/Makassar",
-                      });
-
-                      values.semester = values.semester;
-                      values.semesterPeriod = values.semesterPeriod;
-                      values.major = major;
-                      values.dueDate = new Date(dueDateWITA);
-                      values.employeeId = id;
-
-                      try {
-                        const response = await jwtAuthAxios.post(
-                          `/pre-regist/create`,
-                          values,
-                          {
-                            headers: {
-                              Authorization: `Bearer ${localStorage.getItem(
-                                "token"
-                              )}`,
-                            },
-                          }
-                        );
-
-                        console.log("ini isi values preregis", values);
-
-                        setLoading(false);
-                        resetForm();
-                        PreregisModalClose();
-                        handleOpenSuccessModal();
-                        setSubmitting(false);
-                        setFormType("pre-registration");
-                      } catch (error) {
-                        console.log("Error submitting form:", error);
-
-                        if (error.response) {
-                          console.log(
-                            "Server responded with status:",
-                            error.response.status
-                          );
-                          console.log(
-                            "Server responded with data:",
-                            error.response.data
-                          );
-                        }
-
-                        setLoading(false);
-                        PreregisModalClose();
-                        handleOpenErrorModal();
-                        setSubmitting(false);
-                        setFormType("");
-                      }
-                    }}
-                  >
-                    {({
-                      isSubmitting,
-                      handleChange,
-                      handleSubmit,
-                      setFieldValue,
-                      values,
-                    }) => (
-                      <Form>
-                        <div
-                          style={{
+                        <Grid xs={12} item>
+                          <JumboSelectField
+                            name="semester"
+                            label="Semester"
+                            sx={{ width: "480px" }}
+                            options={[
+                              { value: "", label: "None" },
+                              { value: "Ganjil", label: "Ganjil" },
+                              { value: "Genap", label: "Genap" },
+                            ]}
+                            onChange={(event) => {
+                              setFieldValue("semester", event.target.value);
+                            }}
+                          />
+                        </Grid>
+                        <Grid xs={12} item>
+                          <JumboTextField
+                            name="semesterPeriod"
+                            variant="outlined"
+                            label="Semester Period (e.g., 2023/2024)"
+                            fullWidth
+                            onChange={handleChange}
+                          />
+                        </Grid>
+                        <Grid xs={12} item>
+                          <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DesktopDatePicker
+                              sx={{
+                                backgroundColor: "white",
+                                width: "100%",
+                              }}
+                              label="Choose Due Date"
+                              value={values.dueDate || null}
+                              onChange={(date) =>
+                                setFieldValue("dueDate", date)
+                              }
+                              TextField={(params) => <TextField {...params} />}
+                            />
+                          </LocalizationProvider>
+                        </Grid>
+                        <Grid
+                          item
+                          sx={{
                             display: "flex",
-                            rowGap: "20px",
-                            flexDirection: "column",
+                            justifyContent: "flex-start",
                           }}
                         >
-                          <Grid xs={12} item>
-                            <JumboSelectField
-                              name="semester"
-                              label="Semester"
-                              sx={{ width: "480px" }}
-                              options={[
-                                { value: "", label: "None" },
-                                { value: "Ganjil", label: "Ganjil" },
-                                { value: "Genap", label: "Genap" },
-                              ]}
-                              onChange={(event) => {
-                                setFieldValue("semester", event.target.value);
-                              }}
-                            />
-                          </Grid>
-                          <Grid xs={12} item>
-                            <JumboTextField
-                              name="semesterPeriod"
-                              variant="outlined"
-                              label="Semester Period (e.g., 2023/2024)"
-                              fullWidth
-                              onChange={handleChange}
-                            />
-                          </Grid>
-                          <Grid xs={12} item>
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                              <DesktopDatePicker
-                                sx={{
-                                  backgroundColor: "white",
-                                  width: "100%",
-                                }}
-                                label="Choose Due Date"
-                                value={values.dueDate || null}
-                                onChange={(date) =>
-                                  setFieldValue("dueDate", date)
-                                }
-                                TextField={(params) => (
-                                  <TextField {...params} />
-                                )}
-                              />
-                            </LocalizationProvider>
-                          </Grid>
-                          <Grid
-                            item
+                          <LoadingButton
+                            loading={isSubmitting}
+                            type="submit"
+                            variant="contained"
                             sx={{
-                              display: "flex",
-                              justifyContent: "flex-start",
+                              textTransform: "capitalize",
+                              backgroundColor: "#006AF5",
                             }}
+                            onClick={handleSubmit}
                           >
-                            <LoadingButton
-                              loading={isSubmitting}
-                              type="submit"
-                              variant="contained"
-                              sx={{
-                                textTransform: "capitalize",
-                                backgroundColor: "#006AF5",
-                              }}
-                              onClick={handleSubmit}
-                            >
-                              Submit
-                            </LoadingButton>
-                          </Grid>
-                        </div>
-                      </Form>
-                    )}
-                  </Formik>
-                </Box>
-              </Modal>
-            </Grid>
+                            Submit
+                          </LoadingButton>
+                        </Grid>
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
+              </Box>
+            </Modal>
           </Grid>
+          {/* </Grid> */}
           <Grid container pt={1}>
             <Grid item xs={12}>
               <TableContainer component={Paper}>
@@ -627,7 +627,7 @@ const Manage = () => {
                     <TableRow>
                       <TableCell>Number</TableCell>
                       <TableCell>Created Date</TableCell>
-                      <TableCell>To Major</TableCell>
+                      {/* <TableCell>To Major</TableCell> */}
                       <TableCell>Semester</TableCell>
                       <TableCell>Year</TableCell>
                       <TableCell>Due Date Estimation</TableCell>
@@ -665,7 +665,7 @@ const Manage = () => {
                               }
                             )}
                           </TableCell>
-                          <TableCell
+                          {/* <TableCell
                             sx={{
                               width: "200px",
                             }}
@@ -677,7 +677,7 @@ const Manage = () => {
                               : value.major === "DKV"
                               ? "Information Technology"
                               : value.major}
-                          </TableCell>
+                          </TableCell> */}
                           <TableCell
                             sx={{
                               width: "130px",
@@ -809,7 +809,7 @@ const Manage = () => {
                           {selectedRow?.semesterPeriod}
                         </Typography>
                       </Grid>
-                      <Grid item xs={12} md={6}>
+                      {/* <Grid item xs={12} md={6}>
                         <Typography variant="h6">To Major</Typography>
                         <Typography variant="h6" sx={textStyle}>
                           {selectedRow?.major === "IF"
@@ -820,7 +820,7 @@ const Manage = () => {
                             ? "Information Technology"
                             : selectedRow?.major}
                         </Typography>
-                      </Grid>
+                      </Grid> */}
                       <Grid item xs={12} md={6}>
                         <Typography variant="h6">Status</Typography>
                         <Typography variant="h6" sx={textStyle}>
@@ -840,7 +840,7 @@ const Manage = () => {
                           )}
                         </Typography>
                       </Grid>
-                      <Grid item xs={12} md={6}>
+                      <Grid item xs={12} md={12}>
                         <Typography variant="h6">
                           Due Date Estimation
                         </Typography>
@@ -862,7 +862,8 @@ const Manage = () => {
                           fullWidth
                           onClick={() =>
                             navigate(
-                              `/bimbingan-akademik/kaprodi/manage/list-student/${selectedRow?.id}`
+                              `/bimbingan-akademik/kaprodi/manage/list-student/${selectedRow?.id}`,
+                              { state: { id: selectedRow?.id, major: major } }
                             )
                           }
                           sx={{
@@ -890,7 +891,8 @@ const Manage = () => {
                           fullWidth
                           onClick={() =>
                             navigate(
-                              `/bimbingan-akademik/kaprodi/manage/list-courses/${selectedRow?.id}`
+                              `/bimbingan-akademik/kaprodi/manage/list-courses/${selectedRow?.id}`,
+                              { state: { id: selectedRow?.id, major: major } }
                             )
                           }
                           sx={{
@@ -940,8 +942,8 @@ const Manage = () => {
 
       <TabPanel value={value} index={1}>
         <div>
-          <Grid container pt={1} pb={2}>
-            <Grid
+          {/* <Grid container pt={1} pb={2}> */}
+          {/* <Grid
               item
               xs={12}
               sm={6}
@@ -971,207 +973,206 @@ const Manage = () => {
                   style: { borderRadius: "25px" },
                 }}
               />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
+            </Grid> */}
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            sx={{
+              padding: "1px",
+              // paddingLeft: "10px",
+              paddingBottom: "15px",
+              // paddingTop: "23px",
+              paddingTop: "10px",
+            }}
+          >
+            <Button
+              variant="outlined"
+              size="small"
               sx={{
-                padding: "1px",
-                paddingLeft: "10px",
-                paddingBottom: "15px",
-                paddingTop: "23px",
+                backgroundColor: "#006AF5",
+                borderRadius: "24px",
+                color: "white",
+                fontSize: "12px",
+                padding: "7px",
+                paddingLeft: "9px",
+                paddingRight: "13px",
+                minWidth: "110px",
+                gap: "5px",
+                "&:hover": {
+                  backgroundColor: "#025ED8",
+                },
               }}
+              onClick={handleGradeModalOpen}
             >
-              <Button
-                variant="outlined"
-                size="small"
-                sx={{
-                  backgroundColor: "#006AF5",
-                  borderRadius: "24px",
-                  color: "white",
-                  fontSize: "12px",
-                  padding: "7px",
-                  paddingLeft: "9px",
-                  paddingRight: "13px",
-                  minWidth: "110px",
-                  gap: "5px",
-                  "&:hover": {
-                    backgroundColor: "#025ED8",
-                  },
-                }}
-                onClick={handleGradeModalOpen}
-              >
-                <AddIcon sx={{ fontSize: "14px" }} />
-                Add Grades Submission
-              </Button>
-              <Modal open={gradeModalOpen} onClose={GradeModalClose}>
-                <Box style={styleModal}>
-                  <IconButton
-                    edge="end"
-                    color="#D9D9D9"
-                    onClick={GradeModalClose}
-                    aria-label="close"
-                    sx={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "20px",
-                    }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                  <Grid container paddingTop={2}>
-                    <Grid item md={8} xs={8}>
-                      <Typography
-                        id="modal-modal-title"
-                        variant="h4"
-                        component="h2"
-                        sx={{
-                          fontWeight: 600,
-                          paddingBottom: 3,
-                          "@media (maxWidth: 390px)": {
-                            fontSize: "15px",
-                          },
-                        }}
-                      >
-                        Add Grades Submission
-                      </Typography>
-                    </Grid>
+              <AddIcon sx={{ fontSize: "14px" }} />
+              Add Grades Submission
+            </Button>
+            <Modal open={gradeModalOpen} onClose={GradeModalClose}>
+              <Box style={styleModal}>
+                <IconButton
+                  edge="end"
+                  color="#D9D9D9"
+                  onClick={GradeModalClose}
+                  aria-label="close"
+                  sx={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "20px",
+                  }}
+                >
+                  <CloseIcon />
+                </IconButton>
+                <Grid container paddingTop={2}>
+                  <Grid item md={8} xs={8}>
+                    <Typography
+                      id="modal-modal-title"
+                      variant="h4"
+                      component="h2"
+                      sx={{
+                        fontWeight: 600,
+                        paddingBottom: 3,
+                        "@media (maxWidth: 390px)": {
+                          fontSize: "15px",
+                        },
+                      }}
+                    >
+                      Add Grades Submission
+                    </Typography>
                   </Grid>
-                  <Formik
-                    initialValues={{
-                      semester: "",
-                      semesterPeriod: "",
-                      major: "",
-                      dueDate: null,
-                      employeeId:
-                        JSON.parse(localStorage.getItem("user"))?.id || "",
-                    }}
-                    validationSchema={gradeSchema}
-                    onSubmit={async (values, { resetForm, setSubmitting }) => {
-                      const { id } = JSON.parse(localStorage.getItem("user"));
-                      setLoading(true);
-                      values.semester = values.semester;
-                      values.semesterPeriod = values.semesterPeriod;
-                      values.major = major;
-                      values.dueDate = values.dueDate;
-                      values.employeeId = id;
-                      try {
-                        const result = await jwtAuthAxios.post(
-                          `/access/open/grades`,
-                          values,
-                          {
-                            headers: {
-                              Authorization: `Bearer ${localStorage.getItem(
-                                "token"
-                              )}`,
-                            },
-                          }
-                        );
+                </Grid>
+                <Formik
+                  initialValues={{
+                    semester: "",
+                    semesterPeriod: "",
+                    major: "",
+                    dueDate: null,
+                    employeeId:
+                      JSON.parse(localStorage.getItem("user"))?.id || "",
+                  }}
+                  validationSchema={gradeSchema}
+                  onSubmit={async (values, { resetForm, setSubmitting }) => {
+                    const { id } = JSON.parse(localStorage.getItem("user"));
+                    setLoading(true);
+                    values.semester = values.semester;
+                    values.semesterPeriod = values.semesterPeriod;
+                    values.major = major;
+                    values.dueDate = values.dueDate;
+                    values.employeeId = id;
+                    try {
+                      const result = await jwtAuthAxios.post(
+                        `/access/open/grades`,
+                        values,
+                        {
+                          headers: {
+                            Authorization: `Bearer ${localStorage.getItem(
+                              "token"
+                            )}`,
+                          },
+                        }
+                      );
 
-                        setLoading(false);
-                        console.log("ini isi values grade", values);
-                        resetForm();
-                        GradeModalClose();
-                        handleOpenSuccessModal();
-                        setSubmitting(false);
-                        setFormType("grade");
-                      } catch (error) {
-                        console.log(error);
-                        setLoading(false);
-                        GradeModalClose();
-                        handleOpenErrorModal();
-                        setSubmitting(false);
-                        setFormType("");
-                      }
-                    }}
-                  >
-                    {({
-                      isSubmitting,
-                      handleChange,
-                      handleSubmit,
-                      setFieldValue,
-                      values,
-                    }) => (
-                      <Form>
-                        <Grid container>
-                          <Grid xs={12} item>
-                            <JumboSelectField
-                              name="semester"
-                              label="Semester"
-                              sx={{ margin: "0 0 20px 0", width: "480px" }}
-                              options={[
-                                { value: "", label: "None" },
-                                { value: "Ganjil", label: "Ganjil" },
-                                { value: "Genap", label: "Genap" },
-                              ]}
-                              onChange={(event) => {
-                                setFieldValue("semester", event.target.value);
+                      setLoading(false);
+                      console.log("ini isi values grade", values);
+                      resetForm();
+                      GradeModalClose();
+                      handleOpenSuccessModal();
+                      setSubmitting(false);
+                      setFormType("grade");
+                    } catch (error) {
+                      console.log(error);
+                      setLoading(false);
+                      GradeModalClose();
+                      handleOpenErrorModal();
+                      setSubmitting(false);
+                      setFormType("");
+                    }
+                  }}
+                >
+                  {({
+                    isSubmitting,
+                    handleChange,
+                    handleSubmit,
+                    setFieldValue,
+                    values,
+                  }) => (
+                    <Form>
+                      <Grid container>
+                        <Grid xs={12} item>
+                          <JumboSelectField
+                            name="semester"
+                            label="Semester"
+                            sx={{ margin: "0 0 20px 0", width: "480px" }}
+                            options={[
+                              { value: "", label: "None" },
+                              { value: "Ganjil", label: "Ganjil" },
+                              { value: "Genap", label: "Genap" },
+                            ]}
+                            onChange={(event) => {
+                              setFieldValue("semester", event.target.value);
+                            }}
+                          />
+                        </Grid>
+                        <Grid xs={12} item>
+                          <JumboTextField
+                            name="semesterPeriod"
+                            variant="outlined"
+                            label="Semester Period (e.g., 2023/2024)"
+                            sx={{ margin: "0 0 20px 0" }}
+                            fullWidth
+                            onChange={handleChange}
+                          />
+                        </Grid>
+                        <Grid xs={12} item>
+                          <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DesktopDatePicker
+                              sx={{
+                                backgroundColor: "white",
+                                width: "100%",
+                                margin: "0 0 20px 0",
                               }}
+                              label="Choose Due Date"
+                              value={values.dueDate || null}
+                              onChange={(date) =>
+                                setFieldValue("dueDate", date)
+                              }
+                              TextField={(params) => <TextField {...params} />}
                             />
-                          </Grid>
-                          <Grid xs={12} item>
-                            <JumboTextField
-                              name="semesterPeriod"
-                              variant="outlined"
-                              label="Semester Period (e.g., 2023/2024)"
-                              sx={{ margin: "0 0 20px 0" }}
-                              fullWidth
-                              onChange={handleChange}
-                            />
-                          </Grid>
-                          <Grid xs={12} item>
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                              <DesktopDatePicker
-                                sx={{
-                                  backgroundColor: "white",
-                                  width: "100%",
-                                  margin: "0 0 20px 0",
-                                }}
-                                label="Choose Due Date"
-                                value={values.dueDate || null}
-                                onChange={(date) =>
-                                  setFieldValue("dueDate", date)
-                                }
-                                TextField={(params) => (
-                                  <TextField {...params} />
-                                )}
-                              />
-                            </LocalizationProvider>
-                          </Grid>
-                          <Grid
-                            item
+                          </LocalizationProvider>
+                        </Grid>
+                        <Grid
+                          item
+                          sx={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          <LoadingButton
+                            loading={isSubmitting}
+                            type="submit"
+                            variant="contained"
+                            fullWidth
                             sx={{
-                              display: "flex",
-                              justifyContent: "flex-end",
+                              textTransform: "capitalize",
+                              backgroundColor: "#006AF5",
+                            }}
+                            onClick={() => {
+                              console.log("Button clicked submit");
+                              handleSubmit();
                             }}
                           >
-                            <LoadingButton
-                              loading={isSubmitting}
-                              type="submit"
-                              variant="contained"
-                              fullWidth
-                              sx={{
-                                textTransform: "capitalize",
-                                backgroundColor: "#006AF5",
-                              }}
-                              onClick={() => {
-                                console.log("Button clicked submit");
-                                handleSubmit();
-                              }}
-                            >
-                              Submit
-                            </LoadingButton>
-                          </Grid>
+                            Submit
+                          </LoadingButton>
                         </Grid>
-                      </Form>
-                    )}
-                  </Formik>
-                </Box>
-              </Modal>
-            </Grid>
+                      </Grid>
+                    </Form>
+                  )}
+                </Formik>
+              </Box>
+            </Modal>
           </Grid>
+          {/* </Grid> */}
 
           <Grid container pt={1}>
             <Grid item xs={12}>
@@ -1189,7 +1190,7 @@ const Manage = () => {
                     <TableRow>
                       <TableCell>Number</TableCell>
                       <TableCell>Created Date</TableCell>
-                      <TableCell>To Major</TableCell>
+                      {/* <TableCell>To Major</TableCell> */}
                       <TableCell>Semester</TableCell>
                       <TableCell>Year</TableCell>
                       <TableCell>Due Date Estimation</TableCell>
@@ -1214,7 +1215,7 @@ const Manage = () => {
                               }
                             )}
                           </TableCell>
-                          <TableCell sx={{ width: "200px" }}>
+                          {/* <TableCell sx={{ width: "200px" }}>
                             {value.major === "IF"
                               ? "Informatics"
                               : value.major === "SI"
@@ -1222,7 +1223,7 @@ const Manage = () => {
                               : value.major === "DKV"
                               ? "Information Technology"
                               : value.major}
-                          </TableCell>
+                          </TableCell> */}
                           <TableCell sx={{ width: "130px" }}>
                             {value.semester}
                           </TableCell>

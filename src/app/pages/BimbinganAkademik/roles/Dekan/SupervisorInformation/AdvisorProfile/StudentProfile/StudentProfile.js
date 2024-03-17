@@ -18,19 +18,37 @@ import {
   RadioGroup,
   Backdrop,
   CircularProgress,
+  Button,
+  Modal,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useLocation, useNavigate } from "react-router-dom";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
 import {
   handlePermissionError,
   handleAuthenticationError,
 } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
-const role = Boolean(localStorage.getItem("user"))
-  ? JSON.parse(localStorage.getItem("user")).role
-  : [];
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  padding: 24,
+  backgroundColor: "white",
+  borderRadius: 10,
+  maxWidth: "100%",
+  "@media (maxWidth: 768px)": {
+    maxWidth: "80%",
+  },
+  "@media (maxWidth: 480px)": {
+    maxWidth: "80%",
+  },
+};
 
 const StudentProfile = () => {
   //abort
@@ -48,6 +66,21 @@ const StudentProfile = () => {
   const dosenGuidanceClass = JSON.parse(
     localStorage.getItem("user")
   ).guidanceClassId;
+
+  //modal
+  const [openFirstModal, setOpenFirstModal] = useState(false);
+  const [openErrorModal, setOpenErrorModal] = useState(false);
+  const handleOpenFirstModal = () => {
+    if (selectedStatus) {
+      setOpenFirstModal(true);
+    }
+  };
+  const handleCloseFirstModal = () => setOpenFirstModal(false);
+  const handleOpenErrorModal = () => setOpenErrorModal(true);
+  const handleCloseErrorModal = () => {
+    setOpenErrorModal(false);
+    handleCloseFirstModal();
+  };
 
   const getProfile = async () => {
     try {
@@ -88,7 +121,7 @@ const StudentProfile = () => {
       handleClosePopover();
       const response = await jwtAuthAxios.patch(
         `/employee/biodataStudent/status/${studentNim}`,
-        { status: value },
+        { status: selectedStatus },
         {
           signal,
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -97,10 +130,12 @@ const StudentProfile = () => {
 
       const { status, data } = response.data;
       if (status === "OK") {
+        setOpenFirstModal(false);
         getProfile();
       }
       setIsLoading(false);
     } catch (error) {
+      handleOpenErrorModal();
       setIsLoading(false);
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
@@ -117,6 +152,11 @@ const StudentProfile = () => {
         return;
       }
     }
+  };
+
+  const handleChangeStatus = (event) => {
+    handleOpenFirstModal();
+    setSelectedStatus(event.target.value);
   };
 
   useEffect(() => {
@@ -332,7 +372,7 @@ const StudentProfile = () => {
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
               value={studentProfileData?.status}
-              onChange={(e) => changeStatus(e.target.value)}
+              onChange={handleChangeStatus}
             >
               <FormControlLabel
                 value="ACTIVE"
@@ -346,6 +386,73 @@ const StudentProfile = () => {
                 label="Inactive"
               />
             </RadioGroup>
+            <Modal
+              open={openFirstModal}
+              onClose={() => setOpenFirstModal(false)}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <div style={style}>
+                <Typography
+                  id="modal-modal-title"
+                  variant="h4"
+                  component="h2"
+                  sx={{
+                    fontWeight: 600,
+                    paddingTop: 2,
+                  }}
+                >
+                  Change Student Status?
+                </Typography>
+                <Typography
+                  id="modal-modal-description"
+                  style={{ marginTop: "16px", marginBottom: "20px" }}
+                >
+                  Are you sure you want to change student status?
+                </Typography>
+
+                <Grid container spacing={1} justifyContent="flex-end">
+                  <Grid item>
+                    <Button
+                      onClick={() => setOpenFirstModal(false)}
+                      sx={{
+                        backgroundColor: "white",
+                        borderRadius: "5px",
+                        color: "black",
+                        whiteSpace: "nowrap",
+                        "&:hover": {
+                          backgroundColor: "lightgrey",
+                        },
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      onClick={changeStatus}
+                      sx={{
+                        backgroundColor: "#006AF5",
+                        borderRadius: "5px",
+                        color: "white",
+                        whiteSpace: "nowrap",
+                        "&:hover": {
+                          backgroundColor: "#025ED8",
+                        },
+                      }}
+                    >
+                      Submit
+                    </Button>
+                  </Grid>
+                </Grid>
+              </div>
+            </Modal>
+            <SuccessOrError
+              open={openErrorModal}
+              handleClose={handleCloseErrorModal}
+              title="Error Submission!"
+              description="Error: Failed to create activity. Please try again."
+            />
           </FormControl>
         </Popover>
       </Accordion>

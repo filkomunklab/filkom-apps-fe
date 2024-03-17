@@ -23,73 +23,9 @@ import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import LinearProgressWithLabel from "app/shared/LinearProgressWithLabel";
 import BubbleChartIcon from "@mui/icons-material/BubbleChart";
 import Div from "@jumbo/shared/Div";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
-const COLORS = ["#8884d8", "#82ca9d"];
-
-const data = [
-  {
-    year: null,
-    IF: 10,
-    DKV: 2,
-    SI: 17,
-  },
-  {
-    year: "2020",
-    SI: 2,
-    DKV: 2,
-    IF: 6,
-  },
-];
-
-const data02 = [
-  {
-    category: "Local",
-    count: 1,
-  },
-  {
-    category: "National",
-    count: 2,
-  },
-  {
-    category: "International",
-    count: 2,
-  },
-];
-
-const data03 = [...Array(5).keys()].map((i) => ({
-  title: "Menang lomba desain prototype",
-  name: "Mukesh K",
-  profileImage:
-    "https://www.mecgale.com/wp-content/uploads/2017/08/dummy-profile.png",
-  submiteDate: "11 September 2023",
-  status: "Waiting",
-}));
-
-const data04 = [...Array(4).keys()].map((_) => ({
-  nim: "105022010000",
-  name: "Yuhu, Christopher Darell",
-  profileImage:
-    "https://img.freepik.com/free-photo/business-finance-employment-female-successful-entrepreneurs-concept-friendly-smiling-office-manager-greeting-new-coworker-businesswoman-welcome-clients-with-hand-wave-hold-laptop_1258-59122.jpg?w=740&t=st=1696821634~exp=1696822234~hmac=71482abe3c3e1282d09976b8ebc39f7b50eb50eaa2a32f443094b12028a42cfe",
-  semester: "1",
-  prodi: "Informatika",
-  status: "Waiting",
-}));
-
-const statusColor = (status) => {
-  switch (status.toLowerCase()) {
-    case "waiting":
-      return "warning.main";
-    case "approved":
-      return "success.main";
-    case "rejected":
-      return "error.main";
-    default:
-      return "black";
-  }
-};
+const COLORS = ["#8884d8", "#82ca9d", "skyblue", "#AAC4FF", "#51829B"];
 
 const Dashboard = () => {
   const [distributionData, setDistributionData] = useState([]);
@@ -230,7 +166,7 @@ const Dashboard = () => {
           <Card sx={{ width: "100%" }}>
             <CardHeader title="Distribution of students" />
             <CardContent style={{ width: "100%" }}>
-              <ResponsiveContainer width="100%" height={250}>
+              <ResponsiveContainer width="100%" height={350}>
                 <BarChart data={distributionData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="year" />
@@ -257,7 +193,7 @@ const Dashboard = () => {
           <Card>
             <CardHeader title="Certificate" />
             <CardContent>
-              <ResponsiveContainer width={"100%"} height={250}>
+              <ResponsiveContainer width={"100%"} height={350}>
                 <PieChart>
                   <Pie
                     data={certificateData}
@@ -270,14 +206,31 @@ const Dashboard = () => {
                     fill="skyblue"
                     label
                   >
-                    {data.map((entry, index) => (
+                    {certificateData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}
                       />
                     ))}
                   </Pie>
-                  <Legend />
+                  <Legend
+                    formatter={(value) => {
+                      switch (value) {
+                        case "PENALARAN_KEILMUAN":
+                          return "Reasoning and Scholarship";
+                        case "ORGANISASI_KEPEMIMPINAN":
+                          return "Organization and Leadership";
+                        case "BAKAT_MINAT":
+                          return "Talents and Interests";
+                        case "PENGABDIAN_MASYARAKAT":
+                          return "Community Service";
+                        case "OTHER":
+                          return "Others";
+                        default:
+                          return value;
+                      }
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>

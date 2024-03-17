@@ -331,7 +331,7 @@ const TableItem = ({ item, index, onDelete }) => {
         break;
       case "history":
         navigate(`advisor-history/${nik}`, {
-          state: { classID: item.id, nik: nik, major: major, id: id },
+          state: { classID: item.id, id: item.teacher.id },
         });
         break;
 

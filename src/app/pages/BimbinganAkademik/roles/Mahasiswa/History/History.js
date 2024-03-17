@@ -457,6 +457,23 @@ const History = () => {
     }
   };
 
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case "PENALARAN_KEILMUAN":
+        return "Reasoning and Scholarship";
+      case "ORGANISASI_KEPEMIMPINAN":
+        return "Organization and Leadership";
+      case "BAKAT_MINAT":
+        return "Talents and Interests";
+      case "PENGABDIAN_MASYARAKAT":
+        return "Community Service";
+      case "OTHER":
+        return "Others";
+      default:
+        return category;
+    }
+  };
+
   return (
     <div>
       <Typography
@@ -584,7 +601,8 @@ const History = () => {
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
                               >
-                                {value.title}
+                                {value.title.charAt(0).toUpperCase() +
+                                  value.title.slice(1)}
                               </Typography>
                               <Typography
                                 sx={{
@@ -883,7 +901,7 @@ const History = () => {
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
                                 >
-                                  {value.category}
+                                  {getCategoryLabel(value.category)}
                                 </Typography>
                               </>
                             }
