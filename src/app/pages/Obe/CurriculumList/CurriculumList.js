@@ -28,74 +28,6 @@ import { DeleteOutline } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import getCurriculum from "app/api/getCurriculum";
 
-function createData(
-  kurikulum,
-  totalMK,
-  programStudi,
-  tahunKurikulum,
-  ketuaProgramStudi
-) {
-  return {
-    kurikulum,
-    totalMK,
-    programStudi,
-    tahunKurikulum,
-    ketuaProgramStudi,
-  };
-}
-
-const rows = [
-  createData(
-    "Kurikulum 2020",
-    54,
-    "Sistem Informasi",
-    2020,
-    "Stenly R. Pungus, MT, PhD"
-  ),
-  createData(
-    "Kurikulum 2018",
-    33,
-    "Sistem Informasi",
-    2019,
-    "Stenly R. Pungus, MT, PhD"
-  ),
-  createData(
-    "Kurikulum 2020",
-    21,
-    "Informatika",
-    2020,
-    "Green Mandias, SKom, MCs"
-  ),
-  createData(
-    "Kurikulum 2018",
-    59,
-    "Informatika",
-    2018,
-    "Green Mandias, SKom, MCs"
-  ),
-  createData(
-    "Kurikulum 2020",
-    44,
-    "Teknologi Informasi",
-    2020,
-    "Oktoverano H. Lengkong, SKom, MDs, MM"
-  ),
-  createData(
-    "Kurikulum 2020",
-    54,
-    "Sistem Informasi",
-    2020,
-    "Stenly R. Pungus, MT, PhD"
-  ),
-  createData(
-    "Kurikulum 2020",
-    54,
-    "Sistem Informasi",
-    2020,
-    "Stenly R. Pungus, MT, PhD"
-  ),
-];
-
 const CurriculumList = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -385,9 +317,7 @@ const CurriculumList = () => {
                     >
                       <MenuItem
                         onClick={() =>
-                          navigate(
-                            `/obe/curriculum/list/${major}/${row.tahunKurikulum}`
-                          )
+                          navigate(`/obe/curriculum/${major}/${row.id}`)
                         }
                       >
                         Lihat Mata Kuliah

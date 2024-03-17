@@ -572,17 +572,17 @@ export const dekanMenus = [
           {
             label: "Informatics",
             type: "nav-item",
-            uri: "/obe/curriculum/list/IF",
+            uri: "/obe/curriculum/IF",
           },
           {
             label: "Information System",
             type: "nav-item",
-            uri: "/obe/curriculum/list/SI",
+            uri: "/obe/curriculum/SI",
           },
           {
             label: "Information Technology",
             type: "nav-item",
-            uri: "/obe/curriculum/list/DKV",
+            uri: "/obe/curriculum/DKV",
           },
         ],
       },

@@ -351,20 +351,16 @@ const dekanRoutes = [
 
   // ========================== OBE ROUTES ==========================
   {
-    path: "/obe/curriculum/list/:major",
+    path: "/obe/curriculum/:major",
     element: <Page component={CurriculumList} />,
   },
   {
-    path: "/obe/curriculum/list/:major/:kurikulum",
+    path: "/obe/curriculum/:major/:curriculumId",
     element: <Page component={SubjectList} />,
   },
   {
-    path: "/obe/curriculum/:id/subject-list",
-    // element: <Page component={StudentList} />,
-  },
-  {
-    path: "/obe/subject/:id/cpl-mapping",
-    // element: <Page component={StudentList} />,
+    path: "/obe/curriculum/:major/:curriculumId/:subjectId",
+    element: <Page component={MappingCPL} />,
   },
   {
     path: "/obe/evaluasi-cpl/list/:major",
@@ -377,10 +373,6 @@ const dekanRoutes = [
   {
     path: "/obe/evaluasi-cpl/list/:major/:kurikulum/reportCPL/:kodeMK",
     element: <Page component={ReportCPL} />,
-  },
-  {
-    path: "/obe/curriculum/list/:major/:kurikulum/mappingCPL/:kodeMK",
-    element: <Page component={MappingCPL} />,
   },
   {
     path: "/obe/evaluasi-cpmk/",
