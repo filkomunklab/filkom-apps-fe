@@ -16,21 +16,32 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const ReviewPreRegistration = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [dataWaiting, setDataWaiting] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const getDataWaiting = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      const result = await axios.get(
-        `${BASE_URL_API}/pre-regist/review/${user.guidanceClassId}`
+      const result = await jwtAuthAxios.get(
+        `/pre-regist/review/${user.guidanceClassId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
       const filteredData = result.data.data.filter((item) => {
         const studentFullName =
@@ -52,8 +63,12 @@ const ReviewPreRegistration = () => {
 
   const handleNavigate = async (value) => {
     try {
-      const preregisDetailsResult = await axios.get(
-        `${BASE_URL_API}/pre-regist/details/${value.id}`
+      const preregisDetailsResult = await jwtAuthAxios.get(
+        `/pre-regist/details/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
       const detail = preregisDetailsResult.data.data;
       const { role } = JSON.parse(localStorage.getItem("user"));
@@ -74,19 +89,32 @@ const ReviewPreRegistration = () => {
           preregisDetails: {
             id: detail.id,
             studentName:
-              detail.Student.lastName + ", " + detail.Student.firstName,
+              detail.Student?.lastName + ", " + detail.Student?.firstName,
             supervisorName:
-              detail.Employee.firstName + " " + detail.Employee.lastName,
+              detail.Employee?.firstName + " " + detail.Employee?.lastName,
             submitDate: detail.submitDate,
             status: detail.status,
             listSubjectPreregis: detail.ListOfRequest,
-            curriculum: detail.Student.curriculum,
+            curriculum: detail.Student?.curriculum,
             totalCredits: value.totalCredits,
           },
         },
       });
     } catch (error) {
-      console.log(error.message);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -160,6 +188,7 @@ const ReviewPreRegistration = () => {
                 position: "sticky",
                 top: 0,
                 backgroundColor: "rgba(26, 56, 96, 0.1)",
+                zIndex: 1,
               }}
             >
               <TableRow>
@@ -189,12 +218,12 @@ const ReviewPreRegistration = () => {
                     }}
                   >
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{value.Student.nim}</TableCell>
+                    <TableCell>{value.Student?.nim}</TableCell>
                     <TableCell>
-                      {value.Student.lastName}, {value.Student.firstName}
+                      {value.Student?.lastName}, {value.Student?.firstName}
                     </TableCell>
-                    <TableCell>{value.Student.major}</TableCell>
-                    <TableCell>{value.Student.arrivalYear}</TableCell>
+                    <TableCell>{value.Student?.major}</TableCell>
+                    <TableCell>{value.Student?.arrivalYear}</TableCell>
                     <TableCell
                       sx={{
                         color: "#FFCC00",
@@ -221,7 +250,7 @@ const ReviewPreRegistration = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"

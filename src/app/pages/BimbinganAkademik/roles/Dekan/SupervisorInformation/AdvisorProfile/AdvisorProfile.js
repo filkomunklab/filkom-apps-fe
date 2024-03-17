@@ -2,31 +2,26 @@ import {
   Paper,
   Typography,
   Grid,
-  TextField,
-  Stack,
-  MenuItem,
-  Select,
-  FormControl,
-  ListSubheader,
-  InputLabel,
   Table,
   TableCell,
   TableRow,
   TableHead,
   TableBody,
   TablePagination,
-  TableContainer,
   Chip,
   Button,
   Breadcrumbs,
   experimentalStyled as styled,
+  TableContainer,
 } from "@mui/material";
 import Div from "@jumbo/shared/Div";
-import { useState } from "react";
-import SearchGlobal from "app/shared/SearchLocal";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import SearchLocal from "app/shared/SearchLocal";
-import { useEffect } from "react";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -37,128 +32,75 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const data = Array.from(Array(15).keys()).map((item, index) => ({
-  nim: `105022010000`,
-  name: `Yuhu, Christopher Darell`,
-  prodi: `Informatika`,
-  year: `2021`,
-  status: `Active`,
-}));
-
-const yearList = [
-  {
-    value: "2017",
-    label: "2017",
-  },
-  {
-    value: "2018",
-    label: "2018",
-  },
-  {
-    value: "2019",
-    label: "2019",
-  },
-  {
-    value: "2020",
-    label: "2020",
-  },
-  {
-    value: "2021",
-    label: "2021",
-  },
-  {
-    value: "2022",
-    label: "2022",
-  },
-  {
-    value: "2023",
-    label: "2023",
-  },
-];
-
-const prodiList = [
-  {
-    value: "informatika",
-    label: "Informatika",
-  },
-  {
-    value: "dkv",
-    label: "DKV",
-  },
-  {
-    value: "si",
-    label: "SI",
-  },
-];
-
 const AdvisorProfile = () => {
-  const location = useLocation();
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
   const navigate = useNavigate();
-  const [showLabel, setShowLabel] = useState(true);
-  const [pilihJurusan, setPilihJurusan] = useState("");
 
-  const [filter, setFilter] = useState([]);
+  const location = useLocation();
+  const { classID } = location.state || { classID: null, nik: null };
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [dataProfile, setDataProfile] = useState([]);
+  const [studentOptions, setStudentOptions] = useState([]);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  const handleClick = (event) => {
-    event.preventDefault();
-  };
-
-  const handleUbahJurusan = (event) => {
-    setPilihJurusan(event.target.value);
-  };
-
-  const handleUbahJurusanDanKlik = (event) => {
-    handleUbahJurusan(event);
-    handleClick(event);
-    setShowLabel(false);
-  };
-
-  const handleEditStudent = () => {
-    console.log("masokkk", location.state);
-    navigate(
-      `/bimbingan-akademik/dekan/supervisor-information/advisor-profile/${location.state}/edit-student`,
-      { state: location.state }
-    );
+  const getProfile = async () => {
+    try {
+      const response = await jwtAuthAxios.get(`/guidance-class/${classID}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        signal,
+      });
+      const { status, data } = response.data;
+      if (status === "OK") {
+        setDataProfile(data.teacher);
+        setStudentOptions(data.GuidanceClassMember);
+      }
+    } catch (error) {
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
+    }
   };
 
   useEffect(() => {
-    console.log(location);
+    getProfile();
+    return () => controller.abort();
   }, []);
 
   return (
     <Div>
-      <Div
-        role="presentation"
-        onClick={handleClick}
-        sx={{ paddingBottom: "15px" }}
-      >
+      <Div role="presentation" sx={{ paddingBottom: "15px" }}>
         <Breadcrumbs aria-label="breadcrumb">
           <StyledLink to="/bimbingan-akademik/dekan/supervisor-information/">
             Supervisor Information
           </StyledLink>
-          <Typography color="text.primary">Advisor Profile</Typography>
+          <Typography color="text.primary">Supervisor Profile</Typography>
         </Breadcrumbs>
       </Div>
       <Div>
-        <Typography variant="h1" fontWeight={500} sx={{ mb: 3 }}>
-          Advisor Profile
+        <Typography variant="h1" fontWeight={500} sx={{ marginBottom: "25px" }}>
+          Supervisor Profile
         </Typography>
         <Typography
           variant="h6"
           sx={{
             paddingBottom: "25px",
-            fontSize: "15px",
+            fontSize: "14px",
             fontWeight: 400,
             color: "rgba(27, 43, 65, 0.69)",
             textAlign: "justify",
@@ -178,189 +120,61 @@ const AdvisorProfile = () => {
             padding: "16px",
           }}
         >
-          Academic Advisor Information
+          Academic Supervisor Information
         </Typography>
         <Grid container spacing={3} sx={{ padding: 2 }}>
           <Grid item xs={12} md={12}>
             <Typography variant="h6">Full Name</Typography>
-            <Typography variant="h6" sx={textSyle}>
-              Adzana Shaliha
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6">NIDN</Typography>
-            <Typography variant="h6" sx={textSyle}>
-              319288918900
+            <Typography variant="h6" sx={textStyle}>
+              {`${dataProfile.lastName}, ${dataProfile.firstName}`}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Email</Typography>
-            <Typography variant="h6" sx={textSyle}>
-              AdzanaShaliha123@gmail.com
+            <Typography variant="h6" sx={textStyle}>
+              {dataProfile.email}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Phone</Typography>
-            <Typography variant="h6" sx={textSyle}>
-              082919912400
+            <Typography variant="h6" sx={textStyle}>
+              {dataProfile.phoneNum}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">Major</Typography>
-            <Typography variant="h6" sx={textSyle}>
-              Informatics
+            <Typography variant="h6" sx={textStyle}>
+              {dataProfile.major === "IF"
+                ? "Informatics"
+                : dataProfile.major === "SI"
+                ? "Information System"
+                : dataProfile.major === "DKV"
+                ? "Information Technology"
+                : "-"}
             </Typography>
           </Grid>
           <Grid item xs={12} md={12}>
             <Typography variant="h6">Address</Typography>
-            <Typography variant="h6" sx={textSyle}>
-              Perum Agape griya blok K/10, Tumaluntung, Kabupaten Minahasa Utara
+            <Typography variant="h6" sx={textStyle}>
+              {dataProfile.Address}
             </Typography>
           </Grid>
         </Grid>
       </Paper>
       <Grid container spacing={2}>
-        <Grid display={"flex"} alignItems={"flex-end"} item md={6} xl={4}>
+        <Grid display={"flex"} alignItems={"flex-end"} item minWidth={"100%"}>
           <Typography
             variant="h2"
             sx={{
               textAlign: "justify",
-              "@media (max-width: 390px)": {
+              "@media (maxWidth: 390px)": {
                 fontSize: "16px",
                 fontWeight: 500,
               },
             }}
           >
-            List of Mentored Students
+            List of mentored students
           </Typography>
-        </Grid>
-        <Grid item xs={12} sm={8} md={12} xl={3}>
-          <SearchGlobal
-            sx={{
-              height: "100%",
-              "@media (max-width: 390px)": {
-                height: "40px",
-              },
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={4} md={12} xl={3}>
-          <FormControl
-            sx={{
-              width: "100%",
-            }}
-          >
-            <InputLabel>Filter</InputLabel>
-            <Select
-              sx={{
-                borderRadius: 50,
-                "@media (max-width: 390px)": {
-                  height: "45px",
-                },
-              }}
-              multiple
-              value={filter}
-              label="Grouping"
-              renderValue={(selected) => selected.join(", ")}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: "37%",
-                  },
-                },
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Status
-              </ListSubheader>
-              <MenuItem
-                sx={{
-                  backgroundColor: "#FAFAFA",
-                  borderRadius: "5px",
-                }}
-                value={"activeStudent"}
-              >
-                Active
-              </MenuItem>
-              <MenuItem
-                sx={{
-                  backgroundColor: "#FAFAFA",
-                  borderRadius: "5px",
-                }}
-                value={"nonactiveStudent"}
-              >
-                Nonactive
-              </MenuItem>
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Tahun Masuk
-              </ListSubheader>
-              {yearList.map((item) => (
-                <MenuItem
-                  key={item.value}
-                  value={item.value}
-                  sx={{
-                    backgroundColor: "#FAFAFA",
-                    borderRadius: "5px",
-                  }}
-                >
-                  {item.label}
-                </MenuItem>
-              ))}
-              <Div>
-                <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                  Prodi
-                </ListSubheader>
-                {prodiList.map((item) => (
-                  <MenuItem
-                    key={item.value}
-                    onChange={(event) => console.log(event.currentTarget.value)}
-                    value={item.value}
-                    sx={{
-                      backgroundColor: "#FAFAFA",
-                      borderRadius: "5px",
-                    }}
-                  >
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Div>
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item md={2} xl={2} display="flex" alignItems="center">
-          {/* <Link
-            // onClick={handleEditStudent}
-            // to={`/bimbingan-akademik/dekan/supervisor-information/advisor-profile/${location.state}/edit-student`}
-            
-          > */}
-          <Button
-            onClick={() =>
-              navigate(
-                `/bimbingan-akademik/dekan/supervisor-information/advisor-profile/${location.state}/edit-student`,
-                { state: location.state }
-              )
-            }
-            sx={{
-              backgroundColor: "#006AF5",
-              borderRadius: "24px",
-              color: "white",
-              whiteSpace: "nowrap",
-              minWidth: "132px",
-              fontSize: "12px",
-              padding: "10px",
-              width: "100%",
-
-              "&:hover": {
-                backgroundColor: "#025ED8",
-              },
-            }}
-          >
-            Edit Student
-          </Button>
-          {/* </Link> */}
         </Grid>
         <Grid item xs={12}>
           <TableContainer
@@ -371,14 +185,97 @@ const AdvisorProfile = () => {
           >
             <Table stickyHeader>
               <TableHead>
-                <TableHeading />
+                <TableRow>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    No
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    NIM
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Student Name
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Program Studi
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Tahun Masuk
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Nilai
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Sertifikat
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Status
+                  </TableCell>
+                </TableRow>
               </TableHead>
               <TableBody>
-                {data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((item, index) => (
-                    <TableItem item={item} index={index} key={index} />
-                  ))}
+                {studentOptions.length > 0 ? (
+                  studentOptions
+                    .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+                    .map((item, index) => (
+                      <TableItem
+                        item={item}
+                        index={index}
+                        key={item.studentNim}
+                      />
+                    ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={8}>No data available</TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -388,15 +285,24 @@ const AdvisorProfile = () => {
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
-              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+              "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
             }}
             rowsPerPageOptions={[10, 25, 50, 100]}
-            component="div"
-            count={data.length}
+            component={"div"}
+            count={
+              dataProfile.student
+                ? dataProfile.student.filter(
+                    (item) => item.status !== "GRADUATE"
+                  ).length
+                : 0
+            }
             rowsPerPage={rowsPerPage}
             page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+            onPageChange={(_, newPage) => setPage(newPage)}
+            onRowsPerPageChange={(event) => {
+              setRowsPerPage(+event.target.value);
+              setPage(0);
+            }}
           />
         </Grid>
       </Grid>
@@ -404,48 +310,51 @@ const AdvisorProfile = () => {
   );
 };
 
-const TableHeading = ({ index }) => {
-  const style = { fontWeight: 400 };
-  return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={[style]}>No</TableCell>
-      <TableCell sx={[style]}>NIM</TableCell>
-      <TableCell sx={[style]}>Student Name</TableCell>
-      <TableCell sx={[style]}>Program Studi</TableCell>
-      <TableCell sx={[style]}>Tahun Masuk</TableCell>
-      <TableCell sx={[style]}>Nilai</TableCell>
-      <TableCell sx={[style]}>Sertifikat</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
-    </TableRow>
-  );
-};
-
-const textSyle = {
+const textStyle = {
   borderWidth: 1,
   borderColor: "#00000029",
   borderStyle: "solid",
   paddingX: "24px",
   paddingY: "16px",
   borderRadius: "8px",
-  textAlign: "justify",
 };
 
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
-  const handleButtonNavigate = (event) => {
-    const { name } = event.currentTarget;
+  const { arrivalYear, firstName, lastName, major, nim, status } = item.student;
+
+  const handleButtonNavigate = (_, name) => {
     switch (name) {
       case "profile":
-        navigate(`/bimbingan-akademik/dekan/student-information/${item.nim}`);
+        navigate(
+          `/bimbingan-akademik/dekan/supervisor-information/advisor-profile/${nim}/student-profile`,
+          { state: { studentNim: nim, studentId: item.studentId } }
+        );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/grade`
+          `/bimbingan-akademik/dekan/supervisor-information/advisor-profile/${nim}/student-grade`,
+          {
+            state: {
+              studentNim: nim,
+              firstName: firstName,
+              lastName: lastName,
+              studentId: item.studentId,
+            },
+          }
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/dekan/student-information/${item.nim}/certificate`
+          `/bimbingan-akademik/dekan/supervisor-information/advisor-profile/${nim}/student-certificate`,
+          {
+            state: {
+              studentNim: nim,
+              firstName: firstName,
+              lastName: lastName,
+              studentId: item.studentId,
+            },
+          }
         );
         break;
 
@@ -453,40 +362,82 @@ const TableItem = ({ item, index }) => {
         console.log("Path not found");
     }
   };
+  const rowStyle = {
+    "@media (maxWidth: 650px)": { fontSize: "11px" },
+    textAlign: "center",
+  };
   return (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{`105022010000`}</TableCell>
+      <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
+      <TableCell sx={[rowStyle]}>{nim}</TableCell>
       <TableCell>
-        <Button
-          name="profile"
-          sx={{ textTransform: "capitalize" }}
-          onClick={handleButtonNavigate}
-        >{`Yuhu, Christopher Darell`}</Button>
+        <Typography
+          style={{
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+            paddingX: 0,
+            color: "#006AF5",
+            textDecoration: "none",
+            width: "100%",
+            cursor: "pointer",
+            textAlign: "center",
+          }}
+          onClick={(e) => handleButtonNavigate(e, "profile")}
+        >
+          {lastName}, {firstName}
+        </Typography>
       </TableCell>
-      <TableCell>{`Informatika`}</TableCell>
-      <TableCell>{`2021`}</TableCell>
+      <TableCell sx={[rowStyle]}>
+        {major === "IF"
+          ? "Informatics"
+          : major === "SI"
+          ? "Information System"
+          : major === "DKV"
+          ? "Information Technology"
+          : "-"}
+      </TableCell>
+      <TableCell sx={[rowStyle]}>{arrivalYear}</TableCell>
 
       <TableCell>
-        <Button
-          name="grade"
-          onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+        <Typography
+          onClick={(e) => handleButtonNavigate(e, "grade")}
+          style={{
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+            paddingX: 0,
+            color: "#006AF5",
+            textDecoration: "none",
+            width: "100%",
+            cursor: "pointer",
+            textAlign: "center",
+          }}
         >
           View Grades
-        </Button>
+        </Typography>
       </TableCell>
       <TableCell>
-        <Button
-          name="certificate"
-          onClick={handleButtonNavigate}
-          sx={{ textTransform: "capitalize" }}
+        <Typography
+          onClick={(e) => handleButtonNavigate(e, "certificate")}
+          style={{
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+            paddingX: 0,
+            color: "#006AF5",
+            textDecoration: "none",
+            width: "100%",
+            cursor: "pointer",
+            textAlign: "center",
+          }}
         >
           View Certificates
-        </Button>
+        </Typography>
       </TableCell>
-      <TableCell>
-        <Chip label={"Active"} variant="filled" color={"success"} />
+      <TableCell sx={[rowStyle]}>
+        <Chip
+          label={status}
+          variant="filled"
+          color={status === "ACTIVE" ? "success" : "default"}
+        />
       </TableCell>
     </TableRow>
   );

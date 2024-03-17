@@ -16,34 +16,37 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const ReviewGrade = () => {
-  const [filter, setFilter] = useState([]);
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dataWaiting, setDataWaiting] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const navigate = useNavigate();
 
   const getDataWaiting = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const headers = { Authorization: `Bearer ${token}` };
       const { id } = JSON.parse(localStorage.getItem("user"));
 
-      const response = await axios.get(`${BASE_URL_API}/employee/${id}`, {
-        headers,
+      const response = await jwtAuthAxios.get(`/employee/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
       });
       const major = response.data.data.major;
-      const result = await axios.get(
-        `${BASE_URL_API}/transaction/list/${major}`,
-        {
-          headers,
-        }
-      );
+      const result = await jwtAuthAxios.get(`/transaction/list/${major}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
+
       const filteredData = result.data.data.filter((item) => {
         const studentFullName = `${item.Student?.lastName}, ${item.Student?.firstName}`;
         return studentFullName
@@ -53,11 +56,25 @@ const ReviewGrade = () => {
 
       setDataWaiting(filteredData);
     } catch (error) {
-      console.log(error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
   useEffect(() => {
     getDataWaiting();
+    return () => controller.abort();
   }, [searchValue]);
 
   const handleChangePage = (event, newPage) => {
@@ -75,6 +92,7 @@ const ReviewGrade = () => {
         `/transaction/submissionDetail/${value.id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
       const detail = gradeDetailsResult.data.data;
@@ -83,13 +101,13 @@ const ReviewGrade = () => {
         state: {
           gradeDetails: {
             studentName:
-              detail.Student.lastName + " " + detail.Student.firstName,
+              detail.Student?.lastName + " " + detail.Student?.firstName,
             supervisorName:
-              detail.Student.GuidanceClassMember.gudianceClass.teacher
-                .lastName +
+              detail.Student?.GuidanceClassMember?.gudianceClass?.teacher
+                ?.lastName +
               " " +
-              detail.Student.GuidanceClassMember.gudianceClass.teacher
-                .firstName,
+              detail.Student?.GuidanceClassMember?.gudianceClass?.teacher
+                ?.firstName,
             submitedDate: detail.submitedDate,
             status: detail.status,
             semester: detail.semester,
@@ -99,7 +117,20 @@ const ReviewGrade = () => {
         },
       });
     } catch (error) {
-      console.log(error.message);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -152,39 +183,6 @@ const ReviewGrade = () => {
             }}
           />
         </Grid>
-        {/* <Grid item xs={12} sm={4} md={4} xl={3}>
-          <FormControl
-            sx={{ width: "100%", height: "100%", marginTop: "20px" }}
-            size="small"
-          >
-            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
-            <Select
-              style={{ borderRadius: "25px" }}
-              multiple
-              value={filter}
-              label="Grouping"
-              renderValue={(selected) => selected.join(", ")}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: "37%",
-                  },
-                },
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Category
-              </ListSubheader>
-              <MenuItem value={"local"}>Local</MenuItem>
-              <MenuItem value={"national"}>National</MenuItem>
-              <MenuItem value={"international"}>International</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid> */}
       </Grid>
       <Grid item xs={12}>
         <TableContainer component={Paper}>
@@ -195,12 +193,12 @@ const ReviewGrade = () => {
                 position: "sticky",
                 top: 0,
                 backgroundColor: "rgba(26, 56, 96, 0.1)",
+                zIndex: 1,
               }}
             >
               <TableRow>
                 <TableCell>Number</TableCell>
                 <TableCell>Submission Date</TableCell>
-                <TableCell>NIM</TableCell>
                 <TableCell>Student Name</TableCell>
                 <TableCell>Supervisor Name</TableCell>
                 <TableCell>Major</TableCell>
@@ -237,7 +235,6 @@ const ReviewGrade = () => {
                         }
                       )}
                     </TableCell>
-                    <TableCell>{value.Student.nim}</TableCell>
                     <TableCell>
                       {value.Student.lastName}, {value.Student.firstName}
                     </TableCell>
@@ -287,7 +284,7 @@ const ReviewGrade = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            "@media (max-width: 650px)": { justifyContent: "flex-start" },
+            "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"

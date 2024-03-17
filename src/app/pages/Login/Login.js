@@ -11,7 +11,6 @@ import React, { useState } from "react";
 import { makeStyles } from "@mui/styles";
 import Div from "@jumbo/shared/Div";
 import { ASSET_IMAGES } from "app/utils/constants/paths";
-import Logo from "app/shared/Logo";
 import useJumboAuth from "@jumbo/hooks/useJumboAuth";
 import { useNavigate } from "react-router-dom";
 import authService from "app/services/Auth/auth.service";
@@ -22,8 +21,10 @@ import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
 import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
 import { useMediaQuery } from "@mui/material";
 
-import { FormAfterLogin } from "./components";
+import { FormAfterLoginStudent } from "./components";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import Swal from "sweetalert2";
+import { cleanDigitSectionValue } from "@mui/x-date-pickers/internals/hooks/useField/useField.utils";
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
@@ -52,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.75)",
   },
-  "@media (max-width: 927px)": {
+  "@media (maxWidth: 927px)": {
     pageContainer: {
       flexDirection: "column",
       alignItems: "center",
@@ -74,64 +75,15 @@ const Login = () => {
   const [openModal, setOpenModal] = useState(false);
   const [profileMahasiswa, setProfileMahasiswa] = useState([]);
   const [userLogin, setUserLogin] = useState("");
+  const [tokenUser, setTokenUser] = useState("");
   const style = useStyles();
-  const maxWidth515 = useMediaQuery("(max-width: 515px)");
+  const maxWidth515 = useMediaQuery("(maxWidth: 515px)");
 
   const { setAuthToken } = useJumboAuth();
   const navigate = useNavigate();
 
-  const onSignIn = async (formdata) => {
-    const { token, user } = await authService.signIn(formdata);
-
-    if (user.role === "MAHASISWA") {
-      const response = await jwtAuthAxios.get(
-        `student/biodata/check/${user.nim}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.data.data.biodataCheck) {
-        setAuthToken(token);
-
-        console.log("ini user loh: ", user);
-        localStorage.setItem("user", JSON.stringify(user));
-
-        navigate("/");
-      } else {
-        const response = await jwtAuthAxios.get(`student/${user.nim}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const responseCurriculum = await jwtAuthAxios.get(
-          `curriculum/${response.data.data.curriculumId}`
-          // {
-          //   headers: {
-          //     Authorization: `Bearer ${localStorage.getItem("token")}`,
-          //   },
-          // }
-        );
-
-        const data = {
-          ...response.data.data,
-          curriculum: responseCurriculum.data.data,
-        };
-        console.log("ini data: ", data);
-        setProfileMahasiswa(data);
-        setUserLogin(user);
-        setOpenModal(true);
-      }
-    } else {
-      setAuthToken(token);
-
-      console.log("ini user loh: ", user);
-      localStorage.setItem("user", JSON.stringify(user));
-
-      navigate("/");
-    }
+  const blueTheme = {
+    confirmButtonColor: "#007BFF",
   };
 
   return (
@@ -148,18 +100,80 @@ const Login = () => {
         <Formik
           validateOnChange={true}
           validationSchema={signInSchema}
-          initialValues={
-            {
-              // username: "admin",
-              // password: "12345",
-              // loginAs: "admin",
-            }
-          }
-          onSubmit={(data, { setSubmitting }) => {
-            console.log(data);
+          initialValues={{
+            username: "",
+            password: "",
+            loginAs: "",
+          }}
+          onSubmit={async (data, { setSubmitting }) => {
             setSubmitting(true);
-            onSignIn(data);
-            setSubmitting(false);
+            try {
+              const { token, user } = await authService.signIn(data);
+
+              console.log(token, user);
+              if (user.role === "MAHASISWA") {
+                const response = await jwtAuthAxios.get(
+                  `student/biodata/check/${user.id}`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  }
+                );
+                console.log("ini response: ", response);
+                if (response.data.data.biodataCheck) {
+                  setAuthToken(token);
+
+                  console.log("ini user loh: ", user);
+                  localStorage.setItem("user", JSON.stringify(user));
+
+                  navigate("/");
+                } else {
+                  const response = await jwtAuthAxios.get(
+                    `student/${user.nim}`,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
+                  );
+                  const responseCurriculum = await jwtAuthAxios.get(
+                    `curriculum/${response.data.data.curriculumId}`,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
+                  );
+
+                  const data = {
+                    ...response.data.data,
+                    curriculum: responseCurriculum.data.data,
+                  };
+                  console.log("ini data: ", data);
+                  setProfileMahasiswa(data);
+                  setUserLogin(user);
+                  setOpenModal(true);
+                }
+              } else {
+                setAuthToken(token);
+
+                console.log("ini user loh: ", user);
+                localStorage.setItem("user", JSON.stringify(user));
+
+                navigate("/");
+              }
+            } catch (error) {
+              console.log(error);
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Username atau password salah",
+                ...blueTheme,
+              });
+            } finally {
+              setSubmitting(false);
+            }
           }}
         >
           {({ isSubmitting }) => (
@@ -170,7 +184,6 @@ const Login = () => {
                   width: maxWidth515 ? "275px" : "433px",
                 }}
               >
-                <Logo mini sx={{ height: "104px" }} />
                 <Typography
                   variant="h1"
                   sx={{
@@ -266,6 +279,16 @@ const Login = () => {
                       Create an account
                     </Button>
                   </Grid>
+                  <Grid item alignSelf={"center"}>
+                    <a href="http://localhost:3000/">
+                      <Button
+                        sx={{ textTransform: "capitalize" }}
+                        variant="text"
+                      >
+                        Daftar Judul Skripsi
+                      </Button>
+                    </a>
+                  </Grid>
                 </Grid>
               </Stack>
             </Form>
@@ -285,11 +308,12 @@ const Login = () => {
           />
         </Div>
       </Div>
-      <FormAfterLogin
+      <FormAfterLoginStudent
         openModal={openModal}
         setOpenModal={setOpenModal}
         profileMahasiswa={profileMahasiswa}
         userLogin={userLogin}
+        tokenUser={tokenUser}
       />
     </Div>
   );

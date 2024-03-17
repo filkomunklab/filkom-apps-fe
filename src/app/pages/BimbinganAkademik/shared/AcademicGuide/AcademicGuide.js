@@ -39,7 +39,7 @@ const AcademicGuide = () => {
         Academic Guide
       </Typography>
       <div sx={{ flex: 1 }}>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             sx={{ paddingLeft: "24px" }}
             expandIcon={<ExpandMoreIcon />}
@@ -56,7 +56,7 @@ const AcademicGuide = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (max-width: 390px)": {
+                "@media (maxWidth: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -103,7 +103,7 @@ const AcademicGuide = () => {
             </Typography>
           </AccordionDetails>
         </Accordion>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             sx={{ paddingLeft: "24px" }}
             expandIcon={<ExpandMoreIcon />}
@@ -120,7 +120,7 @@ const AcademicGuide = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (max-width: 390px)": {
+                "@media (maxWidth: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -171,7 +171,7 @@ const AcademicGuide = () => {
             </Typography>
           </AccordionDetails>
         </Accordion>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             sx={{ paddingLeft: "24px" }}
             expandIcon={<ExpandMoreIcon />}
@@ -188,7 +188,7 @@ const AcademicGuide = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (max-width: 390px)": {
+                "@media (maxWidth: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -236,7 +236,7 @@ const AcademicGuide = () => {
             </Typography>
           </AccordionDetails>
         </Accordion>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             sx={{ paddingLeft: "24px" }}
             expandIcon={<ExpandMoreIcon />}
@@ -253,7 +253,7 @@ const AcademicGuide = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (max-width: 390px)": {
+                "@media (maxWidth: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -290,7 +290,7 @@ const AcademicGuide = () => {
             </Typography>
           </AccordionDetails>
         </Accordion>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             sx={{ paddingLeft: "24px" }}
             expandIcon={<ExpandMoreIcon />}
@@ -307,7 +307,7 @@ const AcademicGuide = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (max-width: 390px)": {
+                "@media (maxWidth: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -343,7 +343,7 @@ const AcademicGuide = () => {
             </Typography>
           </AccordionDetails>
         </Accordion>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             sx={{ paddingLeft: "24px" }}
             expandIcon={<ExpandMoreIcon />}
@@ -360,7 +360,7 @@ const AcademicGuide = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (max-width: 390px)": {
+                "@media (maxWidth: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -381,7 +381,7 @@ const AcademicGuide = () => {
             </Typography>
           </AccordionDetails>
         </Accordion>
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             sx={{ paddingLeft: "24px" }}
             expandIcon={<ExpandMoreIcon />}
@@ -398,7 +398,7 @@ const AcademicGuide = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (max-width: 390px)": {
+                "@media (maxWidth: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",

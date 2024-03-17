@@ -15,17 +15,18 @@ import {
   DialogTitle,
   Button,
   Box,
-  IconButton,
   Modal,
   CircularProgress,
 } from "@mui/material";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
-import CloseIcon from "@mui/icons-material/Close";
-import PreRegistrationSubmitted from "./PreRegistrationSubmitted";
+import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
 import { useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const style = {
   position: "absolute",
@@ -45,18 +46,6 @@ const style = {
   "@media (maxWidth: 480px)": {
     maxWidth: "80%",
   },
-};
-
-const style2 = {
-  position: "fixed",
-  top: "15%",
-  right: "2%",
-  width: 400,
-  // bgcolor: "background.paper",
-  boxShadow: 24,
-  padding: 24,
-  backgroundColor: "white",
-  borderRadius: 10,
 };
 
 const PreviewPopup = ({ open, onClose, previewRows, totalCredits }) => {
@@ -108,12 +97,10 @@ const PreviewPopup = ({ open, onClose, previewRows, totalCredits }) => {
                       <TableCell>{data.code}</TableCell>
                       <TableCell>{data.name}</TableCell>
                       <TableCell>{data.credits}</TableCell>
-                      <TableCell>{data.grade ? data.grade : "-"}</TableCell>
                       <TableCell>{data.type}</TableCell>
                       <TableCell>
                         {data.prerequisite ? data.prerequisite : "-"}
                       </TableCell>
-                      <TableCell>{data.status ? data.status : "-"}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -246,18 +233,66 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
 };
 
 const PreRegistrationSubmission = ({}) => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
+  //inisialisasi
+  const [listSubject, setListSubject] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [totalCredits, setTotalCredits] = useState(0);
+  const [showPopup, setShowPopup] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  //get data
+  const [dataPreregis, setDataPreregis] = useState([]);
   const [curriculumDetails, setCurriculumDetails] = useState({
     name: "",
     year: "",
   });
-  const [dataPreregis, setDataPreregis] = useState([]);
+
+  //modal
+  const [openFirstModal, setOpenFirstModal] = useState(false);
+  const [openErrorModal, setOpenErrorModal] = useState(false);
+  const handleOpenFirstModal = () => setOpenFirstModal(true);
+  const handleCloseFirstModal = () => setOpenFirstModal(false);
+  const handleOpenErrorModal = () => setOpenErrorModal(true);
+  const handleCloseErrorModal = () => setOpenErrorModal(false);
+
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (error.response && error.response.status === 403) {
+      handlePermissionError();
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      return;
+    } else if (error.response && error.response.status === 401) {
+      handleAuthenticationError();
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
+
   const getDataPreregis = async () => {
     try {
       const nim = JSON.parse(localStorage.getItem("user")).nim;
-      const studentData = await axios.get(`${BASE_URL_API}/student/${nim}`);
+      const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
       const major = studentData.data.data.major;
-      const result = await axios.get(
-        `${BASE_URL_API}/pre-regist/status/${major}/${nim}`
+      const result = await jwtAuthAxios.get(
+        `/pre-regist/status/${major}/${nim}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
       const preregisData = result.data.data;
       setDataPreregis(preregisData);
@@ -265,67 +300,89 @@ const PreRegistrationSubmission = ({}) => {
       console.log("ini panjang preregisdata", preregisData.PreRegistrationData);
       console.log("Data preregistration:", preregisData);
     } catch (error) {
-      console.log(error.message);
-      console.log("ini error: ", error);
+      handleError(error);
+    }
+  };
+
+  const getCurriculumDetails = async () => {
+    try {
+      const userNIM = JSON.parse(localStorage.getItem("user")).nim;
+      const studentData = await jwtAuthAxios.get(`/student/${userNIM}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
+      const curriculumId = studentData.data.data.curriculumId;
+      // const curriculumId = "790021f2-9d25-4d65-a637-f4e883ad1885";
+
+      if (!curriculumId) {
+        console.error("Curriculum ID is null.");
+        return;
+      }
+
+      const curriculumResult = await jwtAuthAxios.get(
+        `/pre-regist/curriculum?id=${curriculumId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
+
+      const detail = curriculumResult.data.data;
+      setCurriculumDetails({
+        name: detail.major,
+        year: detail.year,
+      });
+
+      setListSubject(detail.Subjects);
+    } catch (error) {
+      handleError(error);
     }
   };
 
   useEffect(() => {
     getCurriculumDetails();
     getDataPreregis();
+    return () => controller.abort();
   }, []);
 
-  const [listSubject, setListSubject] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [totalCredits, setTotalCredits] = useState(0);
-  const [showPopup, setShowPopup] = useState(false);
-  const [showButton, setShowButton] = useState(false);
-  const [showWarning, setShowWarning] = useState(false);
-
-  const [openFirstModal, setOpenFirstModal] = React.useState(false);
-  const [loading, setLoading] = useState(false);
-  const [openSuccessModal, setOpenSuccessModal] = React.useState(false);
-  const [openErrorModal, setOpenErrorModal] = React.useState(false);
-
-  const handleOpenFirstModal = () => setOpenFirstModal(true);
-  const handleCloseFirstModal = () => setOpenFirstModal(false);
-  const handleOpenSuccessModal = () => setOpenSuccessModal(true);
-  const handleCloseSuccessModal = () => setOpenSuccessModal(false);
-  const handleOpenErrorModal = () => setOpenErrorModal(true);
-  const handleCloseErrorModal = () => setOpenErrorModal(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleCloseSuccessModal();
-    }, 5000); // 5000 ms = 5 detik
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [handleOpenSuccessModal]);
-  const navigate = useNavigate();
   const handleSubmitFirstModal = async () => {
     handleCloseFirstModal();
     setLoading(true);
-    const user = JSON.parse(localStorage.getItem("user"));
-    const classId = await axios.get(
-      `${BASE_URL_API}/guidance-class/${user.guidanceClassId}`
-    );
-    const employeeId = classId.data.data.teacherId;
-
-    const listOfSubject = selectedRows.map((row) => ({ subjectId: row.id }));
-    const requestBody = {
-      studentId: user.nim,
-      employeeId: employeeId,
-      listOfSubject: listOfSubject,
-      description: "",
-      preRegistrationId: dataPreregis.id,
-    };
     try {
-      const response = await axios.post(
-        `${BASE_URL_API}/pre-regist/submit`,
-        requestBody
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      const classId = await jwtAuthAxios.get(
+        `/guidance-class/${user.guidanceClassId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          signal,
+        }
       );
+
+      const employeeId = classId.data.data.teacherId;
+
+      const listOfSubject = selectedRows.map((row) => ({ subjectId: row.id }));
+      const requestBody = {
+        studentId: user.id,
+        employeeId: employeeId,
+        listOfSubject: listOfSubject,
+        description: "",
+        preRegistrationId: dataPreregis.id,
+      };
+
+      const response = await jwtAuthAxios.post(
+        `/pre-regist/submit`,
+        requestBody,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          signal,
+        }
+      );
+      console.log("ini isi requestbody:", requestBody);
       if (response.data.status === "OK") {
         window.location.reload();
         setSelectedRows([]);
@@ -334,13 +391,24 @@ const PreRegistrationSubmission = ({}) => {
         setLoading(false);
       }
     } catch (error) {
-      console.log("Error submitting courses:", error.response);
-      console.log("ini isi requestbody:", requestBody);
-      setSelectedRows([]);
-      setTotalCredits(0);
-      setShowPopup(true);
-      handleOpenErrorModal();
-      setLoading(false);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.log("Error submitting courses:", error.response);
+        setSelectedRows([]);
+        setTotalCredits(0);
+        setShowPopup(true);
+        handleOpenErrorModal();
+        setLoading(false);
+      }
     }
   };
 
@@ -349,9 +417,9 @@ const PreRegistrationSubmission = ({}) => {
     let updatedTotalCredits = totalCredits;
 
     if (isChecked) {
-      if (updatedTotalCredits + data.credits > 23) {
+      if (updatedTotalCredits + data.credits > 20) {
         alert(
-          "Warning: Credit limit exceeded! Please select fewer credits or take courses with 23 accumulated credits."
+          "Warning: Credit limit exceeded! Please select fewer credits or take courses with 20 accumulated credits."
         );
         return;
       }
@@ -375,33 +443,6 @@ const PreRegistrationSubmission = ({}) => {
 
   const handleClosePopup = () => {
     setShowPopup(false);
-  };
-
-  const getCurriculumDetails = async () => {
-    try {
-      const userNIM = JSON.parse(localStorage.getItem("user")).nim;
-      const studentData = await axios.get(`${BASE_URL_API}/student/${userNIM}`);
-
-      const curriculumId = studentData.data.data.curriculumId;
-      // const curriculumId = "790021f2-9d25-4d65-a637-f4e883ad1885";
-
-      if (!curriculumId) {
-        console.error("Curriculum ID is null.");
-        return;
-      }
-
-      const curriculumResult = await axios.get(
-        `${BASE_URL_API}/pre-regist/curriculum?id=${curriculumId}`
-      );
-      const detail = curriculumResult.data.data;
-      setCurriculumDetails({
-        name: detail.major,
-        year: detail.year,
-      });
-      setListSubject(detail.Subjects);
-    } catch (error) {
-      console.error("Error in getCurriculumDetails:", error);
-    }
   };
 
   const renderRows = () => {
@@ -445,7 +486,6 @@ const PreRegistrationSubmission = ({}) => {
           <TableCell>{value.code}</TableCell>
           <TableCell>{value.name}</TableCell>
           <TableCell>{value.credits}</TableCell>
-          <TableCell>{value.grade ? value.grade : "-"}</TableCell>
           <TableCell>{value.type}</TableCell>
           <TableCell sx={{ width: "400px" }}>
             {value.prerequisite === null || value.prerequisite === ""
@@ -463,7 +503,6 @@ const PreRegistrationSubmission = ({}) => {
                     </React.Fragment>
                   ))}
           </TableCell>
-          <TableCell>{value.status ? value.status : "-"}</TableCell>
         </TableRow>
       );
     });
@@ -547,7 +586,7 @@ const PreRegistrationSubmission = ({}) => {
             clash of course schedules and can plan lectures more effectively.
             <br />
             <br /> It must be noted that each student can only fill in
-            pre-registration courses limited to 23 credits. No more than that.
+            pre-registration courses limited to 20 credits. No more than that.
           </Typography>
         </Paper>
         <Typography
@@ -570,20 +609,6 @@ const PreRegistrationSubmission = ({}) => {
           <Table stickyHeader>
             <TableHead>
               <TableHeading />
-              {/* <TableRow>
-                <TableCell sx={{ width: "80px" }}> </TableCell>
-                <TableCell sx={{ width: "80px" }}>Code</TableCell>
-                <TableCell sx={{ width: "400px" }}>Name</TableCell>
-                <TableCell sx={{ width: "80px", textAlign: "right" }}>
-                  Credit(s)
-                </TableCell>
-                <TableCell sx={{ width: "80px", lign: "right" }}>
-                  Grade
-                </TableCell>
-                <TableCell sx={{ width: "130px" }}>Type</TableCell>
-                <TableCell sx={{ width: "400px" }}>Prerequisite</TableCell>
-                <TableCell sx={{ width: "400px" }}>Status</TableCell>
-              </TableRow> */}
             </TableHead>
             <TableBody>{renderRows()}</TableBody>
           </Table>
@@ -677,97 +702,27 @@ const PreRegistrationSubmission = ({}) => {
               </Grid>
             </div>
           </Modal>
-          <Modal
-            open={openSuccessModal}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <div style={style2}>
-              <IconButton
-                edge="end"
-                color="#D9D9D9"
-                onClick={handleCloseSuccessModal}
-                aria-label="close"
-                sx={{
-                  position: "absolute",
-                  top: "10px",
-                  right: "20px",
-                }}
-              >
-                <CloseIcon />
-              </IconButton>
-              <Typography
-                id="modal-modal-title"
-                variant="h4"
-                component="h2"
-                sx={{
-                  fontWeight: 600,
-                }}
-              >
-                Successfull Request!
-              </Typography>
-              <Typography
-                id="modal-modal-description"
-                style={{ marginTop: "16px", marginBottom: "20px" }}
-              >
-                You have successfully made a consultation request.
-              </Typography>
-            </div>
-          </Modal>
-          <Modal
+          <SuccessOrError
             open={openErrorModal}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <div style={style2}>
-              <IconButton
-                edge="end"
-                color="#D9D9D9"
-                onClick={handleCloseErrorModal}
-                aria-label="close"
-                sx={{
-                  position: "absolute",
-                  top: "10px",
-                  right: "20px",
-                }}
-              >
-                <CloseIcon />
-              </IconButton>
-              <Typography
-                id="modal-modal-title"
-                variant="h4"
-                component="h2"
-                sx={{
-                  fontWeight: 600,
-                }}
-              >
-                Error Submission!
-              </Typography>
-              <Typography
-                id="modal-modal-description"
-                style={{ marginTop: "16px", marginBottom: "20px" }}
-              >
-                Error: Failed to submit Pre-Registration. Please try again.
-              </Typography>
-            </div>
-          </Modal>
+            handleClose={handleCloseErrorModal}
+            title="Error Submission!"
+            description="Error: Failed to submit pre-registration. Please try again."
+          />
         </Box>
       </Grid>
     </div>
   );
 };
 const TableHeading = () => {
-  const style = { fontWeight: 500 };
+  const style = { fontWeight: 500, backgroundColor: "#dfe4eb" };
   return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
+    <TableRow>
       <TableCell sx={[style]}>No</TableCell>
       <TableCell sx={[style]}>Code</TableCell>
       <TableCell sx={[style]}>Subject Name</TableCell>
       <TableCell sx={[style]}>Credit(s)</TableCell>
-      <TableCell sx={[style]}>Grades</TableCell>
       <TableCell sx={[style]}>Type</TableCell>
       <TableCell sx={[style]}>Prerequisite</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
     </TableRow>
   );
 };

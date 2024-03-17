@@ -1,31 +1,27 @@
-import React, {useState} from 'react';
-import {
-    Box,
-    Button,
-} from "@mui/material";
-import { Link, useNavigate} from "react-router-dom";
+import React from "react";
+import { Box, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const IsiForm = () => {
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    navigate("/klabat-bridge/home-calon-tamatan", { 
-      state: { 
-        buttonColor: '#B1FFA5', 
+    navigate("/klabat-bridge/home-calon-tamatan", {
+      state: {
+        buttonColor: "#B1FFA5",
         formSubmitted: true,
-        buttonText: 'Anda telah mengisi form SPT',
-      } 
+        buttonText: "Anda telah mengisi form SPT",
+      },
     });
   };
 
   return (
     <Box>
-
       <Button onClick={handleSubmit}>
         {/* <Link to="/klabat-bridge/home-calon-tamatan">Submit</Link> */}
         Submit
       </Button>
-      
+
       {/* <Box sx={{
           backgroundColor:"#E8EBE8", 
           height: "70px", 
@@ -37,11 +33,7 @@ const IsiForm = () => {
           <Typography sx={{fontSize: "16px", fontWeight: 500,}}>Form TEst</Typography>
       </Box> */}
     </Box>
-  )
-}
+  );
+};
 
-export default IsiForm
-
-
-
-
+export default IsiForm;

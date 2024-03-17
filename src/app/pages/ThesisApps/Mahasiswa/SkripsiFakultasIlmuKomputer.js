@@ -1,12 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import Div from "@jumbo/shared/Div";
-import PeopleIcon from "@mui/icons-material/People";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Chip,
   Paper,
   Table,
   TableBody,
@@ -16,35 +11,9 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
 import SearchGlobal from "app/shared/SearchGlobal";
-import { Link } from "react-router-dom";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const SkripsiFakultasIlmuKomputer = () => {
-  // State untuk melacak panel accordion yang terbuka
-  const [expanded, setExpanded] = useState(false);
-
-  // Fungsi untuk menangani perubahan pada state accordion yang terbuka
-  const handleChange = (panel) => (event, isExpanded) => {
-    // Mengatur state expanded berdasarkan apakah panel tersebut terbuka
-    setExpanded(isExpanded ? panel : false);
-  };
-
-  const [daftarBimbinganProposal, setDaftarBimbinganProposal] = useState({
-    dashboard: {
-      total_group: 0,
-      not_submitted: 0,
-      has_submitted: 0,
-      approved: 0,
-      rejected: 0,
-    },
-    semesterData: [],
-  });
-
   // fungsi untuk mendapatkan token JWT
   const token = localStorage.getItem("token");
   console.log("token", token);
@@ -60,8 +29,6 @@ const SkripsiFakultasIlmuKomputer = () => {
             },
           }
         );
-        // Atur state 'setDaftarBimbinganProposal' dengan data dari respons
-        setDaftarBimbinganProposal(response.data.data);
         console.log("Request get daftar proposal: ", response.data.data);
       } catch (error) {
         console.error(

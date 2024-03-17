@@ -213,9 +213,6 @@ const BeritaAcara = () => {
   const [isRevisionEnabled, setIsRevisionEnabled] = useState(true);
   const [isScoreEnabled, setIsScoreEnabled] = useState(true);
   const [isSignInEnabled, setIsSignInEnabled] = useState(true);
-  const [isSubmitButtonVisible, setIsSubmitButtonVisible] = useState(true);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [nilai, setNilai] = useState("");
   const [perubahan, setPerubahan] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
   const [errorMessageKesimpulan, setErrorMessageKesimpulan] = useState();
@@ -238,18 +235,6 @@ const BeritaAcara = () => {
 
   const handleStatusChange = (event) => {
     setStatus(event.target.value); // Mengubah status saat radio button berubah
-  };
-
-  const handleNilaiChange = (event) => {
-    setNilai(event.target.value); // Mengubah nilai saat radio button berubah
-  };
-
-  const handlePerubahanChange = (event) => {
-    setPerubahan(event.target.value); // Mengubah jenis perubahan saat radio button berubah
-  };
-
-  const handleDeskripsiChange = (event) => {
-    setDeskripsi(event.target.value); // Ubah nama state saat radio button berubah
   };
 
   const [

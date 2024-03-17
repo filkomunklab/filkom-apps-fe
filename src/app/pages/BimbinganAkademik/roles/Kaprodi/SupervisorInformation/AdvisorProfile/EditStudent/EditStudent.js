@@ -17,12 +17,19 @@ import {
   TablePagination,
   Backdrop,
   CircularProgress,
+  TextField,
+  InputAdornment,
+  MenuItem,
 } from "@mui/material";
-import SearchLocal from "app/shared/SearchLocal";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import SearchIcon from "@mui/icons-material/Search";
 import Div from "@jumbo/shared/Div";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -41,51 +48,104 @@ const CountStudent = ({ selected, totalStudents }) => {
   );
 };
 
+const majorLabel = (major) => {
+  switch (major) {
+    case "IF":
+      return "Informatics";
+    case "SI":
+      return "Information System";
+    case "DKV":
+      return "Information Technology";
+    default:
+      return "-";
+  }
+};
+
 const EditStudent = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
   const navigate = useNavigate();
+
   const location = useLocation();
-  const { nik, classID } = location.state;
+  const { nik, classID, major } = location.state;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [studentOptions, setStudentOptions] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const controller = new AbortController();
-  const signal = controller.signal;
+
+  //search dan filter
+  const [searchFilteredData, setSearchFilteredData] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
+  const [originalDataStudent, setOriginalDataStudent] = useState([]);
+
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (error.response && error.response.status === 403) {
+      handlePermissionError();
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      return;
+    } else if (error.response && error.response.status === 401) {
+      handleAuthenticationError();
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
 
   const getStudent = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/guidance-class/get-all-unassigned-student/list`,
-        { signal }
+      const response = await jwtAuthAxios.get(
+        `/guidance-class/get-all-unassigned-student/list`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
 
-      const { status, data } = response.data;
-      console.log("inii response :", response);
-      if (status === "OK") {
-        setStudentOptions(data.filter((item) => item.status !== "GRADUATE"));
-      } else {
-        console.log("ini response :", response);
-      }
+      setStudentOptions(
+        response.data.data.filter(
+          (item) => item.status !== "GRADUATE"
+          // && major === item.major
+        )
+      );
     } catch (error) {
-      console.log(error);
+      handleError(error);
     }
   };
 
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      const nimList = selectedStudent.map((nim) => ({ studentNim: nim }));
-      console.log("yaho", nimList);
 
-      const response = await axios.post(
-        `${BASE_URL_API}/guidance-class/add-student/${classID}`,
-        { studentList: nimList },
-        { signal }
+      // Add this console log
+      console.log("Selected Students:", selectedStudent);
+
+      const response = await jwtAuthAxios.post(
+        `/guidance-class/add-student/${classID}`,
+        {
+          studentList: selectedStudent.map((id) => ({
+            studentId: id,
+          })),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          signal,
+        }
       );
-      console.log("ahahaha :", response);
+
+      console.log("Response:", response);
+
       const { status } = response.data;
       setIsLoading(false);
+
       if (status === "OK") {
         navigate(
           `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}`,
@@ -94,7 +154,7 @@ const EditStudent = () => {
       }
     } catch (error) {
       setIsLoading(false);
-      console.log("nnn", error);
+      handleError(error);
     }
   };
 
@@ -105,15 +165,50 @@ const EditStudent = () => {
   }, []);
 
   useEffect(() => {
-    console.log("hadeh", selectedStudent);
+    setOriginalDataStudent(studentOptions);
+  }, [studentOptions]);
+
+  useEffect(() => {
+    filterAndSetStudents();
+  }, [search, filter, originalDataStudent]);
+
+  useEffect(() => {
+    console.log("selected student", selectedStudent);
   }, [selectedStudent]);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = studentOptions.map((item) => item.nim);
+      const newSelected = studentOptions.map((item) => item.id);
       setSelectedStudent(newSelected);
     } else {
       setSelectedStudent([]);
+    }
+  };
+
+  const filterAndSetStudents = () => {
+    const filteredData = originalDataStudent.filter((item) => {
+      const nameMatches =
+        item.firstName.toLowerCase().includes(search.toLowerCase()) ||
+        item.lastName.toLowerCase().includes(search.toLowerCase());
+      const nimMatches = item.nim.toLowerCase().includes(search.toLowerCase());
+      const majorMatches = filter === "" || item.major === filter;
+
+      return (nameMatches || nimMatches) && majorMatches;
+    });
+
+    setSearchFilteredData(filteredData);
+  };
+  console.log("ini isi originial", originalDataStudent);
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+  };
+
+  const handleFilter = (event) => {
+    if (event.target.value === "All Major") {
+      setFilter("");
+    } else {
+      setFilter(event.target.value);
     }
   };
 
@@ -134,7 +229,7 @@ const EditStudent = () => {
             state={location.state}
             to={`/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}`}
           >
-            Advisor Profile
+            Supervisor Profile
           </StyledLink>
           <Typography color="text.primary">Edit Student</Typography>
         </Breadcrumbs>
@@ -149,21 +244,92 @@ const EditStudent = () => {
         >
           <Grid item md={6}>
             <Typography variant="h4" sx={{ fontWeight: 600 }}>
-              List of Students Majoring in Informatics
+              List of Students Majoring in {majorLabel(major)}
             </Typography>
-          </Grid>
-          <Grid item xs={12} sm={8} md={5}>
-            <SearchLocal
-              sx={{
-                height: "100%",
-                "@media (max-width: 390px)": {
-                  height: "40px",
-                },
-              }}
-            />
           </Grid>
         </Grid>
       </Div>
+      <Grid container paddingTop={1} paddingBottom={3.5} spacing={2}>
+        <Grid item xs={12} sm={6} md={3.5}>
+          <TextField
+            size="small"
+            placeholder="Search by Name or NIM"
+            variant="outlined"
+            id="search-field"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "#1C304A85" }} />
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "65px",
+              },
+            }}
+            sx={{
+              width: "100%",
+              marginBottom: { xs: 2, md: 0 },
+            }}
+            value={search}
+            onChange={handleSearch}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            size="small"
+            fullWidth
+            id="outlined-select-currency"
+            select
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start" sx={{ zIndex: -2 }}>
+                  <FilterListIcon sx={{ color: "#1C304A85" }} />
+
+                  <Typography sx={{ marginLeft: "16px", color: "#1C304A85" }}>
+                    Filter:
+                  </Typography>
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "65px",
+                borderColor: "#E0E0E0",
+              },
+            }}
+            sx={{
+              m: 0,
+              borderRadius: "65px",
+              width: "100%",
+              borderColor: "#E0E0E0",
+            }}
+            value={filter ? filter : "All Major"}
+            onChange={handleFilter}
+          >
+            <Typography
+              sx={{
+                fontWeight: "600",
+                paddingLeft: "12px",
+                marginBottom: "10px",
+                marginTop: "10px",
+              }}
+            >
+              Major
+            </Typography>
+            <MenuItem key={"All Major"} value={"All Major"}>
+              All Major
+            </MenuItem>
+            <MenuItem key={"IF"} value={"IF"}>
+              Informatics
+            </MenuItem>
+            <MenuItem key={"SI"} value={"SI"}>
+              Information System
+            </MenuItem>
+            <MenuItem key={"DKV"} value={"DKV"}>
+              Information Technology
+            </MenuItem>
+          </TextField>
+        </Grid>
+      </Grid>
       <Grid item xs={12}>
         <TableContainer
           sx={{
@@ -174,7 +340,10 @@ const EditStudent = () => {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
+                <TableCell
+                  sx={{ backgroundColor: "#e8ecf2" }}
+                  padding="checkbox"
+                >
                   <Checkbox
                     indeterminate={
                       selectedStudent.length > 0 &&
@@ -187,28 +356,70 @@ const EditStudent = () => {
                     onChange={handleSelectAllClick}
                   />
                 </TableCell>
-                <TableCell>No</TableCell>
-                <TableCell>NIM</TableCell>
-                <TableCell>Student Name</TableCell>
-                <TableCell>Program Studi</TableCell>
-                <TableCell>Tahun Masuk</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    textAlign: "center",
+                  }}
+                >
+                  No
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    textAlign: "center",
+                  }}
+                >
+                  NIM
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    textAlign: "center",
+                  }}
+                >
+                  Student Name
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    textAlign: "center",
+                  }}
+                >
+                  Program Studi
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    textAlign: "center",
+                  }}
+                >
+                  Tahun Masuk
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    textAlign: "center",
+                  }}
+                >
+                  Status
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {studentOptions
+              {searchFilteredData
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((item, index) => (
                   <TableItem
                     item={item}
                     index={index}
                     key={item.nim}
-                    isSelected={selectedStudent.includes(item.nim)}
+                    isSelected={selectedStudent.includes(item.id)}
                     handleClick={(i) =>
                       setSelectedStudent(
-                        selectedStudent.includes(i.nim)
-                          ? selectedStudent.filter((nim) => nim !== i.nim)
-                          : [...selectedStudent, i.nim]
+                        selectedStudent.includes(i.id)
+                          ? selectedStudent.filter((id) => id !== i.id)
+                          : [...selectedStudent, i.id]
                       )
                     }
                   />
@@ -219,7 +430,7 @@ const EditStudent = () => {
         <TablePagination
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"
-          count={studentOptions.length}
+          count={searchFilteredData.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={(_, newPage) => setPage(newPage)}
@@ -272,25 +483,54 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
       aria-checked={isSelected}
       selected={isSelected}
     >
-      <TableCell padding="checkbox">
+      <TableCell
+        sx={{
+          textAlign: "center",
+        }}
+        padding="checkbox"
+      >
         <Checkbox checked={isSelected} />
       </TableCell>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{item.nim}</TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        {index + 1}
+      </TableCell>
+      <TableCell
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        {item.nim}
+      </TableCell>
+      <TableCell
+        sx={{
+          textAlign: "center",
+        }}
+      >
         {item.lastName}, {item.firstName}
       </TableCell>
-      <TableCell>
-        {item.major === "IF"
-          ? "Informatics"
-          : item.major === "SI"
-          ? "Information System"
-          : item.major === "DKV"
-          ? "Information Technology"
-          : "-"}
+      <TableCell
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        {majorLabel(item.major)}
       </TableCell>
-      <TableCell>{item.arrivalYear}</TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        {item.arrivalYear}
+      </TableCell>
+      <TableCell
+        sx={{
+          textAlign: "center",
+        }}
+      >
         <Chip
           label={item.status}
           variant="filled"

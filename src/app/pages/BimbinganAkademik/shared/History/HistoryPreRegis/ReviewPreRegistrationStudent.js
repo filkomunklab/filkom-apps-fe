@@ -14,7 +14,7 @@ import {
   experimentalStyled as styled,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -42,29 +42,40 @@ const ReviewPreRegistrationStudent = () => {
     comments,
   } = preregisDetails;
 
+  // for (const data of listSubjectPreregis) {
+  //   totalCredit += data.subject.credits;
+  // }
+
   for (const data of listSubjectPreregis) {
-    totalCredit += data.subject.credits;
+    if (data.subject && typeof data.subject === "object") {
+      totalCredit += data.subject.credits;
+    } else {
+      console.error("Invalid subject data:", data.subject);
+    }
   }
 
-  const handleBreadcrumbsClick = () => {
-    const { role } = JSON.parse(localStorage.getItem("user"));
-    let path = "";
+  console.log("ini listSubjectPreregis", listSubjectPreregis);
+  console.log("preregisDetails", preregisDetails);
 
-    if (role.includes("DEKAN")) {
-      path = "/bimbingan-akademik/dekan/history";
-    } else if (role.includes("KAPRODI")) {
-      path = "/bimbingan-akademik/kaprodi/history";
-    } else {
-      path = "/bimbingan-akademik/dosen-pembimbing/history";
-    }
-    return <StyledLink to={path}>History</StyledLink>;
+  const role = Boolean(localStorage.getItem("user"))
+    ? JSON.parse(localStorage.getItem("user")).role
+    : [];
+  const getRole = () => {
+    const filter = role.includes("KAPRODI")
+      ? "kaprodi"
+      : role.includes("DEKAN")
+      ? "dekan"
+      : "dosen-pembimbing";
+
+    return filter;
   };
-
   return (
     <Div>
-      <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
-        {handleBreadcrumbsClick()}
-        <Typography color="text.primary">Certificate</Typography>
+      <Breadcrumbs oaria-label="breadcrumb">
+        <StyledLink to={`/bimbingan-akademik/${getRole()}/history`}>
+          History
+        </StyledLink>
+        <Typography color="text.primary">Pre-registration</Typography>
       </Breadcrumbs>
       <Typography
         fontSize={"24px"}
@@ -160,7 +171,9 @@ const ReviewPreRegistrationStudent = () => {
                       : "#005FDB",
                 }}
               >
-                {status.charAt(0) + status.slice(1).toLowerCase()}
+                {status
+                  ? status.charAt(0) + status.slice(1).toLowerCase()
+                  : "-"}
               </Typography>
             </Grid>
           </Grid>
@@ -174,42 +187,86 @@ const ReviewPreRegistrationStudent = () => {
           component={Paper}
         >
           <Table stickyHeader>
-            <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+            <TableHead>
               <TableRow>
-                <TableCell sx={{ width: "40px" }}>Number</TableCell>
-                <TableCell sx={{ width: "40px" }}>Code</TableCell>
-                <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
-                <TableCell sx={{ width: "40px" }}>Credit(s)</TableCell>
-                <TableCell sx={{ width: "40px" }}>Grade</TableCell>
-                <TableCell>Type </TableCell>
-                <TableCell sx={{ width: "380px" }}>Prerequisite</TableCell>
-                <TableCell sx={{ width: "110px" }}>Status</TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Number
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Code
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "400px",
+                    textAlign: "center",
+                  }}
+                >
+                  Subject Name
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Credit(s)
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Type
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "380px",
+                    textAlign: "center",
+                  }}
+                >
+                  Prerequisite
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {listSubjectPreregis.map((data, index) => (
                 <TableRow key={index}>
-                  <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
-                  <TableCell sx={{ width: "40px" }}>
+                  <TableCell sx={{ textAlign: "center", width: "40px" }}>
+                    {index + 1}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center", width: "40px" }}>
                     {data.subject.code}
                   </TableCell>
-                  <TableCell sx={{ width: "400px" }}>
+                  <TableCell sx={{ textAlign: "center", width: "400px" }}>
                     {data.subject.name}
                   </TableCell>
-                  <TableCell sx={{ width: "40px" }}>
+                  <TableCell sx={{ textAlign: "center", width: "40px" }}>
                     {data.subject.credits}
                   </TableCell>
-                  <TableCell sx={{ width: "40px" }}>
-                    {/*ini kalo ada grade */}-
-                  </TableCell>
-                  <TableCell sx={{ width: "200px" }}>
+                  <TableCell sx={{ textAlign: "center", width: "200px" }}>
                     {data.subject.type}
                   </TableCell>
-                  <TableCell sx={{ width: "380px" }}>
-                    {data.subject.prerequisite}
-                  </TableCell>
-                  <TableCell sx={{ width: "110px" }}>
-                    {/*ini kalo ada status, pass ato nda */}-{" "}
+                  <TableCell sx={{ textAlign: "center", width: "380px" }}>
+                    {data.subject.prerequisite
+                      ? data.subject.prerequisite
+                      : "-"}
                   </TableCell>
                 </TableRow>
               ))}

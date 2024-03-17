@@ -1,8 +1,6 @@
 import {
-  Container,
   Typography,
   Box,
-  Stack,
   Breadcrumbs,
   experimentalStyled as styled,
   Button,
@@ -20,10 +18,12 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import Div from "@jumbo/shared/Div";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const style = {
   position: "absolute",
@@ -47,13 +47,17 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const GradeStudent = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isReject, setIsReject] = useState(false);
   const [isApprove, setIsApprove] = useState(false);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
   const [commentText, setCommentText] = useState("");
 
   const { state } = useLocation();
@@ -88,13 +92,27 @@ const GradeStudent = () => {
       };
       await jwtAuthAxios.put(`/transaction/grades/approval/${id}`, bodyData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
       });
       setLoading(false);
       let path = "/bimbingan-akademik/kaprodi/review-activities/grade";
       navigate(path);
     } catch (error) {
       setLoading(false);
-      console.error("Error completing status:", error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -302,7 +320,6 @@ const GradeStudent = () => {
                 display: "flex",
                 columnGap: 2,
                 justifyContent: "flex-end",
-                bgcolor: "#F5F5F5",
                 px: 2,
                 py: 1,
               }}
@@ -353,7 +370,6 @@ const GradeStudent = () => {
                 display: "flex",
                 columnGap: 2,
                 justifyContent: "flex-end",
-                bgcolor: "#F5F5F5",
                 px: 2,
                 py: 1,
               }}

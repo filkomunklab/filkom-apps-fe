@@ -1,7 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useReactToPrint } from "react-to-print";
-import Button from "@mui/material/Button";
-import { scheduleData } from "app/shared/widgets/ScheduleCard/data";
+import React, { useEffect, useState } from "react";
 
 // Fungsi untuk mengonversi tahun ke dalam format teks
 const convertToText = (number) => {

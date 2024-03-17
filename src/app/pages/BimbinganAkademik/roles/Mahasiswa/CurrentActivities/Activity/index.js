@@ -1,1 +1,1 @@
-export { default } from "./HistoryActivity";
+export { default } from "./Activity";

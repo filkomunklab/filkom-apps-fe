@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
-  Box,
   Tab,
   Tabs,
   Typography,
   Grid,
   TextField,
-  Button,
   IconButton,
   TableContainer,
   Table,
@@ -16,13 +14,14 @@ import {
   TablePagination,
   TableRow,
   Paper,
-  Modal,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import SearchIcon from "@mui/icons-material/Search";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -52,23 +51,42 @@ function a11yProps(index) {
 }
 
 const Manage = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
+  //inisialisasi
   const [dataGrades, setDataGrades] = useState([]);
   const [dataPreregis, setDataPreregis] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const navigate = useNavigate();
+
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (error.response && error.response.status === 403) {
+      handlePermissionError();
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      return;
+    } else if (error.response && error.response.status === 401) {
+      handleAuthenticationError();
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
 
   const getDataGrades = async () => {
     try {
-      const { major } = JSON.parse(localStorage.getItem("user"));
-      const result = await jwtAuthAxios.get(
-        `/access/list/gradesAccess/${major}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const result = await jwtAuthAxios.get(`/access/list/gradeAccess`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
       const filteredData = result.data.data.filter((item) => {
         const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
         return employeeFullName
@@ -77,14 +95,14 @@ const Manage = () => {
       });
       setDataGrades(filteredData);
     } catch (error) {
-      console.log(error.message);
+      handleError(error);
     }
   };
   const getDataPreregis = async () => {
     try {
-      // const { major } = JSON.parse(localStorage.getItem("user"));
       const result = await jwtAuthAxios.get(`/pre-regist`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
       });
       const filteredData = result.data.data.filter((item) => {
         const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
@@ -94,13 +112,14 @@ const Manage = () => {
       });
       setDataPreregis(filteredData);
     } catch (error) {
-      console.log(error.message);
+      handleError(error);
     }
   };
 
   useEffect(() => {
     getDataGrades();
     getDataPreregis();
+    return () => controller.abort();
   }, [searchValue]);
 
   const handleChangePage = (event, newPage) => {
@@ -195,6 +214,7 @@ const Manage = () => {
                       position: "-webkit-sticky",
                       position: "sticky",
                       top: 0,
+                      zIndex: 1,
                       backgroundColor: "rgba(26, 56, 96, 0.1)",
                     }}
                   >
@@ -240,7 +260,8 @@ const Manage = () => {
                             )}
                           </TableCell>
                           <TableCell sx={{ width: "250px" }}>
-                            {value.Employee.firstName} {value.Employee.lastName}
+                            {value.Employee?.firstName}{" "}
+                            {value.Employee?.lastName}
                           </TableCell>
                           <TableCell
                             sx={{
@@ -306,7 +327,7 @@ const Manage = () => {
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  "@media (max-width: 650px)": { justifyContent: "flex-start" },
+                  "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
                 }}
                 rowsPerPageOptions={[10, 25, 50, 100]}
                 component="div"
@@ -368,6 +389,7 @@ const Manage = () => {
                       position: "-webkit-sticky",
                       position: "sticky",
                       top: 0,
+                      zIndex: 1,
                       backgroundColor: "rgba(26, 56, 96, 0.1)",
                     }}
                   >
@@ -385,20 +407,7 @@ const Manage = () => {
                   <TableBody>
                     {dataGrades && dataGrades.length > 0 ? (
                       dataGrades.map((value, index) => (
-                        <TableRow
-                          key={value.id}
-                          // onClick={() => handleNavigate(value)}
-                          sx={{
-                            ":hover": {
-                              cursor: "pointer",
-                              backgroundColor: "#338CFF21",
-                              transition: "0.3s",
-                              transitionTimingFunction: "ease-in-out",
-                              transitionDelay: "0s",
-                              transitionProperty: "all",
-                            },
-                          }}
-                        >
+                        <TableRow key={value.id}>
                           <TableCell sx={{ width: "80px" }}>
                             {index + 1}
                           </TableCell>
@@ -413,7 +422,8 @@ const Manage = () => {
                             )}
                           </TableCell>
                           <TableCell sx={{ width: "250px" }}>
-                            {value.Employee.firstName} {value.Employee.lastName}
+                            {value.Employee?.firstName}{" "}
+                            {value.Employee?.lastName}
                           </TableCell>
                           <TableCell
                             sx={{
@@ -440,14 +450,14 @@ const Manage = () => {
                               width: "170px",
                             }}
                           >
-                            {value.semester_period}
+                            {value.semesterPeriod}
                           </TableCell>
                           <TableCell
                             sx={{
                               width: "200px",
                             }}
                           >
-                            {new Date(value.due_date).toLocaleDateString(
+                            {new Date(value.dueDate).toLocaleDateString(
                               "en-US",
                               {
                                 day: "numeric",
@@ -479,7 +489,7 @@ const Manage = () => {
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  "@media (max-width: 650px)": { justifyContent: "flex-start" },
+                  "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
                 }}
                 rowsPerPageOptions={[10, 25, 50, 100]}
                 component="div"

@@ -27,18 +27,11 @@ import {
   Paper,
   FormHelperText,
   Snackbar,
-  Alert,
   AlertTitle,
   CircularProgress,
   IconButton,
 } from "@mui/material";
-import {
-  Add,
-  Attachment,
-  Clear,
-  CloudUpload,
-  InsertDriveFile,
-} from "@mui/icons-material";
+import { Add, Clear, CloudUpload, InsertDriveFile } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import { Box } from "@mui/system";

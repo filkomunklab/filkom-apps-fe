@@ -11,83 +11,119 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  TextField,
-  IconButton,
   Popover,
   Backdrop,
   CircularProgress,
+  TextField,
+  InputAdornment,
+  MenuItem,
+  Modal,
 } from "@mui/material";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { MoreVert } from "@mui/icons-material";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
-const userRole = Boolean(localStorage.getItem("user"))
-  ? JSON.parse(localStorage.getItem("user")).role
-  : [];
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  padding: 24,
+  backgroundColor: "white",
+  borderRadius: 10,
+  maxWidth: "90%",
+  "@media (maxWidth: 768px)": {
+    maxWidth: "80%",
+  },
+  "@media (maxWidth: 480px)": {
+    maxWidth: "80%",
+  },
+};
 
 const SupervisorInformation = () => {
-  const [role, setRole] = useState(userRole);
-  const [searchValue, setSearchValue] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dataSupervisor, setDataSupervisor] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  //abort
   const controller = new AbortController();
   const signal = controller.signal;
   const navigate = useNavigate();
 
+  //search dan filter
+  const [searchFilteredData, setSearchFilteredData] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
+  const [originalDataSupervisor, setOriginalDataSupervisor] = useState([]);
+  const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] =
+    useState(false);
+  const [selectedSupervisorId, setSelectedSupervisorId] = useState(null);
+
+  const handleOpenDeleteConfirmationModal = (id) => {
+    setSelectedSupervisorId(id);
+    setIsDeleteConfirmationModalOpen(true);
+  };
+  const handleCloseDeleteConfirmationModal = () => {
+    setSelectedSupervisorId(null);
+    setIsDeleteConfirmationModalOpen(false);
+  };
+
   const getDataSupervisor = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const headers = { Authorization: `Bearer ${token}` };
-
-      const response = await axios.get(`${BASE_URL_API}/guidance-class`, {
+      const response = await jwtAuthAxios.get(`/guidance-class`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
       });
-      const { status, data } = response.data;
-      const searchData = data.filter((item) => {
-        const fullName =
-          `${item.lastName}`.toLowerCase() && `${item.firstName}`.toLowerCase();
-        const nameIDN = `${item.nidn}`.toLowerCase();
-        const includesSearch =
-          nameIDN.includes(searchValue.toLowerCase()) ||
-          fullName.includes(searchValue.toLowerCase());
-        return includesSearch;
-      });
-      if (status === "OK") {
-        console.log("ini isi supervisor: ", response.data.data);
-        setDataSupervisor(searchData);
-      } else {
-        console.log("ini data response: ", response);
-      }
+      setDataSupervisor(response.data.data);
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("Error fetching data: ", error);
+        console.log("ini error: ", error);
+        return;
       }
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDeleteSupervisor = async (id) => {
     try {
       setIsLoading(true);
-      const response = await axios.delete(
-        `${BASE_URL_API}//guidance-class/${id}`
-      );
-      console.log("hehe", response.status);
-      getDataSupervisor();
+      const response = await jwtAuthAxios.delete(`/guidance-class/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        signal,
+      });
+      console.log("Deleted supervisor with ID:", id);
+      getDataSupervisor(); // Assuming this function fetches the updated data
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("Error fetching data: ", error);
+        console.log("Error deleting supervisor:", error);
       }
     }
   };
@@ -95,7 +131,42 @@ const SupervisorInformation = () => {
   useEffect(() => {
     getDataSupervisor();
     return () => controller.abort();
-  }, [searchValue]);
+  }, []);
+
+  useEffect(() => {
+    setOriginalDataSupervisor(dataSupervisor);
+  }, [dataSupervisor]);
+
+  useEffect(() => {
+    filterAndSetStudents();
+  }, [search, filter, originalDataSupervisor]);
+  console.log("ini isi originial", originalDataSupervisor);
+
+  const filterAndSetStudents = () => {
+    const filteredData = originalDataSupervisor.filter((item) => {
+      const nameMatches =
+        item.teacher.firstName.toLowerCase().includes(search.toLowerCase()) ||
+        item.teacher.lastName.toLowerCase().includes(search.toLowerCase());
+
+      const majorMatches = filter === "" || item.teacher.major === filter;
+
+      return nameMatches && majorMatches;
+    });
+
+    setSearchFilteredData(filteredData);
+  };
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+  };
+
+  const handleFilter = (event) => {
+    if (event.target.value === "All Major") {
+      setFilter("");
+    } else {
+      setFilter(event.target.value);
+    }
+  };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -144,75 +215,211 @@ const SupervisorInformation = () => {
             List of Academic Supervisors
           </Typography>
         </Grid>
-        {/* <Grid item xs={12} sm={8} md={4} xl={3.5}>
+      </Grid>
+
+      <Grid container paddingTop={3} paddingBottom={2} spacing={2}>
+        <Grid item xs={12} sm={6} md={3.5}>
           <TextField
-            // label="Search by Name and NIDN"
-            placeholder="Search by Name and NIDN"
-            variant="outlined"
             size="small"
+            placeholder="Search by Name"
+            variant="outlined"
+            id="search-field"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "#1C304A85" }} />
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "65px",
+              },
+            }}
             sx={{
               width: "100%",
-              height: "100%",
+              marginBottom: { xs: 2, md: 0 },
             }}
-            onChange={(e) => setSearchValue(e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <IconButton edge="end">
-                  <SearchIcon />
-                </IconButton>
-              ),
-              style: { borderRadius: "25px" },
-            }}
+            value={search}
+            onChange={handleSearch}
           />
-        </Grid> */}
-        {role.includes("KAPRODI") && (
-          <Grid item xs={2} sm={2} md={2} xl={2}>
-            <Button
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            size="small"
+            fullWidth
+            id="outlined-select-currency"
+            select
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start" sx={{ zIndex: -2 }}>
+                  <FilterListIcon sx={{ color: "#1C304A85" }} />
+
+                  <Typography sx={{ marginLeft: "16px", color: "#1C304A85" }}>
+                    Filter:
+                  </Typography>
+                </InputAdornment>
+              ),
+              style: {
+                borderRadius: "65px",
+                borderColor: "#E0E0E0",
+              },
+            }}
+            sx={{
+              m: 0,
+              borderRadius: "65px",
+              width: "100%",
+              borderColor: "#E0E0E0",
+            }}
+            value={filter ? filter : "All Major"}
+            onChange={handleFilter}
+          >
+            <Typography
               sx={{
-                backgroundColor: "#006AF5",
-                borderRadius: "24px",
-                color: "white",
-                width: "100%",
-                minWidth: "132px",
-                fontSize: "12px",
-                height: "95%",
-                "&:hover": {
-                  backgroundColor: "#025ED8",
-                },
-              }}
-              onClick={() => {
-                navigate(
-                  "/bimbingan-akademik/kaprodi/supervisor-information/add-supervisor"
-                );
+                fontWeight: "600",
+                paddingLeft: "12px",
+                marginBottom: "10px",
+                marginTop: "10px",
               }}
             >
-              <AddIcon sx={{ fontSize: "14px" }} />
-              Add Dosen
-            </Button>
-          </Grid>
-        )}
+              Major
+            </Typography>
+            <MenuItem key={"All Major"} value={"All Major"}>
+              All Major
+            </MenuItem>
+            <MenuItem key={"IF"} value={"IF"}>
+              Informatics
+            </MenuItem>
+            <MenuItem key={"SI"} value={"SI"}>
+              Information System
+            </MenuItem>
+            <MenuItem key={"DKV"} value={"DKV"}>
+              Information Technology
+            </MenuItem>
+          </TextField>
+        </Grid>
+        <Grid item xs={2} sm={2} md={2} xl={2}>
+          <Button
+            sx={{
+              backgroundColor: "#006AF5",
+              borderRadius: "24px",
+              color: "white",
+              width: "100%",
+              minWidth: "132px",
+              fontSize: "12px",
+              height: "95%",
+              "&:hover": {
+                backgroundColor: "#025ED8",
+              },
+            }}
+            onClick={() => {
+              navigate("add-supervisor");
+            }}
+          >
+            <AddIcon sx={{ fontSize: "14px" }} />
+            Add Supervisor
+          </Button>
+        </Grid>
       </Grid>
+
       <Grid xs={12} mt={3}>
-        <TableContainer component={Paper}>
-          <Table stickyHeader>
-            <TableHead>
+        <TableContainer sx={{ maxHeight: 480 }} component={Paper}>
+          <Table>
+            <TableHead
+              sx={{
+                position: "-webkit-sticky",
+                position: "sticky",
+                top: 0,
+                backgroundColor: "#e8ecf2",
+                zIndex: 1,
+              }}
+            >
               <TableHeading />
             </TableHead>
             <TableBody>
-              {dataSupervisor &&
-                dataSupervisor
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              {searchFilteredData && searchFilteredData.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8}>No data available</TableCell>
+                </TableRow>
+              ) : (
+                searchFilteredData
+                  .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
                   .map((item, index) => (
                     <TableItem
                       item={item}
-                      index={index}
+                      index={index + page * rowsPerPage}
                       key={index}
-                      handleDelete={() => handleDelete(item.id)}
+                      onDelete={() =>
+                        handleOpenDeleteConfirmationModal(item.id)
+                      }
                     />
-                  ))}
+                  ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>
+
+        <Modal
+          open={isDeleteConfirmationModalOpen}
+          onClose={handleCloseDeleteConfirmationModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <div style={style}>
+            <Typography
+              id="modal-modal-title"
+              variant="h4"
+              component="h2"
+              sx={{
+                fontWeight: 600,
+              }}
+            >
+              Confirm Deletion
+            </Typography>
+            <Typography
+              id="modal-modal-description"
+              style={{ marginTop: "16px", marginBottom: "20px" }}
+            >
+              Are you sure you want to delete this supervisor?
+            </Typography>
+            <Grid container spacing={1} justifyContent="flex-end">
+              <Grid item>
+                <Button
+                  onClick={handleCloseDeleteConfirmationModal}
+                  sx={{
+                    backgroundColor: "white",
+                    borderRadius: "5px",
+                    color: "black",
+                    whiteSpace: "nowrap",
+                    "&:hover": {
+                      backgroundColor: "lightgrey",
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={() => {
+                    handleDeleteSupervisor(selectedSupervisorId);
+                    handleCloseDeleteConfirmationModal();
+                  }}
+                  sx={{
+                    borderRadius: "5px",
+                    color: "white",
+                    whiteSpace: "nowrap",
+                    backgroundColor: "#006AF5",
+                    "&:hover": {
+                      backgroundColor: "#025ED8",
+                    },
+                  }}
+                >
+                  Delete
+                </Button>
+              </Grid>
+            </Grid>
+          </div>
+        </Modal>
 
         <TablePagination
           sx={{
@@ -224,7 +431,7 @@ const SupervisorInformation = () => {
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"
-          count={dataSupervisor.length}
+          count={searchFilteredData.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={(_, newPage) => setPage(newPage)}
@@ -236,56 +443,36 @@ const SupervisorInformation = () => {
 };
 
 const TableHeading = () => {
-  const style = {
-    fontWeight: 400,
-    "@media (maxWidth: 650px)": { fontSize: "13px" },
-  };
   return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-      <TableCell sx={{ ...style, width: "80px" }}>No</TableCell>
-      <TableCell sx={{ ...style, width: "120px" }}>NIDN</TableCell>
-      <TableCell sx={{ ...style, width: "240px" }}>Name</TableCell>
-      <TableCell sx={{ ...style, width: "140px" }}>Faculty</TableCell>
-      <TableCell sx={{ ...style, width: "120px" }}>History</TableCell>
-      <TableCell sx={{ ...style, width: "140px" }}>Number of Student</TableCell>
-      <TableCell sx={{ ...style, width: "140px" }}>Action</TableCell>
+    <TableRow>
+      <TableCell sx={{ textAlign: "center" }}>No</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>Name</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>Major</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>History</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>Number of Student</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>Action</TableCell>
     </TableRow>
   );
 };
 
-const TableItem = ({ item, index, handleDelete }) => {
+const TableItem = ({ item, index, onDelete }) => {
   const navigate = useNavigate();
-  const [isActionVisible, setIsActionVisible] = useState(false);
   const [anchorEl, setAnchorE1] = useState(null);
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-  const { firstName, lastName, major, nidn, nik } = item.teacher;
-  console.log("ini isi item.techer", item.teacher);
-  const role = JSON.parse(localStorage.getItem("user")).role;
-  console.log("test role", role);
+  const { firstName, lastName, major, nik } = item.teacher;
 
-  const getRole = () => {
-    const filter = role.includes("KAPRODI")
-      ? "kaprodi"
-      : role.includes("DEKAN")
-      ? "dekan"
-      : "undefined";
-    return filter;
-  };
-  console.log("ini get role", getRole);
   const handleButtonNavigate = (_, name) => {
     switch (name) {
       case "profile":
-        navigate(
-          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${nik}`,
-          { state: { classID: item.id, nik: nik } }
-        );
+        navigate(`advisor-profile/${nik}`, {
+          state: { classID: item.id, nik: nik },
+        });
         break;
       case "history":
-        navigate(
-          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-history/${nik}`,
-          { state: { classID: item.id, nik: nik, major: major, id: id } }
-        );
+        navigate(`advisor-history/${nik}`, {
+          state: { classID: item.id, nik: nik, major: major, id: id },
+        });
         break;
 
       default:
@@ -295,12 +482,12 @@ const TableItem = ({ item, index, handleDelete }) => {
 
   const rowStyle = {
     "@media (maxWidth: 650px)": { fontSize: "11px" },
+    textAlign: "center",
   };
 
   return (
     <TableRow>
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
-      <TableCell sx={[rowStyle]}>{nidn}</TableCell>
       <TableCell>
         <Typography
           onClick={(e) => handleButtonNavigate(e, "profile")}
@@ -309,6 +496,8 @@ const TableItem = ({ item, index, handleDelete }) => {
             "@media (maxWidth: 650px)": { fontSize: "11px" },
             color: "#006AF5",
             textDecoration: "none",
+            width: "100%",
+            textAlign: "center",
             cursor: "pointer",
           }}
         >
@@ -333,17 +522,20 @@ const TableItem = ({ item, index, handleDelete }) => {
             paddingX: 0,
             color: "#006AF5",
             textDecoration: "none",
+            width: "100%",
             cursor: "pointer",
+            textAlign: "center",
           }}
         >
           View History
         </Typography>
       </TableCell>
       <TableCell sx={[rowStyle]}>{item._count.GuidanceClassMember}</TableCell>
-      <TableCell>
+      <TableCell sx={{ textAlign: "center", cursor: "pointer" }}>
         <MoreVert
           aria-describedby={id}
           onClick={(e) => setAnchorE1(e.currentTarget)}
+          sx={{ cursor: "pointer" }}
         />
         <Popover
           id={id}
@@ -352,7 +544,7 @@ const TableItem = ({ item, index, handleDelete }) => {
           onClose={() => setAnchorE1(null)}
           anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         >
-          <Button onClick={() => handleDelete()} sx={{ color: "#CA150C" }}>
+          <Button onClick={() => onDelete()} sx={{ color: "#CA150C" }}>
             Delete
           </Button>
         </Popover>

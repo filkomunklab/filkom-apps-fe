@@ -2,11 +2,6 @@ import {
   Paper,
   Typography,
   Grid,
-  MenuItem,
-  Select,
-  FormControl,
-  ListSubheader,
-  InputLabel,
   Table,
   TableCell,
   TableRow,
@@ -21,15 +16,17 @@ import {
   Checkbox,
   CircularProgress,
   Backdrop,
+  Modal,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Div from "@jumbo/shared/Div";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
-import SearchLocal from "app/shared/SearchLocal";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { display } from "@mui/system";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -40,106 +37,93 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-// const yearList = [
-//   {
-//     value: "2017",
-//     label: "2017",
-//   },
-//   {
-//     value: "2018",
-//     label: "2018",
-//   },
-//   {
-//     value: "2019",
-//     label: "2019",
-//   },
-//   {
-//     value: "2020",
-//     label: "2020",
-//   },
-//   {
-//     value: "2021",
-//     label: "2021",
-//   },
-//   {
-//     value: "2022",
-//     label: "2022",
-//   },
-//   {
-//     value: "2023",
-//     label: "2023",
-//   },
-// ];
-
-// const prodiList = [
-//   {
-//     value: "informatika",
-//     label: "Informatika",
-//   },
-//   {
-//     value: "dkv",
-//     label: "DKV",
-//   },
-//   {
-//     value: "si",
-//     label: "SI",
-//   },
-// ];
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  padding: 24,
+  backgroundColor: "white",
+  borderRadius: 10,
+  maxWidth: "90%",
+  "@media (maxWidth: 768px)": {
+    maxWidth: "80%",
+  },
+  "@media (maxWidth: 480px)": {
+    maxWidth: "80%",
+  },
+};
 
 const AdvisorProfile = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
   const navigate = useNavigate();
+
   const location = useLocation();
-  const { classID, nik } = location.state;
-  const [filter, setFilter] = useState([]);
+  const { classID, nik } = location.state || { classID: null, nik: null };
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dataProfile, setDataProfile] = useState([]);
-  // const studentOptions =
-  //   // dataProfile?.student.filter((item) => item.status !== "GRADUATE") ||
-  //   [];
   const [studentOptions, setStudentOptions] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const controller = new AbortController();
-  const signal = controller.signal;
   const role = JSON.parse(localStorage.getItem("user")).role;
-  console.log("test role", role);
+  const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] =
+    useState(false);
 
-  const getRole = () => {
-    const filter = role.includes("KAPRODI")
-      ? "kaprodi"
-      : role.includes("DEKAN")
-      ? "dekan"
-      : "undefined";
-    return filter;
+  const handleOpenDeleteConfirmationModal = () => {
+    setIsDeleteConfirmationModalOpen(true);
+  };
+
+  const handleCloseDeleteConfirmationModal = () => {
+    setIsDeleteConfirmationModalOpen(false);
   };
 
   const getProfile = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/guidance-class/${classID}`,
-        { signal }
-      );
-      console.log("ini isi result.data", response.data);
-
+      const response = await jwtAuthAxios.get(`/guidance-class/${classID}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        signal,
+      });
       const { status, data } = response.data;
-
       if (status === "OK") {
         setDataProfile(data.teacher);
         setStudentOptions(data.GuidanceClassMember);
       }
     } catch (error) {
-      console.log(error.message);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
   const handleDelete = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.delete(
-        `${BASE_URL_API}/guidance-class/delete-student`,
+      const response = await jwtAuthAxios.delete(
+        `/guidance-class/delete-student`,
         {
           data: { studentList: selectedStudent },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
           signal,
         }
       );
@@ -153,20 +137,31 @@ const AdvisorProfile = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.log(error);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
   useEffect(() => {
     getProfile();
-    console.log("ini di profile :", location.state);
     return () => controller.abort();
   }, []);
 
   const handleSelectAllClick = (event) => {
-    console.log(event);
     if (event.target.checked) {
-      const newSelected = studentOptions.map((item) => item.studentNim);
+      const newSelected = studentOptions.map((item) => item.studentId);
       setSelectedStudent(newSelected);
     } else {
       setSelectedStudent([]);
@@ -186,12 +181,12 @@ const AdvisorProfile = () => {
           <StyledLink to="/bimbingan-akademik/kaprodi/supervisor-information/">
             Supervisor Information
           </StyledLink>
-          <Typography color="text.primary">Advisor Profile</Typography>
+          <Typography color="text.primary">Supervisor Profile</Typography>
         </Breadcrumbs>
       </Div>
       <Div>
         <Typography variant="h1" fontWeight={500} sx={{ marginBottom: "25px" }}>
-          Advisor Profile
+          Supervisor Profile
         </Typography>
         <Typography
           variant="h6"
@@ -217,19 +212,13 @@ const AdvisorProfile = () => {
             padding: "16px",
           }}
         >
-          Academic Advisor Information
+          Academic Supervisor Information
         </Typography>
         <Grid container spacing={3} sx={{ padding: 2 }}>
           <Grid item xs={12} md={12}>
             <Typography variant="h6">Full Name</Typography>
             <Typography variant="h6" sx={textStyle}>
               {`${dataProfile.lastName}, ${dataProfile.firstName}`}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6">NIDN</Typography>
-            <Typography variant="h6" sx={textStyle}>
-              {dataProfile.nidn}
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
@@ -270,7 +259,7 @@ const AdvisorProfile = () => {
             variant="h2"
             sx={{
               textAlign: "justify",
-              "@media (max-width: 390px)": {
+              "@media (maxWidth: 390px)": {
                 fontSize: "16px",
                 fontWeight: 500,
               },
@@ -279,120 +268,25 @@ const AdvisorProfile = () => {
             List of mentored students
           </Typography>
         </Grid>
-        {/* <Grid
-          item
-          xs={12}
-          sm={8}
-          md={12}
-          xl={6}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <SearchLocal
-            sx={{
-              height: "100%",
-              "@media (max-width: 390px)": {
-                height: "40px",
-              },
-            }}
-          />
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={4}
-          md={12}
-          xl={3}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <FormControl
-            sx={{
-              width: "100%",
-            }}
-          >
-            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
-            <Select
-              sx={{
-                borderRadius: 50,
-                "@media (max-width: 390px)": {
-                  height: "45px",
-                },
-              }}
-              multiple
-              value={filter}
-              label="Grouping"
-              renderValue={(selected) => selected.join(", ")}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: "37%",
-                  },
-                },
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Status
-              </ListSubheader>
-              <MenuItem value={"activeStudent"}>Active</MenuItem>
-              <MenuItem value={"nonactiveStudent"}>Nonactive</MenuItem>
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Tahun Masuk
-              </ListSubheader>
-              {yearList.map((item) => (
-                <MenuItem
-                  key={item.value}
-                  value={item.value}
-                  sx={{
-                    backgroundColor: "#FAFAFA",
-                    borderRadius: "5px",
-                    margin: "5px",
-                  }}
-                >
-                  {item.label}
-                </MenuItem>
-              ))}
-              <Div>
-                <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                  Prodi
-                </ListSubheader>
-                {prodiList.map((item) => (
-                  <MenuItem
-                    key={item.value}
-                    onChange={(event) => console.log(event.currentTarget.value)}
-                    value={item.value}
-                    sx={{
-                      backgroundColor: "#FAFAFA",
-                      borderRadius: "5px",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Div>
-            </Select>
-          </FormControl>
-        </Grid> */}
         <Grid item display={"flex"} alignItems={"center"}>
           <Button
-            onClick={() =>
+            onClick={() => {
+              console.log("Navigating to edit-student with parameters:", {
+                nik: nik,
+                classID: classID,
+              });
+
               navigate(
-                `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${nik}/edit-student`,
+                `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}/edit-student`,
                 {
                   state: {
                     nik: nik,
                     classID: classID,
-                    // students: dataProfile?.student.map((item) => item.nim),
+                    major: dataProfile.major,
                   },
                 }
-              )
-            }
+              );
+            }}
             sx={{
               backgroundColor: "#006AF5",
               borderRadius: "24px",
@@ -401,7 +295,6 @@ const AdvisorProfile = () => {
               minWidth: "135px",
               fontSize: "12px",
               padding: "10px",
-
               "&:hover": {
                 backgroundColor: "#025ED8",
               },
@@ -419,10 +312,70 @@ const AdvisorProfile = () => {
                 padding: 1,
                 height: 41,
                 width: 41,
+                cursor: "pointer",
                 borderRadius: 2,
               }}
-              onClick={() => handleDelete()}
+              onClick={handleOpenDeleteConfirmationModal}
             />
+            <Modal
+              open={isDeleteConfirmationModalOpen}
+              onClose={handleCloseDeleteConfirmationModal}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <div style={style}>
+                <Typography
+                  id="modal-modal-title"
+                  variant="h4"
+                  component="h2"
+                  sx={{
+                    fontWeight: 600,
+                  }}
+                >
+                  Confirm Deletion
+                </Typography>
+                <Typography
+                  id="modal-modal-description"
+                  style={{ marginTop: "16px", marginBottom: "20px" }}
+                >
+                  Are you sure you want to delete student from the list?
+                </Typography>
+                <Grid container spacing={1} justifyContent="flex-end">
+                  <Grid item>
+                    <Button
+                      onClick={handleCloseDeleteConfirmationModal}
+                      sx={{
+                        backgroundColor: "white",
+                        borderRadius: "5px",
+                        color: "black",
+                        whiteSpace: "nowrap",
+                        "&:hover": {
+                          backgroundColor: "lightgrey",
+                        },
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      onClick={handleDelete}
+                      sx={{
+                        borderRadius: "5px",
+                        color: "white",
+                        whiteSpace: "nowrap",
+                        backgroundColor: "#006AF5",
+                        "&:hover": {
+                          backgroundColor: "#025ED8",
+                        },
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </Grid>
+                </Grid>
+              </div>
+            </Modal>
           </Grid>
         )}
         <Grid item xs={12}>
@@ -435,8 +388,11 @@ const AdvisorProfile = () => {
             <Table stickyHeader>
               <TableHead>
                 {/* <TableHeading /> */}
-                <TableRow sx={{ backgroundColor: "#1A38601A" }}>
-                  <TableCell padding="checkbox">
+                <TableRow>
+                  <TableCell
+                    sx={{ backgroundColor: "#e8ecf2" }}
+                    padding="checkbox"
+                  >
                     <Checkbox
                       indeterminate={
                         selectedStudent.length > 0 &&
@@ -449,14 +405,78 @@ const AdvisorProfile = () => {
                       onChange={handleSelectAllClick}
                     />
                   </TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>No</TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>NIM</TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>Student Name</TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>Program Studi</TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>Tahun Masuk</TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>Nilai</TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>Sertifikat</TableCell>
-                  <TableCell sx={{ fontWeight: 400 }}>Status</TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    No
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    NIM
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Student Name
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Program Studi
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Tahun Masuk
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Nilai
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Sertifikat
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 500,
+                      backgroundColor: "#e8ecf2",
+                      textAlign: "center",
+                    }}
+                  >
+                    Status
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -467,12 +487,14 @@ const AdvisorProfile = () => {
                       <TableItem
                         item={item}
                         index={index}
-                        key={item.studentNim}
-                        isSelected={selectedStudent.includes(item.studentNim)}
+                        key={item.studentId}
+                        isSelected={selectedStudent.includes(item.studentId)}
                         handleClick={(i) =>
                           setSelectedStudent(
                             selectedStudent.includes(i)
-                              ? selectedStudent.filter((nim) => nim !== i)
+                              ? selectedStudent.filter(
+                                  (studentId) => studentId !== i
+                                )
                               : [...selectedStudent, i]
                           )
                         }
@@ -492,7 +514,7 @@ const AdvisorProfile = () => {
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
-              "@media (max-width: 650px)": { justifyContent: "flex-start" },
+              "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
             }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
@@ -528,41 +550,42 @@ const textStyle = {
 
 const TableItem = ({ item, index, isSelected, handleClick }) => {
   const navigate = useNavigate();
-  const { arrivalYear, firstName, id, lastName, major, nim, status } =
-    item.student;
+  const { arrivalYear, firstName, lastName, major, nim, status } = item.student;
   const role = JSON.parse(localStorage.getItem("user")).role;
   console.log("test role", role);
 
-  const getRole = () => {
-    const filter = role.includes("KAPRODI")
-      ? "kaprodi"
-      : role.includes("DEKAN")
-      ? "dekan"
-      : "undefined";
-    return filter;
-  };
-  const handleButtonNavigate = (event) => {
-    const { name } = event.currentTarget;
+  const handleButtonNavigate = (_, name) => {
     switch (name) {
       case "profile":
         navigate(
-          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${
-            item.nim
-          }/student-profile`
+          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nim}/student-profile`,
+          { state: { studentId: item.studentId, studentNim: nim } }
         );
         break;
       case "grade":
         navigate(
-          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${
-            item.nim
-          }/student-grade`
+          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nim}/student-grade`,
+          {
+            state: {
+              studentNim: nim,
+              firstName: firstName,
+              lastName: lastName,
+              studentId: item.studentId,
+            },
+          }
         );
         break;
       case "certificate":
         navigate(
-          `/bimbingan-akademik/${getRole()}/supervisor-information/advisor-profile/${
-            item.nim
-          }/student-certificate`
+          `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nim}/student-certificate`,
+          {
+            state: {
+              studentNim: nim,
+              firstName: firstName,
+              lastName: lastName,
+              studentId: item.studentId,
+            },
+          }
         );
         break;
 
@@ -571,11 +594,12 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
     }
   };
   const rowStyle = {
-    "@media (max-width: 650px)": { fontSize: "11px" },
+    "@media (maxWidth: 650px)": { fontSize: "11px" },
+    textAlign: "center",
   };
   return (
     <TableRow
-      onClick={() => handleClick(nim)}
+      onClick={() => handleClick(item.studentId)}
       role="checkbox"
       aria-checked={isSelected}
       selected={isSelected}
@@ -586,16 +610,21 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
       <TableCell sx={[rowStyle]}>{index + 1}</TableCell>
       <TableCell sx={[rowStyle]}>{nim}</TableCell>
       <TableCell>
-        <Button
-          name="profile"
-          sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+        <Typography
+          style={{
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             textTransform: "capitalize",
+            paddingX: 0,
+            color: "#006AF5",
+            textDecoration: "none",
+            width: "100%",
+            cursor: "pointer",
+            textAlign: "center",
           }}
-          onClick={handleButtonNavigate}
+          onClick={(e) => handleButtonNavigate(e, "profile")}
         >
           {lastName}, {firstName}
-        </Button>
+        </Typography>
       </TableCell>
       <TableCell sx={[rowStyle]}>
         {major === "IF"
@@ -609,31 +638,45 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
       <TableCell sx={[rowStyle]}>{arrivalYear}</TableCell>
 
       <TableCell>
-        <Button
-          name="grade"
-          onClick={handleButtonNavigate}
-          sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+        <Typography
+          onClick={(e) => handleButtonNavigate(e, "grade")}
+          style={{
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             textTransform: "capitalize",
+            paddingX: 0,
+            color: "#006AF5",
+            textDecoration: "none",
+            width: "100%",
+            cursor: "pointer",
+            textAlign: "center",
           }}
         >
           View Grades
-        </Button>
+        </Typography>
       </TableCell>
       <TableCell>
-        <Button
-          name="certificate"
-          onClick={handleButtonNavigate}
-          sx={{
-            "@media (max-width: 650px)": { fontSize: "11px" },
+        <Typography
+          onClick={(e) => handleButtonNavigate(e, "certificate")}
+          style={{
+            "@media (maxWidth: 650px)": { fontSize: "11px" },
             textTransform: "capitalize",
+            paddingX: 0,
+            color: "#006AF5",
+            textDecoration: "none",
+            width: "100%",
+            cursor: "pointer",
+            textAlign: "center",
           }}
         >
           View Certificates
-        </Button>
+        </Typography>
       </TableCell>
       <TableCell sx={[rowStyle]}>
-        <Chip label={status} variant="filled" color={"success"} />
+        <Chip
+          label={status}
+          variant="filled"
+          color={status === "ACTIVE" ? "success" : "default"}
+        />{" "}
       </TableCell>
     </TableRow>
   );

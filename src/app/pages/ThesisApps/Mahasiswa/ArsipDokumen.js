@@ -83,15 +83,6 @@ const PDFViewerSourceCode = ({ sourceCode, isUploading }) => {
   );
 };
 
-const formatIndonesianDate = (date) => {
-  const day = date.getDate();
-  const month = date.getMonth() + 1; // Perhatikan bahwa bulan dimulai dari 0
-  const year = date.getFullYear();
-
-  const formattedDate = `${day}/${month}/${year}`;
-  return formattedDate;
-};
-
 const ArsipDocument = () => {
   // state - menyimpan request data
   const [HKI, setHKI] = useState();
@@ -768,6 +759,91 @@ const ArsipDocument = () => {
   // fungsi untuk membuka situs web link
   const openLink = (url) => {
     window.open(url, "_blank"); // Membuka tautan dalam tab atau jendela baru
+  };
+
+  //------------------------------Unggah link2 -------------------------------------------
+  const [open, setOpen] = useState(false);
+  const [linkGroups, setLinkGroups] = useState([]);
+  const [newLink2, setNewLink2] = useState({ name: "", url: "" });
+  const [editGroupIndex, setEditGroupIndex] = useState(null);
+  const [editLinkIndex, setEditLinkIndex] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState({
+    open: false,
+    groupIndex: null,
+    linkIndex: null,
+  });
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setEditGroupIndex(null);
+    setEditLinkIndex(null);
+    setNewLink2({ name: "", url: "" });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewLink2((prevLink) => ({ ...prevLink, [name]: value }));
+  };
+
+  const handleAddLink = () => {
+    const updatedGroups = [...linkGroups];
+
+    if (editGroupIndex !== null && editLinkIndex !== null) {
+      // Editing existing link
+      updatedGroups[editGroupIndex].title = newLink2.name;
+      updatedGroups[editGroupIndex].links[editLinkIndex] = {
+        url: newLink2.url,
+        date: new Date().toLocaleDateString("id-ID"),
+      };
+    } else {
+      // Adding new link
+      const newLink2Group = {
+        title: newLink2.name,
+        links: [
+          {
+            url: newLink2.url,
+            date: new Date().toLocaleDateString("id-ID"),
+          },
+        ],
+      };
+      updatedGroups.push(newLink2Group);
+    }
+
+    setLinkGroups(updatedGroups);
+    handleClose();
+  };
+
+  const handleEdit = (groupIndex, linkIndex) => {
+    const editedLink = linkGroups[groupIndex].links[linkIndex];
+    setEditGroupIndex(groupIndex);
+    setEditLinkIndex(linkIndex);
+    setNewLink2({ name: linkGroups[groupIndex].title, url: editedLink.url });
+    setOpen(true);
+  };
+
+  const handleDeleteConfirm = (groupIndex, linkIndex) => {
+    if (confirmDelete.linkIndex !== null) {
+      // Deleting link
+      setLinkGroups((prevGroups) => {
+        const updatedGroups = [...prevGroups];
+        updatedGroups[confirmDelete.groupIndex].links.splice(linkIndex, 1);
+        return updatedGroups;
+      });
+    } else {
+      // Deleting entire group
+      setLinkGroups((prevGroups) => {
+        const updatedGroups = [...prevGroups];
+        updatedGroups.splice(groupIndex, 1);
+        return updatedGroups;
+      });
+    }
+
+    setConfirmDelete({ open: false, groupIndex: null, linkIndex: null });
+    handleClose();
   };
 
   return (

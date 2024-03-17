@@ -74,6 +74,12 @@ const studentArraySchema = Yup.array()
         .trim("Address cannot include leading and trailing spaces")
         .strict(true)
         .min(3, "must be at least 3 characters"),
+      currentResidenceStatus: Yup.string()
+        .trim(
+          "Current Residence Status cannot include leading and trailing spaces"
+        )
+        .strict(true)
+        .oneOf(["Asrama", "Outsider Dekat", "Outsider Jauh"]),
       curriculumMajor: Yup.string()
         .trim("Curriculum Major cannot include leading and trailing spaces")
         .strict(true)
@@ -223,6 +229,7 @@ const AddStudentModal = ({
             "MaritalStatus",
             "studentEmail",
             "address",
+            "currentResidenceStatus",
             "curriculumMajor",
             "curriculumYear",
             "guardianName",
@@ -268,7 +275,7 @@ const AddStudentModal = ({
 
         try {
           await jwtAuthAxios.post(
-            `/student-many`,
+            `/student-many/file`,
             {
               data,
             },

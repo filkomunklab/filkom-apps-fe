@@ -10,13 +10,16 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
 } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import Div from "@jumbo/shared/Div";
 import SendIcon from "@mui/icons-material/Send";
 import { format } from "date-fns";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -41,10 +44,14 @@ const style = {
 };
 
 const Consultation = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [status, setStatus] = useState("");
   const [messages, setMessages] = useState([]);
-  const [openFirstModal, setOpenFirstModal] = React.useState(false);
-  const [openSecondModal, setOpenSecondModal] = React.useState(false);
+  const [openFirstModal, setOpenFirstModal] = useState(false);
 
   const { state } = useLocation();
   const consultationDetails = state ? state.consultationDetails : {};
@@ -61,11 +68,8 @@ const Consultation = () => {
 
   const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
-  const handleOpenSecondModal = () => setOpenSecondModal(true);
-  const handleCloseSecondModal = () => setOpenSecondModal(false);
 
   const [inputValue, setInputValue] = useState("");
-  const [submittedValue, setSubmittedValue] = useState("");
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -87,63 +91,90 @@ const Consultation = () => {
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      handleCloseSecondModal();
-    }, 5000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [handleOpenSecondModal]);
-
-  useEffect(() => {
     getCurrentStatus();
     getMessage();
+    return () => controller.abort();
   }, [messages]);
+
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (error.response && error.response.status === 403) {
+      handlePermissionError();
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      return;
+    } else if (error.response && error.response.status === 401) {
+      handleAuthenticationError();
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
 
   const getCurrentStatus = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/academic-consultation/detail/${id}`
+      const response = await jwtAuthAxios.get(
+        `/academic-consultation/detail/${id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
       setStatus(response.data.data.status);
     } catch (error) {
-      console.log("error", error);
+      handleError(error);
     }
   };
 
   const getMessage = async () => {
     try {
-      const response = await axios.get(`${BASE_URL_API}/message/${id}`);
+      const response = await jwtAuthAxios.get(`/message/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
       setMessages(response.data.data);
     } catch (error) {
-      console.log("error", error);
+      handleError(error);
     }
   };
 
   const postMessage = async (content) => {
     try {
-      const response = await axios.post(`${BASE_URL_API}/message`, {
-        academic_consultation_id: id,
-        content,
-        sender_name: `${JSON.parse(localStorage.getItem("user")).name}`,
-      });
+      await jwtAuthAxios.post(
+        `/message`,
+        {
+          academic_consultation_id: id,
+          content,
+          sender_name: `${JSON.parse(localStorage.getItem("user")).name}`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          signal,
+        }
+      );
     } catch (error) {
-      console.log("error", error);
+      handleError(error);
     }
   };
 
   const handleSubmitFirstModal = async () => {
     try {
       handleCloseFirstModal();
-      await axios.patch(
-        `${BASE_URL_API}/academic-consultation/${id}/status/complete`
-      );
-      handleOpenSecondModal();
+      await jwtAuthAxios.patch(`/academic-consultation/${id}/status/complete`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        signal,
+      });
     } catch (error) {
-      console.error("ini error complete status:", error);
+      handleError(error);
     }
   };
+
   const handleBreadcrumbsClick = () => {
     const { role } = JSON.parse(localStorage.getItem("user"));
     let path = "";

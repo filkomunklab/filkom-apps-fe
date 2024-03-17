@@ -254,8 +254,6 @@ const PengajuanJudulDosenSkripsi = () => {
       });
   };
 
-  const [status, setStatus] = useState("Menunggu"); // Tambahkan state untuk status
-
   const handleAdvisorChange = (e) => {
     setAdvisor(e.target.value);
   };
@@ -267,14 +265,6 @@ const PengajuanJudulDosenSkripsi = () => {
   const handleCoAdvisor2Change = (e) => {
     setCoAdvisor2(e.target.value);
   };
-
-  // menyembunyikan status
-  const [isStatusVisible] = useState(true);
-
-  // State untuk mengelola berbagai data termasuk judul, latar belakang, dll.
-  const [judul] = useState(
-    "Pengembangan Sistem Informasi Skripsi di Fakultas Ilmu Komputer Universitas Klabat"
-  );
 
   const [openDialog, setOpenDialog] = useState(false);
 

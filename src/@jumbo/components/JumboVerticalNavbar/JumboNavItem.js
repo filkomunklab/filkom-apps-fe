@@ -4,7 +4,6 @@ import Link from "@mui/material/Link";
 import ListItemButton from "@mui/material/ListItemButton";
 import { ListItemIcon } from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
-import CircleIcon from "@mui/icons-material/Circle";
 import useJumboLayoutSidebar from "@jumbo/hooks/useJumboLayoutSidebar";
 import { SIDEBAR_VIEWS } from "@jumbo/utils/constants/layout";
 import { useTranslation } from "react-i18next";

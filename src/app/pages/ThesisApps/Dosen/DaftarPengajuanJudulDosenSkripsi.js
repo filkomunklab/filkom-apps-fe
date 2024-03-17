@@ -99,14 +99,6 @@ const DaftarPengajuanJudulDosenSkripsi = () => {
             },
           }
         );
-        // Memperoleh data dari respons
-        const data = response.data.data;
-
-        // Membalik urutan data
-        const reversedData = {
-          dashboard: data.dashboard,
-          semesterData: data.semesterData.reverse(),
-        };
 
         // Atur state 'setDaftarPengajuanJudul' dengan data dari respons
         setDaftarPengajuanJudul(response.data.data);

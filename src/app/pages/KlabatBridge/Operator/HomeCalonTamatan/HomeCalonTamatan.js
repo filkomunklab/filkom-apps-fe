@@ -1,25 +1,19 @@
-import React, {useState, useEffect } from 'react';
-import {
-    Typography,
-    Box,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-} from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
-import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
-const HomeCalonTamatan = ({ nim, currentStatus }) => {
-  console.log('nim:', nim); // Log the value of nim
+const HomeCalonTamatan = ({ nim }) => {
+  console.log("nim:", nim); // Log the value of nim
 
   // Use useLocation to get the state passed through the route
   const { state } = useLocation();
-  const [buttonColor, setButtonColor] = useState(state ? state.buttonColor : '#E8EBE8');
+  const [buttonColor, setButtonColor] = useState(
+    state ? state.buttonColor : "#E8EBE8"
+  );
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [buttonText, setButtonText] = useState(state ? state.buttonText : 'Silahkan mengisi form SPT');
+  const [buttonText, setButtonText] = useState(
+    state ? state.buttonText : "Silahkan mengisi form SPT"
+  );
 
   useEffect(() => {
     // Update the button color when the state changes
@@ -27,8 +21,8 @@ const HomeCalonTamatan = ({ nim, currentStatus }) => {
       setButtonColor(state.buttonColor);
     }
 
-     // Update the formSubmitted state
-     if (state && state.formSubmitted !== undefined) {
+    // Update the formSubmitted state
+    if (state && state.formSubmitted !== undefined) {
       setFormSubmitted(state.formSubmitted);
     }
 
@@ -40,36 +34,40 @@ const HomeCalonTamatan = ({ nim, currentStatus }) => {
 
   return (
     <Box>
-      <Link to="/klabat-bridge/pengisian-spt" style={{ textDecoration: "none", width: "100%" }} >
-        <span style={{ color: formSubmitted === true ? "gray" : "inherit", pointerEvents: formSubmitted === true ? "none" : "auto" }}>
+      <Link
+        to="/klabat-bridge/pengisian-spt"
+        style={{ textDecoration: "none", width: "100%" }}
+      >
+        <span
+          style={{
+            color: formSubmitted === true ? "gray" : "inherit",
+            pointerEvents: formSubmitted === true ? "none" : "auto",
+          }}
+        >
           <Box
             component="div"
             sx={{
               padding: "10px 15px",
               backgroundColor: buttonColor,
               color: "black",
-              border: "none", /* Remove borders */
+              border: "none" /* Remove borders */,
               borderRadius: "5px",
               cursor: "pointer",
               width: "100%",
               height: "70px",
               textAlign: "left",
               textTransform: "none",
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-start',
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
             }}
           >
-            {buttonText}    
+            {buttonText}
           </Box>
         </span>
       </Link>
     </Box>
-  )
-}
+  );
+};
 
-export default HomeCalonTamatan
-
-
-
-
+export default HomeCalonTamatan;

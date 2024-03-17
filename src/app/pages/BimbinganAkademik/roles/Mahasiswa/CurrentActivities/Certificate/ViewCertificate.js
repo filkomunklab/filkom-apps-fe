@@ -1,15 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Grid,
-  Stack,
-  Paper,
-  Typography,
-  Box,
   Breadcrumbs,
   experimentalStyled as styled,
+  Grid,
+  Stack,
+  Typography,
 } from "@mui/material";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { format } from "date-fns";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -31,6 +28,7 @@ const CertificateWaiting = () => {
     SupervisorLastName,
     submissionDate,
     pathFile,
+    level,
     category,
     description,
     status,
@@ -39,6 +37,40 @@ const CertificateWaiting = () => {
   } = certificateDetails;
   const pdfURL = pathFile;
   console.log("ini pdf url", pdfURL);
+
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case "PENALARAN_KEILMUAN":
+        return "Reasoning and Scholarship";
+      case "ORGANISASI_KEPEMIMPINAN":
+        return "Organization and Leadership";
+      case "BAKAT_MINAT":
+        return "Talents and Interests";
+      case "PENGABDIAN_MASYARAKAT":
+        return "Community Service";
+      case "OTHER":
+        return "Others";
+      default:
+        return category;
+    }
+  };
+
+  const getLevelLabel = (level) => {
+    switch (level) {
+      case "REGION":
+        return "Region";
+      case "NATIONAL":
+        return "National";
+      case "INTERNATIONAL":
+        return "International";
+      case "UNIVERSITY":
+        return "University";
+      case "MAJOR":
+        return "Study Program";
+      default:
+        return level;
+    }
+  };
 
   const handleClick = (event) => {
     navigate("/bimbingan-akademik/current-activities");
@@ -74,7 +106,10 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5">
-                  {title.charAt(0).toUpperCase() + title.slice(1)}
+                  {/* {certificateDetailsData?.title.charAt(0).toUpperCase() +
+                    certificateDetailsData?.title.slice(1)} */}
+
+                  {title?.charAt(0).toUpperCase() + title?.slice(1)}
                 </Typography>
               </Grid>
             </Grid>
@@ -89,6 +124,8 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5">
+                  {/* {certificateDetailsData?.lastName},{" "}
+                  {certificateDetailsData?.firstName} */}
                   {lastName}, {firstName}
                 </Typography>
               </Grid>
@@ -105,6 +142,8 @@ const CertificateWaiting = () => {
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5">
                   {SupervisorLastName}, {SupervisorFirstName}
+                  {/* {certificateDetailsData?.SupervisorLastName},{" "}
+                  {certificateDetailsData?.SupervisorFirstName} */}
                 </Typography>
               </Grid>
             </Grid>
@@ -138,8 +177,22 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5">
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                  {getCategoryLabel(category)}
                 </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={4} xl={3} pb={1}>
+                <Typography variant="h5">Level</Typography>
+              </Grid>
+              <Grid item xs={1} xl={0.5}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                <Typography variant="h5">{getLevelLabel(level)}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -154,6 +207,8 @@ const CertificateWaiting = () => {
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5" sx={{ color: "#FFCC00" }}>
                   {status.charAt(0) + status.slice(1).toLowerCase()}
+                  {/* {certificateDetailsData?.status.charAt(0) +
+                    certificateDetailsData?.status.slice(1).toLowerCase()} */}
                 </Typography>
               </Grid>
             </Grid>
@@ -175,6 +230,8 @@ const CertificateWaiting = () => {
               >
                 <Typography variant="h5" sx={{ textAlign: "justify" }}>
                   {description.charAt(0).toUpperCase() + description.slice(1)}
+                  {/* {certificateDetailsData?.description.charAt(0).toUpperCase() +
+                    certificateDetailsData?.description.slice(1)} */}
                 </Typography>
               </Grid>
             </Grid>

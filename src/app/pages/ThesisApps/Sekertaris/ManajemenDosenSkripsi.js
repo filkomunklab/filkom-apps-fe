@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import {
   Button,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -22,7 +21,6 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import SearchGlobal from "app/shared/SearchGlobal";
 import AddIcon from "@mui/icons-material/Add";
 import Div from "@jumbo/shared/Div";
 import WarningIcon from "@mui/icons-material/Warning";
@@ -36,7 +34,6 @@ const ManajemenDosenSkripsi = () => {
 
   const groupId = useParams().groupId;
   console.log("group id: ", groupId);
-  const [progress, setProgress] = useState(null);
 
   const userRole = useParams().role;
   console.log("role user akses page: ", userRole);
@@ -91,35 +88,16 @@ const ManajemenDosenSkripsi = () => {
 
   const [open, setOpen] = useState(false);
   const [selectedDosen, setSelectedDosen] = useState("");
-  const [dosenList, setDosenList] = useState([]);
-  const [nextDosenId, setNextDosenId] = useState(1);
-
-  const [confirmationDialogOpenNonActive, setConfirmationDialogOpenNonActive] =
-    useState(false);
-  const [selectedDosenId, setSelectedDosenId] = useState(null);
 
   const [deleteConfirmationDialogOpen, setDeleteConfirmationDialogOpen] =
     useState(false);
-  const [selectedDosenToDelete, setSelectedDosenToDelete] = useState(null);
 
   const handleOpenDeleteConfirmationDialog = (dosenId) => {
-    setSelectedDosenToDelete(dosenId);
     setDeleteConfirmationDialogOpen(true);
   };
 
   const handleCloseDeleteConfirmationDialog = () => {
-    setSelectedDosenToDelete(null);
     setDeleteConfirmationDialogOpen(false);
-  };
-
-  const handleOpenConfirmationDialogNonActive = (dosenId) => {
-    setSelectedDosenId(dosenId);
-    setConfirmationDialogOpenNonActive(true);
-  };
-
-  const handleCloseConfirmationDialogNonActive = () => {
-    setSelectedDosenId(null);
-    setConfirmationDialogOpenNonActive(false);
   };
 
   const handleOpenDialog = () => {
@@ -203,43 +181,6 @@ const ManajemenDosenSkripsi = () => {
     }
   };
 
-  const dosenOptions = [
-    { value: 10, label: "Andrew T. Liem, MT, PhD" },
-    { value: 20, label: "Green Mandias, SKom, MCs" },
-    { value: 30, label: "Stenly R. Pungus, MT, PhD" },
-    { value: 40, label: "Debby E. Sondakh, MT, PhD" },
-    { value: 50, label: "Ir. Edson Y. Putra, MKom" },
-    { value: 60, label: "Green A. Sandag, SKom, MS" },
-    { value: 70, label: "Jacquline M. S. Waworundeng, ST, MT" },
-    { value: 80, label: "Jimmy H. Moedjahedy, SKom, MKom, MM" },
-    { value: 90, label: "Joe Y. Mambu, BSIT, MCIS" },
-    { value: 100, label: "Lidya C. Laoh, SKom, MMSi" },
-    { value: 110, label: "Marshal Tombeng," },
-    { value: 120, label: "Oktoverano H. Lengkong, SKom, MDs, MM" },
-    { value: 130, label: "Reymon Rotikan, SKom, MS, MM" },
-    { value: 140, label: "Reynoldus A. Sahulata, SKom, MM" },
-    { value: 150, label: "Rolly Lontaan, MKom" },
-    { value: 160, label: "Semmy W. Taju, SKom" },
-    { value: 170, label: "Senly I. Adam, SKom, MSc" },
-  ];
-
-  const generateRandomNIDN = () => {
-    // Fungsi ini bisa Anda sesuaikan sesuai kebutuhan Anda
-    // Untuk menghasilkan NIDN secara acak
-    return Math.floor(1000000000 + Math.random() * 9000000000);
-  };
-
-  const handleToggleStatus = (dosenId, newStatus) => {
-    const updatedDosenList = dosenList.map((dosen) => {
-      if (dosen.id === dosenId) {
-        return { ...dosen, status: newStatus };
-      }
-      return dosen;
-    });
-
-    setDosenList(updatedDosenList);
-  };
-
   const handleDeleteDosen = () => {
     axios
       .delete(
@@ -307,21 +248,6 @@ const ManajemenDosenSkripsi = () => {
       .catch((error) => {
         console.error("Terjadi kesalahan saat menghapus dosen skripsi:", error);
       });
-  };
-
-  const handleConfirmStatusChange = (newStatus) => {
-    if (selectedDosenId !== null) {
-      // Lakukan logika untuk mengubah status dosen dengan ID yang sesuai
-      const updatedDosenList = dosenList.map((dosen) => {
-        if (dosen.id === selectedDosenId) {
-          return { ...dosen, status: newStatus };
-        }
-        return dosen;
-      });
-
-      setDosenList(updatedDosenList);
-      setSelectedDosenId(null);
-    }
   };
 
   return (
@@ -563,7 +489,6 @@ const ManajemenDosenSkripsi = () => {
               boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.12)",
               textTransform: "none",
               color: "black",
-              textTransform: "none",
             }}
           >
             Batal

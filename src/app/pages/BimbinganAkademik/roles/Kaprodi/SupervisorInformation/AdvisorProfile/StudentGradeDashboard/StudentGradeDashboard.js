@@ -1,4 +1,5 @@
 import Div from "@jumbo/shared/Div";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Stack,
@@ -7,11 +8,17 @@ import {
   Paper,
   Breadcrumbs,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
+
   "&:hover": {
     textDecoration: "underline",
   },
@@ -40,55 +47,145 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const StudentGradeDashboard = () => {
-  const semesterNames = [
-    { label: "Semester 1", value: 1 },
-    { label: "Semester 2", value: 2 },
-    { label: "Semester 3", value: 3 },
-    { label: "Semester 4", value: 4 },
-    { label: "Semester 5", value: 5 },
-  ];
-  const id = "105022010000";
-
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
   const navigate = useNavigate();
-  const handleClick = (event, step) => {
-    event.preventDefault();
-    navigate(step);
+
+  const [semesterData, setSemesterData, studentId] = useState([]);
+  const location = useLocation();
+  const { studentNim, firstName, lastName } = location.state
+    ? location.state
+    : "";
+
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (error.response && error.response.status === 403) {
+      handlePermissionError();
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      return;
+    } else if (error.response && error.response.status === 401) {
+      handleAuthenticationError();
+    } else {
+      console.log("ini error: ", error);
+    }
   };
+
+  const getDataGrade = async () => {
+    try {
+      const response = await jwtAuthAxios.get(
+        `/transaction/semesterList/${studentId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
+
+      //menampilkan semester yang paling terbaru secara berurut
+      const sortedData = response.data.data.sort((a, b) =>
+        a.semester.localeCompare(b.semester, undefined, { numeric: true })
+      );
+
+      const reversedData = sortedData.reverse();
+
+      setSemesterData(reversedData);
+    } catch (error) {
+      handleError();
+    }
+  };
+
+  useEffect(() => {
+    getDataGrade();
+    return () => controller.abort();
+  }, []);
+
+  const handleNavigateGrade = async (value) => {
+    try {
+      const gradeDetailsResult = await jwtAuthAxios.get(
+        `/grades/detailGrades/${value.id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
+
+      const detail = gradeDetailsResult.data.data;
+      console.log("isi detail", detail);
+
+      navigate(`${value.id}`, {
+        state: {
+          gradeDetails: {
+            semester: detail.semester,
+            subject: detail.subject,
+            lastName: lastName,
+            firstName: firstName,
+          },
+        },
+      });
+    } catch (error) {
+      handleError();
+    }
+  };
+
   return (
     <Div>
-      <Div role="presentation" onClick={handleClick}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink onClick={(event) => handleClick(event, -2)}>
-            Supervisor Information
-          </StyledLink>
-          <StyledLink onClick={(event) => handleClick(event, -1)}>
-            Advisor Profile
-          </StyledLink>
-          <Typography color="text.primary">Student Grade</Typography>
-        </Breadcrumbs>
-      </Div>
+      <Breadcrumbs aria-label="breadcrumb">
+        <StyledLink
+          onClick={() =>
+            navigate("/bimbingan-akademik/kaprodi/supervisor-information/")
+          }
+        >
+          Supervisor Information
+        </StyledLink>
+        <StyledLink onClick={() => navigate(-1)}>Supervisor Profile</StyledLink>
+        <Typography color="text.primary">Student Grade</Typography>
+      </Breadcrumbs>
       <Stack gap={3} paddingTop={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography variant="h1" fontWeight={500}>
             Student Grade
           </Typography>
-          <Typography variant="h6">Yuhu, Darell Deil</Typography>
+          <Typography variant="h6">
+            {lastName}, {firstName}
+          </Typography>
         </Stack>
-        <Typography variant="h5">
-          Please select a semester to view student grades.
-        </Typography>
+
+        {semesterData && semesterData.length === 0 ? (
+          <Paper
+            sx={{
+              backgroundColor: "rgba(0, 106, 245, 0.1)",
+              padding: "15px",
+              borderRadius: "10px",
+              boxShadow: "50px",
+              marginBottom: "15px",
+            }}
+          >
+            <Typography variant="body1">
+              This student has not submitted their grades yet.
+            </Typography>
+          </Paper>
+        ) : (
+          <Typography variant="h5">
+            Select a semester to view grades.
+          </Typography>
+        )}
         <Grid
           container
           spacing={{ xs: 2, md: 3 }}
           columns={{ xs: 4, sm: 8, md: 12 }}
         >
-          {semesterNames.reverse().map((semester, index) => (
-            <Grid item xs={2} sm={4} md={4} key={index}>
-              <Link
-                to={`/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${id}/grade/semester/${semester.value}`}
-                style={{ textDecoration: "none" }}
-              >
-                <Item>
+          {semesterData &&
+            semesterData.map((value, index) => (
+              <Grid item xs={2} sm={4} md={4} key={index}>
+                <Item
+                  onClick={() => {
+                    handleNavigateGrade(value, studentNim);
+                  }}
+                >
                   <Typography
                     sx={{
                       fontSize: "11px",
@@ -106,12 +203,11 @@ const StudentGradeDashboard = () => {
                       textAlign: "left",
                     }}
                   >
-                    {semester.label}{" "}
+                    {value.semester}
                   </Typography>
                 </Item>
-              </Link>
-            </Grid>
-          ))}
+              </Grid>
+            ))}
         </Grid>
       </Stack>
     </Div>

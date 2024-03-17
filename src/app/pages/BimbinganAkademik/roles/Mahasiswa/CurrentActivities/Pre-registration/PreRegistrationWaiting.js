@@ -1,21 +1,18 @@
 import {
+  Breadcrumbs,
   Grid,
-  Stack,
-  Typography,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Breadcrumbs,
+  Typography,
   experimentalStyled as styled,
-  Paper,
 } from "@mui/material";
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -27,81 +24,21 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const PreRegistrationWaiting = () => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(7);
-  let totalCredit = 0;
-
   const { state } = useLocation();
   const preregisDetails = state ? state.preregisDetails : {};
   const {
-    id,
     studentName,
     supervisorName,
     submitDate,
     status,
     listSubjectPreregis,
-    curriculum,
   } = preregisDetails;
+
+  //
+  let totalCredit = 0;
   for (const data of listSubjectPreregis) {
     totalCredit += data.subject.credits;
   }
-  const renderRows = () => {
-    const rows = [];
-    let currentSemester = null;
-    const subjects = curriculum ? curriculum.Subjects : [];
-
-    subjects.forEach((value, index) => {
-      if (value.semester !== currentSemester) {
-        rows.push(
-          <TableRow key={`semester-${value.semester}`}>
-            <TableCell
-              colSpan={6}
-              sx={{
-                lign: "left",
-                fontWeight: 500,
-                fontSize: "15px",
-                color: "black",
-              }}
-            >
-              {value.semester === 0
-                ? "Pre-Requisite"
-                : value.semester === 9
-                ? "Elective"
-                : `Semester ${value.semester}`}
-            </TableCell>
-          </TableRow>
-        );
-        currentSemester = value.semester;
-      }
-
-      rows.push(
-        <TableRow key={value.id}>
-          <TableCell>{value.code}</TableCell>
-          <TableCell>{value.name}</TableCell>
-          <TableCell>{value.credits}</TableCell>
-          <TableCell>{value.type}</TableCell>
-          <TableCell sx={{ width: "400px" }}>
-            {value.prerequisite === null || value.prerequisite === ""
-              ? "-"
-              : value.prerequisite
-                  .split(/(?<=\])\s-\s|\n/)
-                  .map((prereq, index) => (
-                    <React.Fragment key={index}>
-                      {index > 0 && (
-                        <>
-                          <br /> <br />
-                        </>
-                      )}
-                      {prereq}
-                    </React.Fragment>
-                  ))}
-          </TableCell>
-        </TableRow>
-      );
-    });
-
-    return rows;
-  };
 
   const handleBreadcrumbsClick = () => {
     let path = "/bimbingan-akademik/current-activities";
@@ -194,47 +131,89 @@ const PreRegistrationWaiting = () => {
           component={Paper}
         >
           <Table stickyHeader>
-            <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
+            <TableHead>
               <TableRow>
-                <TableCell sx={{ width: "40px" }}>Number</TableCell>
-                <TableCell sx={{ width: "40px" }}>Code</TableCell>
-                <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
-                <TableCell sx={{ width: "40px" }}>Credit(s)</TableCell>
-                <TableCell sx={{ width: "40px" }}>Grade</TableCell>
-                <TableCell sx={{ width: "40px" }}>Type </TableCell>
-                <TableCell sx={{ width: "380px" }}>Prerequisite</TableCell>
-                <TableCell sx={{ width: "110px" }}>Status</TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Number
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Code
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "400px",
+                    textAlign: "center",
+                  }}
+                >
+                  Subject Name
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Credit(s)
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Type
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "380px",
+                    textAlign: "center",
+                  }}
+                >
+                  Prerequisite
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {listSubjectPreregis
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((data, index) => (
-                  <TableRow key={index}>
-                    <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
-                    <TableCell sx={{ width: "40px" }}>
-                      {data.subject.code}
-                    </TableCell>
-                    <TableCell sx={{ width: "400px" }}>
-                      {data.subject.name}
-                    </TableCell>
-                    <TableCell sx={{ width: "40px" }}>
-                      {data.subject.credits}
-                    </TableCell>
-                    <TableCell sx={{ width: "40px" }}>
-                      {/*ini kalo ada grade */}-
-                    </TableCell>
-                    <TableCell sx={{ width: "200px" }}>
-                      {data.subject.type}
-                    </TableCell>
-                    <TableCell sx={{ width: "380px" }}>
-                      {data.subject.prerequisite}
-                    </TableCell>
-                    <TableCell sx={{ width: "110px" }}>
-                      {/*ini kalo ada status, pass ato nda */}-{" "}
-                    </TableCell>
-                  </TableRow>
-                ))}
+              {listSubjectPreregis.map((data, index) => (
+                <TableRow key={index}>
+                  <TableCell sx={{ textAlign: "center", width: "40px" }}>
+                    {index + 1}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center", width: "40px" }}>
+                    {data.subject.code}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center", width: "400px" }}>
+                    {data.subject.name}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center", width: "40px" }}>
+                    {data.subject.credits}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center", width: "200px" }}>
+                    {data.subject.type}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center", width: "380px" }}>
+                    {data.subject.prerequisite
+                      ? data.subject.prerequisite
+                      : "-"}
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>

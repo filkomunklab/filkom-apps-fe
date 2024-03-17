@@ -26,44 +26,44 @@ import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 
 export const sekretarisMenus = [
   {
-    label: "Bimbingan Akademik",
+    label: "Fi-SAH",
     type: "section",
     children: [
       {
         label: "Academic Guide",
         type: "nav-item",
         icon: <AccountBalanceIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/sek-dekan/academic-guide",
+        uri: "/bimbingan-akademik/sekretaris/academic-guide",
       },
       {
         label: "Vision Mission Goals",
         type: "nav-item",
         icon: <LocalLibraryIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/sek-dekan/vision-mission-goals",
+        uri: "/bimbingan-akademik/sekretaris/vision-mission-goals",
       },
       {
         label: "Curriculum",
         type: "nav-item",
         icon: <ImportContactsIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/sek-dekan/curriculum",
+        uri: "/bimbingan-akademik/sekretaris/curriculum",
       },
       {
         label: "Student Information",
         type: "nav-item",
         icon: <SchoolIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/sek-dekan/student-information",
+        uri: "/bimbingan-akademik/sekretaris/student-information/faculty-student",
       },
       {
         label: "Supervisor Information",
         type: "nav-item",
         icon: <GroupIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/sek-dekan/supervisor-information",
+        uri: "/bimbingan-akademik/sekretaris/supervisor-information",
       },
       {
         label: "Profile",
         type: "nav-item",
         icon: <PermContactCalendarIcon sx={{ fontSize: 20 }} />,
-        uri: "/bimbingan-akademik/sek-dekan/profile",
+        uri: "/bimbingan-akademik/sekretaris/profile",
       },
     ],
   },
@@ -159,7 +159,7 @@ export const mahasiswaMenus = [
     ],
   },
   {
-    label: "Bimbingan Akademik",
+    label: "Fi-SAH",
     type: "section",
     children: [
       {
@@ -277,7 +277,7 @@ export const dekanMenus = [
     ],
   },
   {
-    label: "Bimbingan Akademik",
+    label: "Fi-SAH",
     type: "section",
     children: [
       {
@@ -564,7 +564,7 @@ export const dekanMenus = [
 
 export const dosenMenus = [
   {
-    label: "Bimbingan Akademik",
+    label: "Fi-SAH",
     type: "section",
     children: [
       {
@@ -944,7 +944,7 @@ export const kaprodiMenus = [
     ],
   },
   {
-    label: "Bimbingan Akademik",
+    label: "Fi-SAH",
     type: "section",
     children: [
       {

@@ -9,40 +9,71 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { useNavigate } from "react-router-dom";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+import Swal from "sweetalert2";
 
 const StudentProfile = () => {
-  const [advisorProfileData, setAdvisorProfileData] = useState([]);
-  const [studentProfileData, setStudentProfileData] = useState([]);
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    getProfile();
-  }, []);
+  //get data
+  const [studentProfileData, setStudentProfileData] = useState([]);
+  const [advisorProfileData, setAdvisorProfileData] = useState([]);
 
   const getProfile = async () => {
     try {
-      const { nim } = JSON.parse(localStorage.getItem("user"));
-      const resultStudent = await jwtAuthAxios.get(`/student/${nim}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-
-      const result = await jwtAuthAxios.get(
-        `/employee/profile/${resultStudent.data.data.employeeNik}`,
+      const { id } = JSON.parse(localStorage.getItem("user"));
+      const resultStudent = await jwtAuthAxios.get(
+        `/student/view/biodata/${id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
 
-      console.log(result);
-      // console.log(resultStudent);
       setStudentProfileData(resultStudent.data.data);
-      setAdvisorProfileData(result.data.data);
+      setAdvisorProfileData(
+        resultStudent.data.data.GuidanceClassMember.gudianceClass.teacher
+      );
+      console.log(resultStudent.data.data);
     } catch (error) {
-      console.log(error.message);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        return;
+      } else if (error.response && error.response.status === 401) {
+        const blueTheme = {
+          confirmButtonColor: "#007BFF",
+        };
+        Swal.fire({
+          icon: "info",
+          title: "Please Sign In Again",
+          text: "You have successfully completed the data. Now, please sign in again.",
+          ...blueTheme,
+        });
+        navigate("/login");
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
+
+  useEffect(() => {
+    getProfile();
+    return () => controller.abort();
+  }, []);
 
   return (
     <Div>
@@ -72,19 +103,36 @@ const StudentProfile = () => {
                   borderRadius: "10px",
                 }}
               >
-                <Typography>Photo</Typography>
+                {studentProfileData?.path ? (
+                  <img
+                    id="displayImage"
+                    src={studentProfileData?.path}
+                    alt="Profile-Picture"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      borderRadius: "10px",
+                    }}
+                    loading="lazy"
+                  />
+                ) : (
+                  <Typography>No photo</Typography>
+                )}
               </Div>
             </Grid>
             <Grid item xs={12} md={12}>
               <Typography variant="h5">Full Name</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {`${studentProfileData?.lastName}, ${studentProfileData?.firstName}`}
+                {studentProfileData?.lastName
+                  ? `${studentProfileData.lastName}, ${studentProfileData.firstName}`
+                  : "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Gender</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.gender}
+                {studentProfileData?.gender || "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -92,91 +140,92 @@ const StudentProfile = () => {
                 <Typography variant="h5">Student Status</Typography>
               </Stack>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.status}
+                {studentProfileData?.status || "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">NIM</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.nim}
+                {studentProfileData?.nim || "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Registration Number</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.reg_num}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Date of Birth</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.dateOfBirth}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Religion</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.religion}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Blood Type</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.bloodType}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Marital Status</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.MaritalStatus}
+                {studentProfileData?.reg_num || "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Student Email</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.studentEmail}
+                {studentProfileData?.studentEmail || "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h5">Phone Number</Typography>
+              <Typography variant="h5">Major</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.phoneNo}
+                {studentProfileData?.major === "IF"
+                  ? "Informatics"
+                  : studentProfileData?.major === "SI"
+                  ? "Information System"
+                  : studentProfileData?.major === "DKV"
+                  ? "Information Technology"
+                  : "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Curriculum</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.curriculumId}
+                {studentProfileData?.curriculum
+                  ? `${studentProfileData?.curriculum.major} - ${studentProfileData?.curriculum.year}`
+                  : "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Area of Concentration</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.AreaOfConcentration}
+                {studentProfileData?.AreaOfConcentration === "OBJECT_PROGRAMMER"
+                  ? "Object Programmer"
+                  : studentProfileData?.AreaOfConcentration ===
+                    "COMPETITIVE_INTELEGENT_ANALYSIS"
+                  ? "Competitive Intelligent Analysis"
+                  : studentProfileData?.AreaOfConcentration ===
+                    "NETWORK_ADMINISTRATOR"
+                  ? "Network Administrator"
+                  : "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h5">Previous High School</Typography>
+              <Typography variant="h5">Date of Birth</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.highSchoolGrad}
+                {studentProfileData?.dateOfBirth
+                  ? new Date(studentProfileData?.dateOfBirth).toLocaleString(
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }
+                    )
+                  : "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h5">Address</Typography>
+              <Typography variant="h5">Religion</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.address}
+                {studentProfileData?.religion || "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h5">Current Address</Typography>
+              <Typography variant="h5">Phone Number</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.currentAddress}
+                {studentProfileData?.phoneNo || "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Current Residence Status</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.currentResidenceStatus}
+                {studentProfileData?.currentResidenceStatus || "-"}
               </Typography>
             </Grid>
           </Grid>
@@ -194,49 +243,25 @@ const StudentProfile = () => {
             <Grid item xs={12} md={12}>
               <Typography variant="h5">Full Name</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianName}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Level of Education</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianEducation}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Religion</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianReligion}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Married Status</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianStatus}
+                {studentProfileData?.guardianName || "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Family Relationship</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.familyRelation}
+                {studentProfileData?.familyRelation || "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Email</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianEmail}
+                {studentProfileData?.guardianEmail || "-"}
               </Typography>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={12}>
               <Typography variant="h5">Phone</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianPhoneNo}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="h5">Address</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianAddress}
+                {studentProfileData?.guardianPhoneNo || "-"}
               </Typography>
             </Grid>
           </Grid>
@@ -247,38 +272,34 @@ const StudentProfile = () => {
           expandIcon={<ExpandMoreIcon />}
           sx={{ backgroundColor: "#1A38601A" }}
         >
-          <Typography fontWeight={500}>Academic Advisor</Typography>
+          <Typography fontWeight={500}>Academic Supervisor</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3} sx={{ padding: 2 }}>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Full Name</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {`${advisorProfileData?.lastName}, ${advisorProfileData?.firstName}`}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">NIDN</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {advisorProfileData?.nidn}
+                {advisorProfileData?.lastName
+                  ? `${advisorProfileData.lastName}, ${advisorProfileData.firstName}`
+                  : "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Email</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {advisorProfileData?.email}
+                {advisorProfileData?.email || "-"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Phone</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {advisorProfileData?.phoneNum}
+                {advisorProfileData?.phoneNum || "-"}
               </Typography>
             </Grid>
-            <Grid item xs={12} md={12}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h5">Address</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {advisorProfileData?.Address}
+                {advisorProfileData?.Address || "-"}
               </Typography>
             </Grid>
           </Grid>

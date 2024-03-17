@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Grid,
   Typography,
@@ -6,10 +6,8 @@ import {
   Breadcrumbs,
   Paper,
   experimentalStyled as styled,
-  TextField,
 } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
-import { comment } from "stylis";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -23,6 +21,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const HistoryCertificate = () => {
   const { state } = useLocation();
   const certificateDetails = state ? state.certificateDetails : {};
+  const navigate = useNavigate();
   const {
     firstName,
     lastName,
@@ -31,6 +30,7 @@ const HistoryCertificate = () => {
     submissionDate,
     pathFile,
     category,
+    level,
     description,
     status,
     title,
@@ -40,29 +40,55 @@ const HistoryCertificate = () => {
   } = certificateDetails;
   const pdfURL = pathFile;
   console.log("comment", comments);
-  const handleBreadcrumbsClick = () => {
-    const { role } = JSON.parse(localStorage.getItem("user"));
-    let path = "";
 
-    if (role.includes("DEKAN")) {
-      path = "/bimbingan-akademik/dekan/history";
-    } else if (role.includes("KAPRODI")) {
-      path = "/bimbingan-akademik/kaprodi/history";
-    } else {
-      path = "/bimbingan-akademik/dosen-pembimbing/history";
-    }
-    return <StyledLink to={path}>History</StyledLink>;
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigate(-1);
   };
 
   const commentContent =
     comments && comments.trim() !== "" ? comments.trim() : "-";
 
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case "PENALARAN_KEILMUAN":
+        return "Reasoning and Scholarship";
+      case "ORGANISASI_KEPEMIMPINAN":
+        return "Organization and Leadership";
+      case "BAKAT_MINAT":
+        return "Talents and Interests";
+      case "PENGABDIAN_MASYARAKAT":
+        return "Community Service";
+      case "OTHER":
+        return "Others";
+      default:
+        return category;
+    }
+  };
+
+  const getLevelLabel = (level) => {
+    switch (level) {
+      case "REGION":
+        return "Region";
+      case "NATIONAL":
+        return "National";
+      case "INTERNATIONAL":
+        return "International";
+      case "UNIVERSITY":
+        return "University";
+      case "MAJOR":
+        return "Study Program";
+      default:
+        return level;
+    }
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item md={6} id="detail-item">
         <Box style={{ height: "100%", overflowY: "auto" }}>
-          <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
-            {handleBreadcrumbsClick()}
+          <Breadcrumbs aria-label="breadcrumb" onClick={handleClick}>
+            <StyledLink>History</StyledLink>
             <Typography color="text.primary">Certificate</Typography>
           </Breadcrumbs>
           <Grid item>
@@ -86,7 +112,9 @@ const HistoryCertificate = () => {
                 </Grid>
                 <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                   <Typography variant="h5">
-                    {title.charAt(0).toUpperCase() + title.slice(1)}
+                    {title
+                      ? title.charAt(0).toUpperCase() + title.slice(1)
+                      : "-"}
                   </Typography>
                 </Grid>
               </Grid>
@@ -169,8 +197,21 @@ const HistoryCertificate = () => {
                 </Grid>
                 <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                   <Typography variant="h5">
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                    {getCategoryLabel(category)}
                   </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container>
+                <Grid item xs={4} md={4} xl={3} pb={1}>
+                  <Typography variant="h5">Level</Typography>
+                </Grid>
+                <Grid item xs={1} xl={0.5}>
+                  <Typography variant="h5">:</Typography>
+                </Grid>
+                <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                  <Typography variant="h5">{getLevelLabel(level)}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -194,7 +235,9 @@ const HistoryCertificate = () => {
                           : "#005FDB",
                     }}
                   >
-                    {status.charAt(0) + status.slice(1).toLowerCase()}
+                    {status
+                      ? status.charAt(0) + status.slice(1).toLowerCase()
+                      : "-"}
                   </Typography>
                 </Grid>
               </Grid>

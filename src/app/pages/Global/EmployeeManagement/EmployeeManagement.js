@@ -313,7 +313,7 @@ const EmployeeManagement = () => {
                     <TableRow>
                       <TableCell>No</TableCell>
                       <TableCell>NIK</TableCell>
-                      <TableCell>NIDN</TableCell>
+                      {/* <TableCell>NIDN</TableCell> */}
                       <TableCell>Employee Name</TableCell>
                       <TableCell>Degree</TableCell>
                       <TableCell>Major</TableCell>
@@ -341,7 +341,7 @@ const EmployeeManagement = () => {
                               {index + 1 + page * rowsPerPage}
                             </TableCell>
                             <TableCell>{item.nik}</TableCell>
-                            <TableCell>{item.nidn ? item.nidn : "-"}</TableCell>
+                            {/* <TableCell>{item.nidn ? item.nidn : "-"}</TableCell> */}
                             <TableCell>
                               {item.lastName}, {item.firstName}
                             </TableCell>

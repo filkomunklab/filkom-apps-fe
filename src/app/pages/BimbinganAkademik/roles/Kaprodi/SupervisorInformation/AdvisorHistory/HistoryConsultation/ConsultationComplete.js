@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from "react";
 import {
   Typography,
+  TextField,
   Stack,
   Grid,
+  Button,
+  IconButton,
+  Paper,
   Breadcrumbs,
   experimentalStyled as styled,
-  Paper,
 } from "@mui/material";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Div from "@jumbo/shared/Div";
 import { format } from "date-fns";
-import { Link, useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   color: "rgba(27, 43, 65, 0.69)",
@@ -18,49 +28,91 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const ConsultationComplete = () => {
+const Consultation = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
   const navigate = useNavigate();
-  const handleClick = (event, step) => {
-    event.preventDefault();
-    navigate(step);
-  };
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedFileName, setSelectedFileName] = useState("");
 
-  const [openFirstModal, setOpenFirstModal] = React.useState(false);
-  const [openSecondModal, setOpenSecondModal] = React.useState(false);
+  const [status, setStatus] = useState("");
+  const [messages, setMessages] = useState([]);
 
-  const handleOpenSecondModal = () => setOpenSecondModal(true);
-  const handleCloseSecondModal = () => setOpenSecondModal(false);
-
-  const currentDate = format(new Date(), "dd/MM/yyyy HH:mm");
+  const { state } = useLocation();
+  const consultationDetails = state ? state.consultationDetails : {};
+  const {
+    studentName,
+    supervisorName,
+    studentMajor,
+    studentArrivalYear,
+    topic,
+    receiverName,
+    description,
+    id,
+  } = consultationDetails;
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      handleCloseSecondModal();
-    }, 5000);
+    getCurrentStatus();
+    getMessage();
+  }, [messages]);
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [handleOpenSecondModal]);
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (error.response && error.response.status === 403) {
+      handlePermissionError();
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      return;
+    } else if (error.response && error.response.status === 401) {
+      handleAuthenticationError();
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
+
+  const getCurrentStatus = async () => {
+    try {
+      const response = await jwtAuthAxios.get(
+        `/academic-consultation/detail/${id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
+      setStatus(response.data.data.status);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const getMessage = async () => {
+    try {
+      const response = await jwtAuthAxios.get(`/message/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
+      setMessages(response.data.data);
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
   return (
-    <div>
-      <div role="presentation">
-        <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink onClick={(event) => handleClick(event, -2)}>
-            Supervisor Information
-          </StyledLink>
-          <StyledLink onClick={(event) => handleClick(event, -1)}>
-            History
-          </StyledLink>
-          <Typography color="text.primary">Consultation</Typography>
-        </Breadcrumbs>
-      </div>
-      <Typography
-        sx={{ fontSize: "24px", fontWeight: 500, paddingTop: "20px" }}
-      >
+    <Div>
+      <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
+        <StyledLink
+          onClick={() =>
+            navigate("/bimbingan-akademik/kaprodi/supervisor-information/")
+          }
+        >
+          Supervisor Information
+        </StyledLink>
+        <StyledLink onClick={() => navigate(-1)}>History</StyledLink>
+        <Typography color="text.primary">Consultation</Typography>
+      </Breadcrumbs>
+      <Typography sx={{ fontSize: "24px", fontWeight: 500 }}>
         Consultation
       </Typography>
       <Grid container spacing={2}>
@@ -70,315 +122,190 @@ const ConsultationComplete = () => {
               <Typography>Student Name</Typography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Siregar, Marchelino Feraldy
+                {studentName}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
-
         <Grid item xs={12} md={6}>
           <Stack spacing={2} sx={{ paddingTop: 3 }}>
             <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Supervisor Name</Typography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Poluan, Jeremy Kenny, S.Kom, MBA
+                {supervisorName}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
-
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <Typography>Major</Typography>
+              <Typography>student_major</Typography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Informatics
+                {studentMajor === "IF"
+                  ? "Informatika"
+                  : studentMajor === "SI"
+                  ? "Sistem Informasi"
+                  : studentMajor === "DKV"
+                  ? "Teknologi Informasi"
+                  : studentMajor}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
-
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Arrival Year</Typography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                2020
+                {studentArrivalYear}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
-
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Topic of Discussion</Typography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Academic
+                {topic}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
-
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
               <Typography>Consultation Receiver</Typography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Poluan, Jeremy Kenny, S.Kom, MBA
+                {receiverName}
               </Typography>
             </Paper>
           </Stack>
         </Grid>
-
         <Grid item xs={12}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <Typography>Message</Typography>
+              <Typography> Description</Typography>
             </Grid>
 
-            <Paper elevation={0} variant="outlined" fullWidth>
+            <Paper elevation={0} variant="outlined">
               <Typography variant="body1" sx={{ p: 2 }}>
-                Syalom sir, mohon maaf mengganggu, saya ingin melakukan
-                konsultasi terkait perkuliahan saya. Saya mengalami krisis dalam
-                hal keuangan. orang tua saya di PHK dan saya rasa saya tidak
-                busa melanjutkan perkuliahan saya. Saya ingin membicarakan hal
-                ini secara langsung dengan sir, selaku dosen pembimbing saya.
-                Apakah sir punya waktu luang? Terima kasih sebelumnya.
+                {description}
               </Typography>
             </Paper>
-          </Stack>
-        </Grid>
-        <Grid item xs={12}>
-          <Stack spacing={2} sx={{ paddingTop: 4 }}>
-            <Grid sx={{ display: "flex", direction: "row" }}>
-              <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                Status:
-              </Typography>
-              <Typography
-                variant="h5"
-                sx={{
-                  fontWeight: 600,
-                  color: "#005FDB",
-                  marginLeft: 1,
-                }}
-              >
-                Complete
-              </Typography>
-            </Grid>
-
-            <Paper
-              elevation={0}
-              variant="outlined"
-              fullWidth
-              sx={{ borderColor: "#005FDB" }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography
-                  variant="h6"
-                  sx={{
-                    padding: "8px",
-                    fontWeight: 600,
-                  }}
-                >
-                  Poluan, Jeremy Kenny
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    padding: "8px",
-                  }}
-                >
-                  {currentDate}
-                </Typography>
-              </div>
-
-              <Typography variant="body1" sx={{ padding: "8px" }}>
-                Saya sedang tidak berada di daerah kampus. Lagi healing di
-                Jerman. Nanti kita atur pertemuan lagi.
-              </Typography>
-            </Paper>
-            <Paper
-              elevation={0}
-              variant="outlined"
-              fullWidth
-              sx={{ borderColor: "#192434" }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography
-                  variant="h6"
-                  sx={{
-                    padding: "8px",
-                    fontWeight: 600,
-                  }}
-                >
-                  Siregar, Marchelino Feraldy
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    padding: "8px",
-                  }}
-                >
-                  {currentDate}
-                </Typography>
-              </div>
-
-              <Typography variant="body1" sx={{ padding: "8px" }}>
-                Baik sir. Terima kasih.
-              </Typography>
-            </Paper>
-            <Paper
-              elevation={0}
-              variant="outlined"
-              fullWidth
-              sx={{ borderColor: "#192434" }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography
-                  variant="h6"
-                  sx={{
-                    padding: "8px",
-                    fontWeight: 600,
-                  }}
-                >
-                  Siregar, Marchelino Feraldy
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    padding: "8px",
-                  }}
-                >
-                  {currentDate}
-                </Typography>
-              </div>
-
-              <Typography variant="body1" sx={{ padding: "8px" }}>
-                Maaf sebelumnya, kira-kira bisa hari apa ya sir saya buka konsul
-                lagi dengan sir?
-              </Typography>
-            </Paper>
-            <Paper
-              elevation={0}
-              variant="outlined"
-              fullWidth
-              sx={{ borderColor: "#005FDB" }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography
-                  variant="h6"
-                  sx={{
-                    padding: "8px",
-                    fontWeight: 600,
-                  }}
-                >
-                  Poluan, Jeremy Kenny
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    padding: "8px",
-                  }}
-                >
-                  {currentDate}
-                </Typography>
-              </div>
-
-              <Typography variant="body1" sx={{ padding: "8px" }}>
-                Nanti hari Kamis saya kabari lagi.
-              </Typography>
-            </Paper>
-            <Paper
-              elevation={0}
-              variant="outlined"
-              fullWidth
-              sx={{ borderColor: "#192434" }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography
-                  variant="h6"
-                  sx={{
-                    padding: "8px",
-                    fontWeight: 600,
-                  }}
-                >
-                  Siregar, Marchelino Feraldy
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    padding: "8px",
-                  }}
-                >
-                  {currentDate}
-                </Typography>
-              </div>
-
-              <Typography variant="body1" sx={{ padding: "8px" }}>
-                Oh Iya baik sir. Terima kasih.
-              </Typography>
-            </Paper>
-            <Typography
-              sx={{
-                color: "darkgray",
-                textAlign: "center",
-              }}
-            >
-              Your session has ended.
-            </Typography>
           </Stack>
         </Grid>
       </Grid>
-    </div>
+      <Grid item xs={12}>
+        <Stack spacing={2} sx={{ paddingTop: 6 }}>
+          <Grid sx={{ display: "flex", direction: "row" }}>
+            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+              Status:
+            </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 600,
+                color:
+                  status === "Waiting"
+                    ? "#FFCC00"
+                    : status === "OnProcess"
+                    ? "#0A7637"
+                    : status === "Complete"
+                    ? "blue"
+                    : "#005FDB",
+                marginLeft: 1,
+              }}
+            >
+              {status}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Stack spacing={2} sx={{ paddingBottom: 3 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 20,
+                }}
+              >
+                {messages &&
+                  messages.map((value) => (
+                    <Paper
+                      elevation={0}
+                      variant="outlined"
+                      sx={{
+                        borderColor:
+                          value.sender_name === studentName
+                            ? "#000000"
+                            : "#005FDB",
+                        padding: "12px",
+                        borderRadius: "4px",
+                        backgroundColor: "#FFFFFF",
+                        color: "#000000",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: 600,
+                          }}
+                        >
+                          {value.sender_name}
+                        </Typography>
+                        <Typography variant="caption">
+                          {format(
+                            new Date(value.createdAt),
+                            "dd/MM/yyyy HH:mm"
+                          )}
+                        </Typography>
+                      </div>
+                      <Typography variant="body1">{value.content}</Typography>
+                    </Paper>
+                  ))}
+
+                {status === "Complete" && (
+                  <Typography
+                    sx={{
+                      color: "darkgray",
+                      textAlign: "center",
+                    }}
+                  >
+                    Your session has ended.
+                  </Typography>
+                )}
+              </div>
+            </Stack>
+          </Grid>
+        </Stack>
+      </Grid>
+    </Div>
   );
 };
 
-export default ConsultationComplete;
+export default Consultation;
