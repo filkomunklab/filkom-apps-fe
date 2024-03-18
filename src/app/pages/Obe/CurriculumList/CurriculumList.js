@@ -2,7 +2,12 @@ import React, { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
-import { Button, FormHelperText, TextField } from "@mui/material";
+import {
+  Button,
+  FormHelperText,
+  TablePagination,
+  TextField,
+} from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -12,8 +17,6 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Modal from "@mui/material/Modal";
 import InputLabel from "@mui/material/InputLabel";
 import Menu from "@mui/material/Menu";
@@ -30,19 +33,26 @@ import getCurriculum from "app/api/getCurriculum";
 
 const CurriculumList = () => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [page, setPage] = useState(0);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const inputRef = useRef(null);
   const { major } = useParams();
   const navigate = useNavigate();
 
-  const [anchorEl, setAnchorEl] = useState(null);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const openMenu = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleCloseMenu = () => {
     setAnchorEl(null);
+  };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   const employee = useQuery({
@@ -331,52 +341,15 @@ const CurriculumList = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
-      <div className="flex items-center justify-between">
-        <div>
-          <span className="text-gray-400">Showing 19 of 19</span>
-        </div>
-        <div className="flex gap-2">
-          <div>
-            <Button
-              style={{ border: "2px solid" }}
-              className="!rounded-full !p-0 !min-w-8 !min-h-8"
-              variant="outlined"
-              color="primary"
-            >
-              <ArrowBackIosNewIcon />
-            </Button>
-          </div>
-          <div>
-            <Button
-              className="!rounded-full !p-0 !min-w-8 !min-h-8 font-bold"
-              variant="contained"
-              color="primary"
-            >
-              1
-            </Button>
-          </div>
-          <div>
-            <Button
-              style={{ border: "2px solid" }}
-              className="!rounded-full !p-0 !min-w-8 !min-h-8"
-              variant="outlined"
-              color="primary"
-            >
-              2
-            </Button>
-          </div>
-          <div>
-            <Button
-              style={{ border: "2px solid" }}
-              className="!rounded-full !p-0 !min-w-8 !min-h-8"
-              variant="outlined"
-              color="primary"
-            >
-              <ArrowForwardIosIcon />
-            </Button>
-          </div>
-        </div>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={curriculumQuery.data?.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={(_, page) => setPage(page)}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </div>
     </div>
   );

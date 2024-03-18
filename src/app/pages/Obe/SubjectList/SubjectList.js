@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
-import { Button, TablePagination, TextField } from "@mui/material";
+import { Button, Chip, TablePagination, TextField } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -10,84 +10,28 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import IconButton from "@mui/material/IconButton";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Modal from "@mui/material/Modal";
 import InputLabel from "@mui/material/InputLabel";
-import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getSubjects, postCpl } from "app/api";
-import { CplTable } from "./components";
+import { Actions, CplTable } from "./components";
 import Swal from "sweetalert2";
 import { LoadingButton } from "@mui/lab";
-
-function createData(namaMataKuliah, kodeMK, prodi, cpl) {
-  return {
-    namaMataKuliah,
-    kodeMK,
-    prodi,
-    cpl,
-  };
-}
-
-const rows = [
-  createData(
-    "Business Process Reengineering / Rekayasa Proses Bisnis",
-    "IS3155",
-    "Sistem Informasi",
-    ["S10", "P12", "P12", "KU7", "KU13", "KK3"]
-  ),
-  createData(
-    "Business Process Reengineering / Rekayasa Proses Bisnis",
-    "IS3155",
-    "Sistem Informasi",
-    ["S10", "P12", "P12", "KU7", "KU13", "KK3"]
-  ),
-  createData(
-    "Business Process Reengineering / Rekayasa Proses Bisnis",
-    "IS3155",
-    "Sistem Informasi",
-    ["S10", "P12", "P12", "KU7", "KU13", "KK3"]
-  ),
-  createData(
-    "Business Process Reengineering / Rekayasa Proses Bisnis",
-    "IS3155",
-    "Sistem Informasi",
-    ["S10", "P12", "P12", "KU7", "KU13", "KK3"]
-  ),
-  createData(
-    "Business Process Reengineering / Rekayasa Proses Bisnis",
-    "IS3155",
-    "Sistem Informasi",
-    ["S10", "P12", "P12", "KU7", "KU13", "KK3"]
-  ),
-];
 
 const SubjectList = () => {
   const [open, setOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [anchorEl, setAnchorEl] = useState(null);
   const [page, setPage] = useState(0);
-  const { major, curriculumId, subjectId } = useParams();
-  const navigate = useNavigate();
+  const { major, curriculumId } = useParams();
   const inputRef = useRef(null);
   const queryClient = useQueryClient();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const openMenu = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -270,54 +214,27 @@ const SubjectList = () => {
                   <TableCell>{`${row.subject.englishName} / ${row.subject.indonesiaName}`}</TableCell>
                   <TableCell>{row.subject.code}</TableCell>
                   {/* <TableCell>{row.prodi}</TableCell> */}
-                  {/* <TableCell>
-                    <div className="flex gap-2">
-                      {row.cpl.map((cpl, i) => (
-                        <span
-                          key={i}
-                          className={`!p-1 !rounded-md ${
-                            cpl[0] === "S"
-                              ? "bg-blue-200"
-                              : cpl[0] === "P"
-                              ? "bg-red-200"
-                              : cpl[0] === "K" && cpl[1] === "U"
-                              ? "bg-green-200"
-                              : cpl[0] === "K" && cpl[1] === "K"
-                              ? "bg-yellow-200"
-                              : ""
-                          }`}
-                        >
-                          {cpl}
-                        </span>
-                      ))}
-                    </div>
-                  </TableCell> */}
                   <TableCell>
-                    <IconButton aria-label="delete" onClick={handleClick}>
-                      <MoreVertIcon />
-                    </IconButton>
-                    <Menu
-                      className="*:!shadow-sm"
-                      id="basic-menu"
-                      anchorEl={anchorEl}
-                      open={openMenu}
-                      onClose={handleCloseMenu}
-                      MenuListProps={{
-                        "aria-labelledby": "basic-button",
-                      }}
-                    >
-                      <MenuItem
-                        onClick={() =>
-                          navigate(
-                            `/obe/curriculum/${major}/${curriculumId}/${subjectId}`
-                          )
-                        }
-                      >
-                        Mapping CPL
-                      </MenuItem>
-                      <hr />
-                      <MenuItem onClick={handleCloseMenu}>Delete</MenuItem>
-                    </Menu>
+                    <div className="flex gap-2">
+                      {row.subject.Subject_Cpl.length !== 0 ? (
+                        row.subject.Subject_Cpl.map((item, i) => (
+                          <span
+                            key={i}
+                            className={`!p-1 !rounded-md bg-cyan-500 text-white`}
+                          >
+                            {item.cpl.code}
+                          </span>
+                        ))
+                      ) : (
+                        <Chip
+                          label={"CPL has not been mapped yet"}
+                          color="error"
+                        />
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Actions row={row} />
                   </TableCell>
                 </TableRow>
               ))}
@@ -327,7 +244,7 @@ const SubjectList = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={subjectsQuery.data?.Curriculum_Subject.length}
+          count={subjectsQuery.data?.Curriculum_Subject?.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={(_, page) => setPage(page)}
@@ -335,7 +252,7 @@ const SubjectList = () => {
         />
       </div>
       {subjectsQuery.data?.Cpl.length !== 0 ? (
-        <CplTable />
+        <CplTable data={subjectsQuery.data?.Cpl} />
       ) : (
         <div>
           <input

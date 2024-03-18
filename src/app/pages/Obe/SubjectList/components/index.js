@@ -1,3 +1,4 @@
 import CplTable from "./CplTable";
+import Actions from "./Actions";
 
-export { CplTable };
+export { CplTable, Actions };
