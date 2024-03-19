@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, TextField } from "@mui/material";
+import { Button } from "@mui/material";
 import { ASSET_IMAGES } from "../../../utils/constants/paths";
+import { useNavigate } from "react-router-dom";
 
 export default function CardProdi({
   prodi,
@@ -9,10 +10,9 @@ export default function CardProdi({
   kepalaProdi,
   major,
 }) {
+  const navigate = useNavigate();
   const handleNavigate = () => {
-    const currentPath = window.location.pathname;
-    const newPath = `${currentPath}/${major}`;
-    window.location.href = newPath;
+    navigate(`/obe/list-rps/${major}`);
   };
   return (
     <div className="relative shadow-xl flex flex-col justify-between rounded-3xl h-[500px] mx-5">

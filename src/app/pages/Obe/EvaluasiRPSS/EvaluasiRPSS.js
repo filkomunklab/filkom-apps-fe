@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
@@ -11,14 +10,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
-import IconButton from "@mui/material/IconButton";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import { useQuery } from "@tanstack/react-query";
+import { getRpsListTeacher } from "app/api";
+import { Actions } from "./Components";
+import moment from "moment";
 
 const EvaluasiRPS = () => {
-  const { major } = useParams();
-  console.log(major);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
+  const teacherId = "0e9fb127-088f-4b31-984e-1eaa170d9128";
 
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -62,118 +62,15 @@ const EvaluasiRPS = () => {
     },
   }));
 
-  const columns = [
-    { id: "no", label: "No", minWidth: 50 },
-    { id: "namaMataKuliah", label: "Nama Mata Kuliah", minWidth: 150 },
-    { id: "kodeMK", label: "Kode MK", minWidth: 150 },
-    { id: "semester", label: "Semester", minWidth: 150 },
-    { id: "prodi", label: "Program Studi", minWidth: 150 },
-    { id: "jumlahSiswa", label: "Jumlah Siswa", minWidth: 150 },
-    { id: "revisi", label: "Direvisi", minWidth: 150 },
-    { id: "action", label: "Action", minWidth: 150 },
-  ];
-
-  function createData(
-    no,
-    namaMataKuliah,
-    kodeMK,
-    semester,
-    prodi,
-    jumlahSiswa,
-    revisi
-  ) {
-    return {
-      no,
-      namaMataKuliah,
-      kodeMK,
-      semester,
-      prodi,
-      jumlahSiswa,
-      revisi,
-    };
-  }
-
-  const rows = [
-    createData(
-      1,
-      "Pemrograman Berbasis Objek",
-      "TIK101",
-      "5",
-      "Teknik Informatika",
-      40,
-      "9/8/2023"
-    ),
-    createData(
-      2,
-      "Pemrograman Berbasis Web",
-      "TIK102",
-      "5",
-      "Teknik Informatika",
-      "Data Tidak Ada",
-      "9/8/2023"
-    ),
-    createData(
-      3,
-      "Pemrograman Berbasis Mobile",
-      "TIK103",
-      "5",
-      "Teknik Informatika",
-      40,
-      "9/8/2023"
-    ),
-    createData(
-      4,
-      "Pemrograman Berbasis Desktop",
-      "TIK104",
-      "5",
-      "Teknik Informatika",
-      40,
-      "9/8/2023"
-    ),
-    createData(
-      5,
-      "Pemrograman Berbasis Cloud",
-      "TIK105",
-      "5",
-      "Teknik Informatika",
-      40,
-      "9/8/2023"
-    ),
-    createData(
-      6,
-      "Pemrograman Berbasis AI",
-      "TIK106",
-      "5",
-      "Teknik Informatika",
-      40,
-      "9/8/2023"
-    ),
-  ];
-
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(8);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedKodeMK, setSelectedKodeMK] = useState(null);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedKodeMK(event.currentTarget.getAttribute("data-kodemk"));
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedKodeMK(null);
-  };
-
-  const handleViewReport = () => {
-    const currentPath = window.location.pathname;
-    const newPath = `${currentPath}/evaluasi-penilaian-cpmk/${selectedKodeMK}`;
-    window.location.href = newPath;
-  };
+  const rpsQuery = useQuery({
+    queryKey: ["rps", { teacherId }],
+    queryFn: () => getRpsListTeacher({ teacherId }),
+  });
 
   return (
     <div className="">
@@ -237,98 +134,87 @@ const EvaluasiRPS = () => {
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align="left"
-                      style={{
-                        minWidth: column.minWidth,
-                        backgroundColor: "#006AF5",
-                        color: "white",
-                      }}
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
+                  <TableCell align="left" style={styles.theadCell}>
+                    No
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
+                    Nama Mata Kuliah
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
+                    Kode MK
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
+                    Semester
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
+                    Program Studi
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
+                    Jumlah Siswa
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
+                    Direvisi
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
+                    Action
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow hover key={row.no}>
-                    {columns.map((column) => (
-                      <TableCell key={column.id} align="left">
-                        {column.id === "jumlahSiswa" ? (
-                          <div
-                            className={`rounded-full text-center text-${
-                              row.jumlahSiswa === "Data Tidak Ada"
-                                ? "red-800"
-                                : "black"
-                            }`}
-                          >
-                            {row[column.id]}
-                          </div>
-                        ) : column.id === "action" ? (
-                          <div>
-                            <IconButton
-                              aria-label="Action"
-                              size="small"
-                              onClick={handleMenuClick}
-                              data-kodemk={row.kodeMK}
-                            >
-                              <MoreVertIcon />
-                            </IconButton>
-                            <Menu
-                              className="*:!shadow-sm"
-                              anchorEl={anchorEl}
-                              open={Boolean(anchorEl)}
-                              onClose={handleMenuClose}
-                              MenuListProps={{
-                                "aria-labelledby": "basic-button",
-                              }}
-                            >
-                              <MenuItem onClick={handleViewReport}>
-                                View Report CPMK
-                              </MenuItem>
-                              <MenuItem onClick={handleMenuClose}>
-                                Edit
-                              </MenuItem>
-                              <MenuItem onClick={handleMenuClose}>
-                                Delete
-                              </MenuItem>
-                            </Menu>
-                          </div>
-                        ) : (
-                          row[column.id]
-                        )}
+                {rpsQuery.data
+                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => (
+                    <TableRow hover key={row.id}>
+                      <TableCell align="left">{index + 1}</TableCell>
+                      <TableCell align="left">{`${row.Subject.indonesiaName}`}</TableCell>
+                      <TableCell align="left">{row.Subject.code}</TableCell>
+                      <TableCell align="left">{row.semester}</TableCell>
+                      <TableCell align="left">
+                        {row.Subject.Curriculum_Subject.map((item) => {
+                          return item.curriculum.major;
+                        }).join(" | ")}
                       </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
+                      <TableCell align="left">
+                        <div
+                          className={`rounded-full text-center text-${
+                            row._count.ClassStudent === 0 ? "red-800" : "black"
+                          }`}
+                        >
+                          {row._count.ClassStudent}
+                        </div>
+                      </TableCell>
+                      <TableCell align="left">
+                        {moment(row.updatedAt).format("DD/MM/YYYY")}
+                      </TableCell>
+                      <TableCell align="left">
+                        <Actions row={row} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
           <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={rows.length}
-            page={page}
-            onPageChange={handleChangePage}
+            count={rpsQuery.data?.length}
             rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[]}
-            labelDisplayedRows={({ from, to, count }) =>
-              `Showing ${from} of ${count}`
-            }
-            labelRowsPerPage=""
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              paddingLeft: "16px",
-              paddingRight: "16px",
-            }}
+            page={page}
+            onPageChange={(_, page) => setPage(page)}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
       </div>
     </div>
   );
+};
+
+const styles = {
+  theadCell: {
+    whiteSpace: "nowrap",
+    backgroundColor: "#006AF5",
+    color: "white",
+  },
 };
 
 export default EvaluasiRPS;

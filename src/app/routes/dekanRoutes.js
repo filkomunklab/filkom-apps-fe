@@ -387,7 +387,7 @@ const dekanRoutes = [
     element: <Page component={EvaluasiRPS} />,
   },
   {
-    path: "/obe/evaluasi-rps/evaluasi-penilaian-cpmk/:kodeMK",
+    path: "/obe/evaluasi-rps/:rpsId",
     element: <Page component={EvaluasiPenilaianCPMK} />,
   },
   {

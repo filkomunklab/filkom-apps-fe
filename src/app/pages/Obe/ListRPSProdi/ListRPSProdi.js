@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, TablePagination } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
@@ -12,14 +12,14 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import TablePagination from "@mui/material/TablePagination";
-import IconButton from "@mui/material/IconButton";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import { getRpsList } from "app/api";
+import { useQuery } from "@tanstack/react-query";
+import { Actions } from "./Components";
+import moment from "moment";
 
 const ListRPSProdi = () => {
   const { major } = useParams();
+  const teacherId = "0e9fb127-088f-4b31-984e-1eaa170d9128";
 
   let prodiName;
 
@@ -73,128 +73,18 @@ const ListRPSProdi = () => {
     },
   }));
 
-  const columns = [
-    { id: "no", label: "No", minWidth: 50 },
-    { id: "namaMataKuliah", label: "Nama Mata Kuliah", minWidth: 150 },
-    { id: "dosen", label: "Dosen", minWidth: 150 },
-    { id: "kodeMK", label: "Kode MK", minWidth: 150 },
-    { id: "prodi", label: "Prodi", minWidth: 150 },
-    { id: "semester", label: "Semester", minWidth: 150 },
-    { id: "direvisi", label: "Direvisi", minWidth: 150 },
-    { id: "action", label: "Action", minWidth: 150 },
-  ];
-
-  function createData(
-    no,
-    namaMataKuliah,
-    dosen,
-    kodeMK,
-    prodi,
-    semester,
-    direvisi
-  ) {
-    return {
-      no,
-      namaMataKuliah,
-      dosen,
-      kodeMK,
-      prodi,
-      semester,
-      direvisi,
-    };
-  }
-
-  const rows = [
-    createData(
-      1,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3152",
-      "Sistem Informasi",
-      "5",
-      "9/8/2023"
-    ),
-    createData(
-      2,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3154",
-      "Sistem Informasi",
-      "5",
-      "9/8/2023"
-    ),
-    createData(
-      3,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3155",
-      "Sistem Informasi",
-      "5",
-      "9/8/2023"
-    ),
-    createData(
-      4,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3155",
-      "Sistem Informasi",
-      "5",
-      "9/8/2023"
-    ),
-    createData(
-      5,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3155",
-      "Sistem Informasi",
-      "5",
-      "9/8/2023"
-    ),
-    createData(
-      6,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3155",
-      "Sistem Informasi",
-      "5",
-      "9/8/2023"
-    ),
-    createData(
-      7,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3151",
-      "Sistem Informasi",
-      "5",
-      "9/8/2023"
-    ),
-    // Add more rows as needed
-  ];
-
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(8);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedKodeMK, setSelectedKodeMK] = useState(null);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedKodeMK(event.currentTarget.getAttribute("data-kodemk"));
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedKodeMK(null);
-  };
-
-  const handleView = () => {
-    const currentPath = window.location.pathname;
-    const newPath = `${currentPath}/${selectedKodeMK}`;
-    window.location.href = newPath;
-  };
+  const rpsQuery = useQuery({
+    queryKey: ["rps", { major, teacherId }],
+    queryFn: () => getRpsList({ major, teacherId }),
+  });
 
   return (
     <div className="">
@@ -239,86 +129,81 @@ const ListRPSProdi = () => {
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align="left"
-                      style={{
-                        minWidth: column.minWidth,
-                        backgroundColor: "#006AF5",
-                        color: "white",
-                      }}
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
+                  <TableCell align="left" style={styles.theadCell}>
+                    No
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
+                    Nama Mata Kuliah
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
+                    Dosen
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
+                    Kode MK
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
+                    Prodi
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
+                    Semester
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
+                    Direvisi
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow hover key={row.no}>
-                    {columns.map((column) => (
-                      <TableCell key={column.id} align="left">
-                        {column.id === "action" ? (
-                          <div>
-                            <IconButton
-                              aria-label="Action"
-                              size="small"
-                              onClick={handleMenuClick}
-                              data-kodemk={row.kodeMK}
-                            >
-                              <MoreVertIcon />
-                            </IconButton>
-                            <Menu
-                              className="*:!shadow-sm"
-                              anchorEl={anchorEl}
-                              open={Boolean(anchorEl)}
-                              onClose={handleMenuClose}
-                              MenuListProps={{
-                                "aria-labelledby": "basic-button",
-                              }}
-                            >
-                              <MenuItem onClick={handleView}>View</MenuItem>
-                              <MenuItem onClick={handleMenuClose}>
-                                Edit
-                              </MenuItem>
-                              <MenuItem onClick={handleMenuClose}>
-                                Delete
-                              </MenuItem>
-                            </Menu>
-                          </div>
-                        ) : (
-                          row[column.id]
-                        )}
-                      </TableCell>
-                    ))}
+                {rpsQuery.data?.map((row, index) => (
+                  <TableRow hover key={row.id}>
+                    <TableCell align="left">{index + 1}</TableCell>
+                    <TableCell align="left">
+                      {`${row.Subject.indonesiaName} / ${row.Subject.englishName}`}
+                    </TableCell>
+                    <TableCell align="left">
+                      {`${row.teacher.firstName} ${row.teacher.lastName}`}
+                    </TableCell>
+                    <TableCell align="left">{row.Subject.code}</TableCell>
+                    <TableCell align="left">
+                      {row.Subject.Curriculum_Subject.map((item) => {
+                        return item.curriculum.major;
+                      }).join(" | ")}
+                    </TableCell>
+                    <TableCell align="left">{row.semester}</TableCell>
+                    <TableCell align="left">
+                      {moment(row.updatedAt).format("DD/MM/YYYY")}
+                    </TableCell>
+                    <TableCell>
+                      <Actions row={row} />
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
           <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={rows.length}
-            page={page}
-            onPageChange={handleChangePage}
+            count={rpsQuery.data?.length}
             rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[]}
-            labelDisplayedRows={({ from, to, count }) =>
-              `Showing ${from} of ${count}`
-            }
-            labelRowsPerPage=""
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              paddingLeft: "16px",
-              paddingRight: "16px",
-            }}
+            page={page}
+            onPageChange={(_, page) => setPage(page)}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
       </div>
     </div>
   );
+};
+
+const styles = {
+  theadCell: {
+    backgroundColor: "#006AF5",
+    color: "white",
+    whiteSpace: "nowrap",
+  },
 };
 
 export default ListRPSProdi;
