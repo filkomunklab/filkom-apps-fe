@@ -16,40 +16,33 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+
 import Modal from "@mui/material/Modal";
 import InputLabel from "@mui/material/InputLabel";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTeacher, postCurriculum } from "app/api";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
 import { DeleteOutline } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import getCurriculum from "app/api/getCurriculum";
+import { Actions } from "./Components";
 
 const CurriculumList = () => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
-  const [anchorEl, setAnchorEl] = useState(null);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const inputRef = useRef(null);
   const { major } = useParams();
-  const navigate = useNavigate();
+  const queryClient  = useQueryClient()
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const openMenu = Boolean(anchorEl);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -66,6 +59,9 @@ const CurriculumList = () => {
   const curriculum = useMutation({
     mutationFn: postCurriculum,
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['curriculum', major]
+      })
       Swal.fire({
         icon: "success",
         title: "Success",
@@ -116,7 +112,6 @@ const CurriculumList = () => {
                 setFieldValue,
                 handleSubmit,
               }) => {
-                console.log(errors);
                 return (
                   <Form>
                     <div className="flex flex-col gap-3 p-3 py-6">
@@ -312,30 +307,8 @@ const CurriculumList = () => {
                   <TableCell>{row._count.Curriculum_Subject}</TableCell>
                   <TableCell>{`${row.headOfProgramStudy.firstName} ${row.headOfProgramStudy.lastName} `}</TableCell>
                   <TableCell>
-                    <IconButton aria-label="delete" onClick={handleClick}>
-                      <MoreVertIcon />
-                    </IconButton>
-                    <Menu
-                      className="*:!shadow-sm"
-                      id="basic-menu"
-                      anchorEl={anchorEl}
-                      open={openMenu}
-                      onClose={handleCloseMenu}
-                      MenuListProps={{
-                        "aria-labelledby": "basic-button",
-                      }}
-                    >
-                      <MenuItem
-                        onClick={() =>
-                          navigate(`/obe/curriculum/${major}/${row.id}`)
-                        }
-                      >
-                        Lihat Mata Kuliah
-                      </MenuItem>
-                      <hr />
-                      <MenuItem onClick={handleCloseMenu}>Delete</MenuItem>
-                    </Menu>
-                  </TableCell>
+                    <Actions  row={row}/>
+                    </TableCell>
                 </TableRow>
               ))}
             </TableBody>
