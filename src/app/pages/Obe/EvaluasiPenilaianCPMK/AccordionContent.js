@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -6,64 +6,16 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { GradingModal } from "./Components";
 
-export default function AccordionContent() {
-  function createData(
-    no,
-    namaMahasiswa,
-    NIM,
-    kuis1,
-    kuis2,
-    tugas1,
-    tugas4,
-    kehadiran,
-    midTerm,
-    final,
-    totalBobot
-  ) {
-    return {
-      no,
-      namaMahasiswa,
-      NIM,
-      kuis1,
-      kuis2,
-      tugas1,
-      tugas4,
-      kehadiran,
-      midTerm,
-      final,
-      totalBobot,
-    };
-  }
+export default function AccordionContent({ item }) {
+  const [open, setOpen] = useState(false);
+  const [selectedGrading, setSelectedGrading] = useState(null);
 
-  const rows = [
-    createData(
-      1,
-      "Misael Jordy",
-      "	105022010076",
-      80,
-      90,
-      70,
-      85,
-      95,
-      90,
-      80,
-      590
-    ),
-    createData(
-      2,
-      "Misael Jordy",
-      "	105022010076",
-      80,
-      90,
-      70,
-      85,
-      95,
-      90,
-      80,
-      590
-    ),
-  ];
+  const handleOpen = (selectedItem) => {
+    setOpen(true);
+    setSelectedGrading(selectedItem);
+  };
 
   return (
     <div>
@@ -74,24 +26,25 @@ export default function AccordionContent() {
               <TableCell>No</TableCell>
               <TableCell>Nama Mahasiswa</TableCell>
               <TableCell>Nomor Induk Mahasiswa</TableCell>
-              <TableCell>Kuis 1</TableCell>
-              <TableCell>Kuis 2</TableCell>
-              <TableCell>Tugas 1</TableCell>
-              <TableCell>Tugas 4</TableCell>
-              <TableCell>Kehadiran</TableCell>
-              <TableCell>Mid Term</TableCell>
-              <TableCell>Final</TableCell>
+              {item.studentList[0].grading.map((item, index) => (
+                <TableCell
+                  key={index}
+                  onClick={() => handleOpen(item)}
+                  className="hover:cursor-pointer hover:bg-blue-400"
+                >
+                  {item.gradingName}
+                </TableCell>
+              ))}
               <TableCell>Total Bobot</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.no}>
+            {item.studentList.map((row, index) => (
+              <TableRow key={index}>
                 <TableCell component="th" scope="row">
-                  {row.no}
+                  {index + 1}
                 </TableCell>
                 <TableCell
-                  // onClick={handleOpen}
                   style={{ cursor: "pointer", color: "black" }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.color = "blue";
@@ -100,29 +53,44 @@ export default function AccordionContent() {
                     e.currentTarget.style.color = "black";
                   }}
                 >
-                  {row.namaMahasiswa}
+                  {row.name}
                 </TableCell>
 
-                <TableCell>{row.NIM}</TableCell>
-                <TableCell>{row.kuis1}</TableCell>
-                <TableCell>{row.kuis2}</TableCell>
-                <TableCell>{row.tugas1}</TableCell>
-                <TableCell>{row.tugas4}</TableCell>
-                <TableCell>{row.kehadiran}</TableCell>
-                <TableCell>{row.midTerm}</TableCell>
-                <TableCell>{row.final}</TableCell>
-                <TableCell>{row.totalBobot}</TableCell>
+                <TableCell>{row.nim}</TableCell>
+                {row.grading.map((item, index) => (
+                  <TableCell key={index}>{item.score}</TableCell>
+                ))}
+                <TableCell>
+                  {row.grading.reduce((acc, curr) => acc + curr.score, 0)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
           <TableRow className="bg-primary *:!text-white">
-            <TableCell colSpan={10} align="center">
+            <TableCell
+              colSpan={3 + item.studentList[0].grading.length}
+              align="center"
+            >
               TOTAL CPMK1
             </TableCell>
-            <TableCell>590</TableCell>
+            <TableCell>
+              {item.studentList.reduce(
+                (acc, curr) =>
+                  acc + curr.grading.reduce((acc, curr) => acc + curr.score, 0),
+                0
+              )}
+            </TableCell>
           </TableRow>
         </Table>
       </TableContainer>
+      <GradingModal
+        open={open}
+        setOpen={(value) => {
+          setOpen(value);
+          setSelectedGrading(null);
+        }}
+        item={selectedGrading}
+      />
     </div>
   );
 }

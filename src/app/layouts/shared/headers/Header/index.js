@@ -74,10 +74,10 @@ const Header = () => {
           </Typography>
         </Div>
 
-        <Div sx={{ display: "flex", alignItems: "center", gap: "24px" }}>
+        {/* <Div sx={{ display: "flex", alignItems: "center", gap: "24px" }}>
           <NotificationsDropdown />
           <SearchGlobal sx={{ maxWidth: { xs: 120, sm: 120, md: 320 } }} />
-        </Div>
+        </Div> */}
       </Div>
     </React.Fragment>
   );

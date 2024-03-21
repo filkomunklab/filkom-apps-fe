@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import {
@@ -19,7 +19,6 @@ import IconButton from "@mui/material/IconButton";
 
 import Modal from "@mui/material/Modal";
 import InputLabel from "@mui/material/InputLabel";
-import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -38,7 +37,7 @@ const CurriculumList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const inputRef = useRef(null);
   const { major } = useParams();
-  const queryClient  = useQueryClient()
+  const queryClient = useQueryClient();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -60,8 +59,8 @@ const CurriculumList = () => {
     mutationFn: postCurriculum,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['curriculum', major]
-      })
+        queryKey: ["curriculum", major],
+      });
       Swal.fire({
         icon: "success",
         title: "Success",
@@ -73,7 +72,7 @@ const CurriculumList = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.message,
+        text: error.response.data.message ?? error.message,
       });
     },
   });
@@ -307,8 +306,8 @@ const CurriculumList = () => {
                   <TableCell>{row._count.Curriculum_Subject}</TableCell>
                   <TableCell>{`${row.headOfProgramStudy.firstName} ${row.headOfProgramStudy.lastName} `}</TableCell>
                   <TableCell>
-                    <Actions  row={row}/>
-                    </TableCell>
+                    <Actions row={row} />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
