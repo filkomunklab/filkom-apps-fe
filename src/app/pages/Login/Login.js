@@ -127,7 +127,7 @@ const Login = () => {
                   console.log("ini user loh: ", user);
                   localStorage.setItem("user", JSON.stringify(user));
 
-                  navigate("/");
+                  navigate("/bimbingan-akademik/profile");
                 } else {
                   const response = await jwtAuthAxios.get(
                     `student/${user.nim}`,

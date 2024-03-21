@@ -106,31 +106,13 @@ const StudentGradeDashboard = () => {
   }, []);
 
   const handleNavigateGrade = async (value) => {
-    try {
-      const gradeDetailsResult = await jwtAuthAxios.get(
-        `/grades/detailGrades/${value.id}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          signal,
-        }
-      );
-
-      const detail = gradeDetailsResult.data.data;
-      console.log("isi detail", detail);
-
-      navigate(`${value.id}`, {
-        state: {
-          gradeDetails: {
-            semester: detail.semester,
-            subject: detail.subject,
-            lastName: lastName,
-            firstName: firstName,
-          },
-        },
-      });
-    } catch (error) {
-      handleError();
-    }
+    navigate(`${value.id}`, {
+      state: {
+        id: value.id,
+        lastName: lastName,
+        firstName: firstName,
+      },
+    });
   };
 
   return (

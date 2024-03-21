@@ -88,7 +88,7 @@ const FormAfterLoginStudent = ({
   const [base64Image, setBase64Image] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
-  const [AreaOfConcentration, setAreaOfConcentration] = useState("");
+  const [areaOfConcentration, setAreaOfConcentration] = useState("");
 
   // field input parent / guardian
   const [guardianEmail, setGuardianEmail] = useState("");
@@ -137,7 +137,7 @@ const FormAfterLoginStudent = ({
           base64Image,
           dateOfBirth,
           phoneNo,
-          AreaOfConcentration,
+          areaOfConcentration,
           guardianEmail,
           guardianPhoneNo,
         },
@@ -186,7 +186,7 @@ const FormAfterLoginStudent = ({
           password: newPassword,
           dateOfBirth: waktuISO8601,
           phoneNo: phoneNo.trim(),
-          areaOfConcentration: AreaOfConcentration,
+          areaOfConcentration: areaOfConcentration,
           guardianEmail: guardianEmail.trim(),
           guardianPhoneNo: guardianPhoneNo.trim(),
           studentImage: {
@@ -315,7 +315,7 @@ const FormAfterLoginStudent = ({
                             // maxHeight: "100%",
                             // height: "auto",
                             // width: "auto",
-                            // objectFit: "cover",
+                            objectFit: "cover",
                           }}
                           loading="lazy"
                         />
@@ -500,7 +500,7 @@ const FormAfterLoginStudent = ({
                         sx={{
                           padding: 0.5,
                         }}
-                        value={AreaOfConcentration}
+                        value={areaOfConcentration}
                         onChange={(event) => {
                           setAreaOfConcentration(event.target.value);
                           setShowLabelAreaOfConcentration(false);

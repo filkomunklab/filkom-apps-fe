@@ -155,7 +155,8 @@ const StudentPerMajor = () => {
               ? "Information System"
               : major === "DKV"
               ? "Information Technology"
-              : "-"}
+              : "-"}{" "}
+            Students List
           </Typography>
         </Breadcrumbs>
       </div>
@@ -333,7 +334,7 @@ const TableItem = ({ item, index }) => {
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-
+    console.log("ini id student", id);
     switch (name) {
       case "profile":
         navigate(`${nim}`, {

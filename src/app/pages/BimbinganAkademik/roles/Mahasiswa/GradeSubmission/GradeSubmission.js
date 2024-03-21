@@ -428,11 +428,11 @@ const GradeSubmission = () => {
             }}
           >
             <TableRow>
-              <TableCell>Number</TableCell>
-              <TableCell sx={{ width: "220px" }}>Subject Name</TableCell>
+              <TableCell sx={{ width: "80px" }}>Number</TableCell>
+              <TableCell>Subject Name</TableCell>
               <TableCell sx={{ width: "120px" }}>Grade</TableCell>
-              <TableCell>Lecturer</TableCell>
-              <TableCell>Description</TableCell>
+              <TableCell sx={{ width: "420px" }}>Lecturer</TableCell>
+              <TableCell sx={{ width: "420px" }}>Description</TableCell>
             </TableRow>
           </TableHead>
           <TableBody sx={{ backgroundColor: "white" }}>

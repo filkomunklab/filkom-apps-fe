@@ -50,7 +50,7 @@ const StudentGrade = () => {
     let totalMajorGrade = 0;
     let totalSKS = 0;
 
-    subjects.forEach((data) => {
+    subjects?.forEach((data) => {
       const letterGrade = getLetterGrade(data.grades);
       const weightedGrade = letterGrade.weight * data.Subject.credits;
 

@@ -41,7 +41,7 @@ const StudentCertificate = () => {
   const [dataWaiting, setDataWaiting] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const location = useLocation();
-  const { studentNim, firstName, lastName, major } = location.state
+  const { studentNim, firstName, lastName, major, studentId } = location.state
     ? location.state
     : "";
 
@@ -64,13 +64,10 @@ const StudentCertificate = () => {
 
   const getDataWaiting = async () => {
     try {
-      const result = await jwtAuthAxios.get(
-        `/certificate/all/${JSON.parse(localStorage.getItem("user")).id}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          signal,
-        }
-      );
+      const result = await jwtAuthAxios.get(`/certificate/all/${studentId}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
 
       console.log("ini isi result data di certi", result);
 

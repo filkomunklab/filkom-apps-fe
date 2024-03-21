@@ -324,12 +324,12 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Area of Concentration</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.AreaOfConcentration === "OBJECT_PROGRAMMER"
+                {studentProfileData?.areaOfConcentration === "OBJECT_PROGRAMMER"
                   ? "Object Programmer"
-                  : studentProfileData?.AreaOfConcentration ===
+                  : studentProfileData?.areaOfConcentration ===
                     "COMPETITIVE_INTELEGENT_ANALYSIS"
                   ? "Competitive Intelligent Analysis"
-                  : studentProfileData?.AreaOfConcentration ===
+                  : studentProfileData?.areaOfConcentration ===
                     "NETWORK_ADMINISTRATOR"
                   ? "Network Administrator"
                   : "-"}
@@ -521,7 +521,7 @@ const StudentProfile = () => {
                 {advisorProfileData?.phoneNum ?? "-"}
               </Typography>
             </Grid>
-            <Grid item xs={12} md={12}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h5">Address</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {advisorProfileData?.Address ?? "-"}

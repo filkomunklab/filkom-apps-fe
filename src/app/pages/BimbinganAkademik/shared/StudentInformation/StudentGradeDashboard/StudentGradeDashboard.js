@@ -54,7 +54,7 @@ const StudentGradeDashboard = () => {
 
   const [semesterData, setSemesterData] = useState([]);
   const location = useLocation();
-  const { studentNim, firstName, lastName } = location.state
+  const { studentNim, firstName, lastName, studentId } = location.state
     ? location.state
     : "";
 
@@ -78,14 +78,15 @@ const StudentGradeDashboard = () => {
   const getDataGrade = async () => {
     try {
       const response = await jwtAuthAxios.get(
-        `/transaction/semesterList/${
-          JSON.parse(localStorage.getItem("user")).id
-        }`,
+        `/transaction/semesterList/${studentId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
         }
       );
+      console.log("ini id", studentId);
+
+      console.log("ini grade", response.data);
 
       //menampilkan semester yang paling terbaru secara berurut
       const sortedData = response.data.data.sort((a, b) =>
@@ -105,32 +106,14 @@ const StudentGradeDashboard = () => {
     return () => controller.abort();
   }, []);
 
-  const handleNavigateGrade = async (value) => {
-    try {
-      const gradeDetailsResult = await jwtAuthAxios.get(
-        `/grades/detailGrades/${value.id}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          signal,
-        }
-      );
-
-      const detail = gradeDetailsResult.data.data;
-      console.log("isi detail", detail);
-
-      navigate(`${value.id}`, {
-        state: {
-          gradeDetails: {
-            semester: detail.semester,
-            subject: detail.subject,
-            lastName: lastName,
-            firstName: firstName,
-          },
-        },
-      });
-    } catch (error) {
-      handleError();
-    }
+  const handleNavigateGrade = (value) => {
+    navigate(`${value.id}`, {
+      state: {
+        id: value.id,
+        lastName: lastName,
+        firstName: firstName,
+      },
+    });
   };
 
   const handleClick = (event, step) => {

@@ -63,6 +63,7 @@ const StudentProfile = () => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("");
   const dosenGuidanceClass = JSON.parse(
     localStorage.getItem("user")
   ).guidanceClassId;
@@ -325,12 +326,12 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Area of Concentration</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.AreaOfConcentration === "OBJECT_PROGRAMMER"
+                {studentProfileData?.areaOfConcentration === "OBJECT_PROGRAMMER"
                   ? "Object Programmer"
-                  : studentProfileData?.AreaOfConcentration ===
+                  : studentProfileData?.areaOfConcentration ===
                     "COMPETITIVE_INTELEGENT_ANALYSIS"
                   ? "Competitive Intelligent Analysis"
-                  : studentProfileData?.AreaOfConcentration ===
+                  : studentProfileData?.areaOfConcentration ===
                     "NETWORK_ADMINISTRATOR"
                   ? "Network Administrator"
                   : "-"}

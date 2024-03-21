@@ -437,8 +437,8 @@ const StudentManagement = () => {
                               {item.highSchoolGrad ? item.highSchoolGrad : "-"}
                             </TableCell>
                             <TableCell>
-                              {item.AreaOfConcentration
-                                ? item.AreaOfConcentration
+                              {item.areaOfConcentration
+                                ? item.areaOfConcentration
                                 : "-"}
                             </TableCell>
                             <TableCell>

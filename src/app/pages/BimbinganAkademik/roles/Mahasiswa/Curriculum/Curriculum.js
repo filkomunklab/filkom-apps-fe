@@ -39,27 +39,28 @@ const Curriculum = () => {
 
   const getCurriculumDetails = async () => {
     try {
-      const curriculumResult = await jwtAuthAxios.get(`/curriculum`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal,
-      });
+      const curriculumResult = await jwtAuthAxios.get(
+        `/curriculum/${JSON.parse(localStorage.getItem("user")).curriculumId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
+      console.log("curriculumResult", curriculumResult);
       if (curriculumResult.data.status === "OK") {
-        const firstCurriculum = curriculumResult.data.data[0];
+        const hasil = curriculumResult.data.data;
 
         setCurriculumDetails({
-          name: firstCurriculum.major,
-          year: firstCurriculum.year,
+          name: hasil.major,
+          year: hasil.year,
         });
 
-        const result = await jwtAuthAxios.get(
-          `/subject/${firstCurriculum.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            signal,
-          }
-        );
+        const result = await jwtAuthAxios.get(`/subject/${hasil.id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          signal,
+        });
 
         if (result.data.status === "OK") {
           setListSubject(result.data.data);
@@ -140,7 +141,7 @@ const Curriculum = () => {
 
     return rows;
   };
-
+  console.log("ini curriculumDetails", curriculumDetails);
   return (
     <div>
       {loading ? (

@@ -142,7 +142,9 @@ const Grades = () => {
           <Typography variant="body1">You don't have a grade yet.</Typography>
         </Paper>
       ) : (
-        <Typography variant="h5">Select a semester to view grades.</Typography>
+        <Typography variant="h5" sx={{ paddingBottom: "20px" }}>
+          Select a semester to view grades.
+        </Typography>
       )}
       <Grid
         container

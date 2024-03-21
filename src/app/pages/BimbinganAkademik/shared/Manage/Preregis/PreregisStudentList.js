@@ -43,8 +43,7 @@ const PreregisStudentList = () => {
     console.log("id", id);
     try {
       const result = await jwtAuthAxios.get(
-        `/pre-regist/list-submitted/${id}`,
-        { major: major },
+        `/pre-regist/list-submitted/${id}?major=${major}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,

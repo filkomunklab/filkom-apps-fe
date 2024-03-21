@@ -58,7 +58,7 @@ const Profile = () => {
             padding: "16px",
           }}
         >
-          Student Council Information
+          Profile
         </Typography>
         <Grid container spacing={3} sx={{ padding: 2 }}>
           <Grid item xs={12} md={6}>
@@ -81,7 +81,7 @@ const Profile = () => {
               {dataProfile?.phoneNum || "-"}
             </Typography>
           </Grid>
-          <Grid item xs={12} md={12}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h6">Address</Typography>
             <Typography variant="h6" sx={textSyle}>
               {dataProfile?.Address || "-"}

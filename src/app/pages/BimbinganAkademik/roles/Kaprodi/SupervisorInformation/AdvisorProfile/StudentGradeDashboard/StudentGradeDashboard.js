@@ -52,9 +52,9 @@ const StudentGradeDashboard = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  const [semesterData, setSemesterData, studentId] = useState([]);
+  const [semesterData, setSemesterData] = useState([]);
   const location = useLocation();
-  const { studentNim, firstName, lastName } = location.state
+  const { studentNim, firstName, lastName, studentId } = location.state
     ? location.state
     : "";
 
@@ -103,32 +103,14 @@ const StudentGradeDashboard = () => {
     return () => controller.abort();
   }, []);
 
-  const handleNavigateGrade = async (value) => {
-    try {
-      const gradeDetailsResult = await jwtAuthAxios.get(
-        `/grades/detailGrades/${value.id}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          signal,
-        }
-      );
-
-      const detail = gradeDetailsResult.data.data;
-      console.log("isi detail", detail);
-
-      navigate(`${value.id}`, {
-        state: {
-          gradeDetails: {
-            semester: detail.semester,
-            subject: detail.subject,
-            lastName: lastName,
-            firstName: firstName,
-          },
-        },
-      });
-    } catch (error) {
-      handleError();
-    }
+  const handleNavigateGrade = (value) => {
+    navigate(`${value.id}`, {
+      state: {
+        id: value.id,
+        lastName: lastName,
+        firstName: firstName,
+      },
+    });
   };
 
   return (

@@ -116,7 +116,7 @@ const History = (props) => {
       );
       console.log("ini guidanceClassId", guidanceClassId);
       const resultPreregis = await jwtAuthAxios.get(
-        `/pre-regist/history-for-advisor/${id}`,
+        `/pre-regist/history-for-advisor/${guidanceClassId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
