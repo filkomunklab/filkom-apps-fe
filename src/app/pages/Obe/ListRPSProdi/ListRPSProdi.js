@@ -19,7 +19,7 @@ import moment from "moment";
 
 const ListRPSProdi = () => {
   const { major } = useParams();
-  const teacherId = "15769d2f-3028-43e3-8544-44bd01152517";
+  const teacherId = "061644a9-8ae5-48a2-a792-4c1df867ea5a";
 
   let prodiName;
 

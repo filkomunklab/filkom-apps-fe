@@ -33,7 +33,7 @@ const UploadModal = ({ open, setOpen = () => {} }) => {
       Swal.fire({
         icon: "success",
         title: "Success",
-        text: "Students has been uploaded",
+        text: `Students has been uploaded`,
       });
     },
     onError: (error) => {
