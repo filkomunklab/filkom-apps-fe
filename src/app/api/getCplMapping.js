@@ -1,11 +1,8 @@
-import { OBE_BASE_URL_API } from "@jumbo/config/env";
-import axios from "axios";
+import { obeClient } from "./client";
 
 export default async function getCplMapping(payload) {
   const { subjectId, formik } = payload;
-  const { data } = await axios.get(
-    `${OBE_BASE_URL_API}/api/subject/${subjectId}/cpl-mapping`
-  );
+  const { data } = await obeClient.get(`/subject/${subjectId}/cpl-mapping`);
   data.data.Curriculum_Cpl = data.data.Curriculum_Subject.flatMap(
     (item) => item.curriculum.Cpl
   );

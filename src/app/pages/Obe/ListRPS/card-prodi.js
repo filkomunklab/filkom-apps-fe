@@ -12,7 +12,7 @@ export default function CardProdi({
 }) {
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate(`/obe/list-rps/${major}`);
+    navigate(`/obe/all-list-rps/${major}`);
   };
   return (
     <div className="relative shadow-xl flex flex-col justify-between rounded-3xl h-[500px] mx-5">

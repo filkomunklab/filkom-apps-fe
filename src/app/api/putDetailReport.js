@@ -1,6 +1,5 @@
-import { OBE_BASE_URL_API } from "@jumbo/config/env";
-import axios from "axios";
+import { obeClient } from "./client";
 
 export default function putReportDetail(rpsId) {
-  return axios.put(`${OBE_BASE_URL_API}/api/report-detail/${rpsId}`);
+  return obeClient.put(`/report-detail/${rpsId}`);
 }

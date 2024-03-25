@@ -387,15 +387,11 @@ const dekanRoutes = [
     element: <Page component={EvaluasiRPS} />,
   },
   {
-    path: "/obe/evaluasi-rps/:rpsId",
-    element: <Page component={EvaluasiPenilaianCPMK} />,
-  },
-  {
-    path: "/obe/list-rps",
+    path: "/obe/all-list-rps",
     element: <Page component={ListGeneralRPS} />,
   },
   {
-    path: "/obe/list-rps/:major",
+    path: "/obe/all-list-rps/:major",
     element: <Page component={ListRPSProdi} />,
   },
 ];

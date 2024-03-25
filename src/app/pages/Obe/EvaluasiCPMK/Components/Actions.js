@@ -25,9 +25,9 @@ const Actions = ({ row }) => {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem>
-          <Link to={`/obe/evaluasi-rps/${row.id}`}>View Report CPMK</Link>
-        </MenuItem>
+        <Link to={`/obe/evaluasi-matakuliah/${row.id}`}>
+          <MenuItem>View Report CPMK</MenuItem>
+        </Link>
       </Menu>
     </div>
   );

@@ -1,5 +1,4 @@
-import { OBE_BASE_URL_API } from "@jumbo/config/env";
-import axios from "axios";
+import { obeClient } from "./client";
 
 export default function postCurriculum(data) {
   const formData = new FormData();
@@ -7,7 +6,7 @@ export default function postCurriculum(data) {
   formData.append("year", data.year);
   formData.append("headOfProgramStudyId", data.headOfProgramStudyId);
   formData.append("curriculumFile", data.curriculumFile);
-  return axios.post(`${OBE_BASE_URL_API}/api/curriculum`, formData, {
+  return obeClient.post(`/curriculum`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

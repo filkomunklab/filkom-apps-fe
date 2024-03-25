@@ -26,6 +26,10 @@ import ViewActivity from "app/pages/BimbinganAkademik/shared/CurrentActivities/V
 import ViewConsultation from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewConsultation/ViewConsultation";
 import AddActivity from "app/pages/BimbinganAkademik/shared/AddActivity";
 import Profile from "app/pages/BimbinganAkademik/shared/Profile/Profile";
+import EvaluasiRPS from "app/pages/Obe/EvaluasiRPSS/EvaluasiRPSS";
+import EvaluasiCPMK from "app/pages/Obe/EvaluasiCPMK";
+import EvaluasiPenilaianCPMK from "app/pages/Obe/EvaluasiPenilaianCPMK";
+import ReportCPMK from "app/pages/Obe/ReportCPMK";
 
 const { default: Page } = require("@jumbo/shared/Page");
 
@@ -142,6 +146,28 @@ const dosenPembimbingRoutes = [
   {
     path: "/bimbingan-akademik/dosen-pembimbing/profile",
     element: <Page component={Profile} />,
+  },
+
+  // ========================== OBE ROUTES ==========================
+  {
+    path: "/obe/list-rps",
+    element: <Page component={EvaluasiRPS} />,
+  },
+  {
+    path: "/obe/evaluasi-matakuliah",
+    element: <Page component={EvaluasiCPMK} />,
+  },
+  {
+    path: "/obe/evaluasi-matakuliah/:rpsId",
+    element: <Page component={EvaluasiPenilaianCPMK} />,
+  },
+  {
+    path: "/obe/evaluasi-mahasiswa",
+    element: <Page component={EvaluasiCPMK} />,
+  },
+  {
+    path: "/obe/evaluasi-mahasiswa/:rpsId",
+    element: <Page component={ReportCPMK} />,
   },
 ];
 
