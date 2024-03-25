@@ -58,6 +58,7 @@ import EvaluasiRPS from "app/pages/Obe/EvaluasiRPSS";
 import ListGeneralRPS from "app/pages/Obe/ListRPS";
 import EvaluasiPenilaianCPMK from "app/pages/Obe/EvaluasiPenilaianCPMK";
 import ListRPSProdi from "app/pages/Obe/ListRPSProdi";
+import CreateRPS from "app/pages/Obe/CreateRPS";
 
 const { default: Page } = require("@jumbo/shared/Page");
 
@@ -397,6 +398,10 @@ const dekanRoutes = [
   {
     path: "/obe/list-rps/:major",
     element: <Page component={ListRPSProdi} />,
+  },
+  {
+    path: "/obe/create-rps",
+    element: <Page component={CreateRPS} />,
   },
 ];
 
