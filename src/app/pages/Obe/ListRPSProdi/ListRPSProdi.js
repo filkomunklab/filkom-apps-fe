@@ -82,30 +82,15 @@ const ListRPSProdi = () => {
   };
 
   const rpsQuery = useQuery({
-    queryKey: ["rps", { major, teacherId }],
-    queryFn: () => getRpsList({ major, teacherId }),
+    queryKey: ["rps", { major }],
+    queryFn: () => getRpsList({ major }),
   });
 
   return (
     <div className="">
-      <div className="flex flex-row justify-between items-center mb-10">
-        <div>
-          <h1 className="text-3xl font-bold">
-            RANCANGAN PEMBELAJARAN SEMESTER
-          </h1>
-          <h2 className="text-2xl font-semibold">PRODI {prodiName}</h2>
-        </div>
-        <div>
-          <Button
-            variant="contained"
-            color="primary"
-            className="!rounded-xl"
-            size="large"
-            endIcon={<AddIcon />}
-          >
-            Buat RPS
-          </Button>
-        </div>
+      <div className="items-center mb-10">
+        <h1 className="text-3xl font-bold">RANCANGAN PEMBELAJARAN SEMESTER</h1>
+        <h2 className="text-2xl font-semibold">PRODI {prodiName}</h2>
       </div>
 
       <div className="flex flex-row items-center justify-between mt-4 mb-6">

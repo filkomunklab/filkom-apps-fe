@@ -1,5 +1,6 @@
 import React from "react";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import GradingIcon from "@mui/icons-material/Grading";
 import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 import SchoolIcon from "@mui/icons-material/School";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -23,6 +24,8 @@ import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import AccountBoxSharpIcon from "@mui/icons-material/AccountBoxSharp";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
+import DescriptionIcon from "@mui/icons-material/Description";
+import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 
 export const sekretarisMenus = [
   {
@@ -567,7 +570,7 @@ export const dekanMenus = [
       {
         label: "Curriculum Management",
         type: "collapsible",
-        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
         children: [
           {
             label: "Informatics",
@@ -589,7 +592,7 @@ export const dekanMenus = [
       {
         label: "Evaluasi CPL",
         type: "collapsible",
-        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
+        icon: <PublishedWithChangesIcon sx={{ fontSize: 20 }} />,
         children: [
           {
             label: "Informatics",
@@ -609,22 +612,33 @@ export const dekanMenus = [
         ],
       },
       {
-        label: "Evaluasi RPS",
+        label: "RPS Management",
         type: "nav-item",
-        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
-        uri: "/obe/evaluasi-rps",
-      },
-      {
-        label: "Evaluasi CPMK",
-        type: "nav-item",
-        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
-        uri: "/obe/evaluasi-cpmk",
+        icon: <DescriptionIcon sx={{ fontSize: 20 }} />,
+        uri: "/obe/all-list-rps",
       },
       {
         label: "List RPS",
         type: "nav-item",
-        icon: <PeopleIcon sx={{ fontSize: 20 }} />,
-        uri: "/obe/list-rps",
+        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+        uri: `/obe/list-rps`,
+      },
+      {
+        label: "Evaluasi CPMK",
+        type: "collapsible",
+        icon: <GradingIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Mata Kuliah",
+            type: "nav-item",
+            uri: `/obe/evaluasi-matakuliah`,
+          },
+          {
+            label: "Mahasiswa (Individu)",
+            type: "nav-item",
+            uri: `/obe/evaluasi-mahasiswa`,
+          },
+        ],
       },
     ],
   },
@@ -820,6 +834,35 @@ export const dosenMenus = [
             label: "Skrip. Anggota",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Outcome-Based Education",
+    type: "section",
+    children: [
+      {
+        label: "List RPS",
+        type: "nav-item",
+        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+        uri: `/obe/list-rps`,
+      },
+      {
+        label: "Evaluasi CPMK",
+        type: "collapsible",
+        icon: <GradingIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Mata Kuliah",
+            type: "nav-item",
+            uri: `/obe/evaluasi-matakuliah`,
+          },
+          {
+            label: "Mahasiswa (Individu)",
+            type: "nav-item",
+            uri: `/obe/evaluasi-mahasiswa`,
           },
         ],
       },

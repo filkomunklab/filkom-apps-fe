@@ -1,12 +1,11 @@
-import { OBE_BASE_URL_API } from "@jumbo/config/env";
-import axios from "axios";
+import { obeClient } from "./client";
 
 export default async function getRpsList(payload) {
-  const { major, teacherId } = payload;
-  const query = teacherId ? `?teacherId=${teacherId}` : "";
-  const { data } = await axios.get(
-    `${OBE_BASE_URL_API}/api/rps/list/${major}${query}`
+  const { major } = payload;
+  const queryParams = new URLSearchParams();
+  major && queryParams.append("major", major);
+  const { data } = await obeClient.get(
+    `/rps/list/all${queryParams.toString() && `?${queryParams}`}`
   );
-  console.log(data.data);
   return data.data;
 }

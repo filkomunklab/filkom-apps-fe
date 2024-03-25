@@ -35,7 +35,7 @@ const ListGeneralRPS = () => {
 
       <div className="mt-16">
         {/* card */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
           {prodi.map((item, index) => (
             <CardProdi
               key={index}

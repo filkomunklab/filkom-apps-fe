@@ -1,9 +1,6 @@
-import { OBE_BASE_URL_API } from "@jumbo/config/env";
-import axios from "axios";
+import { obeClient } from "./client";
 
 export default async function getDetailReport(rpsId) {
-  const { data } = await axios.get(
-    `${OBE_BASE_URL_API}/api/report-detail/${rpsId}`
-  );
+  const { data } = await obeClient.get(`/report-detail/${rpsId}`);
   return data.data;
 }
