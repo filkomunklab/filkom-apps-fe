@@ -23,7 +23,6 @@ const Profile = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
       });
-      console.log("ini isi result.data", result.data.data);
       setDataProfile(result.data.data);
     } catch (error) {
       if (error.code === "ERR_CANCELED") {

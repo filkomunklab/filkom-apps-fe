@@ -95,7 +95,6 @@ const Grades = () => {
         }
       );
       const detail = gradeDetailsResult.data.data;
-      console.log("isi detail", detail);
       navigate(`${value.id}`, {
         state: {
           gradeDetails: {

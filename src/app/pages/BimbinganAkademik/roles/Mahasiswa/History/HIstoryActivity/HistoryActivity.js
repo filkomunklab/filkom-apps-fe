@@ -30,7 +30,6 @@ const Activity = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
-  console.log("loca", location);
   const { activityId } = location?.state || "-";
   const [activityDetail, setActivityDetail] = useState("");
 
@@ -46,8 +45,6 @@ const Activity = () => {
       const { status, data } = response.data;
       if (status === "OK") {
         setActivityDetail(data);
-      } else {
-        console.log("status result tidak ok", response);
       }
     } catch (error) {
       if (error.code === "ERR_CANCELED") {

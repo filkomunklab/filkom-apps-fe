@@ -78,7 +78,6 @@ const ReviewPreRegistrationStudent = () => {
 
   useEffect(() => {
     getPreregis();
-    console.log("INI ISI detail", detail.Student?.lastName);
     return () => controller.abort();
   }, []);
 

@@ -554,36 +554,21 @@ const FormAfterLoginStudent = ({
                   Parents / Guardians
                 </Typography>
                 <Grid container spacing={3} sx={{ padding: 2 }}>
-                  <Grid item xs={12} md={12}>
+                  <Grid item xs={12} md={6}>
                     <Typography variant="h5">Full Name</Typography>
                     <Typography variant="h6" sx={textStyle}>
                       {profileMahasiswa?.guardianName || "-"}
                     </Typography>
                   </Grid>
+
                   <Grid item xs={12} md={6}>
                     <Typography variant="h5">Family Relationship</Typography>
                     <Typography variant="h6" sx={textStyle}>
                       {profileMahasiswa?.familyRelation || "-"}
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} md={6}>
-                    <RTypography variant="h5">Email</RTypography>
-                    <TextField
-                      id="outlined-basic-1"
-                      variant="outlined"
-                      placeholder="Enter email..."
-                      fullWidth
-                      value={guardianEmail}
-                      onChange={(event) => setGuardianEmail(event.target.value)}
-                      size="small"
-                      sx={{
-                        backgroundColor: "white",
-                        "& input": { padding: 1.5 },
-                      }}
-                    />
-                  </Grid>
 
-                  <Grid item xs={12} md={12}>
+                  <Grid item xs={12} md={6}>
                     <RTypography variant="h5">Phone</RTypography>
                     <TextField
                       id="outlined-basic-1"
@@ -594,6 +579,23 @@ const FormAfterLoginStudent = ({
                       onChange={(event) =>
                         setGuardianPhoneNo(event.target.value)
                       }
+                      size="small"
+                      sx={{
+                        backgroundColor: "white",
+                        "& input": { padding: 1.5 },
+                      }}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} md={6}>
+                    <RTypography variant="h5">Email</RTypography>
+                    <TextField
+                      id="outlined-basic-1"
+                      variant="outlined"
+                      placeholder="Enter email..."
+                      fullWidth
+                      value={guardianEmail}
+                      onChange={(event) => setGuardianEmail(event.target.value)}
                       size="small"
                       sx={{
                         backgroundColor: "white",

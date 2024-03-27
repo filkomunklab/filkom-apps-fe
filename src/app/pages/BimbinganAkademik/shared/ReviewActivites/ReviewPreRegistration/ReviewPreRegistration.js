@@ -53,7 +53,20 @@ const ReviewPreRegistration = () => {
       });
       setDataWaiting(filteredData);
     } catch (error) {
-      console.log(error.message);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
     }
   };
 
@@ -73,8 +86,6 @@ const ReviewPreRegistration = () => {
       const detail = preregisDetailsResult.data.data;
       const { role } = JSON.parse(localStorage.getItem("user"));
       let path = "";
-      console.log("hai ini role KAPRODI", role.includes("KAPRODI"));
-      console.log("hai ini role DEKAN", role.includes("DEKAN"));
       if (role.includes("DEKAN")) {
         path = "/bimbingan-akademik/dekan/review-activities/pre-registration/";
       } else if (role.includes("KAPRODI")) {

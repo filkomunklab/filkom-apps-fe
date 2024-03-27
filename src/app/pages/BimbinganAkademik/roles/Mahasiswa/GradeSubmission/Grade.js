@@ -33,8 +33,6 @@ const Grade = () => {
       const gradeData = result.data.data;
       setDataGrade(gradeData);
 
-      console.log("ini panjang gradedata", result);
-
       const resultCurrent = await jwtAuthAxios.get(
         `/transaction/student/currentGrades/${id}`,
         {
@@ -42,11 +40,7 @@ const Grade = () => {
           signal,
         }
       );
-      console.log("ini resultCurrent", resultCurrent);
-      console.log("ini resultCurrent", resultCurrent);
-
       const transactionId = resultCurrent.data.data[0].id;
-      console.log("ini transactionId", transactionId);
 
       const checkTransactionId = await jwtAuthAxios.get(
         `/transaction/grades/check/${transactionId}`,
@@ -55,7 +49,6 @@ const Grade = () => {
           signal,
         }
       );
-      console.log("ini checkTransactionId", checkTransactionId);
       if (checkTransactionId.data.data !== null) {
         setSubmissionStatus("success");
       } else {
@@ -83,8 +76,6 @@ const Grade = () => {
     getDataGrade();
     return () => controller.abort();
   }, []);
-
-  console.log("ini isi dari submissionStatus", submissionStatus);
 
   return (
     <div>

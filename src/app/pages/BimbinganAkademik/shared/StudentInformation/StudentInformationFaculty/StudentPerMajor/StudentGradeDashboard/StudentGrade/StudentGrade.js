@@ -30,7 +30,6 @@ const StudentGrade = () => {
 
   const gradeDetails = state ? state.gradeDetails : {};
   const { semester, subject, firstName, lastName, major } = gradeDetails;
-  console.log("ini grade detail", gradeDetails);
 
   const getLetterGrade = (grade) => {
     if (grade >= 91) return { letter: "A", weight: 4.0 };

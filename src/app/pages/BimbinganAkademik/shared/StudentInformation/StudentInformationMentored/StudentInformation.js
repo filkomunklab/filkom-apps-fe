@@ -61,10 +61,7 @@ const StudentInformationMentored = () => {
       const { status, data } = result.data;
 
       if (status === "OK") {
-        console.log("ini isi result.data dalam status ok mentored", result);
         setResultData(data.GuidanceClassMember);
-      } else {
-        console.error("error, ini data result: ", result);
       }
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
@@ -112,7 +109,6 @@ const StudentInformationMentored = () => {
       const majorMatches =
         filter === "" ||
         (item.student.status && item.student.status === filter);
-      console.log("ini isi item", item);
       return (nameMatches || nimMatches) && majorMatches;
     });
 
@@ -349,9 +345,6 @@ const TableItem = ({ item, index }) => {
           },
         });
         break;
-
-      default:
-        console.log("Path not found");
     }
   };
 

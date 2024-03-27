@@ -88,8 +88,6 @@ const ViewActivity = () => {
         }
       );
 
-      console.log("res activity detail", response.data.data);
-
       const { status, data } = response.data;
       if (status === "OK") {
         setActivityDetail(data);
@@ -201,7 +199,6 @@ const ViewActivity = () => {
 
   useEffect(() => {
     getActivityDetail();
-    console.log("activityDetail", activityDetail);
     return () => controller.abort();
   }, []);
 

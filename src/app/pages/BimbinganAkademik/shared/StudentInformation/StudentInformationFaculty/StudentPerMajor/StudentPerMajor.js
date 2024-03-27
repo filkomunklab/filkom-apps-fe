@@ -115,8 +115,6 @@ const StudentPerMajor = () => {
     navigate(-1);
   };
 
-  useEffect(() => console.log("location: ", location), []);
-
   const filterAndSetStudents = () => {
     const filteredData = originalDataStudent.filter((item) => {
       const nameMatches =
@@ -334,7 +332,6 @@ const TableItem = ({ item, index }) => {
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-    console.log("ini id student", id);
     switch (name) {
       case "profile":
         navigate(`${nim}`, {
@@ -363,8 +360,6 @@ const TableItem = ({ item, index }) => {
           },
         });
         break;
-      default:
-        console.log("Path not found");
     }
   };
 

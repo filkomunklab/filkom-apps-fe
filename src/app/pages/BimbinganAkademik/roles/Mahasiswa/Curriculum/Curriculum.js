@@ -46,7 +46,6 @@ const Curriculum = () => {
           signal,
         }
       );
-      console.log("curriculumResult", curriculumResult);
       if (curriculumResult.data.status === "OK") {
         const hasil = curriculumResult.data.data;
 
@@ -141,7 +140,6 @@ const Curriculum = () => {
 
     return rows;
   };
-  console.log("ini curriculumDetails", curriculumDetails);
   return (
     <div>
       {loading ? (

@@ -151,37 +151,24 @@ const History = () => {
 
       if (activityStatus === "OK") {
         setDataActivity(activityData);
-      } else {
-        console.log("error activity:", resultActivity);
       }
 
       if (consultationStatus === "OK") {
         setDataConsultation(
           consultationData.filter((value) => value.status === "Complete")
         );
-      } else {
-        console.log(resultConsultation);
       }
 
       if (certificateStatus === "OK") {
         setDataCertificate(certificateData);
-      } else {
-        console.log(resultCertificate);
-        console.log(resultCertificate.data);
       }
 
       if (preregisStatus === "OK") {
         setDataPreregis(preregisData);
-      } else {
-        console.log(resultCertificate);
-        console.log(resultCertificate.data);
       }
 
       if (gradeStatus === "OK") {
         setDataGrade(gradeData);
-      } else {
-        console.log(resultGrade);
-        console.log(resultGrade.data);
       }
     } catch (error) {
       handleError(error);
@@ -306,7 +293,6 @@ const History = () => {
         }
       );
 
-      console.log("ini detail Consutation result:", consultationDetailsResult);
       let path = "/bimbingan-akademik/history/consultation/";
 
       navigate(`${path}${value.id}`, {
@@ -354,32 +340,28 @@ const History = () => {
         id,
         comments,
       } = certificateDetailsResult.data.data;
-      navigate(
-        `${pathh}${value.id}`,
-        {
-          state: {
-            certificateDetails: {
-              firstName: student.firstName,
-              lastName: student.lastName,
-              SupervisorFirstName:
-                student.GuidanceClassMember.gudianceClass.teacher.firstName,
-              SupervisorLastName:
-                student.GuidanceClassMember.gudianceClass.teacher.lastName,
-              submissionDate: submitDate,
-              pathFile: path,
-              category: category,
-              level: level,
-              description: description,
-              status: approvalStatus,
-              title: title,
-              id: id,
-              approvalDate: approvalDate,
-              comments: comments,
-            },
+      navigate(`${pathh}${value.id}`, {
+        state: {
+          certificateDetails: {
+            firstName: student.firstName,
+            lastName: student.lastName,
+            SupervisorFirstName:
+              student.GuidanceClassMember.gudianceClass.teacher.firstName,
+            SupervisorLastName:
+              student.GuidanceClassMember.gudianceClass.teacher.lastName,
+            submissionDate: submitDate,
+            pathFile: path,
+            category: category,
+            level: level,
+            description: description,
+            status: approvalStatus,
+            title: title,
+            id: id,
+            approvalDate: approvalDate,
+            comments: comments,
           },
         },
-        console.log("ini pathFile", path)
-      );
+      });
     } catch (error) {
       handleError(error);
     }
@@ -431,7 +413,6 @@ const History = () => {
 
       const detail = gradeDetailsResult.data.data;
       let path = "/bimbingan-akademik/history/grade/";
-      console.log("isi detail", detail);
       navigate(`${path}${value.id}`, {
         state: {
           gradeDetails: {
@@ -863,7 +844,6 @@ const History = () => {
                           sx={{ padding: "10px 50px" }}
                           onClick={() => {
                             handleNavigateCertificate(value);
-                            // console.log("ini isi dari value certi: ", value);
                           }}
                         >
                           <ListItemText

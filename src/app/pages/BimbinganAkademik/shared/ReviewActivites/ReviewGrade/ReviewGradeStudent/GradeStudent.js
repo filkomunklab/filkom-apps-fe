@@ -71,7 +71,6 @@ const GradeStudent = () => {
     semester,
     grades,
   } = gradeDetails;
-  console.log("ini grade detail", gradeDetails);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

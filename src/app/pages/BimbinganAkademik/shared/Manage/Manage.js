@@ -181,7 +181,6 @@ const Manage = () => {
 
   const getGradeAndPreregis = async () => {
     try {
-      console.log("ini major", major);
       const gradesResult = await jwtAuthAxios.get(
         `/access/list/gradesAccess/${major}`,
         {
@@ -232,13 +231,11 @@ const Manage = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
-      console.log("response close prereg", response);
 
       getGradeAndPreregis();
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log(error);
     }
   };
 
@@ -256,13 +253,11 @@ const Manage = () => {
       const response = await jwtAuthAxios.patch(`/access/close/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      console.log("response close prereg", response);
 
       getGradeAndPreregis();
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log(error);
     }
   };
 
@@ -275,7 +270,6 @@ const Manage = () => {
   const [listPreregisModalOpen, setListPreregisModalOpen] = useState(false);
 
   const handleTableRowClick = (rowData) => {
-    console.log("ahaha", rowData);
     setSelectedRow(rowData);
     setListPreregisModalOpen(true);
   };
@@ -498,8 +492,6 @@ const Manage = () => {
                         }
                       );
 
-                      console.log("ini isi values preregis", values);
-
                       setLoading(false);
                       resetForm();
                       PreregisModalClose();
@@ -507,19 +499,6 @@ const Manage = () => {
                       setSubmitting(false);
                       setFormType("pre-registration");
                     } catch (error) {
-                      console.log("Error submitting form:", error);
-
-                      if (error.response) {
-                        console.log(
-                          "Server responded with status:",
-                          error.response.status
-                        );
-                        console.log(
-                          "Server responded with data:",
-                          error.response.data
-                        );
-                      }
-
                       setLoading(false);
                       PreregisModalClose();
                       handleOpenErrorModal();
@@ -738,7 +717,6 @@ const Manage = () => {
                               <Button
                                 onClick={() => {
                                   handleClosePreregis(value.id);
-                                  console.log("Button Clicked prereg");
                                 }}
                               >
                                 Close
@@ -1074,14 +1052,12 @@ const Manage = () => {
                       );
 
                       setLoading(false);
-                      console.log("ini isi values grade", values);
                       resetForm();
                       GradeModalClose();
                       handleOpenSuccessModal();
                       setSubmitting(false);
                       setFormType("grade");
                     } catch (error) {
-                      console.log(error);
                       setLoading(false);
                       GradeModalClose();
                       handleOpenErrorModal();
@@ -1158,7 +1134,6 @@ const Manage = () => {
                               backgroundColor: "#006AF5",
                             }}
                             onClick={() => {
-                              console.log("Button clicked submit");
                               handleSubmit();
                             }}
                           >
@@ -1264,7 +1239,6 @@ const Manage = () => {
                               <Button
                                 onClick={() => {
                                   handleCloseGrade(value.id);
-                                  console.log("Button Clicked grade");
                                 }}
                               >
                                 Close

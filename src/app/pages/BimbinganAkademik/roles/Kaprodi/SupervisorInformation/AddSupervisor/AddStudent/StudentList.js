@@ -102,7 +102,6 @@ const StudentList = () => {
 
   useEffect(() => {
     getStudent();
-    console.log("ini di studentlist :", location?.state);
     return () => controller.abort();
   }, []);
 
@@ -136,7 +135,6 @@ const StudentList = () => {
 
     setSearchFilteredData(filteredData);
   };
-  console.log("ini isi originial", originalDataStudent);
 
   const handleSearch = (event) => {
     setSearch(event.target.value);

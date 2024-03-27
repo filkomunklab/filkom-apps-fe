@@ -84,9 +84,6 @@ const StudentGradeDashboard = () => {
           signal,
         }
       );
-      console.log("ini id", studentId);
-
-      console.log("ini grade", response.data);
 
       //menampilkan semester yang paling terbaru secara berurut
       const sortedData = response.data.data.sort((a, b) =>

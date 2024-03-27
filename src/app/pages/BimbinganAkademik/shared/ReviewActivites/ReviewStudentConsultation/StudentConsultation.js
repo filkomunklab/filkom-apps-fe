@@ -54,7 +54,6 @@ const StudentConsultation = () => {
         return includesSearch && item.status === "Waiting";
       });
 
-      console.log("Filtered data:", filteredData);
       setDataWaiting(filteredData);
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
@@ -100,7 +99,6 @@ const StudentConsultation = () => {
 
       const { role } = JSON.parse(localStorage.getItem("user"));
       let path = "";
-      console.log("hai ini role", role.includes === "KAPRODI");
       if (role.includes("DEKAN")) {
         path = "/bimbingan-akademik/dekan/review-activities/consultation/";
       } else if (role.includes("KAPRODI")) {

@@ -69,8 +69,6 @@ const StudentCertificate = () => {
         signal,
       });
 
-      console.log("ini isi result data di certi", result);
-
       if (result.data && result.data.data) {
         setDataWaiting(result.data.data);
       } else {
@@ -96,8 +94,6 @@ const StudentCertificate = () => {
         }
       );
 
-      console.log("ini detail certi result:", certificateDetailsResult);
-
       const {
         student,
         submitDate,
@@ -111,33 +107,29 @@ const StudentCertificate = () => {
         id,
         comments,
       } = certificateDetailsResult.data.data;
-      navigate(
-        `${value.id}`,
-        {
-          state: {
-            certificateDetails: {
-              firstName: student.firstName,
-              lastName: student.lastName,
-              SupervisorFirstName:
-                student.GuidanceClassMember?.gudianceClass?.teacher?.firstName,
-              SupervisorLastName:
-                student.GuidanceClassMember?.gudianceClass?.teacher?.lastName,
-              submissionDate: submitDate,
-              pathFile: path,
-              category: category,
-              level: level,
-              description: description,
-              status: approvalStatus,
-              title: title,
-              id: id,
-              approvalDate: approvalDate,
-              comments: comments,
-              major,
-            },
+      navigate(`${value.id}`, {
+        state: {
+          certificateDetails: {
+            firstName: student.firstName,
+            lastName: student.lastName,
+            SupervisorFirstName:
+              student.GuidanceClassMember?.gudianceClass?.teacher?.firstName,
+            SupervisorLastName:
+              student.GuidanceClassMember?.gudianceClass?.teacher?.lastName,
+            submissionDate: submitDate,
+            pathFile: path,
+            category: category,
+            level: level,
+            description: description,
+            status: approvalStatus,
+            title: title,
+            id: id,
+            approvalDate: approvalDate,
+            comments: comments,
+            major,
           },
         },
-        console.log("ini pathFile", path)
-      );
+      });
     } catch (error) {
       handleError(error);
     }

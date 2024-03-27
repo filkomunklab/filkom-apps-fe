@@ -30,8 +30,6 @@ const GradeSubmitted = () => {
 
       const gradeData = result.data.data;
       setDataGrade(gradeData);
-
-      console.log("ini panjang gradedata", result);
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");

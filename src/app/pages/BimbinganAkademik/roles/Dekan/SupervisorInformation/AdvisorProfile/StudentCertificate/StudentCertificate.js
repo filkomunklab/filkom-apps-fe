@@ -72,8 +72,6 @@ const StudentCertificate = () => {
         }
       );
 
-      console.log("ini isi result data di certi", result);
-
       if (result.data && result.data.data) {
         setDataWaiting(result.data.data);
       } else {

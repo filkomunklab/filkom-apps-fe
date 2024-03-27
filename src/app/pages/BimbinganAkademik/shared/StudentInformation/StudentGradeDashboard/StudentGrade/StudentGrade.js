@@ -53,8 +53,6 @@ const StudentGrade = () => {
       );
       setGradeDetails(gradeDetailsResult.data.data);
       setSubject(gradeDetailsResult.data.data.subject);
-
-      console.log("ini isi gradeDetailsResult", gradeDetailsResult.data.data);
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");

@@ -89,7 +89,6 @@ const SupervisorInformation = () => {
   useEffect(() => {
     filterAndSetStudents();
   }, [search, filter, originalDataSupervisor]);
-  console.log("ini isi originial", originalDataSupervisor);
 
   const filterAndSetStudents = () => {
     const filteredData = originalDataSupervisor.filter((item) => {
@@ -320,7 +319,6 @@ const TableItem = ({ item, index, onDelete }) => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   const { firstName, lastName, major, nik } = item.teacher;
-  console.log("ini isi item.techer", item.teacher);
 
   const handleButtonNavigate = (_, name) => {
     switch (name) {
@@ -334,9 +332,6 @@ const TableItem = ({ item, index, onDelete }) => {
           state: { classID: item.id, id: item.teacher.id },
         });
         break;
-
-      default:
-        console.log("Path not found. isi name: ", name);
     }
   };
 

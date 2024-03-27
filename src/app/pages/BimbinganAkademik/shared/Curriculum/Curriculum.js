@@ -162,7 +162,6 @@ const Curriculum = () => {
   const handleSubmitFirstModal = async () => {
     setLoading(true);
 
-    console.log("ini selected file: ", selectedFile);
     const file = selectedFile;
     const reader = new FileReader();
 
@@ -192,7 +191,6 @@ const Curriculum = () => {
         });
 
         if (response.data.status === "OK") {
-          console.log("Successful response:", response.data);
           hideAlert();
           setSelectedProdi("");
           setSelectedYear("");

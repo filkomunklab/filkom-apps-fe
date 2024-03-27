@@ -87,7 +87,6 @@ const Consultation = () => {
         handleCloseFirstModal();
         setLoading(true);
         const arrayReceiver = receiver.split("|");
-        console.log("receiver", receiver);
         const receiverId = arrayReceiver[0];
         const receiver_name = arrayReceiver[1];
         //bodyRequest
@@ -102,7 +101,6 @@ const Consultation = () => {
           supervisor_name: `${supervisorData.teacher.firstName} ${supervisorData.teacher.lastName}`,
           description: trimmedValue,
         };
-        console.log("ini isi consultationData", consultationData);
         try {
           const consultationResult = await jwtAuthAxios.post(
             `/academic-consultation`,
@@ -143,7 +141,6 @@ const Consultation = () => {
       } else {
         alert("Input tidak valid. Mohon masukkan pesan yang valid.");
       }
-      console.log("ini akhir dari handleSubmitFirstModal");
     } catch (error) {
       if (
         error.response &&
@@ -191,8 +188,6 @@ const Consultation = () => {
         if (response1.data.status === "OK") {
           const supervisorData = response1.data.data;
           setSupervisorData(supervisorData);
-        } else {
-          console.log(response1);
         }
 
         if (response2.data.status === "OK") {
@@ -204,28 +199,20 @@ const Consultation = () => {
             (item) => item.role === "dekan"
           );
           setDekanData(dekanData);
-        } else {
-          console.log(response2);
         }
         setInformationStudent(result.data.data);
-        console.log("supervisorData", supervisorData);
-        console.log("kaprodiData", kaprodiData);
-        console.log("dekanData", dekanData);
-      } else {
-        console.log("status result tidak ok", result);
       }
     } catch (error) {
-      if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
         return;
-      } else {
-        console.log("ini error: ", error);
-        return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
       }
     }
   };

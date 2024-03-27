@@ -46,7 +46,6 @@ const CertificateDetail = () => {
         }
       );
       setCertificateDetails(certificateDetailsResult.data.data);
-      console.log("setCertificateDetails", certificateDetailsResult.data.data);
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
@@ -83,7 +82,6 @@ const CertificateDetail = () => {
     approvalStatus,
     student,
   } = certificateDetails;
-  console.log("filename", path);
   const {
     firstName: studentFirstName,
     lastName: studentLastName,
@@ -94,9 +92,6 @@ const CertificateDetail = () => {
   const teacherFirstName =
     teacher && teacher.firstName ? teacher.firstName : null;
   const teacherLastName = teacher && teacher.lastName ? teacher.lastName : null;
-  console.log("ini isi teacher", teacher);
-  console.log("ini isi teacherFirstName", teacherFirstName);
-  console.log("ini isi teacherLastName", teacherLastName);
 
   const commentContent =
     comments && comments.trim() !== "" ? comments.trim() : "-";

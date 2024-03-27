@@ -159,12 +159,9 @@ const AddActivity = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
         });
-        console.log("ini isi responseMajor employee id", responseMajor);
-        console.log("ini isi response student", response);
       }
 
       const { status, data } = response.data;
-      console.log("ini data getStudentList", response);
 
       if (status === "OK" && data) {
         if (valueStudent === "GUIDANCE_CLASS") {
@@ -184,7 +181,6 @@ const AddActivity = () => {
             ),
           ]);
         } else {
-          console.log("masok");
           setStudentOptions([
             "All students",
             ...data.filter((item) => item.status === "ACTIVE"),
@@ -229,15 +225,12 @@ const AddActivity = () => {
             .map((item) => ({ studentId: item.id })),
         };
 
-        console.log("Request Body:", requestBody);
-
         const response = await jwtAuthAxios.post(`/activity`, requestBody, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           signal,
         });
-        console.log("ini itu isi", response);
 
         const { status } = response.data;
         if (status === "OK") {
@@ -282,7 +275,6 @@ const AddActivity = () => {
 
   const validation = () => {
     const current = new Date();
-    console.log("waktu skarang", current);
     return (
       title !== "" &&
       dueDate !== null &&
@@ -302,26 +294,16 @@ const AddActivity = () => {
   }, [valueStudent]);
 
   useEffect(() => {
-    console.log("ini time", time);
-    console.log("ini date", date);
     combinedDateTime();
   }, [time, date]);
 
-  useEffect(() => {
-    console.log("due date: ", dueDate);
-  }, [dueDate]);
-
   const combinedDateTime = () => {
     if (!date || isNaN(date)) {
-      console.log("Invalid date");
-      return null; // atau nilai default yang sesuai
+      return null;
     }
 
     const combinedDateTime = new Date(date);
     const [hours, minutes] = time.split(":");
-
-    console.log("isi hours", hours);
-    console.log("isi minutes", minutes);
 
     combinedDateTime.setHours(hours);
     combinedDateTime.setMinutes(minutes);
@@ -329,7 +311,6 @@ const AddActivity = () => {
   };
 
   const handleSelectStudent = (_, newValue) => {
-    console.log("yaho", newValue);
     const wasAllSelected =
       prevSelectedStudentRef.current.includes("All students");
     if (newValue.includes("All students")) {
@@ -418,7 +399,6 @@ const AddActivity = () => {
             type="time"
             value={time}
             onChange={(e) => {
-              console.log("wkwk", e);
               setTime(e.target.value);
             }}
             inputProps={{

@@ -128,7 +128,6 @@ const AdvisorProfile = () => {
         }
       );
 
-      console.log("res delete: ", response);
       const { status } = response.data;
       if (status === "OK") {
         getProfile();
@@ -271,11 +270,6 @@ const AdvisorProfile = () => {
         <Grid item display={"flex"} alignItems={"center"}>
           <Button
             onClick={() => {
-              console.log("Navigating to edit-student with parameters:", {
-                nik: nik,
-                classID: classID,
-              });
-
               navigate(
                 `/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/${nik}/edit-student`,
                 {
@@ -552,7 +546,6 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
   const navigate = useNavigate();
   const { arrivalYear, firstName, lastName, major, nim, status } = item.student;
   const role = JSON.parse(localStorage.getItem("user")).role;
-  console.log("test role", role);
 
   const handleButtonNavigate = (_, name) => {
     switch (name) {
@@ -588,9 +581,6 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
           }
         );
         break;
-
-      default:
-        console.log("Path not found");
     }
   };
   const rowStyle = {

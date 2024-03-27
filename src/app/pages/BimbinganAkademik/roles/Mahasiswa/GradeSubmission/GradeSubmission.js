@@ -113,8 +113,6 @@ const GradeSubmission = () => {
 
       const gradeData = result.data.data;
       setDataGrade(gradeData);
-
-      console.log("ini panjang gradedata", result);
     } catch (error) {
       handleError(error);
     }
@@ -161,8 +159,6 @@ const GradeSubmission = () => {
         })),
       };
 
-      console.log("Request Body:", requestBody);
-
       const response = await jwtAuthAxios.post(
         `/transaction/grades/${id}`,
         requestBody,
@@ -171,8 +167,6 @@ const GradeSubmission = () => {
           signal,
         }
       );
-
-      console.log("Response.data pe hasil:", response.data);
 
       if (response.data.status === "OK") {
         window.location.reload();
@@ -198,8 +192,6 @@ const GradeSubmission = () => {
       } else if (error.response && error.response.status === 401) {
         handleAuthenticationError();
       } else {
-        console.log("error: ", error);
-        handleOpenErrorModal();
         setSemester("");
         setRow();
         setSubjectNames(Array(row).fill(""));
@@ -208,6 +200,7 @@ const GradeSubmission = () => {
         setDescriptions(Array(row).fill(""));
         setShowLabel(true);
         setShowLabel2(true);
+        handleOpenErrorModal();
         setLoading(false);
         return;
       }
@@ -230,8 +223,6 @@ const GradeSubmission = () => {
     newSubjectNames[index] = { ...value, subjectId };
     setSubjectNames(newSubjectNames);
   };
-
-  console.log("ini subjectname", subjectNames);
 
   const handleGradeChange = (event, index) => {
     const newGrades = [...grades];
@@ -269,15 +260,6 @@ const GradeSubmission = () => {
   };
 
   const tableData = generateTableData(row);
-
-  useEffect(() => {
-    console.log("Semester:", semester);
-    console.log("Row:", row);
-    console.log("Subject Names:", subjectNames);
-    console.log("Grades:", grades);
-    console.log("Lecturers:", lecturers);
-    console.log("Descriptions:", descriptions);
-  }, []);
 
   return (
     <div>

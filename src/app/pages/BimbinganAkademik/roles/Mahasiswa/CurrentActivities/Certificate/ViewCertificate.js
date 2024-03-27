@@ -36,7 +36,6 @@ const CertificateWaiting = () => {
     title,
   } = certificateDetails;
   const pdfURL = pathFile;
-  console.log("ini pdf url", pdfURL);
 
   const getCategoryLabel = (category) => {
     switch (category) {

@@ -25,10 +25,16 @@ import LinearProgressWithLabel from "app/shared/LinearProgressWithLabel";
 import BubbleChartIcon from "@mui/icons-material/BubbleChart";
 import Div from "@jumbo/shared/Div";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+import { useNavigate } from "react-router-dom";
 
 const COLORS = ["#8884d8", "#82ca9d", "skyblue", "#AAC4FF", "#51829B"];
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [distributionData, setDistributionData] = useState([]);
   const [myMajor, setMyMajor] = useState("");
   const [majorStudent, setMajorStudent] = useState([]);
@@ -48,6 +54,23 @@ const Dashboard = () => {
 
   useEffect(() => {}, [distributionData]);
 
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (error.response && error.response.status === 403) {
+      handlePermissionError();
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      return;
+    } else if (error.response && error.response.status === 401) {
+      handleAuthenticationError();
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
+
   const getMyDataProfile = async () => {
     try {
       const response = await jwtAuthAxios.get(
@@ -61,7 +84,7 @@ const Dashboard = () => {
 
       setMyMajor(response.data.data.major);
     } catch (error) {
-      console.log(error.message);
+      handleError(error);
     }
   };
 
@@ -73,11 +96,10 @@ const Dashboard = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
-      console.log("certi", response.data);
 
       setCertificateData(response.data.data);
     } catch (error) {
-      console.log(error.message);
+      handleError(error);
     }
   };
 
@@ -89,12 +111,9 @@ const Dashboard = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
-
-      const apiData = response.data.data;
-
       setDistributionData(response.data.data);
     } catch (error) {
-      console.log(error);
+      handleError(error);
     }
   };
 
@@ -107,11 +126,9 @@ const Dashboard = () => {
         }
       );
 
-      console.log(response.data);
-
       setMajorStudent(response.data.data);
     } catch (error) {
-      console.log(error);
+      handleError(error);
     }
   };
 
@@ -127,8 +144,6 @@ const Dashboard = () => {
           }
         );
 
-        console.log(response.data);
-
         setActiveStudentStatus(response.data.data);
       } else {
         const response = await jwtAuthAxios.get(
@@ -140,12 +155,10 @@ const Dashboard = () => {
           }
         );
 
-        console.log(response.data);
-
         setActiveStudentStatus(response.data.data[0].count);
       }
     } catch (error) {
-      console.log(error);
+      handleError(error);
     }
   };
 
@@ -161,8 +174,6 @@ const Dashboard = () => {
           }
         );
 
-        console.log(response.data);
-
         setInActiveStudentStatus(response.data.data);
       } else {
         const response = await jwtAuthAxios.get(
@@ -174,12 +185,10 @@ const Dashboard = () => {
           }
         );
 
-        console.log(response.data);
-
         setInActiveStudentStatus(response.data.data[0].count);
       }
     } catch (error) {
-      console.log(error);
+      handleError(error);
     }
   };
 
@@ -311,9 +320,6 @@ const Dashboard = () => {
                     const result =
                       (studentActiveCount?.count / allStudentCount?.count) *
                       100;
-                    // console.log("ini result e: ", result);
-
-                    // Memeriksa apakah hasil kalkulasi adalah NaN
                     const finalResult = isNaN(result) ? 0 : result;
 
                     return finalResult;
@@ -333,11 +339,7 @@ const Dashboard = () => {
                     const result =
                       (studentInActiveCount?.count / allStudentCount?.count) *
                       100;
-
-                    // Memeriksa apakah hasil kalkulasi adalah NaN
                     const finalResult = isNaN(result) ? 0 : result;
-                    // console.log("ini result e: ", result);
-
                     return finalResult;
                   })()}
                   color="warning"

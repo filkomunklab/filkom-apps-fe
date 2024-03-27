@@ -93,7 +93,6 @@ const StudentProfile = () => {
         }
       );
 
-      console.log("ini isi student", resultStudent);
       setStudentProfileData(resultStudent.data.data);
       setAdvisorProfileData(
         resultStudent.data.data.GuidanceClassMember.gudianceClass.teacher
@@ -135,7 +134,6 @@ const StudentProfile = () => {
         getProfile();
       }
       setIsLoading(false);
-      console.log("ini status", status);
     } catch (error) {
       handleOpenErrorModal();
       setIsLoading(false);
@@ -255,11 +253,6 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Stack direction={"row"} gap={1} justifyContent={"space-between"}>
                 <Typography variant="h5">Student Status</Typography>
-                {console.log("dosenGuidanceClass", dosenGuidanceClass)}
-                {console.log(
-                  "studentGuidanceClass",
-                  studentProfileData?.GuidanceClassMember?.gudianceClass?.id
-                )}
                 {dosenGuidanceClass ===
                   studentProfileData?.GuidanceClassMember?.gudianceClass
                     ?.id && (
@@ -467,7 +460,7 @@ const StudentProfile = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3} sx={{ padding: 2 }}>
-            <Grid item xs={12} md={12}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h5">Full Name</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.guardianName ?? "-"}
@@ -480,15 +473,15 @@ const StudentProfile = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h5">Email</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianEmail ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={12}>
               <Typography variant="h5">Phone</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.guardianPhoneNo ?? "-"}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h5">Email</Typography>
+              <Typography variant="h6" sx={textStyle}>
+                {studentProfileData?.guardianEmail ?? "-"}
               </Typography>
             </Grid>
           </Grid>

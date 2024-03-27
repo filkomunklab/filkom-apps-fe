@@ -87,7 +87,6 @@ const SupervisorInformation = () => {
         },
         signal,
       });
-      console.log("hehe", response.status);
       getDataSupervisor();
       setIsLoading(false);
     } catch (error) {
@@ -121,7 +120,6 @@ const SupervisorInformation = () => {
   useEffect(() => {
     filterAndSetStudents();
   }, [search, filter, originalDataSupervisor]);
-  console.log("ini isi originial", originalDataSupervisor);
 
   const filterAndSetStudents = () => {
     const filteredData = originalDataSupervisor.filter((item) => {
@@ -352,7 +350,6 @@ const TableItem = ({ item, index, handleDelete }) => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   const { firstName, lastName, major, nik } = item.teacher;
-  console.log("ini isi item.techer", item.teacher);
 
   const handleButtonNavigate = (_, name) => {
     switch (name) {
@@ -361,9 +358,6 @@ const TableItem = ({ item, index, handleDelete }) => {
           state: { classID: item.id, nik: nik },
         });
         break;
-
-      default:
-        console.log("Path not found. isi name: ", name);
     }
   };
 

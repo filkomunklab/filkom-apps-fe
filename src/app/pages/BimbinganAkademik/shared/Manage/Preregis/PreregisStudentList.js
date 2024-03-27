@@ -39,8 +39,6 @@ const PreregisStudentList = () => {
   const [dataStudent, setDataStudent] = useState([]);
 
   const getDataStudent = async () => {
-    console.log("major", major);
-    console.log("id", id);
     try {
       const result = await jwtAuthAxios.get(
         `/pre-regist/list-submitted/${id}?major=${major}`,
@@ -49,9 +47,6 @@ const PreregisStudentList = () => {
           signal,
         }
       );
-
-      console.log("ini result dari student", result.data.data);
-
       const filteredData = result.data.data.filter((item) => {
         const studentFullName = `${item?.lastName}, ${item?.firstName}`;
         return studentFullName
@@ -77,7 +72,6 @@ const PreregisStudentList = () => {
   };
   useEffect(() => {
     getDataStudent();
-    console.log("isi dataStudent", dataStudent);
     return () => controller.abort();
   }, [searchValue, id]);
 
