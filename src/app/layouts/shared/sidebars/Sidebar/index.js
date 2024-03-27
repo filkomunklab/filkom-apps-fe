@@ -238,6 +238,7 @@ const SidebarFooter = () => {
           localStorage.clear();
           setAuthToken(null);
           navigate("/login");
+          window.location.reload();
         },
         label: "Logout",
         type: "nav-item",

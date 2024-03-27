@@ -110,6 +110,24 @@ const Login = () => {
             try {
               const { token, user } = await authService.signIn(data);
 
+              console.log("ini user sebelum role", user.role);
+
+              const role = user.role;
+              const getRole = () => {
+                if (role.includes("KAPRODI")) {
+                  return "kaprodi";
+                } else if (role.includes("DEKAN")) {
+                  return "dekan";
+                } else if (role.includes("OPERATOR_FAKULTAS")) {
+                  return "sekretaris";
+                } else if (role.includes("DOSEN")) {
+                  return "dosen-pembimbing";
+                } else {
+                  return "default-role";
+                }
+              };
+              console.log("ini user sesudah role", role);
+
               console.log(token, user);
               if (user.role === "MAHASISWA") {
                 const response = await jwtAuthAxios.get(
@@ -156,12 +174,13 @@ const Login = () => {
                   setOpenModal(true);
                 }
               } else {
+                const userRole = getRole();
+                console.log("userRole", userRole);
                 setAuthToken(token);
 
                 console.log("ini user loh: ", user);
                 localStorage.setItem("user", JSON.stringify(user));
-
-                navigate("/");
+                navigate(`/bimbingan-akademik/${userRole}/profile`);
               }
             } catch (error) {
               console.log(error);
@@ -192,7 +211,7 @@ const Login = () => {
                     padding: maxWidth515 ? "15px 0 " : "5px 0",
                   }}
                 >
-                  Sign In
+                  Login
                 </Typography>
                 <Grid container direction={"column"} gap={2}>
                   <Grid item>
@@ -265,7 +284,7 @@ const Login = () => {
                         backgroundColor: "#006AF5",
                       }}
                     >
-                      Sign In
+                      Login
                     </LoadingButton>
                   </Grid>
                   <Grid item alignSelf={"center"}>
