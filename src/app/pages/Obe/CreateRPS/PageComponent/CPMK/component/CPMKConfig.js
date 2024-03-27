@@ -42,7 +42,7 @@ function getStyles(CPL, personName, theme) {
   };
 }
 
-const CPMKConfig = ({ id, onDeleteCpmk }) => {
+const CPMKConfig = ({ onDeleteCpmk, item, index }) => {
   const theme = useTheme();
   const [cpl, setCpl] = React.useState([]);
 
@@ -123,7 +123,7 @@ const CPMKConfig = ({ id, onDeleteCpmk }) => {
       <div className="absolute top-1/2 right-0 transform -translate-y-1/2">
         <DeleteIcon
           style={{ cursor: "pointer", color: "red" }}
-          onClick={() => onDeleteCpmk(id)}
+          onClick={() => onDeleteCpmk(item.cpmkCode)}
         />
       </div>
     </div>

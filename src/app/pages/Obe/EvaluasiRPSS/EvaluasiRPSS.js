@@ -16,6 +16,7 @@ import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { Link } from "react-router-dom";
 
 const EvaluasiRPS = () => {
   const [page, setPage] = useState(0);
@@ -182,15 +183,17 @@ const EvaluasiRPS = () => {
           </h1>
         </div>
         <div className="col-span-3 text-end">
-          <Button
-            variant="contained"
-            color="primary"
-            className="!rounded-xl"
-            size="large"
-            endIcon={<AddIcon />}
-          >
-            Buat RPS
-          </Button>
+          <Link to={"/obe/list-rps/create"}>
+            <Button
+              variant="contained"
+              color="primary"
+              className="!rounded-xl"
+              size="large"
+              endIcon={<AddIcon />}
+            >
+              Buat RPS
+            </Button>
+          </Link>
         </div>
       </div>
 

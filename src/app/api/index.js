@@ -1,6 +1,6 @@
+import GetSubjects from "./GetSubjects";
 import getTeacher from "./getTeacher";
 import getRpsList from "./getRpsList";
-import getSubjects from "./getSubjects";
 import getCplMapping from "./getCplMapping";
 import getRpsListTeacher from "./getRpsListTeacher";
 import getDetailReport from "./getDetailReport";
@@ -12,6 +12,7 @@ import putReportDetail from "./putDetailReport";
 import putStudentGrade from "./putStudentGrade";
 
 export {
+  GetSubjects,
   putStudentGrade,
   putReportDetail,
   getDetailReport,
@@ -19,7 +20,6 @@ export {
   getTeacher,
   getRpsListTeacher,
   postCurriculum,
-  getSubjects,
   postCpl,
   getCplMapping,
   putSubjectCpl,

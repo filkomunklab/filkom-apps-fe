@@ -17,7 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getSubjects, postCpl } from "app/api";
+import { GetSubjects, postCpl } from "app/api";
 import { Actions, CplTable } from "./components";
 import Swal from "sweetalert2";
 import { LoadingButton } from "@mui/lab";
@@ -40,7 +40,7 @@ const SubjectList = () => {
 
   const subjectsQuery = useQuery({
     queryKey: ["subjects", curriculumId],
-    queryFn: () => getSubjects(curriculumId),
+    queryFn: () => GetSubjects.byCurriculum(curriculumId),
   });
 
   const cplMutation = useMutation({

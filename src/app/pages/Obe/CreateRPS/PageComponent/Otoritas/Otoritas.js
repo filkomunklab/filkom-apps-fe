@@ -2,28 +2,28 @@ import React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { useQuery } from "@tanstack/react-query";
+import { getTeacher } from "app/api";
+import { useFormikContext } from "formik";
 
 const Otoritas = () => {
+  const { handleChange, values } = useFormikContext();
   const [Pengembang, setPengembang] = React.useState("");
-  const [KetuaKelompok, setKetuaKelompok] = React.useState("");
+
   const [Kaprodi, setKaprodi] = React.useState("");
 
   const handleChangePengembang = (event) => {
     setPengembang(event.target.value);
   };
 
-  const handleChangeKetuaKelompok = (event) => {
-    setKetuaKelompok(event.target.value);
-  };
-
-  const handlesumbit = (event) => {
-    event.preventDefault();
-    console.log(Pengembang, KetuaKelompok, Kaprodi);
-  };
-
   const handleChangeKaprodi = (event) => {
     setKaprodi(event.target.value);
   };
+
+  const employee = useQuery({
+    queryKey: ["employee"],
+    queryFn: getTeacher,
+  });
 
   return (
     <div className="bg-white rounded-sm p-5">
@@ -40,12 +40,11 @@ const Otoritas = () => {
             <MenuItem value="">
               <em>Pilih Pengembang</em>
             </MenuItem>
-            <MenuItem value={10}>Andrew Tanny Liem, SSi., MT., PhD</MenuItem>
-            <MenuItem value={20}>Stenly R. Pungus, MT, PhD</MenuItem>
-            <MenuItem value={30}>
-              Oktoverano H. Lengkong, SKom, MDs, MM
-            </MenuItem>
-            <MenuItem value={40}>Green Mandias, SKom, MCs</MenuItem>
+            {employee.data?.map((item) => (
+              <MenuItem key={item.value} value={item.value}>
+                {item.label}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </div>
@@ -53,11 +52,12 @@ const Otoritas = () => {
       <div className="mb-5">
         <p className="mb-2">Ketua Kelompok Keahlian</p>
         <input
+          name="headOfExpretise"
           type="text"
           className="w-full border border-gray-400 rounded-md p-2 py-4 hover:border-gray-600 focus:outline-none focus:border-blue-500 transition duration-200 ease-in-out"
           placeholder="Ex.Andrew Tanny Liem, SSi., MT., PhD"
-          value={KetuaKelompok}
-          onChange={handleChangeKetuaKelompok}
+          value={values.headOfExpretise}
+          onChange={handleChange}
         />
       </div>
 
