@@ -57,10 +57,6 @@ const MediaPembelajaran = () => {
     );
   };
 
-  const handleDelete = (chipToDelete) => () => {
-    setDosen((chips) => chips.filter((chip) => chip !== chipToDelete));
-  };
-
   return (
     <div>
       <div className="bg-white rounded-sm p-5 my-5">
@@ -103,11 +99,7 @@ const MediaPembelajaran = () => {
             renderValue={(selected) => (
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                 {selected.map((value) => (
-                  <Chip
-                    key={value}
-                    label={value}
-                    onDelete={handleDelete(value)}
-                  />
+                  <Chip key={value} label={value} />
                 ))}
               </Box>
             )}

@@ -120,7 +120,17 @@ const BobotCPMK = () => {
                               className="border border-gray-300 p-2 w-full h-[53px] rounded-md active:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all duration-300"
                               min={0}
                             />
-                            {12 < 0 && (
+                            {values.gradingSystem.find(
+                              (item) =>
+                                item.label ===
+                                values.cpmkGrading[index].gradingSystem[
+                                  innerIndex
+                                ].gradingName
+                            )?.value -
+                              values.cpmkGrading[index].gradingSystem[
+                                innerIndex
+                              ].gradingWeight <
+                              0 && (
                               <div className="text-end mt-2">
                                 <p className="text-red-500 text-xs">
                                   Bobot Melebihi Limit
