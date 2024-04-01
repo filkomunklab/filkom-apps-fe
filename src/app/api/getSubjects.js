@@ -13,11 +13,12 @@ export default class GetSubjects {
       .sort((a, b) => {
         return a.englishName.localeCompare(b.englishName);
       })
+      .filter((item) => item.Subject_Cpl.length > 0)
       .map((item) => ({
         label: `[${item.code}] ${item.englishName} / ${item.indonesiaName}`,
         value: item.id,
       }));
-    console.log(normalize);
+    console.log(data.data, normalize);
     return normalize;
   }
 
@@ -30,5 +31,11 @@ export default class GetSubjects {
 
     console.log(data.data, normalize);
     return normalize;
+  }
+
+  static async preRequisite(id) {
+    const { data } = await obeClient.get(`/subject/${id}/prerequisite`);
+    console.log(data.data);
+    return data.data;
   }
 }

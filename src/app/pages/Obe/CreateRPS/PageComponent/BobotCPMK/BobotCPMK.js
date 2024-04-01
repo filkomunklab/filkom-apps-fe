@@ -1,11 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Field, FieldArray, useFormikContext } from "formik";
-import { FormControl, MenuItem, Select } from "@mui/material";
+import {
+  FormControl,
+  FormHelperText,
+  MenuItem,
+  Select,
+  Stack,
+} from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 const BobotCPMK = () => {
   const [newGrading, setNewGrading] = useState("");
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue, errors } = useFormikContext();
+  const prevCpmkGrading = useRef([]);
 
   useEffect(() => {
     if (values.cpmkGrading.length < values.cpmk.length) {
@@ -25,11 +32,60 @@ const BobotCPMK = () => {
     }
   }, []);
 
+  useEffect(() => {
+    // Check if the current value of values.cpmkGrading is different from the previous one
+    if (
+      JSON.stringify(prevCpmkGrading.current) !==
+      JSON.stringify(values.cpmkGrading)
+    ) {
+      const totalGradingWeight = values.cpmkGrading.map((item) =>
+        item.gradingSystem.reduce((acc, curr) => acc + curr.gradingWeight, 0)
+      );
+      setFieldValue(
+        "cpmkGrading",
+        values.cpmkGrading.map((item, index) => ({
+          ...item,
+          totalGradingWeight: totalGradingWeight[index],
+        }))
+      );
+      prevCpmkGrading.current = values.cpmkGrading; // Update previous value
+    }
+  }, [values.cpmkGrading]);
+
+  useEffect(() => {
+    console.log(values.cpmkGrading, values.gradingSystem);
+    const updatedGradingSystem = values.gradingSystem.map((item) => {
+      const gradingName = item.label;
+      const gradingWeightSum = values.cpmkGrading.reduce((acc, curr) => {
+        const gradingSystem = curr.gradingSystem.find(
+          (system) => system.gradingName === gradingName
+        );
+        return (
+          acc +
+          (gradingSystem && gradingSystem.gradingWeight
+            ? gradingSystem.gradingWeight
+            : 0)
+        );
+      }, 0);
+      const left = item.value - gradingWeightSum;
+      return {
+        ...item,
+        left,
+      };
+    });
+    setFieldValue("gradingSystem", updatedGradingSystem);
+  }, [values.cpmkGrading]);
+
   return (
     <div className="">
-      <h1 className="bg-white rounded-sm p-5 text-base font-semibold">
-        Bobot per Bentuk Penilaian Pada Tiap CPMK
-      </h1>
+      <div className="bg-white rounded-sm p-5 flex justify-between">
+        <h1 className="text-base font-semibold">
+          Bobot per Bentuk Penilaian Pada Tiap CPMK
+        </h1>
+        <FormHelperText error>
+          <b>{errors.customValidation?.cpmkGrading}</b>
+        </FormHelperText>
+      </div>
 
       <FieldArray
         name="cpmkGrading"
@@ -61,9 +117,9 @@ const BobotCPMK = () => {
                                     values.gradingSystem.find(
                                       (item) =>
                                         item.label ===
-                                        values.cpmkGrading[index].gradingSystem[
-                                          innerIndex
-                                        ].gradingName
+                                        values.cpmkGrading?.[index]
+                                          ?.gradingSystem?.[innerIndex]
+                                          ?.gradingName
                                     )?.value
                                   }
                                 </span>
@@ -82,35 +138,45 @@ const BobotCPMK = () => {
                                       "aria-label": "Without label",
                                     }}
                                   >
-                                    {values.gradingSystem?.map((item) => (
-                                      <MenuItem value={item.label}>
-                                        {item.label}
-                                      </MenuItem>
-                                    ))}
+                                    {values.gradingSystem?.map(
+                                      (item, index) => (
+                                        <MenuItem
+                                          key={index}
+                                          value={item.label}
+                                        >
+                                          {item.label}
+                                        </MenuItem>
+                                      )
+                                    )}
                                   </Select>
                                 )}
                               </Field>
+                              <FormHelperText error>
+                                <b>
+                                  {
+                                    errors.cpmkGrading?.[index]
+                                      ?.gradingSystem?.[innerIndex]?.gradingName
+                                  }
+                                </b>
+                              </FormHelperText>
                             </FormControl>
                           </div>
 
                           <div>
                             <div className="flex justify-between">
-                              <p className="font-semibold mb-2">
-                                Total per Penilaian
-                              </p>
+                              <p className="font-semibold mb-2">Nilai</p>
                               <p>
                                 Sisa Bobot :{" "}
                                 <span>
-                                  {values.gradingSystem.find(
-                                    (item) =>
-                                      item.label ===
-                                      values.cpmkGrading[index].gradingSystem[
-                                        innerIndex
-                                      ].gradingName
-                                  )?.value -
-                                    values.cpmkGrading[index].gradingSystem[
-                                      innerIndex
-                                    ].gradingWeight}
+                                  {
+                                    values.gradingSystem.find(
+                                      (item) =>
+                                        item.label ===
+                                        values.cpmkGrading?.[index]
+                                          ?.gradingSystem?.[innerIndex]
+                                          ?.gradingName
+                                    )?.left
+                                  }
                                 </span>
                               </p>
                             </div>
@@ -120,28 +186,28 @@ const BobotCPMK = () => {
                               className="border border-gray-300 p-2 w-full h-[53px] rounded-md active:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all duration-300"
                               min={0}
                             />
-                            {values.gradingSystem.find(
-                              (item) =>
-                                item.label ===
-                                values.cpmkGrading[index].gradingSystem[
-                                  innerIndex
-                                ].gradingName
-                            )?.value -
-                              values.cpmkGrading[index].gradingSystem[
-                                innerIndex
-                              ].gradingWeight <
-                              0 && (
-                              <div className="text-end mt-2">
-                                <p className="text-red-500 text-xs">
-                                  Bobot Melebihi Limit
-                                </p>
-                              </div>
-                            )}
+                            <FormHelperText error>
+                              <b>
+                                {
+                                  errors.cpmkGrading?.[index]?.gradingSystem?.[
+                                    innerIndex
+                                  ]?.gradingWeight
+                                }
+                              </b>
+                            </FormHelperText>
+                          </div>
+                          <div>
+                            <button
+                              onClick={() => arrayHelpers.remove(innerIndex)}
+                              className="bg-red-600 text-white px-3 py-2 rounded-md flex items-center hover:bg-red-800 transition-colors duration-300"
+                            >
+                              Hapus Bentuk
+                            </button>
                           </div>
                         </div>
                       ))}
 
-                      <div>
+                      <Stack direction={"row"} gap={3}>
                         <button
                           onClick={() => {
                             arrayHelpers.push({
@@ -156,7 +222,13 @@ const BobotCPMK = () => {
                             style={{ fontSize: 16, marginLeft: 5 }}
                           />
                         </button>
-                      </div>
+                        <button
+                          onClick={() => outerHelpers.remove(index)}
+                          className="bg-red-600 text-white px-3 py-2 rounded-md flex items-center hover:bg-red-800 transition-colors duration-300"
+                        >
+                          Hapus Penilaian
+                        </button>
+                      </Stack>
                     </>
                   )}
                 />

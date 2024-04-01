@@ -6,6 +6,7 @@ import getRpsListTeacher from "./getRpsListTeacher";
 import getDetailReport from "./getDetailReport";
 import postCurriculum from "./postCurriculum";
 import postCpl from "./postCpl";
+import postRps from "./postRps";
 import postStudents from "./postStudents";
 import putSubjectCpl from "./putSubjectCpl";
 import putReportDetail from "./putDetailReport";
@@ -24,4 +25,5 @@ export {
   getCplMapping,
   putSubjectCpl,
   getRpsList,
+  postRps,
 };

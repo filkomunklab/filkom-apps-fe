@@ -1,13 +1,24 @@
-import React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useQuery } from "@tanstack/react-query";
 import { GetSubjects } from "app/api";
 import { useFormikContext } from "formik";
+import { FormHelperText } from "@mui/material";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 const IdentitasMK = () => {
-  const { handleChange, values } = useFormikContext();
+  const { handleChange, values, errors } = useFormikContext();
 
   const subjectsQuery = useQuery({
     queryKey: ["subjects"],
@@ -26,11 +37,17 @@ const IdentitasMK = () => {
             displayEmpty
             inputProps={{ "aria-label": "Without label" }}
             value={values.subjectId}
+            MenuProps={MenuProps}
           >
-            {subjectsQuery.data?.map((item) => (
-              <MenuItem value={item.value}>{item.label}</MenuItem>
+            {subjectsQuery.data?.map((item, index) => (
+              <MenuItem key={index} value={item.value}>
+                {item.label}
+              </MenuItem>
             ))}
           </Select>
+          <FormHelperText error>
+            <b>{errors.subjectId}</b>
+          </FormHelperText>
         </FormControl>
       </div>
 
@@ -44,6 +61,9 @@ const IdentitasMK = () => {
           onChange={handleChange}
           value={values.subjectFamily}
         />
+        <FormHelperText error>
+          <b>{errors.subjectFamily}</b>
+        </FormHelperText>
       </div>
 
       <div className="mb-5 grid grid-cols-2 gap-4">
@@ -57,6 +77,9 @@ const IdentitasMK = () => {
             onChange={handleChange}
             value={values.parallel}
           />
+          <FormHelperText error>
+            <b>{errors.parallel}</b>
+          </FormHelperText>
         </div>
 
         <div>
@@ -69,6 +92,9 @@ const IdentitasMK = () => {
             onChange={handleChange}
             value={values.schedule}
           />
+          <FormHelperText error>
+            <b>{errors.schedule}</b>
+          </FormHelperText>
         </div>
       </div>
 
@@ -80,7 +106,11 @@ const IdentitasMK = () => {
           name="subjectDescription"
           onChange={handleChange}
           value={values.subjectDescription}
+          rows={5}
         />
+        <FormHelperText error>
+          <b>{errors.subjectDescription}</b>
+        </FormHelperText>
       </div>
 
       {/* <div className="mb-5 grid grid-cols-2 gap-4">

@@ -1,9 +1,10 @@
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { FormHelperText } from "@mui/material";
 import { Field, FieldArray, useFormikContext } from "formik";
 
 const BentukCPMK = () => {
-  const { values } = useFormikContext();
+  const { values, errors } = useFormikContext();
 
   return (
     <div className="bg-white rounded-sm p-5">
@@ -23,6 +24,9 @@ const BentukCPMK = () => {
                     type="text"
                     className="border border-gray-300 p-2 w-full rounded-md"
                   />
+                  <FormHelperText error>
+                    <b>{errors?.gradingSystem?.[index]?.label}</b>
+                  </FormHelperText>
                 </div>
 
                 <div>
@@ -33,6 +37,9 @@ const BentukCPMK = () => {
                     inputMode="numeric"
                     className="border border-gray-300 p-2 w-[95%] rounded-md"
                   />
+                  <FormHelperText error>
+                    <b>{errors?.gradingSystem?.[index]?.value}</b>
+                  </FormHelperText>
                 </div>
 
                 <div className="absolute top-1/2 right-0 transform -translate-y-1/2">
@@ -43,8 +50,11 @@ const BentukCPMK = () => {
                 </div>
               </div>
             ))}
+            <FormHelperText error>
+              <b>{errors.customValidation?.gradingSystem}</b>
+            </FormHelperText>
             <button
-              onClick={() => arrayHelpers.push({ label: "", value: "", })}
+              onClick={() => arrayHelpers.push({ label: "", value: "" })}
               className="bg-blue-600 text-white px-3 py-2 rounded-md flex items-center hover:bg-blue-800 transition-colors duration-300"
             >
               Tambah Bentuk

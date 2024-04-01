@@ -2,7 +2,14 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Field, FieldArray, useFormikContext } from "formik";
 import { useQuery } from "@tanstack/react-query";
-import { Box, Chip, FormControl, MenuItem, Select } from "@mui/material";
+import {
+  Box,
+  Chip,
+  FormControl,
+  FormHelperText,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import { GetSubjects } from "app/api";
 
 const ITEM_HEIGHT = 48;
@@ -17,7 +24,7 @@ const MenuProps = {
 };
 
 const CPMK = () => {
-  const { values } = useFormikContext();
+  const { values, errors } = useFormikContext();
 
   const cplQuery = useQuery({
     queryKey: ["cpl", values.subjectId],
@@ -64,31 +71,38 @@ const CPMK = () => {
                   <div>
                     <p className="mb-2">ID CPMK</p>
                     <Field
-                      name={`cpmk.${index}.code`}
+                      name={`cpmk[${index}].code`}
                       type="text"
                       className="border border-gray-300 p-2 w-full rounded-md h-14"
                     />
+                    <FormHelperText error>
+                      <b>{errors?.cpmk?.[index]?.code}</b>
+                    </FormHelperText>
                   </div>
 
                   <div>
                     <p className="mb-2">Deskripsi</p>
                     <Field
-                      name={`cpmk.${index}.description`}
+                      name={`cpmk[${index}].description`}
                       as="textarea"
                       className="border border-gray-300 p-2 w-full rounded-md h-24"
                       rows="4"
-                    ></Field>
+                    />
+                    <FormHelperText error>
+                      <b>{errors?.cpmk?.[index]?.description}</b>
+                    </FormHelperText>
                   </div>
 
                   <div className="relative">
                     <p className="mb-2">CPL yang di Dukung</p>
                     <FormControl sx={{ width: "90%" }}>
-                      <Field name={`cpmk.${index}.supportedCplIds`}>
+                      <Field name={`cpmk[${index}].supportedCplIds`}>
                         {({ field }) => (
                           <Select
                             {...field}
                             labelId="demo-multiple-chip-label"
                             id="demo-multiple-chip"
+                            multiple
                             renderValue={(selected) => (
                               <Box
                                 sx={{
@@ -119,6 +133,9 @@ const CPMK = () => {
                           </Select>
                         )}
                       </Field>
+                      <FormHelperText error>
+                        <b>{errors?.cpmk?.[index]?.supportedCplIds}</b>
+                      </FormHelperText>
                     </FormControl>
                   </div>
 
@@ -143,6 +160,9 @@ const CPMK = () => {
                 Tambah CPMK
                 <AddCircleOutlineIcon style={{ fontSize: 16, marginLeft: 5 }} />
               </button>
+              <FormHelperText error>
+                <b>{typeof errors.cpmk === "string" && errors.cpmk}</b>
+              </FormHelperText>
             </>
           )}
         />

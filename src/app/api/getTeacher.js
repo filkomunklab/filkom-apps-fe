@@ -1,14 +1,12 @@
-import { BASE_URL_API } from "@jumbo/config/env";
-import axios from "axios";
+import { globalClient } from "./client";
 
 export default async function getTeacher() {
-  const token = localStorage.getItem("token");
-  const { data } = await axios.get(`${BASE_URL_API}/employee`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  const normalize = data.data.map((item) => ({
-    label: `${item.firstName} ${item.lastName}`,
-    value: item.id,
-  }));
+  const { data } = await globalClient.get(`/employee`);
+  const normalize = data.data
+    .map((item) => ({
+      label: `${item.firstName} ${item.lastName}`,
+      value: item.id,
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
   return normalize;
 }

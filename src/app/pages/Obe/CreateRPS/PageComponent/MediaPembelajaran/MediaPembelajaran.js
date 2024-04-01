@@ -1,6 +1,4 @@
-import React from "react";
-import { useState } from "react";
-import { useTheme } from "@mui/material/styles";
+import React, { Fragment } from "react";
 import Box from "@mui/material/Box";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -8,8 +6,11 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { Form } from "react-router-dom";
+import { Field, useFormikContext } from "formik";
+import { useQuery } from "@tanstack/react-query";
+import { GetSubjects, getTeacher } from "app/api";
+import { convertShortMajor } from "app/utils/appHelpers";
+import { FormHelperText } from "@mui/material";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -22,40 +23,18 @@ const MenuProps = {
   },
 };
 
-const namaDosen = [
-  "Andrew Tanny Liem, SSi., MT., PhD",
-  "Stenly R. Pungus, MT, PhD",
-  "Green Mandias, SKom, MCs",
-  "Oktoverano H. Lengkong, SKom, MDs, MM",
-  "Debby E. Sondakh, MT, PhD",
-  "Joe Y. Mambu, BSIT, MCIS",
-  "Lidya C. Laoh, SKom, MMSi",
-  "Reynoldus A. Sahulata, SKom, MM",
-  "Jimmy H. Moedjahedy, SKom, MKom, MM",
-];
-
-function getStyles(namaDosen, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(namaDosen) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
-
 const MediaPembelajaran = () => {
-  const theme = useTheme();
-  const [dosen, setDosen] = useState([]);
+  const { values, errors } = useFormikContext();
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setDosen(
-      // On autofill we get a the stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
+  const employee = useQuery({
+    queryKey: ["employee"],
+    queryFn: getTeacher,
+  });
+
+  const preReqSubject = useQuery({
+    queryKey: ["preReqSubject", values.subjectId],
+    queryFn: () => GetSubjects.preRequisite(values.subjectId),
+  });
 
   return (
     <div>
@@ -65,20 +44,28 @@ const MediaPembelajaran = () => {
         <div className="mb-5 grid grid-cols-2 gap-4">
           <div>
             <p className="mb-2">Software</p>
-            <input
+            <Field
+              name="software"
               type="text"
               className="w-full border border-gray-400 rounded-md p-2 py-[15px] hover:border-gray-600 focus:outline-none focus:border-blue-500 transition duration-200 ease-in-out"
               placeholder="Ex.Arena Simulation Software"
             />
+            <FormHelperText error>
+              <b>{errors.software}</b>
+            </FormHelperText>
           </div>
 
           <div>
             <p className="mb-2">Hardware</p>
-            <input
+            <Field
+              name="hardware"
               type="text"
               className="w-full border border-gray-400 rounded-md p-2 py-[15px] hover:border-gray-600 focus:outline-none focus:border-blue-500 transition duration-200 ease-in-out"
               placeholder="Ex. Komputer/Laptop, Proyektor, dll"
             />
+            <FormHelperText error>
+              <b>{errors.hardware}</b>
+            </FormHelperText>
           </div>
         </div>
       </div>
@@ -87,34 +74,38 @@ const MediaPembelajaran = () => {
 
         <FormControl sx={{ width: "100%" }}>
           <InputLabel id="demo-multiple-chip-label">Nama Dosen</InputLabel>
-          <Select
-            labelId="demo-multiple-chip-label"
-            id="demo-multiple-chip"
-            multiple
-            value={dosen}
-            onChange={handleChange}
-            input={
-              <OutlinedInput id="select-multiple-chip" label="Nama Dosen" />
-            }
-            renderValue={(selected) => (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            )}
-            MenuProps={MenuProps}
-          >
-            {namaDosen.map((nama) => (
-              <MenuItem
-                key={nama}
-                value={nama}
-                style={getStyles(nama, dosen, theme)}
+          <Field name="teamTeaching">
+            {({ field }) => (
+              <Select
+                {...field}
+                labelId="demo-multiple-chip-label"
+                id="demo-multiple-chip"
+                multiple
+                input={
+                  <OutlinedInput id="select-multiple-chip" label="Nama Dosen" />
+                }
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value, index) => (
+                      <Chip key={index} label={value} />
+                    ))}
+                  </Box>
+                )}
+                MenuProps={MenuProps}
               >
-                {nama}
-              </MenuItem>
-            ))}
-          </Select>
+                {employee.data?.map((item, index) => (
+                  <MenuItem key={index} value={item.label}>
+                    {item.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          </Field>
+          <FormHelperText error>
+            <b>
+              {typeof errors.teamTeaching === "string" && errors.teamTeaching}
+            </b>
+          </FormHelperText>
         </FormControl>
       </div>
       <div className="bg-white rounded-sm p-5 my-5">
@@ -129,27 +120,25 @@ const MediaPembelajaran = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="border px-2">
-                  [IS1222] Pengantar Akuntansi Keuangan/ Introduction to
-                  Financial Accounting
-                </td>
-                <td className="border text-center px-2">3</td>
-              </tr>
-              <tr>
-                <td className="border px-2">
-                  [IS1222] Pengantar Akuntansi Keuangan/ Introduction to
-                  Financial Accounting
-                </td>
-                <td className="border text-center px-2">3</td>
-              </tr>
-              <tr>
-                <td className="border px-2">
-                  [IS1222] Pengantar Akuntansi Keuangan/ Introduction to
-                  Financial Accounting
-                </td>
-                <td className="border text-center px-2">3</td>
-              </tr>
+              {preReqSubject.data?.Prerequisite.map((item, index) => (
+                <Fragment key={index}>
+                  <tr>
+                    <th colSpan={2}>{`${convertShortMajor(
+                      item.curriculum.major
+                    )} - ${item.curriculum.year}`}</th>
+                  </tr>
+                  {item.prerequisite.map((item) => (
+                    <tr key={item.id}>
+                      <td className="border px-2">
+                        {`[${item.code}] ${item.indonesiaName}/ ${item.englishName}`}
+                      </td>
+                      <td className="border text-center px-2">
+                        {item.credits}
+                      </td>
+                    </tr>
+                  ))}
+                </Fragment>
+              ))}
             </tbody>
           </table>
         </div>
@@ -160,20 +149,28 @@ const MediaPembelajaran = () => {
         <div className="mb-5 grid grid-cols-2 gap-4">
           <div>
             <p className="mb-2">Mahasiswa</p>
-            <input
+            <Field
+              name="minPassStudents"
               type="text"
               className="w-full border border-gray-400 rounded-md p-2 py-[15px] hover:border-gray-600 focus:outline-none focus:border-blue-500 transition duration-200 ease-in-out"
-              placeholder="50.01"
+              placeholder="Ex. 50.01"
             />
+            <FormHelperText error>
+              <b>{errors.minPassStudents}</b>
+            </FormHelperText>
           </div>
 
           <div>
             <p className="mb-2">Matakuliah</p>
-            <input
+            <Field
+              name="minPassGrade"
               type="text"
               className="w-full border border-gray-400 rounded-md p-2 py-[15px] hover:border-gray-600 focus:outline-none focus:border-blue-500 transition duration-200 ease-in-out"
-              placeholder="Ex. Komputer/Laptop, Proyektor, dll"
+              placeholder="Ex. 85.00%"
             />
+            <FormHelperText error>
+              <b>{errors.minPassGrade}</b>
+            </FormHelperText>
           </div>
         </div>
       </div>
