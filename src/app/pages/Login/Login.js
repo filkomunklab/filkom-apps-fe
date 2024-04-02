@@ -26,6 +26,20 @@ import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import Swal from "sweetalert2";
 
 const useStyles = makeStyles((theme) => ({
+  pageContainer: {
+    width: "100%",
+    height: "100vh",
+    display: "flex",
+    flex: 1,
+    justifyContent: "space-between",
+    // overflow: "auto",
+  },
+  leftSide: {
+    display: "flex",
+    flex: 1,
+    overflow: "hidden",
+    position: "relative",
+  },
   circleContainer: {
     position: "absolute",
     right: "-23%",
@@ -37,6 +51,16 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     display: "flex",
     boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.75)",
+  },
+  "@media (max-width: 927px)": {
+    pageContainer: {
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    leftSide: {
+      display: "none",
+    },
   },
 }));
 
@@ -57,15 +81,16 @@ const Login = () => {
   const navigate = useNavigate();
 
   return (
-    <Div
-      className="flex justify-center items-center h-screen w-full overflow-hidden"
-      style={{
-        backgroundImage: `url(${ASSET_IMAGES}/img-auth-background-new.jpg)`,
-        backgroundSize: "contain",
-        backgroundPosition: "right 100px center",
-      }}
-    >
-      <Div className="backdrop-filter backdrop-blur-md bg-white bg-opacity-60 p-3 rounded-2xl shadow-lg">
+    <Div className={style.pageContainer}>
+      <CssBaseline />
+      <Div
+        sx={{
+          width: "50%",
+          alignItems: "center",
+          justifyContent: "center",
+          display: "flex",
+        }}
+      >
         <Formik
           validateOnChange={true}
           validationSchema={signInSchema}
@@ -149,7 +174,8 @@ const Login = () => {
             <Form noValidate>
               <Stack
                 sx={{
-                  width: "433px",
+                  backgroundColor: "white",
+                  width: maxWidth515 ? "275px" : "433px",
                 }}
               >
                 <Typography
@@ -195,7 +221,7 @@ const Login = () => {
                       ]}
                     />
                   </Grid>
-                  {/* <Grid container justifyContent={"space-between"}>
+                  <Grid container justifyContent={"space-between"}>
                     <Grid item>
                       <FormControlLabel
                         control={<Checkbox />}
@@ -221,7 +247,7 @@ const Login = () => {
                         Forgot Password?
                       </Button>
                     </Grid>
-                  </Grid> */}
+                  </Grid>
                   <Grid item>
                     <LoadingButton
                       loading={isSubmitting}
@@ -262,6 +288,19 @@ const Login = () => {
             </Form>
           )}
         </Formik>
+      </Div>
+      <Div className={style.leftSide}>
+        <Div className={style.circleContainer}>
+          <img
+            src={`${ASSET_IMAGES}/img-auth-background.png`}
+            style={{
+              objectFit: "contain",
+              objectPosition: "left",
+              display: "flex",
+              flex: 1,
+            }}
+          />
+        </Div>
       </Div>
       <FormAfterLoginStudent
         openModal={openModal}
