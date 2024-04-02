@@ -146,7 +146,7 @@ const SubjectList = () => {
       </Modal>
       <div className="flex justify-between mb-3">
         <div>
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-2xl font-semibold">
             MATAKULIAH PRODI{" "}
             {major === "SI"
               ? "SISTEM INFORMASI"
@@ -172,7 +172,7 @@ const SubjectList = () => {
       </div>
       <div className="flex justify-between mb-3">
         <div>
-          <h1 className="text-2xl font-bold">List Data Matakuliah</h1>
+          <h1 className="text-2xl font-medium">List Data Matakuliah</h1>
         </div>
         <div>
           <TextField

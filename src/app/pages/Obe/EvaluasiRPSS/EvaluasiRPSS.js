@@ -72,7 +72,7 @@ const EvaluasiRPS = () => {
     { id: "kodeMK", label: "Kode MK", minWidth: 150 },
     { id: "semester", label: "Semester", minWidth: 150 },
     { id: "prodi", label: "Program Studi", minWidth: 150 },
-    { id: "jumlahSiwwa", label: "Jumlah Siwwa", minWidth: 150 },
+    { id: "jumlahSiwwa", label: "Jumlah Siswa", minWidth: 150 },
     { id: "status", label: "Status", minWidth: 150 },
     { id: "action", label: "Action", minWidth: 150 },
   ];
@@ -226,9 +226,9 @@ const EvaluasiRPS = () => {
       </div>
 
       <div className="flex flex-row items-center justify-between mt-4 mb-6">
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-3xl font-medium">
           Daftar Matakuliah{" "}
-          <span className="text-2xl font-medium">
+          <span className="text-2xl font-normal">
             (Rancangan Pembelajaran Semester)
           </span>
         </h1>

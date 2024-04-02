@@ -175,7 +175,7 @@ const EvaluasiCPL = () => {
   return (
     <div className="">
       <div className="flex flex-row items-center justify-between mb-12">
-        <h1 className="text-3xl font-semibold">
+        <h1 className="text-3xl font-medium">
           LIST KURIKULUM FAKULTAS ILMU KOMPUTER
         </h1>
       </div>

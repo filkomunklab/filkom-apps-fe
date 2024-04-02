@@ -89,7 +89,9 @@ const ListRPSProdi = () => {
   return (
     <div className="">
       <div className="items-center mb-10">
-        <h1 className="text-3xl font-bold">RANCANGAN PEMBELAJARAN SEMESTER</h1>
+        <h1 className="text-3xl font-semibold">
+          RANCANGAN PEMBELAJARAN SEMESTER
+        </h1>
         <h2 className="text-2xl font-semibold">PRODI {prodiName}</h2>
       </div>
 
