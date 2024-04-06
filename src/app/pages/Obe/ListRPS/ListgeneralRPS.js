@@ -28,7 +28,7 @@ const prodi = [
 const ListGeneralRPS = () => {
   return (
     <div>
-      <div className="flex flex-col justify-center items-center text-3xl font-bold">
+      <div className="flex flex-col justify-center items-center text-3xl font-semibold">
         <h1 className="">RANCANGAN PEMBELAJARAN SEMESTER</h1>
         <h1 className="">FAKULTAS ILMU KOMPUTER</h1>
       </div>

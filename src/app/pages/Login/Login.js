@@ -186,7 +186,7 @@ const Login = () => {
                     padding: maxWidth515 ? "15px 0 " : "5px 0",
                   }}
                 >
-                  Sign In
+                  Login
                 </Typography>
                 <Grid container direction={"column"} gap={2}>
                   <Grid item>
@@ -259,7 +259,7 @@ const Login = () => {
                         backgroundColor: "#006AF5",
                       }}
                     >
-                      Sign In
+                      Login
                     </LoadingButton>
                   </Grid>
                   <Grid item alignSelf={"center"}>

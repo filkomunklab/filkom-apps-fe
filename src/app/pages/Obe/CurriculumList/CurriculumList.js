@@ -87,7 +87,7 @@ const CurriculumList = () => {
         <div className="flex items-center justify-center h-screen">
           <div className="bg-white w-[400px]  rounded-md">
             <div className="p-3">
-              <h1 className="text-2xl font-bold">Buat Kurikulum</h1>
+              <h1 className="text-2xl font-semibold">Buat Kurikulum</h1>
             </div>
             <hr />
             <Formik
@@ -243,7 +243,7 @@ const CurriculumList = () => {
       </Modal>
       <div className="flex justify-between mb-3">
         <div>
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-2xl font-medium">
             LIST KURIKULUM FAKULTAS ILMU KOMPUTER
           </h1>
         </div>
@@ -262,7 +262,7 @@ const CurriculumList = () => {
       </div>
       <div className="flex justify-between mb-3">
         <div>
-          <h1 className="text-2xl font-bold">List Kurikulum {major}</h1>
+          <h1 className="text-2xl font-medium">List Kurikulum {major}</h1>
         </div>
         <div>
           <TextField
