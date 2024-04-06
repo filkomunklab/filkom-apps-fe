@@ -49,11 +49,18 @@ const AxiosInterceptor = ({ children }) => {
       return Promise.reject(error);
     };
 
-    const interceptor = globalClient.interceptors.response.use(
+    const interceptor1 = globalClient.interceptors.response.use(
       resInterceptor,
       errInterceptor
     );
-    return () => globalClient.interceptors.response.eject(interceptor);
+    const interceptor2 = obeClient.interceptors.response.use(
+      resInterceptor,
+      errInterceptor
+    );
+    return () => {
+      globalClient.interceptors.response.eject(interceptor1);
+      obeClient.interceptors.response.eject(interceptor2);
+    };
   }, [navigate]);
 
   return children;

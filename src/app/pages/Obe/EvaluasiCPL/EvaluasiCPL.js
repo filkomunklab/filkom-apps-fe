@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
-import AddIcon from "@mui/icons-material/Add";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,14 +11,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
-import IconButton from "@mui/material/IconButton";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import { convertShortMajor } from "app/utils/appHelpers";
+import { useQuery } from "@tanstack/react-query";
+import getCurriculum from "app/api/getCurriculum";
 
 const EvaluasiCPL = () => {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
   const { major } = useParams();
-  console.log(major);
 
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -65,112 +64,20 @@ const EvaluasiCPL = () => {
 
   const columns = [
     { id: "no", label: "No", minWidth: 50 },
-    { id: "kurikulum", label: "Kurikulum", minWidth: 150 },
-    { id: "totalMK", label: "Total MK", minWidth: 100 },
     { id: "programStudi", label: "Program Studi", minWidth: 150 },
     { id: "tahunKurikulum", label: "Tahun Kurikulum", minWidth: 120 },
+    { id: "totalMK", label: "Total MK", minWidth: 100 },
     { id: "ketuaProgramStudi", label: "Ketua Program Studi", minWidth: 150 },
-    { id: "action", label: "Action", minWidth: 50 },
   ];
 
-  function createData(
-    no,
-    kurikulum,
-    totalMK,
-    programStudi,
-    tahunKurikulum,
-    ketuaProgramStudi
-  ) {
-    return {
-      no,
-      kurikulum,
-      totalMK,
-      programStudi,
-      tahunKurikulum,
-      ketuaProgramStudi,
-    };
-  }
-
-  const rows = [
-    createData(
-      1,
-      "KURIKULUM 2020",
-      54,
-      "Sistem Informasi",
-      2020,
-      "Stenly R. Pungus, MT, PhD"
-    ),
-    createData(
-      2,
-      "KURIKULUM 2018",
-      27,
-      "Sistem Informasi",
-      2018,
-      "Stenly R. Pungus, MT, PhD"
-    ),
-    createData(
-      3,
-      "KURIKULUM 2020",
-      21,
-      "Informatika",
-      2020,
-      "Green Mandias, SKom, MCs"
-    ),
-    createData(
-      4,
-      "KURIKULUM 2018",
-      59,
-      "Informatika",
-      2018,
-      "Green Mandias, SKom, MCs"
-    ),
-    createData(
-      5,
-      "KURIKULUM 2020",
-      44,
-      "Teknologi Informasi",
-      2020,
-      "Oktoverano H. Lengkong, SKom, MDs, MM"
-    ),
-    createData(
-      6,
-      "KURIKULUM 2020",
-      54,
-      "Sistem Informasi",
-      2020,
-      "Stenly R. Pungus, MT, PhD"
-    ),
-    createData(
-      7,
-      "KURIKULUM 2020",
-      54,
-      "Sistem Informasi",
-      2020,
-      "Stenly R. Pungus, MT, PhD"
-    ),
-
-    // Add more rows as needed
-  ];
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(8);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_, newPage) => {
     setPage(newPage);
   };
 
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleMenuView = () => {
-    const currentPath = window.location.pathname;
-    window.location.href = `${currentPath}/list-rps`;
-  };
+  const curriculumQuery = useQuery({
+    queryKey: ["curriculum", major],
+    queryFn: () => getCurriculum(major),
+  });
 
   return (
     <div className="">
@@ -217,42 +124,22 @@ const EvaluasiCPL = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow hover key={row.no}>
-                    {columns.map((column) => (
-                      <TableCell key={column.id} align="left">
-                        {column.id === "action" ? (
-                          <div>
-                            <IconButton
-                              aria-label="Action"
-                              size="small"
-                              onClick={handleMenuClick}
-                            >
-                              <MoreVertIcon />
-                            </IconButton>
-                            <Menu
-                              className="*:!shadow-sm"
-                              anchorEl={anchorEl}
-                              open={Boolean(anchorEl)}
-                              onClose={handleMenuClose}
-                              MenuListProps={{
-                                "aria-labelledby": "basic-button",
-                              }}
-                            >
-                              <MenuItem onClick={handleMenuView}>View</MenuItem>
-                              <MenuItem onClick={handleMenuClose}>
-                                Edit
-                              </MenuItem>
-                              <MenuItem onClick={handleMenuClose}>
-                                Delete
-                              </MenuItem>
-                            </Menu>
-                          </div>
-                        ) : (
-                          row[column.id]
-                        )}
-                      </TableCell>
-                    ))}
+                {curriculumQuery.data?.map((row, index) => (
+                  <TableRow
+                    hover
+                    component={Link}
+                    to={`/obe/evaluasi-cpl/list/${major}/${row.id}`}
+                    key={row.id}
+                  >
+                    <TableCell align="left">{index + 1}</TableCell>
+                    <TableCell align="left">
+                      {convertShortMajor(row.major)}
+                    </TableCell>
+                    <TableCell align="left">{row.year}</TableCell>
+                    <TableCell align="left">
+                      {row._count.Curriculum_Subject}
+                    </TableCell>
+                    <TableCell align="left">{`${row.headOfProgramStudy.firstName} ${row.headOfProgramStudy.lastName}`}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -260,7 +147,7 @@ const EvaluasiCPL = () => {
           </TableContainer>
           <TablePagination
             component="div"
-            count={rows.length}
+            count={curriculumQuery.data?.length}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}

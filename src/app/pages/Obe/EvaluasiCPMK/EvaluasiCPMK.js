@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
@@ -11,11 +11,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
-import { Actions } from "./Components";
 import moment from "moment";
 import { useQuery } from "@tanstack/react-query";
 import { getRpsListTeacher } from "app/api";
 import useUser from "app/hooks/useUser";
+import { convertShortMajor } from "app/utils/appHelpers";
 
 const EvaluasiCPMK = () => {
   const [page, setPage] = useState(0);
@@ -23,7 +23,6 @@ const EvaluasiCPMK = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { user } = useUser();
-  console.log(pathname);
 
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -103,11 +102,11 @@ const EvaluasiCPMK = () => {
           <tbody>
             <tr>
               <td className="text-lg font-semibold w-40">Dosen</td>
-              <td className="text-lg">: Andrew Tanny Liem, SSi., MT., PhD</td>
+              <td className="text-lg">{`: ${rpsQuery?.data?.metadata?.teacher?.firstName} ${rpsQuery?.data?.metadata?.teacher?.lastName}`}</td>
             </tr>
             <tr>
               <td className="text-lg font-semibold w-40">Total SKS</td>
-              <td className="text-lg">: 18 SKS</td>
+              <td className="text-lg">{`: ${rpsQuery?.data?.metadata?.creditsTotal} SKS`}</td>
             </tr>
           </tbody>
         </table>
@@ -116,11 +115,11 @@ const EvaluasiCPMK = () => {
           <tbody>
             <tr>
               <td className="text-lg font-semibold w-40">Total Mahasiswa</td>
-              <td className="text-lg">: 157 Mahasiswa</td>
+              <td className="text-lg">{`: ${rpsQuery?.data?.metadata?.studentsTotal} Mahasiswa`}</td>
             </tr>
             <tr>
               <td className="text-lg font-semibold w-40">Total Matkul</td>
-              <td className="text-lg">: 6 Matakuliah</td>
+              <td className="text-lg">{`: ${rpsQuery?.data?.metadata?.rpsTotal} Matakuliah`}</td>
             </tr>
           </tbody>
         </table>
@@ -179,7 +178,7 @@ const EvaluasiCPMK = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rpsQuery.data
+                {rpsQuery.data?.rps
                   ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => (
                     <TableRow
@@ -191,11 +190,15 @@ const EvaluasiCPMK = () => {
                       <TableCell align="left">{index + 1}</TableCell>
                       <TableCell align="left">{`${row.Subject.indonesiaName}`}</TableCell>
                       <TableCell align="left">{row.Subject.code}</TableCell>
-                      <TableCell align="left">{row.semester}</TableCell>
                       <TableCell align="left">
-                        {row.Subject.Curriculum_Subject.map((item) => {
-                          return item.curriculum.major;
-                        }).join(" | ")}
+                        {row.Subject.Curriculum_Subject.map(
+                          (item) => item.semester
+                        ).join(" | ")}
+                      </TableCell>
+                      <TableCell align="left">
+                        {row.Subject.Curriculum_Subject.map((item) =>
+                          convertShortMajor(item.curriculum.major)
+                        ).join(" | ")}
                       </TableCell>
                       <TableCell align="left">
                         <div

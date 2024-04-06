@@ -368,11 +368,11 @@ const dekanRoutes = [
     element: <Page component={EvaluasiCPL} />,
   },
   {
-    path: "/obe/evaluasi-cpl/list/:major/:kurikulum",
+    path: "/obe/evaluasi-cpl/list/:major/:curriculumId",
     element: <Page component={ListRPS} />,
   },
   {
-    path: "/obe/evaluasi-cpl/list/:major/:kurikulum/reportCPL/:kodeMK",
+    path: "/obe/evaluasi-cpl/list/:major/:curriculumId/reportCPL/:kodeMK",
     element: <Page component={ReportCPL} />,
   },
   {

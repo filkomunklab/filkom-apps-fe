@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Button, TablePagination } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { TablePagination } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
@@ -16,20 +15,12 @@ import { getRpsList } from "app/api";
 import { useQuery } from "@tanstack/react-query";
 import { Actions } from "./Components";
 import moment from "moment";
+import { convertShortMajor } from "app/utils/appHelpers";
 
 const ListRPSProdi = () => {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
   const { major } = useParams();
-  const teacherId = "061644a9-8ae5-48a2-a792-4c1df867ea5a";
-
-  let prodiName;
-
-  if (major === "IF") {
-    prodiName = "INFORMATIKA";
-  } else if (major === "SI") {
-    prodiName = "SISTEM INFORMASI";
-  } else if (major === "DKV") {
-    prodiName = "TEKNOLOGI INFORMASI";
-  }
 
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -73,9 +64,6 @@ const ListRPSProdi = () => {
     },
   }));
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(8);
-
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -90,7 +78,9 @@ const ListRPSProdi = () => {
     <div className="">
       <div className="items-center mb-10">
         <h1 className="text-3xl font-bold">RANCANGAN PEMBELAJARAN SEMESTER</h1>
-        <h2 className="text-2xl font-semibold">PRODI {prodiName}</h2>
+        <h2 className="text-2xl font-semibold">
+          PRODI {convertShortMajor(major)}
+        </h2>
       </div>
 
       <div className="flex flex-row items-center justify-between mt-4 mb-6">
@@ -153,10 +143,14 @@ const ListRPSProdi = () => {
                     <TableCell align="left">{row.Subject.code}</TableCell>
                     <TableCell align="left">
                       {row.Subject.Curriculum_Subject.map((item) => {
-                        return item.curriculum.major;
+                        return convertShortMajor(item.curriculum.major);
                       }).join(" | ")}
                     </TableCell>
-                    <TableCell align="left">{row.semester}</TableCell>
+                    <TableCell align="left">
+                      {row.Subject.Curriculum_Subject.map((item) => {
+                        return item.semester;
+                      }).join(" | ")}
+                    </TableCell>
                     <TableCell align="left">
                       {moment(row.updatedAt).format("DD/MM/YYYY")}
                     </TableCell>

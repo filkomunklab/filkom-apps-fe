@@ -68,7 +68,7 @@ const EvaluasiPenilaianCPMK = () => {
         </ButtonGroup>
       </div>
 
-      <div>Huhi</div>
+      <div></div>
 
       <div className="bg-secondary rounded-lg p-5 flex flex-row mb-10">
         <table className="w-full">
@@ -118,8 +118,8 @@ const EvaluasiPenilaianCPMK = () => {
           </div>
         </div>
 
-        {reportDetailQuery.data?.studentGrade.map((item) => (
-          <div className="mb-5">
+        {reportDetailQuery.data?.studentGrade.map((item, index) => (
+          <div className="mb-5" key={index}>
             <Accordion defaultExpanded>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
