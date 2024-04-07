@@ -180,7 +180,15 @@ const Login = () => {
 
                 console.log("ini user loh: ", user);
                 localStorage.setItem("user", JSON.stringify(user));
-                navigate(`/bimbingan-akademik/${userRole}/profile`);
+                if (
+                  ["KAPRODI", "DEKAN", "OPERATOR_FAKULTAS", "DOSEN"].includes(
+                    user.role
+                  )
+                ) {
+                  navigate(`/bimbingan-akademik/${userRole}/profile`);
+                } else {
+                  navigate("/");
+                }
               }
             } catch (error) {
               console.log(error);
