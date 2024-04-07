@@ -65,6 +65,23 @@ const ReportCPMK = () => {
     },
   });
 
+  const color = (status) => {
+    switch (status) {
+      case "Sangat Baik":
+        return "text-green-800";
+      case "Baik":
+        return "text-blue-800";
+      case "Cukup":
+        return "text-yellow-500";
+      case "Kurang":
+        return "text-red-500";
+      case "Sangat Kurang":
+        return "text-red-800";
+      default:
+        break;
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-3">
@@ -106,8 +123,12 @@ const ReportCPMK = () => {
           <tbody>
             <tr>
               <td className="text-lg font-semibold w-40">Status</td>
-              <td className="text-lg font-semibold text-green-800">
-                : Sangat Baik
+              <td
+                className={`text-lg font-semibold ${color(
+                  reportDetailQuery.data?.status
+                )}`}
+              >
+                {`: ${reportDetailQuery.data?.status}`}
               </td>
             </tr>
             <tr>
