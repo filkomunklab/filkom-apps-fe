@@ -58,6 +58,7 @@ const GradeSubmission = () => {
   const [subjectNames, setSubjectNames] = useState(Array(row).fill(""));
   const [grades, setGrades] = useState(Array(row).fill(""));
   const [lecturers, setLecturers] = useState(Array(row).fill(""));
+  const [lecturersData, setLecturersData] = useState([]);
   const [descriptions, setDescriptions] = useState(Array(row).fill(""));
   const [showLabel, setShowLabel] = useState(true);
   const [showLabel2, setShowLabel2] = useState(true);
@@ -136,10 +137,20 @@ const GradeSubmission = () => {
     }
   };
 
+  const getLecturers = async () => {
+    try {
+      const response = await jwtAuthAxios.get("/lecturer");
+      setLecturersData(response.data.data);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
   useEffect(() => {
     getCurriculum();
     getDataGrade();
-
+    getLecturers();
+    console.log("isi lecturer", lecturersData);
     return () => controller.abort();
   }, []);
 
@@ -411,7 +422,7 @@ const GradeSubmission = () => {
           >
             <TableRow>
               <TableCell sx={{ width: "80px" }}>Number</TableCell>
-              <TableCell>Subject Name</TableCell>
+              <TableCell sx={{ width: "420px" }}>Subject Name</TableCell>
               <TableCell sx={{ width: "120px" }}>Grade</TableCell>
               <TableCell sx={{ width: "420px" }}>Lecturer</TableCell>
               <TableCell sx={{ width: "420px" }}>Description</TableCell>
@@ -450,12 +461,27 @@ const GradeSubmission = () => {
                 </TableCell>
 
                 <TableCell>
-                  <TextField
-                    onChange={(e) => handleLecturerChange(e, index)}
-                    value={lecturers[index]}
-                    size="small"
-                    fullWidth
-                  />
+                  <FormControl size="small" fullWidth>
+                    <Select
+                      value={lecturers[index] || ""}
+                      onChange={(e) => handleLecturerChange(e, index)}
+                      MenuProps={{
+                        PaperProps: {
+                          style: {
+                            maxHeight: "37%",
+                          },
+                        },
+                      }}
+                    >
+                      {lecturersData.length > 0 &&
+                        lecturersData.map((lecturer) => (
+                          <MenuItem key={lecturer.id} value={lecturer.id}>
+                            {lecturer.firstName} {lecturer.lastName} (
+                            {lecturer.degree})
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </FormControl>
                 </TableCell>
 
                 <TableCell>

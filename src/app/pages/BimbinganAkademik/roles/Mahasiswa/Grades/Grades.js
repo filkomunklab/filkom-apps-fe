@@ -44,7 +44,6 @@ const Grades = () => {
 
   const getDataGrade = async () => {
     try {
-      const nim = JSON.parse(localStorage.getItem("user")).nim;
       const response = await jwtAuthAxios.get(
         `/transaction/semesterList/${
           JSON.parse(localStorage.getItem("user")).id
