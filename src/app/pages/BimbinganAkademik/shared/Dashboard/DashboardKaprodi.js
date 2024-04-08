@@ -249,16 +249,16 @@ const Dashboard = () => {
                   <Legend
                     formatter={(value) => {
                       switch (value) {
-                        case "PENALARAN_KEILMUAN":
-                          return "Reasoning and Scholarship";
-                        case "ORGANISASI_KEPEMIMPINAN":
-                          return "Organization and Leadership";
-                        case "BAKAT_MINAT":
-                          return "Talents and Interests";
-                        case "PENGABDIAN_MASYARAKAT":
-                          return "Community Service";
-                        case "OTHER":
-                          return "Others";
+                        case "REGION":
+                          return "Region";
+                        case "NATIONAL":
+                          return "National";
+                        case "INTERNATIONAL":
+                          return "International";
+                        case "UNIVERSITY":
+                          return "University";
+                        case "MAJOR":
+                          return "Study Program";
                         default:
                           return value;
                       }

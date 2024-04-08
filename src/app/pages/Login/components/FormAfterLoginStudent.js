@@ -75,7 +75,6 @@ const FormAfterLoginStudent = ({
   const navigate = useNavigate();
   const [showLabelAreaOfConcentration, setShowLabelAreaOfConcentration] =
     useState(true);
-  useState(true);
   const [loading, setLoading] = useState(false);
   const [openFirstModal, setOpenFirstModal] = useState(false);
   const handleOpenFirstModal = () => setOpenFirstModal(true);

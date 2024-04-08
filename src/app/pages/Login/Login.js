@@ -122,8 +122,6 @@ const Login = () => {
                   return "sekretaris";
                 } else if (role.includes("DOSEN")) {
                   return "dosen-pembimbing";
-                } else {
-                  return "default-role";
                 }
               };
               console.log("ini user sesudah role", role);
@@ -181,9 +179,10 @@ const Login = () => {
                 console.log("ini user loh: ", user);
                 localStorage.setItem("user", JSON.stringify(user));
                 if (
-                  ["KAPRODI", "DEKAN", "OPERATOR_FAKULTAS", "DOSEN"].includes(
-                    user.role
-                  )
+                  user.role.includes("OPERATOR_FAKULTAS") ||
+                  user.role.includes("DEKAN") ||
+                  user.role.includes("KAPRODI") ||
+                  user.role.includes("DOSEN")
                 ) {
                   navigate(`/bimbingan-akademik/${userRole}/profile`);
                 } else {

@@ -69,7 +69,7 @@ const ViewConsultation = () => {
   const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
 
-  const [inputValue, setInputValue] = useState("");
+  const [inputMessage, setInputMessage] = useState("");
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -81,10 +81,10 @@ const ViewConsultation = () => {
   };
 
   const handleSubmit = () => {
-    const trimmedValue = inputValue?.trim();
+    const trimmedValue = inputMessage?.trim();
     if (trimmedValue !== "") {
       postMessage(trimmedValue);
-      setInputValue("");
+      setInputMessage("");
     } else {
       alert("Input tidak valid. Mohon masukkan pesan yang valid.");
     }
@@ -391,8 +391,8 @@ const ViewConsultation = () => {
                       placeholder="Enter Message..."
                       fullWidth
                       multiline
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
+                      value={inputMessage}
+                      onChange={(e) => setInputMessage(e.target.value)}
                       InputProps={{
                         endAdornment: (
                           <IconButton onClick={handleIconClick}>
