@@ -18,6 +18,7 @@ import {
   Paper,
   Modal,
   Popover,
+  Stack,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
@@ -26,7 +27,6 @@ import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
-import SearchIcon from "@mui/icons-material/Search";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import CloseIcon from "@mui/icons-material/Close";
@@ -40,7 +40,6 @@ import {
   handlePermissionError,
   handleAuthenticationError,
 } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
-import { cleanDigitSectionValue } from "@mui/x-date-pickers/internals/hooks/useField/useField.utils";
 
 const styleModal = {
   position: "absolute",
@@ -128,6 +127,8 @@ const Manage = () => {
   const [major, setMajor] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [listPreregisModalOpen, setListPreregisModalOpen] = useState(false);
 
   //modal
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
@@ -136,6 +137,60 @@ const Manage = () => {
   const handleCloseSuccessModal = () => setOpenSuccessModal(false);
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
+
+  //handle preregis
+  const handleViewListStudent = (selectedRow) => {
+    navigate(
+      `/bimbingan-akademik/kaprodi/manage/list-student/${selectedRow?.id}`,
+      { state: { id: selectedRow?.id, major: major } }
+    );
+  };
+  const handleViewListCourses = (selectedRow) => {
+    navigate(
+      `/bimbingan-akademik/kaprodi/manage/list-courses/${selectedRow?.id}`,
+      { state: { id: selectedRow?.id, major: major } }
+    );
+  };
+  const handleEditPreregis = (rowData) => {
+    setSelectedRow(rowData);
+    setPreregisModalOpen(true);
+  };
+  const handleEditSuccessPreregis = () => {
+    setLoading(false);
+    handlePreregisModalClose();
+    getGradeAndPreregis();
+    handleOpenSuccessModal();
+  };
+  const handlePreregisModalOpen = () => {
+    setSelectedRow(null);
+    setPreregisModalOpen(true);
+  };
+  const handlePreregisModalClose = () => {
+    setPreregisModalOpen(false);
+    setOpen(false);
+    setSelectedRow(null);
+  };
+
+  //handle grade
+  const handleEditGrade = (rowData) => {
+    setSelectedRow(rowData);
+    setGradeModalOpen(true);
+  };
+  const handleEditSuccess = () => {
+    setLoading(false);
+    GradeModalClose();
+    getGradeAndPreregis();
+    handleOpenSuccessModal();
+  };
+  const handleGradeModalOpen = () => {
+    setSelectedRow(null);
+    setGradeModalOpen(true);
+  };
+  const GradeModalClose = () => {
+    setGradeModalOpen(false);
+    setOpen(false);
+    setSelectedRow(null);
+  };
 
   //handle error
   const handleError = (error) => {
@@ -261,19 +316,6 @@ const Manage = () => {
     }
   };
 
-  //handle
-  const handlePreregisModalOpen = () => setPreregisModalOpen(true);
-  const PreregisModalClose = () => setPreregisModalOpen(false);
-  const handleGradeModalOpen = () => setGradeModalOpen(true);
-  const GradeModalClose = () => setGradeModalOpen(false);
-  const [selectedRow, setSelectedRow] = useState(null);
-  const [listPreregisModalOpen, setListPreregisModalOpen] = useState(false);
-
-  const handleTableRowClick = (rowData) => {
-    setSelectedRow(rowData);
-    setListPreregisModalOpen(true);
-  };
-
   const ListPreregisModalClose = () => {
     setSelectedRow(null);
     setListPreregisModalOpen(false);
@@ -351,38 +393,6 @@ const Manage = () => {
 
       <TabPanel value={value} index={0}>
         <div>
-          {/* <Grid container pt={1} pb={2}> */}
-          {/* <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              xl={3}
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                paddingTop: "23px",
-              }}
-            >
-              <TextField
-                placeholder="Search by Status "
-                variant="outlined"
-                size="small"
-                sx={{
-                  width: "350px",
-                  height: "100%",
-                }}
-                onChange={(e) => setSearchValue(e.target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton edge="end">
-                      <SearchIcon />
-                    </IconButton>
-                  ),
-                  style: { borderRadius: "25px" },
-                }}
-              />
-            </Grid> */}
           <Grid
             item
             xs={12}
@@ -390,9 +400,7 @@ const Manage = () => {
             md={4}
             sx={{
               padding: "1px",
-              // paddingLeft: "10px",
               paddingBottom: "15px",
-              // paddingTop: "23px",
               paddingTop: "10px",
             }}
           >
@@ -418,12 +426,12 @@ const Manage = () => {
               <AddIcon sx={{ fontSize: "14px" }} />
               Add Pre-regis Submission
             </Button>
-            <Modal open={preregisModalOpen} onClose={PreregisModalClose}>
+            <Modal open={preregisModalOpen} onClose={handlePreregisModalClose}>
               <Box style={styleModal}>
                 <IconButton
                   edge="end"
                   color="#D9D9D9"
-                  onClick={PreregisModalClose}
+                  onClick={handlePreregisModalClose}
                   aria-label="close"
                   sx={{
                     position: "absolute",
@@ -453,10 +461,16 @@ const Manage = () => {
                 </Grid>
                 <Formik
                   initialValues={{
-                    semester: "",
-                    semesterPeriod: "",
-                    major: "",
-                    dueDate: null,
+                    semester: selectedRow ? selectedRow.semester || "" : "",
+                    semesterPeriod: selectedRow
+                      ? selectedRow.semesterPeriod || ""
+                      : "",
+                    dueDate: selectedRow
+                      ? selectedRow.dueDate
+                        ? new Date(selectedRow.dueDate)
+                        : null
+                      : null,
+                    major: major || "",
                     employeeId:
                       JSON.parse(localStorage.getItem("user"))?.id || "",
                   }}
@@ -473,34 +487,49 @@ const Manage = () => {
                       }
                     );
 
-                    values.semester = values.semester;
-                    values.semesterPeriod = values.semesterPeriod;
                     values.major = major;
                     values.dueDate = new Date(dueDateWITA);
                     values.employeeId = id;
 
                     try {
-                      const response = await jwtAuthAxios.post(
-                        `/pre-regist/create`,
-                        values,
-                        {
-                          headers: {
-                            Authorization: `Bearer ${localStorage.getItem(
-                              "token"
-                            )}`,
-                          },
-                        }
-                      );
-
-                      setLoading(false);
-                      resetForm();
-                      PreregisModalClose();
-                      handleOpenSuccessModal();
-                      setSubmitting(false);
-                      setFormType("pre-registration");
+                      if (selectedRow) {
+                        // Editing existing pre-registration submission
+                        const response = await jwtAuthAxios.patch(
+                          `/pre-regist/update/${selectedRow.id}`,
+                          values,
+                          {
+                            headers: {
+                              Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                              )}`,
+                            },
+                          }
+                        );
+                        handleEditSuccessPreregis(); // Call handleEditSuccessPreregis after successful edit
+                      } else {
+                        // Adding new pre-registration submission
+                        const response = await jwtAuthAxios.post(
+                          `/pre-regist/create`,
+                          values,
+                          {
+                            headers: {
+                              Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                              )}`,
+                            },
+                          }
+                        );
+                        setLoading(false);
+                        resetForm();
+                        handlePreregisModalClose(); // Call handlePreregisModalClose after adding new submission
+                        getGradeAndPreregis();
+                        handleOpenSuccessModal();
+                        setSubmitting(false);
+                        setFormType("pre-registration");
+                      }
                     } catch (error) {
                       setLoading(false);
-                      PreregisModalClose();
+                      handlePreregisModalClose();
                       handleOpenErrorModal();
                       setSubmitting(false);
                       setFormType("");
@@ -589,7 +618,6 @@ const Manage = () => {
               </Box>
             </Modal>
           </Grid>
-          {/* </Grid> */}
           <Grid container pt={1}>
             <Grid item xs={12}>
               <TableContainer component={Paper}>
@@ -606,31 +634,17 @@ const Manage = () => {
                     <TableRow>
                       <TableCell>Number</TableCell>
                       <TableCell>Created Date</TableCell>
-                      {/* <TableCell>To Major</TableCell> */}
                       <TableCell>Semester</TableCell>
                       <TableCell>Year</TableCell>
                       <TableCell>Due Date Estimation</TableCell>
                       <TableCell>Status</TableCell>
-                      {/* <TableCell>Action</TableCell> */}
+                      <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {dataPreregis && dataPreregis.length > 0 ? (
                       dataPreregis.map((value, index) => (
-                        <TableRow
-                          key={value.id}
-                          onClick={() => handleTableRowClick(value)}
-                          sx={{
-                            ":hover": {
-                              cursor: "pointer",
-                              backgroundColor: "#338CFF21",
-                              transition: "0.3s",
-                              transitionTimingFunction: "ease-in-out",
-                              transitionDelay: "0s",
-                              transitionProperty: "all",
-                            },
-                          }}
-                        >
+                        <TableRow key={value.id}>
                           <TableCell sx={{ width: "80px" }}>
                             {index + 1}
                           </TableCell>
@@ -644,19 +658,6 @@ const Manage = () => {
                               }
                             )}
                           </TableCell>
-                          {/* <TableCell
-                            sx={{
-                              width: "200px",
-                            }}
-                          >
-                            {value.major === "IF"
-                              ? "Informatics"
-                              : value.major === "SI"
-                              ? "Information System"
-                              : value.major === "DKV"
-                              ? "Information Technology"
-                              : value.major}
-                          </TableCell> */}
                           <TableCell
                             sx={{
                               width: "130px",
@@ -692,37 +693,64 @@ const Manage = () => {
                           >
                             {value.isOpen ? "Open" : "Closed"}
                           </TableCell>
-                          {/* <TableCell
+                          <TableCell
                             sx={{
-                              width: "150px",
+                              width: "100px",
                             }}
                           >
                             <MoreVert
                               aria-describedby={value.id}
                               onClick={(e) => {
+                                setSelectedRow(value);
                                 setAnchorEl(e.currentTarget);
                                 setOpen(true);
                               }}
+                              sx={{ cursor: "pointer" }}
                             />
                             <Popover
                               id={value.id}
                               anchorEl={anchorEl}
                               open={open}
-                              onClose={() => setOpen(false)}
+                              onClose={() => {
+                                setOpen(false);
+                                setSelectedRow(null);
+                              }}
                               anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "left",
+                                horizontal: "right",
                               }}
                             >
-                              <Button
-                                onClick={() => {
-                                  handleClosePreregis(value.id);
-                                }}
-                              >
-                                Close
-                              </Button>
+                              <Stack direction="column">
+                                <Button
+                                  size="small"
+                                  onClick={() => {
+                                    handleEditPreregis(value);
+                                  }}
+                                >
+                                  Edit
+                                </Button>
+                                <Button
+                                  size="small"
+                                  onClick={() => {
+                                    handleClosePreregis(value.id);
+                                  }}
+                                >
+                                  Close
+                                </Button>
+                                <Button
+                                  size="small"
+                                  onClick={handleViewListStudent}
+                                >
+                                  List Student
+                                </Button>
+                                <Button
+                                  size="small"
+                                  onClick={handleViewListCourses}
+                                >
+                                  List Courses
+                                </Button>
+                              </Stack>
                             </Popover>
-                          </TableCell> */}
+                          </TableCell>
                         </TableRow>
                       ))
                     ) : (
@@ -732,168 +760,6 @@ const Manage = () => {
                     )}
                   </TableBody>
                 </Table>
-                <Modal
-                  open={listPreregisModalOpen}
-                  onClose={ListPreregisModalClose}
-                >
-                  <Box
-                    style={{
-                      ...styleModal,
-                      overflow: "auto",
-                      maxHeight: "80vh",
-                    }}
-                  >
-                    <IconButton
-                      edge="end"
-                      color="#D9D9D9"
-                      onClick={ListPreregisModalClose}
-                      aria-label="close"
-                      sx={{
-                        position: "absolute",
-                        top: "10px",
-                        right: "20px",
-                      }}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                    <Grid container>
-                      <Grid item md={8} xs={8}>
-                        <Typography
-                          id="modal-modal-title"
-                          variant="h4"
-                          component="h2"
-                          sx={{
-                            fontWeight: 600,
-                            paddingBottom: 3,
-                            "@media (maxWidth: 390px)": {
-                              fontSize: "15px",
-                            },
-                          }}
-                        >
-                          Pre-registration Submission
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={3}>
-                      <Grid item xs={12} md={6}>
-                        <Typography variant="h6">Semester</Typography>
-                        <Typography variant="h6" sx={textStyle}>
-                          {selectedRow?.semester}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <Typography variant="h6">Year</Typography>
-                        <Typography variant="h6" sx={textStyle}>
-                          {selectedRow?.semesterPeriod}
-                        </Typography>
-                      </Grid>
-                      {/* <Grid item xs={12} md={6}>
-                        <Typography variant="h6">To Major</Typography>
-                        <Typography variant="h6" sx={textStyle}>
-                          {selectedRow?.major === "IF"
-                            ? "Informatics"
-                            : selectedRow?.major === "SI"
-                            ? "Information System"
-                            : selectedRow?.major === "DKV"
-                            ? "Information Technology"
-                            : selectedRow?.major}
-                        </Typography>
-                      </Grid> */}
-                      <Grid item xs={12} md={6}>
-                        <Typography variant="h6">Status</Typography>
-                        <Typography variant="h6" sx={textStyle}>
-                          {selectedRow?.isOpen ? "Open" : "Closed"}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <Typography variant="h6">Create Date</Typography>
-                        <Typography variant="h6" sx={textStyle}>
-                          {new Date(selectedRow?.createdAt).toLocaleDateString(
-                            "en-US",
-                            {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            }
-                          )}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} md={12}>
-                        <Typography variant="h6">
-                          Due Date Estimation
-                        </Typography>
-                        <Typography variant="h6" sx={textStyle}>
-                          {new Date(selectedRow?.dueDate).toLocaleDateString(
-                            "en-US",
-                            {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            }
-                          )}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          fullWidth
-                          onClick={() =>
-                            navigate(
-                              `/bimbingan-akademik/kaprodi/manage/list-student/${selectedRow?.id}`,
-                              { state: { id: selectedRow?.id, major: major } }
-                            )
-                          }
-                          sx={{
-                            backgroundColor: "#006AF5",
-                            borderRadius: "15px",
-                            color: "white",
-                            fontSize: "12px",
-                            padding: "7px",
-                            paddingLeft: "9px",
-                            paddingRight: "13px",
-                            gap: "5px",
-                            "&:hover": {
-                              backgroundColor: "#025ED8",
-                            },
-                          }}
-                        >
-                          <PeopleAltIcon sx={{ fontSize: "14px" }} />
-                          View List Student
-                        </Button>
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          fullWidth
-                          onClick={() =>
-                            navigate(
-                              `/bimbingan-akademik/kaprodi/manage/list-courses/${selectedRow?.id}`,
-                              { state: { id: selectedRow?.id, major: major } }
-                            )
-                          }
-                          sx={{
-                            backgroundColor: "#006AF5",
-                            borderRadius: "15px",
-                            color: "white",
-                            fontSize: "12px",
-                            padding: "7px",
-                            paddingLeft: "9px",
-                            paddingRight: "13px",
-                            gap: "5px",
-                            "&:hover": {
-                              backgroundColor: "#025ED8",
-                            },
-                          }}
-                        >
-                          <ViewListIcon sx={{ fontSize: "14px" }} />
-                          View List Courses
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Modal>
               </TableContainer>
               <TablePagination
                 sx={{
@@ -920,38 +786,6 @@ const Manage = () => {
 
       <TabPanel value={value} index={1}>
         <div>
-          {/* <Grid container pt={1} pb={2}> */}
-          {/* <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              xl={3}
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                paddingTop: "23px",
-              }}
-            >
-              <TextField
-                placeholder="Search by Status"
-                variant="outlined"
-                size="small"
-                sx={{
-                  width: "350px",
-                  height: "100%",
-                }}
-                onChange={(e) => setSearchValue(e.target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton edge="end">
-                      <SearchIcon />
-                    </IconButton>
-                  ),
-                  style: { borderRadius: "25px" },
-                }}
-              />
-            </Grid> */}
           <Grid
             item
             xs={12}
@@ -959,9 +793,7 @@ const Manage = () => {
             md={4}
             sx={{
               padding: "1px",
-              // paddingLeft: "10px",
               paddingBottom: "15px",
-              // paddingTop: "23px",
               paddingTop: "10px",
             }}
           >
@@ -1022,10 +854,16 @@ const Manage = () => {
                 </Grid>
                 <Formik
                   initialValues={{
-                    semester: "",
-                    semesterPeriod: "",
-                    major: "",
-                    dueDate: null,
+                    semester: selectedRow ? selectedRow.semester || "" : "",
+                    semesterPeriod: selectedRow
+                      ? selectedRow.semesterPeriod || ""
+                      : "",
+                    dueDate: selectedRow
+                      ? selectedRow.dueDate
+                        ? new Date(selectedRow.dueDate)
+                        : null
+                      : null,
+                    major: major || "",
                     employeeId:
                       JSON.parse(localStorage.getItem("user"))?.id || "",
                   }}
@@ -1033,33 +871,55 @@ const Manage = () => {
                   onSubmit={async (values, { resetForm, setSubmitting }) => {
                     const { id } = JSON.parse(localStorage.getItem("user"));
                     setLoading(true);
-                    values.semester = values.semester;
-                    values.semesterPeriod = values.semesterPeriod;
                     values.major = major;
-                    values.dueDate = values.dueDate;
+                    // buat dueDate ke WITA
+                    const dueDateWITA = new Date(values.dueDate).toLocaleString(
+                      "en-US",
+                      {
+                        timeZone: "Asia/Makassar",
+                      }
+                    );
+                    values.dueDate = new Date(dueDateWITA);
                     values.employeeId = id;
                     try {
-                      const result = await jwtAuthAxios.post(
-                        `/access/open/grades`,
-                        values,
-                        {
-                          headers: {
-                            Authorization: `Bearer ${localStorage.getItem(
-                              "token"
-                            )}`,
-                          },
-                        }
-                      );
-
-                      setLoading(false);
-                      resetForm();
-                      GradeModalClose();
-                      handleOpenSuccessModal();
-                      setSubmitting(false);
-                      setFormType("grade");
+                      if (selectedRow) {
+                        // Editing existing grade submission
+                        const result = await jwtAuthAxios.patch(
+                          `/access/update/${selectedRow.id}`,
+                          values,
+                          {
+                            headers: {
+                              Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                              )}`,
+                            },
+                          }
+                        );
+                        handleEditSuccess(); // Call handleEditSuccess after successful edit
+                      } else {
+                        // Adding new grade submission
+                        const result = await jwtAuthAxios.post(
+                          `/access/open/grades`,
+                          values,
+                          {
+                            headers: {
+                              Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                              )}`,
+                            },
+                          }
+                        );
+                        setLoading(false);
+                        resetForm();
+                        GradeModalClose(); // Call GradeModalClose after adding new submission
+                        getGradeAndPreregis();
+                        handleOpenSuccessModal();
+                        setSubmitting(false);
+                        setFormType("grade");
+                      }
                     } catch (error) {
                       setLoading(false);
-                      GradeModalClose();
+                      GradeModalClose(); // Call handleCloseModal after error
                       handleOpenErrorModal();
                       setSubmitting(false);
                       setFormType("");
@@ -1147,8 +1007,6 @@ const Manage = () => {
               </Box>
             </Modal>
           </Grid>
-          {/* </Grid> */}
-
           <Grid container pt={1}>
             <Grid item xs={12}>
               <TableContainer component={Paper}>
@@ -1165,12 +1023,11 @@ const Manage = () => {
                     <TableRow>
                       <TableCell>Number</TableCell>
                       <TableCell>Created Date</TableCell>
-                      {/* <TableCell>To Major</TableCell> */}
                       <TableCell>Semester</TableCell>
                       <TableCell>Year</TableCell>
                       <TableCell>Due Date Estimation</TableCell>
                       <TableCell>Status</TableCell>
-                      {/* <TableCell>Action</TableCell> */}
+                      <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -1190,15 +1047,6 @@ const Manage = () => {
                               }
                             )}
                           </TableCell>
-                          {/* <TableCell sx={{ width: "200px" }}>
-                            {value.major === "IF"
-                              ? "Informatics"
-                              : value.major === "SI"
-                              ? "Information System"
-                              : value.major === "DKV"
-                              ? "Information Technology"
-                              : value.major}
-                          </TableCell> */}
                           <TableCell sx={{ width: "130px" }}>
                             {value.semester}
                           </TableCell>
@@ -1218,33 +1066,48 @@ const Manage = () => {
                           <TableCell sx={{ width: "150px" }}>
                             {value.isOpen ? "Open" : "Closed"}
                           </TableCell>
-                          {/* <TableCell sx={{ width: "150px" }}>
+                          <TableCell sx={{ width: "100px" }}>
                             <MoreVert
                               aria-describedby={value.id}
                               onClick={(e) => {
+                                setSelectedRow(value);
                                 setAnchorEl(e.currentTarget);
                                 setOpen(true);
                               }}
+                              sx={{ cursor: "pointer" }}
                             />
                             <Popover
                               id={value.id}
                               anchorEl={anchorEl}
                               open={open}
-                              onClose={() => setOpen(false)}
+                              onClose={() => {
+                                setOpen(false);
+                                setSelectedRow(null);
+                              }}
                               anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "left",
+                                horizontal: "right",
                               }}
                             >
-                              <Button
-                                onClick={() => {
-                                  handleCloseGrade(value.id);
-                                }}
-                              >
-                                Close
-                              </Button>
+                              <Stack>
+                                <Button
+                                  size="small"
+                                  onClick={() => {
+                                    handleEditGrade(value);
+                                  }}
+                                >
+                                  Edit
+                                </Button>
+                                <Button
+                                  size="small"
+                                  onClick={() => {
+                                    handleCloseGrade(value.id);
+                                  }}
+                                >
+                                  Close
+                                </Button>
+                              </Stack>
                             </Popover>
-                          </TableCell> */}
+                          </TableCell>
                         </TableRow>
                       ))
                     ) : (
@@ -1282,7 +1145,7 @@ const Manage = () => {
         open={openSuccessModal}
         handleClose={handleCloseSuccessModal}
         title="Success creating submission form!"
-        description={`You have successfully creating a form for ${formType} submission. Please refresh your page.`}
+        description={`You have successfully creating a form for ${formType} submission.`}
       />
       <SuccessOrError
         open={openErrorModal}
