@@ -71,11 +71,6 @@ const Consultation = () => {
 
   const [inputValue, setInputValue] = useState("");
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSubmit();
-    }
-  };
   const handleIconClick = () => {
     handleSubmit();
   };
@@ -400,7 +395,6 @@ const Consultation = () => {
                           </IconButton>
                         ),
                       }}
-                      onKeyPress={handleKeyPress}
                     />
                     <Grid
                       container
