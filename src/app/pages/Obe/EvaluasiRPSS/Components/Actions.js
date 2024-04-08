@@ -1,8 +1,9 @@
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
-const Actions = () => {
+const Actions = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuClick = (event) => {
@@ -23,7 +24,9 @@ const Actions = () => {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem>View Report CPMK</MenuItem>
+        <MenuItem>
+          <Link to={`/obe/list-rps/${item.id}`}>View RPS Detail</Link>
+        </MenuItem>
         <MenuItem>Edit</MenuItem>
         <MenuItem>Delete</MenuItem>
       </Menu>

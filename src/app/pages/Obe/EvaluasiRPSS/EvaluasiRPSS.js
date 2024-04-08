@@ -210,7 +210,7 @@ const EvaluasiRPS = () => {
                       <Chip label={row.status} color={getColor(row.status)} />
                     </TableCell>
                     <TableCell align="left">
-                      <Actions />
+                      <Actions item={row} />
                     </TableCell>
                   </TableRow>
                 ))}

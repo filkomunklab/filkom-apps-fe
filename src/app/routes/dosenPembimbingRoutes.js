@@ -31,6 +31,7 @@ import EvaluasiCPMK from "app/pages/Obe/EvaluasiCPMK";
 import EvaluasiPenilaianCPMK from "app/pages/Obe/EvaluasiPenilaianCPMK";
 import ReportCPMK from "app/pages/Obe/ReportCPMK";
 import CreateRPS from "app/pages/Obe/CreateRPS";
+import RpsDetail from "app/pages/Obe/RpsDetail";
 
 const { default: Page } = require("@jumbo/shared/Page");
 
@@ -153,6 +154,10 @@ const dosenPembimbingRoutes = [
   {
     path: "/obe/list-rps",
     element: <Page component={EvaluasiRPS} />,
+  },
+  {
+    path: "/obe/list-rps/:rpsId",
+    element: <Page component={RpsDetail} />,
   },
   {
     path: "/obe/list-rps/create",
