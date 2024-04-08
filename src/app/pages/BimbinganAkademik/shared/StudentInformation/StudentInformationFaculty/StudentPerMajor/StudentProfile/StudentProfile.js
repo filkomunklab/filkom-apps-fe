@@ -20,6 +20,10 @@ import {
   CircularProgress,
   Button,
   Modal,
+  TextField,
+  Select,
+  InputLabel,
+  MenuItem,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -34,6 +38,15 @@ import {
 const role = Boolean(localStorage.getItem("user"))
   ? JSON.parse(localStorage.getItem("user")).role
   : [];
+
+const areaOfConcentrationOptions = [
+  { value: "OBJECT_PROGRAMMER", label: "Object Programmer" },
+  {
+    value: "COMPETITIVE_INTELEGENT_ANALYSIS",
+    label: "Competitive Intelligent Analysis",
+  },
+  { value: "NETWORK_ADMINISTRATOR", label: "Network Administrator" },
+];
 
 const style = {
   position: "absolute",
@@ -68,13 +81,25 @@ const StudentProfile = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [editedFields, setEditedFields] = useState({});
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [areaOfConcentration, setAreaOfConcentration] = useState("");
+  const [showLabelAreaOfConcentration, setShowLabelAreaOfConcentration] =
+    useState(false);
   const dosenGuidanceClass = JSON.parse(
     localStorage.getItem("user")
   ).guidanceClassId;
 
   //modal
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const [openFirstModal, setOpenFirstModal] = useState(false);
   const [openErrorModal, setOpenErrorModal] = useState(false);
+  const handleOpenConfirmModal = () => {
+    setOpenConfirmModal(true);
+  };
+  const handleCloseConfirmModal = () => {
+    setOpenConfirmModal(false);
+  };
   const handleOpenFirstModal = () => {
     if (selectedStatus) {
       setOpenFirstModal(true);
@@ -85,6 +110,23 @@ const StudentProfile = () => {
   const handleCloseErrorModal = () => {
     setOpenErrorModal(false);
     handleCloseFirstModal();
+  };
+
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (error.response && error.response.status === 403) {
+      handlePermissionError();
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      return;
+    } else if (error.response && error.response.status === 401) {
+      handleAuthenticationError();
+    } else {
+      console.log("ini error: ", error);
+    }
   };
 
   const getProfile = async () => {
@@ -102,20 +144,7 @@ const StudentProfile = () => {
         resultStudent.data.data.GuidanceClassMember?.gudianceClass?.teacher
       );
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
-        console.log("request canceled");
-      } else if (error.response && error.response.status === 403) {
-        handlePermissionError();
-        setTimeout(() => {
-          navigate(-1);
-        }, 2000);
-        return;
-      } else if (error.response && error.response.status === 401) {
-        handleAuthenticationError();
-      } else {
-        console.log("ini error: ", error);
-        return;
-      }
+      handleError(error);
     }
   };
 
@@ -143,20 +172,7 @@ const StudentProfile = () => {
     } catch (error) {
       handleOpenErrorModal();
       setIsLoading(false);
-      if (error.code === "ERR_CANCELED") {
-        console.log("request canceled");
-      } else if (error.response && error.response.status === 403) {
-        handlePermissionError();
-        setTimeout(() => {
-          navigate(-1);
-        }, 2000);
-        return;
-      } else if (error.response && error.response.status === 401) {
-        handleAuthenticationError();
-      } else {
-        console.log("ini error: ", error);
-        return;
-      }
+      handleError(error);
     }
   };
 
@@ -178,6 +194,51 @@ const StudentProfile = () => {
   const handleClosePopover = () => {
     setAnchorEl(null);
     setOpen(false);
+  };
+
+  const handleEditProfile = () => {
+    if (isEditMode) {
+      handleOpenConfirmModal();
+    } else {
+      setIsEditMode(true);
+    }
+  };
+
+  const handleFieldChange = (fieldName, value) => {
+    setEditedFields((prev) => ({ ...prev, [fieldName]: value }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      setOpenConfirmModal(false);
+      const payload = { ...editedFields };
+      const response = await jwtAuthAxios.patch(
+        `/employee/change-student-profile/${studentId}`,
+        payload,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      setIsEditMode(false);
+      setIsLoading(false);
+      getProfile();
+    } catch (error) {
+      setIsLoading(false);
+      setOpenErrorModal(true);
+      console.error("Error:", error);
+    }
+  };
+
+  const textStyle = {
+    borderWidth: 1,
+    borderColor: "#00000029",
+    borderStyle: "solid",
+    paddingX: "24px",
+    paddingY: "13px",
+    borderRadius: "8px",
+    color: isEditMode ? "#ccc" : "#000",
+    cursor: isEditMode ? "not-allowed" : "text",
   };
 
   return (
@@ -213,6 +274,83 @@ const StudentProfile = () => {
       </Breadcrumbs>
       <Typography sx={{ fontSize: "24px", fontWeight: 500, paddingY: "20px" }}>
         Student Profile
+        <Button
+          sx={{
+            // backgroundColor: "#006AF5",
+            // color: "white",
+            Color: "#006AF5",
+            borderRadius: "5px",
+            whiteSpace: "nowrap",
+            "&:hover": {
+              backgroundColor: "rgba(230,245,255,0.8)",
+            },
+            float: "right",
+          }}
+          onClick={handleEditProfile}
+        >
+          {isEditMode ? "Submit" : "Edit Profile"}
+        </Button>
+        <Modal
+          open={openConfirmModal}
+          onClose={() => setOpenConfirmModal(false)}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <div style={style}>
+            <Typography
+              id="modal-modal-title"
+              variant="h4"
+              component="h2"
+              sx={{
+                fontWeight: 600,
+                paddingTop: 2,
+              }}
+            >
+              Change Student Information?
+            </Typography>
+            <Typography
+              id="modal-modal-description"
+              style={{ marginTop: "16px", marginBottom: "20px" }}
+            >
+              Are you sure you want to change information of this student?
+            </Typography>
+
+            <Grid container spacing={1} justifyContent="flex-end">
+              <Grid item>
+                <Button
+                  onClick={() => setOpenConfirmModal(false)}
+                  sx={{
+                    backgroundColor: "white",
+                    borderRadius: "5px",
+                    color: "black",
+                    whiteSpace: "nowrap",
+                    "&:hover": {
+                      backgroundColor: "lightgrey",
+                    },
+                  }}
+                >
+                  No
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={handleSubmit}
+                  sx={{
+                    backgroundColor: "#006AF5",
+                    borderRadius: "5px",
+                    color: "white",
+                    whiteSpace: "nowrap",
+                    "&:hover": {
+                      backgroundColor: "#025ED8",
+                    },
+                  }}
+                >
+                  Yes
+                </Button>
+              </Grid>
+            </Grid>
+          </div>
+        </Modal>
       </Typography>
       <Accordion defaultExpanded>
         <AccordionSummary
@@ -278,9 +416,25 @@ const StudentProfile = () => {
                   </IconButton>
                 )}
               </Stack>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.status ?? "-"}
-              </Typography>
+              {isEditMode ? (
+                <Typography
+                  variant="h6"
+                  sx={{
+                    borderWidth: 1,
+                    borderColor: "#00000029",
+                    borderStyle: "solid",
+                    paddingX: "24px",
+                    paddingY: "13px",
+                    borderRadius: "8px",
+                  }}
+                >
+                  {studentProfileData?.status ?? "-"}
+                </Typography>
+              ) : (
+                <Typography variant="h6" sx={textStyle}>
+                  {studentProfileData?.status ?? "-"}
+                </Typography>
+              )}
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">NIM</Typography>
@@ -323,9 +477,24 @@ const StudentProfile = () => {
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Phone Number</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.phoneNo ?? "-"}
-              </Typography>
+              {isEditMode ? (
+                <TextField
+                  fullWidth
+                  size="small"
+                  inputProps={{
+                    style: {
+                      borderRadius: "8px",
+                      height: "27px",
+                    },
+                  }}
+                  value={editedFields.phoneNo ?? studentProfileData.phoneNo}
+                  onChange={(e) => handleFieldChange("phoneNo", e.target.value)}
+                />
+              ) : (
+                <Typography variant="h6" sx={textStyle}>
+                  {studentProfileData?.phoneNo ?? "-"}
+                </Typography>
+              )}
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Curriculum</Typography>
@@ -336,17 +505,54 @@ const StudentProfile = () => {
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Area of Concentration</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.areaOfConcentration === "OBJECT_PROGRAMMER"
-                  ? "Object Programmer"
-                  : studentProfileData?.areaOfConcentration ===
-                    "COMPETITIVE_INTELEGENT_ANALYSIS"
-                  ? "Competitive Intelligent Analysis"
-                  : studentProfileData?.areaOfConcentration ===
-                    "NETWORK_ADMINISTRATOR"
-                  ? "Network Administrator"
-                  : "-"}
-              </Typography>
+              {isEditMode ? (
+                <FormControl size="small" sx={{}} fullWidth>
+                  <InputLabel shrink={false}>
+                    {showLabelAreaOfConcentration ? "Select Option" : ""}
+                  </InputLabel>
+                  <Select
+                    sx={{
+                      padding: 0.5,
+                    }}
+                    value={
+                      editedFields.areaOfConcentration ?? areaOfConcentration
+                    }
+                    onChange={(event) => {
+                      handleFieldChange(
+                        "areaOfConcentration",
+                        event.target.value
+                      );
+                      setShowLabelAreaOfConcentration(false);
+                    }}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: "37%",
+                        },
+                      },
+                    }}
+                  >
+                    {areaOfConcentrationOptions.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              ) : (
+                <Typography variant="h6" sx={textStyle}>
+                  {studentProfileData?.areaOfConcentration ===
+                  "OBJECT_PROGRAMMER"
+                    ? "Object Programmer"
+                    : studentProfileData?.areaOfConcentration ===
+                      "COMPETITIVE_INTELEGENT_ANALYSIS"
+                    ? "Competitive Intelligent Analysis"
+                    : studentProfileData?.areaOfConcentration ===
+                      "NETWORK_ADMINISTRATOR"
+                    ? "Network Administrator"
+                    : "-"}
+                </Typography>
+              )}
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Address</Typography>
@@ -356,12 +562,33 @@ const StudentProfile = () => {
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Current Residence Status</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.currentResidenceStatus ?? "-"}
-              </Typography>
+              {isEditMode ? (
+                <TextField
+                  fullWidth
+                  size="small"
+                  value={
+                    editedFields.currentResidenceStatus ??
+                    studentProfileData.currentResidenceStatus
+                  }
+                  inputProps={{
+                    style: {
+                      borderRadius: "8px",
+                      height: "27.5px",
+                    },
+                  }}
+                  onChange={(e) =>
+                    handleFieldChange("currentResidenceStatus", e.target.value)
+                  }
+                />
+              ) : (
+                <Typography variant="h6" sx={textStyle}>
+                  {studentProfileData?.currentResidenceStatus ?? "-"}
+                </Typography>
+              )}
             </Grid>
           </Grid>
         </AccordionDetails>
+
         <Popover
           open={open}
           anchorEl={anchorEl}
@@ -437,7 +664,7 @@ const StudentProfile = () => {
                         },
                       }}
                     >
-                      Cancel
+                      No
                     </Button>
                   </Grid>
                   <Grid item>
@@ -453,18 +680,12 @@ const StudentProfile = () => {
                         },
                       }}
                     >
-                      Submit
+                      Yes
                     </Button>
                   </Grid>
                 </Grid>
               </div>
             </Modal>
-            <SuccessOrError
-              open={openErrorModal}
-              handleClose={handleCloseErrorModal}
-              title="Error Submission!"
-              description="Error: Failed to create activity. Please try again."
-            />
           </FormControl>
         </Popover>
       </Accordion>
@@ -491,15 +712,55 @@ const StudentProfile = () => {
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Phone</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianPhoneNo ?? "-"}
-              </Typography>
+              {isEditMode ? (
+                <TextField
+                  fullWidth
+                  size="small"
+                  value={
+                    editedFields.guardianPhoneNo ??
+                    studentProfileData.guardianPhoneNo
+                  }
+                  inputProps={{
+                    style: {
+                      borderRadius: "8px",
+                      height: "27px",
+                    },
+                  }}
+                  onChange={(e) =>
+                    handleFieldChange("guardianPhoneNo", e.target.value)
+                  }
+                />
+              ) : (
+                <Typography variant="h6" sx={textStyle}>
+                  {studentProfileData?.guardianPhoneNo ?? "-"}
+                </Typography>
+              )}
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Email</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianEmail ?? "-"}
-              </Typography>
+              {isEditMode ? (
+                <TextField
+                  fullWidth
+                  size="small"
+                  value={
+                    editedFields.guardianEmail ??
+                    studentProfileData.guardianEmail
+                  }
+                  onChange={(e) =>
+                    handleFieldChange("guardianEmail", e.target.value)
+                  }
+                  inputProps={{
+                    style: {
+                      borderRadius: "8px",
+                      height: "27px",
+                    },
+                  }}
+                />
+              ) : (
+                <Typography variant="h6" sx={textStyle}>
+                  {studentProfileData?.guardianEmail ?? "-"}
+                </Typography>
+              )}
             </Grid>
           </Grid>
         </AccordionDetails>
@@ -534,7 +795,7 @@ const StudentProfile = () => {
                 {advisorProfileData?.phoneNum ?? "-"}
               </Typography>
             </Grid>
-            <Grid item xs={12} md={12}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h5">Address</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {advisorProfileData?.Address ?? "-"}
@@ -543,6 +804,12 @@ const StudentProfile = () => {
           </Grid>
         </AccordionDetails>
       </Accordion>
+      <SuccessOrError
+        open={openErrorModal}
+        handleClose={handleCloseErrorModal}
+        title="Error Submission!"
+        description="Error: Failed to submit your change. Please try again."
+      />
     </Div>
   );
 };
@@ -557,15 +824,6 @@ const getRole = () => {
     : "dosen-pembimbing";
 
   return filter;
-};
-
-const textStyle = {
-  borderWidth: 1,
-  borderColor: "#00000029",
-  borderStyle: "solid",
-  paddingX: "24px",
-  paddingY: "13px",
-  borderRadius: "8px",
 };
 
 const StyledLink = styled(Link)(({ theme }) => ({
