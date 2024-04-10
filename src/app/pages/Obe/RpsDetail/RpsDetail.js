@@ -2,6 +2,11 @@ import { Stack, Button } from "@mui/material";
 import { ASSET_IMAGES } from "app/utils/constants/paths";
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getRpsDetail } from "app/api";
+import moment from "moment";
+import { convertShortMajor } from "app/utils/appHelpers";
 
 const marginTop = "10mm";
 const marginRight = "10mm";
@@ -14,12 +19,25 @@ const getPageMargins = () => {
 
 const RpsDetail = () => {
   const componentRef = useRef();
+  const { rpsId } = useParams();
+
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
 
+  const rpsQuery = useQuery({
+    queryKey: ["rps", rpsId],
+    queryFn: () => getRpsDetail(rpsId),
+  });
+
   return (
-    <Stack alignItems={"center"} style={{ height: `calc(100vh - 150px)` }}>
+    <Stack
+      alignItems={"center"}
+      style={{
+        height: `calc(100vh - 150px)`,
+        fontFamily: "Tahoma, sans-serif",
+      }}
+    >
       <Stack
         direction={"row"}
         justifyContent={"space-between"}
@@ -63,7 +81,7 @@ const RpsDetail = () => {
                     className="text-center border-[1px] border-black py-1"
                   >
                     RENCANA PEMBELAJARAN SEMESTER <br />
-                    PROGRAM STUDI S1 SISTEM INFORMASI <br />
+                    PROGRAM STUDI S1 <br />
                     FAKULTAS ILMU KOMPUTER <br />
                     <b>Universitas Klabat</b>
                   </td>
@@ -112,21 +130,23 @@ const RpsDetail = () => {
                 </tr>
                 <tr>
                   <td className="border-[1px] border-black text-center">
-                    Business Process Reengineering / Rekayasa Proses Bisnis
+                    {`${rpsQuery.data?.Subject.englishName} / ${rpsQuery.data?.Subject.indonesiaName}`}
                   </td>
                   <td
                     colSpan={2}
                     className="border-[1px] border-black text-center"
                   >
-                    IS3155
+                    {rpsQuery.data?.Subject.code}
                   </td>
                   <td
                     colSpan={2}
                     className="border-[1px] border-black text-center"
                   >
-                    Business and Management
+                    {rpsQuery.data?.subjectFamily}
                   </td>
-                  <td className="border-[1px] border-black text-center">3</td>
+                  <td className="border-[1px] border-black text-center">
+                    {rpsQuery.data?.Subject.credits}
+                  </td>
                   <td
                     colSpan={2}
                     className="border-[1px] border-black text-center"
@@ -137,13 +157,15 @@ const RpsDetail = () => {
                     colSpan={2}
                     className="border-[1px] border-black text-center"
                   >
-                    5
+                    {rpsQuery.data?.Subject.Curriculum_Subject.map(
+                      (item) => item.semester
+                    ).join(", ")}
                   </td>
                   <td
                     colSpan={2}
                     className="border-[1px] border-black text-center"
                   >
-                    9/8/2023
+                    {moment(rpsQuery.data?.updatedAt).format("DD/MM/YYYY")}
                   </td>
                 </tr>
               </>
@@ -178,19 +200,19 @@ const RpsDetail = () => {
                     colSpan={5}
                     className="border-[1px] border-black text-center"
                   >
-                    Andrew Tanny Liem, SSi., MT., PhD{" "}
+                    {rpsQuery.data?.rpsDeveloper}
                   </td>
                   <td
                     colSpan={3}
                     className="border-[1px] border-black text-center"
                   >
-                    Andrew Tanny Liem, SSi., MT., PhD{" "}
+                    {rpsQuery.data?.headOfExpertise}
                   </td>
                   <td
                     colSpan={4}
                     className="border-[1px] border-black text-center"
                   >
-                    Stenly Richard Pungus, S.Kom., MT., MM., PhD{" "}
+                    {rpsQuery.data?.headOfProgramStudy}
                   </td>
                 </tr>
               </>
@@ -201,26 +223,10 @@ const RpsDetail = () => {
                   <td className="border-[1px] border-black">
                     Deskripsi Mata Kuliah
                   </td>
-                  <td colSpan={12} className="border-[1px] border-black">
-                    Matakuliah ini mengajarkan pentingnya Business Process
-                    Reengineering (BPR) dalam konteks bisnis modern, dengan
-                    fokus pada karakteristik esensial BPR, pemodelan proses
-                    menggunakan IDEF0 dan BPMN, strategi implementasi, analisis,
-                    desain, simulasi, dan evaluasi proses, serta manajemen
-                    perubahan dan transisi organisasi. Mahasiswa akan
-                    dipersiapkan untuk menghadapi tantangan perubahan dalam
-                    organisasi dengan pemahaman mendalam tentang BPR dan
-                    keterampilan praktis dalam merancang, mengelola, dan
-                    mengoptimalkan proses bisnis. This course teaches the
-                    importance of Business Process Reengineering (BPR) in the
-                    context of modern business, focusing on the essential
-                    characteristics of BPR, process modeling using IDEF0 and
-                    BPMN, implementation strategies, process analysis, design,
-                    simulation, and evaluation, as well as organizational change
-                    management and transition. Students will be prepared to
-                    confront the challenges of organizational change with a deep
-                    understanding of BPR and practical skills in designing,
-                    managing, and optimizing business processes.
+                  <td colSpan={12} className="border-[1px] border-black w-full">
+                    <pre className="whitespace-pre-wrap">
+                      {rpsQuery.data?.subjectDescription}
+                    </pre>
                   </td>
                 </tr>
               </>
@@ -239,19 +245,16 @@ const RpsDetail = () => {
                     Capaian Pembelajaran Lulusan (CPL) PRODI
                   </td>
                 </tr>
-                {Array(3)
-                  .fill("yuhu")
-                  .map((item, index) => (
-                    <tr>
-                      <td className="border-[1px] border-black">{`CPL0${
-                        index + 1
-                      }`}</td>
-                      <td colSpan={11} className="border-[1px] border-black">
-                        Mengenali berbagai tipe peluang inovasi dan dampaknya
-                        terhadap rancangan model bisnis.
-                      </td>
-                    </tr>
-                  ))}
+                {rpsQuery.data?.Subject.Subject_Cpl.map((item, index) => (
+                  <tr key={item.cpl.id}>
+                    <td className="border-[1px] border-black">
+                      {item.cpl.code}
+                    </td>
+                    <td colSpan={11} className="border-[1px] border-black">
+                      {item.cpl.description}
+                    </td>
+                  </tr>
+                ))}
                 <tr>
                   <td
                     colSpan={9}
@@ -266,157 +269,95 @@ const RpsDetail = () => {
                     CPL yang di dukung{" "}
                   </td>
                 </tr>
-                {Array(7)
-                  .fill("huhi")
-                  .map((item) => (
-                    <tr>
-                      <td className="border-[1px] border-black">CPMK01</td>
-                      <td colSpan={8} className="border-[1px] border-black">
-                        Mahasiswa mampu menganalisis berbagai peluang inovasi
-                        dan dampaknya terhadap desain model bisnis.
-                      </td>
-                      <td colSpan={3} className="border-[1px] border-black">
-                        CPL021, CPL022
-                      </td>
-                    </tr>
-                  ))}
+                {rpsQuery.data?.Cpmk.map((item) => (
+                  <tr>
+                    <td className="border-[1px] border-black">{item.code}</td>
+                    <td colSpan={8} className="border-[1px] border-black">
+                      {item.description}
+                    </td>
+                    <td colSpan={3} className="border-[1px] border-black">
+                      {item.SupportedCpl.map((item) => item.cpl.code).join(
+                        ", "
+                      )}
+                    </td>
+                  </tr>
+                ))}
               </>
 
               {/* 6 Penilaian */}
               <>
                 <tr>
-                  <td rowSpan={12} className="border-[1px] border-black">
-                    Penilaian
-                  </td>
-                  <td
-                    rowSpan={2}
-                    className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold"
-                  >
-                    ID CPMK
-                  </td>
-                  <td
-                    colSpan={10}
-                    className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold"
-                  >
-                    Bobot per Bentuk Penilaian
-                  </td>
-                  <td
-                    rowSpan={2}
-                    className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold"
-                  >
-                    TOTAL BOBOT PER CPMK
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold">
-                    Presensi
-                  </td>
-                  <td className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold">
-                    Kuis 1
-                  </td>
-                  <td className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold">
-                    Tugas 1
-                  </td>
-                  <td className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold">
-                    Tugas 2
-                  </td>
-                  <td
-                    colSpan={2}
-                    className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold"
-                  >
-                    Proyek 1
-                  </td>
-                  <td
-                    colSpan={2}
-                    className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold"
-                  >
-                    UTS
-                  </td>
-                  <td
-                    colSpan={2}
-                    className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold"
-                  >
-                    UAS
-                  </td>
-                </tr>
-                {Array(9)
-                  .fill("huhi")
-                  .map((item) => (
-                    <tr>
-                      <td className="border-[1px] border-black text-center">
-                        CPMK01
-                      </td>
-                      <td className="border-[1px] border-black text-center">
-                        1
-                      </td>
-                      <td className="border-[1px] border-black text-center">
-                        5
-                      </td>
-                      <td className="border-[1px] border-black text-center">
-                        5
-                      </td>
-                      <td className="border-[1px] border-black text-center">
-                        0
-                      </td>
-                      <td
-                        colSpan={2}
-                        className="border-[1px] border-black text-center"
-                      >
-                        0
-                      </td>
-                      <td
-                        colSpan={2}
-                        className="border-[1px] border-black text-center"
-                      >
-                        0
-                      </td>
-                      <td
-                        colSpan={2}
-                        className="border-[1px] border-black text-center"
-                      >
-                        0
-                      </td>
-                      <td className="border-[1px] border-black text-center">
-                        11
-                      </td>
-                    </tr>
-                  ))}
-                <tr>
-                  <td className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold">
-                    Total Per Penilaian
-                  </td>
-                  <td className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold">
-                    10
-                  </td>
-                  <td className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold">
-                    5
-                  </td>
-                  <td className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold">
-                    25
-                  </td>
-                  <td className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold">
-                    5
-                  </td>
-                  <td
-                    colSpan={2}
-                    className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold"
-                  >
-                    25
-                  </td>
-                  <td
-                    colSpan={2}
-                    className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold"
-                  >
-                    30
-                  </td>
-                  <td
-                    colSpan={2}
-                    className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold"
-                  >
-                    30
-                  </td>
-                  <td className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold">
-                    100
+                  <td className="border-[1px] border-black">Penilaian</td>
+                  <td colSpan={12} className="border-[1px] border-black p-0">
+                    <table className="w-full">
+                      <thead>
+                        <tr>
+                          <td
+                            rowSpan={2}
+                            className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold"
+                          >
+                            ID CPMK
+                          </td>
+                          <td
+                            colSpan={
+                              rpsQuery.data?.GradingSystem.gradingSys.length
+                            }
+                            className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold"
+                          >
+                            Bobot per bentuk penilaian
+                          </td>
+                          <td
+                            rowSpan={2}
+                            className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold"
+                          >
+                            Total Bobot Per CPMK
+                          </td>
+                        </tr>
+                        <tr>
+                          {rpsQuery.data?.GradingSystem.gradingSys.map(
+                            (item) => (
+                              <td className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold">
+                                {item.label}
+                              </td>
+                            )
+                          )}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {rpsQuery.data?.GradingSystem.cpmkGrades.map((item) => (
+                          <tr>
+                            <td className="border-[1px] border-black text-center">
+                              {item.code}
+                            </td>
+                            {item.grades.map((grade) => (
+                              <td className="border-[1px] border-black text-center">
+                                {grade}
+                              </td>
+                            ))}
+                            <td className="border-[1px] border-black text-center">
+                              {item.totalGradingWeight}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold">
+                            Total Per Penilaian
+                          </td>
+                          {rpsQuery.data?.GradingSystem.gradingSys.map(
+                            (item) => (
+                              <td className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold">
+                                {item.value}
+                              </td>
+                            )
+                          )}
+                          <td className="border-[1px] border-black bg-[#d9d9d9] text-center font-semibold">
+                            {rpsQuery?.data?.GradingSystem.total}
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
                   </td>
                 </tr>
               </>
@@ -424,7 +365,14 @@ const RpsDetail = () => {
               {/* 7 Pustaka */}
               <>
                 <tr>
-                  <td rowspan="9" className="border-[1px] border-black">
+                  <td
+                    rowspan={
+                      rpsQuery.data?.mainReferences.length +
+                      rpsQuery.data?.supportingReferences.length +
+                      2
+                    }
+                    className="border-[1px] border-black"
+                  >
                     Pustaka{" "}
                   </td>
                   <td
@@ -434,18 +382,15 @@ const RpsDetail = () => {
                     Utama:{" "}
                   </td>
                 </tr>
-                {Array(5)
-                  .fill("huhi")
-                  .map((item, index) => (
-                    <tr className="border-l-[1px] border-black">
-                      <td
-                        colspan="12"
-                        className="border-r-[1px] border-black"
-                      >{`${
-                        index + 1
-                      }. Fundamentals of Business Process Management, Marlon Dumas, 2018`}</td>
-                    </tr>
-                  ))}
+                {rpsQuery.data?.mainReferences.map((item, index) => (
+                  <tr className="border-l-[1px] border-black">
+                    <td colspan="12" className="border-r-[1px] border-black">
+                      <pre className="whitespace-pre-wrap">
+                        {`${index + 1}. ${item}`}
+                      </pre>
+                    </td>
+                  </tr>
+                ))}
                 <tr>
                   <td
                     colspan="12"
@@ -454,18 +399,15 @@ const RpsDetail = () => {
                     Pustaka Pendukung:{" "}
                   </td>
                 </tr>
-                {Array(2)
-                  .fill("huhi")
-                  .map((item, index) => (
-                    <tr>
-                      <td
-                        colspan="12"
-                        className="border-r-[1px] border-black"
-                      >{`${
-                        index + 1
-                      }.Business Analysis and Process Modeling Guidebook: Business Analysis Techniques and Business Process Improvement`}</td>
-                    </tr>
-                  ))}
+                {rpsQuery.data?.supportingReferences.map((item, index) => (
+                  <tr>
+                    <td colspan="12" className="border-r-[1px] border-black">
+                      <pre className="whitespace-pre-wrap">
+                        {`${index + 1}. ${item}`}
+                      </pre>
+                    </td>
+                  </tr>
+                ))}
               </>
 
               {/* 8 Media Pembelajaran */}
@@ -486,10 +428,10 @@ const RpsDetail = () => {
                 </tr>
                 <tr>
                   <td colspan="11" className="border-[1px] border-black">
-                    Arena Simulation Software{" "}
+                    {rpsQuery.data?.software}
                   </td>
                   <td className="border-[1px] border-black">
-                    Komputer/Laptop; Projector{" "}
+                    {rpsQuery.data?.hardware}
                   </td>
                 </tr>
               </>
@@ -499,7 +441,7 @@ const RpsDetail = () => {
                 <tr>
                   <td className="border-[1px] border-black">Team Teaching</td>
                   <td colspan="12" className="border-[1px] border-black">
-                    Andrew Tanny Liem., SSi., MT., PhD{" "}
+                    {rpsQuery.data?.teamTeaching.map((item) => item).join(", ")}
                   </td>
                 </tr>
               </>
@@ -507,18 +449,26 @@ const RpsDetail = () => {
               {/* 10 MK Prasyarat */}
               <>
                 <tr>
-                  <td rowspan="2" className="border-[1px] border-black">
+                  <td className="border-[1px] border-black">
                     Matakuliah Syarat{" "}
                   </td>
                   <td colspan="12" className="border-[1px] border-black">
-                    - [IS1222] Pengantar Akuntansi Keuangan/ Introduction to
-                    Financial Accounting - 3 credit(s){" "}
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="12" className="border-[1px] border-black">
-                    - [IS2131] Sistem Informasi Manajemen/ Management
-                    Information System - 3 credit(s)
+                    {rpsQuery.data?.Prerequisite.map((item) => (
+                      <table className="w-full">
+                        <tr className="bg-[#d9d9d9] text-center font-semibold">
+                          <td>{`${convertShortMajor(item.curriculum.major)} - ${
+                            item.curriculum.year
+                          }`}</td>
+                        </tr>
+                        {item.prerequisite.map((item) => (
+                          <tr>
+                            <td>
+                              {`${item.code} - ${item.englishName} / ${item.indonesiaName}`}
+                            </td>
+                          </tr>
+                        ))}
+                      </table>
+                    ))}
                   </td>
                 </tr>
               </>
@@ -529,18 +479,22 @@ const RpsDetail = () => {
                   <td className="border-[1px] border-black text-red-500">
                     Ambang Batas Kelulusan Mahasiswa
                   </td>
-                  <td className="border-[1px] border-black">50.01</td>
+                  <td className="border-[1px] border-black">
+                    {rpsQuery.data?.minPassStudents}
+                  </td>
                   <td colspan="11" className="border-[1px] border-black">
-                    &nbsp;&nbsp;
+                    &nbsp;
                   </td>
                 </tr>
                 <tr>
                   <td className="border-[1px] border-black text-red-500">
                     Ambang Batas Kelulusan MK{" "}
                   </td>
-                  <td className="border-[1px] border-black">85.00%</td>
+                  <td className="border-[1px] border-black">
+                    {rpsQuery.data?.minPassGrade}
+                  </td>
                   <td colspan="11" className="border-[1px] border-black">
-                    &nbsp;&nbsp;
+                    &nbsp;
                   </td>
                 </tr>
               </>
@@ -587,57 +541,53 @@ const RpsDetail = () => {
               </tr>
             </thead>
             <tbody>
-              {Array(3)
-                .fill("yuhu")
-                .map((item, index) => (
-                  <tr>
-                    <td className="border-[1px] border-black text-center">
-                      {index + 1}
-                    </td>
-                    <td className="border-[1px] border-black">CPMK01</td>
-                    <td className="border-[1px] border-black align-top">
-                      Topik: BPR and Organization <br />
-                      Mahasiswa mampu menjelaskan berbagai pendekatan BPR dan
-                      menjelaskan dampaknya terhadap desain model bisnis <br />
-                      Mahasiswa memahami perubahan organisasi yang diperlukan
-                      untuk mendukung upaya BPR
-                    </td>
-                    <td className="border-[1px] border-black align-top">
-                      Tugas 1: Ketepatan mahasiswa dalam menjelaskan konsep
-                      dasar BPR <br />
-                      Kuis 1: Ketepatan mahasiswa dalam menjawab kuis
-                    </td>
-                    <td className="border-[1px] border-black align-top">
-                      Kuis, Case Study{" "}
-                    </td>
-                    <td className="border-[1px] border-black align-top">
-                      BPR and Organization #1: Definisi dari Re-Engineering,
-                      process dan proses bisnis. Definisi dan contoh dari BPR{" "}
-                      <br />
-                      BPR and Organization #2: Bagaimana BPR dapat di
-                      implementasikan pada suatu Organisasi <br />
-                      BPR and Organization #3: Karateristik dan Tujuan/Objektif
-                      dari BPR <br />
-                      BPR and Organization #3: Metodologi untuk
-                      mengimplementasikan BPR dan teknik-teknik lain yang dapat
-                      digunakan
-                    </td>
-                    <td className="border-[1px] border-black align-top">
-                      Ceramah dan Diskusi TM: 2x(3x50’) <br />
-                      Case Study 1 Mazda vs. Ford Case: Memahami dampak BPR
-                      terhadap desain model bisnis dan perubahan yang disebabkan{" "}
-                      <br />
-                      BM:2x(3x60’) BT:2x(3x60’)
-                    </td>
-                    <td className="border-[1px] border-black align-top">
-                      1. Mengikuti perkulihan tatap muka <br />
-                      2. Penjelasan materi <br />
-                      3. Menanyakan materi yang belum jelas ke dosen <br />
-                      4. diskusi dan tanya jawab
-                    </td>
-                    <td className="border-[1px] border-black align-top"></td>
-                  </tr>
-                ))}
+              {rpsQuery.data?.MeetingPlan.map((item, index) => (
+                <tr>
+                  <td className="border-[1px] border-black text-center">
+                    {item.week}
+                  </td>
+                  <td className="border-[1px] border-black">
+                    {item.cpmkList.map((item) => item).join(", ")}
+                  </td>
+                  <td className="border-[1px] border-black align-top">
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: item.subCpmkDescription,
+                      }}
+                    />
+                  </td>
+                  <td className="border-[1px] border-black align-top">
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: item.achievementIndicators,
+                      }}
+                    />
+                  </td>
+                  <td className="border-[1px] border-black align-top">
+                    {item.assessmentModel}
+                  </td>
+                  <td className="border-[1px] border-black align-top">
+                    <div dangerouslySetInnerHTML={{ __html: item.material }} />
+                  </td>
+                  <td className="border-[1px] border-black align-top">
+                    <div dangerouslySetInnerHTML={{ __html: item.method }} />
+                  </td>
+                  <td className="border-[1px] border-black align-top">
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: item.offlineActivity,
+                      }}
+                    />
+                  </td>
+                  <td className="border-[1px] border-black align-top">
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: item.onlineActivity,
+                      }}
+                    />
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
 
@@ -656,12 +606,12 @@ const RpsDetail = () => {
             </p>
             <div>
               <b>Notes:</b>
-              <ol className="list-decimal px-5">
-                <li className="list-item">
+              <ol>
+                <li>
                   Ambang Batas Kelulusan Mahasiswa merupakan batas minimal nilai
                   yang harus dicapai mahasiswa untuk setiap CPMK pada MK
                 </li>
-                <li className="list-item">
+                <li>
                   Ambang Batas Kelulusan Mata Kuliah merupakan batas minimal
                   persentase jumlah mahasiswa dalam satu periode pengajaran yang
                   memperoleh
@@ -732,160 +682,160 @@ const RpsDetail = () => {
           </Stack>
 
           {/* Student Assignment Plan */}
-          <table className="table-fixed w-[570px] self-center">
-            <tbody>
-              <tr>
-                <td
-                  colspan="6"
-                  className="border-[1px] border-black bg-[#01a0d9] text-center font-semibold"
-                >
-                  RENCANA TUGAS MAHASISWA{" "}
-                </td>
-              </tr>
-              <tr>
-                <td className="border-[1px] border-black">Mata Kuliah </td>
-                <td
-                  colspan="5"
-                  className="border-[1px] border-black text-red-600 font-semibold"
-                >
-                  Business Process Reengineering
-                </td>
-              </tr>
-              <tr>
-                <td className="border-[1px] border-black">Kode </td>
-                <td className="border-[1px] border-black text-red-600 font-semibold text-center">
-                  IS3155
-                </td>
-                <td className="border-[1px] border-black text-center">SKS </td>
-                <td className="border-[1px] border-black text-center">3</td>
-                <td className="border-[1px] border-black text-center">
-                  SEMESTER{" "}
-                </td>
-                <td className="border-[1px] border-black text-center">5</td>
-              </tr>
-              <tr>
-                <td className="border-[1px] border-black">Dosen Pengampu</td>
-                <td colspan="5" className="border-[1px] border-black">
-                  Andrew Tanny Liem, S.Kom., MT., PhD{" "}
-                </td>
-              </tr>
-              <tr>
-                <td
-                  colspan="6"
-                  className="border-[1px] border-black bg-[#d9d9d9] font-semibold"
-                >
-                  BENTUK TUGAS{" "}
-                </td>
-              </tr>
-              <tr>
-                <td colspan="6" className="border-x-[1px] border-black">
-                  Case Study 1: Mazda vs. Ford
-                </td>
-              </tr>
-              <tr>
-                <td colspan="6" className="border-x-[1px] border-black">
-                  Pustaka: [1]{" "}
-                </td>
-              </tr>
-              <tr>
-                <td
-                  colspan="6"
-                  className="border-[1px] border-black bg-[#d9d9d9] font-semibold"
-                >
-                  SUB CAPAIAN PEMBELAJARAN{" "}
-                </td>
-              </tr>
-              <tr>
-                <td colspan="6" className="border-[1px] border-black">
-                  CPMK01 Mahasiswa mampu menganalisis berbagai peluang inovasi
-                  dan dampaknya terhadap desain model bisnis.{" "}
-                </td>
-              </tr>
-              <tr>
-                <td
-                  colspan="6"
-                  className="border-[1px] border-black bg-[#d9d9d9] font-semibold"
-                >
-                  DESKRIPSI TUGAS{" "}
-                </td>
-              </tr>
-              <tr>
-                <td colspan="6" className="border-[1px] border-black">
-                  Mahasiswa membaca materi peran pentingnya BPR, menganalisis
-                  inovasi yang dilakukan oleh Mazda vs. Ford dan dapat melihat
-                  dampaknya terhadap perusahaan.{" "}
-                </td>
-              </tr>
-              <tr>
-                <td
-                  colspan="6"
-                  className="border-[1px] border-black bg-[#d9d9d9] font-semibold"
-                >
-                  INDIKATOR, KRITERIA DAN BOBOT PENILAIAN{" "}
-                </td>
-              </tr>
-              <tr>
-                <td colspan="6" className="border-[1px] border-black">
-                  1.{" "}
-                  <span>
-                    Case Study 1 diberikan pada minggu ke-1 perkuliahan
-                  </span>
-                  <span>
-                    <br />
-                    2. Laporan hasil analisis dikumpulkan pada minggu ke-2
-                    perkuliahan
-                    <br />
-                    3. Laporan akan dinilai sesuai rubrikasi yang telah
-                    diberikan
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td
-                  colspan="6"
-                  className="border-[1px] border-black bg-[#d9d9d9] font-semibold"
-                >
-                  JADWAL PELAKSANAAN{" "}
-                </td>
-              </tr>
-              <tr>
-                <td colspan="6" className="border-[1px] border-black">
-                  Minggu ke-1 perkuliahan{" "}
-                </td>
-              </tr>
-              <tr>
-                <td
-                  colspan="6"
-                  className="border-[1px] border-black bg-[#d9d9d9] font-semibold"
-                >
-                  LAIN-LAIN{" "}
-                </td>
-              </tr>
-              <tr>
-                <td colspan="6" className="border-[1px] border-black">
-                  Bobot nilai Tugas <span>1</span>
-                  <span> </span>
-                  <span>adalah </span>
-                  <span>5</span>
-                  <span>%</span>
-                  <span> dari total bobot mata kuliah </span>
-                </td>
-              </tr>
-              <tr>
-                <td
-                  colspan="6"
-                  className="border-[1px] border-black bg-[#d9d9d9] font-semibold"
-                >
-                  DAFTAR RUJUKAN{" "}
-                </td>
-              </tr>
-              <tr>
-                <td colspan="6" className="border-[1px] border-black">
-                  z
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <Stack gap={5}>
+            {rpsQuery.data?.StudentAssignmentPlan.map((item, index) => (
+              <table
+                className="table-fixed w-[570px] self-center"
+                key={item.id}
+              >
+                <tbody>
+                  <tr>
+                    <td
+                      colspan="6"
+                      className="border-[1px] border-black bg-[#01a0d9] text-center font-semibold"
+                    >
+                      RENCANA TUGAS MAHASISWA{" "}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="border-[1px] border-black">Mata Kuliah </td>
+                    <td
+                      colspan="5"
+                      className="border-[1px] border-black text-red-600 font-semibold"
+                    >
+                      {`${rpsQuery.data?.Subject.englishName} / ${rpsQuery.data?.Subject.indonesiaName}`}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="border-[1px] border-black">Kode </td>
+                    <td className="border-[1px] border-black text-red-600 font-semibold text-center">
+                      {rpsQuery.data?.Subject.code}
+                    </td>
+                    <td className="border-[1px] border-black text-center">
+                      SKS{" "}
+                    </td>
+                    <td className="border-[1px] border-black text-center">
+                      {rpsQuery.data?.Subject.credits}
+                    </td>
+                    <td className="border-[1px] border-black text-center">
+                      SEMESTER{" "}
+                    </td>
+                    <td className="border-[1px] border-black text-center">
+                      {rpsQuery.data?.Subject.Curriculum_Subject.map(
+                        (item) => item.semester
+                      ).join(", ")}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="border-[1px] border-black">
+                      Dosen Pengampu
+                    </td>
+                    <td colspan="5" className="border-[1px] border-black">
+                      {`${rpsQuery.data?.teacher.firstName} ${rpsQuery.data?.teacher.lastName}`}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      colspan="6"
+                      className="border-[1px] border-black bg-[#d9d9d9] font-semibold"
+                    >
+                      BENTUK TUGAS{" "}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="6" className="border-x-[1px] border-black">
+                      {item.assignmentModel}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="6" className="border-x-[1px] border-black">
+                      Pustaka: {item.references}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      colspan="6"
+                      className="border-[1px] border-black bg-[#d9d9d9] font-semibold"
+                    >
+                      SUB CAPAIAN PEMBELAJARAN{" "}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="6" className="border-[1px] border-black">
+                      {item.subLearningOutcomes}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      colspan="6"
+                      className="border-[1px] border-black bg-[#d9d9d9] font-semibold"
+                    >
+                      DESKRIPSI TUGAS{" "}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="6" className="border-[1px] border-black">
+                      {item.assignmentDescription}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      colspan="6"
+                      className="border-[1px] border-black bg-[#d9d9d9] font-semibold"
+                    >
+                      INDIKATOR, KRITERIA DAN BOBOT PENILAIAN{" "}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="6" className="border-[1px] border-black">
+                      <pre className="whitespace-pre-wrap">
+                        {item.icbValuation}
+                      </pre>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      colspan="6"
+                      className="border-[1px] border-black bg-[#d9d9d9] font-semibold"
+                    >
+                      JADWAL PELAKSANAAN{" "}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="6" className="border-[1px] border-black">
+                      {item.dueSchedule}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      colspan="6"
+                      className="border-[1px] border-black bg-[#d9d9d9] font-semibold"
+                    >
+                      LAIN-LAIN{" "}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="6" className="border-[1px] border-black">
+                      {item.others}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      colspan="6"
+                      className="border-[1px] border-black bg-[#d9d9d9] font-semibold"
+                    >
+                      DAFTAR RUJUKAN{" "}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="6" className="border-[1px] border-black">
+                      {item.referenceList}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            ))}
+          </Stack>
         </Stack>
       </div>
     </Stack>

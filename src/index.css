@@ -5,3 +5,8 @@
 .swal2-container {
   z-index: 9999;
 }
+
+ol {
+  list-style-type: decimal;
+  list-style-position: inside;
+}

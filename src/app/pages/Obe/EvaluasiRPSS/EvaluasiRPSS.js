@@ -210,7 +210,7 @@ const EvaluasiRPS = () => {
                       <Chip label={row.status} color={getColor(row.status)} />
                     </TableCell>
                     <TableCell align="left">
-                      <Actions item={row} />
+                      <Actions item={row} user={user} />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -219,7 +219,7 @@ const EvaluasiRPS = () => {
           </TableContainer>
           <TablePagination
             component="div"
-            count={rpsQuery?.data?.rps}
+            count={rpsQuery?.data?.rps.length}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}

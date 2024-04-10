@@ -361,7 +361,11 @@ const createRpsSchema = yup
           .object()
           .shape({
             week: yup.string().required("Required"),
-            cpmkList: yup.string().required("Required"),
+            cpmkList: yup
+              .array()
+              .of(yup.string().required("Required"))
+              .min(1, "Must have at least one CPMK")
+              .required("Required"),
             subCpmkDescription: yup.string().required("Required"),
             achievementIndicators: yup.string().required("Required"),
             assessmentModel: yup.string().required("Required"),

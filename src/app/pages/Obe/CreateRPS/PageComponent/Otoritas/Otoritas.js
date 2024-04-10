@@ -56,7 +56,7 @@ const Otoritas = () => {
                   <em>Pilih Pengembang</em>
                 </MenuItem>
                 {employee.data?.map((item) => (
-                  <MenuItem key={item.value} value={item.value}>
+                  <MenuItem key={item.value} value={item.label}>
                     {item.label}
                   </MenuItem>
                 ))}
@@ -84,7 +84,7 @@ const Otoritas = () => {
                   <em>Pilih Kaprodi</em>
                 </MenuItem>
                 {employee.data?.map((item) => (
-                  <MenuItem key={item.value} value={item.value}>
+                  <MenuItem key={item.value} value={item.label}>
                     {item.label}
                   </MenuItem>
                 ))}

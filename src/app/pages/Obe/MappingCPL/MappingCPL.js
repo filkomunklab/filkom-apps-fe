@@ -8,11 +8,13 @@ import * as yup from "yup";
 import Swal from "sweetalert2";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MappingCPL = () => {
   const { subjectId } = useParams();
   const queryClient = useQueryClient();
   const formik = useRef(null);
+  const navigate = useNavigate();
 
   const subjectCplQuery = useQuery({
     queryKey: ["subjectCpl", subjectId],
@@ -27,6 +29,7 @@ const MappingCPL = () => {
         title: "Berhasil",
         text: "Data berhasil disimpan",
       });
+      navigate(-1);
     },
     onError: (error) => {
       Swal.fire({

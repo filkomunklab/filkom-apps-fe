@@ -200,7 +200,6 @@ const RencanaTugas = () => {
                 className="bg-blue-600 text-white px-3 py-2 rounded-md flex items-center hover:bg-blue-800 transition-colors duration-300"
                 onClick={() =>
                   arrayHelpers.push({
-                    title: "",
                     assignmentModel: "",
                     references: "",
                     subLearningOutcomes: "",

@@ -8,14 +8,14 @@ import {
   FormHelperText,
   MenuItem,
   Select,
+  OutlinedInput,
+  Box,
+  Chip,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Editor } from "react-draft-wysiwyg";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import draftToHtml from "draftjs-to-html";
-import { convertToRaw } from "draft-js";
 import { Field, FieldArray, useFormikContext } from "formik";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Editor from "app/shared/Editor";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -31,8 +31,6 @@ const MenuProps = {
 const RencanaPertemuan = () => {
   const { setFieldValue, values, errors } = useFormikContext();
 
-  console.log(values, errors);
-
   return (
     <div className="bg-white rounded-sm p-5">
       <h1 className="text-lg font-semibold mb-10">Rencana Pertemuan</h1>
@@ -41,7 +39,7 @@ const RencanaPertemuan = () => {
         name="meetingPlan"
         render={(arrayHelpers) => (
           <Fragment>
-            {values.meetingPlan.map((item, index) => (
+            {values.meetingPlan.map((_, index) => (
               <div className="my-2">
                 <Accordion className="bg-primary">
                   <AccordionSummary
@@ -86,6 +84,26 @@ const RencanaPertemuan = () => {
                                 {...field}
                                 labelId="demo-multiple-chip-label"
                                 id="demo-multiple-chip"
+                                multiple
+                                input={
+                                  <OutlinedInput
+                                    id="select-multiple-chip"
+                                    label="Nama Dosen"
+                                  />
+                                }
+                                renderValue={(selected) => (
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      flexWrap: "wrap",
+                                      gap: 0.5,
+                                    }}
+                                  >
+                                    {selected.map((value, index) => (
+                                      <Chip key={index} label={value} />
+                                    ))}
+                                  </Box>
+                                )}
                                 MenuProps={MenuProps}
                               >
                                 {values.cpmk.map((item, index) => (
@@ -106,13 +124,11 @@ const RencanaPertemuan = () => {
                     <div className="mb-5">
                       <p className="font-semibold mb-2">Deskripsi SUB CPMK</p>
                       <Editor
-                        editorStyle={styles.editorStyle}
-                        onEditorStateChange={(editorState) =>
+                        value={values.meetingPlan[index].subCpmkDescription}
+                        onChange={(value) =>
                           setFieldValue(
                             `meetingPlan[${index}].subCpmkDescription`,
-                            draftToHtml(
-                              convertToRaw(editorState.getCurrentContent())
-                            )
+                            value
                           )
                         }
                       />
@@ -125,13 +141,11 @@ const RencanaPertemuan = () => {
                         Indikator Ketercapaian CPMK
                       </p>
                       <Editor
-                        editorStyle={styles.editorStyle}
-                        onEditorStateChange={(editorState) =>
+                        value={values.meetingPlan[index].achievementIndicators}
+                        onChange={(value) =>
                           setFieldValue(
                             `meetingPlan[${index}].achievementIndicators`,
-                            draftToHtml(
-                              convertToRaw(editorState.getCurrentContent())
-                            )
+                            value
                           )
                         }
                       />
@@ -158,14 +172,9 @@ const RencanaPertemuan = () => {
                     <div className="mb-5">
                       <p className="font-semibold mb-2">Materi</p>
                       <Editor
-                        editorStyle={styles.editorStyle}
-                        onEditorStateChange={(editorState) =>
-                          setFieldValue(
-                            `meetingPlan[${index}].material`,
-                            draftToHtml(
-                              convertToRaw(editorState.getCurrentContent())
-                            )
-                          )
+                        value={values.meetingPlan[index].material}
+                        onChange={(value) =>
+                          setFieldValue(`meetingPlan[${index}].material`, value)
                         }
                       />
                       <FormHelperText error>
@@ -175,14 +184,9 @@ const RencanaPertemuan = () => {
                     <div className="mb-5">
                       <p className="font-semibold mb-2">Metode</p>
                       <Editor
-                        editorStyle={styles.editorStyle}
-                        onEditorStateChange={(editorState) =>
-                          setFieldValue(
-                            `meetingPlan[${index}].method`,
-                            draftToHtml(
-                              convertToRaw(editorState.getCurrentContent())
-                            )
-                          )
+                        value={values.meetingPlan[index].method}
+                        onChange={(value) =>
+                          setFieldValue(`meetingPlan[${index}].method`, value)
                         }
                       />
                       <FormHelperText error>
@@ -194,13 +198,11 @@ const RencanaPertemuan = () => {
                         Luar Jaringan (Tatap Muka)
                       </p>
                       <Editor
-                        editorStyle={styles.editorStyle}
-                        onEditorStateChange={(editorState) =>
+                        value={values.meetingPlan[index].offlineActivity}
+                        onChange={(value) =>
                           setFieldValue(
                             `meetingPlan[${index}].offlineActivity`,
-                            draftToHtml(
-                              convertToRaw(editorState.getCurrentContent())
-                            )
+                            value
                           )
                         }
                       />
@@ -213,13 +215,11 @@ const RencanaPertemuan = () => {
                         Dalam Jaringan (Daring)
                       </p>
                       <Editor
-                        editorStyle={styles.editorStyle}
-                        onEditorStateChange={(editorState) =>
+                        value={values.meetingPlan[index].onlineActivity}
+                        onChange={(value) =>
                           setFieldValue(
                             `meetingPlan[${index}].onlineActivity`,
-                            draftToHtml(
-                              convertToRaw(editorState.getCurrentContent())
-                            )
+                            value
                           )
                         }
                       />
@@ -246,7 +246,7 @@ const RencanaPertemuan = () => {
                 onClick={() =>
                   arrayHelpers.push({
                     week: "",
-                    cpmkList: [""],
+                    cpmkList: [],
                     subCpmkDescription: "",
                     achievementIndicators: "",
                     assessmentModel: "",
