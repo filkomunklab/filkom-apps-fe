@@ -16,7 +16,6 @@ import {
   Stack,
   Paper,
   Button,
-  IconButton,
   Box,
   Autocomplete,
   Modal,
@@ -26,6 +25,7 @@ import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
 import { useNavigate } from "react-router-dom";
+import CustomAlert from "app/pages/BimbinganAkademik/components/Alert/Alert";
 import {
   handlePermissionError,
   handleAuthenticationError,
@@ -62,6 +62,15 @@ const GradeSubmission = () => {
   const [descriptions, setDescriptions] = useState(Array(row).fill(""));
   const [showLabel, setShowLabel] = useState(true);
   const [showLabel2, setShowLabel2] = useState(true);
+
+  // Alert
+  const [alert, setAlert] = useState(null);
+  const showAlert = (message) => {
+    setAlert({ message });
+  };
+  const hideAlert = () => {
+    setAlert(null);
+  };
 
   //get data
   const [dataGrade, setDataGrade] = useState([]);
@@ -155,8 +164,25 @@ const GradeSubmission = () => {
   }, []);
 
   const handleSubmitFirstModal = async () => {
+    const emptyFields = [];
+
+    if (!semester) emptyFields.push("Semester");
+    if (!row) emptyFields.push("Row");
+    if (subjectNames.some((name) => !name)) emptyFields.push("Subject Name");
+    if (grades.some((grade) => !grade)) emptyFields.push("Grade");
+    if (lecturers.some((lecturer) => !lecturer)) emptyFields.push("Lecturer");
+
+    if (emptyFields.length > 0) {
+      const errorMessage = `Please fill the following fields: ${emptyFields.join(
+        ", "
+      )}`;
+      showAlert(errorMessage);
+      setLoading(false);
+      return;
+    }
     handleCloseFirstModal();
     setLoading(true);
+
     try {
       const { id } = JSON.parse(localStorage.getItem("user"));
       const requestBody = {
@@ -244,9 +270,11 @@ const GradeSubmission = () => {
     }
   };
 
-  const handleLecturerChange = (event, index) => {
+  const handleLecturerChange = (event, value, index) => {
     const newLecturers = [...lecturers];
-    newLecturers[index] = event.target.value;
+    newLecturers[index] = value
+      ? `${value.firstName} ${value.lastName} (${value.degree})`
+      : "";
     setLecturers(newLecturers);
   };
 
@@ -461,6 +489,22 @@ const GradeSubmission = () => {
                 </TableCell>
 
                 <TableCell>
+                  <Autocomplete
+                    disablePortal
+                    options={lecturersData}
+                    onChange={(event, value) =>
+                      handleLecturerChange(event, value, index)
+                    }
+                    getOptionLabel={(option) =>
+                      `${option.firstName} ${option.lastName} (${option.degree})`
+                    }
+                    renderInput={(params) => (
+                      <TextField {...params} size="small" fullWidth />
+                    )}
+                  />
+                </TableCell>
+
+                {/* <TableCell>
                   <FormControl size="small" fullWidth>
                     <Select
                       value={lecturers[index] || ""}
@@ -473,16 +517,19 @@ const GradeSubmission = () => {
                         },
                       }}
                     >
-                      {lecturersData.length > 0 &&
+                      {lecturersData &&
                         lecturersData.map((lecturer) => (
-                          <MenuItem key={lecturer.id} value={lecturer.id}>
+                          <MenuItem
+                            key={lecturer.id}
+                            value={`${lecturer.firstName} ${lecturer.lastName} (${lecturer.degree})`}
+                          >
                             {lecturer.firstName} {lecturer.lastName} (
                             {lecturer.degree})
                           </MenuItem>
                         ))}
                     </Select>
                   </FormControl>
-                </TableCell>
+                </TableCell> */}
 
                 <TableCell>
                   <TextField
@@ -514,17 +561,7 @@ const GradeSubmission = () => {
         >
           <Button
             onClick={() => {
-              if (
-                !semester ||
-                !row ||
-                subjectNames.some((name) => !name) ||
-                grades.some((grade) => !grade) ||
-                lecturers.some((lecturer) => !lecturer)
-              ) {
-                alert("Please fill all the fields first.");
-              } else {
-                handleOpenFirstModal();
-              }
+              handleOpenFirstModal();
             }}
             sx={{
               backgroundColor: "#006AF5",
@@ -545,16 +582,23 @@ const GradeSubmission = () => {
 
           <Modal
             open={openFirstModal}
-            onClose={handleCloseFirstModal}
+            onClose={() => {
+              handleCloseFirstModal();
+              hideAlert();
+            }}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
             <div style={style}>
+              {alert && (
+                <CustomAlert message={alert.message} onClose={hideAlert} />
+              )}
               <Typography
                 id="modal-modal-title"
                 variant="h4"
                 component="h2"
                 sx={{
+                  marginTop: "6px",
                   fontWeight: 600,
                 }}
               >
@@ -571,7 +615,10 @@ const GradeSubmission = () => {
               <Grid container spacing={1} justifyContent="flex-end">
                 <Grid item>
                   <Button
-                    onClick={handleCloseFirstModal}
+                    onClick={() => {
+                      handleCloseFirstModal();
+                      hideAlert();
+                    }}
                     sx={{
                       backgroundColor: "white",
                       borderRadius: "5px",

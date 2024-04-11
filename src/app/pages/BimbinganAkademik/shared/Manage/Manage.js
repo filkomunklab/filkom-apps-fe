@@ -159,7 +159,6 @@ const Manage = () => {
     setLoading(false);
     handlePreregisModalClose();
     getGradeAndPreregis();
-    handleOpenSuccessModal();
   };
   const handlePreregisModalOpen = () => {
     setSelectedRow(null);
@@ -180,7 +179,6 @@ const Manage = () => {
     setLoading(false);
     GradeModalClose();
     getGradeAndPreregis();
-    handleOpenSuccessModal();
   };
   const handleGradeModalOpen = () => {
     setSelectedRow(null);
@@ -479,7 +477,6 @@ const Manage = () => {
                     const { id } = JSON.parse(localStorage.getItem("user"));
                     setLoading(true);
 
-                    // buat dueDate ke WITA
                     const dueDateWITA = new Date(values.dueDate).toLocaleString(
                       "en-US",
                       {
@@ -493,7 +490,6 @@ const Manage = () => {
 
                     try {
                       if (selectedRow) {
-                        // Editing existing pre-registration submission
                         const response = await jwtAuthAxios.patch(
                           `/pre-regist/update/${selectedRow.id}`,
                           values,
@@ -505,9 +501,8 @@ const Manage = () => {
                             },
                           }
                         );
-                        handleEditSuccessPreregis(); // Call handleEditSuccessPreregis after successful edit
+                        handleEditSuccessPreregis();
                       } else {
-                        // Adding new pre-registration submission
                         const response = await jwtAuthAxios.post(
                           `/pre-regist/create`,
                           values,
@@ -521,7 +516,7 @@ const Manage = () => {
                         );
                         setLoading(false);
                         resetForm();
-                        handlePreregisModalClose(); // Call handlePreregisModalClose after adding new submission
+                        handlePreregisModalClose();
                         getGradeAndPreregis();
                         handleOpenSuccessModal();
                         setSubmitting(false);
@@ -723,7 +718,7 @@ const Manage = () => {
                                 <Button
                                   size="small"
                                   onClick={() => {
-                                    handleEditPreregis(value);
+                                    handleEditPreregis(selectedRow);
                                   }}
                                 >
                                   Edit
@@ -731,7 +726,7 @@ const Manage = () => {
                                 <Button
                                   size="small"
                                   onClick={() => {
-                                    handleClosePreregis(value.id);
+                                    handleClosePreregis(selectedRow.id);
                                   }}
                                 >
                                   Close
@@ -872,7 +867,6 @@ const Manage = () => {
                     const { id } = JSON.parse(localStorage.getItem("user"));
                     setLoading(true);
                     values.major = major;
-                    // buat dueDate ke WITA
                     const dueDateWITA = new Date(values.dueDate).toLocaleString(
                       "en-US",
                       {
@@ -883,7 +877,6 @@ const Manage = () => {
                     values.employeeId = id;
                     try {
                       if (selectedRow) {
-                        // Editing existing grade submission
                         const result = await jwtAuthAxios.patch(
                           `/access/update/${selectedRow.id}`,
                           values,
@@ -895,9 +888,8 @@ const Manage = () => {
                             },
                           }
                         );
-                        handleEditSuccess(); // Call handleEditSuccess after successful edit
+                        handleEditSuccess();
                       } else {
-                        // Adding new grade submission
                         const result = await jwtAuthAxios.post(
                           `/access/open/grades`,
                           values,
@@ -911,7 +903,7 @@ const Manage = () => {
                         );
                         setLoading(false);
                         resetForm();
-                        GradeModalClose(); // Call GradeModalClose after adding new submission
+                        GradeModalClose();
                         getGradeAndPreregis();
                         handleOpenSuccessModal();
                         setSubmitting(false);
@@ -919,7 +911,7 @@ const Manage = () => {
                       }
                     } catch (error) {
                       setLoading(false);
-                      GradeModalClose(); // Call handleCloseModal after error
+                      GradeModalClose();
                       handleOpenErrorModal();
                       setSubmitting(false);
                       setFormType("");
@@ -1092,7 +1084,7 @@ const Manage = () => {
                                 <Button
                                   size="small"
                                   onClick={() => {
-                                    handleEditGrade(value);
+                                    handleEditGrade(selectedRow);
                                   }}
                                 >
                                   Edit
@@ -1100,7 +1092,7 @@ const Manage = () => {
                                 <Button
                                   size="small"
                                   onClick={() => {
-                                    handleCloseGrade(value.id);
+                                    handleCloseGrade(selectedRow.id);
                                   }}
                                 >
                                   Close
