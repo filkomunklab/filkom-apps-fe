@@ -87,7 +87,6 @@ const History = (props) => {
   const getHistory = async () => {
     try {
       const { guidanceClassId, id } = JSON.parse(localStorage.getItem("user"));
-      console.log("ini guidanceClassId", guidanceClassId);
 
       const resultActivity = await jwtAuthAxios.get(
         `/activity/history-for-advisor/${id}`,
@@ -130,12 +129,8 @@ const History = (props) => {
       const { status: preregisStatus, data: preregisData } =
         resultPreregis.data;
 
-      console.log("response result activity", resultActivity);
-
       if (activityStatus === "OK") {
         setDataActivity(activityData);
-      } else {
-        console.log("error activity:", resultActivity);
       }
 
       if (consultationStatus === "OK") {
@@ -144,20 +139,14 @@ const History = (props) => {
         );
 
         setDataConsultation(filteredConsultationData);
-      } else {
-        console.log("ini error resultConsultation", resultConsultation);
       }
 
       if (certificateStatus === "OK") {
         setDataCertificate(certificateData);
-      } else {
-        console.log("ini error resultCertificate", resultCertificate);
       }
 
       if (preregisStatus === "OK") {
         setDataPreregis(preregisData);
-      } else {
-        console.log("ini error resultPreregis", resultPreregis);
       }
     } catch (error) {
       handleError(error);
@@ -330,32 +319,28 @@ const History = (props) => {
         id,
         comments,
       } = certificateDetailsResult.data.data;
-      navigate(
-        `${pathh}${value.id}`,
-        {
-          state: {
-            certificateDetails: {
-              firstName: student.firstName,
-              lastName: student.lastName,
-              SupervisorFirstName:
-                student.GuidanceClassMember.gudianceClass.teacher.firstName,
-              SupervisorLastName:
-                student.GuidanceClassMember.gudianceClass.teacher.lastName,
-              submissionDate: submitDate,
-              pathFile: path,
-              category: category,
-              level: level,
-              description: description,
-              status: approvalStatus,
-              title: title,
-              id: id,
-              approvalDate: approvalDate,
-              comments: comments,
-            },
+      navigate(`${pathh}${value.id}`, {
+        state: {
+          certificateDetails: {
+            firstName: student.firstName,
+            lastName: student.lastName,
+            SupervisorFirstName:
+              student.GuidanceClassMember.gudianceClass.teacher.firstName,
+            SupervisorLastName:
+              student.GuidanceClassMember.gudianceClass.teacher.lastName,
+            submissionDate: submitDate,
+            pathFile: path,
+            category: category,
+            level: level,
+            description: description,
+            status: approvalStatus,
+            title: title,
+            id: id,
+            approvalDate: approvalDate,
+            comments: comments,
           },
         },
-        console.log("ini pathFile", path)
-      );
+      });
     } catch (error) {
       handleError(error);
     }
@@ -373,8 +358,7 @@ const History = (props) => {
       const detail = preregisDetailsResult.data.data;
       const { role } = JSON.parse(localStorage.getItem("user"));
       let path = "";
-      console.log("hai ini role KAPRODI", role.includes("KAPRODI"));
-      console.log("hai ini role DEKAN", role.includes("DEKAN"));
+
       if (role.includes("DEKAN")) {
         path = "/bimbingan-akademik/dekan/history/pre-registration/";
       } else if (role.includes("KAPRODI")) {
@@ -501,7 +485,6 @@ const History = (props) => {
                         sx={{ padding: "10px 50px" }}
                         onClick={() => {
                           handleNavigateActivity(value.id);
-                          // console.log("ini isi dari value preregis: ", value);
                         }}
                       >
                         <ListItemText
@@ -647,7 +630,6 @@ const History = (props) => {
                         sx={{ padding: "10px 50px" }}
                         onClick={() => {
                           handleNavigatePreregis(value);
-                          // console.log("ini isi dari value preregis: ", value);
                         }}
                       >
                         <ListItemText
@@ -778,7 +760,6 @@ const History = (props) => {
                           sx={{ padding: "10px 50px" }}
                           onClick={() => {
                             handleNavigateCertificate(value);
-                            // console.log("ini isi dari value certi: ", value);
                           }}
                         >
                           <ListItemText

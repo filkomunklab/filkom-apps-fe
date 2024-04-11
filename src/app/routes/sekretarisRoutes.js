@@ -25,7 +25,7 @@ import AdvisorStudentCertificate2 from "app/pages/BimbinganAkademik/roles/Sekret
 
 const { default: Page } = require("@jumbo/shared/Page");
 
-const sekDekanRoutes = [
+const sekFakultasRoutes = [
   {
     path: "/bimbingan-akademik/sekretaris/academic-guide",
     element: <Page component={AcademicGuide} />,
@@ -173,4 +173,4 @@ const sekDekanRoutes = [
   },
 ];
 
-export default sekDekanRoutes;
+export default sekFakultasRoutes;

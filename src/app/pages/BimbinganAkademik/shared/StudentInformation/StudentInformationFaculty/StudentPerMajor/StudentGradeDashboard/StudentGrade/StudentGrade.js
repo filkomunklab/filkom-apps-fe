@@ -30,7 +30,6 @@ const StudentGrade = () => {
 
   const gradeDetails = state ? state.gradeDetails : {};
   const { semester, subject, firstName, lastName, major } = gradeDetails;
-  console.log("ini grade detail", gradeDetails);
 
   const getLetterGrade = (grade) => {
     if (grade >= 91) return { letter: "A", weight: 4.0 };
@@ -50,7 +49,7 @@ const StudentGrade = () => {
     let totalMajorGrade = 0;
     let totalSKS = 0;
 
-    subjects.forEach((data) => {
+    subjects?.forEach((data) => {
       const letterGrade = getLetterGrade(data.grades);
       const weightedGrade = letterGrade.weight * data.Subject.credits;
 

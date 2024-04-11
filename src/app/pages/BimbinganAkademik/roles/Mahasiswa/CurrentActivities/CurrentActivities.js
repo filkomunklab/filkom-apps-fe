@@ -119,8 +119,6 @@ const CurrentActivities = () => {
         `/pre-regist/current/student/${id}`
       );
 
-      console.log("ini resultPreregis", resultPreregis);
-
       const resultGrade = await jwtAuthAxios.get(
         `/transaction/student/currentGrades/${id}`,
         {
@@ -246,7 +244,6 @@ const CurrentActivities = () => {
       });
 
       const { status, data } = response.data;
-      console.log("response navigate activity", response);
 
       if (status === "OK") {
         navigate("activity", {
@@ -285,30 +282,26 @@ const CurrentActivities = () => {
         title,
         id,
       } = certificateDetailsResult.data.data;
-      navigate(
-        `certificate/${value.id}`,
-        {
-          state: {
-            certificateDetails: {
-              firstName: student.firstName,
-              lastName: student.lastName,
-              SupervisorFirstName:
-                student.GuidanceClassMember.gudianceClass.teacher.firstName,
-              SupervisorLastName:
-                student.GuidanceClassMember.gudianceClass.teacher.lastName,
-              submissionDate: submitDate,
-              pathFile: path,
-              level: level,
-              category: category,
-              description: description,
-              status: approvalStatus,
-              title: title,
-              id: id,
-            },
+      navigate(`certificate/${value.id}`, {
+        state: {
+          certificateDetails: {
+            firstName: student.firstName,
+            lastName: student.lastName,
+            SupervisorFirstName:
+              student.GuidanceClassMember.gudianceClass.teacher.firstName,
+            SupervisorLastName:
+              student.GuidanceClassMember.gudianceClass.teacher.lastName,
+            submissionDate: submitDate,
+            pathFile: path,
+            level: level,
+            category: category,
+            description: description,
+            status: approvalStatus,
+            title: title,
+            id: id,
           },
         },
-        console.log("ini pathFile", path)
-      );
+      });
     } catch (error) {
       handleError(error);
     }
@@ -324,8 +317,8 @@ const CurrentActivities = () => {
       );
 
       const detail = gradeDetailsResult.data.data;
+      console.log("isi grade: ", detail);
       let path = "/bimbingan-akademik/current-activities/grade/";
-      console.log("isi detail", detail);
       navigate(`${path}${value.id}`, {
         state: {
           gradeDetails: {
@@ -391,7 +384,6 @@ const CurrentActivities = () => {
         }
       );
 
-      console.log("ini detail Consutation result:", consultationDetailsResult);
       let path = "/bimbingan-akademik/current-activities/consultation/";
 
       navigate(`${path}${value.id}`, {
@@ -411,6 +403,23 @@ const CurrentActivities = () => {
       });
     } catch (error) {
       handleError(error);
+    }
+  };
+
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case "PENALARAN_KEILMUAN":
+        return "Reasoning and Scholarship";
+      case "ORGANISASI_KEPEMIMPINAN":
+        return "Organization and Leadership";
+      case "BAKAT_MINAT":
+        return "Talents and Interests";
+      case "PENGABDIAN_MASYARAKAT":
+        return "Community Service";
+      case "OTHER":
+        return "Others";
+      default:
+        return category;
     }
   };
 
@@ -543,7 +552,8 @@ const CurrentActivities = () => {
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
                                 >
-                                  {value.title}
+                                  {value.title.charAt(0).toUpperCase() +
+                                    value.title.slice(1)}
                                 </Typography>
                                 <Typography
                                   sx={{
@@ -662,7 +672,6 @@ const CurrentActivities = () => {
                           sx={{ padding: "10px 50px" }}
                           onClick={() => {
                             handleNavigatePreregis(value);
-                            // console.log("ini isi dari value preregis: ", value);
                           }}
                         >
                           <ListItemText
@@ -748,8 +757,6 @@ const CurrentActivities = () => {
       <TabPanel value={value} index={2}>
         <div>
           <Typography sx={{ padding: "10px" }}></Typography>
-          {console.log("ini dataCertificate", dataCertificate)}
-          {console.log("ini groupedDataCertificate", groupedDataCertificate)}
           {dataCertificate.length > 0 ? (
             Object.entries(groupedDataCertificate).map(
               ([date, dataCertificateGroup], index) => (
@@ -792,7 +799,6 @@ const CurrentActivities = () => {
                           sx={{ padding: "10px 50px" }}
                           onClick={() => {
                             handleNavigateCertificate(value);
-                            // console.log("ini isi dari value certi: ", value);
                           }}
                         >
                           <ListItemText
@@ -830,7 +836,7 @@ const CurrentActivities = () => {
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
                                 >
-                                  {value.category}
+                                  {getCategoryLabel(value.category)}
                                 </Typography>
                               </>
                             }
@@ -1093,7 +1099,6 @@ const CurrentActivities = () => {
                           sx={{ padding: "10px 50px" }}
                           onClick={() => {
                             handleNavigateConsultation(value);
-                            // console.log("ini isi dari value: ", value);
                           }}
                         >
                           <ListItemText

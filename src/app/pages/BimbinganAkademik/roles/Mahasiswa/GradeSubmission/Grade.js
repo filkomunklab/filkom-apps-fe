@@ -14,7 +14,7 @@ const Grade = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  const [dataGrade, setDataGrade] = useState(null);
+  const [dataGrade, setDataGrade] = useState([]);
   const [submissionStatus, setSubmissionStatus] = useState("");
 
   const getDataGrade = async () => {
@@ -25,15 +25,12 @@ const Grade = () => {
         signal,
       });
       const major = studentData.data.data.major;
+
       const result = await jwtAuthAxios.get(`/access/isOpen/${major}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
       });
-
-      const gradeData = result.data.data;
-      setDataGrade(gradeData);
-
-      console.log("ini panjang gradedata", result);
+      setDataGrade(result.data.data);
 
       const resultCurrent = await jwtAuthAxios.get(
         `/transaction/student/currentGrades/${id}`,
@@ -42,11 +39,7 @@ const Grade = () => {
           signal,
         }
       );
-      console.log("ini resultCurrent", resultCurrent);
-      console.log("ini resultCurrent", resultCurrent);
-
       const transactionId = resultCurrent.data.data[0].id;
-      console.log("ini transactionId", transactionId);
 
       const checkTransactionId = await jwtAuthAxios.get(
         `/transaction/grades/check/${transactionId}`,
@@ -55,7 +48,7 @@ const Grade = () => {
           signal,
         }
       );
-      console.log("ini checkTransactionId", checkTransactionId);
+
       if (checkTransactionId.data.data !== null) {
         setSubmissionStatus("success");
       } else {
@@ -84,11 +77,9 @@ const Grade = () => {
     return () => controller.abort();
   }, []);
 
-  console.log("ini isi dari submissionStatus", submissionStatus);
-
   return (
     <div>
-      {dataGrade === null || dataGrade.length === 0 ? (
+      {dataGrade.isOpen === false ? (
         <GradeSubmissionClosed />
       ) : submissionStatus === "success" ? (
         <GradeSubmitted />

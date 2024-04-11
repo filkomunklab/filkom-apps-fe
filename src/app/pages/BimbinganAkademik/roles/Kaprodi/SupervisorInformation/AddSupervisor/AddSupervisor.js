@@ -117,9 +117,6 @@ const AddSupervisor = () => {
 
       if (status === "OK") {
         setSupervisorOptions(data);
-        console.log("ini data", data);
-      } else {
-        console.log("ini response :", response);
       }
     } catch (error) {
       handleError();
@@ -157,12 +154,9 @@ const AddSupervisor = () => {
       );
 
       const { status } = response.data;
-      console.log("wkwkwk", response);
       setIsLoading(false);
       if (status === "OK") {
         navigate(`/bimbingan-akademik/kaprodi/supervisor-information`);
-      } else {
-        console.log(response);
       }
     } catch (error) {
       setIsLoading(false);
@@ -173,9 +167,6 @@ const AddSupervisor = () => {
 
   useEffect(() => {
     getSupervisor();
-    console.log("ini student", students);
-    console.log("ini SupervisorOptions", SupervisorOptions);
-    console.log("ini location :", location.state);
     return () => controller.abort();
   }, []);
 
@@ -234,7 +225,6 @@ const AddSupervisor = () => {
                     )
                   );
                   setShowLabel(false);
-                  console.log("ini e", e.target.value);
                 }}
                 value={
                   supervisorId ||
@@ -409,7 +399,7 @@ const AddSupervisor = () => {
             minWidth: "132px",
             fontSize: "12px",
             padding: "10px",
-            margin: "20px",
+            margin: "0px 20px",
 
             "&:hover": {
               backgroundColor: "#025ED8",
@@ -421,7 +411,10 @@ const AddSupervisor = () => {
         </Button>
         <Modal
           open={openFirstModal}
-          onClose={() => setOpenFirstModal(false)}
+          onClose={() => {
+            setOpenFirstModal(false);
+            hideAlert();
+          }}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
           disablePortal
@@ -448,7 +441,10 @@ const AddSupervisor = () => {
             <Grid container spacing={1} justifyContent="flex-end">
               <Grid item>
                 <Button
-                  onClick={() => setOpenFirstModal(false)}
+                  onClick={() => {
+                    setOpenFirstModal(false);
+                    hideAlert();
+                  }}
                   sx={{
                     backgroundColor: "white",
                     borderRadius: "5px",

@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import {
   handlePermissionError,
@@ -31,7 +31,8 @@ const PreregisCoursesList = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  const { id } = useParams();
+  const location = useLocation();
+  const { id, major } = location.state || "-";
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState("");

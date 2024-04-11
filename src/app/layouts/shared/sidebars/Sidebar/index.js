@@ -117,7 +117,6 @@ const SidebarHeader = () => {
 
   const getProfile = async () => {
     try {
-      const { nim } = JSON.parse(localStorage.getItem("user"));
       const resultStudent = await jwtAuthAxios.get(
         `/student/view/biodata/${JSON.parse(localStorage.getItem("user")).id}`,
         {
@@ -125,8 +124,6 @@ const SidebarHeader = () => {
         }
       );
 
-      console.log("ini isi student", resultStudent);
-      // console.log(resultStudent);
       setStudentProfileData(resultStudent.data.data);
     } catch (error) {
       console.log(error.message);
@@ -238,6 +235,7 @@ const SidebarFooter = () => {
           localStorage.clear();
           setAuthToken(null);
           navigate("/login");
+          window.location.reload();
         },
         label: "Logout",
         type: "nav-item",

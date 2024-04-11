@@ -44,7 +44,6 @@ const ReviewCertificate = () => {
         }
       );
 
-      console.log("result", result);
       const dataArray = Array.isArray(result.data.data) ? result.data.data : [];
 
       const filteredData = dataArray.filter((item) => {
@@ -97,10 +96,8 @@ const ReviewCertificate = () => {
         }
       );
 
-      console.log("ini detail certi result:", certificateDetailsResult);
       const { role } = JSON.parse(localStorage.getItem("user"));
       let pathh;
-      console.log("hai ini role", role.includes("KAPRODI"));
       if (role.includes("DEKAN")) {
         pathh = "/bimbingan-akademik/dekan/review-activities/certificate/";
       } else if (role.includes("KAPRODI")) {
@@ -121,30 +118,26 @@ const ReviewCertificate = () => {
         title,
         id,
       } = certificateDetailsResult.data.data;
-      navigate(
-        `${pathh}${value.id}`,
-        {
-          state: {
-            certificateDetails: {
-              firstName: student.firstName,
-              lastName: student.lastName,
-              SupervisorFirstName:
-                student.GuidanceClassMember?.gudianceClass?.teacher?.firstName,
-              SupervisorLastName:
-                student.GuidanceClassMember?.gudianceClass?.teacher?.lastName,
-              submissionDate: submitDate,
-              pathFile: path,
-              category: category,
-              level: level,
-              description: description,
-              status: approvalStatus,
-              title: title,
-              id: id,
-            },
+      navigate(`${pathh}${value.id}`, {
+        state: {
+          certificateDetails: {
+            firstName: student.firstName,
+            lastName: student.lastName,
+            SupervisorFirstName:
+              student.GuidanceClassMember?.gudianceClass?.teacher?.firstName,
+            SupervisorLastName:
+              student.GuidanceClassMember?.gudianceClass?.teacher?.lastName,
+            submissionDate: submitDate,
+            pathFile: path,
+            category: category,
+            level: level,
+            description: description,
+            status: approvalStatus,
+            title: title,
+            id: id,
           },
         },
-        console.log("ini pathFile", path)
-      );
+      });
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
@@ -254,7 +247,6 @@ const ReviewCertificate = () => {
             <TableBody>
               {dataWaiting && dataWaiting.length > 0 ? (
                 dataWaiting.map((value, index) => {
-                  console.log("ini isi value", value); // Move the console.log here
                   return (
                     <TableRow
                       key={value.id}

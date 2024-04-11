@@ -16,7 +16,6 @@ import {
   Stack,
   Paper,
   Button,
-  IconButton,
   Box,
   Autocomplete,
   Modal,
@@ -26,6 +25,7 @@ import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
 import { useNavigate } from "react-router-dom";
+import CustomAlert from "app/pages/BimbinganAkademik/components/Alert/Alert";
 import {
   handlePermissionError,
   handleAuthenticationError,
@@ -58,9 +58,19 @@ const GradeSubmission = () => {
   const [subjectNames, setSubjectNames] = useState(Array(row).fill(""));
   const [grades, setGrades] = useState(Array(row).fill(""));
   const [lecturers, setLecturers] = useState(Array(row).fill(""));
+  const [lecturersData, setLecturersData] = useState([]);
   const [descriptions, setDescriptions] = useState(Array(row).fill(""));
   const [showLabel, setShowLabel] = useState(true);
   const [showLabel2, setShowLabel2] = useState(true);
+
+  // Alert
+  const [alert, setAlert] = useState(null);
+  const showAlert = (message) => {
+    setAlert({ message });
+  };
+  const hideAlert = () => {
+    setAlert(null);
+  };
 
   //get data
   const [dataGrade, setDataGrade] = useState([]);
@@ -113,8 +123,6 @@ const GradeSubmission = () => {
 
       const gradeData = result.data.data;
       setDataGrade(gradeData);
-
-      console.log("ini panjang gradedata", result);
     } catch (error) {
       handleError(error);
     }
@@ -138,16 +146,43 @@ const GradeSubmission = () => {
     }
   };
 
+  const getLecturers = async () => {
+    try {
+      const response = await jwtAuthAxios.get("/lecturer");
+      setLecturersData(response.data.data);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
   useEffect(() => {
     getCurriculum();
     getDataGrade();
-
+    getLecturers();
+    console.log("isi lecturer", lecturersData);
     return () => controller.abort();
   }, []);
 
   const handleSubmitFirstModal = async () => {
+    const emptyFields = [];
+
+    if (!semester) emptyFields.push("Semester");
+    if (!row) emptyFields.push("Row");
+    if (subjectNames.some((name) => !name)) emptyFields.push("Subject Name");
+    if (grades.some((grade) => !grade)) emptyFields.push("Grade");
+    if (lecturers.some((lecturer) => !lecturer)) emptyFields.push("Lecturer");
+
+    if (emptyFields.length > 0) {
+      const errorMessage = `Please fill the following fields: ${emptyFields.join(
+        ", "
+      )}`;
+      showAlert(errorMessage);
+      setLoading(false);
+      return;
+    }
     handleCloseFirstModal();
     setLoading(true);
+
     try {
       const { id } = JSON.parse(localStorage.getItem("user"));
       const requestBody = {
@@ -161,8 +196,6 @@ const GradeSubmission = () => {
         })),
       };
 
-      console.log("Request Body:", requestBody);
-
       const response = await jwtAuthAxios.post(
         `/transaction/grades/${id}`,
         requestBody,
@@ -171,8 +204,6 @@ const GradeSubmission = () => {
           signal,
         }
       );
-
-      console.log("Response.data pe hasil:", response.data);
 
       if (response.data.status === "OK") {
         window.location.reload();
@@ -198,8 +229,6 @@ const GradeSubmission = () => {
       } else if (error.response && error.response.status === 401) {
         handleAuthenticationError();
       } else {
-        console.log("error: ", error);
-        handleOpenErrorModal();
         setSemester("");
         setRow();
         setSubjectNames(Array(row).fill(""));
@@ -208,6 +237,7 @@ const GradeSubmission = () => {
         setDescriptions(Array(row).fill(""));
         setShowLabel(true);
         setShowLabel2(true);
+        handleOpenErrorModal();
         setLoading(false);
         return;
       }
@@ -231,8 +261,6 @@ const GradeSubmission = () => {
     setSubjectNames(newSubjectNames);
   };
 
-  console.log("ini subjectname", subjectNames);
-
   const handleGradeChange = (event, index) => {
     const newGrades = [...grades];
     const inputValue = event.target.value;
@@ -242,9 +270,11 @@ const GradeSubmission = () => {
     }
   };
 
-  const handleLecturerChange = (event, index) => {
+  const handleLecturerChange = (event, value, index) => {
     const newLecturers = [...lecturers];
-    newLecturers[index] = event.target.value;
+    newLecturers[index] = value
+      ? `${value.firstName} ${value.lastName} (${value.degree})`
+      : "";
     setLecturers(newLecturers);
   };
 
@@ -269,15 +299,6 @@ const GradeSubmission = () => {
   };
 
   const tableData = generateTableData(row);
-
-  useEffect(() => {
-    console.log("Semester:", semester);
-    console.log("Row:", row);
-    console.log("Subject Names:", subjectNames);
-    console.log("Grades:", grades);
-    console.log("Lecturers:", lecturers);
-    console.log("Descriptions:", descriptions);
-  }, []);
 
   return (
     <div>
@@ -428,11 +449,11 @@ const GradeSubmission = () => {
             }}
           >
             <TableRow>
-              <TableCell>Number</TableCell>
-              <TableCell sx={{ width: "220px" }}>Subject Name</TableCell>
+              <TableCell sx={{ width: "80px" }}>Number</TableCell>
+              <TableCell sx={{ width: "420px" }}>Subject Name</TableCell>
               <TableCell sx={{ width: "120px" }}>Grade</TableCell>
-              <TableCell>Lecturer</TableCell>
-              <TableCell>Description</TableCell>
+              <TableCell sx={{ width: "420px" }}>Lecturer</TableCell>
+              <TableCell sx={{ width: "420px" }}>Description</TableCell>
             </TableRow>
           </TableHead>
           <TableBody sx={{ backgroundColor: "white" }}>
@@ -468,13 +489,47 @@ const GradeSubmission = () => {
                 </TableCell>
 
                 <TableCell>
-                  <TextField
-                    onChange={(e) => handleLecturerChange(e, index)}
-                    value={lecturers[index]}
-                    size="small"
-                    fullWidth
+                  <Autocomplete
+                    disablePortal
+                    options={lecturersData}
+                    onChange={(event, value) =>
+                      handleLecturerChange(event, value, index)
+                    }
+                    getOptionLabel={(option) =>
+                      `${option.firstName} ${option.lastName} (${option.degree})`
+                    }
+                    renderInput={(params) => (
+                      <TextField {...params} size="small" fullWidth />
+                    )}
                   />
                 </TableCell>
+
+                {/* <TableCell>
+                  <FormControl size="small" fullWidth>
+                    <Select
+                      value={lecturers[index] || ""}
+                      onChange={(e) => handleLecturerChange(e, index)}
+                      MenuProps={{
+                        PaperProps: {
+                          style: {
+                            maxHeight: "37%",
+                          },
+                        },
+                      }}
+                    >
+                      {lecturersData &&
+                        lecturersData.map((lecturer) => (
+                          <MenuItem
+                            key={lecturer.id}
+                            value={`${lecturer.firstName} ${lecturer.lastName} (${lecturer.degree})`}
+                          >
+                            {lecturer.firstName} {lecturer.lastName} (
+                            {lecturer.degree})
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </FormControl>
+                </TableCell> */}
 
                 <TableCell>
                   <TextField
@@ -506,17 +561,7 @@ const GradeSubmission = () => {
         >
           <Button
             onClick={() => {
-              if (
-                !semester ||
-                !row ||
-                subjectNames.some((name) => !name) ||
-                grades.some((grade) => !grade) ||
-                lecturers.some((lecturer) => !lecturer)
-              ) {
-                alert("Please fill all the fields first.");
-              } else {
-                handleOpenFirstModal();
-              }
+              handleOpenFirstModal();
             }}
             sx={{
               backgroundColor: "#006AF5",
@@ -537,16 +582,23 @@ const GradeSubmission = () => {
 
           <Modal
             open={openFirstModal}
-            onClose={handleCloseFirstModal}
+            onClose={() => {
+              handleCloseFirstModal();
+              hideAlert();
+            }}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
             <div style={style}>
+              {alert && (
+                <CustomAlert message={alert.message} onClose={hideAlert} />
+              )}
               <Typography
                 id="modal-modal-title"
                 variant="h4"
                 component="h2"
                 sx={{
+                  marginTop: "6px",
                   fontWeight: 600,
                 }}
               >
@@ -563,7 +615,10 @@ const GradeSubmission = () => {
               <Grid container spacing={1} justifyContent="flex-end">
                 <Grid item>
                   <Button
-                    onClick={handleCloseFirstModal}
+                    onClick={() => {
+                      handleCloseFirstModal();
+                      hideAlert();
+                    }}
                     sx={{
                       backgroundColor: "white",
                       borderRadius: "5px",

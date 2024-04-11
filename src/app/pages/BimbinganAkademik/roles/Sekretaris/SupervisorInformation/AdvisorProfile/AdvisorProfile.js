@@ -153,7 +153,7 @@ const AdvisorProfile = () => {
                 : "-"}
             </Typography>
           </Grid>
-          <Grid item xs={12} md={12}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h6">Address</Typography>
             <Typography variant="h6" sx={textStyle}>
               {dataProfile.Address}
@@ -357,9 +357,6 @@ const TableItem = ({ item, index }) => {
           }
         );
         break;
-
-      default:
-        console.log("Path not found");
     }
   };
   const rowStyle = {

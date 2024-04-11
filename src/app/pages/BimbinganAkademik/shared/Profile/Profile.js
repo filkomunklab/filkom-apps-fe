@@ -23,7 +23,6 @@ const Profile = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
       });
-      console.log("ini isi result.data", result.data.data);
       setDataProfile(result.data.data);
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
@@ -58,7 +57,7 @@ const Profile = () => {
             padding: "16px",
           }}
         >
-          Student Council Information
+          Profile
         </Typography>
         <Grid container spacing={3} sx={{ padding: 2 }}>
           <Grid item xs={12} md={6}>
@@ -81,7 +80,7 @@ const Profile = () => {
               {dataProfile?.phoneNum || "-"}
             </Typography>
           </Grid>
-          <Grid item xs={12} md={12}>
+          <Grid item xs={12} md={6}>
             <Typography variant="h6">Address</Typography>
             <Typography variant="h6" sx={textSyle}>
               {dataProfile?.Address || "-"}

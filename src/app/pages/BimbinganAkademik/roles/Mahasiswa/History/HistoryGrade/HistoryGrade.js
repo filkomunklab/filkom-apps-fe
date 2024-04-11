@@ -37,7 +37,6 @@ const HistoryGrade = () => {
     comments,
     approveDate,
   } = gradeDetails;
-  console.log("ini grade detail", gradeDetails);
 
   const handleBreadcrumbsClick = () => {
     let path = "/bimbingan-akademik/history";

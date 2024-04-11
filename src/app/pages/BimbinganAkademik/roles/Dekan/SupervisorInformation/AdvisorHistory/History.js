@@ -78,7 +78,6 @@ const History = (props) => {
 
   useEffect(() => {
     localStorage.setItem("historyTabValue", value);
-    console.log("Value:", value);
   }, [value]);
 
   //handle error
@@ -141,15 +140,8 @@ const History = (props) => {
       const { status: preregisStatus, data: preregisData } =
         resultPreregis.data;
 
-      console.log("response result activityData", activityData);
-      console.log("response result consultationData", consultationData);
-      console.log("response result certificateData", certificateData);
-      console.log("response result preregisData", preregisData);
-
       if (activityStatus === "OK") {
         setDataActivity(activityData);
-      } else {
-        console.log("error activity:", resultActivity);
       }
 
       if (consultationStatus === "OK") {
@@ -158,20 +150,14 @@ const History = (props) => {
         );
 
         setDataConsultation(filteredConsultationData);
-      } else {
-        console.log("ini error resultConsultation", resultConsultation);
       }
 
       if (certificateStatus === "OK") {
         setDataCertificate(certificateData);
-      } else {
-        console.log("ini error resultCertificate", resultCertificate);
       }
 
       if (preregisStatus === "OK") {
         setDataPreregis(preregisData);
-      } else {
-        console.log("ini error resultPreregis", resultPreregis);
       }
     } catch (error) {
       handleError(error);
@@ -324,66 +310,39 @@ const History = (props) => {
         comments,
         level,
       } = certificateDetailsResult.data.data;
-      navigate(
-        `${value.id}/history-certificate`,
-        {
-          state: {
-            certificateDetails: {
-              firstName: student.firstName,
-              lastName: student.lastName,
-              SupervisorFirstName:
-                student.GuidanceClassMember.gudianceClass.teacher.firstName,
-              SupervisorLastName:
-                student.GuidanceClassMember.gudianceClass.teacher.lastName,
-              submissionDate: submitDate,
-              pathFile: path,
-              category: category,
-              level: level,
-              description: description,
-              status: approvalStatus,
-              title: title,
-              id: id,
-              approvalDate: approvalDate,
-              comments: comments,
-            },
-          },
-        },
-        console.log("ini pathFile", path)
-      );
-    } catch (error) {
-      handleError(error);
-    }
-  };
-
-  const handleNavigatePreregis = async (value) => {
-    try {
-      const preregisDetailsResult = await jwtAuthAxios.get(
-        `/pre-regist/details/${value.id}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          signal,
-        }
-      );
-      const detail = preregisDetailsResult.data.data;
-      navigate(`${value.id}/history-preregistration`, {
+      navigate(`${value.id}/history-certificate`, {
         state: {
-          preregisDetails: {
-            id: detail.id,
-            studentName:
-              detail.Student.lastName + ", " + detail.Student.firstName,
-            supervisorName:
-              detail.Employee.lastName + ", " + detail.Employee.firstName,
-            submitDate: detail.submitDate,
-            approveDate: detail.approveDate,
-            status: detail.status,
-            listSubjectPreregis: detail.ListOfRequest,
-            comments: detail.comments,
+          certificateDetails: {
+            firstName: student.firstName,
+            lastName: student.lastName,
+            SupervisorFirstName:
+              student.GuidanceClassMember.gudianceClass.teacher.firstName,
+            SupervisorLastName:
+              student.GuidanceClassMember.gudianceClass.teacher.lastName,
+            submissionDate: submitDate,
+            pathFile: path,
+            category: category,
+            level: level,
+            description: description,
+            status: approvalStatus,
+            title: title,
+            id: id,
+            approvalDate: approvalDate,
+            comments: comments,
           },
         },
       });
     } catch (error) {
       handleError(error);
     }
+  };
+
+  const handleNavigatePreregis = async (value) => {
+    navigate(`${value.id}/history-preregistration`, {
+      state: {
+        id: value.id,
+      },
+    });
   };
 
   return (
@@ -494,7 +453,6 @@ const History = (props) => {
                         sx={{ padding: "10px 50px" }}
                         onClick={() => {
                           handleNavigateActivity(value.id);
-                          // console.log("ini isi dari value preregis: ", value);
                         }}
                       >
                         <ListItemText
@@ -637,7 +595,6 @@ const History = (props) => {
                         sx={{ padding: "10px 50px" }}
                         onClick={() => {
                           handleNavigatePreregis(value);
-                          // console.log("ini isi dari value preregis: ", value);
                         }}
                       >
                         <ListItemText
@@ -768,7 +725,6 @@ const History = (props) => {
                           sx={{ padding: "10px 50px" }}
                           onClick={() => {
                             handleNavigateCertificate(value);
-                            // console.log("ini isi dari value certi: ", value);
                           }}
                         >
                           <ListItemText

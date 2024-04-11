@@ -126,7 +126,6 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
   const [showWarning, setShowWarning] = useState(false);
 
   const handleShowPreview = () => {
-    console.log("ahem", selectedRows);
     setPreviewRows(selectedRows);
     setDivVisible(true);
   };
@@ -296,9 +295,6 @@ const PreRegistrationSubmission = ({}) => {
       );
       const preregisData = result.data.data;
       setDataPreregis(preregisData);
-
-      console.log("ini panjang preregisdata", preregisData.PreRegistrationData);
-      console.log("Data preregistration:", preregisData);
     } catch (error) {
       handleError(error);
     }
@@ -402,7 +398,6 @@ const PreRegistrationSubmission = ({}) => {
       } else if (error.response && error.response.status === 401) {
         handleAuthenticationError();
       } else {
-        console.log("Error submitting courses:", error.response);
         setSelectedRows([]);
         setTotalCredits(0);
         setShowPopup(true);

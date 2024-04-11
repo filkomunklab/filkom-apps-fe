@@ -17,8 +17,8 @@ const GradeSubmissionClosed = () => {
         }}
       >
         <Typography variant="body1">
-          Student semester grade entry has closed. Please wait for direction
-          from your Head of Study Program.
+          Submission of student semester grades has closed. Please wait for
+          direction from your Head of Study Program.
         </Typography>
       </Paper>
     </div>

@@ -66,7 +66,7 @@ const Consultation = () => {
   useEffect(() => {
     getCurrentStatus();
     getMessage();
-  }, [messages]);
+  }, []);
 
   //handle error
   const handleError = (error) => {

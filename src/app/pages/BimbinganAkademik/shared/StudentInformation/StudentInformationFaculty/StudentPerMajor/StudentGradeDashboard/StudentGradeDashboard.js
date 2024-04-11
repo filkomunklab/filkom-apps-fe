@@ -54,7 +54,7 @@ const StudentGradeDashboard = () => {
 
   const [semesterData, setSemesterData] = useState([]);
   const location = useLocation();
-  const { studentNim, firstName, lastName, major } = location.state
+  const { studentNim, firstName, lastName, major, studentId } = location.state
     ? location.state
     : "";
 
@@ -78,9 +78,7 @@ const StudentGradeDashboard = () => {
   const getDataGrade = async () => {
     try {
       const response = await jwtAuthAxios.get(
-        `/transaction/semesterList/${
-          JSON.parse(localStorage.getItem("user")).id
-        }`,
+        `/transaction/semesterList/${studentId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -116,7 +114,6 @@ const StudentGradeDashboard = () => {
       );
 
       const detail = gradeDetailsResult.data.data;
-      console.log("isi detail", detail);
 
       navigate(`${value.id}`, {
         state: {

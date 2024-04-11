@@ -75,7 +75,6 @@ const FormAfterLoginStudent = ({
   const navigate = useNavigate();
   const [showLabelAreaOfConcentration, setShowLabelAreaOfConcentration] =
     useState(true);
-  useState(true);
   const [loading, setLoading] = useState(false);
   const [openFirstModal, setOpenFirstModal] = useState(false);
   const handleOpenFirstModal = () => setOpenFirstModal(true);
@@ -88,7 +87,7 @@ const FormAfterLoginStudent = ({
   const [base64Image, setBase64Image] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
-  const [AreaOfConcentration, setAreaOfConcentration] = useState("");
+  const [areaOfConcentration, setAreaOfConcentration] = useState("");
 
   // field input parent / guardian
   const [guardianEmail, setGuardianEmail] = useState("");
@@ -137,7 +136,7 @@ const FormAfterLoginStudent = ({
           base64Image,
           dateOfBirth,
           phoneNo,
-          AreaOfConcentration,
+          areaOfConcentration,
           guardianEmail,
           guardianPhoneNo,
         },
@@ -186,7 +185,7 @@ const FormAfterLoginStudent = ({
           password: newPassword,
           dateOfBirth: waktuISO8601,
           phoneNo: phoneNo.trim(),
-          areaOfConcentration: AreaOfConcentration,
+          areaOfConcentration: areaOfConcentration,
           guardianEmail: guardianEmail.trim(),
           guardianPhoneNo: guardianPhoneNo.trim(),
           studentImage: {
@@ -315,7 +314,7 @@ const FormAfterLoginStudent = ({
                             // maxHeight: "100%",
                             // height: "auto",
                             // width: "auto",
-                            // objectFit: "cover",
+                            objectFit: "cover",
                           }}
                           loading="lazy"
                         />
@@ -500,7 +499,7 @@ const FormAfterLoginStudent = ({
                         sx={{
                           padding: 0.5,
                         }}
-                        value={AreaOfConcentration}
+                        value={areaOfConcentration}
                         onChange={(event) => {
                           setAreaOfConcentration(event.target.value);
                           setShowLabelAreaOfConcentration(false);
@@ -554,36 +553,21 @@ const FormAfterLoginStudent = ({
                   Parents / Guardians
                 </Typography>
                 <Grid container spacing={3} sx={{ padding: 2 }}>
-                  <Grid item xs={12} md={12}>
+                  <Grid item xs={12} md={6}>
                     <Typography variant="h5">Full Name</Typography>
                     <Typography variant="h6" sx={textStyle}>
                       {profileMahasiswa?.guardianName || "-"}
                     </Typography>
                   </Grid>
+
                   <Grid item xs={12} md={6}>
                     <Typography variant="h5">Family Relationship</Typography>
                     <Typography variant="h6" sx={textStyle}>
                       {profileMahasiswa?.familyRelation || "-"}
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} md={6}>
-                    <RTypography variant="h5">Email</RTypography>
-                    <TextField
-                      id="outlined-basic-1"
-                      variant="outlined"
-                      placeholder="Enter email..."
-                      fullWidth
-                      value={guardianEmail}
-                      onChange={(event) => setGuardianEmail(event.target.value)}
-                      size="small"
-                      sx={{
-                        backgroundColor: "white",
-                        "& input": { padding: 1.5 },
-                      }}
-                    />
-                  </Grid>
 
-                  <Grid item xs={12} md={12}>
+                  <Grid item xs={12} md={6}>
                     <RTypography variant="h5">Phone</RTypography>
                     <TextField
                       id="outlined-basic-1"
@@ -594,6 +578,23 @@ const FormAfterLoginStudent = ({
                       onChange={(event) =>
                         setGuardianPhoneNo(event.target.value)
                       }
+                      size="small"
+                      sx={{
+                        backgroundColor: "white",
+                        "& input": { padding: 1.5 },
+                      }}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} md={6}>
+                    <RTypography variant="h5">Email</RTypography>
+                    <TextField
+                      id="outlined-basic-1"
+                      variant="outlined"
+                      placeholder="Enter email..."
+                      fullWidth
+                      value={guardianEmail}
+                      onChange={(event) => setGuardianEmail(event.target.value)}
                       size="small"
                       sx={{
                         backgroundColor: "white",
@@ -655,8 +656,9 @@ const FormAfterLoginStudent = ({
                     id="modal-modal-description"
                     style={{ marginTop: "16px", marginBottom: "20px" }}
                   >
-                    The data you enter cannot be changed anymore, make sure the
-                    data you enter is correct!
+                    Please ensure that the data you enter is accurate as you are
+                    only allowed to edit it once. Further changes must be
+                    requested through your Academic Advisor!
                   </Typography>
 
                   <Grid container spacing={1} justifyContent="flex-end">

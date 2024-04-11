@@ -69,22 +69,17 @@ const ViewConsultation = () => {
   const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
 
-  const [inputValue, setInputValue] = useState("");
+  const [inputMessage, setInputMessage] = useState("");
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSubmit();
-    }
-  };
   const handleIconClick = () => {
     handleSubmit();
   };
 
   const handleSubmit = () => {
-    const trimmedValue = inputValue?.trim();
+    const trimmedValue = inputMessage?.trim();
     if (trimmedValue !== "") {
       postMessage(trimmedValue);
-      setInputValue("");
+      setInputMessage("");
     } else {
       alert("Input tidak valid. Mohon masukkan pesan yang valid.");
     }
@@ -94,7 +89,7 @@ const ViewConsultation = () => {
     getCurrentStatus();
     getMessage();
     return () => controller.abort();
-  }, [messages]);
+  }, []);
 
   //handle error
   const handleError = (error) => {
@@ -156,6 +151,8 @@ const ViewConsultation = () => {
           signal,
         }
       );
+      getCurrentStatus();
+      getMessage();
     } catch (error) {
       handleError(error);
     }
@@ -168,6 +165,8 @@ const ViewConsultation = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
       });
+      getCurrentStatus();
+      getMessage();
     } catch (error) {
       handleError(error);
     }
@@ -391,8 +390,8 @@ const ViewConsultation = () => {
                       placeholder="Enter Message..."
                       fullWidth
                       multiline
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
+                      value={inputMessage}
+                      onChange={(e) => setInputMessage(e.target.value)}
                       InputProps={{
                         endAdornment: (
                           <IconButton onClick={handleIconClick}>
@@ -400,7 +399,6 @@ const ViewConsultation = () => {
                           </IconButton>
                         ),
                       }}
-                      onKeyPress={handleKeyPress}
                     />
                     <Grid
                       container

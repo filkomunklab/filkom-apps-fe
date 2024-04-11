@@ -44,7 +44,6 @@ const Grades = () => {
 
   const getDataGrade = async () => {
     try {
-      const nim = JSON.parse(localStorage.getItem("user")).nim;
       const response = await jwtAuthAxios.get(
         `/transaction/semesterList/${
           JSON.parse(localStorage.getItem("user")).id
@@ -95,7 +94,6 @@ const Grades = () => {
         }
       );
       const detail = gradeDetailsResult.data.data;
-      console.log("isi detail", detail);
       navigate(`${value.id}`, {
         state: {
           gradeDetails: {
@@ -142,7 +140,9 @@ const Grades = () => {
           <Typography variant="body1">You don't have a grade yet.</Typography>
         </Paper>
       ) : (
-        <Typography variant="h5">Select a semester to view grades.</Typography>
+        <Typography variant="h5" sx={{ paddingBottom: "20px" }}>
+          Select a semester to view grades.
+        </Typography>
       )}
       <Grid
         container

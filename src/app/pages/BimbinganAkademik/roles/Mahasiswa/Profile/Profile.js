@@ -42,7 +42,6 @@ const StudentProfile = () => {
       setAdvisorProfileData(
         resultStudent.data.data.GuidanceClassMember.gudianceClass.teacher
       );
-      console.log(resultStudent.data.data);
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
@@ -184,12 +183,12 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Typography variant="h5">Area of Concentration</Typography>
               <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.AreaOfConcentration === "OBJECT_PROGRAMMER"
+                {studentProfileData?.areaOfConcentration === "OBJECT_PROGRAMMER"
                   ? "Object Programmer"
-                  : studentProfileData?.AreaOfConcentration ===
+                  : studentProfileData?.areaOfConcentration ===
                     "COMPETITIVE_INTELEGENT_ANALYSIS"
                   ? "Competitive Intelligent Analysis"
-                  : studentProfileData?.AreaOfConcentration ===
+                  : studentProfileData?.areaOfConcentration ===
                     "NETWORK_ADMINISTRATOR"
                   ? "Network Administrator"
                   : "-"}
@@ -240,7 +239,7 @@ const StudentProfile = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3} sx={{ padding: 2 }}>
-            <Grid item xs={12} md={12}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h5">Full Name</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.guardianName || "-"}
@@ -253,15 +252,15 @@ const StudentProfile = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h5">Email</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianEmail || "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={12}>
               <Typography variant="h5">Phone</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.guardianPhoneNo || "-"}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h5">Email</Typography>
+              <Typography variant="h6" sx={textStyle}>
+                {studentProfileData?.guardianEmail || "-"}
               </Typography>
             </Grid>
           </Grid>

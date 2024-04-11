@@ -39,7 +39,6 @@ const HistoryCertificate = () => {
     id,
   } = certificateDetails;
   const pdfURL = pathFile;
-  console.log("comment", comments);
 
   const handleClick = (event) => {
     event.preventDefault();

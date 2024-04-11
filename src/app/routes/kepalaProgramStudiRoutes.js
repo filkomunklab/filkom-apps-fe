@@ -262,7 +262,7 @@ const kepalaProgramStudiRoutes = [
     element: <Page component={AdvisorStudentGrade} />,
   },
   {
-    path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/:id/grade/semester/:id",
+    path: "/bimbingan-akademik/kaprodi/supervisor-information/advisor-profile/:id/student-grade/:id",
     element: <Page component={AdvisorStudentGrade2} />,
   },
   {

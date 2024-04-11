@@ -113,8 +113,7 @@ const SupervisorInformation = () => {
         },
         signal,
       });
-      console.log("Deleted supervisor with ID:", id);
-      getDataSupervisor(); // Assuming this function fetches the updated data
+      getDataSupervisor();
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -140,7 +139,6 @@ const SupervisorInformation = () => {
   useEffect(() => {
     filterAndSetStudents();
   }, [search, filter, originalDataSupervisor]);
-  console.log("ini isi originial", originalDataSupervisor);
 
   const filterAndSetStudents = () => {
     const filteredData = originalDataSupervisor.filter((item) => {
@@ -471,12 +469,9 @@ const TableItem = ({ item, index, onDelete }) => {
         break;
       case "history":
         navigate(`advisor-history/${nik}`, {
-          state: { classID: item.id, nik: nik, major: major, id: id },
+          state: { classID: item.id, id: item.teacher.id },
         });
         break;
-
-      default:
-        console.log("Path not found. isi name: ", name);
     }
   };
 

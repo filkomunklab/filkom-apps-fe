@@ -123,9 +123,6 @@ const EditStudent = () => {
     try {
       setIsLoading(true);
 
-      // Add this console log
-      console.log("Selected Students:", selectedStudent);
-
       const response = await jwtAuthAxios.post(
         `/guidance-class/add-student/${classID}`,
         {
@@ -140,8 +137,6 @@ const EditStudent = () => {
           signal,
         }
       );
-
-      console.log("Response:", response);
 
       const { status } = response.data;
       setIsLoading(false);
@@ -160,7 +155,6 @@ const EditStudent = () => {
 
   useEffect(() => {
     getStudent();
-    console.log("ini location :", location?.state);
     return () => controller.abort();
   }, []);
 
@@ -172,9 +166,7 @@ const EditStudent = () => {
     filterAndSetStudents();
   }, [search, filter, originalDataStudent]);
 
-  useEffect(() => {
-    console.log("selected student", selectedStudent);
-  }, [selectedStudent]);
+  useEffect(() => {}, [selectedStudent]);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -198,7 +190,6 @@ const EditStudent = () => {
 
     setSearchFilteredData(filteredData);
   };
-  console.log("ini isi originial", originalDataStudent);
 
   const handleSearch = (event) => {
     setSearch(event.target.value);

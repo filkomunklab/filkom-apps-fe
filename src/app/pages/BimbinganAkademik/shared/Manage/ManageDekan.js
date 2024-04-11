@@ -153,8 +153,8 @@ const Manage = () => {
       >
         Currently, you are on the 'Management of Pre-registration and Grades'
         page. On this page, you can check a history of pre-registration and
-        grade submission list that have been created by the head of the
-        department (kaprodi).
+        grade submission list that have been created by the Head of Study
+        Program (kaprodi).
       </Typography>
 
       <div sx={{ borderBottom: 1, borderColor: "divider" }}>

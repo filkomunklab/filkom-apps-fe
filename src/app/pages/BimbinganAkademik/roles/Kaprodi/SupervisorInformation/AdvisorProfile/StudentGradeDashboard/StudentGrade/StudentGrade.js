@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import Div from "@jumbo/shared/Div";
 import {
   Stack,
@@ -13,6 +14,12 @@ import {
   experimentalStyled as styled,
   Grid,
 } from "@mui/material";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -25,12 +32,49 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const StudentGrade = () => {
-  const { state } = useLocation();
+  //abort
   const navigate = useNavigate();
+  const controller = new AbortController();
+  const signal = controller.signal;
 
-  const gradeDetails = state ? state.gradeDetails : {};
-  const { semester, subject, firstName, lastName } = gradeDetails;
-  console.log("ini grade detail", gradeDetails);
+  const location = useLocation();
+  const { id, firstName, lastName } = location.state || "-";
+  const [gradeDetails, setGradeDetails] = useState([]);
+  const [subject, setSubject] = useState([]);
+
+  const getGrades = async () => {
+    try {
+      const gradeDetailsResult = await jwtAuthAxios.get(
+        `/grades/detailGrades/${id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
+      setGradeDetails(gradeDetailsResult.data.data);
+      setSubject(gradeDetailsResult.data.data.subject);
+    } catch (error) {
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
+    }
+  };
+
+  useEffect(() => {
+    getGrades();
+    return () => controller.abort();
+  }, []);
 
   const getLetterGrade = (grade) => {
     if (grade >= 91) return { letter: "A", weight: 4.0 };
@@ -50,7 +94,7 @@ const StudentGrade = () => {
     let totalMajorGrade = 0;
     let totalSKS = 0;
 
-    subjects.forEach((data) => {
+    subjects?.forEach((data) => {
       const letterGrade = getLetterGrade(data.grades);
       const weightedGrade = letterGrade.weight * data.Subject.credits;
 
@@ -91,7 +135,7 @@ const StudentGrade = () => {
       <Stack gap={3} paddingTop={3}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography variant="h1" fontWeight={500}>
-            Student Grade {semester}
+            Student Grade {gradeDetails.semester}
           </Typography>
           <Typography variant="h6" sx={{ paddingRight: "15px" }}>
             {lastName}, {firstName}

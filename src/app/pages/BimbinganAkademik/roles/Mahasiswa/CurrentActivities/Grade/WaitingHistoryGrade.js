@@ -35,7 +35,7 @@ const WaitingGrade = () => {
     semester,
     grades,
   } = gradeDetails;
-
+  console.log("grades", grades);
   const handleClick = (event) => {
     event.preventDefault();
     navigate(-1);

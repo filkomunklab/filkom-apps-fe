@@ -71,11 +71,6 @@ const ViewConsultation = () => {
 
   const [inputValue, setInputValue] = useState("");
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSubmit();
-    }
-  };
   const handleIconClick = () => {
     handleSubmit();
   };
@@ -94,7 +89,7 @@ const ViewConsultation = () => {
     getCurrentStatus();
     getMessage();
     return () => controller.abort();
-  }, [messages]);
+  }, []);
 
   //handle error
   const handleError = (error) => {
@@ -154,6 +149,8 @@ const ViewConsultation = () => {
           signal,
         }
       );
+      getCurrentStatus();
+      getMessage();
     } catch (error) {
       handleError(error);
     }
@@ -166,6 +163,8 @@ const ViewConsultation = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
       });
+      getCurrentStatus();
+      getMessage();
     } catch (error) {
       handleError(error);
     }
@@ -399,7 +398,6 @@ const ViewConsultation = () => {
                           </IconButton>
                         ),
                       }}
-                      onKeyPress={handleKeyPress}
                     />
                     <Grid
                       container

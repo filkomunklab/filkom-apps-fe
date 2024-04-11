@@ -54,9 +54,6 @@ const ReviewPreRegistrationStudent = () => {
     }
   }
 
-  console.log("ini listSubjectPreregis", listSubjectPreregis);
-  console.log("preregisDetails", preregisDetails);
-
   const role = Boolean(localStorage.getItem("user"))
     ? JSON.parse(localStorage.getItem("user")).role
     : [];

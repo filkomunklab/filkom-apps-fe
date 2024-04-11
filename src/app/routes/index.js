@@ -10,7 +10,7 @@ import operatorRoutes from "./operatorRoutes";
 import dosenPembimbingRoutes from "./dosenPembimbingRoutes";
 import dekanRoutes from "./dekanRoutes";
 import kepalaProgramStudiRoutes from "./kepalaProgramStudiRoutes";
-import sekDekanRoutes from "./sekretarisRoutes";
+import sekFakultasRoutes from "./sekretarisRoutes";
 import skripsiAppDekanRoutes from "./skripsi_app_dekan_routes";
 import skripsiAppKaprodiRoutes from "./skripsi_app_kaprodi_routes";
 import skripsiAppDosenRoutes from "./skripsi_app_dosen_routes";
@@ -30,6 +30,47 @@ const routesForPublic = [
 /**
  routes only accessible to authenticated users
  **/
+
+const userJSON = localStorage.getItem("user");
+const user = userJSON ? JSON.parse(userJSON) : null;
+
+const isDekan = () => {
+  return (
+    user && user.role && (user.role === "DEKAN" || user.role.includes("DEKAN"))
+  );
+};
+
+const isMahasiswa = () => {
+  return (
+    user &&
+    user.role &&
+    (user.role === "MAHASISWA" || user.role.includes("MAHASISWA"))
+  );
+};
+
+const isSekFakultas = () => {
+  return (
+    user &&
+    user.role &&
+    (user.role === "OPERATOR_FAKULTAS" ||
+      user.role.includes("OPERATOR_FAKULTAS"))
+  );
+};
+
+const isDosen = () => {
+  return (
+    user && user.role && (user.role === "DOSEN" || user.role.includes("DOSEN"))
+  );
+};
+
+const isKaprodi = () => {
+  return (
+    user &&
+    user.role &&
+    (user.role === "KAPRODI" || user.role.includes("KAPRODI"))
+  );
+};
+
 const routesForAuthenticatedOnly = [
   {
     path: "/",
@@ -39,12 +80,12 @@ const routesForAuthenticatedOnly = [
     path: "/change-password",
     element: <Page component={ChangePassword} />,
   },
-  ...mahasiswaRoutes,
+  ...(isMahasiswa() ? mahasiswaRoutes : []),
+  ...(isDekan() ? dekanRoutes : []),
   ...operatorRoutes,
-  ...dosenPembimbingRoutes,
-  ...dekanRoutes,
-  ...kepalaProgramStudiRoutes,
-  ...sekDekanRoutes,
+  ...(isDosen() ? dosenPembimbingRoutes : []),
+  ...(isKaprodi() ? kepalaProgramStudiRoutes : []),
+  ...(isSekFakultas() ? sekFakultasRoutes : []),
   //...operatorRoutes,
   ...skripsiAppDekanRoutes,
   ...skripsiAppKaprodiRoutes,

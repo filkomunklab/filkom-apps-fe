@@ -49,13 +49,9 @@ const CurrentActivities = () => {
         signal,
       });
 
-      console.log("ini result di get activity", result);
       const { status: activityStatus, data } = result.data;
       if (activityStatus === "OK") {
         setDataActivity(data);
-      } else {
-        console.error("Error in activityStatus: ", activityStatus);
-        console.log("ini isi result", result);
       }
     } catch (error) {
       handleError(error);
@@ -81,9 +77,6 @@ const CurrentActivities = () => {
         );
 
         setDataConsultation(onProcessConsultations);
-      } else {
-        console.error("Error in consultationStatus: ", consultationStatus);
-        console.log("ini isi result", result);
       }
     } catch (error) {
       handleError(error);

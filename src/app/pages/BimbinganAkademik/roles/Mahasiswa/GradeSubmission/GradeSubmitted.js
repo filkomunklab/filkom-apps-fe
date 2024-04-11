@@ -30,8 +30,6 @@ const GradeSubmitted = () => {
 
       const gradeData = result.data.data;
       setDataGrade(gradeData);
-
-      console.log("ini panjang gradedata", result);
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
@@ -95,10 +93,10 @@ const GradeSubmitted = () => {
         }}
       >
         <Typography variant="body1">
-          You have successfully submitted your grades. Please await a response
-          from the Head of the Study Program. If you have any inquiries
-          regarding this matter, kindly contact the Head of the Study Program.
-          You can also seek further assistance on the Consultation page. <br />
+          You have successfully submitted your grades. Please wait for a
+          response from the Head of Study Program. If you have any inquiries
+          regarding this matter, kindly contact the Head of Study Program. You
+          can also seek further assistance on the Consultation page. <br />
           <br />
           If you wish to view the list of course grades you've submitted, please
           navigate to the History page. Alternatively, if you want to view the

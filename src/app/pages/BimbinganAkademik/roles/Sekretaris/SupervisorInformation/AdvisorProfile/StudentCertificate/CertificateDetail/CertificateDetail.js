@@ -7,8 +7,13 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -22,41 +27,115 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 const CertificateDetail = () => {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const certificateDetails = state ? state.certificateDetails : {};
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  const location = useLocation();
+  const { id } = location.state || "-";
+  const [certificateDetails, setCertificateDetails] = useState({});
+
+  const getCertificate = async () => {
+    try {
+      const certificateDetailsResult = await jwtAuthAxios.get(
+        `/certificate/student/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          signal,
+        }
+      );
+      setCertificateDetails(certificateDetailsResult.data.data);
+    } catch (error) {
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
+        handlePermissionError();
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
+        return;
+      } else if (error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.log("ini error: ", error);
+        return;
+      }
+    }
+  };
+
+  useEffect(() => {
+    getCertificate();
+    return () => controller.abort();
+  }, []);
+
+  // Pastikan student tidak undefined sebelum melakukan destrukturisasi
   const {
-    firstName,
-    lastName,
-    SupervisorFirstName,
-    SupervisorLastName,
-    submissionDate,
-    pathFile,
+    path,
+    title,
     category,
     level,
     description,
-    status,
-    title,
     comments,
     approvalDate,
-    id,
+    submitDate,
+    approvalStatus,
+    student,
   } = certificateDetails;
-  const pdfURL = pathFile;
+  const {
+    firstName: studentFirstName,
+    lastName: studentLastName,
+    GuidanceClassMember: { gudianceClass } = {},
+  } = student || {};
+  const teacher =
+    gudianceClass && gudianceClass.teacher ? gudianceClass.teacher : null;
+  const teacherFirstName =
+    teacher && teacher.firstName ? teacher.firstName : null;
+  const teacherLastName = teacher && teacher.lastName ? teacher.lastName : null;
 
   const commentContent =
     comments && comments.trim() !== "" ? comments.trim() : "-";
+
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case "PENALARAN_KEILMUAN":
+        return "Reasoning and Scholarship";
+      case "ORGANISASI_KEPEMIMPINAN":
+        return "Organization and Leadership";
+      case "BAKAT_MINAT":
+        return "Talents and Interests";
+      case "PENGABDIAN_MASYARAKAT":
+        return "Community Service";
+      case "OTHER":
+        return "Others";
+      default:
+        return category;
+    }
+  };
+
+  const getLevelLabel = (level) => {
+    switch (level) {
+      case "REGION":
+        return "Region";
+      case "NATIONAL":
+        return "National";
+      case "INTERNATIONAL":
+        return "International";
+      case "UNIVERSITY":
+        return "University";
+      case "MAJOR":
+        return "Study Program";
+      default:
+        return level;
+    }
+  };
 
   return (
     <Grid container spacing={2}>
       <Grid item md={6} id="detail-item">
         <Box style={{ height: "100%", overflowY: "auto" }}>
           <Breadcrumbs aria-label="breadcrumb">
-            <StyledLink
-              onClick={() =>
-                navigate(
-                  "/bimbingan-akademik/sekretaris/supervisor-information/"
-                )
-              }
-            >
+            <StyledLink onClick={() => navigate(-3)}>
               Supervisor Information
             </StyledLink>
             <StyledLink onClick={() => navigate(-2)}>
@@ -88,7 +167,7 @@ const CertificateDetail = () => {
                 </Grid>
                 <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                   <Typography variant="h5">
-                    {title.charAt(0).toUpperCase() + title.slice(1)}
+                    {title?.charAt(0).toUpperCase() + title?.slice(1)}
                   </Typography>
                 </Grid>
               </Grid>
@@ -103,7 +182,7 @@ const CertificateDetail = () => {
                 </Grid>
                 <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                   <Typography variant="h5">
-                    {lastName}, {firstName}
+                    {studentLastName}, {studentFirstName}
                   </Typography>
                 </Grid>
               </Grid>
@@ -118,7 +197,7 @@ const CertificateDetail = () => {
                 </Grid>
                 <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                   <Typography variant="h5">
-                    {SupervisorLastName}, {SupervisorFirstName}
+                    {teacherLastName}, {teacherFirstName}
                   </Typography>
                 </Grid>
               </Grid>
@@ -133,7 +212,7 @@ const CertificateDetail = () => {
                 </Grid>
                 <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                   <Typography variant="h5">
-                    {new Date(submissionDate).toLocaleDateString("en-US", {
+                    {new Date(submitDate).toLocaleDateString("en-US", {
                       year: "numeric",
                       day: "numeric",
                       month: "long",
@@ -202,16 +281,17 @@ const CertificateDetail = () => {
                     variant="h5"
                     sx={{
                       color:
-                        status === "REJECTED"
+                        approvalStatus === "REJECTED"
                           ? "red"
-                          : status === "APPROVED"
+                          : approvalStatus === "APPROVED"
                           ? "#005FDB"
-                          : status === "WAITING"
+                          : approvalStatus === "WAITING"
                           ? "#FFCC00"
                           : "inherit",
                     }}
                   >
-                    {status.charAt(0) + status.slice(1).toLowerCase()}
+                    {approvalStatus?.charAt(0) +
+                      approvalStatus?.slice(1).toLowerCase()}
                   </Typography>
                 </Grid>
               </Grid>
@@ -227,8 +307,8 @@ const CertificateDetail = () => {
                 <Grid item xs={7} md={6.5} xl={8} paddingLeft={1}>
                   <Typography variant="h5" sx={{ textAlign: "justify" }}>
                     {description
-                      ? description.charAt(0).toUpperCase() +
-                        description.slice(1)
+                      ? description?.charAt(0).toUpperCase() +
+                        description?.slice(1)
                       : "-"}
                   </Typography>
                 </Grid>
@@ -256,7 +336,7 @@ const CertificateDetail = () => {
       </Grid>
       <Grid item xs={12} md={6}>
         <iframe
-          src={pdfURL}
+          src={path}
           title="Certificate-pdf"
           style={{ width: "100%", height: "80vh" }}
         />

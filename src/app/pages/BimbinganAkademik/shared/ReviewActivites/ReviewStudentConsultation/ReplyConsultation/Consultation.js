@@ -71,11 +71,6 @@ const Consultation = () => {
 
   const [inputValue, setInputValue] = useState("");
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSubmit();
-    }
-  };
   const handleIconClick = () => {
     handleSubmit();
   };
@@ -94,7 +89,7 @@ const Consultation = () => {
     getCurrentStatus();
     getMessage();
     return () => controller.abort();
-  }, [messages]);
+  }, []);
 
   //handle error
   const handleError = (error) => {
@@ -156,6 +151,8 @@ const Consultation = () => {
           signal,
         }
       );
+      getCurrentStatus();
+      getMessage();
     } catch (error) {
       handleError(error);
     }
@@ -170,6 +167,8 @@ const Consultation = () => {
         },
         signal,
       });
+      getCurrentStatus();
+      getMessage();
     } catch (error) {
       handleError(error);
     }
@@ -400,7 +399,6 @@ const Consultation = () => {
                           </IconButton>
                         ),
                       }}
-                      onKeyPress={handleKeyPress}
                     />
                     <Grid
                       container

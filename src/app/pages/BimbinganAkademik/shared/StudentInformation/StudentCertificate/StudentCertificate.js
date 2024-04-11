@@ -41,7 +41,7 @@ const StudentCertificate = () => {
   const [dataWaiting, setDataWaiting] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const location = useLocation();
-  const { studentNim, firstName, lastName } = location.state
+  const { studentNim, firstName, lastName, studentId } = location.state
     ? location.state
     : "";
 
@@ -64,15 +64,10 @@ const StudentCertificate = () => {
 
   const getDataWaiting = async () => {
     try {
-      const result = await jwtAuthAxios.get(
-        `/certificate/all/${JSON.parse(localStorage.getItem("user")).id}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          signal,
-        }
-      );
-
-      console.log("ini isi result data di certi", result);
+      const result = await jwtAuthAxios.get(`/certificate/all/${studentId}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
 
       if (result.data && result.data.data) {
         setDataWaiting(result.data.data);
@@ -99,8 +94,6 @@ const StudentCertificate = () => {
         }
       );
 
-      console.log("ini detail certi result:", certificateDetailsResult);
-
       const {
         student,
         submitDate,
@@ -114,32 +107,28 @@ const StudentCertificate = () => {
         id,
         comments,
       } = certificateDetailsResult.data.data;
-      navigate(
-        `${value.id}`,
-        {
-          state: {
-            certificateDetails: {
-              firstName: student.firstName,
-              lastName: student.lastName,
-              SupervisorFirstName:
-                student.GuidanceClassMember?.gudianceClass?.teacher?.firstName,
-              SupervisorLastName:
-                student.GuidanceClassMember?.gudianceClass?.teacher?.lastName,
-              submissionDate: submitDate,
-              pathFile: path,
-              category: category,
-              level: level,
-              description: description,
-              status: approvalStatus,
-              title: title,
-              id: id,
-              approvalDate: approvalDate,
-              comments: comments,
-            },
+      navigate(`${value.id}`, {
+        state: {
+          certificateDetails: {
+            firstName: student.firstName,
+            lastName: student.lastName,
+            SupervisorFirstName:
+              student.GuidanceClassMember?.gudianceClass?.teacher?.firstName,
+            SupervisorLastName:
+              student.GuidanceClassMember?.gudianceClass?.teacher?.lastName,
+            submissionDate: submitDate,
+            pathFile: path,
+            category: category,
+            level: level,
+            description: description,
+            status: approvalStatus,
+            title: title,
+            id: id,
+            approvalDate: approvalDate,
+            comments: comments,
           },
         },
-        console.log("ini pathFile", path)
-      );
+      });
     } catch (error) {
       handleError(error);
     }

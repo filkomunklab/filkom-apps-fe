@@ -66,17 +66,12 @@ const ViewActivity = () => {
   const [activityDetail, setActivityDetail] = useState("");
   const [selectedAll, setSelectedAll] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState([]);
-  const [hideCheckbox, setHideCheckbox] = useState(false);
-  const [hideButton, setHideButton] = useState(null);
 
   //modal
   const [openFirstModal, setOpenFirstModal] = useState(false);
-  const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [openErrorModal, setOpenErrorModal] = useState(false);
   const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
-  const handleOpenSuccessModal = () => setOpenSuccessModal(true);
-  const handleCloseSuccessModal = () => setOpenSuccessModal(false);
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
 
@@ -89,8 +84,6 @@ const ViewActivity = () => {
           signal,
         }
       );
-
-      console.log("res activity detail", response);
 
       const { status, data } = response.data;
       if (status === "OK") {
@@ -116,29 +109,6 @@ const ViewActivity = () => {
     }
   };
 
-  // const getStudentList = async() =>{
-  //   try{
-  //     const headers = {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer token_apa`,
-  //     };
-
-  //     const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
-
-  //     const {status, message, code, data} = response.data
-  //     if(status === 'OK'){ //isi status atau code tergantung API
-  //     //simpan dalam usestate contoh:
-  //     //setStudentList = data
-  //     //tambahkan handle lain jika perlu
-  //     }else{
-  //     //tambah handler jika respon lain, kalau tidak perlu hapus saja
-  //       console.log(response)
-  //     }
-  //   }catch(error){
-  //     console.log(error)
-  //   }
-  // }
-
   const handleSubmitFirstModal = async () => {
     handleCloseFirstModal();
     setLoading(true);
@@ -152,11 +122,8 @@ const ViewActivity = () => {
         }
       );
       if (response.data.status === "OK") {
-        handleOpenSuccessModal();
         setLoading(false);
-        setHideCheckbox(true);
-        setHideButton("");
-        // navigate(-1);
+        window.location.reload();
       }
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
@@ -317,7 +284,7 @@ const ViewActivity = () => {
             <Table>
               <TableHead>
                 <TableRow size="small">
-                  {hideCheckbox ? null : (
+                  {activityDetail?.ActivityMember[0]?.presence ? null : (
                     <TableCell
                       sx={{
                         backgroundColor: "rgba(26, 56, 96, 0.1)",
@@ -358,7 +325,7 @@ const ViewActivity = () => {
                   >
                     Prodi
                   </TableCell>
-                  {hideCheckbox ? (
+                  {activityDetail?.ActivityMember[0]?.presence ? (
                     <TableCell
                       sx={{
                         backgroundColor: "rgba(26, 56, 96, 0.1)",
@@ -371,8 +338,8 @@ const ViewActivity = () => {
               </TableHead>
               <TableBody>
                 {activityDetail.ActivityMember?.map((student, index) => (
-                  <TableRow key={student.studentId}>
-                    {hideCheckbox ? null : (
+                  <TableRow key={`${index}-${student.studentId}`}>
+                    {student.presence === null ? (
                       <TableCell sx={{ width: "40px" }}>
                         <Checkbox
                           checked={selectedStudents.includes(student.studentId)}
@@ -381,7 +348,7 @@ const ViewActivity = () => {
                           }
                         />
                       </TableCell>
-                    )}
+                    ) : null}
                     <TableCell sx={{ width: "30px" }}>{index + 1}</TableCell>
                     <TableCell>
                       {student.student.lastName}, {student.student.firstName}
@@ -396,7 +363,7 @@ const ViewActivity = () => {
                         ? "Teknologi Informasi"
                         : student.student.major}
                     </TableCell>
-                    {hideCheckbox ? (
+                    {student.presence !== null && (
                       <TableCell sx={{ width: "80px" }}>
                         <Chip
                           label={
@@ -416,7 +383,7 @@ const ViewActivity = () => {
                           }
                         />
                       </TableCell>
-                    ) : null}
+                    )}
                   </TableRow>
                 ))}
               </TableBody>
@@ -431,7 +398,7 @@ const ViewActivity = () => {
               paddingBottom: "60px",
             }}
           >
-            {hideButton ? null : (
+            {activityDetail?.ActivityMember[0]?.presence ? null : (
               <Button
                 onClick={handleOpenFirstModal}
                 sx={{
@@ -517,12 +484,6 @@ const ViewActivity = () => {
           </Grid>
         </div>
       </Modal>
-      <SuccessOrError
-        open={openSuccessModal}
-        handleClose={handleCloseSuccessModal}
-        title="Successful Submission!"
-        description="You have successfully entered the student attendance form."
-      />
       <SuccessOrError
         open={openErrorModal}
         handleClose={handleCloseErrorModal}

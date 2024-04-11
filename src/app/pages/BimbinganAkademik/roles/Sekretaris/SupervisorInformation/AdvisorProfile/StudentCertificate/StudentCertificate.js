@@ -72,8 +72,6 @@ const StudentCertificate = () => {
         }
       );
 
-      console.log("ini isi result data di certi", result);
-
       if (result.data && result.data.data) {
         setDataWaiting(result.data.data);
       } else {
@@ -90,59 +88,11 @@ const StudentCertificate = () => {
   }, []);
 
   const handleNavigate = async (value) => {
-    try {
-      const certificateDetailsResult = await jwtAuthAxios.get(
-        `/certificate/student/${value.id}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          signal,
-        }
-      );
-
-      console.log("ini detail certi result:", certificateDetailsResult);
-
-      const {
-        student,
-        submitDate,
-        path,
-        category,
-        description,
-        level,
-        approvalStatus,
-        approvalDate,
-        title,
-        id,
-        comments,
-      } = certificateDetailsResult.data.data;
-      navigate(
-        `${value.id}`,
-        {
-          state: {
-            certificateDetails: {
-              firstName: student.firstName,
-              lastName: student.lastName,
-              SupervisorFirstName:
-                student.GuidanceClassMember.gudianceClass.teacher.firstName,
-              SupervisorLastName:
-                student.GuidanceClassMember.gudianceClass.teacher.lastName,
-              submissionDate: submitDate,
-              pathFile: path,
-              category: category,
-              level: level,
-              description: description,
-              status: approvalStatus,
-              title: title,
-              id: id,
-              approvalDate: approvalDate,
-              comments: comments,
-            },
-          },
-        },
-        console.log("ini pathFile", path)
-      );
-    } catch (error) {
-      console.log(error.message);
-    }
+    navigate(`${value.id}`, {
+      state: {
+        id: value.id,
+      },
+    });
   };
 
   const handleChangePage = (event, newPage) => {

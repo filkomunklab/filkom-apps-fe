@@ -114,9 +114,8 @@ const History = (props) => {
           signal,
         }
       );
-      console.log("ini guidanceClassId", guidanceClassId);
       const resultPreregis = await jwtAuthAxios.get(
-        `/pre-regist/history-for-advisor/${id}`,
+        `/pre-regist/history-for-advisor/${guidanceClassId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -132,12 +131,8 @@ const History = (props) => {
       const { status: preregisStatus, data: preregisData } =
         resultPreregis.data;
 
-      console.log("response result activity", resultActivity);
-
       if (activityStatus === "OK") {
         setDataActivity(activityData);
-      } else {
-        console.log("error activity:", resultActivity);
       }
 
       if (consultationStatus === "OK") {
@@ -146,20 +141,14 @@ const History = (props) => {
         );
 
         setDataConsultation(filteredConsultationData);
-      } else {
-        console.log("ini error resultConsultation", resultConsultation);
       }
 
       if (certificateStatus === "OK") {
         setDataCertificate(certificateData);
-      } else {
-        console.log("ini error resultCertificate", resultCertificate);
       }
 
       if (preregisStatus === "OK") {
         setDataPreregis(preregisData);
-      } else {
-        console.log("ini error resultPreregis", resultPreregis);
       }
     } catch (error) {
       handleError(error);
@@ -187,10 +176,7 @@ const History = (props) => {
       const { status: gradeStatus, data: gradeData } = resultGrade.data;
 
       if (gradeStatus === "OK") {
-        console.log("ini isi response.data gradeData", gradeData);
         setDataGrade(gradeData);
-      } else {
-        console.log("ini error resultGrade", resultGrade);
       }
     } catch (error) {
       handleError(error);
@@ -200,7 +186,6 @@ const History = (props) => {
   useEffect(() => {
     getHistory();
     getHistoryGrade();
-    console.log("ini isi dari data certificate", dataCertificate);
     return () => controller.abort();
   }, []);
 
@@ -379,32 +364,28 @@ const History = (props) => {
         id,
         comments,
       } = certificateDetailsResult.data.data;
-      navigate(
-        `${pathh}${value.id}`,
-        {
-          state: {
-            certificateDetails: {
-              firstName: student.firstName,
-              lastName: student.lastName,
-              SupervisorFirstName:
-                student.GuidanceClassMember.gudianceClass.teacher.firstName,
-              SupervisorLastName:
-                student.GuidanceClassMember.gudianceClass.teacher.lastName,
-              submissionDate: submitDate,
-              pathFile: path,
-              category: category,
-              description: description,
-              level: level,
-              status: approvalStatus,
-              title: title,
-              id: id,
-              approvalDate: approvalDate,
-              comments: comments,
-            },
+      navigate(`${pathh}${value.id}`, {
+        state: {
+          certificateDetails: {
+            firstName: student.firstName,
+            lastName: student.lastName,
+            SupervisorFirstName:
+              student.GuidanceClassMember.gudianceClass.teacher.firstName,
+            SupervisorLastName:
+              student.GuidanceClassMember.gudianceClass.teacher.lastName,
+            submissionDate: submitDate,
+            pathFile: path,
+            category: category,
+            description: description,
+            level: level,
+            status: approvalStatus,
+            title: title,
+            id: id,
+            approvalDate: approvalDate,
+            comments: comments,
           },
         },
-        console.log("ini pathFile", path)
-      );
+      });
     } catch (error) {
       handleError(error);
     }
@@ -422,8 +403,6 @@ const History = (props) => {
       const detail = preregisDetailsResult.data.data;
       const { role } = JSON.parse(localStorage.getItem("user"));
       let path = "";
-      console.log("hai ini role KAPRODI", role.includes("KAPRODI"));
-      console.log("hai ini role DEKAN", role.includes("DEKAN"));
       if (role.includes("DEKAN")) {
         path = "/bimbingan-akademik/dekan/history/pre-registration/";
       } else if (role.includes("KAPRODI")) {
@@ -463,7 +442,6 @@ const History = (props) => {
 
       const detail = gradeDetailsResult.data.data;
       let path = "/bimbingan-akademik/kaprodi/history/grade/";
-      console.log("isi detail", detail);
       navigate(`${path}${value.id}`, {
         state: {
           gradeDetails: {
@@ -587,7 +565,6 @@ const History = (props) => {
                         sx={{ padding: "10px 50px" }}
                         onClick={() => {
                           handleNavigateActivity(value.id);
-                          // console.log("ini isi dari value preregis: ", value);
                         }}
                       >
                         <ListItemText
@@ -730,7 +707,6 @@ const History = (props) => {
                         sx={{ padding: "10px 50px" }}
                         onClick={() => {
                           handleNavigatePreregis(value);
-                          // console.log("ini isi dari value preregis: ", value);
                         }}
                       >
                         <ListItemText
@@ -861,7 +837,6 @@ const History = (props) => {
                           sx={{ padding: "10px 50px" }}
                           onClick={() => {
                             handleNavigateCertificate(value);
-                            // console.log("ini isi dari value certi: ", value);
                           }}
                         >
                           <ListItemText

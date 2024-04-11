@@ -23,75 +23,17 @@ import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import LinearProgressWithLabel from "app/shared/LinearProgressWithLabel";
 import BubbleChartIcon from "@mui/icons-material/BubbleChart";
 import Div from "@jumbo/shared/Div";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import {
+  handlePermissionError,
+  handleAuthenticationError,
+} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+import { useNavigate } from "react-router-dom";
 
-const COLORS = ["#8884d8", "#82ca9d"];
-
-const data = [
-  {
-    year: null,
-    IF: 10,
-    DKV: 2,
-    SI: 17,
-  },
-  {
-    year: "2020",
-    SI: 2,
-    DKV: 2,
-    IF: 6,
-  },
-];
-
-const data02 = [
-  {
-    category: "Local",
-    count: 1,
-  },
-  {
-    category: "National",
-    count: 2,
-  },
-  {
-    category: "International",
-    count: 2,
-  },
-];
-
-const data03 = [...Array(5).keys()].map((i) => ({
-  title: "Menang lomba desain prototype",
-  name: "Mukesh K",
-  profileImage:
-    "https://www.mecgale.com/wp-content/uploads/2017/08/dummy-profile.png",
-  submiteDate: "11 September 2023",
-  status: "Waiting",
-}));
-
-const data04 = [...Array(4).keys()].map((_) => ({
-  nim: "105022010000",
-  name: "Yuhu, Christopher Darell",
-  profileImage:
-    "https://img.freepik.com/free-photo/business-finance-employment-female-successful-entrepreneurs-concept-friendly-smiling-office-manager-greeting-new-coworker-businesswoman-welcome-clients-with-hand-wave-hold-laptop_1258-59122.jpg?w=740&t=st=1696821634~exp=1696822234~hmac=71482abe3c3e1282d09976b8ebc39f7b50eb50eaa2a32f443094b12028a42cfe",
-  semester: "1",
-  prodi: "Informatika",
-  status: "Waiting",
-}));
-
-const statusColor = (status) => {
-  switch (status.toLowerCase()) {
-    case "waiting":
-      return "warning.main";
-    case "approved":
-      return "success.main";
-    case "rejected":
-      return "error.main";
-    default:
-      return "black";
-  }
-};
+const COLORS = ["#8884d8", "#82ca9d", "skyblue", "#AAC4FF", "#51829B"];
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [distributionData, setDistributionData] = useState([]);
   const [facultyStudent, setFacultyStudent] = useState(0);
   const [activeStudentStatus, setActiveStudentStatus] = useState([]);
@@ -109,18 +51,37 @@ const Dashboard = () => {
 
   useEffect(() => {}, [distributionData]);
 
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (error.response && error.response.status === 403) {
+      handlePermissionError();
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      return;
+    } else if (error.response && error.response.status === 401) {
+      handleAuthenticationError();
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
+
   const getCertificateData = async () => {
     try {
       const response = await jwtAuthAxios.get(
         `/dashboard/statistc/categoryCertificate`,
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
       );
 
       setCertificateData(response.data.data);
     } catch (error) {
-      console.log(error.message);
+      handleError(error);
     }
   };
 
@@ -129,29 +90,31 @@ const Dashboard = () => {
       const response = await jwtAuthAxios.get(
         `/dashboard/statistic/majorStudent/arrivalYear`,
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
       );
 
       const apiData = response.data.data;
 
-      setDistributionData(response.data.data);
+      setDistributionData(apiData);
     } catch (error) {
-      console.log(error);
+      handleError(error);
     }
   };
 
   const getFacultyStudent = async () => {
     try {
       const response = await jwtAuthAxios.get(`/dashboard/statistic/faculty/`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
-
-      console.log(response.data);
 
       setFacultyStudent(response.data.data[0].count);
     } catch (error) {
-      console.log(error);
+      handleError(error);
     }
   };
 
@@ -167,8 +130,6 @@ const Dashboard = () => {
           }
         );
 
-        console.log(response.data);
-
         setActiveStudentStatus(response.data.data);
       } else {
         const response = await jwtAuthAxios.get(
@@ -179,13 +140,10 @@ const Dashboard = () => {
             },
           }
         );
-
-        console.log(response.data);
-
         setActiveStudentStatus(response.data.data[0].count);
       }
     } catch (error) {
-      console.log(error);
+      handleError(error);
     }
   };
 
@@ -201,8 +159,6 @@ const Dashboard = () => {
           }
         );
 
-        console.log(response.data);
-
         setInActiveStudentStatus(response.data.data);
       } else {
         const response = await jwtAuthAxios.get(
@@ -214,12 +170,10 @@ const Dashboard = () => {
           }
         );
 
-        console.log(response.data);
-
         setInActiveStudentStatus(response.data.data[0].count);
       }
     } catch (error) {
-      console.log(error);
+      handleError(error);
     }
   };
 
@@ -230,7 +184,7 @@ const Dashboard = () => {
           <Card sx={{ width: "100%" }}>
             <CardHeader title="Distribution of students" />
             <CardContent style={{ width: "100%" }}>
-              <ResponsiveContainer width="100%" height={250}>
+              <ResponsiveContainer width="100%" height={350}>
                 <BarChart data={distributionData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="year" />
@@ -257,7 +211,7 @@ const Dashboard = () => {
           <Card>
             <CardHeader title="Certificate" />
             <CardContent>
-              <ResponsiveContainer width={"100%"} height={250}>
+              <ResponsiveContainer width={"100%"} height={350}>
                 <PieChart>
                   <Pie
                     data={certificateData}
@@ -270,14 +224,31 @@ const Dashboard = () => {
                     fill="skyblue"
                     label
                   >
-                    {data.map((entry, index) => (
+                    {certificateData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}
                       />
                     ))}
                   </Pie>
-                  <Legend />
+                  <Legend
+                    formatter={(value) => {
+                      switch (value) {
+                        case "REGION":
+                          return "Region";
+                        case "NATIONAL":
+                          return "National";
+                        case "INTERNATIONAL":
+                          return "International";
+                        case "UNIVERSITY":
+                          return "University";
+                        case "MAJOR":
+                          return "Study Program";
+                        default:
+                          return value;
+                      }
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>
@@ -335,7 +306,6 @@ const Dashboard = () => {
                       (inActiveStudentStatus / facultyStudent) * 100;
 
                     const finalResult = isNaN(result) ? 0 : result;
-                    // console.log("ini result e: ", result);
 
                     return finalResult;
                   })()}

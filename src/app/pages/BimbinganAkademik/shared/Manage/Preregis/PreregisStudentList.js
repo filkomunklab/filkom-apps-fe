@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import {
   handlePermissionError,
@@ -31,7 +31,8 @@ const PreregisStudentList = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  const { id } = useParams();
+  const location = useLocation();
+  const { id, major } = location.state || "-";
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState("");
@@ -39,20 +40,19 @@ const PreregisStudentList = () => {
 
   const getDataStudent = async () => {
     try {
-      const result = await jwtAuthAxios.get(`pre-regist/list-submitted/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal,
-      });
-
-      const filteredData = result.data.data.PreRegistrationData.filter(
-        (item) => {
-          const studentFullName = `${item.Student?.lastName}, ${item.Student?.firstName}`;
-          return studentFullName
-            .toLowerCase()
-            .includes(searchValue.toLowerCase());
+      const result = await jwtAuthAxios.get(
+        `/pre-regist/list-submitted/${id}?major=${major}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
-      console.log("isi result", result);
+      const filteredData = result.data.data.filter((item) => {
+        const studentFullName = `${item?.lastName}, ${item?.firstName}`;
+        return studentFullName
+          .toLowerCase()
+          .includes(searchValue.toLowerCase());
+      });
       setDataStudent(filteredData);
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
@@ -160,10 +160,33 @@ const PreregisStudentList = () => {
                 dataStudent.map((registration, index) => (
                   <TableRow key={index}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{registration.Student?.nim}</TableCell>
-                    <TableCell>{`${registration.Student?.firstName} ${registration.Student?.lastName}`}</TableCell>
-                    <TableCell>{registration.Student?.arrivalYear}</TableCell>
-                    <TableCell>{registration.status}</TableCell>
+                    <TableCell>{registration?.nim}</TableCell>
+                    <TableCell>{`${registration?.firstName} ${registration?.lastName}`}</TableCell>
+                    <TableCell>{registration?.arrivalYear}</TableCell>
+                    <TableCell
+                      sx={{
+                        color:
+                          registration.PreRegistrationData.length > 0
+                            ? registration.PreRegistrationData[0].status ===
+                              "APPROVED"
+                              ? "#005FDB"
+                              : registration.PreRegistrationData[0].status ===
+                                "WAITING"
+                              ? "#FFCC00"
+                              : "inherit"
+                            : "inherit",
+                      }}
+                    >
+                      {registration.PreRegistrationData.length > 0
+                        ? registration.PreRegistrationData[0].status ===
+                          "APPROVED"
+                          ? "Approved"
+                          : registration.PreRegistrationData[0].status ===
+                            "WAITING"
+                          ? "Waiting"
+                          : "not pre-registered"
+                        : "not pre-registered"}
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (

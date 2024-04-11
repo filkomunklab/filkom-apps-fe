@@ -529,9 +529,6 @@ const TableItem = ({ item, index }) => {
           },
         });
         break;
-
-      default:
-        console.log("Path not found");
     }
   };
 

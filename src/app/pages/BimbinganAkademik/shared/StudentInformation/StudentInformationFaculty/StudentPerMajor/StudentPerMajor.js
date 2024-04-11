@@ -115,8 +115,6 @@ const StudentPerMajor = () => {
     navigate(-1);
   };
 
-  useEffect(() => console.log("location: ", location), []);
-
   const filterAndSetStudents = () => {
     const filteredData = originalDataStudent.filter((item) => {
       const nameMatches =
@@ -155,7 +153,8 @@ const StudentPerMajor = () => {
               ? "Information System"
               : major === "DKV"
               ? "Information Technology"
-              : "-"}
+              : "-"}{" "}
+            Students List
           </Typography>
         </Breadcrumbs>
       </div>
@@ -333,7 +332,6 @@ const TableItem = ({ item, index }) => {
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
-
     switch (name) {
       case "profile":
         navigate(`${nim}`, {
@@ -362,8 +360,6 @@ const TableItem = ({ item, index }) => {
           },
         });
         break;
-      default:
-        console.log("Path not found");
     }
   };
 

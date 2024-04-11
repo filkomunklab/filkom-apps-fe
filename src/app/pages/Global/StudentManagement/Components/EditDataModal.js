@@ -126,7 +126,7 @@ const EditDataSchema = Yup.object().shape({
     .min(3, "must be at least 3 digits")
     .max(70, "cannot be more than 70 digits")
     .nullable(),
-  AreaOfConcentration: Yup.string()
+  areaOfConcentration: Yup.string()
     .trim("Area Of Concentration cannot include leading and trailing spaces")
     .strict(true)
     .min(3, "must be at least 3 digits")
@@ -266,7 +266,7 @@ const EditDataModal = ({
         personalEmail: passingData.personalEmail,
         bloodType: passingData.bloodType,
         highSchoolGrad: passingData.highSchoolGrad,
-        AreaOfConcentration: passingData.AreaOfConcentration,
+        areaOfConcentration: passingData.areaOfConcentration,
         address: passingData.address,
         currentAddress: passingData.currentAddress,
         currentResidenceStatus: passingData.currentResidenceStatus,
@@ -299,7 +299,7 @@ const EditDataModal = ({
         values.personalEmail = values.personalEmail?.trim();
         values.bloodType = values.bloodType?.trim();
         values.highSchoolGrad = values.highSchoolGrad?.trim();
-        values.AreaOfConcentration = values.AreaOfConcentration?.trim();
+        values.areaOfConcentration = values.areaOfConcentration?.trim();
         values.address = values.address?.trim();
         values.currentAddress = values.currentAddress?.trim();
         values.currentResidenceStatus = values.currentResidenceStatus?.trim();
@@ -719,14 +719,14 @@ const EditDataModal = ({
 
                 <TextField
                   label="Are Of Concentration"
-                  name="AreaOfConcentration"
+                  name="areaOfConcentration"
                   variant="outlined"
                   onChange={handleChange}
                   error={
-                    errors.AreaOfConcentration && touched.AreaOfConcentration
+                    errors.areaOfConcentration && touched.areaOfConcentration
                   }
-                  helperText={errors.AreaOfConcentration}
-                  defaultValue={passingData.AreaOfConcentration}
+                  helperText={errors.areaOfConcentration}
+                  defaultValue={passingData.areaOfConcentration}
                   FormHelperTextProps={{
                     style: { whiteSpace: "normal", color: "red" },
                   }}
