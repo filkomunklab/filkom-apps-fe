@@ -43,7 +43,6 @@ import HistoryActivityAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/Supe
 import HistoryPreRegistrationAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HistoryPreRegis/ReviewPreRegistrationStudent";
 import HistoryCertificateAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HistoryCertificate/Certificate";
 import HistoryConsultationAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HistoryConsultation/ConsultationComplete";
-
 import Profile from "app/pages/BimbinganAkademik/shared/Profile/Profile";
 
 const { default: Page } = require("@jumbo/shared/Page");

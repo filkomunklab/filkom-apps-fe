@@ -69,12 +69,9 @@ const ViewActivity = () => {
 
   //modal
   const [openFirstModal, setOpenFirstModal] = useState(false);
-  const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [openErrorModal, setOpenErrorModal] = useState(false);
   const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
-  const handleOpenSuccessModal = () => setOpenSuccessModal(true);
-  const handleCloseSuccessModal = () => setOpenSuccessModal(false);
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
 
@@ -112,29 +109,6 @@ const ViewActivity = () => {
     }
   };
 
-  // const getStudentList = async() =>{
-  //   try{
-  //     const headers = {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer token_apa`,
-  //     };
-
-  //     const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
-
-  //     const {status, message, code, data} = response.data
-  //     if(status === 'OK'){ //isi status atau code tergantung API
-  //     //simpan dalam usestate contoh:
-  //     //setStudentList = data
-  //     //tambahkan handle lain jika perlu
-  //     }else{
-  //     //tambah handler jika respon lain, kalau tidak perlu hapus saja
-  //       console.log(response)
-  //     }
-  //   }catch(error){
-  //     console.log(error)
-  //   }
-  // }
-
   const handleSubmitFirstModal = async () => {
     handleCloseFirstModal();
     setLoading(true);
@@ -148,7 +122,6 @@ const ViewActivity = () => {
         }
       );
       if (response.data.status === "OK") {
-        handleOpenSuccessModal();
         setLoading(false);
         window.location.reload();
       }
@@ -511,12 +484,6 @@ const ViewActivity = () => {
           </Grid>
         </div>
       </Modal>
-      <SuccessOrError
-        open={openSuccessModal}
-        handleClose={handleCloseSuccessModal}
-        title="Successful Submission!"
-        description="You have successfully entered the student attendance form."
-      />
       <SuccessOrError
         open={openErrorModal}
         handleClose={handleCloseErrorModal}

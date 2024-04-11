@@ -656,8 +656,9 @@ const FormAfterLoginStudent = ({
                     id="modal-modal-description"
                     style={{ marginTop: "16px", marginBottom: "20px" }}
                   >
-                    The data you enter cannot be changed anymore, make sure the
-                    data you enter is correct!
+                    Please ensure that the data you enter is accurate as you are
+                    only allowed to edit it once. Further changes must be
+                    requested through your Academic Advisor!
                   </Typography>
 
                   <Grid container spacing={1} justifyContent="flex-end">

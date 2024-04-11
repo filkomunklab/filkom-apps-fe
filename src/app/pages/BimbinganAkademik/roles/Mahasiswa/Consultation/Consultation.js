@@ -373,7 +373,7 @@ const Consultation = () => {
               <MenuItem
                 value={`${kaprodiData?.id}|${kaprodiData?.lastName}, ${kaprodiData?.firstName}`}
               >
-                Head of Program Study
+                Head of Study Program
               </MenuItem>
               <MenuItem
                 value={`${dekanData?.id}|${dekanData?.lastName}, ${dekanData?.firstName}`}

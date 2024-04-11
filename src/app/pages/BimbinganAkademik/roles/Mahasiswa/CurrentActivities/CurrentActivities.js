@@ -317,6 +317,7 @@ const CurrentActivities = () => {
       );
 
       const detail = gradeDetailsResult.data.data;
+      console.log("isi grade: ", detail);
       let path = "/bimbingan-akademik/current-activities/grade/";
       navigate(`${path}${value.id}`, {
         state: {

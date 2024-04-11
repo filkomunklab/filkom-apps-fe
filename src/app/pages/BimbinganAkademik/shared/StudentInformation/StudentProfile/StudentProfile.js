@@ -260,15 +260,17 @@ const StudentProfile = () => {
         Student Profile
         <Button
           sx={{
-            // backgroundColor: "#006AF5",
-            // color: "white",
-            Color: "#006AF5",
-            borderRadius: "5px",
+            backgroundColor: "#006AF5",
+            color: "white",
+            // Color: "#006AF5",
+            borderRadius: "30px",
             whiteSpace: "nowrap",
             "&:hover": {
-              backgroundColor: "rgba(230,245,255,0.8)",
+              backgroundColor: "#004EE9",
             },
             float: "right",
+            marginRight: "20px",
+            padding: "10px 20px",
           }}
           onClick={handleEditProfile}
         >

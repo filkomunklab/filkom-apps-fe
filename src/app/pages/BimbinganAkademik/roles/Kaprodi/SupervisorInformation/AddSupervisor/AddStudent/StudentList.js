@@ -56,6 +56,7 @@ const StudentList = () => {
   const { students, supervisor, major } = location.state;
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [currentFilter, setCurrentFilter] = useState("All Major");
   const [studentOptions, setStudentOptions] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(
     students?.map((data) => data.nim) || []
@@ -111,11 +112,11 @@ const StudentList = () => {
 
   useEffect(() => {
     filterAndSetStudents();
-  }, [search, filter, originalDataStudent]);
+  }, [search, currentFilter, originalDataStudent]);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = studentOptions.map((item) => item.nim);
+      const newSelected = searchFilteredData.map((item) => item.nim);
       setSelectedStudent(newSelected);
     } else {
       setSelectedStudent([]);
@@ -128,11 +129,10 @@ const StudentList = () => {
         item.firstName.toLowerCase().includes(search.toLowerCase()) ||
         item.lastName.toLowerCase().includes(search.toLowerCase());
       const nimMatches = item.nim.toLowerCase().includes(search.toLowerCase());
-      const majorMatches = filter === "" || item.major === filter;
-
+      const majorMatches =
+        currentFilter === "All Major" || item.major === currentFilter;
       return (nameMatches || nimMatches) && majorMatches;
     });
-
     setSearchFilteredData(filteredData);
   };
 
@@ -141,11 +141,7 @@ const StudentList = () => {
   };
 
   const handleFilter = (event) => {
-    if (event.target.value === "All Major") {
-      setFilter("");
-    } else {
-      setFilter(event.target.value);
-    }
+    setCurrentFilter(event.target.value);
   };
 
   return (
@@ -202,8 +198,6 @@ const StudentList = () => {
             }}
             value={search}
             onChange={handleSearch}
-            // value={search}
-            // onChange={handleSearch}
           />
         </Grid>
 
@@ -217,7 +211,6 @@ const StudentList = () => {
               startAdornment: (
                 <InputAdornment position="start" sx={{ zIndex: -2 }}>
                   <FilterListIcon sx={{ color: "#1C304A85" }} />
-
                   <Typography sx={{ marginLeft: "16px", color: "#1C304A85" }}>
                     Filter:
                   </Typography>
@@ -234,7 +227,7 @@ const StudentList = () => {
               width: "100%",
               borderColor: "#E0E0E0",
             }}
-            value={filter ? filter : "All Major"}
+            value={currentFilter}
             onChange={handleFilter}
           >
             <Typography
