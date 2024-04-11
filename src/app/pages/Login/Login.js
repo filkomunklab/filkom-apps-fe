@@ -199,6 +199,7 @@ const Login = () => {
               });
             } finally {
               setSubmitting(false);
+              window.location.reload();
             }
           }}
         >
