@@ -23,7 +23,6 @@ const StudentProfile = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //get data
   const [studentProfileData, setStudentProfileData] = useState([]);
   const [advisorProfileData, setAdvisorProfileData] = useState([]);
 

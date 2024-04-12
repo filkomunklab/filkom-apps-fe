@@ -262,7 +262,6 @@ const StudentProfile = () => {
           sx={{
             backgroundColor: "#006AF5",
             color: "white",
-            // Color: "#006AF5",
             borderRadius: "30px",
             whiteSpace: "nowrap",
             "&:hover": {

@@ -150,22 +150,6 @@ const StudentCertificate = () => {
               student.
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={8} md={3}>
-            {/* <SearchLocal
-              sx={{
-                height: "100%",
-                "@media (maxWidth: 390px)": {
-                  height: "40px",
-                },
-              }}
-            /> */}
-          </Grid>
-          <Grid item xs={12} sm={4} md={3}>
-            {/* <FormControl
-             
-            > 
-            </FormControl> */}
-          </Grid>
           <Grid item xs={12}>
             <TableContainer component={Paper}>
               <Table>

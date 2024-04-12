@@ -52,7 +52,6 @@ const style = {
 };
 
 const GradeSubmission = () => {
-  //inisialisasi
   const [semester, setSemester] = useState("");
   const [row, setRow] = useState("");
   const [subjectNames, setSubjectNames] = useState(Array(row).fill(""));
@@ -72,7 +71,6 @@ const GradeSubmission = () => {
     setAlert(null);
   };
 
-  //get data
   const [dataGrade, setDataGrade] = useState([]);
   const [curriculumData, setCurriculumData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -503,33 +501,6 @@ const GradeSubmission = () => {
                     )}
                   />
                 </TableCell>
-
-                {/* <TableCell>
-                  <FormControl size="small" fullWidth>
-                    <Select
-                      value={lecturers[index] || ""}
-                      onChange={(e) => handleLecturerChange(e, index)}
-                      MenuProps={{
-                        PaperProps: {
-                          style: {
-                            maxHeight: "37%",
-                          },
-                        },
-                      }}
-                    >
-                      {lecturersData &&
-                        lecturersData.map((lecturer) => (
-                          <MenuItem
-                            key={lecturer.id}
-                            value={`${lecturer.firstName} ${lecturer.lastName} (${lecturer.degree})`}
-                          >
-                            {lecturer.firstName} {lecturer.lastName} (
-                            {lecturer.degree})
-                          </MenuItem>
-                        ))}
-                    </Select>
-                  </FormControl>
-                </TableCell> */}
 
                 <TableCell>
                   <TextField

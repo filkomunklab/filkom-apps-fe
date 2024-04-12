@@ -51,17 +51,14 @@ const CurrentActivities = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //get data
   const [dataActivity, setDataActivity] = useState([]);
   const [dataConsultation, setDataConsultation] = useState([]);
   const [dataCertificate, setDataCertificate] = useState([]);
   const [dataPreregis, setDataPreregis] = useState([]);
   const [dataGrade, setDataGrade] = useState([]);
 
-  //set tab value
   const [value, setValue] = useState(0);
 
-  //useEffect untuk tab
   useEffect(() => {
     const storedValue = localStorage.getItem("currentTabValue");
     if (storedValue !== null) {
@@ -89,7 +86,6 @@ const CurrentActivities = () => {
     }
   };
 
-  //get current activities
   const getCurrentActivities = async () => {
     try {
       const { id } = JSON.parse(localStorage.getItem("user"));
@@ -186,7 +182,7 @@ const CurrentActivities = () => {
     return () => controller.abort();
   }, []);
 
-  //filter berdasarkan tanggal
+  // filter by date
   const groupedDataActivity = {};
   const groupedDataConsultation = {};
   const groupedDataCertificate = {};
@@ -214,7 +210,6 @@ const CurrentActivities = () => {
   groupDataByDate(dataPreregis, "submitDate", groupedDataPreregis);
   groupDataByDate(dataGrade, "submitedDate", groupedDataGrade);
 
-  //format tanggal untuk today dan yesterday
   const formatDate = (date) => {
     const currentDate = new Date();
     const formattedDate = new Date(date);

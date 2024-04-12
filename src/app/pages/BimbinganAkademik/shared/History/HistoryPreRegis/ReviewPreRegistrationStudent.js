@@ -42,10 +42,6 @@ const ReviewPreRegistrationStudent = () => {
     comments,
   } = preregisDetails;
 
-  // for (const data of listSubjectPreregis) {
-  //   totalCredit += data.subject.credits;
-  // }
-
   for (const data of listSubjectPreregis) {
     if (data.subject && typeof data.subject === "object") {
       totalCredit += data.subject.credits;

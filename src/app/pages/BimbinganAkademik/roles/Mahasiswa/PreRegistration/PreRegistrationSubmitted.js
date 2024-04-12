@@ -13,7 +13,6 @@ const PreRegistrationSubmitted = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //get data
   const [dataPreregis, setDataPreregis] = useState([]);
   const getDataPreregis = async () => {
     try {

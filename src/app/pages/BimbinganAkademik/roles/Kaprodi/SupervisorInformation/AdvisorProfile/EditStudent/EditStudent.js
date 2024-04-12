@@ -109,10 +109,7 @@ const EditStudent = () => {
       );
 
       setStudentOptions(
-        response.data.data.filter(
-          (item) => item.status !== "GRADUATE"
-          // && major === item.major
-        )
+        response.data.data.filter((item) => item.status !== "GRADUATE")
       );
     } catch (error) {
       handleError(error);

@@ -188,8 +188,6 @@ const StudentInformationMentored = () => {
             }}
             value={search}
             onChange={handleSearch}
-            // value={search}
-            // onChange={handleSearch}
           />
         </Grid>
 

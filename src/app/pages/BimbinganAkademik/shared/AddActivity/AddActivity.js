@@ -81,7 +81,6 @@ const AddActivity = () => {
     setAlert(null);
   };
 
-  //inisialisasi
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState(null);
@@ -383,7 +382,6 @@ const AddActivity = () => {
               label={date ? "" : "No Due Date"}
               value={date}
               onChange={(e) => setDate(e)}
-              // renderInput={(params) => <TextField {...params} />}
               text
             />
           </LocalizationProvider>

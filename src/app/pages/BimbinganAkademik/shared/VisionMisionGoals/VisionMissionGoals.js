@@ -277,7 +277,6 @@ const VisionMissionGoals = () => {
                   paddingLeft: "5px",
                   paddingRight: "5px",
                 },
-                //fontWeight: "450",
               }}
             >
               Vision
@@ -313,7 +312,6 @@ const VisionMissionGoals = () => {
                   paddingLeft: "5px",
                   paddingRight: "5px",
                 },
-                //fontWeight: "450",
               }}
             >
               Mission
@@ -437,7 +435,6 @@ const VisionMissionGoals = () => {
                   paddingLeft: "5px",
                   paddingRight: "5px",
                 },
-                //fontWeight: "450",
               }}
             >
               Vision
@@ -473,7 +470,6 @@ const VisionMissionGoals = () => {
                   paddingLeft: "5px",
                   paddingRight: "5px",
                 },
-                //fontWeight: "450",
               }}
             >
               Mission
@@ -536,7 +532,6 @@ const VisionMissionGoals = () => {
                   paddingLeft: "5px",
                   paddingRight: "5px",
                 },
-                //fontWeight: "450",
               }}
             >
               Vision
@@ -574,7 +569,6 @@ const VisionMissionGoals = () => {
                   paddingLeft: "5px",
                   paddingRight: "5px",
                 },
-                //fontWeight: "450",
               }}
             >
               Mission

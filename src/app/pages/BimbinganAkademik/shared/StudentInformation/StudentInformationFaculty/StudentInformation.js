@@ -114,26 +114,6 @@ const StudentInformationFaculty = () => {
 
       return (nameMatches || nimMatches) && combinedMatches;
     });
-    // .sort((a, b) => {
-    //   // Sort by entrance year
-    //   const entranceYearA = a.arrivalYear;
-    //   const entranceYearB = b.arrivalYear;
-
-    //   if (sortOrder === "asc") {
-    //     return entranceYearA - entranceYearB;
-    //   } else {
-    //     return entranceYearB - entranceYearA;
-    //   }
-    // });
-
-    // .sort((a, b) => {
-    //   // Sort alphabetically by last name
-    //   const lastNameA = a.lastName.toLowerCase();
-    //   const lastNameB = b.lastName.toLowerCase();
-    //   if (lastNameA < lastNameB) return -1;
-    //   if (lastNameA > lastNameB) return 1;
-    //   return 0;
-    // });
 
     const sortedData = sortData(filteredData);
     setSearchFilteredData(sortedData);
@@ -326,8 +306,6 @@ const StudentInformationFaculty = () => {
             }}
             value={search}
             onChange={handleSearch}
-            // value={search}
-            // onChange={handleSearch}
           />
         </Grid>
 

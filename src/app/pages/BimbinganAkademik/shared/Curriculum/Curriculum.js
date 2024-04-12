@@ -83,7 +83,6 @@ const Curriculum = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //inisialisasi
   const [curriculum, setCurriculum] = useState("selectCurriculum");
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState("");

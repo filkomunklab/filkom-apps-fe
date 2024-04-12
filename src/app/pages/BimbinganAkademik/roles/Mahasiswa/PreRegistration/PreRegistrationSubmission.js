@@ -237,7 +237,6 @@ const PreRegistrationSubmission = ({}) => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //inisialisasi
   const [listSubject, setListSubject] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [totalCredits, setTotalCredits] = useState(0);
@@ -246,7 +245,6 @@ const PreRegistrationSubmission = ({}) => {
   const [showWarning, setShowWarning] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  //get data
   const [dataPreregis, setDataPreregis] = useState([]);
   const [curriculumDetails, setCurriculumDetails] = useState({
     name: "",
@@ -308,7 +306,6 @@ const PreRegistrationSubmission = ({}) => {
         signal,
       });
       const curriculumId = studentData.data.data.curriculumId;
-      // const curriculumId = "790021f2-9d25-4d65-a637-f4e883ad1885";
 
       if (!curriculumId) {
         console.error("Curriculum ID is null.");

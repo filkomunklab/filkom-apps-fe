@@ -261,8 +261,6 @@ const StudentProfile = () => {
         Student Profile
         <Button
           sx={{
-            // backgroundColor: "#006AF5",
-            // color: "white",
             Color: "#006AF5",
             borderRadius: "5px",
             whiteSpace: "nowrap",
