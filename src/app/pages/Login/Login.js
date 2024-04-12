@@ -77,6 +77,7 @@ const Login = () => {
   const [userLogin, setUserLogin] = useState("");
   const [tokenUser, setTokenUser] = useState("");
   const style = useStyles();
+  const maxWidth1024 = useMediaQuery("(max-width:1024px)");
   const maxWidth515 = useMediaQuery("(maxWidth: 515px)");
 
   const { setAuthToken } = useJumboAuth();
@@ -144,6 +145,7 @@ const Login = () => {
                   localStorage.setItem("user", JSON.stringify(user));
 
                   navigate("/bimbingan-akademik/profile");
+                  window.location.reload();
                 } else {
                   const response = await jwtAuthAxios.get(
                     `student/${user.nim}`,
@@ -185,8 +187,10 @@ const Login = () => {
                   user.role.includes("DOSEN")
                 ) {
                   navigate(`/bimbingan-akademik/${userRole}/profile`);
+                  window.location.reload();
                 } else {
                   navigate("/");
+                  window.location.reload();
                 }
               }
             } catch (error) {
@@ -199,7 +203,6 @@ const Login = () => {
               });
             } finally {
               setSubmitting(false);
-              window.location.reload();
             }
           }}
         >
@@ -322,19 +325,21 @@ const Login = () => {
           )}
         </Formik>
       </Div>
-      <Div className={style.leftSide}>
-        <Div className={style.circleContainer}>
-          <img
-            src={`${ASSET_IMAGES}/img-auth-background.png`}
-            style={{
-              objectFit: "contain",
-              objectPosition: "left",
-              display: "flex",
-              flex: 1,
-            }}
-          />
+      {maxWidth1024 ? null : (
+        <Div className={style.leftSide}>
+          <Div className={style.circleContainer}>
+            <img
+              src={`${ASSET_IMAGES}/img-auth-background.png`}
+              style={{
+                objectFit: "contain",
+                objectPosition: "left",
+                display: "flex",
+                flex: 1,
+              }}
+            />
+          </Div>
         </Div>
-      </Div>
+      )}
       <FormAfterLoginStudent
         openModal={openModal}
         setOpenModal={setOpenModal}
