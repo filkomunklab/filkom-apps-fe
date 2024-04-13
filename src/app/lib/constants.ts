@@ -1,0 +1,2 @@
+export const ASSET_IMAGES = process.env.NEXT_PUBLIC_IMAGES_PATH;
+export const GLOBAL_BASE_URL_API = process.env.NEXT_PUBLIC_GLOBAL_BASE_URL_API;

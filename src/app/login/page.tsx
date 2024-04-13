@@ -1,0 +1,306 @@
+"use client";
+
+import {
+  Button,
+  Checkbox,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
+import { Form, Formik } from "formik";
+import { useState } from "react";
+import * as yup from "yup";
+import JumboTextField from "../components/JumboTextField";
+import JumboSelectField from "../components/JumboSelectField";
+import { LoadingButton } from "@mui/lab";
+import { ASSET_IMAGES } from "../lib/constants";
+import Div from "../components/Div";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { signIn } from "next-auth/react";
+
+const Login = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [profileMahasiswa, setProfileMahasiswa] = useState([]);
+  const [userLogin, setUserLogin] = useState("");
+  const maxWidth515 = useMediaQuery("(max-width: 515px)");
+
+  const router = useRouter();
+
+  return (
+    <Div
+      sx={{
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        flex: 1,
+        justifyContent: "space-between",
+        "@media (max-width: 927px)": {
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      }}
+    >
+      <CssBaseline />
+      <div
+        style={{
+          width: "50%",
+          alignItems: "center",
+          justifyContent: "center",
+          display: "flex",
+        }}
+      >
+        <Formik
+          validateOnChange={true}
+          validationSchema={signInSchema}
+          initialValues={{
+            username: "",
+            password: "",
+            loginAs: "",
+          }}
+          onSubmit={async (data, { setSubmitting }) => {
+            await signIn("credentials", {
+              ...data,
+              redirect: true,
+              callbackUrl: "/",
+            });
+            // setSubmitting(true);
+            // try {
+            //   const { token, user } = await authService.signIn(data);
+            //   console.log(token, user);
+            //   if (user.role === "MAHASISWA") {
+            //     const response = await jwtAuthAxios.get(
+            //       `student/biodata/check/${user.nim}`,
+            //       {
+            //         headers: {
+            //           Authorization: `Bearer ${token}`,
+            //         },
+            //       }
+            //     );
+            //     if (response.data.data.biodataCheck) {
+            //       setAuthToken(token);
+            //       console.log("ini user loh: ", user);
+            //       localStorage.setItem("user", JSON.stringify(user));
+            //       router.push("/");
+            //     } else {
+            //       const response = await jwtAuthAxios.get(
+            //         `student/${user.nim}`,
+            //         {
+            //           headers: {
+            //             Authorization: `Bearer ${token}`,
+            //           },
+            //         }
+            //       );
+            //       const responseCurriculum = await jwtAuthAxios.get(
+            //         `curriculum/${response.data.data.curriculumId}`,
+            //         {
+            //           headers: {
+            //             Authorization: `Bearer ${token}`,
+            //           },
+            //         }
+            //       );
+            //       const data = {
+            //         ...response.data.data,
+            //         curriculum: responseCurriculum.data.data,
+            //       };
+            //       console.log("ini data: ", data);
+            //       setProfileMahasiswa(data);
+            //       setUserLogin(user);
+            //       setOpenModal(true);
+            //     }
+            //   } else {
+            //     setAuthToken(token);
+            //     console.log("ini user loh: ", user);
+            //     localStorage.setItem("user", JSON.stringify(user));
+            //     navigate("/");
+            //   }
+            // } catch (error) {
+            //   console.log(error);
+            //   Swal.fire({
+            //     icon: "error",
+            //     title: "Oops...",
+            //     text: "Username atau password salah",
+            //   });
+            // } finally {
+            //   setSubmitting(false);
+            // }
+          }}
+        >
+          {({ isSubmitting }) => (
+            <Form noValidate>
+              <Stack
+                sx={{
+                  backgroundColor: "white",
+                  width: maxWidth515 ? "275px" : "433px",
+                }}
+              >
+                <Typography
+                  variant="h1"
+                  sx={{
+                    fontSize: maxWidth515 ? "40px" : "60px",
+                    fontWeight: 700,
+                    padding: maxWidth515 ? "15px 0 " : "5px 0",
+                  }}
+                >
+                  Login
+                </Typography>
+                <Grid container direction={"column"} gap={2}>
+                  <Grid item>
+                    <JumboTextField
+                      name="username"
+                      variant="outlined"
+                      label="Username"
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item>
+                    <JumboTextField
+                      name="password"
+                      variant="outlined"
+                      label="Password"
+                      fullWidth
+                      type="password"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <JumboSelectField
+                      name="loginAs"
+                      label="Login as"
+                      sx={{
+                        width: maxWidth515 ? "275px" : "135px",
+                      }}
+                      options={[
+                        { value: "", label: "None" },
+                        { value: "admin", label: "Admin" },
+                        { value: "student", label: "Student" },
+                        { value: "employee", label: "Employee" },
+                      ]}
+                    />
+                  </Grid>
+                  <Grid container justifyContent={"space-between"}>
+                    <Grid item>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label={"Remember Me"}
+                        sx={{
+                          "& .MuiTypography-root": {
+                            fontSize: maxWidth515 ? "12px" : "15px",
+                            marginLeft: maxWidth515 ? "-4px" : "0px",
+                          },
+                        }}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        sx={{
+                          fontSize: maxWidth515 ? "11px" : "14px",
+                          textTransform: "capitalize",
+                          paddingTop: maxWidth515 ? "11px" : "9px",
+                          paddingRight: maxWidth515 ? "0" : "0",
+                        }}
+                        variant="text"
+                      >
+                        Forgot Password?
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  <Grid item>
+                    <LoadingButton
+                      loading={isSubmitting}
+                      type="submit"
+                      variant="contained"
+                      fullWidth
+                      sx={{
+                        textTransform: "capitalize",
+                        backgroundColor: "#006AF5",
+                      }}
+                    >
+                      Login
+                    </LoadingButton>
+                  </Grid>
+                  <Grid item alignSelf={"center"}>
+                    <Button
+                      sx={{
+                        fontSize: maxWidth515 ? "12px" : "14px",
+                        textTransform: "capitalize",
+                      }}
+                      variant="text"
+                    >
+                      Create an account
+                    </Button>
+                  </Grid>
+                  <Grid item alignSelf={"center"}>
+                    <a href="http://localhost:3000/">
+                      <Button
+                        sx={{ textTransform: "capitalize" }}
+                        variant="text"
+                      >
+                        Daftar Judul Skripsi
+                      </Button>
+                    </a>
+                  </Grid>
+                </Grid>
+              </Stack>
+            </Form>
+          )}
+        </Formik>
+      </div>
+      <Div
+        sx={{
+          display: "flex",
+          flex: 1,
+          overflow: "hidden",
+          position: "relative",
+          "@media (max-width: 927px)": {
+            display: "none",
+          },
+        }}
+      >
+        <Div
+          sx={{
+            position: "absolute",
+            right: "-23%",
+            height: "100vh",
+            width: "100%",
+            borderTopLeftRadius: "100%",
+            borderBottomLeftRadius: "100%",
+            scale: "130%",
+            overflow: "hidden",
+            display: "flex",
+            boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.75)",
+          }}
+        >
+          <Image
+            src={`${ASSET_IMAGES}/img-auth-background.png`}
+            alt="background-image"
+            style={{
+              objectFit: "contain",
+              objectPosition: "left",
+              display: "flex",
+              flex: 1,
+            }}
+            fill={true}
+          />
+        </Div>
+      </Div>
+      {/* <FormAfterLoginStudent
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+          profileMahasiswa={profileMahasiswa}
+          userLogin={userLogin}
+        /> */}
+    </Div>
+  );
+};
+
+const signInSchema = yup.object({
+  username: yup.string().required("Username is required"),
+  password: yup.string().required("Password is required"),
+  loginAs: yup.string().required("Role is required"),
+});
+
+export default Login;
