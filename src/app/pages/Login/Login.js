@@ -20,11 +20,9 @@ import * as yup from "yup";
 import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
 import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
 import { useMediaQuery } from "@mui/material";
-
 import { FormAfterLoginStudent } from "./components";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import Swal from "sweetalert2";
-import { cleanDigitSectionValue } from "@mui/x-date-pickers/internals/hooks/useField/useField.utils";
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
@@ -53,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.75)",
   },
-  "@media (maxWidth: 927px)": {
+  "@media (max-width: 927px)": {
     pageContainer: {
       flexDirection: "column",
       alignItems: "center",
@@ -77,8 +75,7 @@ const Login = () => {
   const [userLogin, setUserLogin] = useState("");
   const [tokenUser, setTokenUser] = useState("");
   const style = useStyles();
-  const maxWidth1024 = useMediaQuery("(max-width:1024px)");
-  const maxWidth515 = useMediaQuery("(maxWidth: 515px)");
+  const maxWidth515 = useMediaQuery("(max-width: 515px)");
 
   const { setAuthToken } = useJumboAuth();
   const navigate = useNavigate();
@@ -312,7 +309,10 @@ const Login = () => {
                   <Grid item alignSelf={"center"}>
                     <a href="http://localhost:3000/">
                       <Button
-                        sx={{ textTransform: "capitalize" }}
+                        sx={{
+                          fontSize: maxWidth515 ? "12px" : "14px",
+                          textTransform: "capitalize",
+                        }}
                         variant="text"
                       >
                         Daftar Judul Skripsi
@@ -325,21 +325,19 @@ const Login = () => {
           )}
         </Formik>
       </Div>
-      {maxWidth1024 ? null : (
-        <Div className={style.leftSide}>
-          <Div className={style.circleContainer}>
-            <img
-              src={`${ASSET_IMAGES}/img-auth-background.png`}
-              style={{
-                objectFit: "contain",
-                objectPosition: "left",
-                display: "flex",
-                flex: 1,
-              }}
-            />
-          </Div>
+      <Div className={style.leftSide}>
+        <Div className={style.circleContainer}>
+          <img
+            src={`${ASSET_IMAGES}/img-auth-background.png`}
+            style={{
+              objectFit: "contain",
+              objectPosition: "left",
+              display: "flex",
+              flex: 1,
+            }}
+          />
         </Div>
-      )}
+      </Div>
       <FormAfterLoginStudent
         openModal={openModal}
         setOpenModal={setOpenModal}
