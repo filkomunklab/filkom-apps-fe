@@ -44,6 +44,8 @@ import HistoryPreRegistrationAdvisor from "app/pages/BimbinganAkademik/roles/Dek
 import HistoryCertificateAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HistoryCertificate/Certificate";
 import HistoryConsultationAdvisor from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorHistory/HistoryConsultation/ConsultationComplete";
 import Profile from "app/pages/BimbinganAkademik/shared/Profile/Profile";
+import PreregisStudentList from "app/pages/BimbinganAkademik/shared/Manage/Preregis/PreregisStudentList";
+import PreregisCoursesList from "app/pages/BimbinganAkademik/shared/Manage/Preregis/PreregisCoursesList";
 
 const { default: Page } = require("@jumbo/shared/Page");
 
@@ -252,6 +254,14 @@ const dekanRoutes = [
   {
     path: "/bimbingan-akademik/dekan/manage",
     element: <Page component={Manage} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/manage/list-courses/:id",
+    element: <Page component={PreregisCoursesList} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/manage/list-student/:id",
+    element: <Page component={PreregisStudentList} />,
   },
   {
     path: "/bimbingan-akademik/dekan/profile",

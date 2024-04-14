@@ -379,7 +379,7 @@ const AddActivity = () => {
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DesktopDatePicker
               sx={{ backgroundColor: "white", width: "100%" }}
-              label={date ? "" : "No Due Date"}
+              label={date ? "" : "Due Date"}
               value={date}
               onChange={(e) => setDate(e)}
               text

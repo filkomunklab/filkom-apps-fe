@@ -125,7 +125,6 @@ const Manage = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [listPreregisModalOpen, setListPreregisModalOpen] = useState(false);
 
   //modal
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
@@ -309,11 +308,6 @@ const Manage = () => {
     } catch (error) {
       setLoading(false);
     }
-  };
-
-  const ListPreregisModalClose = () => {
-    setSelectedRow(null);
-    setListPreregisModalOpen(false);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -730,13 +724,17 @@ const Manage = () => {
                                 </Button>
                                 <Button
                                   size="small"
-                                  onClick={handleViewListStudent}
+                                  onClick={() =>
+                                    handleViewListStudent(selectedRow)
+                                  }
                                 >
                                   List Student
                                 </Button>
                                 <Button
                                   size="small"
-                                  onClick={handleViewListCourses}
+                                  onClick={() =>
+                                    handleViewListCourses(selectedRow)
+                                  }
                                 >
                                   List Courses
                                 </Button>
