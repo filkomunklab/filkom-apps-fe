@@ -50,14 +50,12 @@ const History = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //get data
   const [dataActivity, setDataActivity] = useState([]);
   const [dataConsultation, setDataConsultation] = useState([]);
   const [dataCertificate, setDataCertificate] = useState([]);
   const [dataPreregis, setDataPreregis] = useState([]);
   const [dataGrade, setDataGrade] = useState([]);
 
-  //set tab value
   const [value, setValue] = useState(0);
 
   useEffect(() => {
@@ -88,7 +86,6 @@ const History = () => {
     }
   };
 
-  //get history
   const getHistory = async () => {
     try {
       const { nim } = JSON.parse(localStorage.getItem("user"));

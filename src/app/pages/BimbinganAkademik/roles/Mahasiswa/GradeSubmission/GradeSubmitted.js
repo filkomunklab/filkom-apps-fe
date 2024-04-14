@@ -13,7 +13,6 @@ const GradeSubmitted = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //get data
   const [dataGrade, setDataGrade] = useState([]);
   const getDataGrade = async () => {
     try {

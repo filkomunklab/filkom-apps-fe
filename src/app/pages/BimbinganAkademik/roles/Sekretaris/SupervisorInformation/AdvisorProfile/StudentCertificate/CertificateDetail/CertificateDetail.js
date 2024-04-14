@@ -1,4 +1,3 @@
-import Div from "@jumbo/shared/Div";
 import {
   Box,
   Grid,
@@ -69,7 +68,6 @@ const CertificateDetail = () => {
     return () => controller.abort();
   }, []);
 
-  // Pastikan student tidak undefined sebelum melakukan destrukturisasi
   const {
     path,
     title,

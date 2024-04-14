@@ -367,7 +367,6 @@ const AdvisorProfile = () => {
           >
             <Table stickyHeader>
               <TableHead>
-                {/* <TableHeading /> */}
                 <TableRow>
                   <TableCell
                     sx={{ backgroundColor: "#e8ecf2" }}

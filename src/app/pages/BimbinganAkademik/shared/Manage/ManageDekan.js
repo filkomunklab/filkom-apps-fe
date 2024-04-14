@@ -56,7 +56,6 @@ const Manage = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //inisialisasi
   const [dataGrades, setDataGrades] = useState([]);
   const [dataPreregis, setDataPreregis] = useState([]);
   const [searchValue, setSearchValue] = useState("");
@@ -234,7 +233,6 @@ const Manage = () => {
                       dataPreregis.map((value, index) => (
                         <TableRow
                           key={value.id}
-                          // onClick={() => handleNavigate(value)}
                           sx={{
                             ":hover": {
                               cursor: "pointer",

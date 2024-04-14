@@ -111,7 +111,6 @@ const gradeSchema = Yup.object({
 const Manage = () => {
   const navigate = useNavigate();
 
-  //inisialisasi
   const [formType, setFormType] = useState("");
   const [loading, setLoading] = useState(false);
   const [dataGrades, setDataGrades] = useState([]);
