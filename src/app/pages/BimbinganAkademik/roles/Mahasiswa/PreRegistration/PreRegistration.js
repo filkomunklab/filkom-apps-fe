@@ -40,17 +40,19 @@ const PreRegistration = () => {
         setSubmissionStatus("success");
       }
     } catch (error) {
-      if (error.response && error.response.status === 403) {
+      if (error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error.response && error.response.status === 403) {
         handlePermissionError();
         setTimeout(() => {
           navigate(-1);
         }, 2000);
+        return;
       } else if (error.response && error.response.status === 401) {
         handleAuthenticationError();
-      } else if (error.code === "ECONNABORTED") {
-        console.log("Request timeout. Please check your internet connection.");
       } else {
-        console.log("An error occurred: ", error);
+        console.log("ini error: ", error);
+        return;
       }
     }
   };
@@ -71,7 +73,9 @@ const PreRegistration = () => {
 
   return (
     <div>
-      {dataPreregis.isOpen === false ? (
+      {dataPreregis === null ||
+      dataPreregis?.length === 0 ||
+      dataPreregis.isOpen === false ? (
         <PreRegistrationClosedCase />
       ) : submissionStatus === "success" ? (
         <PreRegistrationSubmitted />

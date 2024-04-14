@@ -25,8 +25,6 @@ import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
 import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
 import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
-import ViewListIcon from "@mui/icons-material/ViewList";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import CloseIcon from "@mui/icons-material/Close";
@@ -53,10 +51,10 @@ const styleModal = {
   backgroundColor: "white",
   borderRadius: 8,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -448,7 +446,7 @@ const Manage = () => {
                       sx={{
                         fontWeight: 600,
                         paddingBottom: 3,
-                        "@media (maxWidth: 390px)": {
+                        "@media (max-width: 390px)": {
                           fontSize: "15px",
                         },
                       }}
@@ -762,7 +760,7 @@ const Manage = () => {
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
+                  "@media (max-width: 650px)": { justifyContent: "flex-start" },
                 }}
                 rowsPerPageOptions={[10, 25, 50, 100]}
                 component="div"
@@ -838,7 +836,7 @@ const Manage = () => {
                       sx={{
                         fontWeight: 600,
                         paddingBottom: 3,
-                        "@media (maxWidth: 390px)": {
+                        "@media (max-width: 390px)": {
                           fontSize: "15px",
                         },
                       }}
@@ -1116,7 +1114,7 @@ const Manage = () => {
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
+                  "@media (max-width: 650px)": { justifyContent: "flex-start" },
                 }}
                 rowsPerPageOptions={[10, 25, 50, 100]}
                 component="div"

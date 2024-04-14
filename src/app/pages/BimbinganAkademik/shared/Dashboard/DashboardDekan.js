@@ -4,6 +4,7 @@ import {
   CardHeader,
   Grid,
   Tooltip,
+  Button,
   Typography,
 } from "@mui/material";
 import {
@@ -63,8 +64,6 @@ const Dashboard = () => {
       return;
     } else if (error.response && error.response.status === 401) {
       handleAuthenticationError();
-    } else {
-      console.log("ini error: ", error);
     }
   };
 
@@ -80,6 +79,7 @@ const Dashboard = () => {
       );
 
       setCertificateData(response.data.data);
+      console.log("ini certi", response.data.data);
     } catch (error) {
       handleError(error);
     }
@@ -197,7 +197,6 @@ const Dashboard = () => {
                       dx: 10,
                     }}
                   />
-                  <Tooltip />
                   <Legend />
                   <Bar dataKey="SI" fill="#8884d8" />
                   <Bar dataKey="IF" fill="#82ca9d" />
@@ -216,7 +215,7 @@ const Dashboard = () => {
                   <Pie
                     data={certificateData}
                     dataKey="count"
-                    nameKey="category"
+                    nameKey="level"
                     cx="50%"
                     cy="50%"
                     innerRadius={60}

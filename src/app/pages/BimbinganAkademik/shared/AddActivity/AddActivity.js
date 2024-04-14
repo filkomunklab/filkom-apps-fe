@@ -54,10 +54,10 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "100%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };

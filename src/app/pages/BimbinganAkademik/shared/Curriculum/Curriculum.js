@@ -50,10 +50,10 @@ const styleCurriculum = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -69,10 +69,10 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -545,7 +545,7 @@ const Curriculum = () => {
                             fontWeight: 600,
                             paddingBottom: 3,
                             paddingTop: 2,
-                            "@media (maxWidth: 390px)": {
+                            "@media (max-width: 390px)": {
                               fontSize: "15px",
                             },
                           }}
@@ -560,7 +560,7 @@ const Curriculum = () => {
                             color: "#025ED8",
                             display: "flex",
                             justifyContent: "flex-end",
-                            "@media (maxWidth: 390px)": { fontSize: "11px" },
+                            "@media (max-width: 390px)": { fontSize: "11px" },
                           }}
                           onClick={handleTemplate}
                         >

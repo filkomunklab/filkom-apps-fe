@@ -296,7 +296,7 @@ const StudentCertificate = () => {
                 display: "flex",
                 justifyContent: "flex-end",
                 alignItems: "center",
-                "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
+                "@media (max-width: 650px)": { justifyContent: "flex-start" },
               }}
               rowsPerPageOptions={[10, 25, 50, 100]}
               component="div"

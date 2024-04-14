@@ -40,10 +40,10 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -201,7 +201,7 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
                 sx={{
                   color: "white",
                   backgroundColor: "#006AF5",
-                  "@media (maxWidth: 650px)": { fontSize: "9px" },
+                  "@media (max-width: 650px)": { fontSize: "9px" },
                   "&:hover": {
                     backgroundColor: "#025ED8",
                   },
@@ -209,7 +209,7 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
               >
                 See Preview
                 <ArrowRightAltIcon
-                  sx={{ "@media (maxWidth: 650px)": { fontSize: "14px" } }}
+                  sx={{ "@media (max-width: 650px)": { fontSize: "14px" } }}
                 />
               </Button>
             </div>

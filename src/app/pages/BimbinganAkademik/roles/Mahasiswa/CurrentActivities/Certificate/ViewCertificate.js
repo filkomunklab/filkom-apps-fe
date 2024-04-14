@@ -241,7 +241,7 @@ const CertificateWaiting = () => {
         <iframe
           src={pdfURL}
           title="Certificate-pdf"
-          style={{ width: "100%", height: "55vh" }}
+          style={{ width: "100%", height: "75vh" }}
         />
       </Grid>
     </Grid>

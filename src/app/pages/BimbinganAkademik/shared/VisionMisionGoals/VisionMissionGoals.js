@@ -53,7 +53,7 @@ const VisionMissionGoals = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -76,7 +76,7 @@ const VisionMissionGoals = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -98,7 +98,7 @@ const VisionMissionGoals = () => {
             <Typography
               sx={{
                 paddingLeft: "25px",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "13px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -113,7 +113,7 @@ const VisionMissionGoals = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -166,7 +166,7 @@ const VisionMissionGoals = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -189,7 +189,7 @@ const VisionMissionGoals = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -209,7 +209,7 @@ const VisionMissionGoals = () => {
             <Typography
               sx={{
                 paddingLeft: "25px",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "13px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -223,7 +223,7 @@ const VisionMissionGoals = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -272,7 +272,7 @@ const VisionMissionGoals = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -288,7 +288,7 @@ const VisionMissionGoals = () => {
                 paddingRight: "25px",
                 paddingTop: "10px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -308,7 +308,7 @@ const VisionMissionGoals = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -324,7 +324,7 @@ const VisionMissionGoals = () => {
                 paddingRight: "25px",
                 paddingTop: "10px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -341,7 +341,7 @@ const VisionMissionGoals = () => {
               sx={{
                 paddingLeft: "25px",
                 paddingRight: "25px",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -432,7 +432,7 @@ const VisionMissionGoals = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -448,7 +448,7 @@ const VisionMissionGoals = () => {
                 paddingRight: "25px",
                 paddingTop: "10px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -468,7 +468,7 @@ const VisionMissionGoals = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -482,7 +482,7 @@ const VisionMissionGoals = () => {
               sx={{
                 paddingLeft: "25px",
                 paddingRight: "25px",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -531,7 +531,7 @@ const VisionMissionGoals = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -547,7 +547,7 @@ const VisionMissionGoals = () => {
                 paddingRight: "25px",
                 paddingTop: "10px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -569,7 +569,7 @@ const VisionMissionGoals = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -583,7 +583,7 @@ const VisionMissionGoals = () => {
               sx={{
                 paddingLeft: "25px",
                 paddingRight: "25px",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",

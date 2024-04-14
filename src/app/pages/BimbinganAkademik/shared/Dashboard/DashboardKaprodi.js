@@ -231,7 +231,7 @@ const Dashboard = () => {
                   <Pie
                     data={certificateData}
                     dataKey="count"
-                    nameKey="category"
+                    nameKey="level"
                     cx="50%"
                     cy="50%"
                     innerRadius={60}

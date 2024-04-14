@@ -43,10 +43,10 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWwidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -345,19 +345,18 @@ const GradeSubmission = () => {
         <Typography variant="body1">
           Not yet filled out Grade <br /> <br />
           Date of Grade Filling:{" "}
-          {new Date(dataGrade.createdAt).toLocaleDateString("en-US", {
+          {new Date(dataGrade?.createdAt).toLocaleDateString("en-US", {
             month: "long",
             day: "2-digit",
             year: "numeric",
           })}{" "}
           -{" "}
-          {new Date(dataGrade.dueDate).toLocaleDateString("en-US", {
+          {new Date(dataGrade?.dueDate).toLocaleDateString("en-US", {
             month: "long",
             day: "2-digit",
             year: "numeric",
           })}
         </Typography>
-
         <WarningAmberIcon sx={{ color: "#FFCC00", fontSize: "42px" }} />
       </Paper>
       <Paper
@@ -381,7 +380,7 @@ const GradeSubmission = () => {
         </Typography>
       </Paper>
       <Grid container spacing={2} sx={{ paddingBottom: "20px" }}>
-        <Grid item xs={12} sm={6} md={2} lg={2}>
+        <Grid item xs={12} sm={6} md={2.5}>
           <Stack spacing={2}>
             <FormControl size="small" sx={{ backgroundColor: "white" }}>
               <InputLabel shrink={false}>
@@ -408,7 +407,7 @@ const GradeSubmission = () => {
           </Stack>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={2} lg={2}>
+        <Grid item xs={12} sm={6} md={2.5}>
           <Stack spacing={2}>
             <FormControl size="small" sx={{ backgroundColor: "white" }}>
               <InputLabel shrink={false}>
