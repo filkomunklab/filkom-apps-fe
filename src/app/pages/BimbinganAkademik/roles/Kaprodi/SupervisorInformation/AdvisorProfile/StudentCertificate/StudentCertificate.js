@@ -147,22 +147,6 @@ const StudentCertificate = () => {
               student.
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={8} md={3}>
-            {/* <SearchLocal
-              sx={{
-                height: "100%",
-                "@media (maxWidth: 390px)": {
-                  height: "40px",
-                },
-              }}
-            /> */}
-          </Grid>
-          <Grid item xs={12} sm={4} md={3}>
-            {/* <FormControl
-             
-            > 
-            </FormControl> */}
-          </Grid>
           <Grid item xs={12}>
             <TableContainer component={Paper}>
               <Table>
@@ -269,7 +253,7 @@ const StudentCertificate = () => {
                 display: "flex",
                 justifyContent: "flex-end",
                 alignItems: "center",
-                "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
+                "@media (max-width: 650px)": { justifyContent: "flex-start" },
               }}
               rowsPerPageOptions={[10, 25, 50, 100]}
               component="div"

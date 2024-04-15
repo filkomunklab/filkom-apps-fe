@@ -59,10 +59,10 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "100%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -79,7 +79,7 @@ const StudentProfile = () => {
   const [studentProfileData, setStudentProfileData] = useState([]);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [editedFields, setEditedFields] = useState({});
   const [isEditMode, setIsEditMode] = useState(false);
@@ -163,7 +163,7 @@ const StudentProfile = () => {
         }
       );
 
-      const { status, data } = response.data;
+      const { status } = response.data;
       if (status === "OK") {
         setOpenFirstModal(false);
         getProfile();
@@ -182,7 +182,7 @@ const StudentProfile = () => {
   };
 
   useEffect(() => {
-    getProfile();
+    getProfile().finally(() => setIsLoading(false));
     return () => controller.abort();
   }, []);
 
@@ -242,392 +242,66 @@ const StudentProfile = () => {
   };
 
   return (
-    <Div>
-      <Backdrop
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isLoading}
-      >
-        <CircularProgress />
-      </Backdrop>
-      <Breadcrumbs aria-label="breadcrumb">
-        <StyledLink
-          onClick={() =>
-            navigate(
-              `/bimbingan-akademik/${getRole()}/student-information/faculty-student`
-            )
-          }
+    <>
+      {isLoading ? (
+        <Backdrop
+          sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={isLoading}
         >
-          Faculty Student
-        </StyledLink>
-
-        <StyledLink onClick={() => navigate(-1)}>
-          {major === "IF"
-            ? "Informatics"
-            : major === "SI"
-            ? "Information System"
-            : major === "DKV"
-            ? "Information Technology"
-            : "-"}{" "}
-          Students List
-        </StyledLink>
-        <Typography color="text.primary">Student Profile</Typography>
-      </Breadcrumbs>
-      <Typography sx={{ fontSize: "24px", fontWeight: 500, paddingY: "20px" }}>
-        Student Profile
-        <Button
-          sx={{
-            // backgroundColor: "#006AF5",
-            // color: "white",
-            Color: "#006AF5",
-            borderRadius: "5px",
-            whiteSpace: "nowrap",
-            "&:hover": {
-              backgroundColor: "rgba(230,245,255,0.8)",
-            },
-            float: "right",
-          }}
-          onClick={handleEditProfile}
-        >
-          {isEditMode ? "Submit" : "Edit Profile"}
-        </Button>
-        <Modal
-          open={openConfirmModal}
-          onClose={() => setOpenConfirmModal(false)}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <div style={style}>
-            <Typography
-              id="modal-modal-title"
-              variant="h4"
-              component="h2"
-              sx={{
-                fontWeight: 600,
-                paddingTop: 2,
-              }}
+          <CircularProgress />
+        </Backdrop>
+      ) : (
+        <Div>
+          <Breadcrumbs aria-label="breadcrumb">
+            <StyledLink
+              onClick={() =>
+                navigate(
+                  `/bimbingan-akademik/${getRole()}/student-information/faculty-student`
+                )
+              }
             >
-              Change Student Information?
-            </Typography>
-            <Typography
-              id="modal-modal-description"
-              style={{ marginTop: "16px", marginBottom: "20px" }}
-            >
-              Are you sure you want to change information of this student?
-            </Typography>
+              Faculty Student
+            </StyledLink>
 
-            <Grid container spacing={1} justifyContent="flex-end">
-              <Grid item>
-                <Button
-                  onClick={() => setOpenConfirmModal(false)}
-                  sx={{
-                    backgroundColor: "white",
-                    borderRadius: "5px",
-                    color: "black",
-                    whiteSpace: "nowrap",
-                    "&:hover": {
-                      backgroundColor: "lightgrey",
-                    },
-                  }}
-                >
-                  No
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  onClick={handleSubmit}
-                  sx={{
-                    backgroundColor: "#006AF5",
-                    borderRadius: "5px",
-                    color: "white",
-                    whiteSpace: "nowrap",
-                    "&:hover": {
-                      backgroundColor: "#025ED8",
-                    },
-                  }}
-                >
-                  Yes
-                </Button>
-              </Grid>
-            </Grid>
-          </div>
-        </Modal>
-      </Typography>
-      <Accordion defaultExpanded>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          sx={{ backgroundColor: "#1A38601A" }}
-        >
-          <Typography fontWeight={500}>Student Information</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Grid container spacing={3} sx={{ padding: 2 }}>
-            <Grid item>
-              <Div
-                sx={{
-                  width: "200px",
-                  height: "300px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "#1C345442",
-                  borderRadius: "10px",
-                }}
-              >
-                {studentProfileData?.path ? (
-                  <img
-                    id="displayImage"
-                    src={studentProfileData.path}
-                    alt="Profile-Picture"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      borderRadius: "10px",
-                    }}
-                    loading="lazy"
-                  />
-                ) : (
-                  <Typography>No photo</Typography>
-                )}
-              </Div>
-            </Grid>
-            <Grid item xs={12} md={12}>
-              <Typography variant="h5">Full Name</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {`${studentProfileData?.lastName ?? "-"}, ${
-                  studentProfileData?.firstName ?? "-"
-                }`}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Gender</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.gender ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Stack direction={"row"} gap={1} justifyContent={"space-between"}>
-                <Typography variant="h5">Student Status</Typography>
-                {dosenGuidanceClass ===
-                  studentProfileData?.GuidanceClassMember?.gudianceClass
-                    ?.id && (
-                  <IconButton size="small" onClick={handleOpenPopover}>
-                    <BorderColorIcon fontSize="inherit" />
-                  </IconButton>
-                )}
-              </Stack>
-              {isEditMode ? (
-                <Typography
-                  variant="h6"
-                  sx={{
-                    borderWidth: 1,
-                    borderColor: "#00000029",
-                    borderStyle: "solid",
-                    paddingX: "24px",
-                    paddingY: "13px",
-                    borderRadius: "8px",
-                  }}
-                >
-                  {studentProfileData?.status ?? "-"}
-                </Typography>
-              ) : (
-                <Typography variant="h6" sx={textStyle}>
-                  {studentProfileData?.status ?? "-"}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">NIM</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.nim ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Registration Number</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.reg_num ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Date of Birth</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.dateOfBirth
-                  ? new Date(studentProfileData.dateOfBirth).toLocaleString(
-                      "en-US",
-                      {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      }
-                    )
-                  : "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Religion</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.religion ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Student Email</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.studentEmail ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Phone Number</Typography>
-              {isEditMode ? (
-                <TextField
-                  fullWidth
-                  size="small"
-                  inputProps={{
-                    style: {
-                      borderRadius: "8px",
-                      height: "27px",
-                    },
-                  }}
-                  value={editedFields.phoneNo ?? studentProfileData.phoneNo}
-                  onChange={(e) => handleFieldChange("phoneNo", e.target.value)}
-                />
-              ) : (
-                <Typography variant="h6" sx={textStyle}>
-                  {studentProfileData?.phoneNo ?? "-"}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Curriculum</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.curriculum?.major} -
-                {studentProfileData?.curriculum?.year}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Area of Concentration</Typography>
-              {isEditMode ? (
-                <FormControl size="small" sx={{}} fullWidth>
-                  <InputLabel shrink={false}>
-                    {showLabelAreaOfConcentration ? "Select Option" : ""}
-                  </InputLabel>
-                  <Select
-                    sx={{
-                      padding: 0.5,
-                    }}
-                    value={
-                      editedFields.areaOfConcentration ?? areaOfConcentration
-                    }
-                    onChange={(event) => {
-                      handleFieldChange(
-                        "areaOfConcentration",
-                        event.target.value
-                      );
-                      setShowLabelAreaOfConcentration(false);
-                    }}
-                    MenuProps={{
-                      PaperProps: {
-                        style: {
-                          maxHeight: "37%",
-                        },
-                      },
-                    }}
-                  >
-                    {areaOfConcentrationOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              ) : (
-                <Typography variant="h6" sx={textStyle}>
-                  {studentProfileData?.areaOfConcentration ===
-                  "OBJECT_PROGRAMMER"
-                    ? "Object Programmer"
-                    : studentProfileData?.areaOfConcentration ===
-                      "COMPETITIVE_INTELEGENT_ANALYSIS"
-                    ? "Competitive Intelligent Analysis"
-                    : studentProfileData?.areaOfConcentration ===
-                      "NETWORK_ADMINISTRATOR"
-                    ? "Network Administrator"
-                    : "-"}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Address</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.address ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Current Residence Status</Typography>
-              {isEditMode ? (
-                <TextField
-                  fullWidth
-                  size="small"
-                  value={
-                    editedFields.currentResidenceStatus ??
-                    studentProfileData.currentResidenceStatus
-                  }
-                  inputProps={{
-                    style: {
-                      borderRadius: "8px",
-                      height: "27.5px",
-                    },
-                  }}
-                  onChange={(e) =>
-                    handleFieldChange("currentResidenceStatus", e.target.value)
-                  }
-                />
-              ) : (
-                <Typography variant="h6" sx={textStyle}>
-                  {studentProfileData?.currentResidenceStatus ?? "-"}
-                </Typography>
-              )}
-            </Grid>
-          </Grid>
-        </AccordionDetails>
-
-        <Popover
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClosePopover}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-        >
-          <FormControl
-            component="fieldset"
-            id="demo-controlled-radio-buttons-group"
+            <StyledLink onClick={() => navigate(-1)}>
+              {major === "IF"
+                ? "Informatics"
+                : major === "SI"
+                ? "Information System"
+                : major === "DKV"
+                ? "Information Technology"
+                : "-"}{" "}
+              Students List
+            </StyledLink>
+            <Typography color="text.primary">Student Profile</Typography>
+          </Breadcrumbs>
+          <Typography
+            sx={{ fontSize: "24px", fontWeight: 500, paddingY: "20px" }}
           >
-            <RadioGroup
-              row
-              aria-labelledby="demo-controlled-radio-buttons-group"
-              name="controlled-radio-buttons-group"
-              value={studentProfileData?.status}
-              onChange={handleChangeStatus}
-            >
-              <FormControlLabel
-                value="ACTIVE"
-                control={<Radio />}
-                label="Active"
-                sx={{ marginLeft: "3px" }}
-              />
-              <FormControlLabel
-                value="INACTIVE"
-                control={<Radio />}
-                label="Inactive"
-              />
-            </RadioGroup>
+            Student Profile
+            {dosenGuidanceClass ===
+            studentProfileData?.GuidanceClassMember?.gudianceClass?.id ? (
+              <Button
+                sx={{
+                  backgroundColor: "#006AF5",
+                  color: "white",
+                  borderRadius: "30px",
+                  whiteSpace: "nowrap",
+                  "&:hover": {
+                    backgroundColor: "#004EE9",
+                  },
+                  float: "right",
+                  marginRight: "20px",
+                  padding: "10px 20px",
+                }}
+                onClick={handleEditProfile}
+              >
+                {isEditMode ? "Submit" : "Edit Profile"}
+              </Button>
+            ) : null}
             <Modal
-              open={openFirstModal}
-              onClose={() => setOpenFirstModal(false)}
+              open={openConfirmModal}
+              onClose={() => setOpenConfirmModal(false)}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
@@ -641,19 +315,19 @@ const StudentProfile = () => {
                     paddingTop: 2,
                   }}
                 >
-                  Change Student Status?
+                  Change Student Information?
                 </Typography>
                 <Typography
                   id="modal-modal-description"
                   style={{ marginTop: "16px", marginBottom: "20px" }}
                 >
-                  Are you sure you want to change student status?
+                  Are you sure you want to change information of this student?
                 </Typography>
 
                 <Grid container spacing={1} justifyContent="flex-end">
                   <Grid item>
                     <Button
-                      onClick={() => setOpenFirstModal(false)}
+                      onClick={() => setOpenConfirmModal(false)}
                       sx={{
                         backgroundColor: "white",
                         borderRadius: "5px",
@@ -669,7 +343,7 @@ const StudentProfile = () => {
                   </Grid>
                   <Grid item>
                     <Button
-                      onClick={changeStatus}
+                      onClick={handleSubmit}
                       sx={{
                         backgroundColor: "#006AF5",
                         borderRadius: "5px",
@@ -686,131 +360,478 @@ const StudentProfile = () => {
                 </Grid>
               </div>
             </Modal>
-          </FormControl>
-        </Popover>
-      </Accordion>
-      <Accordion defaultExpanded>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          sx={{ backgroundColor: "#1A38601A" }}
-        >
-          <Typography fontWeight={500}>Parents / Guardians</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Grid container spacing={3} sx={{ padding: 2 }}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Full Name</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.guardianName ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Family Relationship</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {studentProfileData?.familyRelation ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Phone</Typography>
-              {isEditMode ? (
-                <TextField
-                  fullWidth
-                  size="small"
-                  value={
-                    editedFields.guardianPhoneNo ??
-                    studentProfileData.guardianPhoneNo
-                  }
-                  inputProps={{
-                    style: {
-                      borderRadius: "8px",
-                      height: "27px",
-                    },
-                  }}
-                  onChange={(e) =>
-                    handleFieldChange("guardianPhoneNo", e.target.value)
-                  }
-                />
-              ) : (
-                <Typography variant="h6" sx={textStyle}>
-                  {studentProfileData?.guardianPhoneNo ?? "-"}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Email</Typography>
-              {isEditMode ? (
-                <TextField
-                  fullWidth
-                  size="small"
-                  value={
-                    editedFields.guardianEmail ??
-                    studentProfileData.guardianEmail
-                  }
-                  onChange={(e) =>
-                    handleFieldChange("guardianEmail", e.target.value)
-                  }
-                  inputProps={{
-                    style: {
-                      borderRadius: "8px",
-                      height: "27px",
-                    },
-                  }}
-                />
-              ) : (
-                <Typography variant="h6" sx={textStyle}>
-                  {studentProfileData?.guardianEmail ?? "-"}
-                </Typography>
-              )}
-            </Grid>
-          </Grid>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion defaultExpanded>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          sx={{ backgroundColor: "#1A38601A" }}
-        >
-          <Typography fontWeight={500}>Academic Supervisor</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Grid container spacing={3} sx={{ padding: 2 }}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Full Name</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {advisorProfileData?.lastName !== undefined &&
-                advisorProfileData?.firstName !== undefined
-                  ? `${advisorProfileData?.lastName}, ${advisorProfileData?.firstName}`
-                  : "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Email</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {advisorProfileData?.email ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Phone</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {advisorProfileData?.phoneNum ?? "-"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5">Address</Typography>
-              <Typography variant="h6" sx={textStyle}>
-                {advisorProfileData?.Address ?? "-"}
-              </Typography>
-            </Grid>
-          </Grid>
-        </AccordionDetails>
-      </Accordion>
-      <SuccessOrError
-        open={openErrorModal}
-        handleClose={handleCloseErrorModal}
-        title="Error Submission!"
-        description="Error: Failed to submit your change. Please try again."
-      />
-    </Div>
+          </Typography>
+          <Accordion defaultExpanded>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              sx={{ backgroundColor: "#1A38601A" }}
+            >
+              <Typography fontWeight={500}>Student Information</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid container spacing={3} sx={{ padding: 2 }}>
+                <Grid item>
+                  <Div
+                    sx={{
+                      width: "200px",
+                      height: "300px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#1C345442",
+                      borderRadius: "10px",
+                    }}
+                  >
+                    {studentProfileData?.path ? (
+                      <img
+                        id="displayImage"
+                        src={studentProfileData.path}
+                        alt="Profile-Picture"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          borderRadius: "10px",
+                        }}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <Typography>No photo</Typography>
+                    )}
+                  </Div>
+                </Grid>
+                <Grid item xs={12} md={12}>
+                  <Typography variant="h5">Full Name</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {`${studentProfileData?.lastName ?? "-"}, ${
+                      studentProfileData?.firstName ?? "-"
+                    }`}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Gender</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {studentProfileData?.gender ?? "-"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Stack
+                    direction={"row"}
+                    gap={1}
+                    justifyContent={"space-between"}
+                  >
+                    <Typography variant="h5">Student Status</Typography>
+                    {dosenGuidanceClass ===
+                    studentProfileData?.GuidanceClassMember?.gudianceClass
+                      ?.id ? (
+                      <IconButton size="small" onClick={handleOpenPopover}>
+                        <BorderColorIcon fontSize="inherit" />
+                      </IconButton>
+                    ) : null}
+                  </Stack>
+                  {isEditMode ? (
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        borderWidth: 1,
+                        borderColor: "#00000029",
+                        borderStyle: "solid",
+                        paddingX: "24px",
+                        paddingY: "13px",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      {studentProfileData?.status ?? "-"}
+                    </Typography>
+                  ) : (
+                    <Typography variant="h6" sx={textStyle}>
+                      {studentProfileData?.status ?? "-"}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">NIM</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {studentProfileData?.nim ?? "-"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Registration Number</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {studentProfileData?.reg_num ?? "-"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Date of Birth</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {studentProfileData?.dateOfBirth
+                      ? new Date(studentProfileData.dateOfBirth).toLocaleString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          }
+                        )
+                      : "-"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Religion</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {studentProfileData?.religion ?? "-"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Student Email</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {studentProfileData?.studentEmail ?? "-"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Phone Number</Typography>
+                  {isEditMode ? (
+                    <TextField
+                      fullWidth
+                      size="small"
+                      inputProps={{
+                        style: {
+                          borderRadius: "8px",
+                          height: "27px",
+                        },
+                      }}
+                      value={editedFields.phoneNo ?? studentProfileData.phoneNo}
+                      onChange={(e) =>
+                        handleFieldChange("phoneNo", e.target.value)
+                      }
+                    />
+                  ) : (
+                    <Typography variant="h6" sx={textStyle}>
+                      {studentProfileData?.phoneNo ?? "-"}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Curriculum</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {studentProfileData?.curriculum?.major} -
+                    {studentProfileData?.curriculum?.year}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Area of Concentration</Typography>
+                  {isEditMode ? (
+                    <FormControl size="small" sx={{}} fullWidth>
+                      <InputLabel shrink={false}>
+                        {showLabelAreaOfConcentration ? "Select Option" : ""}
+                      </InputLabel>
+                      <Select
+                        sx={{
+                          padding: 0.5,
+                        }}
+                        value={
+                          editedFields.areaOfConcentration ??
+                          areaOfConcentration
+                        }
+                        onChange={(event) => {
+                          handleFieldChange(
+                            "areaOfConcentration",
+                            event.target.value
+                          );
+                          setShowLabelAreaOfConcentration(false);
+                        }}
+                        MenuProps={{
+                          PaperProps: {
+                            style: {
+                              maxHeight: "37%",
+                            },
+                          },
+                        }}
+                      >
+                        {areaOfConcentrationOptions.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  ) : (
+                    <Typography variant="h6" sx={textStyle}>
+                      {studentProfileData?.areaOfConcentration ===
+                      "OBJECT_PROGRAMMER"
+                        ? "Object Programmer"
+                        : studentProfileData?.areaOfConcentration ===
+                          "COMPETITIVE_INTELEGENT_ANALYSIS"
+                        ? "Competitive Intelligent Analysis"
+                        : studentProfileData?.areaOfConcentration ===
+                          "NETWORK_ADMINISTRATOR"
+                        ? "Network Administrator"
+                        : "-"}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Address</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {studentProfileData?.address ?? "-"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Current Residence Status</Typography>
+                  {isEditMode ? (
+                    <TextField
+                      fullWidth
+                      size="small"
+                      value={
+                        editedFields.currentResidenceStatus ??
+                        studentProfileData.currentResidenceStatus
+                      }
+                      inputProps={{
+                        style: {
+                          borderRadius: "8px",
+                          height: "27.5px",
+                        },
+                      }}
+                      onChange={(e) =>
+                        handleFieldChange(
+                          "currentResidenceStatus",
+                          e.target.value
+                        )
+                      }
+                    />
+                  ) : (
+                    <Typography variant="h6" sx={textStyle}>
+                      {studentProfileData?.currentResidenceStatus ?? "-"}
+                    </Typography>
+                  )}
+                </Grid>
+              </Grid>
+            </AccordionDetails>
+
+            <Popover
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClosePopover}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+            >
+              <FormControl
+                component="fieldset"
+                id="demo-controlled-radio-buttons-group"
+              >
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={studentProfileData?.status}
+                  onChange={handleChangeStatus}
+                >
+                  <FormControlLabel
+                    value="ACTIVE"
+                    control={<Radio />}
+                    label="Active"
+                    sx={{ marginLeft: "3px" }}
+                  />
+                  <FormControlLabel
+                    value="INACTIVE"
+                    control={<Radio />}
+                    label="Inactive"
+                  />
+                </RadioGroup>
+                <Modal
+                  open={openFirstModal}
+                  onClose={() => setOpenFirstModal(false)}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <div style={style}>
+                    <Typography
+                      id="modal-modal-title"
+                      variant="h4"
+                      component="h2"
+                      sx={{
+                        fontWeight: 600,
+                        paddingTop: 2,
+                      }}
+                    >
+                      Change Student Status?
+                    </Typography>
+                    <Typography
+                      id="modal-modal-description"
+                      style={{ marginTop: "16px", marginBottom: "20px" }}
+                    >
+                      Are you sure you want to change student status?
+                    </Typography>
+
+                    <Grid container spacing={1} justifyContent="flex-end">
+                      <Grid item>
+                        <Button
+                          onClick={() => setOpenFirstModal(false)}
+                          sx={{
+                            backgroundColor: "white",
+                            borderRadius: "5px",
+                            color: "black",
+                            whiteSpace: "nowrap",
+                            "&:hover": {
+                              backgroundColor: "lightgrey",
+                            },
+                          }}
+                        >
+                          No
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          onClick={changeStatus}
+                          sx={{
+                            backgroundColor: "#006AF5",
+                            borderRadius: "5px",
+                            color: "white",
+                            whiteSpace: "nowrap",
+                            "&:hover": {
+                              backgroundColor: "#025ED8",
+                            },
+                          }}
+                        >
+                          Yes
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </div>
+                </Modal>
+              </FormControl>
+            </Popover>
+          </Accordion>
+          <Accordion defaultExpanded>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              sx={{ backgroundColor: "#1A38601A" }}
+            >
+              <Typography fontWeight={500}>Parents / Guardians</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid container spacing={3} sx={{ padding: 2 }}>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Full Name</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {studentProfileData?.guardianName ?? "-"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Family Relationship</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {studentProfileData?.familyRelation ?? "-"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Phone</Typography>
+                  {isEditMode ? (
+                    <TextField
+                      fullWidth
+                      size="small"
+                      value={
+                        editedFields.guardianPhoneNo ??
+                        studentProfileData.guardianPhoneNo
+                      }
+                      inputProps={{
+                        style: {
+                          borderRadius: "8px",
+                          height: "27px",
+                        },
+                      }}
+                      onChange={(e) =>
+                        handleFieldChange("guardianPhoneNo", e.target.value)
+                      }
+                    />
+                  ) : (
+                    <Typography variant="h6" sx={textStyle}>
+                      {studentProfileData?.guardianPhoneNo ?? "-"}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Email</Typography>
+                  {isEditMode ? (
+                    <TextField
+                      fullWidth
+                      size="small"
+                      value={
+                        editedFields.guardianEmail ??
+                        studentProfileData.guardianEmail
+                      }
+                      onChange={(e) =>
+                        handleFieldChange("guardianEmail", e.target.value)
+                      }
+                      inputProps={{
+                        style: {
+                          borderRadius: "8px",
+                          height: "27px",
+                        },
+                      }}
+                    />
+                  ) : (
+                    <Typography variant="h6" sx={textStyle}>
+                      {studentProfileData?.guardianEmail ?? "-"}
+                    </Typography>
+                  )}
+                </Grid>
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
+          <Accordion defaultExpanded>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              sx={{ backgroundColor: "#1A38601A" }}
+            >
+              <Typography fontWeight={500}>Academic Supervisor</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid container spacing={3} sx={{ padding: 2 }}>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Full Name</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {advisorProfileData?.lastName !== undefined &&
+                    advisorProfileData?.firstName !== undefined
+                      ? `${advisorProfileData?.lastName}, ${advisorProfileData?.firstName}`
+                      : "-"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Email</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {advisorProfileData?.email ?? "-"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Phone</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {advisorProfileData?.phoneNum ?? "-"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5">Address</Typography>
+                  <Typography variant="h6" sx={textStyle}>
+                    {advisorProfileData?.Address ?? "-"}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
+          <SuccessOrError
+            open={openErrorModal}
+            handleClose={handleCloseErrorModal}
+            title="Error Submission!"
+            description="Error: Failed to submit your change. Please try again."
+          />
+        </Div>
+      )}
+    </>
   );
 };
 

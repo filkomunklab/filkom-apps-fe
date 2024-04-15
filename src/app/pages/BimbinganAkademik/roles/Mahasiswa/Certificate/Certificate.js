@@ -48,10 +48,10 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -59,7 +59,6 @@ const style = {
 const Certificate = () => {
   const navigate = useNavigate();
 
-  //inisialisasi
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [level, setLevel] = useState("");
@@ -144,10 +143,8 @@ const Certificate = () => {
     handleCloseFirstModal();
     setLoading(true);
 
-    //ambil nim
     const nim = JSON.parse(localStorage.getItem("user")).nim;
 
-    //ambil employeeNik
     let employeeNik;
     try {
       const response = await jwtAuthAxios.get(`/student/${nim}`, {
@@ -187,7 +184,6 @@ const Certificate = () => {
       employeeNik,
     };
 
-    //post certificate
     try {
       const result = await jwtAuthAxios.post(
         `/certificate/${JSON.parse(localStorage.getItem("user")).id}`,

@@ -51,10 +51,10 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -374,7 +374,7 @@ const AddSupervisor = () => {
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
-              "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
             }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component="div"

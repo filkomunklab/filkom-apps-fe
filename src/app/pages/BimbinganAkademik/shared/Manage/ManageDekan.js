@@ -14,6 +14,9 @@ import {
   TablePagination,
   TableRow,
   Paper,
+  Popover,
+  Button,
+  Stack,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
@@ -22,6 +25,7 @@ import {
   handlePermissionError,
   handleAuthenticationError,
 } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+import { MoreVert } from "@mui/icons-material";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,13 +60,15 @@ const Manage = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //inisialisasi
   const [dataGrades, setDataGrades] = useState([]);
   const [dataPreregis, setDataPreregis] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [value, setValue] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
 
   //handle error
   const handleError = (error) => {
@@ -133,6 +139,20 @@ const Manage = () => {
   useEffect(() => {
     localStorage.setItem("historyTabValue", value);
   }, [value]);
+
+  //handle preregis
+  const handleViewListStudent = (selectedRow) => {
+    navigate(
+      `/bimbingan-akademik/dekan/manage/list-student/${selectedRow?.id}`,
+      { state: { id: selectedRow?.id, major: selectedRow?.major } }
+    );
+  };
+  const handleViewListCourses = (selectedRow) => {
+    navigate(
+      `/bimbingan-akademik/dekan/manage/list-courses/${selectedRow?.id}`,
+      { state: { id: selectedRow?.id, major: selectedRow?.major } }
+    );
+  };
 
   return (
     <div>
@@ -227,25 +247,13 @@ const Manage = () => {
                       <TableCell>Year</TableCell>
                       <TableCell>Due Date Estimation</TableCell>
                       <TableCell>Status</TableCell>
+                      <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {dataPreregis && dataPreregis.length > 0 ? (
                       dataPreregis.map((value, index) => (
-                        <TableRow
-                          key={value.id}
-                          // onClick={() => handleNavigate(value)}
-                          sx={{
-                            ":hover": {
-                              cursor: "pointer",
-                              backgroundColor: "#338CFF21",
-                              transition: "0.3s",
-                              transitionTimingFunction: "ease-in-out",
-                              transitionDelay: "0s",
-                              transitionProperty: "all",
-                            },
-                          }}
-                        >
+                        <TableRow key={value.id}>
                           <TableCell sx={{ width: "80px" }}>
                             {index + 1}
                           </TableCell>
@@ -311,6 +319,52 @@ const Manage = () => {
                           >
                             {value.isOpen ? "Open" : "Closed"}
                           </TableCell>
+                          <TableCell
+                            sx={{
+                              width: "100px",
+                            }}
+                          >
+                            <MoreVert
+                              aria-describedby={value.id}
+                              onClick={(e) => {
+                                setSelectedRow(value);
+                                setAnchorEl(e.currentTarget);
+                                setOpen(true);
+                              }}
+                              sx={{ cursor: "pointer" }}
+                            />
+                            <Popover
+                              id={value.id}
+                              anchorEl={anchorEl}
+                              open={open}
+                              onClose={() => {
+                                setOpen(false);
+                                setSelectedRow(null);
+                              }}
+                              anchorOrigin={{
+                                horizontal: "right",
+                              }}
+                            >
+                              <Stack direction="column">
+                                <Button
+                                  size="small"
+                                  onClick={() =>
+                                    handleViewListStudent(selectedRow)
+                                  }
+                                >
+                                  List Student
+                                </Button>
+                                <Button
+                                  size="small"
+                                  onClick={() =>
+                                    handleViewListCourses(selectedRow)
+                                  }
+                                >
+                                  List Courses
+                                </Button>
+                              </Stack>
+                            </Popover>
+                          </TableCell>
                         </TableRow>
                       ))
                     ) : (
@@ -327,7 +381,7 @@ const Manage = () => {
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
+                  "@media (max-width: 650px)": { justifyContent: "flex-start" },
                 }}
                 rowsPerPageOptions={[10, 25, 50, 100]}
                 component="div"
@@ -489,7 +543,7 @@ const Manage = () => {
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "center",
-                  "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
+                  "@media (max-width: 650px)": { justifyContent: "flex-start" },
                 }}
                 rowsPerPageOptions={[10, 25, 50, 100]}
                 component="div"

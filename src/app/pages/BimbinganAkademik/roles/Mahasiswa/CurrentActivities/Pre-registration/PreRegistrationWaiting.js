@@ -34,7 +34,6 @@ const PreRegistrationWaiting = () => {
     listSubjectPreregis,
   } = preregisDetails;
 
-  //
   let totalCredit = 0;
   for (const data of listSubjectPreregis) {
     totalCredit += data.subject.credits;

@@ -72,17 +72,13 @@ const StudentList = () => {
     try {
       const response = await jwtAuthAxios.get(
         `/guidance-class/get-all-unassigned-student/list`,
-        // `/students-without-supervisor`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
         }
       );
       setStudentOptions(
-        response.data.data.filter(
-          (item) => item.status !== "GRADUATE"
-          //  && major === item.major
-        )
+        response.data.data.filter((item) => item.status !== "GRADUATE")
       );
     } catch (error) {
       if (error.code === "ERR_CANCELED") {

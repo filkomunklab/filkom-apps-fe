@@ -105,9 +105,6 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5">
-                  {/* {certificateDetailsData?.title.charAt(0).toUpperCase() +
-                    certificateDetailsData?.title.slice(1)} */}
-
                   {title?.charAt(0).toUpperCase() + title?.slice(1)}
                 </Typography>
               </Grid>
@@ -123,8 +120,6 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5">
-                  {/* {certificateDetailsData?.lastName},{" "}
-                  {certificateDetailsData?.firstName} */}
                   {lastName}, {firstName}
                 </Typography>
               </Grid>
@@ -141,8 +136,6 @@ const CertificateWaiting = () => {
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5">
                   {SupervisorLastName}, {SupervisorFirstName}
-                  {/* {certificateDetailsData?.SupervisorLastName},{" "}
-                  {certificateDetailsData?.SupervisorFirstName} */}
                 </Typography>
               </Grid>
             </Grid>
@@ -206,8 +199,6 @@ const CertificateWaiting = () => {
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5" sx={{ color: "#FFCC00" }}>
                   {status.charAt(0) + status.slice(1).toLowerCase()}
-                  {/* {certificateDetailsData?.status.charAt(0) +
-                    certificateDetailsData?.status.slice(1).toLowerCase()} */}
                 </Typography>
               </Grid>
             </Grid>
@@ -229,8 +220,6 @@ const CertificateWaiting = () => {
               >
                 <Typography variant="h5" sx={{ textAlign: "justify" }}>
                   {description.charAt(0).toUpperCase() + description.slice(1)}
-                  {/* {certificateDetailsData?.description.charAt(0).toUpperCase() +
-                    certificateDetailsData?.description.slice(1)} */}
                 </Typography>
               </Grid>
             </Grid>
@@ -241,7 +230,7 @@ const CertificateWaiting = () => {
         <iframe
           src={pdfURL}
           title="Certificate-pdf"
-          style={{ width: "100%", height: "55vh" }}
+          style={{ width: "100%", height: "75vh" }}
         />
       </Grid>
     </Grid>

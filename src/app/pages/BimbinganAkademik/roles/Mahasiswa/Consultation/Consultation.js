@@ -49,12 +49,10 @@ const style = {
 const Consultation = () => {
   const navigate = useNavigate();
 
-  //inisialisasi get data
   const [supervisorData, setSupervisorData] = useState("");
   const [kaprodiData, setKaprodiData] = useState("");
   const [dekanData, setDekanData] = useState("");
 
-  //inisialisasi
   const [topic, setTopic] = useState("");
   const [receiver, setReceiver] = useState("");
   const [description, setDescription] = useState("");

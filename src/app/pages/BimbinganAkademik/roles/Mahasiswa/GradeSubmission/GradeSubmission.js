@@ -43,16 +43,15 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWwidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
 
 const GradeSubmission = () => {
-  //inisialisasi
   const [semester, setSemester] = useState("");
   const [row, setRow] = useState("");
   const [subjectNames, setSubjectNames] = useState(Array(row).fill(""));
@@ -72,7 +71,6 @@ const GradeSubmission = () => {
     setAlert(null);
   };
 
-  //get data
   const [dataGrade, setDataGrade] = useState([]);
   const [curriculumData, setCurriculumData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -345,19 +343,18 @@ const GradeSubmission = () => {
         <Typography variant="body1">
           Not yet filled out Grade <br /> <br />
           Date of Grade Filling:{" "}
-          {new Date(dataGrade.createdAt).toLocaleDateString("en-US", {
+          {new Date(dataGrade?.createdAt).toLocaleDateString("en-US", {
             month: "long",
             day: "2-digit",
             year: "numeric",
           })}{" "}
           -{" "}
-          {new Date(dataGrade.dueDate).toLocaleDateString("en-US", {
+          {new Date(dataGrade?.dueDate).toLocaleDateString("en-US", {
             month: "long",
             day: "2-digit",
             year: "numeric",
           })}
         </Typography>
-
         <WarningAmberIcon sx={{ color: "#FFCC00", fontSize: "42px" }} />
       </Paper>
       <Paper
@@ -381,7 +378,7 @@ const GradeSubmission = () => {
         </Typography>
       </Paper>
       <Grid container spacing={2} sx={{ paddingBottom: "20px" }}>
-        <Grid item xs={12} sm={6} md={2} lg={2}>
+        <Grid item xs={12} sm={6} md={2.5}>
           <Stack spacing={2}>
             <FormControl size="small" sx={{ backgroundColor: "white" }}>
               <InputLabel shrink={false}>
@@ -408,7 +405,7 @@ const GradeSubmission = () => {
           </Stack>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={2} lg={2}>
+        <Grid item xs={12} sm={6} md={2.5}>
           <Stack spacing={2}>
             <FormControl size="small" sx={{ backgroundColor: "white" }}>
               <InputLabel shrink={false}>
@@ -503,33 +500,6 @@ const GradeSubmission = () => {
                     )}
                   />
                 </TableCell>
-
-                {/* <TableCell>
-                  <FormControl size="small" fullWidth>
-                    <Select
-                      value={lecturers[index] || ""}
-                      onChange={(e) => handleLecturerChange(e, index)}
-                      MenuProps={{
-                        PaperProps: {
-                          style: {
-                            maxHeight: "37%",
-                          },
-                        },
-                      }}
-                    >
-                      {lecturersData &&
-                        lecturersData.map((lecturer) => (
-                          <MenuItem
-                            key={lecturer.id}
-                            value={`${lecturer.firstName} ${lecturer.lastName} (${lecturer.degree})`}
-                          >
-                            {lecturer.firstName} {lecturer.lastName} (
-                            {lecturer.degree})
-                          </MenuItem>
-                        ))}
-                    </Select>
-                  </FormControl>
-                </TableCell> */}
 
                 <TableCell>
                   <TextField

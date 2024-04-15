@@ -40,10 +40,10 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -201,7 +201,7 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
                 sx={{
                   color: "white",
                   backgroundColor: "#006AF5",
-                  "@media (maxWidth: 650px)": { fontSize: "9px" },
+                  "@media (max-width: 650px)": { fontSize: "9px" },
                   "&:hover": {
                     backgroundColor: "#025ED8",
                   },
@@ -209,7 +209,7 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
               >
                 See Preview
                 <ArrowRightAltIcon
-                  sx={{ "@media (maxWidth: 650px)": { fontSize: "14px" } }}
+                  sx={{ "@media (max-width: 650px)": { fontSize: "14px" } }}
                 />
               </Button>
             </div>
@@ -237,7 +237,6 @@ const PreRegistrationSubmission = ({}) => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //inisialisasi
   const [listSubject, setListSubject] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [totalCredits, setTotalCredits] = useState(0);
@@ -246,7 +245,6 @@ const PreRegistrationSubmission = ({}) => {
   const [showWarning, setShowWarning] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  //get data
   const [dataPreregis, setDataPreregis] = useState([]);
   const [curriculumDetails, setCurriculumDetails] = useState({
     name: "",
@@ -308,7 +306,6 @@ const PreRegistrationSubmission = ({}) => {
         signal,
       });
       const curriculumId = studentData.data.data.curriculumId;
-      // const curriculumId = "790021f2-9d25-4d65-a637-f4e883ad1885";
 
       if (!curriculumId) {
         console.error("Curriculum ID is null.");

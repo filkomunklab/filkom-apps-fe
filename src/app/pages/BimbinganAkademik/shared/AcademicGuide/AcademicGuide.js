@@ -56,7 +56,7 @@ const AcademicGuide = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -120,7 +120,7 @@ const AcademicGuide = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -188,7 +188,7 @@ const AcademicGuide = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -253,7 +253,7 @@ const AcademicGuide = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -307,7 +307,7 @@ const AcademicGuide = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -360,7 +360,7 @@ const AcademicGuide = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",
@@ -398,7 +398,7 @@ const AcademicGuide = () => {
                 paddingLeft: "25px",
                 paddingRight: "25px",
                 textAlign: "justify",
-                "@media (maxWidth: 390px)": {
+                "@media (max-width: 390px)": {
                   fontSize: "12px",
                   paddingLeft: "5px",
                   paddingRight: "5px",

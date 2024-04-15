@@ -293,7 +293,7 @@ const StudentPerMajor = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
+            "@media (max-width: 650px)": { justifyContent: "flex-start" },
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component={"div"}
@@ -364,7 +364,7 @@ const TableItem = ({ item, index }) => {
   };
 
   const rowStyle = {
-    "@media (maxWidth: 650px)": { fontSize: "11px" },
+    "@media (max-width: 650px)": { fontSize: "11px" },
     textAlign: "center",
   };
 
@@ -376,7 +376,7 @@ const TableItem = ({ item, index }) => {
         <Button
           name="profile"
           sx={{
-            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            "@media (max-width: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}
@@ -401,7 +401,7 @@ const TableItem = ({ item, index }) => {
           name="grade"
           onClick={handleButtonNavigate}
           sx={{
-            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            "@media (max-width: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}
@@ -414,7 +414,7 @@ const TableItem = ({ item, index }) => {
           name="certificate"
           onClick={handleButtonNavigate}
           sx={{
-            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            "@media (max-width: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}

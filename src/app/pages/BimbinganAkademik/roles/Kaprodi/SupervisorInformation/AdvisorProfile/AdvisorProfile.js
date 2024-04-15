@@ -48,10 +48,10 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -187,20 +187,6 @@ const AdvisorProfile = () => {
         <Typography variant="h1" fontWeight={500} sx={{ marginBottom: "25px" }}>
           Supervisor Profile
         </Typography>
-        <Typography
-          variant="h6"
-          sx={{
-            paddingBottom: "25px",
-            fontSize: "14px",
-            fontWeight: 400,
-            color: "rgba(27, 43, 65, 0.69)",
-            textAlign: "justify",
-          }}
-        >
-          Currently, you are on the Academic Supervisor Information page, here
-          you can easily see all information about academic supervisors in your
-          department, along with their students.
-        </Typography>
       </Div>
       <Paper elevation={1} sx={{ mb: 5 }}>
         <Typography
@@ -258,7 +244,7 @@ const AdvisorProfile = () => {
             variant="h2"
             sx={{
               textAlign: "justify",
-              "@media (maxWidth: 390px)": {
+              "@media (max-width: 390px)": {
                 fontSize: "16px",
                 fontWeight: 500,
               },
@@ -381,7 +367,6 @@ const AdvisorProfile = () => {
           >
             <Table stickyHeader>
               <TableHead>
-                {/* <TableHeading /> */}
                 <TableRow>
                   <TableCell
                     sx={{ backgroundColor: "#e8ecf2" }}
@@ -508,7 +493,7 @@ const AdvisorProfile = () => {
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
-              "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
+              "@media (max-width: 650px)": { justifyContent: "flex-start" },
             }}
             rowsPerPageOptions={[10, 25, 50, 100]}
             component={"div"}
@@ -584,7 +569,7 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
     }
   };
   const rowStyle = {
-    "@media (maxWidth: 650px)": { fontSize: "11px" },
+    "@media (max-width: 650px)": { fontSize: "11px" },
     textAlign: "center",
   };
   return (
@@ -602,7 +587,7 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
       <TableCell>
         <Typography
           style={{
-            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            "@media (max-width: 650px)": { fontSize: "11px" },
             textTransform: "capitalize",
             paddingX: 0,
             color: "#006AF5",
@@ -631,7 +616,7 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
         <Typography
           onClick={(e) => handleButtonNavigate(e, "grade")}
           style={{
-            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            "@media (max-width: 650px)": { fontSize: "11px" },
             textTransform: "capitalize",
             paddingX: 0,
             color: "#006AF5",
@@ -648,7 +633,7 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
         <Typography
           onClick={(e) => handleButtonNavigate(e, "certificate")}
           style={{
-            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            "@media (max-width: 650px)": { fontSize: "11px" },
             textTransform: "capitalize",
             paddingX: 0,
             color: "#006AF5",

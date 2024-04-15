@@ -20,7 +20,6 @@ const CurrentActivities = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //get data
   const [dataActivity, setDataActivity] = useState([]);
   const [dataConsultation, setDataConsultation] = useState([]);
 

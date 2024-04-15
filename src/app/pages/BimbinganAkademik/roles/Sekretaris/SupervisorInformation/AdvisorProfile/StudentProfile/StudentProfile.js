@@ -10,13 +10,9 @@ import {
   Typography,
   experimentalStyled as styled,
   Link,
-  IconButton,
-  Backdrop,
-  CircularProgress,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useLocation, useNavigate } from "react-router-dom";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import {
   handlePermissionError,
@@ -30,15 +26,26 @@ const StudentProfile = () => {
   const signal = controller.signal;
 
   const location = useLocation();
-  const { studentId, studentNim } = location.state || "-";
+  const { studentId } = location.state || "-";
   const [advisorProfileData, setAdvisorProfileData] = useState([]);
   const [studentProfileData, setStudentProfileData] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const dosenGuidanceClass = JSON.parse(
-    localStorage.getItem("user")
-  ).guidanceClassId;
+
+  //handle error
+  const handleError = (error) => {
+    if (error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (error.response && error.response.status === 403) {
+      handlePermissionError();
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      return;
+    } else if (error.response && error.response.status === 401) {
+      handleAuthenticationError();
+    } else {
+      console.log("ini error: ", error);
+    }
+  };
 
   const getProfile = async () => {
     try {
@@ -52,23 +59,10 @@ const StudentProfile = () => {
 
       setStudentProfileData(resultStudent.data.data);
       setAdvisorProfileData(
-        resultStudent.data.data.GuidanceClassMember.gudianceClass.teacher
+        resultStudent.data.data.GuidanceClassMember?.gudianceClass?.teacher
       );
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
-        console.log("request canceled");
-      } else if (error.response && error.response.status === 403) {
-        handlePermissionError();
-        setTimeout(() => {
-          navigate(-1);
-        }, 2000);
-        return;
-      } else if (error.response && error.response.status === 401) {
-        handleAuthenticationError();
-      } else {
-        console.log("ini error: ", error);
-        return;
-      }
+      handleError(error);
     }
   };
 
@@ -77,28 +71,23 @@ const StudentProfile = () => {
     return () => controller.abort();
   }, []);
 
-  const handleOpenPopover = (event) => {
-    setAnchorEl(event.currentTarget);
-    setOpen(true);
-  };
-
-  const handleClosePopover = () => {
-    setAnchorEl(null);
-    setOpen(false);
+  const textStyle = {
+    borderWidth: 1,
+    borderColor: "#00000029",
+    borderStyle: "solid",
+    paddingX: "24px",
+    paddingY: "13px",
+    borderRadius: "8px",
+    color: "#000",
+    cursor: "text",
   };
 
   return (
     <Div>
-      <Backdrop
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isLoading}
-      >
-        <CircularProgress />
-      </Backdrop>
       <Breadcrumbs aria-label="breadcrumb">
         <StyledLink
           onClick={() =>
-            navigate("/bimbingan-akademik/kaprodi/supervisor-information/")
+            navigate("/bimbingan-akademik/dekan/supervisor-information/")
           }
         >
           Supervisor Information
@@ -166,13 +155,6 @@ const StudentProfile = () => {
             <Grid item xs={12} md={6}>
               <Stack direction={"row"} gap={1} justifyContent={"space-between"}>
                 <Typography variant="h5">Student Status</Typography>
-                {dosenGuidanceClass ===
-                  studentProfileData?.GuidanceClassMember?.gudianceClass
-                    ?.id && (
-                  <IconButton size="small" onClick={handleOpenPopover}>
-                    <BorderColorIcon fontSize="inherit" />
-                  </IconButton>
-                )}
               </Stack>
               <Typography variant="h6" sx={textStyle}>
                 {studentProfileData?.status ?? "-"}
@@ -325,7 +307,7 @@ const StudentProfile = () => {
                 {advisorProfileData?.phoneNum ?? "-"}
               </Typography>
             </Grid>
-            <Grid item xs={12} md={12}>
+            <Grid item xs={12} md={6}>
               <Typography variant="h5">Address</Typography>
               <Typography variant="h6" sx={textStyle}>
                 {advisorProfileData?.Address ?? "-"}
@@ -336,15 +318,6 @@ const StudentProfile = () => {
       </Accordion>
     </Div>
   );
-};
-
-const textStyle = {
-  borderWidth: 1,
-  borderColor: "#00000029",
-  borderStyle: "solid",
-  paddingX: "24px",
-  paddingY: "13px",
-  borderRadius: "8px",
 };
 
 const StyledLink = styled(Link)(({ theme }) => ({

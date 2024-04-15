@@ -69,7 +69,6 @@ const CertificateDetail = () => {
     return () => controller.abort();
   }, []);
 
-  // Pastikan student tidak undefined sebelum melakukan destrukturisasi
   const {
     path,
     title,

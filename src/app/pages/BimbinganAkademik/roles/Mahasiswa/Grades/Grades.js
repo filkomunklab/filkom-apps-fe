@@ -54,7 +54,6 @@ const Grades = () => {
         }
       );
 
-      //menampilkan semester yang paling terbaru secara berurut
       const sortedData = response.data.data.sort((a, b) =>
         a.semester.localeCompare(b.semester, undefined, { numeric: true })
       );

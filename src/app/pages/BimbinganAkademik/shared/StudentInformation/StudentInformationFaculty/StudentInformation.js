@@ -19,6 +19,7 @@ import {
   InputAdornment,
   MenuItem,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import SearchIcon from "@mui/icons-material/Search";
@@ -114,26 +115,6 @@ const StudentInformationFaculty = () => {
 
       return (nameMatches || nimMatches) && combinedMatches;
     });
-    // .sort((a, b) => {
-    //   // Sort by entrance year
-    //   const entranceYearA = a.arrivalYear;
-    //   const entranceYearB = b.arrivalYear;
-
-    //   if (sortOrder === "asc") {
-    //     return entranceYearA - entranceYearB;
-    //   } else {
-    //     return entranceYearB - entranceYearA;
-    //   }
-    // });
-
-    // .sort((a, b) => {
-    //   // Sort alphabetically by last name
-    //   const lastNameA = a.lastName.toLowerCase();
-    //   const lastNameB = b.lastName.toLowerCase();
-    //   if (lastNameA < lastNameB) return -1;
-    //   if (lastNameA > lastNameB) return 1;
-    //   return 0;
-    // });
 
     const sortedData = sortData(filteredData);
     setSearchFilteredData(sortedData);
@@ -294,7 +275,7 @@ const StudentInformationFaculty = () => {
         <Typography
           variant="h2"
           sx={{
-            "@media (maxWidth: 390px)": {
+            "@media (max-width: 390px)": {
               fontSize: "16px",
               fontWeight: 500,
             },
@@ -304,7 +285,7 @@ const StudentInformationFaculty = () => {
         </Typography>
       </Grid>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={12} md={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <TextField
             size="small"
             placeholder="Search by Name or NIM"
@@ -313,7 +294,7 @@ const StudentInformationFaculty = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon sx={{ color: "#1C304A85" }} />
+                  <SearchIcon sx={{ color: "#BDBDBD" }} />
                 </InputAdornment>
               ),
               style: {
@@ -326,12 +307,10 @@ const StudentInformationFaculty = () => {
             }}
             value={search}
             onChange={handleSearch}
-            // value={search}
-            // onChange={handleSearch}
           />
         </Grid>
 
-        <Grid item xs={6} sm={6} md={4}>
+        <Grid item xs={10} sm={5} md={4}>
           <TextField
             size="small"
             fullWidth
@@ -340,23 +319,23 @@ const StudentInformationFaculty = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{ zIndex: -2 }}>
-                  <FilterListIcon sx={{ color: "#1C304A85" }} />
+                  <FilterListIcon sx={{ color: "#BDBDBD" }} />
 
-                  <Typography sx={{ marginLeft: "16px", color: "#1C304A85" }}>
+                  <Typography sx={{ marginLeft: "16px", color: "#BDBDBD" }}>
                     Filter:
                   </Typography>
                 </InputAdornment>
               ),
               style: {
                 borderRadius: "65px",
-                borderColor: "#E0E0E0",
+                borderColor: "#BDBDBD",
               },
             }}
             sx={{
               m: 0,
               borderRadius: "65px",
               width: "100%",
-              borderColor: "#E0E0E0",
+              borderColor: "#BDBDBD",
             }}
             value={combinedFilter ? combinedFilter : "Nonactive Filter"}
             onChange={handleFilter}
@@ -402,28 +381,29 @@ const StudentInformationFaculty = () => {
           </TextField>
         </Grid>
 
-        <Grid item xs={6} sm={6} md={1.5}>
-          <IconButton
-            onClick={handleSortClick}
-            sx={{
-              borderColor: "#d3d5d8fa",
-              borderWidth: "1.5px",
-              borderStyle: "solid",
-              borderRadius: "30px",
-              width: "100%",
-              color: "#1C304A85",
-              "&:hover": {
-                borderColor: "black",
-                backgroundColor: "transparent",
-              },
-              height: "38px",
-            }}
-          >
-            <SwapVertIcon />
-            <Typography sx={{ marginLeft: "8px", color: "#1C304A85" }}>
-              Sort by NIM
-            </Typography>
-          </IconButton>
+        <Grid item xs={2} sm={1} md={4}>
+          <Tooltip title="Sort by NIM">
+            <IconButton
+              alignItems="right"
+              justifyContent="right"
+              onClick={handleSortClick}
+              sx={{
+                borderColor: "#BDBDBD",
+                borderWidth: "1.5px",
+                borderStyle: "solid",
+                borderRadius: "20px",
+                width: "40px",
+                color: "#BDBDBD",
+                "&:hover": {
+                  borderColor: "black",
+                  backgroundColor: "transparent",
+                },
+                height: "38px",
+              }}
+            >
+              <SwapVertIcon />
+            </IconButton>
+          </Tooltip>
         </Grid>
       </Grid>
 
@@ -468,7 +448,7 @@ const StudentInformationFaculty = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
+            "@media (max-width: 650px)": { justifyContent: "flex-start" },
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component={"div"}
@@ -533,7 +513,7 @@ const TableItem = ({ item, index }) => {
   };
 
   const rowStyle = {
-    "@media (maxWidth: 650px)": { fontSize: "11px" },
+    "@media (max-width: 650px)": { fontSize: "11px" },
   };
 
   return (
@@ -546,7 +526,7 @@ const TableItem = ({ item, index }) => {
         <Button
           name="profile"
           sx={{
-            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            "@media (max-width: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}
@@ -572,7 +552,7 @@ const TableItem = ({ item, index }) => {
           name="grade"
           onClick={handleButtonNavigate}
           sx={{
-            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            "@media (max-width: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}
@@ -585,7 +565,7 @@ const TableItem = ({ item, index }) => {
           name="certificate"
           onClick={handleButtonNavigate}
           sx={{
-            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            "@media (max-width: 650px)": { fontSize: "11px" },
             width: "100%",
             textTransform: "capitalize",
           }}

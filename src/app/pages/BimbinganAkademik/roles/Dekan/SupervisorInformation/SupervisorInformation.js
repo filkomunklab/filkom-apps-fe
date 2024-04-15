@@ -153,7 +153,7 @@ const SupervisorInformation = () => {
             variant="h2"
             sx={{
               textAlign: "justify",
-              "@media (maxWidth: 390px)": {
+              "@media (max-width: 390px)": {
                 fontSize: "16px",
                 fontWeight: 500,
               },
@@ -286,7 +286,7 @@ const SupervisorInformation = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
+            "@media (max-width: 650px)": { justifyContent: "flex-start" },
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"
@@ -336,7 +336,7 @@ const TableItem = ({ item, index, onDelete }) => {
   };
 
   const rowStyle = {
-    "@media (maxWidth: 650px)": { fontSize: "11px" },
+    "@media (max-width: 650px)": { fontSize: "11px" },
     textAlign: "center",
   };
 
@@ -348,7 +348,7 @@ const TableItem = ({ item, index, onDelete }) => {
           onClick={(e) => handleButtonNavigate(e, "profile")}
           style={{
             textTransform: "capitalize",
-            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            "@media (max-width: 650px)": { fontSize: "11px" },
             color: "#006AF5",
             textDecoration: "none",
             width: "100%",
@@ -372,7 +372,7 @@ const TableItem = ({ item, index, onDelete }) => {
         <Typography
           onClick={(e) => handleButtonNavigate(e, "history")}
           style={{
-            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            "@media (max-width: 650px)": { fontSize: "11px" },
             textTransform: "capitalize",
             paddingX: 0,
             color: "#006AF5",

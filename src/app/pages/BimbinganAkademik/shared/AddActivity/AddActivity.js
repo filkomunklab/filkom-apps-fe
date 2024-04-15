@@ -54,10 +54,10 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "100%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -81,7 +81,6 @@ const AddActivity = () => {
     setAlert(null);
   };
 
-  //inisialisasi
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState(null);
@@ -380,10 +379,9 @@ const AddActivity = () => {
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DesktopDatePicker
               sx={{ backgroundColor: "white", width: "100%" }}
-              label={date ? "" : "No Due Date"}
+              label={date ? "" : "Due Date"}
               value={date}
               onChange={(e) => setDate(e)}
-              // renderInput={(params) => <TextField {...params} />}
               text
             />
           </LocalizationProvider>

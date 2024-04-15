@@ -79,7 +79,9 @@ const Grade = () => {
 
   return (
     <div>
-      {dataGrade.isOpen === false ? (
+      {dataGrade === null ||
+      dataGrade?.length === 0 ||
+      dataGrade?.isOpen === false ? (
         <GradeSubmissionClosed />
       ) : submissionStatus === "success" ? (
         <GradeSubmitted />

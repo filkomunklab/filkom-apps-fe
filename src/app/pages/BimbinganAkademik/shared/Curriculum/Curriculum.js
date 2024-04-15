@@ -50,10 +50,10 @@ const styleCurriculum = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -69,10 +69,10 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -83,12 +83,12 @@ const Curriculum = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //inisialisasi
   const [curriculum, setCurriculum] = useState("selectCurriculum");
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileName, setSelectedFileName] = useState("");
+  const [showLabel, setShowLabel] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const [listCurriculum, setListCurriculum] = useState([]);
@@ -310,10 +310,6 @@ const Curriculum = () => {
       setSelectedFile(null);
       setSelectedFileName("");
     }
-  };
-
-  const handleOnChange = (e) => {
-    setCurriculum(e.target.value);
   };
 
   const handleProdiChange = (event) => {
@@ -545,7 +541,7 @@ const Curriculum = () => {
                             fontWeight: 600,
                             paddingBottom: 3,
                             paddingTop: 2,
-                            "@media (maxWidth: 390px)": {
+                            "@media (max-width: 390px)": {
                               fontSize: "15px",
                             },
                           }}
@@ -560,7 +556,7 @@ const Curriculum = () => {
                             color: "#025ED8",
                             display: "flex",
                             justifyContent: "flex-end",
-                            "@media (maxWidth: 390px)": { fontSize: "11px" },
+                            "@media (max-width: 390px)": { fontSize: "11px" },
                           }}
                           onClick={handleTemplate}
                         >
@@ -768,12 +764,21 @@ const Curriculum = () => {
         </Grid>
       </div>
       <div>
-        <Select
+        <TextField
           value={curriculum}
-          onChange={handleOnChange}
+          id="outlined-select-topic"
+          select
+          onChange={(event) => {
+            setCurriculum(event.target.value);
+            setShowLabel(false);
+          }}
+          label={showLabel ? "View Curriculum" : ""}
           sx={{
             width: "100%",
             backgroundColor: "rgba(26, 56, 96, 0.1)",
+          }}
+          InputLabelProps={{
+            shrink: false,
           }}
           MenuProps={{
             PaperProps: {
@@ -783,10 +788,6 @@ const Curriculum = () => {
             },
           }}
         >
-          <MenuItem value="selectCurriculum">
-            <Typography sx={{ fontWeight: 400 }}>View Curriculum</Typography>
-          </MenuItem>
-
           {listCurriculum.map((value, index) => (
             <MenuItem
               key={value.id}
@@ -827,7 +828,7 @@ const Curriculum = () => {
               </div>
             </MenuItem>
           ))}
-        </Select>
+        </TextField>
         <Modal
           open={isDeleteConfirmationModalOpen}
           onClose={handleCloseDeleteConfirmationModal}

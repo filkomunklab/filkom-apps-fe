@@ -185,7 +185,7 @@ const SupervisorInformation = () => {
             variant="h2"
             sx={{
               textAlign: "justify",
-              "@media (maxWidth: 390px)": {
+              "@media (max-width: 390px)": {
                 fontSize: "16px",
                 fontWeight: 500,
               },
@@ -318,7 +318,7 @@ const SupervisorInformation = () => {
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
-            "@media (maxWidth: 650px)": { justifyContent: "flex-start" },
+            "@media (max-width: 650px)": { justifyContent: "flex-start" },
           }}
           rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"
@@ -362,7 +362,7 @@ const TableItem = ({ item, index, handleDelete }) => {
   };
 
   const rowStyle = {
-    "@media (maxWidth: 650px)": { fontSize: "11px" },
+    "@media (max-width: 650px)": { fontSize: "11px" },
     textAlign: "center",
   };
 
@@ -374,7 +374,7 @@ const TableItem = ({ item, index, handleDelete }) => {
           onClick={(e) => handleButtonNavigate(e, "profile")}
           style={{
             textTransform: "capitalize",
-            "@media (maxWidth: 650px)": { fontSize: "11px" },
+            "@media (max-width: 650px)": { fontSize: "11px" },
             color: "#006AF5",
             textAlign: "center",
             textDecoration: "none",
