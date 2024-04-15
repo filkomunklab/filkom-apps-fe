@@ -3,6 +3,7 @@ import getTeacher from "./getTeacher";
 import getRpsList from "./getRpsList";
 import getRpsDetail from "./getRpsDetail";
 import getCplMapping from "./getCplMapping";
+import getRpsListSummary from "./getRpsListSummary";
 import getRpsListTeacher from "./getRpsListTeacher";
 import getDetailReport from "./getDetailReport";
 import getSummaryReport from "./getSummaryReport";
@@ -15,8 +16,11 @@ import putReportDetail from "./putDetailReport";
 import putStudentGrade from "./putStudentGrade";
 import putSummaryReport from "./putSummaryReport";
 import deleteRps from "./deleteRps";
+import patchRpsStatus from "./patchRpsStatus";
 
 export {
+  getRpsListSummary,
+  patchRpsStatus,
   getSummaryReport,
   putSummaryReport,
   getRpsDetail,

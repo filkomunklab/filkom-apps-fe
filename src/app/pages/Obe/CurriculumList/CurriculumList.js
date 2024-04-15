@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import {
@@ -30,6 +30,7 @@ import { DeleteOutline } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import getCurriculum from "app/api/getCurriculum";
 import { Actions } from "./Components";
+import { OBE_BASE_URL_API } from "@jumbo/config/env";
 
 const CurriculumList = () => {
   const [open, setOpen] = useState(false);
@@ -232,6 +233,13 @@ const CurriculumList = () => {
                         onClick={handleClose}
                       >
                         <span className="text-gray-400">Batal</span>
+                      </Button>
+                      <Button
+                        LinkComponent={"a"}
+                        href={`${OBE_BASE_URL_API}/static/templates/Curriculum.xlsx`}
+                        variant="text"
+                      >
+                        <span className="text-gray-400">Download Template</span>
                       </Button>
                     </div>
                   </Form>

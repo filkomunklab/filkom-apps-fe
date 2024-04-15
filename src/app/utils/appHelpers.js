@@ -14,7 +14,7 @@ export const convertShortMajor = (major) => {
       return "Informatika";
     case "SI":
       return "Sistem Informasi";
-    case "DKV":
+    case "TI":
       return "Teknologi Informasi";
     default:
       return major;
@@ -57,4 +57,27 @@ export const normalizeGrading = (grade) => {
     };
   });
   return { gradingSys, cpmkGrades, total };
+};
+
+export const downloadFile = (response) => {
+  console.log("fire");
+  const url = window.URL.createObjectURL(new Blob([response.data]));
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", "Curriculum.xlsx"); // or any other filename you want
+  document.body.appendChild(link);
+  link.click();
+};
+
+export const getColor = (status) => {
+  switch (status) {
+    case "WAITING":
+      return "warning";
+    case "APPROVED":
+      return "success";
+    case "REJECTED":
+      return "error";
+    default:
+      return "default";
+  }
 };

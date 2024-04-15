@@ -1,5 +1,10 @@
 import { useParams } from "react-router-dom";
-import { Checkbox } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Checkbox,
+} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Form, Formik } from "formik";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -9,6 +14,8 @@ import Swal from "sweetalert2";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { ExpandMore } from "@mui/icons-material";
+import { convertShortMajor } from "app/utils/appHelpers";
 
 const MappingCPL = () => {
   const { subjectId } = useParams();
@@ -80,39 +87,50 @@ const MappingCPL = () => {
           >
             {({ values, setFieldValue, errors }) => (
               <Form>
-                {subjectCplQuery.data?.Curriculum_Cpl.map((item, index) => {
+                {subjectCplQuery.data?.Curriculum_Subject.map((item, index) => {
                   return (
-                    <div
-                      className="grid grid-cols-10 p-2 border-b"
-                      key={item.id}
-                    >
-                      <div className="flex items-center col-span-1 justify-center">
-                        {item.code}
-                      </div>
-                      <div className="flex items-center col-span-8">
-                        {item.description}
-                      </div>
-                      <div className="flex items-center col-span-1">
-                        <Checkbox
-                          value={item.id}
-                          checked={values.cplIds.includes(item.id)}
-                          onChange={(e) => {
-                            const { checked, value } = e.target;
-                            if (checked) {
-                              setFieldValue("cplIds", [
-                                ...values.cplIds,
-                                value,
-                              ]);
-                            } else {
-                              setFieldValue(
-                                "cplIds",
-                                values.cplIds.filter((id) => id !== value)
-                              );
-                            }
-                          }}
-                        />
-                      </div>
-                    </div>
+                    <Accordion>
+                      <AccordionSummary
+                        expandIcon={<ExpandMore />}
+                      >{`${convertShortMajor(item.curriculum.major)} - ${
+                        item.curriculum.year
+                      }`}</AccordionSummary>
+                      <AccordionDetails>
+                        {item.curriculum.Cpl.map((item) => (
+                          <div
+                            className="grid grid-cols-10 p-2 border-b"
+                            key={item.id}
+                          >
+                            <div className="flex items-center col-span-1 justify-center">
+                              {item.code}
+                            </div>
+                            <div className="flex items-center col-span-8">
+                              {item.description}
+                            </div>
+                            <div className="flex items-center col-span-1">
+                              <Checkbox
+                                value={item.id}
+                                checked={values.cplIds.includes(item.id)}
+                                onChange={(e) => {
+                                  const { checked, value } = e.target;
+                                  if (checked) {
+                                    setFieldValue("cplIds", [
+                                      ...values.cplIds,
+                                      value,
+                                    ]);
+                                  } else {
+                                    setFieldValue(
+                                      "cplIds",
+                                      values.cplIds.filter((id) => id !== value)
+                                    );
+                                  }
+                                }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </AccordionDetails>
+                    </Accordion>
                   );
                 })}
                 <div className="flex justify-end gap-4 mt-2">

@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
-import { Button, Chip, TablePagination, TextField } from "@mui/material";
+import { Button, Chip, Stack, TablePagination, TextField } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -21,6 +21,7 @@ import { GetSubjects, postCpl } from "app/api";
 import { Actions, CplTable } from "./components";
 import Swal from "sweetalert2";
 import { LoadingButton } from "@mui/lab";
+import { OBE_BASE_URL_API } from "@jumbo/config/env";
 
 const SubjectList = () => {
   const [open, setOpen] = useState(false);
@@ -157,7 +158,7 @@ const SubjectList = () => {
               : ""}
           </h1>
         </div>
-        <div>
+        {/* <div>
           <Button
             className="!rounded-full"
             variant="contained"
@@ -168,7 +169,7 @@ const SubjectList = () => {
           >
             Tambah Kurikulum
           </Button>
-        </div>
+        </div> */}
       </div>
       <div className="flex justify-between mb-3">
         <div>
@@ -273,18 +274,27 @@ const SubjectList = () => {
             Cpl for this curriculum has not been created yet. Press the button
             below to upload Cpl.
           </p>
-          <LoadingButton
-            variant="contained"
-            color="primary"
-            loadingPosition="end"
-            endIcon={<UploadFileIcon />}
-            loading={cplMutation.isPending}
-            onClick={() => {
-              inputRef.current.click();
-            }}
-          >
-            Upload CPL
-          </LoadingButton>
+          <Stack direction={"row"} gap={2}>
+            <LoadingButton
+              variant="contained"
+              color="primary"
+              loadingPosition="end"
+              endIcon={<UploadFileIcon />}
+              loading={cplMutation.isPending}
+              onClick={() => {
+                inputRef.current.click();
+              }}
+            >
+              Upload CPL
+            </LoadingButton>
+            <Button
+              LinkComponent={"a"}
+              href={`${OBE_BASE_URL_API}/static/templates/CurriculumCpl.xlsx`}
+              variant="text"
+            >
+              <span className="text-gray-400">Download Template</span>
+            </Button>
+          </Stack>
         </div>
       )}
     </div>

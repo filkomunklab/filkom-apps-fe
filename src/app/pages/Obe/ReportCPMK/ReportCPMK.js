@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Fullscreen, Close, Update } from "@mui/icons-material";
+import { Update } from "@mui/icons-material";
 import {
   Radar,
   RadarChart,
@@ -16,12 +16,11 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Modal,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSummaryReport, putSummaryReport } from "../../../api";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { StatisticModal } from "./Components";
 
@@ -30,6 +29,7 @@ const ReportCPMK = () => {
   const [selectedStudent, setSelectedStudent] = useState({});
   const { rpsId } = useParams();
   const queryClient = useQueryClient();
+  const { pathname } = useLocation();
 
   const handleOpen = (item) => {
     setSelectedStudent(item);
@@ -93,6 +93,7 @@ const ReportCPMK = () => {
           variant="outlined"
           endIcon={<Update />}
           onClick={() => reportDetailMutation.mutate(rpsId)}
+          disabled={!pathname.includes("/obe/evaluasi-mahasiswa")}
         >
           Update Data
         </LoadingButton>

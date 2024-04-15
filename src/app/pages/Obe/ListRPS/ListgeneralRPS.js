@@ -1,5 +1,7 @@
 import React from "react";
 import CardProdi from "./card-prodi";
+import { useQuery } from "@tanstack/react-query";
+import { getRpsListSummary } from "app/api";
 
 const prodi = [
   {
@@ -26,6 +28,9 @@ const prodi = [
 ];
 
 const ListGeneralRPS = () => {
+  const listQuery = useQuery({
+    queryFn: getRpsListSummary,
+  });
   return (
     <div>
       <div className="flex flex-col justify-center items-center text-3xl font-semibold">
@@ -36,15 +41,8 @@ const ListGeneralRPS = () => {
       <div className="mt-16">
         {/* card */}
         <div className="grid xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
-          {prodi.map((item, index) => (
-            <CardProdi
-              key={index}
-              prodi={item.prodi}
-              totalRPS={item.totalRPS}
-              totalDosen={item.totalDosen}
-              kepalaProdi={item.kepalaProdi}
-              major={item.major}
-            />
+          {listQuery.data?.map((item, index) => (
+            <CardProdi key={index} item={item} />
           ))}
         </div>
       </div>

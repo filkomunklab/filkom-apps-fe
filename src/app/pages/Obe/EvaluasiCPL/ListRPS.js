@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
@@ -11,14 +11,12 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
-import IconButton from "@mui/material/IconButton";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import { useQuery } from "@tanstack/react-query";
+import { getRpsList } from "app/api";
+import { convertShortMajor } from "app/utils/appHelpers";
 
 const ListRPS = () => {
-  const { major } = useParams();
-  console.log(major);
+  const { major, curriculumId } = useParams();
 
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -69,121 +67,18 @@ const ListRPS = () => {
     { id: "kodeMK", label: "Kode MK", minWidth: 150 },
     { id: "prodi", label: "Prodi", minWidth: 150 },
     { id: "semester", label: "Semester", minWidth: 150 },
-    { id: "status", label: "Status", minWidth: 150 },
-    { id: "action", label: "Action", minWidth: 150 },
-  ];
-
-  function createData(
-    no,
-    namaMataKuliah,
-    dosen,
-    kodeMK,
-    prodi,
-    semester,
-    status
-  ) {
-    return {
-      no,
-      namaMataKuliah,
-      dosen,
-      kodeMK,
-      prodi,
-      semester,
-      status,
-    };
-  }
-
-  const rows = [
-    createData(
-      1,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3152",
-      "Sistem Informasi",
-      "5",
-      "Available"
-    ),
-    createData(
-      2,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3154",
-      "Sistem Informasi",
-      "5",
-      "Available"
-    ),
-    createData(
-      3,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3155",
-      "Sistem Informasi",
-      "5",
-      "Unvailable"
-    ),
-    createData(
-      4,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3155",
-      "Sistem Informasi",
-      "5",
-      "Available"
-    ),
-    createData(
-      5,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3155",
-      "Sistem Informasi",
-      "5",
-      "Unvailable"
-    ),
-    createData(
-      6,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3155",
-      "Sistem Informasi",
-      "5",
-      "Available"
-    ),
-    createData(
-      7,
-      "Web Programming / Pemrograman Web",
-      "Andrew Tanny Liem, SSi., MT., PhD",
-      "IS3151",
-      "Sistem Informasi",
-      "5",
-      "Available"
-    ),
-    // Add more rows as needed
   ];
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(8);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedKodeMK, setSelectedKodeMK] = useState(null);
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_, newPage) => {
     setPage(newPage);
   };
 
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedKodeMK(event.currentTarget.getAttribute("data-kodemk"));
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedKodeMK(null);
-  };
-
-  const handleViewReport = () => {
-    const currentPath = window.location.pathname;
-    const newPath = `${currentPath}/reportCPL/${selectedKodeMK}`;
-    window.location.href = newPath;
-  };
+  const rpsQuery = useQuery({
+    queryFn: () => getRpsList({ curriculumId }),
+  });
 
   return (
     <div className="">
@@ -201,7 +96,7 @@ const ListRPS = () => {
             <p className="text-lg font-medium ">
               Total RPS :{" "}
               <span className="font-extrabold text-blue-800">
-                {rows.length} RPS
+                {rpsQuery.data?.length} RPS
               </span>
             </p>
           </div>
@@ -239,57 +134,31 @@ const ListRPS = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow hover key={row.no}>
-                    {columns.map((column) => (
-                      <TableCell key={column.id} align="left">
-                        {column.id === "status" ? (
-                          <div
-                            className={`${
-                              row.status === "Available"
-                                ? "bg-green-500 bg-opacity-30"
-                                : "bg-red-500 bg-opacity-30"
-                            } rounded-full text-center text-${
-                              row.status === "Available" ? "green" : "red"
-                            }-800`}
-                          >
-                            {row[column.id]}
-                          </div>
-                        ) : column.id === "action" ? (
-                          <div>
-                            <IconButton
-                              aria-label="Action"
-                              size="small"
-                              onClick={handleMenuClick}
-                              data-kodemk={row.kodeMK}
-                            >
-                              <MoreVertIcon />
-                            </IconButton>
-                            <Menu
-                              className="*:!shadow-sm"
-                              anchorEl={anchorEl}
-                              open={Boolean(anchorEl)}
-                              onClose={handleMenuClose}
-                              MenuListProps={{
-                                "aria-labelledby": "basic-button",
-                              }}
-                            >
-                              <MenuItem onClick={handleViewReport}>
-                                View Report CPL
-                              </MenuItem>
-                              <MenuItem onClick={handleMenuClose}>
-                                Edit
-                              </MenuItem>
-                              <MenuItem onClick={handleMenuClose}>
-                                Delete
-                              </MenuItem>
-                            </Menu>
-                          </div>
-                        ) : (
-                          row[column.id]
-                        )}
-                      </TableCell>
-                    ))}
+                {rpsQuery.data?.map((row, index) => (
+                  <TableRow
+                    component={Link}
+                    to={`/obe/evaluasi-cpl/list/${major}/${curriculumId}/${row.id}`}
+                    hover
+                    key={row.id}
+                  >
+                    <TableCell align="left">{index + 1}</TableCell>
+                    <TableCell align="left">
+                      {`${row.Subject.indonesiaName} ${row.Subject.englishName}`}
+                    </TableCell>
+                    <TableCell align="left">
+                      {`${row.teacher.firstName} ${row.teacher.lastName}`}
+                    </TableCell>
+                    <TableCell align="left">{row.Subject.code}</TableCell>
+                    <TableCell align="left">
+                      {row.Subject.Curriculum_Subject.map((item) =>
+                        convertShortMajor(item.curriculum.major)
+                      ).join(" | ")}
+                    </TableCell>
+                    <TableCell align="left">
+                      {row.Subject.Curriculum_Subject.map(
+                        (item) => item.semester
+                      ).join(" | ")}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -297,7 +166,7 @@ const ListRPS = () => {
           </TableContainer>
           <TablePagination
             component="div"
-            count={rows.length}
+            count={rpsQuery.data?.length}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}

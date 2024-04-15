@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { TablePagination } from "@mui/material";
+import { Chip, TablePagination } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
@@ -15,7 +15,7 @@ import { getRpsList } from "app/api";
 import { useQuery } from "@tanstack/react-query";
 import { Actions } from "./Components";
 import moment from "moment";
-import { convertShortMajor } from "app/utils/appHelpers";
+import { convertShortMajor, getColor } from "app/utils/appHelpers";
 
 const ListRPSProdi = () => {
   const [page, setPage] = useState(0);
@@ -128,6 +128,9 @@ const ListRPSProdi = () => {
                     Direvisi
                   </TableCell>
                   <TableCell align="left" style={styles.theadCell}>
+                    Status
+                  </TableCell>
+                  <TableCell align="left" style={styles.theadCell}>
                     Actions
                   </TableCell>
                 </TableRow>
@@ -156,8 +159,11 @@ const ListRPSProdi = () => {
                     <TableCell align="left">
                       {moment(row.updatedAt).format("DD/MM/YYYY")}
                     </TableCell>
+                    <TableCell align="left">
+                      <Chip label={row.status} color={getColor(row.status)} />
+                    </TableCell>
                     <TableCell>
-                      <Actions row={row} />
+                      <Actions row={row} major={major} />
                     </TableCell>
                   </TableRow>
                 ))}

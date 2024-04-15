@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
@@ -17,25 +17,12 @@ import { useQuery } from "@tanstack/react-query";
 import { getRpsListTeacher } from "app/api";
 import useUser from "app/hooks/useUser";
 import { Actions } from "./Components";
-import { convertShortMajor } from "app/utils/appHelpers";
+import { convertShortMajor, getColor } from "app/utils/appHelpers";
 
 const EvaluasiRPS = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(8);
   const { user } = useUser();
-
-  const getColor = (status) => {
-    switch (status) {
-      case "WAITING":
-        return "warning";
-      case "APPROVED":
-        return "success";
-      case "REJECTED":
-        return "error";
-      default:
-        return "default";
-    }
-  };
 
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
