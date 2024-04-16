@@ -4,15 +4,6 @@ const blueTheme = {
   confirmButtonColor: "#007BFF",
 };
 
-const handlePermissionError = () => {
-  Swal.fire({
-    icon: "error",
-    title: "Sorry",
-    text: "You don't have permission to access this page",
-    ...blueTheme,
-  });
-};
-
 const handleAuthenticationError = () => {
   Swal.fire({
     icon: "error",
@@ -22,4 +13,4 @@ const handleAuthenticationError = () => {
   });
 };
 
-export { handlePermissionError, handleAuthenticationError };
+export { handleAuthenticationError };

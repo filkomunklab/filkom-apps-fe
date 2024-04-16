@@ -32,10 +32,7 @@ import FileSaver from "file-saver";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import SuccessOrError from "../../components/Modal/SuccessOrError";
-import {
-  handlePermissionError,
-  handleAuthenticationError,
-} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 import CustomAlert from "../../components/Alert/Alert";
 
 const styleCurriculum = {
@@ -144,16 +141,10 @@ const Curriculum = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (error.response && error.response.status === 403) {
-        handlePermissionError();
-        setTimeout(() => {
-          navigate(-1);
-        }, 2000);
-        return;
       } else if (error.response && error.response.status === 401) {
         handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         return;
       }
     }
@@ -203,8 +194,7 @@ const Curriculum = () => {
           setLoading(false);
         }
       } catch (error) {
-        console.error("Error:", error);
-        console.error("Error response:", error.response);
+        console.error("Error:");
         hideAlert();
         setSelectedProdi("");
         setSelectedYear("");
@@ -241,16 +231,10 @@ const Curriculum = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (error.response && error.response.status === 403) {
-        handlePermissionError();
-        setTimeout(() => {
-          navigate(-1);
-        }, 2000);
-        return;
       } else if (error.response && error.response.status === 401) {
         handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.log("error: ");
         return;
       }
     }
@@ -269,16 +253,10 @@ const Curriculum = () => {
     } catch (error) {
       if (error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (error.response && error.response.status === 403) {
-        handlePermissionError();
-        setTimeout(() => {
-          navigate(-1);
-        }, 2000);
-        return;
       } else if (error.response && error.response.status === 401) {
         handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         return;
       }
     }
