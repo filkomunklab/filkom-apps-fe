@@ -14,113 +14,11 @@ import Collapse from "@mui/material/Collapse";
 import LoadingButton from "@mui/lab/LoadingButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import { PASSWORD_DEFAULT } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
-import * as Yup from "yup";
-
-const studentArraySchema = Yup.array()
-  .of(
-    Yup.object().shape({
-      nim: Yup.string()
-        .trim("NIM cannot include leading and trailing spaces")
-        .strict(true)
-        .matches(/^\d+$/, "NIM must only contain digits")
-        .length(12, "must be 10 digits")
-        .required(),
-      reg_num: Yup.string()
-        .trim("Registration Number cannot include leading and trailing spaces")
-        .strict(true)
-        .matches(/^[sS]\d{7}$/, "must format like: 's2200021'")
-        .length(8, "must be 8 characters long")
-        .required(),
-      firstName: Yup.string()
-        .trim("First Name cannot include leading and trailing spaces")
-        .strict(true)
-        .min(3, "must be at least 3 characters")
-        .max(50, "cannot be more than 50 characters")
-        .required(),
-      lastName: Yup.string()
-        .trim("Last Name cannot include leading and trailing spaces")
-        .strict(true)
-        .min(3, "must be at least 3 characters")
-        .max(50, "cannot be more than 50 characters")
-        .required(),
-      gender: Yup.string()
-        .oneOf(["MALE", "FEMALE"], "Must be either MALE or FEMALE")
-        .required(),
-      major: Yup.string().oneOf(["IF", "SI", "DKV"]).required(),
-      arrivalYear: Yup.string()
-        .trim("Arrival Year cannot include leading and trailing spaces")
-        .strict(true)
-        .matches(/^\d+$/, "Arrival Year must only contain digits"),
-      religion: Yup.string()
-        .trim("Religion cannot include leading and trailing spaces")
-        .strict(true)
-        .min(3, "must be at least 3 characters")
-        .required(),
-      MaritalStatus: Yup.string()
-        .trim("Marital Status cannot include leading and trailing spaces")
-        .strict(true)
-        .oneOf(["Married", "Not Yet Married"])
-        .required(),
-      studentEmail: Yup.string()
-        .trim("Student Email cannot include leading and trailing spaces")
-        .strict(true)
-        .email(),
-      address: Yup.string()
-        .trim("Address cannot include leading and trailing spaces")
-        .strict(true)
-        .min(3, "must be at least 3 characters"),
-      currentResidenceStatus: Yup.string()
-        .trim(
-          "Current Residence Status cannot include leading and trailing spaces"
-        )
-        .strict(true)
-        .oneOf(["Asrama", "Outsider Dekat", "Outsider Jauh"]),
-      curriculumMajor: Yup.string()
-        .trim("Curriculum Major cannot include leading and trailing spaces")
-        .strict(true)
-        .required(),
-      curriculumYear: Yup.string()
-        .trim("Curriculum Year cannot include leading and trailing spaces")
-        .strict(true)
-        .matches(/^\d+$/, "Curriculum Year must only contain digits")
-        .required(),
-      guardianName: Yup.string()
-        .trim(
-          "Parent / guardian name cannot include leading and trailing spaces"
-        )
-        .strict(true)
-        .min(3, "must be at least 3 characters")
-        .max(50, "cannot be more than 50 characters")
-        .required(),
-      guardianReligion: Yup.string()
-        .trim(
-          "Parent / guardian Religion cannot include leading and trailing spaces"
-        )
-        .strict(true)
-        .min(3, "must be at least 3 characters")
-        .required(),
-      familyRelation: Yup.string()
-        .trim(
-          "Parent / guardian Relation cannot include leading and trailing spaces"
-        )
-        .strict(true)
-        .min(3, "must be at least 3 characters")
-        .required(),
-      guardianAddress: Yup.string()
-        .trim(
-          "Parent / guardian Address cannot include leading and trailing spaces"
-        )
-        .strict(true)
-        .min(3, "must be at least 3 characters")
-        .required(),
-    })
-  )
-  .min(1, "Student cannot be empty");
 
 const AddStudentModal = ({
   openModalAddStudent,
@@ -130,7 +28,6 @@ const AddStudentModal = ({
 }) => {
   const [selectedFile, setSelectedFile] = useState("");
   const [borderStyleEmptyFile, setBorderStyleEmptyFile] = useState("");
-
   const [loading, setLoading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [error, setError] = React.useState("");
@@ -150,21 +47,8 @@ const AddStudentModal = ({
     rowGap: "30px",
   };
 
-  const VisuallyHiddenInput = styled("input")({
-    clip: "rect(0 0 0 0)",
-    clipPath: "inset(50%)",
-    height: 1,
-    overflow: "hidden",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    whiteSpace: "nowrap",
-    width: 1,
-  });
-
   const handleFileInput = (event) => {
     const file = event.target.files[0];
-
     if (file) {
       const allowedExtensions = ["xlsx", "xls"];
       const fileExtension = file.name.split(".").pop().toLowerCase();
@@ -208,111 +92,40 @@ const AddStudentModal = ({
   const handleSubmitFile = async () => {
     setLoading(true);
     if (selectedFile) {
-      const file = selectedFile;
-      const reader = new FileReader();
+      try {
+        const formData = new FormData();
+        formData.append("xlsxFile", selectedFile);
 
-      reader.onload = async (e) => {
-        const dataExcel = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(dataExcel, { type: "array" });
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const options = {
-          header: [
-            "nim",
-            "reg_num",
-            "firstName",
-            "lastName",
-            "gender",
-            "major",
-            "arrivalYear",
-            "religion",
-            "MaritalStatus",
-            "studentEmail",
-            "address",
-            "currentResidenceStatus",
-            "curriculumMajor",
-            "curriculumYear",
-            "guardianName",
-            "guardianReligion",
-            "familyRelation",
-            "guardianAddress",
-          ],
-          raw: false,
-          range: 1,
-          defval: "",
-        };
-        const result = XLSX.utils.sheet_to_json(sheet, options);
-
-        console.log("ini data result excel to json: ", result);
-
-        const data = result.map((item) => {
-          return {
-            ...item,
-            password: PASSWORD_DEFAULT,
-          };
+        await jwtAuthAxios.post(`/student-many/file`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         });
-        console.log("ini data yang sudah di maping loh: ", data);
-        try {
-          await studentArraySchema.validate(data, {
-            abortEarly: false,
-          });
-        } catch (error) {
-          setLoading(false);
-          setOpen(true);
-          console.log("ini errornya: ", error.errors);
-          if (error.inner && error.inner.length > 0) {
-            console.error("Detail kesalahan pada field:");
-            const arrayError = error.inner.map((error) => {
-              const number =
-                parseInt(error.path.split(".")[0].slice(1, -1), 10) + 2;
-              const column = error.path.split(".")[1];
-              return `Row: ${number}, Column: ${column}, Message: ${error.message}. `;
-            });
-            setError(arrayError);
-          }
-          return;
+
+        const response = await jwtAuthAxios.get(`/Student`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setSelectedFile(null);
+        setStudents(response.data.data);
+        setStudentsFromApi(response.data.data);
+        setOpenModalAddStudent(false);
+        setBorderStyleEmptyFile("1px solid #E0E0E0");
+        setLoading(false);
+        setOpen(false);
+      } catch (error) {
+        setLoading(false);
+        if (error.response) {
+          setError(error.response.data.data.error);
+        } else if (error.message) {
+          setError(error.message);
+        } else {
+          setError("Something Wrong!!");
         }
-
-        try {
-          await jwtAuthAxios.post(
-            `/student-many/file`,
-            {
-              data,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-
-          const response = await jwtAuthAxios.get(`/Student`, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          });
-          setSelectedFile(null);
-          setStudents(response.data.data);
-          setStudentsFromApi(response.data.data);
-          setOpenModalAddStudent(false);
-          setBorderStyleEmptyFile("1px solid #E0E0E0");
-          setLoading(false);
-          setOpen(false);
-        } catch (error) {
-          console.log("error apa ini dia: ", error);
-          if (error.response) {
-            setError(error.response.data.data.error);
-          } else if (error.message) {
-            setError(error.message);
-          } else {
-            setError("Something Wrong!!");
-          }
-          setLoading(false);
-          setOpen(true);
-        }
-      };
-
-      reader.readAsArrayBuffer(file);
+        setLoading(false);
+        setOpen(true);
+      }
     } else {
       setLoading(false);
       setError("Please Import Excel file");
@@ -392,7 +205,13 @@ const AddStudentModal = ({
           }}
         >
           {selectedFile ? selectedFile.name : "Import Excel"}
-          <VisuallyHiddenInput type="file" onChange={handleFileInput} />
+          <input
+            type="file"
+            accept=".xls,.xlsx"
+            id="excel-file"
+            onChange={handleFileInput}
+            style={{ display: "none" }}
+          />
         </Button>
         <Stack
           direction="row"
