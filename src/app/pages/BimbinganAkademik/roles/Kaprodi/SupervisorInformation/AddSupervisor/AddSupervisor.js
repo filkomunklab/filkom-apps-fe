@@ -24,10 +24,7 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
-import {
-  handlePermissionError,
-  handleAuthenticationError,
-} from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
 import CustomAlert from "app/pages/BimbinganAkademik/components/Alert/Alert";
 
@@ -91,16 +88,10 @@ const AddSupervisor = () => {
   const handleError = (error) => {
     if (error.code === "ERR_CANCELED") {
       console.log("request canceled");
-    } else if (error.response && error.response.status === 403) {
-      handlePermissionError();
-      setTimeout(() => {
-        navigate(-1);
-      }, 2000);
-      return;
     } else if (error.response && error.response.status === 401) {
       handleAuthenticationError();
     } else {
-      console.log("ini error: ", error);
+      console.error("error: ");
     }
   };
 
