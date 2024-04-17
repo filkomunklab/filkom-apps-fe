@@ -49,12 +49,12 @@ const ReportCPMK = () => {
   const reportDetailMutation = useMutation({
     mutationFn: putSummaryReport,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reportDetail", rpsId] }),
-        Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: "Data has been updated",
-        });
+      queryClient.invalidateQueries({ queryKey: ["reportDetail", rpsId] });
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Data has been updated",
+      });
     },
     onError: (error) => {
       Swal.fire({
