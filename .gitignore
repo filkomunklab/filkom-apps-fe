@@ -25,3 +25,8 @@ yarn-debug.log*
 yarn-error.log*
 yarn.lock*
 /yarn.lock*
+
+
+# next
+.next/
+next-env.d.ts
