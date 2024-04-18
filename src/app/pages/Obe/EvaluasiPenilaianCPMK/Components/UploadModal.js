@@ -3,19 +3,21 @@ import DownloadIcon from "@mui/icons-material/Download";
 import { Button, FormHelperText, IconButton, Modal } from "@mui/material";
 import { useRef } from "react";
 import { useDropzone } from "react-dropzone";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postStudents } from "app/api";
 import { Form, Formik } from "formik";
 import * as yup from "yup";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { DeleteOutline } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import Swal from "sweetalert2";
+import { OBE_BASE_URL_API } from "@jumbo/config/env";
 
 const UploadModal = ({ open, setOpen = () => {} }) => {
   const { rpsId } = useParams();
   const formik = useRef(null);
+  const queryClient = useQueryClient();
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
@@ -30,6 +32,9 @@ const UploadModal = ({ open, setOpen = () => {} }) => {
   const studentsMutation = useMutation({
     mutationFn: postStudents,
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["reportDetail", rpsId],
+      });
       Swal.fire({
         icon: "success",
         title: "Success",
@@ -75,28 +80,30 @@ const UploadModal = ({ open, setOpen = () => {} }) => {
                     <span className="text-blue-600 mr-2">
                       <ErrorIcon />
                     </span>
-                    Persiapkan file CSV
+                    Persiapkan file XLSX
                   </h1>
                   <div className="pl-8">
                     <ul className="list-disc text-lg font-medium text-gray-500 py-5 pl-[18px]">
                       <li>
-                        Pastikan file yang anda upload harus berbentuk .csv
+                        Pastikan file yang anda upload harus berbentuk .xlsx
                       </li>
                       <li>Periksa kembali jika ada data yang sama.</li>
-                      <li>500 baris data maksimal dalam satu file .csv</li>
                     </ul>
-                    <p className="text-xl font-medium text-blue-700">
+                    <Link
+                      to={`${OBE_BASE_URL_API}/static/templates/ClassMember.xlsx`}
+                      className="text-xl font-medium text-blue-700"
+                    >
                       DOWNLOAD TAMPLATE CSV{" "}
                       <span>
                         <DownloadIcon />
                       </span>
-                    </p>
+                    </Link>
                   </div>
                 </div>
                 {!values.file ? (
                   <>
                     <div
-                      className="border-dashed border-2 border-primary rounded-lg p-10 flex justify-center items-center"
+                      className="border-dashed border-2 border-primary rounded-lg p-10 flex justify-center items-center hover:cursor-pointer"
                       {...getRootProps()}
                     >
                       <input {...getInputProps()} />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getRpsListTeacher } from "app/api";
 import useUser from "app/hooks/useUser";
 import { convertShortMajor } from "app/utils/appHelpers";
+import { CircularProgress } from "@mui/material";
 
 const EvaluasiCPMK = () => {
   const [page, setPage] = useState(0);
@@ -88,6 +89,10 @@ const EvaluasiCPMK = () => {
     queryKey: ["rps", { teacherId: user.id }],
     queryFn: () => getRpsListTeacher({ teacherId: user.id }),
   });
+
+  if (rpsQuery.status === "pending") {
+    return <CircularProgress color="info" />;
+  }
 
   return (
     <div className="">
@@ -223,7 +228,7 @@ const EvaluasiCPMK = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={rpsQuery.data?.length}
+            count={rpsQuery.data?.rps.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={(_, page) => setPage(page)}

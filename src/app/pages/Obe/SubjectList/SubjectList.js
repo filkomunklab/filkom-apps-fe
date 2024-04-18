@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
-import { Button, Chip, Stack, TablePagination, TextField } from "@mui/material";
+import { Button, Chip, CircularProgress, Stack, TablePagination, TextField } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -22,6 +22,7 @@ import { Actions, CplTable } from "./components";
 import Swal from "sweetalert2";
 import { LoadingButton } from "@mui/lab";
 import { OBE_BASE_URL_API } from "@jumbo/config/env";
+import NotfoundAnimation from "app/shared/NotfoundAnimation";
 
 const SubjectList = () => {
   const [open, setOpen] = useState(false);
@@ -65,6 +66,15 @@ const SubjectList = () => {
       });
     },
   });
+
+  if (subjectsQuery.status === "pending") {
+    return <CircularProgress color="info" />;
+  }
+
+  if (!subjectsQuery.data) {
+    return <NotfoundAnimation />;
+  }
+
   return (
     <div>
       <Modal

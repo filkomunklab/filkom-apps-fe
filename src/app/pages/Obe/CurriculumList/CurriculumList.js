@@ -1,36 +1,37 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import {
   Button,
+  CircularProgress,
   FormHelperText,
   TablePagination,
   TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Modal,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  IconButton,
+  Select,
 } from "@mui/material";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import IconButton from "@mui/material/IconButton";
-
-import Modal from "@mui/material/Modal";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getTeacher, postCurriculum } from "app/api";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
 import { DeleteOutline } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import getCurriculum from "app/api/getCurriculum";
-import { Actions } from "./Components";
 import { OBE_BASE_URL_API } from "@jumbo/config/env";
+import { convertShortMajor } from "app/utils/appHelpers";
+import NotfoundAnimation from "app/shared/NotfoundAnimation";
 
 const CurriculumList = () => {
   const [open, setOpen] = useState(false);
@@ -38,7 +39,6 @@ const CurriculumList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const inputRef = useRef(null);
   const { major } = useParams();
-  const queryClient = useQueryClient();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -59,9 +59,7 @@ const CurriculumList = () => {
   const curriculum = useMutation({
     mutationFn: postCurriculum,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["curriculum", major],
-      });
+      curriculumQuery.refetch();
       Swal.fire({
         icon: "success",
         title: "Success",
@@ -77,6 +75,11 @@ const CurriculumList = () => {
       });
     },
   });
+
+  if (curriculumQuery.status === "pending") {
+    return <CircularProgress color="info" />;
+  }
+
   return (
     <div>
       <Modal
@@ -141,7 +144,7 @@ const CurriculumList = () => {
                         >
                           <MenuItem value={"SI"}>Sistem Informasi</MenuItem>
                           <MenuItem value={"IF"}>Informatika</MenuItem>
-                          <MenuItem value={"DKV"}>Teknologi Informasi</MenuItem>
+                          <MenuItem value={"TI"}>Teknologi Informasi</MenuItem>
                         </Select>
                         <FormHelperText
                           children={errors.major}
@@ -270,7 +273,9 @@ const CurriculumList = () => {
       </div>
       <div className="flex justify-between mb-3">
         <div>
-          <h1 className="text-2xl font-medium">List Kurikulum {major}</h1>
+          <h1 className="text-2xl font-medium">
+            List Kurikulum {convertShortMajor(major)}
+          </h1>
         </div>
         <div>
           <TextField
@@ -284,59 +289,66 @@ const CurriculumList = () => {
           />
         </div>
       </div>
-      <div className="mb-3">
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow
-                style={{ backgroundColor: "#006AF5", color: "white" }}
-                className="*:!text-white"
-              >
-                <TableCell>No</TableCell>
-                <TableCell>Program Studi</TableCell>
-                <TableCell>Tahun Kurikulum</TableCell>
-                <TableCell>Total MK</TableCell>
-                <TableCell>Ketua Program Studi</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {curriculumQuery.data?.map((row, i) => (
+      {curriculumQuery.data ? (
+        <div className="mb-3">
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
                 <TableRow
-                  key={row.id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  style={{ backgroundColor: "#006AF5", color: "white" }}
+                  className="*:!text-white"
                 >
-                  <TableCell component="th" scope="row">
-                    {i + 1}
-                  </TableCell>
-                  <TableCell>{row.major}</TableCell>
-                  <TableCell>{row.year}</TableCell>
-                  <TableCell>{row._count.Curriculum_Subject}</TableCell>
-                  <TableCell>{`${row.headOfProgramStudy.firstName} ${row.headOfProgramStudy.lastName} `}</TableCell>
-                  <TableCell>
-                    <Actions row={row} />
-                  </TableCell>
+                  <TableCell>No</TableCell>
+                  <TableCell>Program Studi</TableCell>
+                  <TableCell>Tahun Kurikulum</TableCell>
+                  <TableCell>Total MK</TableCell>
+                  <TableCell>Ketua Program Studi</TableCell>
+                  {/* <TableCell>Action</TableCell> */}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={curriculumQuery.data?.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={(_, page) => setPage(page)}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </div>
+              </TableHead>
+              <TableBody>
+                {curriculumQuery.data?.map((row, i) => (
+                  <TableRow
+                    hover
+                    component={Link}
+                    to={`/obe/curriculum/${major}/${row.id}`}
+                    key={row.id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {i + 1}
+                    </TableCell>
+                    <TableCell>{row.major}</TableCell>
+                    <TableCell>{row.year}</TableCell>
+                    <TableCell>{row._count.Curriculum_Subject}</TableCell>
+                    <TableCell>{`${row.headOfProgramStudy.firstName} ${row.headOfProgramStudy.lastName} `}</TableCell>
+                    {/* <TableCell>
+                      <Actions row={row} />
+                    </TableCell> */}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={curriculumQuery.data?.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={(_, page) => setPage(page)}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </div>
+      ) : (
+        <NotfoundAnimation />
+      )}
     </div>
   );
 };
 
 const createCurriculumSchema = yup.object().shape({
-  major: yup.string().oneOf(["IF", "SI", "DKV"]).required("Required"),
+  major: yup.string().oneOf(["IF", "SI", "TI"]).required("Required"),
   year: yup
     .string()
     .length(4, "Year must be 4 characters")

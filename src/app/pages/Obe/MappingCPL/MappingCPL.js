@@ -4,6 +4,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Checkbox,
+  CircularProgress,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Form, Formik } from "formik";
@@ -16,6 +17,7 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { ExpandMore } from "@mui/icons-material";
 import { convertShortMajor } from "app/utils/appHelpers";
+import NotfoundAnimation from "app/shared/NotfoundAnimation";
 
 const MappingCPL = () => {
   const { subjectId } = useParams();
@@ -46,6 +48,15 @@ const MappingCPL = () => {
       });
     },
   });
+
+  if (subjectCplQuery.status === "pending") {
+    return <CircularProgress color="info" />;
+  }
+
+  if (!subjectCplQuery.data) {
+    return <NotfoundAnimation />;
+  }
+
   return (
     <div>
       <div className="mb-8">

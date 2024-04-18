@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { GetSubjects } from "app/api";
 import { useFormikContext } from "formik";
 import { FormHelperText } from "@mui/material";
+import CreateRpsSkeleton from "../CreateRpsSkeleton";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -24,6 +25,8 @@ const IdentitasMK = () => {
     queryKey: ["subjects"],
     queryFn: GetSubjects.all,
   });
+
+  if (subjectsQuery.status === "pending") return <CreateRpsSkeleton />;
 
   return (
     <div className="bg-white rounded-sm p-5">

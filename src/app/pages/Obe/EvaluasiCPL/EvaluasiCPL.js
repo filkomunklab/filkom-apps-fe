@@ -14,6 +14,8 @@ import TablePagination from "@mui/material/TablePagination";
 import { convertShortMajor } from "app/utils/appHelpers";
 import { useQuery } from "@tanstack/react-query";
 import getCurriculum from "app/api/getCurriculum";
+import { CircularProgress } from "@mui/material";
+import NotfoundAnimation from "app/shared/NotfoundAnimation";
 
 const EvaluasiCPL = () => {
   const [page, setPage] = useState(0);
@@ -79,6 +81,10 @@ const EvaluasiCPL = () => {
     queryFn: () => getCurriculum(major),
   });
 
+  if (curriculumQuery.status === "pending") {
+    return <CircularProgress color="info" />;
+  }
+
   return (
     <div className="">
       <div className="flex flex-row items-center justify-between mb-12">
@@ -88,7 +94,7 @@ const EvaluasiCPL = () => {
       </div>
 
       <div className="flex flex-row items-center justify-between mt-4 mb-6">
-        <h1 className="text-3xl">List Kurikulum PRODI</h1>
+        <h1 className="text-3xl">List Kurikulum {convertShortMajor(major)}</h1>
         <div className="flex items-center">
           <Search>
             <SearchIconWrapper>
@@ -102,69 +108,73 @@ const EvaluasiCPL = () => {
         </div>
       </div>
 
-      <div className="w-full">
-        <Paper sx={{ minWidth: "600px", overflow: "hidden" }}>
-          <TableContainer sx={{ Height: "100vh" }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align="left"
-                      style={{
-                        minWidth: column.minWidth,
-                        backgroundColor: "#006AF5",
-                        color: "white",
-                      }}
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {curriculumQuery.data?.map((row, index) => (
-                  <TableRow
-                    hover
-                    component={Link}
-                    to={`/obe/evaluasi-cpl/list/${major}/${row.id}`}
-                    key={row.id}
-                  >
-                    <TableCell align="left">{index + 1}</TableCell>
-                    <TableCell align="left">
-                      {convertShortMajor(row.major)}
-                    </TableCell>
-                    <TableCell align="left">{row.year}</TableCell>
-                    <TableCell align="left">
-                      {row._count.Curriculum_Subject}
-                    </TableCell>
-                    <TableCell align="left">{`${row.headOfProgramStudy.firstName} ${row.headOfProgramStudy.lastName}`}</TableCell>
+      {curriculumQuery.data ? (
+        <div className="w-full">
+          <Paper sx={{ minWidth: "600px", overflow: "hidden" }}>
+            <TableContainer sx={{ Height: "100vh" }}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    {columns.map((column) => (
+                      <TableCell
+                        key={column.id}
+                        align="left"
+                        style={{
+                          minWidth: column.minWidth,
+                          backgroundColor: "#006AF5",
+                          color: "white",
+                        }}
+                      >
+                        {column.label}
+                      </TableCell>
+                    ))}
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            component="div"
-            count={curriculumQuery.data?.length}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[]}
-            labelDisplayedRows={({ from, to, count }) =>
-              `Showing ${from} of ${count}`
-            }
-            labelRowsPerPage=""
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              paddingLeft: "16px",
-              paddingRight: "16px",
-            }}
-          />
-        </Paper>
-      </div>
+                </TableHead>
+                <TableBody>
+                  {curriculumQuery.data?.map((row, index) => (
+                    <TableRow
+                      hover
+                      component={Link}
+                      to={`/obe/evaluasi-cpl/list/${major}/${row.id}`}
+                      key={row.id}
+                    >
+                      <TableCell align="left">{index + 1}</TableCell>
+                      <TableCell align="left">
+                        {convertShortMajor(row.major)}
+                      </TableCell>
+                      <TableCell align="left">{row.year}</TableCell>
+                      <TableCell align="left">
+                        {row._count.Curriculum_Subject}
+                      </TableCell>
+                      <TableCell align="left">{`${row.headOfProgramStudy.firstName} ${row.headOfProgramStudy.lastName}`}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              component="div"
+              count={curriculumQuery.data?.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              rowsPerPageOptions={[]}
+              labelDisplayedRows={({ from, to, count }) =>
+                `Showing ${from} of ${count}`
+              }
+              labelRowsPerPage=""
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                paddingLeft: "16px",
+                paddingRight: "16px",
+              }}
+            />
+          </Paper>
+        </div>
+      ) : (
+        <NotfoundAnimation />
+      )}
     </div>
   );
 };

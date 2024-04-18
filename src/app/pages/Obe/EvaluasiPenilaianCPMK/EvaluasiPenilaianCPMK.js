@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, ButtonGroup } from "@mui/material";
+import { useState } from "react";
+import { Button, ButtonGroup, CircularProgress } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -14,6 +14,7 @@ import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { convertShortMajor } from "app/utils/appHelpers";
 import moment from "moment";
+import NotfoundAnimation from "app/shared/NotfoundAnimation";
 
 const EvaluasiPenilaianCPMK = () => {
   const [open, setOpen] = useState(false);
@@ -28,7 +29,7 @@ const EvaluasiPenilaianCPMK = () => {
   const reportDetailMutation = useMutation({
     mutationFn: putReportDetail,
     onSuccess: () => {
-      queryClient.invalidateQueries(["reportDetail", rpsId]);
+      queryClient.invalidateQueries({ queryKey: ["reportDetail", rpsId] });
       Swal.fire({
         icon: "success",
         title: "Success",
@@ -43,6 +44,10 @@ const EvaluasiPenilaianCPMK = () => {
       });
     },
   });
+
+  if (reportDetailQuery.status === "pending") {
+    return <CircularProgress color="info" />;
+  }
 
   return (
     <div className="">
@@ -68,76 +73,85 @@ const EvaluasiPenilaianCPMK = () => {
         </ButtonGroup>
       </div>
 
-      <div></div>
+      {reportDetailQuery.data ? (
+        <>
+          <div className="bg-secondary rounded-lg p-5 flex flex-row mb-10">
+            <table className="w-full">
+              <tbody>
+                <tr>
+                  <td className="text-lg font-semibold w-40">Program Studi</td>
+                  <td className="text-lg">{`: ${convertShortMajor(
+                    reportDetailQuery.data?.major
+                  )}`}</td>
+                </tr>
+                <tr>
+                  <td className="text-lg font-semibold w-40">SKS/Parallel</td>
+                  <td className="text-lg">{`: ${reportDetailQuery.data?.credits} / ${reportDetailQuery.data?.parallel}`}</td>
+                </tr>
+              </tbody>
+            </table>
 
-      <div className="bg-secondary rounded-lg p-5 flex flex-row mb-10">
-        <table className="w-full">
-          <tbody>
-            <tr>
-              <td className="text-lg font-semibold w-40">Program Studi</td>
-              <td className="text-lg">{`: ${convertShortMajor(
-                reportDetailQuery.data?.major
-              )}`}</td>
-            </tr>
-            <tr>
-              <td className="text-lg font-semibold w-40">SKS/Parallel</td>
-              <td className="text-lg">{`: ${reportDetailQuery.data?.credits} / ${reportDetailQuery.data?.parallel}`}</td>
-            </tr>
-          </tbody>
-        </table>
+            <table className="w-full">
+              <tbody>
+                <tr>
+                  <td className="text-lg font-semibold w-40">Dosen</td>
+                  <td className="text-lg">{`: ${reportDetailQuery.data?.teacher}`}</td>
+                </tr>
 
-        <table className="w-full">
-          <tbody>
-            <tr>
-              <td className="text-lg font-semibold w-40">Dosen</td>
-              <td className="text-lg">{`: ${reportDetailQuery.data?.teacher}`}</td>
-            </tr>
-
-            <tr>
-              <td className="text-lg font-semibold w-40">Jadwal</td>
-              <td className="text-lg">{`: ${reportDetailQuery.data?.schedule}`}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div>
-        <div className="flex flex-row justify-between">
-          <h1 className="text-2xl font-semibold mb-10">
-            Daftar Data Nilai Mahasiwa (CPMK)
-          </h1>
-          <div className="text-lg">
-            <p className="font-semibold mr-2">
-              LAST EDIT:{" "}
-              <span className="mr-5 font-normal">
-                {moment(reportDetailQuery.data?.updateAt).format(
-                  "MM/DD/YYYY, h:mm A"
-                )}
-              </span>
-            </p>
+                <tr>
+                  <td className="text-lg font-semibold w-40">Jadwal</td>
+                  <td className="text-lg">{`: ${reportDetailQuery.data?.schedule}`}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </div>
 
-        {reportDetailQuery.data?.studentGrade.map((item, index) => (
-          <div className="mb-5" key={index}>
-            <Accordion defaultExpanded>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <div className="flex flex-row justify-between w-full">
-                  <h1 className="text-lg font-semibold">{item.code}</h1>
+          <div>
+            <div className="flex flex-row justify-between">
+              <h1 className="text-2xl font-semibold mb-10">
+                Daftar Data Nilai Mahasiwa (CPMK)
+              </h1>
+              <div className="text-lg">
+                <p className="font-semibold mr-2">
+                  LAST EDIT:{" "}
+                  <span className="mr-5 font-normal">
+                    {moment(reportDetailQuery.data?.updateAt).format(
+                      "MM/DD/YYYY, h:mm A"
+                    )}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            {reportDetailQuery.data?.studentGrade.map((item, index) => {
+              return (
+                <div className="mb-5" key={index}>
+                  <Accordion defaultExpanded>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
+                    >
+                      <div className="flex flex-row justify-between w-full">
+                        <h1 className="text-lg font-semibold">{item.code}</h1>
+                      </div>
+                    </AccordionSummary>
+
+                    <AccordionDetails>
+                      <AccordionContent
+                        item={item}
+                        cpmkGrading={reportDetailQuery.data?.Rps.CpmkGrading}
+                      />
+                    </AccordionDetails>
+                  </Accordion>
                 </div>
-              </AccordionSummary>
-
-              <AccordionDetails>
-                <AccordionContent item={item} />
-              </AccordionDetails>
-            </Accordion>
+              );
+            })}
           </div>
-        ))}
-      </div>
+        </>
+      ) : (
+        <NotfoundAnimation message={"Consider upload student first"} />
+      )}
     </div>
   );
 };

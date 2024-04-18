@@ -585,7 +585,7 @@ export const dekanMenus = [
           {
             label: "Information Technology",
             type: "nav-item",
-            uri: "/obe/curriculum/DKV",
+            uri: "/obe/curriculum/TI",
           },
         ],
       },
@@ -1338,6 +1338,85 @@ export const kaprodiMenus = [
             label: "Skrip. Anggota",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Outcome-Based Education",
+    type: "section",
+    children: [
+      {
+        label: "Curriculum Management",
+        type: "collapsible",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Informatics",
+            type: "nav-item",
+            uri: "/obe/curriculum/IF",
+          },
+          {
+            label: "Information System",
+            type: "nav-item",
+            uri: "/obe/curriculum/SI",
+          },
+          {
+            label: "Information Technology",
+            type: "nav-item",
+            uri: "/obe/curriculum/TI",
+          },
+        ],
+      },
+      {
+        label: "Evaluasi CPL",
+        type: "collapsible",
+        icon: <PublishedWithChangesIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Informatics",
+            type: "nav-item",
+            uri: "/obe/evaluasi-cpl/list/IF",
+          },
+          {
+            label: "Information System",
+            type: "nav-item",
+            uri: "/obe/evaluasi-cpl/list/SI",
+          },
+          {
+            label: "Information Technology",
+            type: "nav-item",
+            uri: "/obe/evaluasi-cpl/list/DKV",
+          },
+        ],
+      },
+      {
+        label: "RPS Management",
+        type: "nav-item",
+        icon: <DescriptionIcon sx={{ fontSize: 20 }} />,
+        uri: "/obe/all-list-rps",
+      },
+      {
+        label: "List RPS",
+        type: "nav-item",
+        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+        uri: `/obe/list-rps`,
+      },
+      {
+        label: "Evaluasi CPMK",
+        type: "collapsible",
+        icon: <GradingIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Mata Kuliah",
+            type: "nav-item",
+            uri: `/obe/evaluasi-matakuliah`,
+          },
+          {
+            label: "Mahasiswa (Individu)",
+            type: "nav-item",
+            uri: `/obe/evaluasi-mahasiswa`,
           },
         ],
       },

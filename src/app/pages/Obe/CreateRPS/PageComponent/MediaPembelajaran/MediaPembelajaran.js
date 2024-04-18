@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { GetSubjects, getTeacher } from "app/api";
 import { convertShortMajor } from "app/utils/appHelpers";
 import { FormHelperText } from "@mui/material";
+import CreateRpsSkeleton from "../CreateRpsSkeleton";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -35,6 +36,9 @@ const MediaPembelajaran = () => {
     queryKey: ["preReqSubject", values.subjectId],
     queryFn: () => GetSubjects.preRequisite(values.subjectId),
   });
+
+  if (employee.status === "pending" || preReqSubject.status === "pending")
+    return <CreateRpsSkeleton />;
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
@@ -14,6 +14,8 @@ import TablePagination from "@mui/material/TablePagination";
 import { useQuery } from "@tanstack/react-query";
 import { getRpsList } from "app/api";
 import { convertShortMajor } from "app/utils/appHelpers";
+import { CircularProgress } from "@mui/material";
+import NotfoundAnimation from "app/shared/NotfoundAnimation";
 
 const ListRPS = () => {
   const { major, curriculumId } = useParams();
@@ -80,13 +82,23 @@ const ListRPS = () => {
     queryFn: () => getRpsList({ curriculumId }),
   });
 
+  if (rpsQuery.status === "pending") {
+    return <CircularProgress color="info" />;
+  }
+
+  if (!rpsQuery.data) {
+    return <NotfoundAnimation />;
+  }
+
   return (
     <div className="">
       <div className="flex flex-col mb-12">
         <h1 className="text-3xl font-semibold">
           RANCANGAN PEMBELAJARAN SEMESTER
         </h1>
-        <h2 className="text-xl font-medium">PRODI {major} - KURIKULUM 2020</h2>
+        <h2 className="text-xl font-medium">
+          PRODI {convertShortMajor(major)}
+        </h2>
       </div>
 
       <div className="flex flex-row items-center justify-between mt-4 mb-6">
@@ -96,7 +108,7 @@ const ListRPS = () => {
             <p className="text-lg font-medium ">
               Total RPS :{" "}
               <span className="font-extrabold text-blue-800">
-                {rpsQuery.data?.length} RPS
+                {rpsQuery.data?.length}
               </span>
             </p>
           </div>

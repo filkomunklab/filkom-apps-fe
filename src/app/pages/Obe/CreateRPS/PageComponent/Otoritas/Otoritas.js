@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getTeacher } from "app/api";
 import { Field, useFormikContext } from "formik";
 import { FormHelperText } from "@mui/material";
+import CreateRpsSkeleton from "../CreateRpsSkeleton";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -24,6 +25,8 @@ const Otoritas = () => {
     queryKey: ["employee"],
     queryFn: getTeacher,
   });
+
+  if (employee.status === "pending") return <CreateRpsSkeleton />;
 
   return (
     <div className="bg-white rounded-sm p-5">

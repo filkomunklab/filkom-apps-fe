@@ -11,6 +11,8 @@ import { useDropzone } from "react-dropzone";
 import { useMutation } from "@tanstack/react-query";
 import { putStudentGrade } from "app/api";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
+import { OBE_BASE_URL_API } from "@jumbo/config/env";
 
 const GradingModal = ({ open, setOpen = () => {}, item }) => {
   const formik = useRef(null);
@@ -90,12 +92,15 @@ const GradingModal = ({ open, setOpen = () => {}, item }) => {
                       </li>
                       <li>Periksa kembali jika ada data yang sama.</li>
                     </ul>
-                    <p className="text-xl font-medium text-blue-700">
+                    <Link
+                      to={`${OBE_BASE_URL_API}/static/templates/InsertGrade.xlsx`}
+                      className="text-xl font-medium text-blue-700"
+                    >
                       DOWNLOAD TAMPLATE XLSX{" "}
                       <span>
                         <DownloadIcon />
                       </span>
-                    </p>
+                    </Link>
                   </div>
                 </div>
                 {!values.file ? (

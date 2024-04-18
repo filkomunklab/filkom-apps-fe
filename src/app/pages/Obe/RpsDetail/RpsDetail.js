@@ -1,4 +1,4 @@
-import { Stack, Button } from "@mui/material";
+import { Stack, Button, CircularProgress } from "@mui/material";
 import { ASSET_IMAGES } from "app/utils/constants/paths";
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getRpsDetail } from "app/api";
 import moment from "moment";
 import { convertShortMajor } from "app/utils/appHelpers";
+import NotfoundAnimation from "app/shared/NotfoundAnimation";
 
 const marginTop = "10mm";
 const marginRight = "10mm";
@@ -29,6 +30,14 @@ const RpsDetail = () => {
     queryKey: ["rps", rpsId],
     queryFn: () => getRpsDetail(rpsId),
   });
+
+  if (rpsQuery.status === "pending") {
+    return <CircularProgress color="info" />;
+  }
+
+  if (!rpsQuery.data) {
+    return <NotfoundAnimation />;
+  }
 
   return (
     <Stack

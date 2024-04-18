@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { GradingModal } from "./Components";
 
-export default function AccordionContent({ item }) {
+export default function AccordionContent({ item, cpmkGrading }) {
   const [open, setOpen] = useState(false);
   const [selectedGrading, setSelectedGrading] = useState(null);
 
@@ -16,6 +16,8 @@ export default function AccordionContent({ item }) {
     setOpen(true);
     setSelectedGrading(selectedItem);
   };
+
+  const grading = cpmkGrading.find((cpmk) => cpmk.code === item.code);
 
   return (
     <div>
@@ -26,16 +28,16 @@ export default function AccordionContent({ item }) {
               <TableCell>No</TableCell>
               <TableCell>Nama Mahasiswa</TableCell>
               <TableCell>Nomor Induk Mahasiswa</TableCell>
-              {item.studentList[0].grading.map((item, index) => (
+              {grading.GradingSystem.map((item, index) => (
                 <TableCell
                   key={index}
                   onClick={() => handleOpen(item)}
                   className="hover:cursor-pointer hover:bg-blue-400"
                 >
-                  {item.gradingName}
+                  {`${item.gradingName} - /${item.gradingWeight}`}
                 </TableCell>
               ))}
-              <TableCell>Total Bobot</TableCell>
+              <TableCell>{`Total Bobot - /${grading.totalGradingWeight}`}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -71,14 +73,14 @@ export default function AccordionContent({ item }) {
               colSpan={3 + item.studentList[0].grading.length}
               align="center"
             >
-              TOTAL CPMK1
+              TOTAL
             </TableCell>
             <TableCell>
-              {item.studentList.reduce(
+              {`${item.studentList.reduce(
                 (acc, curr) =>
                   acc + curr.grading.reduce((acc, curr) => acc + curr.score, 0),
                 0
-              )}
+              )} / ${item.studentList.length * grading.totalGradingWeight}`}
             </TableCell>
           </TableRow>
         </Table>

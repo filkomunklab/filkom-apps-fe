@@ -11,6 +11,7 @@ import {
   Select,
 } from "@mui/material";
 import { GetSubjects } from "app/api";
+import CreateRpsSkeleton from "../CreateRpsSkeleton";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -30,6 +31,8 @@ const CPMK = () => {
     queryKey: ["cpl", values.subjectId],
     queryFn: () => GetSubjects.cpl(values.subjectId),
   });
+
+  if (cplQuery.status === "pending") return <CreateRpsSkeleton />;
 
   return (
     <>
