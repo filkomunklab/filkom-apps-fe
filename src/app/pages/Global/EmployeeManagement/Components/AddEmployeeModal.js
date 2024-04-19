@@ -15,70 +15,8 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
-import * as XLSX from "xlsx";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
-import { PASSWORD_DEFAULT } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
-import * as Yup from "yup";
-
-const roleValues = [
-  "ADMIN",
-  "SUPER_ADMIN",
-  "MAHASISWA",
-  "ADMIN_LPMI",
-  "OPERATOR_LPMI",
-  "ALUMNI",
-  "DEKAN",
-  "KAPRODI",
-  "DOSEN",
-  "DOSEN_MK",
-  "OPERATOR_FAKULTAS",
-  "SEKRETARIS",
-  "REGISTER",
-];
-
-const employeeArraySchema = Yup.array()
-  .of(
-    Yup.object().shape({
-      nik: Yup.string()
-        .trim("NIK cannot include leading and trailing spaces")
-        .strict(true)
-        .matches(/^\d+$/, "NIK must only contain digits")
-        .min(10, "must be at least 10 digits")
-        .max(13, "cannot be more than 13 digits")
-        .required(),
-      firstName: Yup.string()
-        .trim("First Name cannot include leading and trailing spaces")
-        .strict(true)
-        .min(3, "must be at least 3 characters")
-        .max(50, "cannot be more than 50 characters")
-        .required(),
-      lastName: Yup.string()
-        .trim("Last Name cannot include leading and trailing spaces")
-        .strict(true)
-        .min(3, "must be at least 3 characters")
-        .max(50, "cannot be more than 50 characters")
-        .required(),
-      degree: Yup.string(),
-      major: Yup.string().oneOf(["IF", "SI", "DKV", "NONE"]),
-      Address: Yup.string(),
-      email: Yup.string()
-        .trim("Email cannot include leading and trailing spaces")
-        .strict(true)
-        .email(),
-      phoneNum: Yup.string()
-        .trim("Phone Number cannot include leading and trailing spaces")
-        .strict(true)
-        .matches(/^\d+$/, "phone number must only contain digits")
-        .min(10, "must be at least 10 digits")
-        .max(13, "cannot be more than 13 digits"),
-      role: Yup.array()
-        .of(Yup.string().oneOf(roleValues, "Invalid role"))
-        .min(1, "At least one role must be selected"),
-      password: Yup.string(),
-    })
-  )
-  .min(1, "Employee cannot be empty");
 
 const AddEmployeeModal = ({
   openModalAddEmployee,
@@ -166,101 +104,46 @@ const AddEmployeeModal = ({
   const handleSubmitFile = async () => {
     setLoading(true);
     if (selectedFile) {
-      const file = selectedFile;
-      const reader = new FileReader();
-
-      reader.onload = async (e) => {
-        const dataExcel = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(dataExcel, { type: "array" });
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const options = {
-          header: [
-            "nik",
-            "firstName",
-            "lastName",
-            "degree",
-            "major",
-            "Address",
-            "email",
-            "phoneNum",
-            "role",
-          ],
-          raw: false,
-          range: 1,
-          defval: "",
-        };
-        const result = XLSX.utils.sheet_to_json(sheet, options);
-
-        console.log("ini data result excel to json: ", result);
-
-        const data = result.map((item) => {
-          return {
-            ...item,
-            password: PASSWORD_DEFAULT,
-            role: item.role.split(","),
-          };
-        });
-        console.log("ini data yang sudah di maping loh: ", data);
-        try {
-          await employeeArraySchema.validate(data, { abortEarly: false });
-        } catch (error) {
-          setLoading(false);
-          setOpen(true);
-          console.log("ini errornya: ", error.errors);
-          if (error.inner && error.inner.length > 0) {
-            console.error("Detail kesalahan pada field:");
-            const arrayError = error.inner.map((error) => {
-              const number =
-                parseInt(error.path.split(".")[0].slice(1, -1), 10) + 2;
-              const column = error.path.split(".")[1];
-              return `Row: ${number}, Column: ${column}, Message: ${error.message}. `;
-            });
-            setError(arrayError);
-          }
-          return;
-        }
-
-        try {
-          await jwtAuthAxios.post(
-            `/employee-many`,
-            {
-              data,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-
-          const response = await jwtAuthAxios.get(`/employee`, {
+      try {
+        const formData = new FormData();
+        formData.append("xlsxFile", selectedFile);
+        await jwtAuthAxios.post(
+          `/employee-many`,
+          {
+            formData,
+          },
+          {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "multipart/form-data",
             },
-          });
-          setSelectedFile(null);
-          setEmployees(response.data.data);
-          setEmployeesFromApi(response.data.data);
-          setOpenModalAddEmployee(false);
-          setBorderStyleEmptyFile("1px solid #E0E0E0");
-          setLoading(false);
-          setOpen(false);
-        } catch (error) {
-          console.log("error apa ini dia: ", error);
-          if (error.response) {
-            setError(error.response.data.data.error);
-          } else if (error.message) {
-            setError(error.message);
-          } else {
-            setError("Something Wrong!!");
           }
-          setLoading(false);
-          setOpen(true);
-        }
-      };
+        );
 
-      reader.readAsArrayBuffer(file);
+        const response = await jwtAuthAxios.get(`/employee`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setSelectedFile(null);
+        setEmployees(response.data.data);
+        setEmployeesFromApi(response.data.data);
+        setOpenModalAddEmployee(false);
+        setBorderStyleEmptyFile("1px solid #E0E0E0");
+        setLoading(false);
+        setOpen(false);
+      } catch (error) {
+        setLoading(false);
+        console.log("error apa ini dia: ", error);
+        if (error.response) {
+          setError(error.response.data.data.error);
+        } else if (error.message) {
+          setError(error.message);
+        } else {
+          setError("Something Wrong!!");
+        }
+        setLoading(false);
+        setOpen(true);
+      }
     } else {
       setLoading(false);
       setError("Please Import Excel file");
