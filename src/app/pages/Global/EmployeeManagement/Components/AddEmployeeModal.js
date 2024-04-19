@@ -107,17 +107,11 @@ const AddEmployeeModal = ({
       try {
         const formData = new FormData();
         formData.append("xlsxFile", selectedFile);
-        await jwtAuthAxios.post(
-          `/employee-many`,
-          {
-            formData,
+        await jwtAuthAxios.post(`/employee-many`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
           },
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        });
 
         const response = await jwtAuthAxios.get(`/employee`, {
           headers: {
@@ -226,7 +220,13 @@ const AddEmployeeModal = ({
           }}
         >
           {selectedFile ? selectedFile.name : "Import Excel"}
-          <VisuallyHiddenInput type="file" onChange={handleFileInput} />
+          <input
+            type="file"
+            accept=".xls,.xlsx"
+            id="excel-file"
+            onChange={handleFileInput}
+            style={{ display: "none" }}
+          />
         </Button>
         <Stack
           direction="row"
