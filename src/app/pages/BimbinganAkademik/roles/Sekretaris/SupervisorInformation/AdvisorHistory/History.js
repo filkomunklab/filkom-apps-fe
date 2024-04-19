@@ -137,7 +137,7 @@ const History = (props) => {
 
       if (consultationStatus === "OK") {
         const filteredConsultationData = consultationData.filter(
-          (value) => value?.status === "Complete"
+          (value) => value.status === "Complete"
         );
 
         setDataConsultation(filteredConsultationData);
@@ -340,7 +340,7 @@ const History = (props) => {
     <div>
       <div role="presentation" sx={{ paddingBottom: "15px" }}>
         <Breadcrumbs aria-label="breadcrumb">
-          <StyledLink to="/bimbingan-akademik/dekan/supervisor-information/">
+          <StyledLink to="/bimbingan-akademik/sekretaris/supervisor-information/">
             Supervisor Information
           </StyledLink>
           <Typography color="text.primary">History</Typography>

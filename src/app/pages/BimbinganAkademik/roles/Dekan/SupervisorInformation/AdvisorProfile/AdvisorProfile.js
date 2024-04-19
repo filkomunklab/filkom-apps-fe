@@ -267,7 +267,7 @@ const AdvisorProfile = () => {
             count={
               dataProfile.student
                 ? dataProfile.student.filter(
-                    (item) => item.status !== "GRADUATE"
+                    (item) => item?.status !== "GRADUATE"
                   ).length
                 : 0
             }

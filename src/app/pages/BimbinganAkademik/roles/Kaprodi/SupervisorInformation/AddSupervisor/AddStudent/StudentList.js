@@ -55,6 +55,7 @@ const StudentList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentFilter, setCurrentFilter] = useState("All Major");
   const [studentOptions, setStudentOptions] = useState([]);
+  const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(
     students?.map((data) => data.nim) || []
   );
@@ -102,22 +103,22 @@ const StudentList = () => {
   }, [search, currentFilter, originalDataStudent]);
 
   const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelected = searchFilteredData.map((item) => item.nim);
-      setSelectedStudent(newSelected);
-    } else {
-      setSelectedStudent([]);
-    }
+    setSelectAllChecked(event.target.checked);
+    setSelectedStudent(
+      event.target.checked ? searchFilteredData.map((item) => item.nim) : []
+    );
   };
 
   const filterAndSetStudents = () => {
     const filteredData = originalDataStudent.filter((item) => {
       const nameMatches =
-        item.firstName.toLowerCase().includes(search.toLowerCase()) ||
-        item.lastName.toLowerCase().includes(search.toLowerCase());
-      const nimMatches = item.nim.toLowerCase().includes(search.toLowerCase());
+        item?.firstName?.toLowerCase().includes(search.toLowerCase()) ||
+        item?.lastName?.toLowerCase().includes(search.toLowerCase());
+      const nimMatches = item?.nim
+        ?.toLowerCase()
+        .includes(search.toLowerCase());
       const majorMatches =
-        currentFilter === "All Major" || item.major === currentFilter;
+        currentFilter === "All Major" || item?.major === currentFilter;
       return (nameMatches || nimMatches) && majorMatches;
     });
     setSearchFilteredData(filteredData);

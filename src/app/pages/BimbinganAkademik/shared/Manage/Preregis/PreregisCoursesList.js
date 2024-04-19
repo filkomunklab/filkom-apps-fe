@@ -43,7 +43,7 @@ const PreregisCoursesList = () => {
       });
 
       const filteredData = result.data.data.filter((item) => {
-        const subjectName = item.name.toLowerCase();
+        const subjectName = item?.name?.toLowerCase();
         return subjectName.includes(searchValue.toLowerCase());
       });
 

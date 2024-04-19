@@ -88,18 +88,18 @@ const StudentInformationMentored = () => {
   const filterAndSetStudents = () => {
     const filteredData = originalDataStudent.filter((item) => {
       const nameMatches =
-        (item.student.firstName &&
-          item.student.firstName
+        (item?.student?.firstName &&
+          item?.student?.firstName
             .toLowerCase()
             .includes(search.toLowerCase())) ||
-        (item.student.lastName &&
-          item.student.lastName.toLowerCase().includes(search.toLowerCase()));
+        (item?.student?.lastName &&
+          item?.student?.lastName.toLowerCase().includes(search.toLowerCase()));
       const nimMatches =
-        item.student.nim &&
-        item.student.nim.toLowerCase().includes(search.toLowerCase());
+        item?.student?.nim &&
+        item?.student.nim.toLowerCase().includes(search.toLowerCase());
       const majorMatches =
         filter === "" ||
-        (item.student.status && item.student.status === filter);
+        (item?.student?.status && item?.student?.status === filter);
       return (nameMatches || nimMatches) && majorMatches;
     });
 

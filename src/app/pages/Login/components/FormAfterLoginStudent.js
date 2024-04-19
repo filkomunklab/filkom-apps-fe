@@ -203,6 +203,7 @@ const FormAfterLoginStudent = ({
       localStorage.setItem("user", JSON.stringify(userLogin));
       localStorage.setItem("token", tokenUser);
       navigate("/bimbingan-akademik/profile");
+      window.location.reload();
       setLoading(false);
     } catch (error) {
       setLoading(false);

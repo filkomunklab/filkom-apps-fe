@@ -151,12 +151,13 @@ const StudentManagement = () => {
   const filterAndSetStudents = () => {
     const filteredData = studentsFromApi.filter((item) => {
       const nameMatches =
-        item.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.lastName.toLowerCase().includes(searchTerm.toLowerCase());
-      const nimMatches = item.nim
+        item?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item?.lastName?.toLowerCase().includes(searchTerm.toLowerCase());
+      const nimMatches = item?.nim
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
-      const majorMatches = selectedMajor === "" || item.major === selectedMajor;
+      const majorMatches =
+        selectedMajor === "" || item?.major === selectedMajor;
 
       return (nameMatches || nimMatches) && majorMatches;
     });

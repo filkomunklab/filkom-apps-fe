@@ -105,10 +105,12 @@ const SupervisorInformation = () => {
   const filterAndSetStudents = () => {
     const filteredData = originalDataSupervisor.filter((item) => {
       const nameMatches =
-        item.teacher.firstName.toLowerCase().includes(search.toLowerCase()) ||
-        item.teacher.lastName.toLowerCase().includes(search.toLowerCase());
+        item?.teacher?.firstName
+          ?.toLowerCase()
+          .includes(search.toLowerCase()) ||
+        item?.teacher?.lastName?.toLowerCase().includes(search.toLowerCase());
 
-      const majorMatches = filter === "" || item.teacher.major === filter;
+      const majorMatches = filter === "" || item?.teacher?.major === filter;
 
       return nameMatches && majorMatches;
     });
@@ -320,12 +322,13 @@ const TableHeading = () => {
       <TableCell sx={{ textAlign: "center" }}>No</TableCell>
       <TableCell sx={{ textAlign: "center" }}>Name</TableCell>
       <TableCell sx={{ textAlign: "center" }}>Major</TableCell>
+      <TableCell sx={{ textAlign: "center" }}>History</TableCell>
       <TableCell sx={{ textAlign: "center" }}>Number of Student</TableCell>
     </TableRow>
   );
 };
 
-const TableItem = ({ item, index, handleDelete }) => {
+const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorE1] = useState(null);
   const open = Boolean(anchorEl);
@@ -337,6 +340,11 @@ const TableItem = ({ item, index, handleDelete }) => {
       case "profile":
         navigate(`advisor-profile/${nik}`, {
           state: { classID: item.id, nik: nik },
+        });
+        break;
+      case "history":
+        navigate(`advisor-history/${nik}`, {
+          state: { classID: item.id, id: item.teacher.id },
         });
         break;
     }
@@ -373,6 +381,23 @@ const TableItem = ({ item, index, handleDelete }) => {
           : major === "TI"
           ? "Information Technology"
           : "-"}
+      </TableCell>
+      <TableCell>
+        <Typography
+          onClick={(e) => handleButtonNavigate(e, "history")}
+          style={{
+            "@media (max-width: 650px)": { fontSize: "11px" },
+            textTransform: "capitalize",
+            paddingX: 0,
+            color: "#006AF5",
+            textDecoration: "none",
+            width: "100%",
+            cursor: "pointer",
+            textAlign: "center",
+          }}
+        >
+          View History
+        </Typography>
       </TableCell>
       <TableCell sx={[rowStyle]}>{item._count.GuidanceClassMember}</TableCell>
     </TableRow>

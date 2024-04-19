@@ -60,11 +60,11 @@ const ChangePassSchema = Yup.object().shape({
     .min(10, "must be at least 10 digits")
     .max(13, "cannot be more than 13 digits")
     .required(),
-  nidn: Yup.string()
-    .trim("NIDN cannot include leading and trailing spaces")
+  Address: Yup.string()
+    .trim("Address cannot include leading and trailing spaces")
     .strict(true)
-    .matches(/^\d+$/, "NIDN must only contain digits")
-    .length(10, "must 10 digits"),
+    .min(3, "must be at least 3 characters")
+    .max(50, "cannot be more than 50 characters"),
   firstName: Yup.string()
     .trim("First Name cannot include leading and trailing spaces")
     .strict(true)
@@ -78,7 +78,7 @@ const ChangePassSchema = Yup.object().shape({
     .max(50, "cannot be more than 50 characters")
     .required(),
   degree: Yup.string(),
-  major: Yup.string().oneOf(["IF", "SI", "TI", "NONE"]),
+  major: Yup.string().oneOf(["IF", "SI", "DKV", "NONE"]),
   phoneNum: Yup.string()
     .trim("Phone Number cannot include leading and trailing spaces")
     .strict(true)
@@ -137,7 +137,7 @@ const EditDataModal = ({
     <Formik
       initialValues={{
         nik: passingData.nik,
-        nidn: passingData.nidn,
+        Address: passingData.Address,
         firstName: passingData.firstName,
         lastName: passingData.lastName,
         degree: passingData.degree,
@@ -148,7 +148,7 @@ const EditDataModal = ({
       validationSchema={ChangePassSchema}
       onSubmit={async (values, { setSubmitting }) => {
         values.nik = values.nik.trim();
-        values.nidn = values.nidn.trim();
+        values.Address = values.Address.trim();
         values.firstName = values.firstName.trim();
         values.lastName = values.lastName.trim();
         values.degree = values.degree.trim();
@@ -271,14 +271,14 @@ const EditDataModal = ({
                   }}
                 />
                 <TextField
-                  label="NIDN"
+                  label="Address"
                   aria-readonly
-                  name="nidn"
+                  name="Address"
                   variant="outlined"
                   onChange={handleChange}
-                  error={errors.nidn && touched.nidn}
-                  helperText={errors.nidn}
-                  defaultValue={passingData.nidn}
+                  error={errors.Address && touched.Address}
+                  helperText={errors.Address}
+                  defaultValue={passingData.Address}
                   FormHelperTextProps={{
                     style: { whiteSpace: "normal", color: "red" },
                   }}
@@ -334,7 +334,7 @@ const EditDataModal = ({
                     <MenuItem value={"NONE"}>None</MenuItem>
                     <MenuItem value={"IF"}>Informatics</MenuItem>
                     <MenuItem value={"SI"}>Information System</MenuItem>
-                    <MenuItem value={"TI"}>Information Technology</MenuItem>
+                    <MenuItem value={"DKV"}>Information Technology</MenuItem>
                   </Select>
                 </FormControl>
                 <TextField

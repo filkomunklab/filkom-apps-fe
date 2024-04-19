@@ -79,9 +79,11 @@ const SupervisorInformation = () => {
   const filterAndSetStudents = () => {
     const filteredData = originalDataSupervisor.filter((item) => {
       const nameMatches =
-        item.teacher.firstName.toLowerCase().includes(search.toLowerCase()) ||
-        item.teacher.lastName.toLowerCase().includes(search.toLowerCase());
-      const majorMatches = filter === "" || item.teacher.major === filter;
+        item?.teacher?.firstName
+          ?.toLowerCase()
+          .includes(search.toLowerCase()) ||
+        item?.teacher?.lastName?.toLowerCase().includes(search.toLowerCase());
+      const majorMatches = filter === "" || item?.teacher?.major === filter;
 
       return nameMatches && majorMatches;
     });

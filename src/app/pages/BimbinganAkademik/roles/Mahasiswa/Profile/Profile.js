@@ -11,7 +11,6 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import { useNavigate } from "react-router-dom";
-import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 import Swal from "sweetalert2";
 
 const StudentProfile = () => {
@@ -41,7 +40,7 @@ const StudentProfile = () => {
     } catch (error) {
       if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (error && error.response && error.response.status === 401) {
+      } else if (error.response && error.response.status === 401) {
         const blueTheme = {
           confirmButtonColor: "#007BFF",
         };
@@ -52,10 +51,8 @@ const StudentProfile = () => {
           ...blueTheme,
         });
         navigate("/login");
-      } else if (error.response && error.response.status === 401) {
-        handleAuthenticationError();
       } else {
-        console.error("error: ");
+        console.log("ini error: ", error);
         return;
       }
     }

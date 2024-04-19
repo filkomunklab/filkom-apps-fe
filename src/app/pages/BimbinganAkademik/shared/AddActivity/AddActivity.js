@@ -163,22 +163,22 @@ const AddActivity = () => {
           setStudentOptions([
             "All students",
             ...data.GuidanceClassMember?.filter(
-              (item) => item.student.status === "ACTIVE"
-            ).map((item) => item.student),
+              (item) => item?.student?.status === "ACTIVE"
+            ).map((item) => item?.student),
           ]);
         } else if (valueStudent === "MAJOR") {
           setStudentOptions([
             "All students",
             ...data.filter(
               (item) =>
-                item.status === "ACTIVE" &&
-                item.major === responseMajor.data.data.major
+                item?.status === "ACTIVE" &&
+                item?.major === responseMajor?.data?.data?.major
             ),
           ]);
         } else {
           setStudentOptions([
             "All students",
-            ...data.filter((item) => item.status === "ACTIVE"),
+            ...data.filter((item) => item?.status === "ACTIVE"),
           ]);
         }
       }

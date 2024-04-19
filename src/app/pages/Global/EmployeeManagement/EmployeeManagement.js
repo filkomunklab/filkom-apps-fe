@@ -134,10 +134,10 @@ const EmployeeManagement = () => {
     setLoadingTable(true);
     const filteredData = employeesFromApi.filter(
       (item) =>
-        (item.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.nik.includes(searchTerm)) &&
-        (selectedMajor === "" || item.major === selectedMajor)
+        (item?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item?.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item?.nik?.includes(searchTerm)) &&
+        (selectedMajor === "" || item?.major === selectedMajor)
     );
     setEmployees(filteredData);
     setLoadingTable(false);
@@ -319,6 +319,7 @@ const EmployeeManagement = () => {
                       <TableCell>Major</TableCell>
                       <TableCell>Phone Number</TableCell>
                       <TableCell>Email</TableCell>
+                      <TableCell>Address</TableCell>
                       <TableCell>Roles</TableCell>
                       <TableCell>Action</TableCell>
                     </TableRow>
@@ -351,6 +352,7 @@ const EmployeeManagement = () => {
                             <TableCell>{majorDescriber(item.major)}</TableCell>
                             <TableCell>{item.phoneNum}</TableCell>
                             <TableCell>{item.email}</TableCell>
+                            <TableCell>{item.Addres}</TableCell>
                             <TableCell>{convertArrayToString(item)}</TableCell>
                             <TableCell>
                               <IconButton onClick={(e) => handleClick(e, item)}>

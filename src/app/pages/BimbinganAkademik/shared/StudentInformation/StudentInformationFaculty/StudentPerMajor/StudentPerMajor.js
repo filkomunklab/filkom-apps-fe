@@ -109,10 +109,12 @@ const StudentPerMajor = () => {
   const filterAndSetStudents = () => {
     const filteredData = originalDataStudent.filter((item) => {
       const nameMatches =
-        item.firstName.toLowerCase().includes(search.toLowerCase()) ||
-        item.lastName.toLowerCase().includes(search.toLowerCase());
-      const nimMatches = item.nim.toLowerCase().includes(search.toLowerCase());
-      const majorMatches = filter === "" || item.status === filter;
+        item?.firstName?.toLowerCase().includes(search.toLowerCase()) ||
+        item?.lastName?.toLowerCase().includes(search.toLowerCase());
+      const nimMatches = item?.nim
+        ?.toLowerCase()
+        .includes(search.toLowerCase());
+      const majorMatches = filter === "" || item?.status === filter;
 
       return (nameMatches || nimMatches) && majorMatches;
     });

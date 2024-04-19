@@ -96,13 +96,15 @@ const StudentInformationFaculty = () => {
   const filterAndSetStudents = () => {
     const filteredData = originalDataStudent.filter((item) => {
       const nameMatches =
-        item.firstName.toLowerCase().includes(search.toLowerCase()) ||
-        item.lastName.toLowerCase().includes(search.toLowerCase());
-      const nimMatches = item.nim.toLowerCase().includes(search.toLowerCase());
+        item?.firstName?.toLowerCase().includes(search.toLowerCase()) ||
+        item?.lastName?.toLowerCase().includes(search.toLowerCase());
+      const nimMatches = item?.nim
+        ?.toLowerCase()
+        .includes(search.toLowerCase());
       const combinedMatches =
         combinedFilter === "" ||
-        item.status === combinedFilter ||
-        item.major === combinedFilter;
+        item?.status === combinedFilter ||
+        item?.major === combinedFilter;
 
       return (nameMatches || nimMatches) && combinedMatches;
     });
@@ -182,7 +184,7 @@ const StudentInformationFaculty = () => {
           >
             <Grid container>
               <Grid item>
-                <CardHeader title="Informatics Student " />
+                <CardHeader title="Informatics Students " />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
                   <Typography variant="h3" color="#006AF5" fontSize="20px">
                     {dataStudent
@@ -215,7 +217,7 @@ const StudentInformationFaculty = () => {
           >
             <Grid container>
               <Grid item>
-                <CardHeader title="Information System Student" />
+                <CardHeader title="Information System Students" />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
                   <Typography variant="h3" color="#006AF5" fontSize="20px">
                     {dataStudent
@@ -248,7 +250,7 @@ const StudentInformationFaculty = () => {
           >
             <Grid container>
               <Grid item>
-                <CardHeader title="Information Technology Student " />
+                <CardHeader title="Information Technology Students" />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
                   <Typography variant="h3" color="#006AF5" fontSize="20px">
                     {dataStudent

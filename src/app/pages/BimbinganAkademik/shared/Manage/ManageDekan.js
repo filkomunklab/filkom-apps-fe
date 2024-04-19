@@ -85,7 +85,7 @@ const Manage = () => {
         signal,
       });
       const filteredData = result.data.data.filter((item) => {
-        const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
+        const employeeFullName = `${item?.Employee?.lastName}, ${item?.Employee?.firstName}`;
         return employeeFullName
           .toLowerCase()
           .includes(searchValue.toLowerCase());

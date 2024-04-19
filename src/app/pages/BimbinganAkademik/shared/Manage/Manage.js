@@ -237,11 +237,11 @@ const Manage = () => {
 
       const filteredGrades = gradesResult.data.data.filter((item) => {
         const isOpenText = item.isOpen ? "Open" : "Closed";
-        return isOpenText.toLowerCase().includes(searchValue.toLowerCase());
+        return isOpenText?.toLowerCase().includes(searchValue?.toLowerCase());
       });
 
       const filteredPreregis = preregisResult.data.data.filter((item) => {
-        const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
+        const employeeFullName = `${item?.Employee?.lastName}, ${item?.Employee?.firstName}`;
         return employeeFullName
           .toLowerCase()
           .includes(searchValue.toLowerCase());
@@ -435,7 +435,9 @@ const Manage = () => {
                         },
                       }}
                     >
-                      Add Pre-registration Submission
+                      {selectedRow
+                        ? "Edit Pre-registration Submission"
+                        : "Add Pre-registration Submission"}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -829,7 +831,9 @@ const Manage = () => {
                         },
                       }}
                     >
-                      Add Grades Submission
+                      {selectedRow
+                        ? "Edit Grades Submission"
+                        : "Add Grades Submission"}
                     </Typography>
                   </Grid>
                 </Grid>

@@ -43,12 +43,12 @@ const StudentConsultation = () => {
       );
 
       const filteredData = result.data.data.filter((item) => {
-        const studentFullName = `${item.student_name}`.toLowerCase();
-        const includesSearch = studentFullName.includes(
+        const studentFullName = `${item?.student_name}`.toLowerCase();
+        const includesSearch = studentFullName?.includes(
           searchValue.toLowerCase()
         );
 
-        return includesSearch && item.status === "Waiting";
+        return includesSearch && item?.status === "Waiting";
       });
 
       setDataWaiting(filteredData);
