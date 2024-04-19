@@ -39,9 +39,9 @@ const StudentProfile = () => {
         resultStudent.data.data.GuidanceClassMember.gudianceClass.teacher
       );
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (error.response && error.response.status === 401) {
+      } else if (error && error.response && error.response.status === 401) {
         const blueTheme = {
           confirmButtonColor: "#007BFF",
         };
