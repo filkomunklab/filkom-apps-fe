@@ -228,7 +228,7 @@ const Consultation = () => {
                   ? "Informatics"
                   : studentMajor === "SI"
                   ? "Information System"
-                  : studentMajor === "DKV"
+                  : studentMajor === "TI"
                   ? "Information Technology"
                   : studentMajor}
               </Typography>

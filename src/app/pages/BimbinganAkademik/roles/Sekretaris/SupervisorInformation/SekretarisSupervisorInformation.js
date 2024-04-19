@@ -252,7 +252,7 @@ const SupervisorInformation = () => {
             <MenuItem key={"SI"} value={"SI"}>
               Information System
             </MenuItem>
-            <MenuItem key={"DKV"} value={"DKV"}>
+            <MenuItem key={"TI"} value={"TI"}>
               Information Technology
             </MenuItem>
           </TextField>
@@ -370,7 +370,7 @@ const TableItem = ({ item, index, handleDelete }) => {
           ? "Informatics"
           : major === "SI"
           ? "Information System"
-          : major === "DKV"
+          : major === "TI"
           ? "Information Technology"
           : "-"}
       </TableCell>

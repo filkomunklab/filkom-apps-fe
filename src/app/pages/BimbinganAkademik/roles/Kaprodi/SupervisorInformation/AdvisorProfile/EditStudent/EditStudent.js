@@ -51,7 +51,7 @@ const majorLabel = (major) => {
       return "Informatics";
     case "SI":
       return "Information System";
-    case "DKV":
+    case "TI":
       return "Information Technology";
     default:
       return "-";
@@ -303,7 +303,7 @@ const EditStudent = () => {
             <MenuItem key={"SI"} value={"SI"}>
               Information System
             </MenuItem>
-            <MenuItem key={"DKV"} value={"DKV"}>
+            <MenuItem key={"TI"} value={"TI"}>
               Information Technology
             </MenuItem>
           </TextField>

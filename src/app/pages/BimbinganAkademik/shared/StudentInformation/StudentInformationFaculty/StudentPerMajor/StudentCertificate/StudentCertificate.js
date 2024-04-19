@@ -177,7 +177,7 @@ const StudentCertificate = () => {
             ? "Informatics"
             : major === "SI"
             ? "Information System"
-            : major === "DKV"
+            : major === "TI"
             ? "Information Technology"
             : "-"}{" "}
           Students List

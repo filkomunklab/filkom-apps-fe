@@ -344,7 +344,7 @@ const ViewActivity = () => {
                         ? "Informatika"
                         : student.student.major === "SI"
                         ? "Sistem Informasi"
-                        : student.student.major === "DKV"
+                        : student.student.major === "TI"
                         ? "Teknologi Informasi"
                         : student.student.major}
                     </TableCell>

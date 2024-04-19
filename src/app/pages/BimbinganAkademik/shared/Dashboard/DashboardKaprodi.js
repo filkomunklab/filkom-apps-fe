@@ -206,7 +206,7 @@ const Dashboard = () => {
                   <Legend />
                   <Bar dataKey="SI" fill="#8884d8" />
                   <Bar dataKey="IF" fill="#82ca9d" />
-                  <Bar dataKey="DKV" fill="skyblue" />
+                  <Bar dataKey="TI" fill="skyblue" />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>

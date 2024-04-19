@@ -159,7 +159,7 @@ const StudentProfile = () => {
                   ? "Informatics"
                   : studentProfileData?.major === "SI"
                   ? "Information System"
-                  : studentProfileData?.major === "DKV"
+                  : studentProfileData?.major === "TI"
                   ? "Information Technology"
                   : "-"}
               </Typography>

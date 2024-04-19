@@ -124,7 +124,7 @@ const AdvisorProfile = () => {
                 ? "Informatics"
                 : dataProfile.major === "SI"
                 ? "Information System"
-                : dataProfile.major === "DKV"
+                : dataProfile.major === "TI"
                 ? "Information Technology"
                 : "-"}
             </Typography>
@@ -365,7 +365,7 @@ const TableItem = ({ item, index }) => {
           ? "Informatics"
           : major === "SI"
           ? "Information System"
-          : major === "DKV"
+          : major === "TI"
           ? "Information Technology"
           : "-"}
       </TableCell>

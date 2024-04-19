@@ -271,7 +271,7 @@ const Manage = () => {
                               ? "Informatics"
                               : value.major === "SI"
                               ? "Information System"
-                              : value.major === "DKV"
+                              : value.major === "TI"
                               ? "Information Technology"
                               : value.major}
                           </TableCell>
@@ -479,7 +479,7 @@ const Manage = () => {
                               ? "Informatics"
                               : value.major === "SI"
                               ? "Information System"
-                              : value.major === "DKV"
+                              : value.major === "TI"
                               ? "Information Technology"
                               : value.major}
                           </TableCell>

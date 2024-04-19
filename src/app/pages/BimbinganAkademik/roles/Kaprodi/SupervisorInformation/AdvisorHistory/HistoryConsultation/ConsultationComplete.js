@@ -142,7 +142,7 @@ const Consultation = () => {
                   ? "Informatika"
                   : studentMajor === "SI"
                   ? "Sistem Informasi"
-                  : studentMajor === "DKV"
+                  : studentMajor === "TI"
                   ? "Teknologi Informasi"
                   : studentMajor}
               </Typography>

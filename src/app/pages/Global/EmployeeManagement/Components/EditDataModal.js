@@ -78,7 +78,7 @@ const ChangePassSchema = Yup.object().shape({
     .max(50, "cannot be more than 50 characters")
     .required(),
   degree: Yup.string(),
-  major: Yup.string().oneOf(["IF", "SI", "DKV", "NONE"]),
+  major: Yup.string().oneOf(["IF", "SI", "TI", "NONE"]),
   phoneNum: Yup.string()
     .trim("Phone Number cannot include leading and trailing spaces")
     .strict(true)
@@ -334,7 +334,7 @@ const EditDataModal = ({
                     <MenuItem value={"NONE"}>None</MenuItem>
                     <MenuItem value={"IF"}>Informatics</MenuItem>
                     <MenuItem value={"SI"}>Information System</MenuItem>
-                    <MenuItem value={"DKV"}>Information Technology</MenuItem>
+                    <MenuItem value={"TI"}>Information Technology</MenuItem>
                   </Select>
                 </FormControl>
                 <TextField

@@ -141,7 +141,7 @@ const ConsultationComplete = () => {
                   ? "Informatika"
                   : studentMajor === "SI"
                   ? "Sistem Informasi"
-                  : studentMajor === "DKV"
+                  : studentMajor === "TI"
                   ? "Teknologi Informasi"
                   : studentMajor}
               </Typography>

@@ -5,7 +5,9 @@ import {
   experimentalStyled as styled,
   Grid,
   Paper,
-  TextField,
+  FormControl,
+  InputLabel,
+  Select,
   Button,
   Table,
   TableHead,
@@ -86,12 +88,12 @@ const AddSupervisor = () => {
 
   //handle error
   const handleError = (error) => {
-    if (error.code === "ERR_CANCELED") {
+    if (error && error.code === "ERR_CANCELED") {
       console.log("request canceled");
-    } else if (error.response && error.response.status === 401) {
+    } else if (error && error.response && error.response.status === 401) {
       handleAuthenticationError();
     } else {
-      console.error("error: ");
+      console.error("error: ", error);
     }
   };
 
@@ -203,37 +205,42 @@ const AddSupervisor = () => {
           <Grid item xs={12} md={12}>
             <Typography variant="h6">Full Name</Typography>
             <Stack>
-              <TextField
-                size="small"
-                id="outlined-select-major"
-                select
-                label={showLabel && "Select"}
-                onChange={(e) => {
-                  setSupervisorId(e.target.value);
-                  setSelectedSupervisor(
-                    SupervisorOptions.find(
-                      (supervisor) => supervisor.id === e.target.value
-                    )
-                  );
-                  setShowLabel(false);
-                }}
-                value={
-                  supervisorId ||
-                  (SupervisorOptions?.length && supervisor?.id) ||
-                  ""
-                }
-                InputLabelProps={{
-                  shrink: false,
-                }}
-              >
-                {SupervisorOptions?.sort((a, b) =>
-                  a.lastName.localeCompare(b.lastName)
-                ).map((item) => (
-                  <MenuItem value={item.id || ""} key={item.id}>
-                    {item.lastName}, {item.firstName}
-                  </MenuItem>
-                ))}
-              </TextField>
+              <FormControl size="small" sx={{ backgroundColor: "white" }}>
+                <InputLabel shrink={false}>
+                  {showLabel ? "Select" : ""}
+                </InputLabel>
+                <Select
+                  value={
+                    supervisorId ||
+                    (SupervisorOptions?.length && supervisor?.id) ||
+                    ""
+                  }
+                  onChange={(e) => {
+                    setSupervisorId(e.target.value);
+                    setSelectedSupervisor(
+                      SupervisorOptions.find(
+                        (supervisor) => supervisor.id === e.target.value
+                      )
+                    );
+                    setShowLabel(false);
+                  }}
+                  MenuProps={{
+                    PaperProps: {
+                      style: {
+                        maxHeight: "37%",
+                      },
+                    },
+                  }}
+                >
+                  {SupervisorOptions?.sort((a, b) =>
+                    a.lastName.localeCompare(b.lastName)
+                  ).map((item) => (
+                    <MenuItem value={item.id || ""} key={item.id}>
+                      {item.lastName}, {item.firstName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Stack>
           </Grid>
           <Grid item xs={12} md={6}>
@@ -255,7 +262,7 @@ const AddSupervisor = () => {
                 ? "Informatics"
                 : selectedSupervisor?.major === "SI"
                 ? "Information System"
-                : selectedSupervisor?.major === "DKV"
+                : selectedSupervisor?.major === "TI"
                 ? "Information Technology"
                 : "-"}
             </Paper>
@@ -504,7 +511,7 @@ const TableItem = ({ item, index }) => {
           ? "Informatics"
           : item.major === "SI"
           ? "Information System"
-          : item.major === "DKV"
+          : item.major === "TI"
           ? "Information Technology"
           : "-"}
       </TableCell>

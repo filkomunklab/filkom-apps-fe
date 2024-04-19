@@ -86,7 +86,7 @@ const EditDataSchema = Yup.object().shape({
     .oneOf(["MALE", "FEMALE"], "Must be either MALE or FEMALE")
     .required(),
   dateOfBirth: Yup.string().nullable(),
-  major: Yup.string().oneOf(["IF", "SI", "DKV"]).required(),
+  major: Yup.string().oneOf(["IF", "SI", "TI"]).required(),
   curriculumId: Yup.string(),
   religion: Yup.string()
     .trim("Religion cannot include leading and trailing spaces")
@@ -535,7 +535,7 @@ const EditDataModal = ({
                   >
                     <MenuItem value={"IF"}>Informatics</MenuItem>
                     <MenuItem value={"SI"}>Information System</MenuItem>
-                    <MenuItem value={"DKV"}>Information Technology</MenuItem>
+                    <MenuItem value={"TI"}>Information Technology</MenuItem>
                   </Select>
                 </FormControl>
 

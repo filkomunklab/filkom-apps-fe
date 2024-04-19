@@ -239,7 +239,7 @@ const ReviewGrade = () => {
                         ? "Informatics"
                         : value.Student.major === "SI"
                         ? "Information System"
-                        : value.Student.major === "DKV"
+                        : value.Student.major === "TI"
                         ? "Information Technology"
                         : value.Student.major}
                     </TableCell>

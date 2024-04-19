@@ -242,7 +242,7 @@ const StudentInformationFaculty = () => {
             }}
             onClick={() =>
               navigate(`information-technology`, {
-                state: { major: "DKV" },
+                state: { major: "TI" },
               })
             }
           >
@@ -252,7 +252,7 @@ const StudentInformationFaculty = () => {
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
                   <Typography variant="h3" color="#006AF5" fontSize="20px">
                     {dataStudent
-                      .filter((student) => student.major === "DKV")
+                      .filter((student) => student.major === "TI")
                       .reduce((total) => total + 1, 0)}{" "}
                     People
                   </Typography>
@@ -366,7 +366,7 @@ const StudentInformationFaculty = () => {
             <MenuItem key={"SI"} value={"SI"}>
               Information System
             </MenuItem>
-            <MenuItem key={"DKV"} value={"DKV"}>
+            <MenuItem key={"TI"} value={"TI"}>
               Information Technology
             </MenuItem>
           </TextField>
@@ -531,7 +531,7 @@ const TableItem = ({ item, index }) => {
           ? "Informatics"
           : major === "SI"
           ? "Information System"
-          : major === "DKV"
+          : major === "TI"
           ? "Information Technology"
           : "-"}
       </TableCell>

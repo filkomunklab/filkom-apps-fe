@@ -236,7 +236,7 @@ const StudentList = () => {
             <MenuItem key={"SI"} value={"SI"}>
               Information System
             </MenuItem>
-            <MenuItem key={"DKV"} value={"DKV"}>
+            <MenuItem key={"TI"} value={"TI"}>
               Information Technology
             </MenuItem>
           </TextField>
@@ -380,7 +380,7 @@ const TableItem = ({ item, index, isSelected, handleClick }) => {
           ? "Informatics"
           : item.major === "SI"
           ? "Information System"
-          : item.major === "DKV"
+          : item.major === "TI"
           ? "Information Technology"
           : "-"}
       </TableCell>

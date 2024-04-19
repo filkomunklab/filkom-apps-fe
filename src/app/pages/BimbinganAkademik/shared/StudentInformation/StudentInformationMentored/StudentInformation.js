@@ -365,7 +365,7 @@ const TableItem = ({ item, index }) => {
           ? "Informatics"
           : major === "SI"
           ? "Information System"
-          : major === "DKV"
+          : major === "TI"
           ? "Information Technology"
           : "-"}
       </TableCell>

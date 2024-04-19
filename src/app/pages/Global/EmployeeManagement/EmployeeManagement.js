@@ -110,7 +110,7 @@ const EmployeeManagement = () => {
       case "SI":
         return "Information System";
 
-      case "DKV":
+      case "TI":
         return "Information Technology";
 
       case "NONE":
@@ -296,7 +296,7 @@ const EmployeeManagement = () => {
               <MenuItem key={"SI"} value={"SI"}>
                 Information System
               </MenuItem>
-              <MenuItem key={"DKV"} value={"DKV"}>
+              <MenuItem key={"TI"} value={"TI"}>
                 Information Technology
               </MenuItem>
             </TextField>
