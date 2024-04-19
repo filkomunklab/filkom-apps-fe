@@ -223,7 +223,7 @@ const AddEmployeeModal = ({
 
         try {
           await jwtAuthAxios.post(
-            `/employees`,
+            `/employee-many`,
             {
               data,
             },
