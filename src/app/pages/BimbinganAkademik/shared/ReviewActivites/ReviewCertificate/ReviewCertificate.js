@@ -54,8 +54,6 @@ const ReviewCertificate = () => {
     } catch (error) {
       if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (error && error.response && error.response.status === 401) {
-        handleAuthenticationError();
       } else {
         console.error("error: ");
         return;
