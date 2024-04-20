@@ -44,18 +44,7 @@ const initialValues = {
       left: 0,
     },
   ],
-  cpmkGrading: [
-    {
-      code: "",
-      totalGradingWeight: 0,
-      gradingSystem: [
-        {
-          gradingName: "",
-          gradingWeight: 0,
-        },
-      ],
-    },
-  ],
+  cpmkGrading: [],
   mainReferences: [""],
   supportingReferences: [""],
   software: "",

@@ -14,21 +14,25 @@ const BobotCPMK = () => {
   const { values, setFieldValue, errors } = useFormikContext();
   const prevCpmkGrading = useRef([]);
 
+  const generateTempalte = () => {
+    const defaultValue = values.cpmk.map((item) => {
+      return {
+        code: item.code,
+        totalGradingWeight: 0,
+        gradingSystem: [
+          {
+            gradingName: "",
+            gradingWeight: 0,
+          },
+        ],
+      };
+    });
+    setFieldValue("cpmkGrading", defaultValue);
+  };
+
   useEffect(() => {
     if (values.cpmkGrading.length < values.cpmk.length) {
-      const defaultValue = values.cpmk.map((item) => {
-        return {
-          code: item.code,
-          totalGradingWeight: 0,
-          gradingSystem: [
-            {
-              gradingName: "",
-              gradingWeight: 0,
-            },
-          ],
-        };
-      });
-      setFieldValue("cpmkGrading", defaultValue);
+      generateTempalte();
     }
   }, []);
 
@@ -261,6 +265,12 @@ const BobotCPMK = () => {
               >
                 Tambah Penilaian
                 <AddCircleOutlineIcon style={{ fontSize: 16, marginLeft: 5 }} />
+              </button>
+              <button
+                onClick={generateTempalte}
+                className="bg-blue-600 mt-2 text-white px-3 py-2 rounded-md flex items-center hover:bg-blue-800 transition-colors duration-300"
+              >
+                Generate Template
               </button>
             </div>
           </>
