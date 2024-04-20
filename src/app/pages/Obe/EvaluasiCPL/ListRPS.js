@@ -80,6 +80,7 @@ const ListRPS = () => {
 
   const rpsQuery = useQuery({
     queryFn: () => getRpsList({ curriculumId }),
+    queryKey: ["rps", { curriculumId }],
   });
 
   if (rpsQuery.status === "pending" && !rpsQuery.data) {

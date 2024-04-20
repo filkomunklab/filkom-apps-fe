@@ -17,6 +17,8 @@ import Swal from "sweetalert2";
 import { useMutation } from "@tanstack/react-query";
 import { postRps } from "app/api";
 import { useNavigate } from "react-router-dom";
+import { LoadingButton } from "@mui/lab";
+import { UploadFile } from "@mui/icons-material";
 
 const initialValues = {
   teacherId: "",
@@ -169,6 +171,7 @@ const CreateRPS = () => {
           rpsMutation.mutate(values);
         }}
         validationSchema={createRpsSchema}
+        validateOnMount={true}
       >
         {({ isValid }) => (
           <Form>
@@ -197,13 +200,17 @@ const CreateRPS = () => {
                     <ArrowForwardIosIcon fontSize="small" />
                   </button>
                 ) : (
-                  <button
-                    disabled={!isValid || rpsMutation.isPending}
+                  <LoadingButton
+                    className="rounded-xl"
+                    variant="contained"
                     type="submit"
-                    className="bg-blue-500 text-white p-2 rounded-xl mx-2 hover:bg-blue-700 transition-colors duration-300 shadow-md disabled:bg-blue-300"
+                    loadingPosition="end"
+                    endIcon={<UploadFile />}
+                    loading={rpsMutation.isPending}
+                    disabled={!isValid}
                   >
-                    <span className="mx-2">SELESAI</span>
-                  </button>
+                    Simpan
+                  </LoadingButton>
                 )}
                 <button
                   type="reset"

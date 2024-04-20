@@ -79,7 +79,7 @@ const Actions = ({ item, user }) => {
         <MenuItem>
           <Link to={`/obe/list-rps/${item.id}`}>View RPS Detail</Link>
         </MenuItem>
-        <MenuItem>Edit</MenuItem>
+        {/* <MenuItem>Edit</MenuItem> */}
         <MenuItem onClick={handleDelete}>Delete</MenuItem>
       </Menu>
     </div>

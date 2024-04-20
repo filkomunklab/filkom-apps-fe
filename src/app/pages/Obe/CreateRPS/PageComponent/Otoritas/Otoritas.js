@@ -33,7 +33,7 @@ const Otoritas = () => {
     <div className="bg-white rounded-sm p-5">
       <h1 className="text-base font-semibold mb-5">Otoritas</h1>
       <div className="mb-5">
-        <p className="mb-2">Pengembangan RPS</p>
+        <p className="mb-2">Pengembang RPS</p>
         <Field
           name="rpsDeveloper"
           type="text"
