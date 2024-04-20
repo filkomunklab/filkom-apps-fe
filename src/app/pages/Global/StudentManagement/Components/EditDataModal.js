@@ -86,7 +86,7 @@ const EditDataSchema = Yup.object().shape({
     .oneOf(["MALE", "FEMALE"], "Must be either MALE or FEMALE")
     .required(),
   dateOfBirth: Yup.string().nullable(),
-  major: Yup.string().oneOf(["IF", "SI", "DKV"]).required(),
+  major: Yup.string().oneOf(["IF", "SI", "TI"]).required(),
   curriculumId: Yup.string(),
   religion: Yup.string()
     .trim("Religion cannot include leading and trailing spaces")
@@ -94,11 +94,6 @@ const EditDataSchema = Yup.object().shape({
     .min(3, "must be at least 3 characters")
     .required(),
   status: Yup.string().oneOf(["GRADUATE", "ACTIVE", "INACTIVE"]).required(),
-  MaritalStatus: Yup.string()
-    .trim("Marital Status cannot include leading and trailing spaces")
-    .strict(true)
-    .oneOf(["Married", "Not Yet Married"])
-    .required(),
   arrivalYear: Yup.string().nullable(),
   graduate_year: Yup.string().nullable(),
   phoneNo: Yup.string()
@@ -111,21 +106,6 @@ const EditDataSchema = Yup.object().shape({
     .trim("Student Email cannot include leading and trailing spaces")
     .strict(true)
     .email(),
-  personalEmail: Yup.string()
-    .trim("Student Email cannot include leading and trailing spaces")
-    .strict(true)
-    .email()
-    .nullable(),
-  bloodType: Yup.string()
-    .trim("Blood Type cannot include leading and trailing spaces")
-    .strict(true)
-    .nullable(),
-  highSchoolGrad: Yup.string()
-    .trim("High School Graduation cannot include leading and trailing spaces")
-    .strict(true)
-    .min(3, "must be at least 3 digits")
-    .max(70, "cannot be more than 70 digits")
-    .nullable(),
   areaOfConcentration: Yup.string()
     .trim("Area Of Concentration cannot include leading and trailing spaces")
     .strict(true)
@@ -134,11 +114,6 @@ const EditDataSchema = Yup.object().shape({
     .nullable(),
   address: Yup.string()
     .trim("Address cannot include leading and trailing spaces")
-    .strict(true)
-    .min(3, "must be at least 3 characters")
-    .nullable(),
-  currentAddress: Yup.string()
-    .trim("Current Address cannot include leading and trailing spaces")
     .strict(true)
     .min(3, "must be at least 3 characters")
     .nullable(),
@@ -153,38 +128,12 @@ const EditDataSchema = Yup.object().shape({
     .min(3, "must be at least 3 characters")
     .max(50, "cannot be more than 50 characters")
     .nullable(),
-  guardianStatus: Yup.string()
-    .trim("Parent / guardian Status cannot include leading and trailing spaces")
-    .strict(true)
-    .min(3, "must be at least 3 characters")
-    .nullable(),
-  guardianReligion: Yup.string()
-    .trim(
-      "Parent / guardian Religion cannot include leading and trailing spaces"
-    )
-    .strict(true)
-    .min(3, "must be at least 3 characters")
-    .nullable(),
   familyRelation: Yup.string()
     .trim(
       "Parent / guardian Relation cannot include leading and trailing spaces"
     )
     .strict(true)
     .min(3, "must be at least 3 characters")
-    .nullable(),
-  guardianAddress: Yup.string()
-    .trim(
-      "Parent / guardian Address cannot include leading and trailing spaces"
-    )
-    .strict(true)
-    .min(3, "must be at least 3 characters")
-    .nullable(),
-  guardianEducation: Yup.string()
-    .trim(
-      "Parent / guardian Education cannot include leading and trailing spaces"
-    )
-    .strict(true)
-    .min(1, "must be at least 1 character")
     .nullable(),
   guardianEmail: Yup.string()
     .trim("Parent / guardian Email cannot include leading and trailing spaces")
@@ -258,29 +207,21 @@ const EditDataModal = ({
         curriculumId: passingData.curriculum?.id,
         religion: passingData.religion,
         status: passingData.status,
-        MaritalStatus: passingData.MaritalStatus,
         arrivalYear: passingData.arrivalYear,
         graduate_year: passingData.graduate_year,
         phoneNo: passingData.phoneNo,
         studentEmail: passingData.studentEmail,
-        personalEmail: passingData.personalEmail,
-        bloodType: passingData.bloodType,
-        highSchoolGrad: passingData.highSchoolGrad,
         areaOfConcentration: passingData.areaOfConcentration,
         address: passingData.address,
-        currentAddress: passingData.currentAddress,
         currentResidenceStatus: passingData.currentResidenceStatus,
         guardianName: passingData.guardianName,
-        guardianStatus: passingData.guardianStatus,
-        guardianReligion: passingData.guardianReligion,
         familyRelation: passingData.familyRelation,
-        guardianAddress: passingData.guardianAddress,
-        guardianEducation: passingData.guardianEducation,
         guardianEmail: passingData.guardianEmail,
         guardianPhoneNo: passingData.guardianPhoneNo,
       }}
       validationSchema={EditDataSchema}
       onSubmit={async (values, { setSubmitting }) => {
+        console.log("Submitting form...");
         values.nim = values.nim?.trim();
         values.reg_num = values.reg_num?.trim();
         values.firstName = values.firstName?.trim();
@@ -291,24 +232,15 @@ const EditDataModal = ({
         values.curriculumId = values.curriculumId?.trim();
         values.religion = values.religion?.trim();
         values.status = values.status?.trim();
-        values.MaritalStatus = values.MaritalStatus?.trim();
         // values.arrivalYear = values.arrivalYear?.trim();
         // values.graduate_year = values.graduate_year?.trim();
         values.phoneNo = values.phoneNo?.trim();
         values.studentEmail = values.studentEmail?.trim();
-        values.personalEmail = values.personalEmail?.trim();
-        values.bloodType = values.bloodType?.trim();
-        values.highSchoolGrad = values.highSchoolGrad?.trim();
         values.areaOfConcentration = values.areaOfConcentration?.trim();
         values.address = values.address?.trim();
-        values.currentAddress = values.currentAddress?.trim();
         values.currentResidenceStatus = values.currentResidenceStatus?.trim();
         values.guardianName = values.guardianName?.trim();
-        values.guardianStatus = values.guardianStatus?.trim();
-        values.guardianReligion = values.guardianReligion?.trim();
         values.familyRelation = values.familyRelation?.trim();
-        values.guardianAddress = values.guardianAddress?.trim();
-        values.guardianEducation = values.guardianEducation?.trim();
         values.guardianEmail = values.guardianEmail?.trim();
         values.guardianPhoneNo = values.guardianPhoneNo?.trim();
 
@@ -535,7 +467,7 @@ const EditDataModal = ({
                   >
                     <MenuItem value={"IF"}>Informatics</MenuItem>
                     <MenuItem value={"SI"}>Information System</MenuItem>
-                    <MenuItem value={"DKV"}>Information Technology</MenuItem>
+                    <MenuItem value={"TI"}>Information Technology</MenuItem>
                   </Select>
                 </FormControl>
 
@@ -590,27 +522,6 @@ const EditDataModal = ({
                     <MenuItem value={"ACTIVE"}>ACTIVE</MenuItem>
                     <MenuItem value={"INACTIVE"}>INACTIVE</MenuItem>
                     <MenuItem value={"GRADUATE"}>GRADUATE</MenuItem>
-                  </Select>
-                </FormControl>
-
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    Marital Status
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    name="MaritalStatus"
-                    id="demo-simple-select"
-                    label="Marital Status"
-                    defaultValue={passingData.MaritalStatus}
-                    onChange={(event) => {
-                      setFieldValue("MaritalStatus", event.target.value);
-                    }}
-                  >
-                    <MenuItem value={"Not Yet Married"}>
-                      Not Yet Married
-                    </MenuItem>
-                    <MenuItem value={"Married"}>Married</MenuItem>
                   </Select>
                 </FormControl>
 
@@ -679,45 +590,6 @@ const EditDataModal = ({
                 />
 
                 <TextField
-                  label="Personal Email"
-                  name="personalEmail"
-                  variant="outlined"
-                  onChange={handleChange}
-                  error={errors.personalEmail && touched.personalEmail}
-                  helperText={errors.personalEmail}
-                  defaultValue={passingData.personalEmail}
-                  FormHelperTextProps={{
-                    style: { whiteSpace: "normal", color: "red" },
-                  }}
-                />
-
-                <TextField
-                  label="Blood Type"
-                  name="bloodType"
-                  variant="outlined"
-                  onChange={handleChange}
-                  error={errors.bloodType && touched.bloodType}
-                  helperText={errors.bloodType}
-                  defaultValue={passingData.bloodType}
-                  FormHelperTextProps={{
-                    style: { whiteSpace: "normal", color: "red" },
-                  }}
-                />
-
-                <TextField
-                  label="High School Graduation"
-                  name="highSchoolGrad"
-                  variant="outlined"
-                  onChange={handleChange}
-                  error={errors.highSchoolGrad && touched.highSchoolGrad}
-                  helperText={errors.highSchoolGrad}
-                  defaultValue={passingData.highSchoolGrad}
-                  FormHelperTextProps={{
-                    style: { whiteSpace: "normal", color: "red" },
-                  }}
-                />
-
-                <TextField
                   label="Are Of Concentration"
                   name="areaOfConcentration"
                   variant="outlined"
@@ -740,19 +612,6 @@ const EditDataModal = ({
                   error={errors.address && touched.address}
                   helperText={errors.address}
                   defaultValue={passingData.address}
-                  FormHelperTextProps={{
-                    style: { whiteSpace: "normal", color: "red" },
-                  }}
-                />
-
-                <TextField
-                  label="Current Address"
-                  name="currentAddress"
-                  variant="outlined"
-                  onChange={handleChange}
-                  error={errors.currentAddress && touched.currentAddress}
-                  helperText={errors.currentAddress}
-                  defaultValue={passingData.currentAddress}
                   FormHelperTextProps={{
                     style: { whiteSpace: "normal", color: "red" },
                   }}
@@ -788,32 +647,6 @@ const EditDataModal = ({
                 />
 
                 <TextField
-                  label="Parent / Guardion Status"
-                  name="guardianStatus"
-                  variant="outlined"
-                  onChange={handleChange}
-                  error={errors.guardianStatus && touched.guardianStatus}
-                  helperText={errors.guardianStatus}
-                  defaultValue={passingData.guardianStatus}
-                  FormHelperTextProps={{
-                    style: { whiteSpace: "normal", color: "red" },
-                  }}
-                />
-
-                <TextField
-                  label="Parent / Guardion Religion"
-                  name="guardianReligion"
-                  variant="outlined"
-                  onChange={handleChange}
-                  error={errors.guardianReligion && touched.guardianReligion}
-                  helperText={errors.guardianReligion}
-                  defaultValue={passingData.guardianReligion}
-                  FormHelperTextProps={{
-                    style: { whiteSpace: "normal", color: "red" },
-                  }}
-                />
-
-                <TextField
                   label="Parent / Guardion Family Relationship"
                   name="familyRelation"
                   variant="outlined"
@@ -821,32 +654,6 @@ const EditDataModal = ({
                   error={errors.familyRelation && touched.familyRelation}
                   helperText={errors.familyRelation}
                   defaultValue={passingData.familyRelation}
-                  FormHelperTextProps={{
-                    style: { whiteSpace: "normal", color: "red" },
-                  }}
-                />
-
-                <TextField
-                  label="Parent / Guardion Address"
-                  name="guardianAddress"
-                  variant="outlined"
-                  onChange={handleChange}
-                  error={errors.guardianAddress && touched.guardianAddress}
-                  helperText={errors.guardianAddress}
-                  defaultValue={passingData.guardianAddress}
-                  FormHelperTextProps={{
-                    style: { whiteSpace: "normal", color: "red" },
-                  }}
-                />
-
-                <TextField
-                  label="Parent / Guardion Education"
-                  name="guardianEducation"
-                  variant="outlined"
-                  onChange={handleChange}
-                  error={errors.guardianEducation && touched.guardianEducation}
-                  helperText={errors.guardianEducation}
-                  defaultValue={passingData.guardianEducation}
                   FormHelperTextProps={{
                     style: { whiteSpace: "normal", color: "red" },
                   }}

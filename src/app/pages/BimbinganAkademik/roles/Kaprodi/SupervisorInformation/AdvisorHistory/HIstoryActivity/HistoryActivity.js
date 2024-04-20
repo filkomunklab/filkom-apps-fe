@@ -52,13 +52,12 @@ const ViewActivity = () => {
         setActivityDetail(data);
       }
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (error.response && error.response.status === 401) {
+      } else if (error && error.response && error.response.status === 401) {
         handleAuthenticationError();
       } else {
-        console.error("error: ");
-        return;
+        console.error("error: ", error);
       }
     }
   };
@@ -213,7 +212,7 @@ const ViewActivity = () => {
                           ? "Informatika"
                           : student.student?.major === "SI"
                           ? "Sistem Informasi"
-                          : student.student?.major === "DKV"
+                          : student.student?.major === "TI"
                           ? "Teknologi Informasi"
                           : student.student?.major}
                       </TableCell>

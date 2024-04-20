@@ -11,7 +11,6 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import { useNavigate } from "react-router-dom";
-import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 import Swal from "sweetalert2";
 
 const StudentProfile = () => {
@@ -39,7 +38,7 @@ const StudentProfile = () => {
         resultStudent.data.data.GuidanceClassMember.gudianceClass.teacher
       );
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
       } else if (error.response && error.response.status === 401) {
         const blueTheme = {
@@ -52,10 +51,8 @@ const StudentProfile = () => {
           ...blueTheme,
         });
         navigate("/login");
-      } else if (error.response && error.response.status === 401) {
-        handleAuthenticationError();
       } else {
-        console.error("error: ");
+        console.log("ini error: ", error);
         return;
       }
     }
@@ -159,7 +156,7 @@ const StudentProfile = () => {
                   ? "Informatics"
                   : studentProfileData?.major === "SI"
                   ? "Information System"
-                  : studentProfileData?.major === "DKV"
+                  : studentProfileData?.major === "TI"
                   ? "Information Technology"
                   : "-"}
               </Typography>

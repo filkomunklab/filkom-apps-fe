@@ -3,7 +3,6 @@ import {
   Typography,
   Button,
   Modal,
-  styled,
   Alert,
   IconButton,
   Link,
@@ -14,10 +13,8 @@ import Collapse from "@mui/material/Collapse";
 import LoadingButton from "@mui/lab/LoadingButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
-import * as XLSX from "xlsx";
+import React, { useState } from "react";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
-import { PASSWORD_DEFAULT } from "@jumbo/config/env";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 
 const AddStudentModal = ({

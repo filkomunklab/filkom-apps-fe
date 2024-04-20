@@ -87,9 +87,9 @@ const GradeSubmission = () => {
 
   //handle error
   const handleError = (error) => {
-    if (error.code === "ERR_CANCELED") {
+    if (error && error.code === "ERR_CANCELED") {
       console.log("request canceled");
-    } else if (error.response && error.response.status === 401) {
+    } else if (error && error.response && error.response.status === 401) {
       handleAuthenticationError();
     } else {
       console.error("error: ");
@@ -206,9 +206,9 @@ const GradeSubmission = () => {
         setLoading(false);
       }
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (error.response && error.response.status === 401) {
+      } else if (error && error.response && error.response.status === 401) {
         handleAuthenticationError();
       } else {
         setSemester("");
@@ -254,9 +254,7 @@ const GradeSubmission = () => {
 
   const handleLecturerChange = (event, value, index) => {
     const newLecturers = [...lecturers];
-    newLecturers[index] = value
-      ? `${value.firstName} ${value.lastName} (${value.degree})`
-      : "";
+    newLecturers[index] = value ? `${value.firstName} ${value.lastName}` : "";
     setLecturers(newLecturers);
   };
 
@@ -477,7 +475,7 @@ const GradeSubmission = () => {
                       handleLecturerChange(event, value, index)
                     }
                     getOptionLabel={(option) =>
-                      `${option.firstName} ${option.lastName} (${option.degree})`
+                      `${option.firstName} ${option.lastName}`
                     }
                     renderInput={(params) => (
                       <TextField {...params} size="small" fullWidth />

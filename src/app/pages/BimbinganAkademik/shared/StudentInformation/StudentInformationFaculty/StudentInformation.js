@@ -69,9 +69,9 @@ const StudentInformationFaculty = () => {
         result.data.data.filter((item) => item.status !== "GRADUATE")
       );
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (error.response && error.response.status === 401) {
+      } else if (error && error.response && error.response.status === 401) {
         handleAuthenticationError();
       } else {
         console.error("error: ");
@@ -96,13 +96,15 @@ const StudentInformationFaculty = () => {
   const filterAndSetStudents = () => {
     const filteredData = originalDataStudent.filter((item) => {
       const nameMatches =
-        item.firstName.toLowerCase().includes(search.toLowerCase()) ||
-        item.lastName.toLowerCase().includes(search.toLowerCase());
-      const nimMatches = item.nim.toLowerCase().includes(search.toLowerCase());
+        item?.firstName?.toLowerCase().includes(search.toLowerCase()) ||
+        item?.lastName?.toLowerCase().includes(search.toLowerCase());
+      const nimMatches = item?.nim
+        ?.toLowerCase()
+        .includes(search.toLowerCase());
       const combinedMatches =
         combinedFilter === "" ||
-        item.status === combinedFilter ||
-        item.major === combinedFilter;
+        item?.status === combinedFilter ||
+        item?.major === combinedFilter;
 
       return (nameMatches || nimMatches) && combinedMatches;
     });
@@ -182,7 +184,7 @@ const StudentInformationFaculty = () => {
           >
             <Grid container>
               <Grid item>
-                <CardHeader title="Informatics Student " />
+                <CardHeader title="Informatics Students " />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
                   <Typography variant="h3" color="#006AF5" fontSize="20px">
                     {dataStudent
@@ -215,7 +217,7 @@ const StudentInformationFaculty = () => {
           >
             <Grid container>
               <Grid item>
-                <CardHeader title="Information System Student" />
+                <CardHeader title="Information System Students" />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
                   <Typography variant="h3" color="#006AF5" fontSize="20px">
                     {dataStudent
@@ -242,17 +244,17 @@ const StudentInformationFaculty = () => {
             }}
             onClick={() =>
               navigate(`information-technology`, {
-                state: { major: "DKV" },
+                state: { major: "TI" },
               })
             }
           >
             <Grid container>
               <Grid item>
-                <CardHeader title="Information Technology Student " />
+                <CardHeader title="Information Technology Students" />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
                   <Typography variant="h3" color="#006AF5" fontSize="20px">
                     {dataStudent
-                      .filter((student) => student.major === "DKV")
+                      .filter((student) => student.major === "TI")
                       .reduce((total) => total + 1, 0)}{" "}
                     People
                   </Typography>
@@ -366,7 +368,7 @@ const StudentInformationFaculty = () => {
             <MenuItem key={"SI"} value={"SI"}>
               Information System
             </MenuItem>
-            <MenuItem key={"DKV"} value={"DKV"}>
+            <MenuItem key={"TI"} value={"TI"}>
               Information Technology
             </MenuItem>
           </TextField>
@@ -531,7 +533,7 @@ const TableItem = ({ item, index }) => {
           ? "Informatics"
           : major === "SI"
           ? "Information System"
-          : major === "DKV"
+          : major === "TI"
           ? "Information Technology"
           : "-"}
       </TableCell>

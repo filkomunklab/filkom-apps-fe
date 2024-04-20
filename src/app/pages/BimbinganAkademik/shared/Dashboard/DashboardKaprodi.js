@@ -52,9 +52,9 @@ const Dashboard = () => {
 
   //handle error
   const handleError = (error) => {
-    if (error.code === "ERR_CANCELED") {
+    if (error && error.code === "ERR_CANCELED") {
       console.log("request canceled");
-    } else if (error.response && error.response.status === 401) {
+    } else if (error && error.response && error.response.status === 401) {
       handleAuthenticationError();
     } else {
       console.error("error: ");
@@ -206,7 +206,7 @@ const Dashboard = () => {
                   <Legend />
                   <Bar dataKey="SI" fill="#8884d8" />
                   <Bar dataKey="IF" fill="#82ca9d" />
-                  <Bar dataKey="DKV" fill="skyblue" />
+                  <Bar dataKey="TI" fill="skyblue" />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>

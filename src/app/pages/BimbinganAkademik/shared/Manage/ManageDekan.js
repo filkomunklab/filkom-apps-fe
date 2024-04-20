@@ -69,9 +69,9 @@ const Manage = () => {
 
   //handle error
   const handleError = (error) => {
-    if (error.code === "ERR_CANCELED") {
+    if (error && error.code === "ERR_CANCELED") {
       console.log("request canceled");
-    } else if (error.response && error.response.status === 401) {
+    } else if (error && error.response && error.response.status === 401) {
       handleAuthenticationError();
     } else {
       console.error("error: ");
@@ -85,7 +85,7 @@ const Manage = () => {
         signal,
       });
       const filteredData = result.data.data.filter((item) => {
-        const employeeFullName = `${item.Employee?.lastName}, ${item.Employee?.firstName}`;
+        const employeeFullName = `${item?.Employee?.lastName}, ${item?.Employee?.firstName}`;
         return employeeFullName
           .toLowerCase()
           .includes(searchValue.toLowerCase());
@@ -271,7 +271,7 @@ const Manage = () => {
                               ? "Informatics"
                               : value.major === "SI"
                               ? "Information System"
-                              : value.major === "DKV"
+                              : value.major === "TI"
                               ? "Information Technology"
                               : value.major}
                           </TableCell>
@@ -479,7 +479,7 @@ const Manage = () => {
                               ? "Informatics"
                               : value.major === "SI"
                               ? "Information System"
-                              : value.major === "DKV"
+                              : value.major === "TI"
                               ? "Information Technology"
                               : value.major}
                           </TableCell>

@@ -61,9 +61,9 @@ const StudentInformationMentored = () => {
         setResultData(data.GuidanceClassMember);
       }
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (error.response && error.response.status === 401) {
+      } else if (error && error.response && error.response.status === 401) {
         handleAuthenticationError();
       } else {
         console.error("error: ");
@@ -88,18 +88,18 @@ const StudentInformationMentored = () => {
   const filterAndSetStudents = () => {
     const filteredData = originalDataStudent.filter((item) => {
       const nameMatches =
-        (item.student.firstName &&
-          item.student.firstName
+        (item?.student?.firstName &&
+          item?.student?.firstName
             .toLowerCase()
             .includes(search.toLowerCase())) ||
-        (item.student.lastName &&
-          item.student.lastName.toLowerCase().includes(search.toLowerCase()));
+        (item?.student?.lastName &&
+          item?.student?.lastName.toLowerCase().includes(search.toLowerCase()));
       const nimMatches =
-        item.student.nim &&
-        item.student.nim.toLowerCase().includes(search.toLowerCase());
+        item?.student?.nim &&
+        item?.student.nim.toLowerCase().includes(search.toLowerCase());
       const majorMatches =
         filter === "" ||
-        (item.student.status && item.student.status === filter);
+        (item?.student?.status && item?.student?.status === filter);
       return (nameMatches || nimMatches) && majorMatches;
     });
 
@@ -365,7 +365,7 @@ const TableItem = ({ item, index }) => {
           ? "Informatics"
           : major === "SI"
           ? "Information System"
-          : major === "DKV"
+          : major === "TI"
           ? "Information Technology"
           : "-"}
       </TableCell>

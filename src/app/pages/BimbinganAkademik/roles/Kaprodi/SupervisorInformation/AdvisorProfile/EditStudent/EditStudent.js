@@ -51,7 +51,7 @@ const majorLabel = (major) => {
       return "Informatics";
     case "SI":
       return "Information System";
-    case "DKV":
+    case "TI":
       return "Information Technology";
     default:
       return "-";
@@ -80,12 +80,12 @@ const EditStudent = () => {
 
   //handle error
   const handleError = (error) => {
-    if (error.code === "ERR_CANCELED") {
+    if (error && error.code === "ERR_CANCELED") {
       console.log("request canceled");
-    } else if (error.response && error.response.status === 401) {
+    } else if (error && error.response && error.response.status === 401) {
       handleAuthenticationError();
     } else {
-      console.error("error: ");
+      console.error("error: ", error);
     }
   };
 
@@ -168,10 +168,12 @@ const EditStudent = () => {
   const filterAndSetStudents = () => {
     const filteredData = originalDataStudent.filter((item) => {
       const nameMatches =
-        item.firstName.toLowerCase().includes(search.toLowerCase()) ||
-        item.lastName.toLowerCase().includes(search.toLowerCase());
-      const nimMatches = item.nim.toLowerCase().includes(search.toLowerCase());
-      const majorMatches = filter === "" || item.major === filter;
+        item?.firstName?.toLowerCase().includes(search.toLowerCase()) ||
+        item?.lastName?.toLowerCase().includes(search.toLowerCase());
+      const nimMatches = item?.nim
+        ?.toLowerCase()
+        .includes(search.toLowerCase());
+      const majorMatches = filter === "" || item?.major === filter;
 
       return (nameMatches || nimMatches) && majorMatches;
     });
@@ -303,7 +305,7 @@ const EditStudent = () => {
             <MenuItem key={"SI"} value={"SI"}>
               Information System
             </MenuItem>
-            <MenuItem key={"DKV"} value={"DKV"}>
+            <MenuItem key={"TI"} value={"TI"}>
               Information Technology
             </MenuItem>
           </TextField>

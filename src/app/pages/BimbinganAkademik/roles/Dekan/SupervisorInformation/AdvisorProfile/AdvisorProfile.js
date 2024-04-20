@@ -56,13 +56,12 @@ const AdvisorProfile = () => {
         setStudentOptions(data.GuidanceClassMember);
       }
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (error.response && error.response.status === 401) {
+      } else if (error && error.response && error.response.status === 401) {
         handleAuthenticationError();
       } else {
-        console.error("ini error: ");
-        return;
+        console.error("error: ", error);
       }
     }
   };
@@ -124,7 +123,7 @@ const AdvisorProfile = () => {
                 ? "Informatics"
                 : dataProfile.major === "SI"
                 ? "Information System"
-                : dataProfile.major === "DKV"
+                : dataProfile.major === "TI"
                 ? "Information Technology"
                 : "-"}
             </Typography>
@@ -268,7 +267,7 @@ const AdvisorProfile = () => {
             count={
               dataProfile.student
                 ? dataProfile.student.filter(
-                    (item) => item.status !== "GRADUATE"
+                    (item) => item?.status !== "GRADUATE"
                   ).length
                 : 0
             }
@@ -365,7 +364,7 @@ const TableItem = ({ item, index }) => {
           ? "Informatics"
           : major === "SI"
           ? "Information System"
-          : major === "DKV"
+          : major === "TI"
           ? "Information Technology"
           : "-"}
       </TableCell>

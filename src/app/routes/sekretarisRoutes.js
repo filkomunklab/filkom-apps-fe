@@ -22,6 +22,11 @@ import AdvisorStudentGrade from "app/pages/BimbinganAkademik/roles/Sekretaris/Su
 import AdvisorStudentGrade2 from "app/pages/BimbinganAkademik/roles/Sekretaris/SupervisorInformation/AdvisorProfile/StudentGradeDashboard/StudentGrade";
 import AdvisorStudentCertificate from "app/pages/BimbinganAkademik/roles/Sekretaris/SupervisorInformation/AdvisorProfile/StudentCertificate";
 import AdvisorStudentCertificate2 from "app/pages/BimbinganAkademik/roles/Sekretaris/SupervisorInformation/AdvisorProfile/StudentCertificate/CertificateDetail";
+import AdvisorHistory from "app/pages/BimbinganAkademik/roles/Sekretaris/SupervisorInformation/AdvisorHistory";
+import HistoryActivityAdvisor from "app/pages/BimbinganAkademik/roles/Sekretaris/SupervisorInformation/AdvisorHistory/HIstoryActivity/HistoryActivity";
+import HistoryPreRegistrationAdvisor from "app/pages/BimbinganAkademik/roles/Sekretaris/SupervisorInformation/AdvisorHistory/HistoryPreRegis/ReviewPreRegistrationStudent";
+import HistoryCertificateAdvisor from "app/pages/BimbinganAkademik/roles/Sekretaris/SupervisorInformation/AdvisorHistory/HistoryCertificate/Certificate";
+import HistoryConsultationAdvisor from "app/pages/BimbinganAkademik/roles/Sekretaris/SupervisorInformation/AdvisorHistory/HistoryConsultation/ConsultationComplete";
 
 const { default: Page } = require("@jumbo/shared/Page");
 
@@ -170,6 +175,26 @@ const sekFakultasRoutes = [
   {
     path: "/bimbingan-akademik/sekretaris/supervisor-information/advisor-profile/:id/student-certificate/:id",
     element: <Page component={AdvisorStudentCertificate2} />,
+  },
+  {
+    path: "/bimbingan-akademik/sekretaris/supervisor-information/advisor-history/:id",
+    element: <Page component={AdvisorHistory} />,
+  },
+  {
+    path: "/bimbingan-akademik/sekretaris/supervisor-information/advisor-history/:id/:id/history-activity",
+    element: <Page component={HistoryActivityAdvisor} />,
+  },
+  {
+    path: "/bimbingan-akademik/sekretaris/supervisor-information/advisor-history/:id/:id/history-preregistration",
+    element: <Page component={HistoryPreRegistrationAdvisor} />,
+  },
+  {
+    path: "/bimbingan-akademik/sekretaris/supervisor-information/advisor-history/:id/:id/history-certificate",
+    element: <Page component={HistoryCertificateAdvisor} />,
+  },
+  {
+    path: "/bimbingan-akademik/sekretaris/supervisor-information/advisor-history/:id/:id/history-consultation",
+    element: <Page component={HistoryConsultationAdvisor} />,
   },
 ];
 

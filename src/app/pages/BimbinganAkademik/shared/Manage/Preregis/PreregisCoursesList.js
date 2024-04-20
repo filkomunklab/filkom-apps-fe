@@ -30,8 +30,6 @@ const PreregisCoursesList = () => {
 
   const location = useLocation();
   const { id, major } = location.state || "-";
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState("");
   const [dataCourses, setDataCourses] = useState([]);
 
@@ -43,15 +41,15 @@ const PreregisCoursesList = () => {
       });
 
       const filteredData = result.data.data.filter((item) => {
-        const subjectName = item.name.toLowerCase();
+        const subjectName = item?.name?.toLowerCase();
         return subjectName.includes(searchValue.toLowerCase());
       });
 
       setDataCourses(filteredData);
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (error.response && error.response.status === 401) {
+      } else if (error && error.response && error.response.status === 401) {
         handleAuthenticationError();
       } else {
         console.error("error: ");
@@ -101,7 +99,7 @@ const PreregisCoursesList = () => {
             sx={{ marginRight: { xs: 0, sm: 2 } }}
           >
             <TextField
-              label="Search by Subject"
+              label="Search by Subject Name"
               variant="outlined"
               size="small"
               sx={{
@@ -123,14 +121,14 @@ const PreregisCoursesList = () => {
         </Grid>
       </Div>
       <Grid item xs={12}>
-        <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
+        <TableContainer sx={{ maxHeight: 600 }} component={Paper}>
           <Table>
             <TableHead
               style={{
                 position: "-webkit-sticky",
                 position: "sticky",
                 top: 0,
-                backgroundColor: "rgba(26, 56, 96, 0.1)",
+                backgroundColor: "#e8ecf2",
                 zIndex: 1,
               }}
             >
@@ -161,18 +159,6 @@ const PreregisCoursesList = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          component="div"
-          count={dataCourses.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={(_, newPage) => setPage(newPage)}
-          onRowsPerPageChange={(event) => {
-            setRowsPerPage(+event.target.value);
-            setPage(0);
-          }}
-        />
       </Grid>
     </Div>
   );

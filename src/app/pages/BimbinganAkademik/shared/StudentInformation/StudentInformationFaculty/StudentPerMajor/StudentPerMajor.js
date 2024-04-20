@@ -68,9 +68,9 @@ const StudentPerMajor = () => {
         response.data.data.filter((item) => item.status !== "GRADUATE")
       );
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (error.response && error.response.status === 401) {
+      } else if (error && error.response && error.response.status === 401) {
         handleAuthenticationError();
       } else {
         console.error("error: ");
@@ -109,10 +109,12 @@ const StudentPerMajor = () => {
   const filterAndSetStudents = () => {
     const filteredData = originalDataStudent.filter((item) => {
       const nameMatches =
-        item.firstName.toLowerCase().includes(search.toLowerCase()) ||
-        item.lastName.toLowerCase().includes(search.toLowerCase());
-      const nimMatches = item.nim.toLowerCase().includes(search.toLowerCase());
-      const majorMatches = filter === "" || item.status === filter;
+        item?.firstName?.toLowerCase().includes(search.toLowerCase()) ||
+        item?.lastName?.toLowerCase().includes(search.toLowerCase());
+      const nimMatches = item?.nim
+        ?.toLowerCase()
+        .includes(search.toLowerCase());
+      const majorMatches = filter === "" || item?.status === filter;
 
       return (nameMatches || nimMatches) && majorMatches;
     });
@@ -142,7 +144,7 @@ const StudentPerMajor = () => {
               ? "Informatics"
               : major === "SI"
               ? "Information System"
-              : major === "DKV"
+              : major === "TI"
               ? "Information Technology"
               : "-"}{" "}
             Students List
@@ -162,7 +164,7 @@ const StudentPerMajor = () => {
               ? "Informatics"
               : major === "SI"
               ? "Information System"
-              : major === "DKV"
+              : major === "TI"
               ? "Information Technology"
               : "-"}{" "}
             Students List
@@ -381,7 +383,7 @@ const TableItem = ({ item, index }) => {
           ? "Informatics"
           : major === "SI"
           ? "Information System"
-          : major === "DKV"
+          : major === "TI"
           ? "Information Technology"
           : "-"}
       </TableCell>

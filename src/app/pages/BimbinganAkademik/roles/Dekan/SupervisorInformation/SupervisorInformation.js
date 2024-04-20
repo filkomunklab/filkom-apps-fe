@@ -53,13 +53,12 @@ const SupervisorInformation = () => {
       });
       setDataSupervisor(response.data.data);
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (error.response && error.response.status === 401) {
+      } else if (error && error.response && error.response.status === 401) {
         handleAuthenticationError();
       } else {
-        console.error("error: ");
-        return;
+        console.error("error: ", error);
       }
     }
   };
@@ -80,9 +79,11 @@ const SupervisorInformation = () => {
   const filterAndSetStudents = () => {
     const filteredData = originalDataSupervisor.filter((item) => {
       const nameMatches =
-        item.teacher.firstName.toLowerCase().includes(search.toLowerCase()) ||
-        item.teacher.lastName.toLowerCase().includes(search.toLowerCase());
-      const majorMatches = filter === "" || item.teacher.major === filter;
+        item?.teacher?.firstName
+          ?.toLowerCase()
+          .includes(search.toLowerCase()) ||
+        item?.teacher?.lastName?.toLowerCase().includes(search.toLowerCase());
+      const majorMatches = filter === "" || item?.teacher?.major === filter;
 
       return nameMatches && majorMatches;
     });
@@ -226,7 +227,7 @@ const SupervisorInformation = () => {
             <MenuItem key={"SI"} value={"SI"}>
               Information System
             </MenuItem>
-            <MenuItem key={"DKV"} value={"DKV"}>
+            <MenuItem key={"TI"} value={"TI"}>
               Information Technology
             </MenuItem>
           </TextField>
@@ -351,7 +352,7 @@ const TableItem = ({ item, index, onDelete }) => {
           ? "Informatics"
           : major === "SI"
           ? "Information System"
-          : major === "DKV"
+          : major === "TI"
           ? "Information Technology"
           : "-"}
       </TableCell>
