@@ -26,7 +26,8 @@ const Otoritas = () => {
     queryFn: getTeacher,
   });
 
-  if (employee.status === "pending") return <CreateRpsSkeleton />;
+  if (employee.status === "pending" && !employee.data)
+    return <CreateRpsSkeleton />;
 
   return (
     <div className="bg-white rounded-sm p-5">

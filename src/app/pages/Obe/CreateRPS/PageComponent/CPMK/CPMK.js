@@ -32,7 +32,8 @@ const CPMK = () => {
     queryFn: () => GetSubjects.cpl(values.subjectId),
   });
 
-  if (cplQuery.status === "pending") return <CreateRpsSkeleton />;
+  if (cplQuery.status === "pending" && !cplQuery.data)
+    return <CreateRpsSkeleton />;
 
   return (
     <>

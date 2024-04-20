@@ -16,10 +16,12 @@ import putReportDetail from "./putDetailReport";
 import putStudentGrade from "./putStudentGrade";
 import putSummaryReport from "./putSummaryReport";
 import deleteRps from "./deleteRps";
+import deleteCurriculum from "./deleteCurriculum";
 import patchRpsStatus from "./patchRpsStatus";
 
 export {
   getRpsListSummary,
+  deleteCurriculum,
   patchRpsStatus,
   getSummaryReport,
   putSummaryReport,

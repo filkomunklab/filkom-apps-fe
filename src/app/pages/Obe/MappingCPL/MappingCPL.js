@@ -49,7 +49,7 @@ const MappingCPL = () => {
     },
   });
 
-  if (subjectCplQuery.status === "pending") {
+  if (subjectCplQuery.status === "pending" && !subjectCplQuery.data) {
     return <CircularProgress color="info" />;
   }
 

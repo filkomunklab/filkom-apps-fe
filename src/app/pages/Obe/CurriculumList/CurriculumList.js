@@ -32,6 +32,7 @@ import getCurriculum from "app/api/getCurriculum";
 import { OBE_BASE_URL_API } from "@jumbo/config/env";
 import { convertShortMajor } from "app/utils/appHelpers";
 import NotfoundAnimation from "app/shared/NotfoundAnimation";
+import { Actions } from "./Components";
 
 const CurriculumList = () => {
   const [open, setOpen] = useState(false);
@@ -76,7 +77,7 @@ const CurriculumList = () => {
     },
   });
 
-  if (curriculumQuery.status === "pending") {
+  if (curriculumQuery.status === "pending" && !curriculumQuery.data) {
     return <CircularProgress color="info" />;
   }
 
@@ -165,8 +166,10 @@ const CurriculumList = () => {
                           onBlur={handleBlur}
                           helperText={errors.headOfProgramStudyId}
                         >
-                          {employee.data?.map((item) => (
-                            <MenuItem value={item.value}>{item.label}</MenuItem>
+                          {employee.data?.map((item, index) => (
+                            <MenuItem value={item.value} key={index}>
+                              {item.label}
+                            </MenuItem>
                           ))}
                         </Select>
                         <FormHelperText
@@ -303,15 +306,15 @@ const CurriculumList = () => {
                   <TableCell>Tahun Kurikulum</TableCell>
                   <TableCell>Total MK</TableCell>
                   <TableCell>Ketua Program Studi</TableCell>
-                  {/* <TableCell>Action</TableCell> */}
+                  <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {curriculumQuery.data?.map((row, i) => (
                   <TableRow
                     hover
-                    component={Link}
-                    to={`/obe/curriculum/${major}/${row.id}`}
+                    // component={Link}
+                    // to={`/obe/curriculum/${major}/${row.id}`}
                     key={row.id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
@@ -322,9 +325,9 @@ const CurriculumList = () => {
                     <TableCell>{row.year}</TableCell>
                     <TableCell>{row._count.Curriculum_Subject}</TableCell>
                     <TableCell>{`${row.headOfProgramStudy.firstName} ${row.headOfProgramStudy.lastName} `}</TableCell>
-                    {/* <TableCell>
+                    <TableCell>
                       <Actions row={row} />
-                    </TableCell> */}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

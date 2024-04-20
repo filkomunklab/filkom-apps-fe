@@ -17,6 +17,7 @@ import { getRpsListTeacher } from "app/api";
 import useUser from "app/hooks/useUser";
 import { convertShortMajor } from "app/utils/appHelpers";
 import { CircularProgress } from "@mui/material";
+import NotfoundAnimation from "app/shared/NotfoundAnimation";
 
 const EvaluasiCPMK = () => {
   const [page, setPage] = useState(0);
@@ -90,7 +91,7 @@ const EvaluasiCPMK = () => {
     queryFn: () => getRpsListTeacher({ teacherId: user.id }),
   });
 
-  if (rpsQuery.status === "pending") {
+  if (rpsQuery.status === "pending" && !rpsQuery.data) {
     return <CircularProgress color="info" />;
   }
 
@@ -102,140 +103,153 @@ const EvaluasiCPMK = () => {
         </h1>
       </div>
 
-      <div className="bg-secondary rounded-lg p-5 flex flex-row mb-10">
-        <table className="w-full">
-          <tbody>
-            <tr>
-              <td className="text-lg font-semibold w-40">Dosen</td>
-              <td className="text-lg">{`: ${rpsQuery?.data?.metadata?.teacher?.firstName} ${rpsQuery?.data?.metadata?.teacher?.lastName}`}</td>
-            </tr>
-            <tr>
-              <td className="text-lg font-semibold w-40">Total SKS</td>
-              <td className="text-lg">{`: ${rpsQuery?.data?.metadata?.creditsTotal} SKS`}</td>
-            </tr>
-          </tbody>
-        </table>
+      {rpsQuery.data ? (
+        <>
+          <div className="bg-secondary rounded-lg p-5 flex flex-row mb-10">
+            <table className="w-full">
+              <tbody>
+                <tr>
+                  <td className="text-lg font-semibold w-40">Dosen</td>
+                  <td className="text-lg">{`: ${rpsQuery?.data?.metadata?.teacher?.firstName} ${rpsQuery?.data?.metadata?.teacher?.lastName}`}</td>
+                </tr>
+                <tr>
+                  <td className="text-lg font-semibold w-40">Total SKS</td>
+                  <td className="text-lg">{`: ${rpsQuery?.data?.metadata?.creditsTotal} SKS`}</td>
+                </tr>
+              </tbody>
+            </table>
 
-        <table className="w-full">
-          <tbody>
-            <tr>
-              <td className="text-lg font-semibold w-40">Total Mahasiswa</td>
-              <td className="text-lg">{`: ${rpsQuery?.data?.metadata?.studentsTotal} Mahasiswa`}</td>
-            </tr>
-            <tr>
-              <td className="text-lg font-semibold w-40">Total Matkul</td>
-              <td className="text-lg">{`: ${rpsQuery?.data?.metadata?.rpsTotal} Matakuliah`}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+            <table className="w-full">
+              <tbody>
+                <tr>
+                  <td className="text-lg font-semibold w-40">
+                    Total Mahasiswa
+                  </td>
+                  <td className="text-lg">{`: ${rpsQuery?.data?.metadata?.studentsTotal} Mahasiswa`}</td>
+                </tr>
+                <tr>
+                  <td className="text-lg font-semibold w-40">Total Matkul</td>
+                  <td className="text-lg">{`: ${rpsQuery?.data?.metadata?.rpsTotal} Matakuliah`}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-      <div className="flex flex-row items-center justify-between mt-4 mb-6">
-        <h1 className="text-3xl font-semibold">
-          Daftar Matakuliah{" "}
-          <span className="text-2xl font-medium">
-            (Rancangan Pembelajaran Semester)
-          </span>
-        </h1>
-        <div className="flex items-center">
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
-        </div>
-      </div>
+          <div className="flex flex-row items-center justify-between mt-4 mb-6">
+            <h1 className="text-3xl font-semibold">
+              Daftar Matakuliah{" "}
+              <span className="text-2xl font-medium">
+                (Rancangan Pembelajaran Semester)
+              </span>
+            </h1>
+            <div className="flex items-center">
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="Search…"
+                  inputProps={{ "aria-label": "search" }}
+                />
+              </Search>
+            </div>
+          </div>
 
-      <div className="w-full">
-        <Paper sx={{ minWidth: "600px", overflow: "hidden" }}>
-          <TableContainer sx={{ Height: "100vh" }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="left" style={styles.theadCell}>
-                    No
-                  </TableCell>
-                  <TableCell align="left" style={styles.theadCell}>
-                    Nama Mata Kuliah
-                  </TableCell>
-                  <TableCell align="left" style={styles.theadCell}>
-                    Kode MK
-                  </TableCell>
-                  <TableCell align="left" style={styles.theadCell}>
-                    Semester
-                  </TableCell>
-                  <TableCell align="left" style={styles.theadCell}>
-                    Program Studi
-                  </TableCell>
-                  <TableCell align="left" style={styles.theadCell}>
-                    Jumlah Siswa
-                  </TableCell>
-                  <TableCell align="left" style={styles.theadCell}>
-                    Direvisi
-                  </TableCell>
-                  {/* <TableCell align="left" style={styles.theadCell}>
+          <div className="w-full">
+            <Paper sx={{ minWidth: "600px", overflow: "hidden" }}>
+              <TableContainer sx={{ Height: "100vh" }}>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="left" style={styles.theadCell}>
+                        No
+                      </TableCell>
+                      <TableCell align="left" style={styles.theadCell}>
+                        Nama Mata Kuliah
+                      </TableCell>
+                      <TableCell align="left" style={styles.theadCell}>
+                        Kode MK
+                      </TableCell>
+                      <TableCell align="left" style={styles.theadCell}>
+                        Semester
+                      </TableCell>
+                      <TableCell align="left" style={styles.theadCell}>
+                        Program Studi
+                      </TableCell>
+                      <TableCell align="left" style={styles.theadCell}>
+                        Jumlah Siswa
+                      </TableCell>
+                      <TableCell align="left" style={styles.theadCell}>
+                        Direvisi
+                      </TableCell>
+                      {/* <TableCell align="left" style={styles.theadCell}>
                     Action
                   </TableCell> */}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rpsQuery.data?.rps
-                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => (
-                    <TableRow
-                      hover
-                      key={row.id}
-                      onClick={() => handleNavigation(row.id)}
-                      className="hover:bg-gray-200 cursor-pointer"
-                    >
-                      <TableCell align="left">{index + 1}</TableCell>
-                      <TableCell align="left">{`${row.Subject.indonesiaName}`}</TableCell>
-                      <TableCell align="left">{row.Subject.code}</TableCell>
-                      <TableCell align="left">
-                        {row.Subject.Curriculum_Subject.map(
-                          (item) => item.semester
-                        ).join(" | ")}
-                      </TableCell>
-                      <TableCell align="left">
-                        {row.Subject.Curriculum_Subject.map((item) =>
-                          convertShortMajor(item.curriculum.major)
-                        ).join(" | ")}
-                      </TableCell>
-                      <TableCell align="left">
-                        <div
-                          className={`rounded-full text-center text-${
-                            row._count.ClassStudent === 0 ? "red-800" : "black"
-                          }`}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {rpsQuery.data?.rps
+                      ?.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row, index) => (
+                        <TableRow
+                          hover
+                          key={row.id}
+                          onClick={() => handleNavigation(row.id)}
+                          className="hover:bg-gray-200 cursor-pointer"
                         >
-                          {row._count.ClassStudent}
-                        </div>
-                      </TableCell>
-                      <TableCell align="left">
-                        {moment(row.updatedAt).format("DD/MM/YYYY")}
-                      </TableCell>
-                      {/* <TableCell align="left">
+                          <TableCell align="left">{index + 1}</TableCell>
+                          <TableCell align="left">{`${row.Subject.indonesiaName}`}</TableCell>
+                          <TableCell align="left">{row.Subject.code}</TableCell>
+                          <TableCell align="left">
+                            {row.Subject.Curriculum_Subject.map(
+                              (item) => item.semester
+                            ).join(" | ")}
+                          </TableCell>
+                          <TableCell align="left">
+                            {row.Subject.Curriculum_Subject.map((item) =>
+                              convertShortMajor(item.curriculum.major)
+                            ).join(" | ")}
+                          </TableCell>
+                          <TableCell align="left">
+                            <div
+                              className={`rounded-full text-center text-${
+                                row._count.ClassStudent === 0
+                                  ? "red-800"
+                                  : "black"
+                              }`}
+                            >
+                              {row._count.ClassStudent}
+                            </div>
+                          </TableCell>
+                          <TableCell align="left">
+                            {moment(row.updatedAt).format("DD/MM/YYYY")}
+                          </TableCell>
+                          {/* <TableCell align="left">
                         <Actions row={row} />
                       </TableCell> */}
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={rpsQuery.data?.rps.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={(_, page) => setPage(page)}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
-      </div>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={rpsQuery.data?.rps.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={(_, page) => setPage(page)}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </Paper>
+          </div>
+        </>
+      ) : (
+        <NotfoundAnimation />
+      )}
     </div>
   );
 };

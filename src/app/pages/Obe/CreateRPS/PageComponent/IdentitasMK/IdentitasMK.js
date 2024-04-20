@@ -26,7 +26,8 @@ const IdentitasMK = () => {
     queryFn: GetSubjects.all,
   });
 
-  if (subjectsQuery.status === "pending") return <CreateRpsSkeleton />;
+  if (subjectsQuery.status === "pending" && !subjectsQuery.data)
+    return <CreateRpsSkeleton />;
 
   return (
     <div className="bg-white rounded-sm p-5">

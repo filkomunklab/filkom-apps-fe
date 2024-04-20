@@ -67,7 +67,7 @@ const ReportCPMK = () => {
     },
   });
 
-  if (reportDetailQuery.status === "pending") {
+  if (reportDetailQuery.status === "pending" && !reportDetailQuery.data) {
     return <CircularProgress color="info" />;
   }
 

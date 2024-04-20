@@ -81,7 +81,7 @@ const EvaluasiCPL = () => {
     queryFn: () => getCurriculum(major),
   });
 
-  if (curriculumQuery.status === "pending") {
+  if (curriculumQuery.status === "pending" && !curriculumQuery.data) {
     return <CircularProgress color="info" />;
   }
 

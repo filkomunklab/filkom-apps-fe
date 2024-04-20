@@ -2,7 +2,14 @@ import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
-import { Button, Chip, CircularProgress, Stack, TablePagination, TextField } from "@mui/material";
+import {
+  Button,
+  Chip,
+  CircularProgress,
+  Stack,
+  TablePagination,
+  TextField,
+} from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -67,7 +74,7 @@ const SubjectList = () => {
     },
   });
 
-  if (subjectsQuery.status === "pending") {
+  if (subjectsQuery.status === "pending" && !subjectsQuery.data) {
     return <CircularProgress color="info" />;
   }
 

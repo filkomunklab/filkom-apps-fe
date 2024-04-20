@@ -31,7 +31,7 @@ const RpsDetail = () => {
     queryFn: () => getRpsDetail(rpsId),
   });
 
-  if (rpsQuery.status === "pending") {
+  if (rpsQuery.status === "pending" && !rpsQuery.data) {
     return <CircularProgress color="info" />;
   }
 

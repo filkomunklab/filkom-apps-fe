@@ -76,7 +76,7 @@ const EvaluasiRPS = () => {
     queryFn: () => getRpsListTeacher({ teacherId: user.id }),
   });
 
-  if (rpsQuery.status === "pending") {
+  if (rpsQuery.status === "pending" && !rpsQuery.data) {
     return <CircularProgress color="info" />;
   }
 
