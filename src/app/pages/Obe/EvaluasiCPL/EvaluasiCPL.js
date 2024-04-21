@@ -77,7 +77,7 @@ const EvaluasiCPL = () => {
   };
 
   const curriculumQuery = useQuery({
-    queryKey: ["curriculum", major],
+    queryKey: ["curriculum", { major }],
     queryFn: () => getCurriculum(major),
   });
 

@@ -48,7 +48,7 @@ const Actions = ({ row }) => {
     mutationFn: deleteCurriculum,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["curriculum", major],
+        queryKey: ["curriculum", { major }],
       });
       Swal.fire({
         title: "Berhasil",

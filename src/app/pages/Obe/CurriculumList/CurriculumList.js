@@ -54,7 +54,7 @@ const CurriculumList = () => {
     queryFn: getTeacher,
   });
   const curriculumQuery = useQuery({
-    queryKey: ["curriculum", major],
+    queryKey: ["curriculum", { major }],
     queryFn: () => getCurriculum(major),
   });
   const curriculum = useMutation({
