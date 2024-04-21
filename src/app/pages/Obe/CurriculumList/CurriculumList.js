@@ -37,7 +37,7 @@ import { Actions } from "./Components";
 const CurriculumList = () => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
   const inputRef = useRef(null);
   const { major } = useParams();
 
@@ -334,7 +334,7 @@ const CurriculumList = () => {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[5, 10, 25, 50]}
             component="div"
             count={curriculumQuery.data?.length}
             rowsPerPage={rowsPerPage}
