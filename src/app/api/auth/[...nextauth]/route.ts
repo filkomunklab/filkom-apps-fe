@@ -3,6 +3,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 const handler = NextAuth({
+  secret: process.env.AUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -30,8 +31,10 @@ const handler = NextAuth({
               break;
           }
           const { data } = await GlobalClientInstance.post(endPoint, payload);
-          console.log(data);
-          return data.data;
+          console.log(data.data);
+          return {
+            ...data.data,
+          };
         } catch (error) {
           console.log(error);
           return null;
@@ -39,8 +42,23 @@ const handler = NextAuth({
       },
     }),
   ],
+  session: {
+    maxAge: 3 * 24 * 60 * 60 * 1000,
+  },
   pages: {
     signIn: "/login",
+  },
+  callbacks: {
+    async jwt({ user, token }) {
+      if (user) {
+        token = { ...token, ...user };
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      session = { ...session, ...token };
+      return session;
+    },
   },
 });
 

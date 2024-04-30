@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.auto-scroll {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.auto-scroll:hover {
+  animation: scroll 5s linear infinite;
+}
+
+@keyframes scroll {
+  0% {
+    text-indent: 0%;
+  }
+  100% {
+    text-indent: -100%;
+  }
+}

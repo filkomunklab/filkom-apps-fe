@@ -16,7 +16,7 @@ import * as yup from "yup";
 import JumboTextField from "../components/JumboTextField";
 import JumboSelectField from "../components/JumboSelectField";
 import { LoadingButton } from "@mui/lab";
-import { ASSET_IMAGES } from "../lib/constants";
+import { ASSET_IMAGES } from "../lib/constants/config";
 import Div from "../components/Div";
 import { useRouter } from "next/navigation";
 import Image from "next/image";

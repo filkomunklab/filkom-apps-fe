@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GLOBAL_BASE_URL_API } from "../constants";
+import { GLOBAL_BASE_URL_API } from "../constants/config";
 
 const GlobalClientInstance = axios.create({
   baseURL: GLOBAL_BASE_URL_API,
