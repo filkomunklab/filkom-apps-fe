@@ -46,6 +46,12 @@ const PustakaPendukung = () => {
                 Tambah Pustaka Pendukung
                 <AddCircleOutlineIcon style={{ fontSize: 16, marginLeft: 5 }} />
               </button>
+              <FormHelperText error>
+                <b>
+                  {typeof errors.supportingReferences === "string" &&
+                    errors.supportingReferences}
+                </b>
+              </FormHelperText>
             </div>
           </>
         )}

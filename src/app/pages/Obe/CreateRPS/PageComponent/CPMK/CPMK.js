@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { GetSubjects } from "app/api";
 import CreateRpsSkeleton from "../CreateRpsSkeleton";
+import { useEffect } from "react";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -25,12 +26,23 @@ const MenuProps = {
 };
 
 const CPMK = () => {
-  const { values, errors } = useFormikContext();
+  const { values, errors, setFieldValue } = useFormikContext();
 
   const cplQuery = useQuery({
     queryKey: ["cpl", values.subjectId],
     queryFn: () => GetSubjects.cpl(values.subjectId),
   });
+
+  useEffect(() => {
+    console.log("triggered");
+    // Update cpmk id whenever the length of the array is mutated
+    const updatedCpmk = values.cpmk.map((item, index) => ({
+      ...item,
+      code: `CPMK${index + 1}`,
+    }));
+    // Update the values with the updated cpmk array
+    setFieldValue("cpmk", updatedCpmk);
+  }, [values.cpmk.length]);
 
   if (cplQuery.status === "pending" && !cplQuery.data)
     return <CreateRpsSkeleton />;
@@ -78,6 +90,7 @@ const CPMK = () => {
                       name={`cpmk[${index}].code`}
                       type="text"
                       className="border border-gray-300 p-2 w-full rounded-md h-14"
+                      disabled
                     />
                     <FormHelperText error>
                       <b>{errors?.cpmk?.[index]?.code}</b>

@@ -33,7 +33,7 @@ const initialValues = {
   cpmk: [
     {
       description: "",
-      code: "",
+      code: "CPMK1",
       supportedCplIds: [],
     },
   ],

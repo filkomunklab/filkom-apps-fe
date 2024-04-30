@@ -60,10 +60,12 @@ export default function AccordionContent({ item, cpmkGrading }) {
 
                 <TableCell>{row.nim}</TableCell>
                 {row.grading.map((item, index) => (
-                  <TableCell key={index}>{item.score}</TableCell>
+                  <TableCell key={index}>{item.score.toFixed(2)}</TableCell>
                 ))}
                 <TableCell>
-                  {row.grading.reduce((acc, curr) => acc + curr.score, 0)}
+                  {row.grading
+                    .reduce((acc, curr) => acc + curr.score, 0)
+                    .toFixed(2)}
                 </TableCell>
               </TableRow>
             ))}
@@ -76,11 +78,16 @@ export default function AccordionContent({ item, cpmkGrading }) {
               TOTAL
             </TableCell>
             <TableCell>
-              {`${item.studentList.reduce(
-                (acc, curr) =>
-                  acc + curr.grading.reduce((acc, curr) => acc + curr.score, 0),
-                0
-              )} / ${item.studentList.length * grading.totalGradingWeight}`}
+              {`${item.studentList
+                .reduce(
+                  (acc, curr) =>
+                    acc +
+                    curr.grading.reduce((acc, curr) => acc + curr.score, 0),
+                  0
+                )
+                .toFixed(2)} / ${
+                item.studentList.length * grading.totalGradingWeight
+              }`}
             </TableCell>
           </TableRow>
         </Table>

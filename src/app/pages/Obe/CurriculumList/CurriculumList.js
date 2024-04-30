@@ -270,15 +270,13 @@ const CurriculumList = () => {
             endIcon={<AddIcon />}
             onClick={handleOpen}
           >
-            Tambah Kurikulum
+            Buat Kurikulum
           </Button>
         </div>
       </div>
       <div className="flex justify-between mb-3">
         <div>
-          <h1 className="text-2xl font-medium">
-            List Kurikulum {convertShortMajor(major)}
-          </h1>
+          <h1 className="text-2xl font-medium">{convertShortMajor(major)}</h1>
         </div>
         <div>
           <TextField

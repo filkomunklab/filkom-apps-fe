@@ -243,7 +243,14 @@ const RpsDetail = () => {
               {/* 5 CPL & CPMK */}
               <>
                 <tr>
-                  <td rowSpan={12} className="border-[1px] border-black">
+                  <td
+                    rowSpan={
+                      rpsQuery.data?.Subject.Subject_Cpl.length +
+                      rpsQuery.data?.Cpmk.length +
+                      2
+                    }
+                    className="border-[1px] border-black"
+                  >
                     Capaian Pembelajaran Lulusan & Capaian Pembelajaran Mata
                     Kuliah{" "}
                   </td>

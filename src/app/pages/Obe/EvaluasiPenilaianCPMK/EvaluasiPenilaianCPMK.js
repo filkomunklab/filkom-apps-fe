@@ -133,7 +133,13 @@ const EvaluasiPenilaianCPMK = () => {
                       id="panel1a-header"
                     >
                       <div className="flex flex-row justify-between w-full">
-                        <h1 className="text-lg font-semibold">{item.code}</h1>
+                        <h1 className="text-lg font-semibold">
+                          {item.code}
+                          {": "}
+                          <span className="text-red-600 font-normal">
+                            *Click on Grading header to submit student Grade
+                          </span>
+                        </h1>
                       </div>
                     </AccordionSummary>
 

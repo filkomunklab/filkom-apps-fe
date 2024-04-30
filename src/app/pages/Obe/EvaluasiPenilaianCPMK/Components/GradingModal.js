@@ -65,7 +65,7 @@ const GradingModal = ({ open, setOpen = () => {}, item }) => {
             })}
             onSubmit={(values) => {
               studentGradeMutation.mutate({
-                gradingSystemId: item.gradingId,
+                gradingSystemId: item.id,
                 file: values.file,
               });
             }}

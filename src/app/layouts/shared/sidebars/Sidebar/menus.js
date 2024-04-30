@@ -590,7 +590,7 @@ export const dekanMenus = [
         ],
       },
       {
-        label: "Evaluasi CPL",
+        label: "Evaluasi CPMK",
         type: "collapsible",
         icon: <PublishedWithChangesIcon sx={{ fontSize: 20 }} />,
         children: [
@@ -618,7 +618,7 @@ export const dekanMenus = [
         uri: "/obe/all-list-rps",
       },
       {
-        label: "List RPS",
+        label: "Daftar RPS",
         type: "nav-item",
         icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
         uri: `/obe/list-rps`,
@@ -844,7 +844,7 @@ export const dosenMenus = [
     type: "section",
     children: [
       {
-        label: "List RPS",
+        label: "Daftar RPS",
         type: "nav-item",
         icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
         uri: `/obe/list-rps`,
@@ -1370,7 +1370,7 @@ export const kaprodiMenus = [
         ],
       },
       {
-        label: "Evaluasi CPL",
+        label: "CPMK Evaluation",
         type: "collapsible",
         icon: <PublishedWithChangesIcon sx={{ fontSize: 20 }} />,
         children: [
@@ -1398,7 +1398,7 @@ export const kaprodiMenus = [
         uri: "/obe/all-list-rps",
       },
       {
-        label: "List RPS",
+        label: "Daftar RPS",
         type: "nav-item",
         icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
         uri: `/obe/list-rps`,
