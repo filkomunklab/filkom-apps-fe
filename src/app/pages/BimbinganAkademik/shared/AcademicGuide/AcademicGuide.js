@@ -197,7 +197,7 @@ const AcademicGuide = () => {
       <Modal
         open={openEditModal}
         onClose={() => setOpenEditModal(false)}
-        aria-labelledby="edit-visi-misi-tujuan-modal"
+        aria-labelledby="edit-academic-guide"
       >
         <Box style={style}>
           <Typography
@@ -209,7 +209,7 @@ const AcademicGuide = () => {
               paddingTop: 2,
             }}
           >
-            Edit Vision, Mission, or Goals
+            Edit Academic Guide
           </Typography>
           <TextField
             multiline
