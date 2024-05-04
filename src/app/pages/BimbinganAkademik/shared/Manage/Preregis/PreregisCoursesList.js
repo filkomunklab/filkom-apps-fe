@@ -11,13 +11,14 @@ import {
   TableContainer,
   TableCell,
   Paper,
-  TablePagination,
   TableRow,
   TextField,
   IconButton,
+  Button,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 import { useNavigate, useLocation } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
@@ -39,11 +40,12 @@ const PreregisCoursesList = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
       });
-
       const filteredData = result.data.data.filter((item) => {
         const subjectName = item?.name?.toLowerCase();
         return subjectName.includes(searchValue.toLowerCase());
       });
+
+      filteredData.sort((a, b) => b.totalRequest - a.totalRequest);
 
       setDataCourses(filteredData);
     } catch (error) {
@@ -65,6 +67,25 @@ const PreregisCoursesList = () => {
     event.preventDefault();
     navigate(-1);
   };
+
+  // const generatePDF = useReactToPrint({
+  //   content: () => conponentPDF.current,
+  //   documentTitle: "List of Courses",
+  //   onAfterPrint: () => {
+  //     const { jsPDF } = require("jspdf");
+  //     const doc = new jsPDF();
+  //     doc.text("List of Courses", 10, 10);
+  //     doc.autoTable({ html: "#table" });
+  //     doc.save("courses.pdf");
+  //   },
+  // });
+
+  const conponentPDF = useRef();
+  const generatePDF = useReactToPrint({
+    content: () => conponentPDF.current,
+    documentTitle: `Course List ${major}`,
+  });
+
   return (
     <Div>
       <Div role="presentation">
@@ -78,87 +99,96 @@ const PreregisCoursesList = () => {
         </Breadcrumbs>
       </Div>
       <Div sx={{ paddingTop: 4, paddingBottom: 2 }}>
-        <Grid
-          container
-          display="flex"
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Grid item md={6}>
+        <Grid container alignItems="center" justifyContent="space-between">
+          <Grid item xs={12} sm={8}>
             <Typography variant="h4" sx={{ fontWeight: 600 }}>
               List of Courses
             </Typography>
           </Grid>
           <Grid
             item
+            container
             xs={12}
-            sm={3}
-            md={3}
-            xl={3}
-            sx={{ marginRight: { xs: 0, sm: 2 } }}
+            sm={4}
+            alignItems="center"
+            justifyContent="flex-end"
           >
-            <TextField
-              label="Search by Subject Name"
-              variant="outlined"
-              size="small"
-              sx={{
-                width: "100%",
-                height: "100%",
-                marginTop: "20px",
-              }}
-              onChange={(e) => setSearchValue(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <IconButton edge="end">
-                    <SearchIcon />
-                  </IconButton>
-                ),
-                style: { borderRadius: "25px" },
-              }}
-            />
+            <Grid item xs={10} sm={10} justifyContent="flex-end">
+              <TextField
+                label="Search by Subject Name"
+                variant="outlined"
+                size="small"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton edge="end">
+                      <SearchIcon />
+                    </IconButton>
+                  ),
+                  style: { borderRadius: "25px" },
+                }}
+                sx={{
+                  width: "96%",
+                }}
+              />
+            </Grid>
+            <Grid item xs={2} sm={2}>
+              <Button
+                onClick={generatePDF}
+                variant="contained"
+                color="primary"
+                size="small"
+              >
+                PDF
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </Div>
       <Grid item xs={12}>
-        <TableContainer sx={{ maxHeight: 600 }} component={Paper}>
-          <Table>
-            <TableHead
-              style={{
-                position: "-webkit-sticky",
-                position: "sticky",
-                top: 0,
-                backgroundColor: "#e8ecf2",
-                zIndex: 1,
-              }}
-            >
-              <TableRow>
-                <TableCell>No</TableCell>
-                <TableCell>Code</TableCell>
-                <TableCell>Subject Name</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Total</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {dataCourses && dataCourses.length > 0 ? (
-                dataCourses.map((course, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{course.code}</TableCell>
-                    <TableCell>{course.name}</TableCell>
-                    <TableCell>{course.type}</TableCell>
-                    <TableCell>{course.totalRequest}</TableCell>
+        <Div ref={conponentPDF} style={{ width: "100%" }}>
+          <Div>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead
+                  style={{
+                    position: "-webkit-sticky",
+                    position: "sticky",
+                    top: 0,
+                    backgroundColor: "#e8ecf2",
+                    zIndex: 1,
+                  }}
+                >
+                  <TableRow>
+                    <TableCell>No</TableCell>
+                    <TableCell>Code</TableCell>
+                    <TableCell>Subject Name</TableCell>
+                    <TableCell>Type</TableCell>
+                    <TableCell>Total</TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={8}>No data available</TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {dataCourses && dataCourses.length > 0 ? (
+                    dataCourses.map((course, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{course.code}</TableCell>
+                        <TableCell>{course.name}</TableCell>
+                        <TableCell>{course.type}</TableCell>
+                        <TableCell>{course.totalRequest}</TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={8}>No data available</TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Div>
+        </Div>
       </Grid>
     </Div>
   );

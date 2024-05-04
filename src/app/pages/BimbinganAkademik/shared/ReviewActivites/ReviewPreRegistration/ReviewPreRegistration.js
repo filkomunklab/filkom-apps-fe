@@ -193,7 +193,7 @@ const ReviewPreRegistration = () => {
                 <TableCell>Student Name</TableCell>
                 <TableCell>Major</TableCell>
                 <TableCell>Arrival Year</TableCell>
-                <TableCell>KRS Status</TableCell>
+                <TableCell>Pre-registration Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

@@ -78,7 +78,7 @@ const StudentProfile = () => {
       <Breadcrumbs aria-label="breadcrumb">
         <StyledLink
           onClick={() =>
-            navigate("/bimbingan-akademik/dekan/supervisor-information/")
+            navigate("/bimbingan-akademik/kaprodi/supervisor-information/")
           }
         >
           Supervisor Information

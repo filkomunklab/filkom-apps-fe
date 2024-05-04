@@ -107,20 +107,26 @@ const FormAfterLoginStudent = ({
         .pop()
         .toLowerCase();
 
-      if (allowedExtensions.includes(fileExtension)) {
-        setFileName(fileInput.files[0].name);
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-          setBase64Image(e.target.result);
-        };
-
-        // Read the file as a data URL
-        reader.readAsDataURL(fileInput.files[0]);
-      } else {
+      if (!allowedExtensions.includes(fileExtension)) {
         alert("Only image files (jpg, jpeg, png) are allowed.");
         event.target.value = "";
+        return;
       }
+
+      if (fileInput.files[0].size > 2 * 1024 * 1024) {
+        alert("Maximum file size allowed is 2MB.");
+        event.target.value = "";
+        return;
+      }
+
+      setFileName(fileInput.files[0].name);
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        setBase64Image(e.target.result);
+      };
+
+      reader.readAsDataURL(fileInput.files[0]);
     } else {
       alert("You haven't uploaded a photo yet.");
     }

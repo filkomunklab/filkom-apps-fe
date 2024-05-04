@@ -527,8 +527,8 @@ const PreRegistrationSubmission = ({}) => {
           }}
         >
           <Typography variant="body1">
-            Not yet filled out KHS <br /> <br />
-            Date of KRS Filling:{" "}
+            Not yet filled out Pre-registration <br /> <br />
+            Date of Pre-registration Filling:{" "}
             {new Date(dataPreregis.createdAt).toLocaleDateString("en-US", {
               month: "long",
               day: "2-digit",

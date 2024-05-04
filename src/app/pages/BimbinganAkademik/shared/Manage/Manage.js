@@ -536,7 +536,6 @@ const Manage = () => {
                             label="Semester"
                             sx={{ width: "480px" }}
                             options={[
-                              { value: "", label: "None" },
                               { value: "Ganjil", label: "Ganjil" },
                               { value: "Genap", label: "Genap" },
                             ]}
@@ -923,7 +922,6 @@ const Manage = () => {
                             label="Semester"
                             sx={{ margin: "0 0 20px 0", width: "480px" }}
                             options={[
-                              { value: "", label: "None" },
                               { value: "Ganjil", label: "Ganjil" },
                               { value: "Genap", label: "Genap" },
                             ]}

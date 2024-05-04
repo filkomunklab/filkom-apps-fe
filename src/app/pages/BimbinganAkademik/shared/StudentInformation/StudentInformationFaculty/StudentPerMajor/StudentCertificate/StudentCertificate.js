@@ -272,7 +272,16 @@ const StudentCertificate = () => {
                         <TableCell>
                           {getCategoryLabel(value.category)}
                         </TableCell>
-                        <TableCell>{value.description}</TableCell>
+                        <TableCell
+                          sx={{
+                            maxWidth: "180px",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {value.description}
+                        </TableCell>
                         <TableCell
                           sx={{
                             color:

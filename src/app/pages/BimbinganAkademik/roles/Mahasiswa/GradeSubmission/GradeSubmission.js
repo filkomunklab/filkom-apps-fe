@@ -446,7 +446,9 @@ const GradeSubmission = () => {
                     onChange={(event, value) =>
                       handleSubjectNameChange(event, index, value)
                     }
-                    getOptionLabel={(option) => option.name}
+                    getOptionLabel={(option) =>
+                      `[${option.code}] ${option.name}`
+                    }
                     renderInput={(params) => (
                       <TextField
                         sx={{ width: "100%" }}

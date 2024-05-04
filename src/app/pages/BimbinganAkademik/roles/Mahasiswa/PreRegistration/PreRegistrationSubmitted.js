@@ -58,10 +58,10 @@ const PreRegistrationSubmitted = () => {
         }}
       >
         <Typography variant="body1">
-          KRS has already been filled in.
+          Pre-registration has already been filled in.
           <br />
           <br />
-          Date of KRS Filling:{" "}
+          Date of Pre-registration Filling:{" "}
           {new Date(dataPreregis.createdAt).toLocaleDateString("en-US", {
             month: "long",
             day: "2-digit",

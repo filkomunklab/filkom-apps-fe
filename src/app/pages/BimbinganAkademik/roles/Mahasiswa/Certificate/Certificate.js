@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Button,
@@ -55,6 +55,8 @@ const style = {
 
 const Certificate = () => {
   const navigate = useNavigate();
+  const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
+  const iframeRef = useRef(null);
 
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -85,6 +87,21 @@ const Certificate = () => {
   };
   const hideAlert = () => {
     setAlert(null);
+  };
+
+  const displayPdfPreview = (file) => {
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const pdfUrl = URL.createObjectURL(
+        new Blob([e.target.result], { type: "application/pdf" })
+      );
+      setPdfPreviewUrl(pdfUrl);
+    };
+
+    reader.readAsArrayBuffer(file);
   };
 
   const handleFileInputChange = (event) => {
@@ -122,6 +139,7 @@ const Certificate = () => {
     }
 
     setSelectedFileName(file.name);
+    displayPdfPreview(file);
   };
 
   const handleValidation = () => {
@@ -403,6 +421,15 @@ const Certificate = () => {
               multiline
             />
           </Stack>
+          {pdfPreviewUrl && (
+            <iframe
+              ref={iframeRef}
+              src={pdfPreviewUrl}
+              width="100%"
+              height="650px"
+              title="PDF Preview"
+            />
+          )}
         </Grid>
 
         <Grid item xs={12}>

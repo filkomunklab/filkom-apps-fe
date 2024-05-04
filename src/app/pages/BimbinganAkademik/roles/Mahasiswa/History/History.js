@@ -92,7 +92,9 @@ const History = () => {
       );
 
       const resultActivity = await jwtAuthAxios.get(
-        `/activity/history-for-student/${nim}`,
+        `/activity/history-for-student/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -110,7 +112,9 @@ const History = () => {
       );
 
       const resultPreregis = await jwtAuthAxios.get(
-        `/pre-regist/history-for-student/${nim}`,
+        `/pre-regist/history-for-student/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,

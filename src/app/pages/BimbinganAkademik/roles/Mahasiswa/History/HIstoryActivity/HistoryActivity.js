@@ -127,7 +127,7 @@ const Activity = () => {
         <Grid item xs={12} md={4}>
           <Stack spacing={2}>
             <Grid paddingTop={2} sx={{ display: "flex", direction: "row" }}>
-              <Typography>Clock (optional)</Typography>
+              <Typography>Clock</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
