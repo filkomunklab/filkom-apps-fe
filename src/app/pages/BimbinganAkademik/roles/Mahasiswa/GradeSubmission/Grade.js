@@ -1,47 +1,81 @@
 import React, { useEffect, useState } from "react";
 import GradeSubmission from "./GradeSubmission";
 import GradeSubmissionClosed from "./GradeSubmissionClosed";
+import GradeSubmitted from "./GradeSubmitted";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { useNavigate } from "react-router-dom";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const Grade = () => {
-  const [dataGrade, setDataGrade] = useState(null);
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
+  const [dataGrade, setDataGrade] = useState([]);
+  const [submissionStatus, setSubmissionStatus] = useState("");
 
   const getDataGrade = async () => {
     try {
-      const nim = JSON.parse(localStorage.getItem("user")).nim;
+      const { nim, id } = JSON.parse(localStorage.getItem("user"));
       const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
       });
       const major = studentData.data.data.major;
-      const result = await jwtAuthAxios.get(
-        `/access/list/gradesAccess/${major}`,
+
+      const result = await jwtAuthAxios.get(`/access/isOpen/${major}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
+      setDataGrade(result.data.data);
+
+      const resultCurrent = await jwtAuthAxios.get(
+        `/transaction/student/currentGrades/${id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
+      const transactionId = resultCurrent.data.data[0].id;
+
+      const checkTransactionId = await jwtAuthAxios.get(
+        `/transaction/grades/check/${transactionId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
 
-      const gradeData = result.data.data;
-      // const result = await axios.get(`${BASE_URL_API}/access/isOpen/${major}/`);
-      // const gradeData = result.data.data.isOpen;
-      setDataGrade(gradeData);
-
-      console.log("ini panjang gradedata", gradeData);
+      if (checkTransactionId.data.data !== null) {
+        setSubmissionStatus("success");
+      } else {
+        setSubmissionStatus("error cuyy");
+      }
     } catch (error) {
-      console.log(error.message);
-      console.log("ini error: ", error);
+      if (error && error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.error("error: ");
+        return;
+      }
     }
   };
 
   useEffect(() => {
     getDataGrade();
+    return () => controller.abort();
   }, []);
 
   return (
     <div>
-      {console.log("ini isi dari dataGrade", dataGrade)}
-
-      {dataGrade === null || dataGrade.length === 0 ? (
+      {dataGrade === null ||
+      dataGrade?.length === 0 ||
+      dataGrade?.isOpen === false ? (
         <GradeSubmissionClosed />
+      ) : submissionStatus === "success" ? (
+        <GradeSubmitted />
       ) : (
         <GradeSubmission />
       )}

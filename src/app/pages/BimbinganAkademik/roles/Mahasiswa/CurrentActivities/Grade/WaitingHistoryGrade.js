@@ -1,5 +1,9 @@
 import React from "react";
 import {
+  Breadcrumbs,
+  experimentalStyled as styled,
+  Grid,
+  Paper,
   Typography,
   Table,
   TableBody,
@@ -7,12 +11,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Breadcrumbs,
-  experimentalStyled as styled,
-  Paper,
-  Grid,
 } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -24,6 +24,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const WaitingGrade = () => {
+  const navigate = useNavigate();
   const { state } = useLocation();
   const gradeDetails = state ? state.gradeDetails : {};
   const {
@@ -34,19 +35,20 @@ const WaitingGrade = () => {
     semester,
     grades,
   } = gradeDetails;
-  console.log("ini grade detail", gradeDetails);
-
-  const handleBreadcrumbsClick = () => {
-    let path = "/bimbingan-akademik/current-activities";
-    return <StyledLink to={path}>Current Activities</StyledLink>;
+  console.log("grades", grades);
+  const handleClick = (event) => {
+    event.preventDefault();
+    navigate(-1);
   };
 
   return (
     <div>
-      <Breadcrumbs aria-label="breadcrumb" sx={{ paddingBottom: 2 }}>
-        {handleBreadcrumbsClick()}
-        <Typography color="text.primary">Grade</Typography>
-      </Breadcrumbs>
+      <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledLink>Current Activities</StyledLink>
+          <Typography color="text.primary">Activity</Typography>
+        </Breadcrumbs>
+      </div>
       <Typography
         sx={{
           fontSize: { xs: "20px", md: "24px" },
@@ -126,7 +128,8 @@ const WaitingGrade = () => {
             </Grid>
             <Grid item xs={7} paddingLeft={1}>
               <Typography variant="h5" sx={{ color: "#FFCC00" }}>
-                {status.charAt(0) + status.slice(1).toLowerCase()}
+                {status?.charAt(0) +
+                  (status ? status.slice(1).toLowerCase() : "")}
               </Typography>
             </Grid>
           </Grid>
@@ -146,19 +149,22 @@ const WaitingGrade = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {grades.map((data, index) => (
-                <TableRow key={index}>
-                  <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
-                  <TableCell sx={{ width: "40px" }}>
-                    {data.subjectName}
-                  </TableCell>
-                  <TableCell sx={{ width: "40px" }}>{data.grades}</TableCell>
-                  <TableCell sx={{ width: "40px" }}>{data.lecturer}</TableCell>
-                  <TableCell sx={{ width: "40px" }}>
-                    {data.description || "-"}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {grades &&
+                grades.map((data, index) => (
+                  <TableRow key={index}>
+                    <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
+                    <TableCell sx={{ width: "40px" }}>
+                      {data.subjectName}
+                    </TableCell>
+                    <TableCell sx={{ width: "40px" }}>{data.grades}</TableCell>
+                    <TableCell sx={{ width: "40px" }}>
+                      {data.lecturer}
+                    </TableCell>
+                    <TableCell sx={{ width: "40px" }}>
+                      {data.description || "-"}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>

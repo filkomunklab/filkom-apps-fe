@@ -9,14 +9,14 @@ import {
   Paper,
   Breadcrumbs,
   experimentalStyled as styled,
+  Modal,
 } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
-import Modal from "@mui/material/Modal";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
 import SendIcon from "@mui/icons-material/Send";
 import { format } from "date-fns";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -41,10 +41,14 @@ const style = {
 };
 
 const ViewConsultation = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [status, setStatus] = useState("");
   const [messages, setMessages] = useState([]);
-  const [openFirstModal, setOpenFirstModal] = React.useState(false);
-  const [openSecondModal, setOpenSecondModal] = React.useState(false);
+  const [openFirstModal, setOpenFirstModal] = useState(false);
 
   const { state } = useLocation();
   const consultationDetails = state ? state.consultationDetails : {};
@@ -61,86 +65,101 @@ const ViewConsultation = () => {
 
   const handleOpenFirstModal = () => setOpenFirstModal(true);
   const handleCloseFirstModal = () => setOpenFirstModal(false);
-  const handleOpenSecondModal = () => setOpenSecondModal(true);
-  const handleCloseSecondModal = () => setOpenSecondModal(false);
 
-  const [inputValue, setInputValue] = useState("");
+  const [inputMessage, setInputMessage] = useState("");
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSubmit();
-    }
-  };
   const handleIconClick = () => {
     handleSubmit();
   };
 
   const handleSubmit = () => {
-    const trimmedValue = inputValue.trim();
+    const trimmedValue = inputMessage?.trim();
     if (trimmedValue !== "") {
       postMessage(trimmedValue);
-      setInputValue("");
+      setInputMessage("");
     } else {
       alert("Input tidak valid. Mohon masukkan pesan yang valid.");
     }
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      handleCloseSecondModal();
-    }, 5000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [handleOpenSecondModal]);
-
-  useEffect(() => {
     getCurrentStatus();
     getMessage();
-  }, [messages]);
+    return () => controller.abort();
+  }, []);
+
+  //handle error
+  const handleError = (error) => {
+    if (error && error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (error && error.response && error.response.status === 401) {
+      handleAuthenticationError();
+    } else {
+      console.error("error: ");
+    }
+  };
 
   const getCurrentStatus = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/academic-consultation/detail/${id}`
+      const response = await jwtAuthAxios.get(
+        `/academic-consultation/detail/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          signal,
+        }
       );
       setStatus(response.data.data.status);
     } catch (error) {
-      console.log("error", error);
+      handleError(error);
     }
   };
 
   const getMessage = async () => {
     try {
-      const response = await axios.get(`${BASE_URL_API}/message/${id}`);
+      const response = await jwtAuthAxios.get(`/message/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
       setMessages(response.data.data);
     } catch (error) {
-      console.log("error", error);
+      handleError(error);
     }
   };
 
   const postMessage = async (content) => {
     try {
-      const response = await axios.post(`${BASE_URL_API}/message`, {
-        academic_consultation_id: id,
-        content,
-        sender_name: `${JSON.parse(localStorage.getItem("user")).name}`,
-      });
+      const response = await jwtAuthAxios.post(
+        `/message`,
+        {
+          academic_consultation_id: id,
+          content,
+          sender_name: `${JSON.parse(localStorage.getItem("user")).name}`,
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
+      getCurrentStatus();
+      getMessage();
     } catch (error) {
-      console.log("error", error);
+      handleError(error);
     }
   };
 
   const handleSubmitFirstModal = async () => {
     try {
       handleCloseFirstModal();
-      await axios.patch(
-        `${BASE_URL_API}/academic-consultation/${id}/status/complete`
-      );
-      handleOpenSecondModal();
+      await jwtAuthAxios.patch(`/academic-consultation/${id}/status/complete`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
+      getCurrentStatus();
+      getMessage();
     } catch (error) {
-      console.error("ini error complete status:", error);
+      handleError(error);
     }
   };
 
@@ -206,7 +225,7 @@ const ViewConsultation = () => {
                   ? "Informatika"
                   : studentMajor === "SI"
                   ? "Sistem Informasi"
-                  : studentMajor === "DKV"
+                  : studentMajor === "TI"
                   ? "Teknologi Informasi"
                   : studentMajor}
               </Typography>
@@ -318,7 +337,7 @@ const ViewConsultation = () => {
                         overflowWrap: "break-word",
                         wordWrap: "break-word",
                         borderColor:
-                          value.sender_name === studentName
+                          value?.sender_name === studentName
                             ? "#000000"
                             : "#005FDB",
                         padding: "12px",
@@ -340,16 +359,16 @@ const ViewConsultation = () => {
                             fontWeight: 600,
                           }}
                         >
-                          {value.sender_name}
+                          {value?.sender_name}
                         </Typography>
                         <Typography variant="caption">
                           {format(
-                            new Date(value.createdAt),
+                            new Date(value?.createdAt),
                             "dd/MM/yyyy HH:mm"
                           )}
                         </Typography>
                       </div>
-                      <Typography variant="body1">{value.content}</Typography>
+                      <Typography variant="body1">{value?.content}</Typography>
                     </Paper>
                   ))}
 
@@ -362,8 +381,8 @@ const ViewConsultation = () => {
                       placeholder="Enter Message..."
                       fullWidth
                       multiline
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
+                      value={inputMessage}
+                      onChange={(e) => setInputMessage(e.target.value)}
                       InputProps={{
                         endAdornment: (
                           <IconButton onClick={handleIconClick}>
@@ -371,7 +390,6 @@ const ViewConsultation = () => {
                           </IconButton>
                         ),
                       }}
-                      onKeyPress={handleKeyPress}
                     />
                     <Grid
                       container
@@ -437,10 +455,6 @@ const ViewConsultation = () => {
                               </Button>
                             </Grid>
                             <Grid item>
-                              {/* <Link
-                            style={{ textDecoration: "none", color: "white" }}
-                            to="/bimbingan-akademik/consultation/"
-                          > */}
                               <Button
                                 onClick={handleSubmitFirstModal}
                                 sx={{
@@ -456,7 +470,6 @@ const ViewConsultation = () => {
                               >
                                 Yes
                               </Button>
-                              {/* </Link> */}
                             </Grid>
                           </Grid>
                         </div>

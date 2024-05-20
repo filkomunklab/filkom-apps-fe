@@ -13,9 +13,6 @@ import ReviewCertificate from "app/pages/BimbinganAkademik/shared/ReviewActivite
 import ReviewCertificateStudent from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewCertificate/DetailCertificate/ViewCertificate";
 import History from "app/pages/BimbinganAkademik/shared/History";
 import HistoryActivity from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity";
-import HistoryActivity1 from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity1";
-import HistoryActivity2 from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity2";
-import HistoryActivity3 from "app/pages/BimbinganAkademik/shared/History/HIstoryActivity/HistoryActivity3";
 import HistoryPreRegistration from "app/pages/BimbinganAkademik/shared/History/HistoryPreRegis/ReviewPreRegistrationStudent";
 import HistoryCertificate from "app/pages/BimbinganAkademik/shared/History/HistoryCertificate/Certificate";
 import HistoryConsultationComplete from "app/pages/BimbinganAkademik/shared/History/HistoryConsultation/ConsultationComplete";
@@ -108,18 +105,6 @@ const dosenPembimbingRoutes = [
   {
     path: "/bimbingan-akademik/dosen-pembimbing/history/activity",
     element: <Page component={HistoryActivity} />,
-  },
-  {
-    path: "/bimbingan-akademik/dosen-pembimbing/history/activity1",
-    element: <Page component={HistoryActivity1} />,
-  },
-  {
-    path: "/bimbingan-akademik/dosen-pembimbing/history/activity2",
-    element: <Page component={HistoryActivity2} />,
-  },
-  {
-    path: "/bimbingan-akademik/dosen-pembimbing/history/activity3",
-    element: <Page component={HistoryActivity3} />,
   },
   {
     path: "/bimbingan-akademik/dosen-pembimbing/history/pre-registration/:id",

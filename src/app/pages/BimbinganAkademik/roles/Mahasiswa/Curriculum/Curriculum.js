@@ -9,11 +9,20 @@ import {
   TableContainer,
   Paper,
   Grid,
+  CircularProgress,
 } from "@mui/material";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import { useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const Curriculum = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(true);
+
   const [curriculumDetails, setCurriculumDetails] = useState({
     name: "",
     year: "",
@@ -22,29 +31,47 @@ const Curriculum = () => {
 
   useEffect(() => {
     getCurriculumDetails();
+    return () => controller.abort();
   }, []);
 
   const getCurriculumDetails = async () => {
     try {
-      const curriculumResult = await axios.get(`${BASE_URL_API}/curriculum`);
+      const curriculumResult = await jwtAuthAxios.get(
+        `/curriculum/${JSON.parse(localStorage.getItem("user")).curriculumId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
       if (curriculumResult.data.status === "OK") {
-        const firstCurriculum = curriculumResult.data.data[0];
+        const hasil = curriculumResult.data.data;
 
         setCurriculumDetails({
-          name: firstCurriculum.major,
-          year: firstCurriculum.year,
+          name: hasil.major,
+          year: hasil.year,
         });
 
-        const result = await axios.get(
-          `${BASE_URL_API}/subject/${firstCurriculum.id}`
-        );
+        const result = await jwtAuthAxios.get(`/subject/${hasil.id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          signal,
+        });
 
         if (result.data.status === "OK") {
           setListSubject(result.data.data);
+          setLoading(false);
         }
       }
     } catch (error) {
-      console.error("Ini error:", error);
+      if (error && error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.error("error: ");
+        return;
+      }
     }
   };
 
@@ -104,13 +131,25 @@ const Curriculum = () => {
 
     return rows;
   };
-  console.log("ini result curriculumResult", curriculumDetails);
-  console.log("ini result listSubject", listSubject);
-
   return (
     <div>
-      {curriculumDetails &&
-      (curriculumDetails.name === "" || curriculumDetails.year === "") ? (
+      {loading ? (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      ) : curriculumDetails &&
+        (curriculumDetails.name === "" || curriculumDetails.year === "") ? (
         <Grid>
           <Typography
             sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "20px" }}
@@ -135,14 +174,14 @@ const Curriculum = () => {
         <Grid container>
           <div>
             <Typography
-              sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "15px" }}
+              sx={{ fontSize: "24px", fontWeight: 500, paddingBottom: "10px" }}
             >
               Curriculum
               {` ${curriculumDetails.name} - ${curriculumDetails.year}`}
             </Typography>
           </div>
           <Grid container pt={2}>
-            <TableContainer sx={{ maxHeight: 530 }} component={Paper}>
+            <TableContainer sx={{ maxHeight: "70vh" }} component={Paper}>
               <Table>
                 <TableHead
                   sx={{
@@ -150,6 +189,7 @@ const Curriculum = () => {
                     position: "sticky",
                     top: 0,
                     backgroundColor: "rgb(245, 247, 250)",
+                    zIndex: 1,
                   }}
                 >
                   <TableRow>

@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -31,37 +32,47 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const Grades = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
   const navigate = useNavigate();
+
   const [semesterData, setSemesterData] = useState([]);
 
   const getDataGrade = async () => {
     try {
-      const nim = JSON.parse(localStorage.getItem("user")).nim;
       const response = await jwtAuthAxios.get(
-        `/transaction/semesterList/${nim}`,
+        `/transaction/semesterList/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
 
-      console.log("ini respnse", response);
       const sortedData = response.data.data.sort((a, b) =>
         a.semester.localeCompare(b.semester, undefined, { numeric: true })
       );
-
       const reversedData = sortedData.reverse();
 
       setSemesterData(reversedData);
     } catch (error) {
-      console.log(error.message);
-      console.log("ini error: ", error);
+      if (error && error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.error("error: ");
+        return;
+      }
     }
   };
 
   useEffect(() => {
     getDataGrade();
+    return () => controller.abort();
   }, []);
-  console.log("ini yg mo loop", semesterData);
 
   const handleNavigateGrade = async (value) => {
     try {
@@ -69,12 +80,11 @@ const Grades = () => {
         `/grades/detailGrades/${value.id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
       const detail = gradeDetailsResult.data.data;
-      let path = `/bimbingan-akademik/student-grade/`;
-      console.log("isi detail", detail);
-      navigate(`${path}${value.id}`, {
+      navigate(`${value.id}`, {
         state: {
           gradeDetails: {
             semester: detail.semester,
@@ -83,7 +93,14 @@ const Grades = () => {
         },
       });
     } catch (error) {
-      console.log(error.message);
+      if (error && error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.error("error: ");
+        return;
+      }
     }
   };
 
@@ -107,7 +124,9 @@ const Grades = () => {
           <Typography variant="body1">You don't have a grade yet.</Typography>
         </Paper>
       ) : (
-        <Typography variant="h5">Select a semester to view grades.</Typography>
+        <Typography variant="h5" sx={{ paddingBottom: "20px" }}>
+          Select a semester to view grades.
+        </Typography>
       )}
       <Grid
         container

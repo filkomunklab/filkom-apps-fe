@@ -1,46 +1,72 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
 import PreRegistrationClosedCase from "./PreRegistrationClosedCase";
 import PreRegistrationSubmission from "./PreRegistrationSubmission";
 import PreRegistrationSubmitted from "./PreRegistrationSubmitted";
+import { useNavigate } from "react-router-dom";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const PreRegistration = () => {
-  const [dataPreregis, setDataPreregis] = useState(null);
+  const navigate = useNavigate();
+
+  const [dataPreregis, setDataPreregis] = useState([]);
   const [submissionStatus, setSubmissionStatus] = useState("");
 
   const getDataPreregis = async () => {
     try {
-      const nim = JSON.parse(localStorage.getItem("user")).nim;
-      const studentData = await axios.get(`${BASE_URL_API}/student/${nim}`);
+      const { nim, id } = JSON.parse(localStorage.getItem("user"));
+      const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       const major = studentData.data.data.major;
-      const result = await axios.get(
-        `${BASE_URL_API}/pre-regist/status/${major}/${nim}`
+
+      const result = await jwtAuthAxios.get(
+        `/pre-regist/status/${major}/${id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
       const preregisData = result.data.data;
       setDataPreregis(preregisData);
-
-      console.log("ini panjang preregisdata", preregisData.PreRegistrationData);
-      console.log("Data preregistration:", preregisData);
       if (
+        preregisData &&
         Array.isArray(preregisData.PreRegistrationData) &&
-        preregisData.PreRegistrationData.length > 0
+        preregisData.PreRegistrationData.length > 0 &&
+        submissionStatus !== "success"
       ) {
         setSubmissionStatus("success");
       }
     } catch (error) {
-      console.log(error.message);
-      console.log("ini error: ", error);
+      if (error && error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.error("error: ");
+        return;
+      }
     }
   };
 
   useEffect(() => {
-    getDataPreregis();
+    const fetchData = async () => {
+      try {
+        await getDataPreregis();
+      } catch (error) {
+        console.log("An error occurred while fetching data: ", error);
+      }
+    };
+
+    fetchData();
+
+    return () => {};
   }, [submissionStatus]);
 
   return (
     <div>
-      {dataPreregis === null || dataPreregis.length === 0 ? (
+      {dataPreregis === null ||
+      dataPreregis?.length === 0 ||
+      dataPreregis.isOpen === false ? (
         <PreRegistrationClosedCase />
       ) : submissionStatus === "success" ? (
         <PreRegistrationSubmitted />

@@ -4,12 +4,13 @@ import {
   Stack,
   Grid,
   Breadcrumbs,
+  Button,
+  Chip,
+  CircularProgress,
   experimentalStyled as styled,
   Paper,
   Checkbox,
   Modal,
-  Button,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -17,10 +18,10 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -50,115 +51,82 @@ const style = {
   },
 };
 
-const style2 = {
-  position: "fixed",
-  top: "15%",
-  right: "2%",
-  width: 400,
-  padding: 24,
-  backgroundColor: "white",
-  borderRadius: 10,
-};
-
-const studentsData = Array.from({ length: 29 }, (_, index) => ({
-  id: index + 1,
-  name: "Adzana, Shaliha Gracia",
-  nim: "105022010006",
-  prodi: "Informatika",
-}));
-
 const ViewActivity = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { activityId } = location?.state || "-";
+  //abort
   const controller = new AbortController();
   const signal = controller.signal;
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const [loading, setLoading] = useState(false);
+  const { activityId } = location?.state || "-";
   const [activityDetail, setActivityDetail] = useState("");
   const [selectedAll, setSelectedAll] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState([]);
+
+  //modal
   const [openFirstModal, setOpenFirstModal] = useState(false);
-  const [openSecondModal, setOpenSecondModal] = useState(false);
+  const [openErrorModal, setOpenErrorModal] = useState(false);
+  const handleOpenFirstModal = () => setOpenFirstModal(true);
+  const handleCloseFirstModal = () => setOpenFirstModal(false);
+  const handleOpenErrorModal = () => setOpenErrorModal(true);
+  const handleCloseErrorModal = () => setOpenErrorModal(false);
 
   const getActivityDetail = async () => {
     try {
-      const headers = {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer token_apa`,
-      };
-
-      const response = await axios.get(
-        `${BASE_URL_API}/activity/detail/${activityId}`,
-        { signal }
+      const response = await jwtAuthAxios.get(
+        `/activity/detail/${activityId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
-      console.log("res activity detail", response);
 
       const { status, data } = response.data;
       if (status === "OK") {
         setActivityDetail(data);
-      } else {
-        //tambah handler jika respon lain, kalau tidak perlu hapus saja
       }
     } catch (error) {
-      console.log(error);
+      if (error && error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.error("error: ");
+        handleOpenErrorModal();
+        setLoading(false);
+        return;
+      }
     }
   };
 
-  // const getStudentList = async() =>{
-  //   try{
-  //     const headers = {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer token_apa`,
-  //     };
-
-  //     const response = await axios.get(`${BASE_URL_API}/bla/bla/bla`,{headers})
-
-  //     const {status, message, code, data} = response.data
-  //     if(status === 'OK'){ //isi status atau code tergantung API
-  //     //simpan dalam usestate contoh:
-  //     //setStudentList = data
-  //     //tambahkan handle lain jika perlu
-  //     }else{
-  //     //tambah handler jika respon lain, kalau tidak perlu hapus saja
-  //       console.log(response)
-  //     }
-  //   }catch(error){
-  //     console.log(error)
-  //   }
-  // }
-
-  // const submitAttendance = async()=>{
-  //   try{
-  //     const headers = {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer token_apa`,
-  //     };
-
-  //     const response = await axios.post(`${BASE_URL_API}/bla/bla/bla`,{body: 'data apa'},{headers})
-
-  //   // jika tidak akan melakukan handle terhadap response maka hapus saja "const response =", jadi sisa await dst...
-  //     console.log(response)
-  //   }catch(error){
-  //     console.log(error)
-  //   }
-  // }
-
-  const submitAttendance = async () => {
+  const handleSubmitFirstModal = async () => {
+    handleCloseFirstModal();
+    setLoading(true);
     try {
-      const headers = {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer token_apa`,
-      };
-
-      const response = await axios.post(
-        `${BASE_URL_API}/activity/take-attendance/${activityId}`,
-        { body: "data apa" },
-        { signal }
+      const response = await jwtAuthAxios.patch(
+        `/activity/take-attendance/${activityId}`,
+        { members: selectedStudents },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
-
-      // jika tidak akan melakukan handle terhadap response maka hapus saja "const response =", jadi sisa await dst...
-      console.log(response);
+      if (response.data.status === "OK") {
+        setLoading(false);
+        window.location.reload();
+      }
     } catch (error) {
-      console.log(error);
+      if (error && error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.error("error: ");
+        handleOpenErrorModal();
+        setLoading(false);
+        return;
+      }
     }
   };
 
@@ -167,7 +135,7 @@ const ViewActivity = () => {
     setSelectedStudents(
       selectedAll
         ? []
-        : activityDetail.ActivityMember.map((student) => student.studentNim)
+        : activityDetail.ActivityMember.map((student) => student.studentId)
     );
   };
 
@@ -176,7 +144,9 @@ const ViewActivity = () => {
       ? selectedStudents.filter((id) => id !== studentId)
       : [...selectedStudents, studentId];
 
-    setSelectedAll(updatedSelectedStudents.length === studentsData.length);
+    setSelectedAll(
+      updatedSelectedStudents.length === activityDetail?.ActivityMember?.length
+    );
     setSelectedStudents(updatedSelectedStudents);
   };
 
@@ -185,28 +155,31 @@ const ViewActivity = () => {
     navigate(-1);
   };
 
-  const handleSubmitFirstModal = () => {
-    setOpenFirstModal(false);
-    setOpenSecondModal(true);
-  };
-
   useEffect(() => {
     getActivityDetail();
     return () => controller.abort();
   }, []);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setOpenSecondModal(false);
-    }, 5000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [openSecondModal === true]);
-
   return (
     <div>
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(34, 34, 34, 0.7)",
+            zIndex: 2003,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )}
       <div role="presentation" onClick={handleClick}>
         <Breadcrumbs aria-label="breadcrumb">
           <StyledLink>Current Activities</StyledLink>
@@ -268,7 +241,7 @@ const ViewActivity = () => {
         <Grid item xs={12} md={6}>
           <Stack spacing={2}>
             <Grid sx={{ display: "flex", direction: "row" }}>
-              <Typography>Clock (optional)</Typography>
+              <Typography>Clock</Typography>
             </Grid>
 
             <Paper elevation={0} variant="outlined" fullWidth>
@@ -282,137 +255,9 @@ const ViewActivity = () => {
           </Stack>
         </Grid>
       </Grid>
-
-      {/* <Grid
-        sx={{
-          padding: 2,
-          paddingTop: "30px",
-          display: "flex",
-          justifyContent: "flex-end",
-        }}
-      >
-        <Button
-          onClick={()=>setOpenFirstModal(true)}
-          sx={{
-            backgroundColor: "#006AF5",
-            borderRadius: "24px",
-            color: "white",
-            whiteSpace: "nowrap",
-            minWidth: "132px",
-            fontSize: "12px",
-            padding: "10px",
-            gap: "6px",
-
-            "&:hover": {
-              backgroundColor: "#025ED8",
-            },
-          }}
-        >
-          Submit
-        </Button>
-      </Grid> */}
-      {/* <Modal
-        open={openFirstModal}
-        onClose={() => setOpenFirstModal(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div style={style}>
-          <Typography
-            id="modal-modal-title"
-            variant="h4"
-            component="h2"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            Submit Now?
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            style={{ marginTop: "16px", marginBottom: "20px" }}
-          >
-            Are you sure you want to submit this? Forms that have been submitted
-            cannot be edited again.
-          </Typography>
-
-          <Grid container spacing={1} justifyContent="flex-end">
-            <Grid item>
-              <Button
-                onClick={() => setOpenFirstModal(false)}
-                sx={{
-                  backgroundColor: "white",
-                  borderRadius: "5px",
-                  color: "black",
-                  whiteSpace: "nowrap",
-                  "&:hover": {
-                    backgroundColor: "lightgrey",
-                  },
-                }}
-              >
-                Cancel
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={handleSubmitFirstModal}
-                sx={{
-                  backgroundColor: "#006AF5",
-                  borderRadius: "5px",
-                  color: "white",
-                  whiteSpace: "nowrap",
-                  "&:hover": {
-                    backgroundColor: "#025ED8",
-                  },
-                }}
-              >
-                Submit the Attendance?
-              </Button>
-            </Grid>
-          </Grid>
-        </div>
-      </Modal>
-      <Modal
-        open={openSecondModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div style={style2}>
-          <IconButton
-            edge="end"
-            color="#D9D9D9"
-            onClick={() => setOpenSecondModal(false)}
-            aria-label="close"
-            sx={{
-              position: "absolute",
-              top: "10px",
-              right: "20px",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <Typography
-            id="modal-modal-title"
-            variant="h4"
-            component="h2"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            Successful Submission!
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            style={{ marginTop: "16px", marginBottom: "20px" }}
-          >
-            You have successfully entered the student attendance form.
-          </Typography>
-        </div>
-      </Modal> */}
-
       {activityDetail?.isAttendance === true && (
         <div>
-          <Typography sx={{ fontSize: "24px", mt: 2, mb: 2, fontWeight: 400 }}>
+          <Typography sx={{ fontSize: "24px", mt: 4, mb: 3, fontWeight: 400 }}>
             Attendance
           </Typography>
           <TableContainer
@@ -421,43 +266,109 @@ const ViewActivity = () => {
             }}
             component={Paper}
           >
-            <Table stickyHeader>
-              <TableHead
-                size="small"
-                sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}
-              >
+            <Table>
+              <TableHead>
                 <TableRow size="small">
-                  <TableCell>
-                    <Checkbox
-                      checked={selectedAll}
-                      onChange={handleSelectAll}
-                    />
+                  {activityDetail?.ActivityMember[0]?.presence ? null : (
+                    <TableCell
+                      sx={{
+                        backgroundColor: "rgba(26, 56, 96, 0.1)",
+                      }}
+                    >
+                      <Checkbox
+                        checked={selectedAll}
+                        onChange={handleSelectAll}
+                      />
+                    </TableCell>
+                  )}
+                  <TableCell
+                    sx={{
+                      backgroundColor: "rgba(26, 56, 96, 0.1)",
+                      width: "30px",
+                    }}
+                  >
+                    Number
                   </TableCell>
-                  <TableCell>Number</TableCell>
-                  <TableCell>Student Name</TableCell>
-                  <TableCell>NIM</TableCell>
-                  <TableCell>Prodi</TableCell>
+                  <TableCell
+                    sx={{
+                      backgroundColor: "rgba(26, 56, 96, 0.1)",
+                    }}
+                  >
+                    Student Name
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      backgroundColor: "rgba(26, 56, 96, 0.1)",
+                    }}
+                  >
+                    NIM
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      backgroundColor: "rgba(26, 56, 96, 0.1)",
+                    }}
+                  >
+                    Prodi
+                  </TableCell>
+                  {activityDetail?.ActivityMember[0]?.presence ? (
+                    <TableCell
+                      sx={{
+                        backgroundColor: "rgba(26, 56, 96, 0.1)",
+                      }}
+                    >
+                      Status
+                    </TableCell>
+                  ) : null}
                 </TableRow>
               </TableHead>
               <TableBody>
-                {activityDetail.ActivityMember.map((student, index) => (
-                  <TableRow key={student.studentNim}>
-                    <TableCell sx={{ width: "40px" }}>
-                      <Checkbox
-                        checked={selectedStudents.includes(student.studentNim)}
-                        onChange={() => handleSelectStudent(student.studentNim)}
-                      />
+                {activityDetail.ActivityMember?.map((student, index) => (
+                  <TableRow key={`${index}-${student.studentId}`}>
+                    {student.presence === null ? (
+                      <TableCell sx={{ width: "40px" }}>
+                        <Checkbox
+                          checked={selectedStudents.includes(student.studentId)}
+                          onChange={() =>
+                            handleSelectStudent(student.studentId)
+                          }
+                        />
+                      </TableCell>
+                    ) : null}
+                    <TableCell sx={{ width: "30px" }}>{index + 1}</TableCell>
+                    <TableCell>
+                      {student.student.lastName}, {student.student.firstName}
                     </TableCell>
-                    <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
-                    <TableCell sx={{ width: "190px" }}>
-                      {student.studentNim}
+                    <TableCell>{student.student.nim}</TableCell>
+                    <TableCell>
+                      {student.student.major === "IF"
+                        ? "Informatika"
+                        : student.student.major === "SI"
+                        ? "Sistem Informasi"
+                        : student.student.major === "TI"
+                        ? "Teknologi Informasi"
+                        : student.student.major}
                     </TableCell>
-                    <TableCell sx={{ width: "80px" }}>
-                      {student.studentNim}
-                    </TableCell>
-                    <TableCell sx={{ width: "80px" }}>
-                      {student.studentNim}
-                    </TableCell>
+                    {student.presence !== null && (
+                      <TableCell sx={{ width: "80px" }}>
+                        <Chip
+                          label={
+                            student.presence === true
+                              ? "Present"
+                              : student.presence === false
+                              ? "Absent"
+                              : "null"
+                          }
+                          variant="filled"
+                          color={
+                            student.presence === true
+                              ? "success"
+                              : student.presence === false
+                              ? "error"
+                              : "default"
+                          }
+                        />
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>
@@ -472,32 +383,34 @@ const ViewActivity = () => {
               paddingBottom: "60px",
             }}
           >
-            <Button
-              onClick={() => setOpenFirstModal(true)}
-              sx={{
-                backgroundColor: "#006AF5",
-                borderRadius: "24px",
-                color: "white",
-                whiteSpace: "nowrap",
-                minWidth: "132px",
-                fontSize: "12px",
-                padding: "10px",
-                gap: "6px",
+            {activityDetail?.ActivityMember[0]?.presence ? null : (
+              <Button
+                onClick={handleOpenFirstModal}
+                sx={{
+                  backgroundColor: "#006AF5",
+                  borderRadius: "24px",
+                  color: "white",
+                  whiteSpace: "nowrap",
+                  minWidth: "132px",
+                  fontSize: "12px",
+                  padding: "10px",
+                  gap: "6px",
 
-                "&:hover": {
-                  backgroundColor: "#025ED8",
-                },
-              }}
-            >
-              Submit Attendance
-            </Button>
+                  "&:hover": {
+                    backgroundColor: "#025ED8",
+                  },
+                }}
+              >
+                Submit Attendance
+              </Button>
+            )}
           </Grid>
         </div>
       )}
 
       <Modal
         open={openFirstModal}
-        onClose={() => setOpenFirstModal(false)}
+        onClose={handleCloseFirstModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -523,7 +436,7 @@ const ViewActivity = () => {
           <Grid container spacing={1} justifyContent="flex-end">
             <Grid item>
               <Button
-                onClick={() => setOpenFirstModal(false)}
+                onClick={handleCloseFirstModal}
                 sx={{
                   backgroundColor: "white",
                   borderRadius: "5px",
@@ -556,43 +469,12 @@ const ViewActivity = () => {
           </Grid>
         </div>
       </Modal>
-      <Modal
-        open={openSecondModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div style={style2}>
-          <IconButton
-            edge="end"
-            color="#D9D9D9"
-            onClick={() => setOpenSecondModal(false)}
-            aria-label="close"
-            sx={{
-              position: "absolute",
-              top: "10px",
-              right: "20px",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <Typography
-            id="modal-modal-title"
-            variant="h4"
-            component="h2"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            Successful Submission!
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            style={{ marginTop: "16px", marginBottom: "20px" }}
-          >
-            You have successfully entered the student attendance form.
-          </Typography>
-        </div>
-      </Modal>
+      <SuccessOrError
+        open={openErrorModal}
+        handleClose={handleCloseErrorModal}
+        title="Error Submission!"
+        description="Error: Failed to enter the student attendance form. Please try again."
+      />
     </div>
   );
 };

@@ -128,7 +128,7 @@ const StudentManagement = () => {
       case "SI":
         return "Information System";
 
-      case "DKV":
+      case "TI":
         return "Information Technology";
 
       case "NONE":
@@ -151,12 +151,13 @@ const StudentManagement = () => {
   const filterAndSetStudents = () => {
     const filteredData = studentsFromApi.filter((item) => {
       const nameMatches =
-        item.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.lastName.toLowerCase().includes(searchTerm.toLowerCase());
-      const nimMatches = item.nim
+        item?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item?.lastName?.toLowerCase().includes(searchTerm.toLowerCase());
+      const nimMatches = item?.nim
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
-      const majorMatches = selectedMajor === "" || item.major === selectedMajor;
+      const majorMatches =
+        selectedMajor === "" || item?.major === selectedMajor;
 
       return (nameMatches || nimMatches) && majorMatches;
     });
@@ -317,7 +318,7 @@ const StudentManagement = () => {
               <MenuItem key={"SI"} value={"SI"}>
                 Information System
               </MenuItem>
-              <MenuItem key={"DKV"} value={"DKV"}>
+              <MenuItem key={"TI"} value={"TI"}>
                 Information Technology
               </MenuItem>
             </TextField>
@@ -437,8 +438,8 @@ const StudentManagement = () => {
                               {item.highSchoolGrad ? item.highSchoolGrad : "-"}
                             </TableCell>
                             <TableCell>
-                              {item.AreaOfConcentration
-                                ? item.AreaOfConcentration
+                              {item.areaOfConcentration
+                                ? item.areaOfConcentration
                                 : "-"}
                             </TableCell>
                             <TableCell>

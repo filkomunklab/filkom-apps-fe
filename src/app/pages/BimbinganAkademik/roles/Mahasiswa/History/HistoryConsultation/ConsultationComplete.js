@@ -7,11 +7,11 @@ import {
   Breadcrumbs,
   experimentalStyled as styled,
 } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Div from "@jumbo/shared/Div";
 import { format } from "date-fns";
-import axios from "axios";
-import { BASE_URL_API } from "@jumbo/config/env";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -23,6 +23,11 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 const ConsultationComplete = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [status, setStatus] = useState("");
   const [messages, setMessages] = useState([]);
 
@@ -42,25 +47,44 @@ const ConsultationComplete = () => {
   useEffect(() => {
     getCurrentStatus();
     getMessage();
-  }, [messages]);
+    return () => controller.abort();
+  }, []);
+
+  //handle error
+  const handleError = (error) => {
+    if (error && error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (error && error.response && error.response.status === 401) {
+      handleAuthenticationError();
+    } else {
+      console.error("error: ");
+    }
+  };
 
   const getCurrentStatus = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL_API}/academic-consultation/detail/${id}`
+      const response = await jwtAuthAxios.get(
+        `/academic-consultation/detail/${id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
       setStatus(response.data.data.status);
     } catch (error) {
-      console.log("error", error);
+      handleError(error);
     }
   };
 
   const getMessage = async () => {
     try {
-      const response = await axios.get(`${BASE_URL_API}/message/${id}`);
+      const response = await jwtAuthAxios.get(`/message/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
       setMessages(response.data.data);
     } catch (error) {
-      console.log("error", error);
+      handleError(error);
     }
   };
 
@@ -117,7 +141,7 @@ const ConsultationComplete = () => {
                   ? "Informatika"
                   : studentMajor === "SI"
                   ? "Sistem Informasi"
-                  : studentMajor === "DKV"
+                  : studentMajor === "TI"
                   ? "Teknologi Informasi"
                   : studentMajor}
               </Typography>

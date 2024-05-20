@@ -20,7 +20,6 @@ import * as yup from "yup";
 import JumboTextField from "@jumbo/components/JumboFormik/JumboTextField";
 import JumboSelectField from "@jumbo/components/JumboFormik/JumboSelectField";
 import { useMediaQuery } from "@mui/material";
-
 import { FormAfterLoginStudent } from "./components";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import Swal from "sweetalert2";
@@ -74,11 +73,16 @@ const Login = () => {
   const [openModal, setOpenModal] = useState(false);
   const [profileMahasiswa, setProfileMahasiswa] = useState([]);
   const [userLogin, setUserLogin] = useState("");
+  const [tokenUser, setTokenUser] = useState("");
   const style = useStyles();
   const maxWidth515 = useMediaQuery("(max-width: 515px)");
 
   const { setAuthToken } = useJumboAuth();
   const navigate = useNavigate();
+
+  const blueTheme = {
+    confirmButtonColor: "#007BFF",
+  };
 
   return (
     <Div className={style.pageContainer}>
@@ -104,25 +108,41 @@ const Login = () => {
             try {
               const { token, user } = await authService.signIn(data);
 
-              console.log(token, user);
+              console.log("ini user sebelum role", user.role);
 
+              const role = user.role;
+              const getRole = () => {
+                if (role.includes("KAPRODI")) {
+                  return "kaprodi";
+                } else if (role.includes("DEKAN")) {
+                  return "dekan";
+                } else if (role.includes("OPERATOR_FAKULTAS")) {
+                  return "sekretaris";
+                } else if (role.includes("DOSEN")) {
+                  return "dosen-pembimbing";
+                }
+              };
+              console.log("ini user sesudah role", role);
+
+              console.log(token, user);
               if (user.role === "MAHASISWA") {
                 const response = await jwtAuthAxios.get(
-                  `student/biodata/check/${user.nim}`,
+                  `student/biodata/check/${user.id}`,
                   {
                     headers: {
                       Authorization: `Bearer ${token}`,
                     },
                   }
                 );
-
+                console.log("ini response: ", response);
                 if (response.data.data.biodataCheck) {
                   setAuthToken(token);
 
                   console.log("ini user loh: ", user);
                   localStorage.setItem("user", JSON.stringify(user));
 
-                  navigate("/");
+                  navigate("/bimbingan-akademik/profile");
+                  window.location.reload();
                 } else {
                   const response = await jwtAuthAxios.get(
                     `student/${user.nim}`,
@@ -151,12 +171,24 @@ const Login = () => {
                   setOpenModal(true);
                 }
               } else {
+                const userRole = getRole();
+                console.log("userRole", userRole);
                 setAuthToken(token);
 
                 console.log("ini user loh: ", user);
                 localStorage.setItem("user", JSON.stringify(user));
-
-                navigate("/");
+                if (
+                  user.role.includes("OPERATOR_FAKULTAS") ||
+                  user.role.includes("DEKAN") ||
+                  user.role.includes("KAPRODI") ||
+                  user.role.includes("DOSEN")
+                ) {
+                  navigate(`/bimbingan-akademik/${userRole}/profile`);
+                  window.location.reload();
+                } else {
+                  navigate("/");
+                  window.location.reload();
+                }
               }
             } catch (error) {
               console.log(error);
@@ -164,6 +196,7 @@ const Login = () => {
                 icon: "error",
                 title: "Oops...",
                 text: "Username atau password salah",
+                ...blueTheme,
               });
             } finally {
               setSubmitting(false);
@@ -276,7 +309,10 @@ const Login = () => {
                   <Grid item alignSelf={"center"}>
                     <a href="http://localhost:3000/">
                       <Button
-                        sx={{ textTransform: "capitalize" }}
+                        sx={{
+                          fontSize: maxWidth515 ? "12px" : "14px",
+                          textTransform: "capitalize",
+                        }}
                         variant="text"
                       >
                         Daftar Judul Skripsi
@@ -307,6 +343,7 @@ const Login = () => {
         setOpenModal={setOpenModal}
         profileMahasiswa={profileMahasiswa}
         userLogin={userLogin}
+        tokenUser={tokenUser}
       />
     </Div>
   );

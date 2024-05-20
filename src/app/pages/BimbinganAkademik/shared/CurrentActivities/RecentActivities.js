@@ -8,81 +8,73 @@ import {
   Divider,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL_API } from "@jumbo/config/env";
-import axios from "axios";
+import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const CurrentActivities = () => {
-  const navigate = useNavigate();
+  //abort
   const controller = new AbortController();
   const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [dataActivity, setDataActivity] = useState([]);
   const [dataConsultation, setDataConsultation] = useState([]);
 
+  //handle error
+  const handleError = (error) => {
+    if (error && error.code === "ERR_CANCELED") {
+      console.log("request canceled");
+    } else if (error && error.response && error.response.status === 401) {
+      handleAuthenticationError();
+    } else {
+      console.error("error: ");
+    }
+  };
+
   const getActivity = async () => {
     try {
-      //content-type dan Authorization liat di dokumentasi API atau postman
-      // const headers = {
-      //     'Content-Type': 'multipart/form-data',
-      //     Authorization: `Bearer token_apa`,
-      //   };
+      const { id } = JSON.parse(localStorage.getItem("user"));
+      const result = await jwtAuthAxios.get(`/activity/current/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        signal,
+      });
 
-      const { nik } = JSON.parse(localStorage.getItem("user"));
-      const result = await axios.get(
-        `${BASE_URL_API}/activity/current/${nik}`,
-        { signal }
-        // {  headers,}
-      );
-
-      console.log("ini result", result);
-      const { status, data } = result.data;
-      if (status === "OK") {
-        // const onProcessConsultations = result.data.data.filter(
-        //   (consultation) => consultation.status === "OnProcess"
-        // );
-
+      const { status: activityStatus, data } = result.data;
+      if (activityStatus === "OK") {
         setDataActivity(data);
-      } else {
-        console.log(result);
-        console.log(result.data);
       }
     } catch (error) {
-      console.log("error getActivity", error);
+      handleError(error);
     }
   };
 
   const getConsultation = async () => {
     try {
-      //content-type dan Authorization liat di dokumentasi API atau postman
-      // const headers = {
-      //     'Content-Type': 'multipart/form-data',
-      //     Authorization: `Bearer token_apa`,
-      //   };
-
       const { nik } = JSON.parse(localStorage.getItem("user"));
-      const result = await axios.get(
-        `${BASE_URL_API}/academic-consultation/employee/${nik}`,
-        { signal }
-        // {  headers,}
+      const result = await jwtAuthAxios.get(
+        `/academic-consultation/employee/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
-      const { status, data } = result.data;
-      if (status === "OK") {
+      const { status: consultationStatus, data } = result.data;
+      if (consultationStatus === "OK") {
         const onProcessConsultations = data.filter(
           (consultation) => consultation.status === "OnProcess"
         );
 
         setDataConsultation(onProcessConsultations);
-      } else {
-        console.log(result);
-        console.log(result.data);
       }
     } catch (error) {
-      console.log(error);
+      handleError(error);
     }
   };
   useEffect(() => {
     getConsultation();
     getActivity();
-
     return () => controller.abort();
   }, []);
 
@@ -140,10 +132,14 @@ const CurrentActivities = () => {
     try {
       const { role } = JSON.parse(localStorage.getItem("user"));
 
-      const consultationDetailsResult = await axios.get(
-        `${BASE_URL_API}/academic-consultation/detail/${value}`
+      const consultationDetailsResult = await jwtAuthAxios.get(
+        `/academic-consultation/detail/${value}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
       );
-      console.log("ini detail Consutation result:", consultationDetailsResult);
+
       const { data, status } = consultationDetailsResult.data;
 
       let path = "";
@@ -175,7 +171,7 @@ const CurrentActivities = () => {
         });
       }
     } catch (error) {
-      console.log(error.message);
+      handleError(error);
     }
   };
 
@@ -240,7 +236,6 @@ const CurrentActivities = () => {
                 key={index}
                 sx={{
                   width: "100%",
-                  maxWidth: 2000,
                   bgcolor: "background.paper",
                   paddingTop: "0px",
                   paddingBottom: "0px",
@@ -256,9 +251,9 @@ const CurrentActivities = () => {
               >
                 <ListItem
                   onClick={() =>
-                    item.type === "activity"
-                      ? handleNavigateActivity(item.id)
-                      : handleNavigate(item.id)
+                    item?.type === "activity"
+                      ? handleNavigateActivity(item?.id)
+                      : handleNavigate(item?.id)
                   }
                 >
                   <ListItemText
@@ -266,15 +261,18 @@ const CurrentActivities = () => {
                       <Typography
                         variant="body1"
                         sx={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
                           fontSize: { xs: "12px", md: "14px" },
                           "&:hover": {
                             textDecorationLine: ["none"],
                           },
                         }}
                       >
-                        {item.type === "activity"
-                          ? item.title
-                          : `${item.student.lastName},${item.student.firstName} `}
+                        {item?.type === "activity"
+                          ? item?.title
+                          : `${item?.student.lastName}, ${item?.student.firstName} `}
                       </Typography>
                     }
                     secondary={
@@ -287,33 +285,27 @@ const CurrentActivities = () => {
                           fontSize: { xs: "12px", md: "14px" },
                         }}
                       >
-                        {item.description}
+                        {item?.description}
                       </Typography>
                     }
                   />
 
                   <Box
                     sx={{
-                      marginRight: "-72px",
+                      marginLeft: { xs: "auto", md: 0 },
                       textAlign: "right",
-                      width: "300px",
-                      "@media (max-width: 630px)": {
-                        width: "400px",
-                      },
-                      "@media (max-width: 400px)": {
-                        width: "600px",
-                      },
                     }}
                   >
                     <ListItemText
                       secondary={
                         <Typography
                           sx={{
+                            width: "70px",
                             fontSize: { xs: "10px", md: "14px" },
                             color: "rgba(27, 43, 65, 0.69)",
                           }}
                         >
-                          {new Date(item.createdAt).toLocaleTimeString(
+                          {new Date(item?.createdAt).toLocaleTimeString(
                             "en-US",
                             {
                               hour: "numeric",
@@ -325,96 +317,10 @@ const CurrentActivities = () => {
                       }
                     />
                   </Box>
-                  <Divider component="li" variant="inset" />
                 </ListItem>
+                <Divider component="li" />
               </List>
             ))}
-            {/* {dataConsultation.map((value, index) => (
-              <List
-                key={index}
-                sx={{
-                  width: "100%",
-                  maxWidth: 2000,
-                  bgcolor: "background.paper",
-                  paddingTop: "0px",
-                  paddingBottom: "0px",
-                  ":hover": {
-                    cursor: "pointer",
-                    backgroundColor: "#338CFF21",
-                    transition: "0.3s",
-                    transitionTimingFunction: "ease-in-out",
-                    transitionDelay: "0s",
-                    transitionProperty: "all",
-                  },
-                }}
-              >
-                <ListItem onClick={() => handleNavigate(value)}>
-                  <ListItemText
-                    primary={
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          fontSize: { xs: "12px", md: "14px" },
-                          "&:hover": {
-                            textDecorationLine: ["none"],
-                          },
-                        }}
-                      >
-                        {value.student_name}
-                      </Typography>
-                    }
-                    secondary={
-                      <Typography
-                        sx={{
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                          color: "rgba(27, 43, 65, 0.69)",
-                          fontSize: { xs: "12px", md: "14px" },
-                        }}
-                      >
-                        {value.description}
-                      </Typography>
-                    }
-                  />
-
-                  <Box
-                    sx={{
-                      marginRight: "-72px",
-                      textAlign: "right",
-                      width: "300px",
-                      "@media (max-width: 630px)": {
-                        width: "400px",
-                      },
-                      "@media (max-width: 400px)": {
-                        width: "600px",
-                      },
-                    }}
-                  >
-                    <ListItemText
-                      secondary={
-                        <Typography
-                          sx={{
-                            fontSize: { xs: "10px", md: "14px" },
-                            color: "rgba(27, 43, 65, 0.69)",
-                          }}
-                        >
-                          {new Date(value.createdAt).toLocaleTimeString(
-                            "en-US",
-                            {
-                              hour: "numeric",
-                              minute: "numeric",
-                              hour12: true,
-                            }
-                          )}
-                        </Typography>
-                      }
-                    />
-                  </Box>
-                  <Divider component="li" variant="inset" />
-                </ListItem>
-              </List>
-            ))} */}
           </div>
         ))
       )}

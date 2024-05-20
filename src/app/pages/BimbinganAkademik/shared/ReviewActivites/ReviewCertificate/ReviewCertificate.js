@@ -17,13 +17,18 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const ReviewCertificate = () => {
+  //abort
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const navigate = useNavigate();
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchValue, setSearchValue] = useState("");
   const [dataWaiting, setDataWaiting] = useState([]);
-  const navigate = useNavigate();
 
   const getDataWaiting = async () => {
     try {
@@ -32,10 +37,13 @@ const ReviewCertificate = () => {
         `/certificate/waitingList/dosen/${guidanceClassId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
 
-      const filteredData = result.data.data.filter((item) => {
+      const dataArray = Array.isArray(result.data.data) ? result.data.data : [];
+
+      const filteredData = dataArray.filter((item) => {
         const studentFullName = `${item.Student?.lastName}, ${item.Student?.firstName}`;
         return studentFullName
           .toLowerCase()
@@ -44,11 +52,18 @@ const ReviewCertificate = () => {
 
       setDataWaiting(filteredData);
     } catch (error) {
-      console.log(error.message);
+      if (error && error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else {
+        console.error("error: ");
+        return;
+      }
     }
   };
+
   useEffect(() => {
     getDataWaiting();
+    return () => controller.abort();
   }, [searchValue]);
 
   const handleChangePage = (event, newPage) => {
@@ -66,13 +81,12 @@ const ReviewCertificate = () => {
         `/certificate/student/${value.id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
         }
       );
 
-      console.log("ini detail certi result:", certificateDetailsResult);
       const { role } = JSON.parse(localStorage.getItem("user"));
       let pathh;
-      console.log("hai ini role", role.includes("KAPRODI"));
       if (role.includes("DEKAN")) {
         pathh = "/bimbingan-akademik/dekan/review-activities/certificate/";
       } else if (role.includes("KAPRODI")) {
@@ -87,36 +101,58 @@ const ReviewCertificate = () => {
         submitDate,
         path,
         category,
+        level,
         description,
-        approval_status,
+        approvalStatus,
         title,
         id,
       } = certificateDetailsResult.data.data;
-      navigate(
-        `${pathh}${value.id}`,
-        {
-          state: {
-            certificateDetails: {
-              firstName: student.firstName,
-              lastName: student.lastName,
-              SupervisorFirstName:
-                student.GuidanceClassMember.gudianceClass.teacher.firstName,
-              SupervisorLastName:
-                student.GuidanceClassMember.gudianceClass.teacher.lastName,
-              submissionDate: submitDate,
-              pathFile: path,
-              category: category,
-              description: description,
-              status: approval_status,
-              title: title,
-              id: id,
-            },
+      navigate(`${pathh}${value.id}`, {
+        state: {
+          certificateDetails: {
+            firstName: student.firstName,
+            lastName: student.lastName,
+            SupervisorFirstName:
+              student.GuidanceClassMember?.gudianceClass?.teacher?.firstName,
+            SupervisorLastName:
+              student.GuidanceClassMember?.gudianceClass?.teacher?.lastName,
+            submissionDate: submitDate,
+            pathFile: path,
+            category: category,
+            level: level,
+            description: description,
+            status: approvalStatus,
+            title: title,
+            id: id,
           },
         },
-        console.log("ini pathFile", path)
-      );
+      });
     } catch (error) {
-      console.log(error.message);
+      if (error && error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.error("error: ");
+        return;
+      }
+    }
+  };
+
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case "PENALARAN_KEILMUAN":
+        return "Reasoning and Scholarship";
+      case "ORGANISASI_KEPEMIMPINAN":
+        return "Organization and Leadership";
+      case "BAKAT_MINAT":
+        return "Talents and Interests";
+      case "PENGABDIAN_MASYARAKAT":
+        return "Community Service";
+      case "OTHER":
+        return "Others";
+      default:
+        return category;
     }
   };
 
@@ -169,39 +205,6 @@ const ReviewCertificate = () => {
             }}
           />
         </Grid>
-        {/* <Grid item xs={12} sm={4} md={4} xl={3}>
-          <FormControl
-            sx={{ width: "100%", height: "100%", marginTop: "20px" }}
-            size="small"
-          >
-            <InputLabel htmlFor="grouped-select">Filter</InputLabel>
-            <Select
-              style={{ borderRadius: "25px" }}
-              multiple
-              value={filter}
-              label="Grouping"
-              renderValue={(selected) => selected.join(", ")}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: "37%",
-                  },
-                },
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-
-              <ListSubheader sx={{ color: "black", fontFamily: "inherit" }}>
-                Category
-              </ListSubheader>
-              <MenuItem value={"local"}>Local</MenuItem>
-              <MenuItem value={"national"}>National</MenuItem>
-              <MenuItem value={"international"}>International</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid> */}
       </Grid>
       <Grid item xs={12}>
         <TableContainer component={Paper}>
@@ -212,6 +215,7 @@ const ReviewCertificate = () => {
                 position: "sticky",
                 top: 0,
                 backgroundColor: "rgba(26, 56, 96, 0.1)",
+                zIndex: 1,
               }}
             >
               <TableRow>
@@ -225,63 +229,65 @@ const ReviewCertificate = () => {
             </TableHead>
             <TableBody>
               {dataWaiting && dataWaiting.length > 0 ? (
-                dataWaiting.map((value, index) => (
-                  <TableRow
-                    key={value.id}
-                    onClick={() => handleNavigate(value)}
-                    sx={{
-                      ":hover": {
-                        cursor: "pointer",
-                        backgroundColor: "#338CFF21",
-                        transition: "0.3s",
-                        transitionTimingFunction: "ease-in-out",
-                        transitionDelay: "0s",
-                        transitionProperty: "all",
-                      },
-                    }}
-                  >
-                    <TableCell
-                      align="right"
-                      sx={{ width: "80px", paddingRight: "40px" }}
-                    >
-                      {index + 1}
-                    </TableCell>
-                    <TableCell sx={{ width: "180px", paddingLeft: "17px" }}>
-                      {new Date(value.submitDate).toLocaleDateString("en-US", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </TableCell>
-                    <TableCell sx={{ width: "200px" }}>
-                      {value.student.lastName}, {value.student.firstName}
-                    </TableCell>
-                    <TableCell
+                dataWaiting.map((value, index) => {
+                  return (
+                    <TableRow
+                      key={value.id}
+                      onClick={() => handleNavigate(value)}
                       sx={{
-                        maxWidth: "240px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
+                        ":hover": {
+                          cursor: "pointer",
+                          backgroundColor: "#338CFF21",
+                          transition: "0.3s",
+                          transitionTimingFunction: "ease-in-out",
+                          transitionDelay: "0s",
+                          transitionProperty: "all",
+                        },
                       }}
                     >
-                      {value.title}
-                    </TableCell>
-                    <TableCell>
-                      {value.category.charAt(0).toUpperCase() +
-                        value.category.slice(1)}
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        color: "#FFCC00",
-                        align: "left",
-                        width: "100px",
-                      }}
-                    >
-                      {value.approval_status.charAt(0) +
-                        value.approval_status.slice(1).toLowerCase()}
-                    </TableCell>
-                  </TableRow>
-                ))
+                      <TableCell
+                        align="right"
+                        sx={{ width: "80px", paddingRight: "40px" }}
+                      >
+                        {index + 1}
+                      </TableCell>
+                      <TableCell sx={{ width: "180px", paddingLeft: "17px" }}>
+                        {new Date(value.submitDate).toLocaleDateString(
+                          "en-US",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }
+                        )}
+                      </TableCell>
+                      <TableCell sx={{ width: "200px" }}>
+                        {value.student?.lastName}, {value.student?.firstName}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          maxWidth: "240px",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {value.title}
+                      </TableCell>
+                      <TableCell>{getCategoryLabel(value.category)}</TableCell>
+                      <TableCell
+                        sx={{
+                          color: "#FFCC00",
+                          align: "left",
+                          width: "100px",
+                        }}
+                      >
+                        {value.approvalStatus?.charAt(0) +
+                          value.approvalStatus?.slice(1).toLowerCase()}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
                   <TableCell colSpan={8}>No data available</TableCell>
