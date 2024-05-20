@@ -31,6 +31,19 @@ import ViewActivity from "app/pages/BimbinganAkademik/shared/CurrentActivities/V
 import ViewConsultation from "app/pages/BimbinganAkademik/shared/CurrentActivities/ViewConsultation/ViewConsultation";
 import AddActivity from "app/pages/BimbinganAkademik/shared/AddActivity";
 import Manage from "app/pages/BimbinganAkademik/shared/Manage/ManageDekan";
+import StudentList from "app/pages/BimbinganAkademik/roles/Kaprodi/SupervisorInformation/AddSupervisor/AddStudent";
+import CurriculumList from "app/pages/Obe/CurriculumList";
+import SubjectList from "app/pages/Obe/SubjectList";
+import EvaluasiCPL from "app/pages/Obe/EvaluasiCPL";
+import { ListRPS } from "app/pages/Obe/EvaluasiCPL";
+import MappingCPL from "app/pages/Obe/MappingCPL";
+import EvaluasiCPMK from "app/pages/Obe/EvaluasiCPMK";
+import ReportCPMK from "app/pages/Obe/ReportCPMK";
+import EvaluasiRPS from "app/pages/Obe/EvaluasiRPSS";
+import ListGeneralRPS from "app/pages/Obe/ListRPS";
+import ListRPSProdi from "app/pages/Obe/ListRPSProdi";
+import CreateRPS from "app/pages/Obe/CreateRPS";
+import RpsDetail from "app/pages/Obe/RpsDetail";
 import SupervisorInformation from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/SupervisorInformation";
 import AdvisorProfile from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorProfile/AdvisorProfile";
 import AdvisorStudentProfile from "app/pages/BimbinganAkademik/roles/Dekan/SupervisorInformation/AdvisorProfile/StudentProfile";
@@ -50,6 +63,7 @@ import PreregisCoursesList from "app/pages/BimbinganAkademik/shared/Manage/Prere
 const { default: Page } = require("@jumbo/shared/Page");
 
 const dekanRoutes = [
+  // ========================== BIMBINGAN AKADEMIK ROUTES ==========================
   {
     path: "/bimbingan-akademik/dekan/dashboard",
     element: <Page component={Dashboard} />,
@@ -314,6 +328,64 @@ const dekanRoutes = [
   {
     path: "/bimbingan-akademik/dekan/supervisor-information/advisor-history/:id/:id/history-consultation",
     element: <Page component={HistoryConsultationAdvisor} />,
+  },
+  {
+    path: "/bimbingan-akademik/dekan/supervisor-information/add-supervisor/student-list",
+    element: <Page component={StudentList} />,
+  },
+
+  // ========================== OBE ROUTES ==========================
+  {
+    path: "/obe/curriculum/:major",
+    element: <Page component={CurriculumList} />,
+  },
+  {
+    path: "/obe/curriculum/:major/:curriculumId",
+    element: <Page component={SubjectList} />,
+  },
+  {
+    path: "/obe/curriculum/:major/:curriculumId/:subjectId",
+    element: <Page component={MappingCPL} />,
+  },
+  {
+    path: "/obe/evaluasi-cpl/list/:major",
+    element: <Page component={EvaluasiCPL} />,
+  },
+  {
+    path: "/obe/evaluasi-cpl/list/:major/:curriculumId",
+    element: <Page component={ListRPS} />,
+  },
+  {
+    path: "/obe/evaluasi-cpl/list/:major/:curriculumId/:rpsId",
+    element: <Page component={ReportCPMK} />,
+  },
+  {
+    path: "/obe/evaluasi-cpmk/",
+    element: <Page component={EvaluasiCPMK} />,
+  },
+  {
+    path: "/obe/evaluasi-cpmk/reportCPMK/:kodeMK",
+    element: <Page component={ReportCPMK} />,
+  },
+  {
+    path: "/obe/evaluasi-rps",
+    element: <Page component={EvaluasiRPS} />,
+  },
+  {
+    path: "/obe/all-list-rps",
+    element: <Page component={ListGeneralRPS} />,
+  },
+  {
+    path: "/obe/all-list-rps/:major",
+    element: <Page component={ListRPSProdi} />,
+  },
+  {
+    path: "/obe/all-list-rps/:major/:rpsId",
+    element: <Page component={RpsDetail} />,
+  },
+  {
+    path: "/obe/create-rps",
+    element: <Page component={CreateRPS} />,
   },
 ];
 

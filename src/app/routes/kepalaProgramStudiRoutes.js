@@ -51,6 +51,17 @@ import ReviewGradeStudent from "app/pages/BimbinganAkademik/shared/ReviewActivit
 import StudentConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/StudentConsultation";
 import ReplyConsultation from "app/pages/BimbinganAkademik/shared/ReviewActivites/ReviewStudentConsultation/ReplyConsultation/Consultation";
 import Profile from "app/pages/BimbinganAkademik/shared/Profile/Profile";
+import CurriculumList from "app/pages/Obe/CurriculumList";
+import SubjectList from "app/pages/Obe/SubjectList";
+import MappingCPL from "app/pages/Obe/MappingCPL";
+import EvaluasiCPL, { ListRPS } from "app/pages/Obe/EvaluasiCPL";
+import ReportCPMK from "app/pages/Obe/ReportCPMK";
+import EvaluasiCPMK from "app/pages/Obe/EvaluasiCPMK";
+import EvaluasiRPS from "app/pages/Obe/EvaluasiRPSS/EvaluasiRPSS";
+import ListGeneralRPS from "app/pages/Obe/ListRPS/ListgeneralRPS";
+import ListRPSProdi from "app/pages/Obe/ListRPSProdi";
+import RpsDetail from "app/pages/Obe/RpsDetail";
+import CreateRPS from "app/pages/Obe/CreateRPS";
 import PreregisStudentList from "app/pages/BimbinganAkademik/shared/Manage/Preregis/PreregisStudentList";
 import PreregisCoursesList from "app/pages/BimbinganAkademik/shared/Manage/Preregis/PreregisCoursesList";
 
@@ -346,6 +357,60 @@ const kepalaProgramStudiRoutes = [
   {
     path: "/bimbingan-akademik/kaprodi/profile",
     element: <Page component={Profile} />,
+  },
+
+  // ========================== OBE ROUTES ==========================
+  {
+    path: "/obe/curriculum/:major",
+    element: <Page component={CurriculumList} />,
+  },
+  {
+    path: "/obe/curriculum/:major/:curriculumId",
+    element: <Page component={SubjectList} />,
+  },
+  {
+    path: "/obe/curriculum/:major/:curriculumId/:subjectId",
+    element: <Page component={MappingCPL} />,
+  },
+  {
+    path: "/obe/evaluasi-cpl/list/:major",
+    element: <Page component={EvaluasiCPL} />,
+  },
+  {
+    path: "/obe/evaluasi-cpl/list/:major/:curriculumId",
+    element: <Page component={ListRPS} />,
+  },
+  {
+    path: "/obe/evaluasi-cpl/list/:major/:curriculumId/:rpsId",
+    element: <Page component={ReportCPMK} />,
+  },
+  {
+    path: "/obe/evaluasi-cpmk/",
+    element: <Page component={EvaluasiCPMK} />,
+  },
+  {
+    path: "/obe/evaluasi-cpmk/reportCPMK/:kodeMK",
+    element: <Page component={ReportCPMK} />,
+  },
+  {
+    path: "/obe/evaluasi-rps",
+    element: <Page component={EvaluasiRPS} />,
+  },
+  {
+    path: "/obe/all-list-rps",
+    element: <Page component={ListGeneralRPS} />,
+  },
+  {
+    path: "/obe/all-list-rps/:major",
+    element: <Page component={ListRPSProdi} />,
+  },
+  {
+    path: "/obe/all-list-rps/:major/:rpsId",
+    element: <Page component={RpsDetail} />,
+  },
+  {
+    path: "/obe/create-rps",
+    element: <Page component={CreateRPS} />,
   },
 ];
 

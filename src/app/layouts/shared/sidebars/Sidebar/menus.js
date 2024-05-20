@@ -1,5 +1,6 @@
 import React from "react";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import GradingIcon from "@mui/icons-material/Grading";
 import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 import SchoolIcon from "@mui/icons-material/School";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -23,6 +24,8 @@ import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import AccountBoxSharpIcon from "@mui/icons-material/AccountBoxSharp";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
+import DescriptionIcon from "@mui/icons-material/Description";
+import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 
 export const sekretarisMenus = [
   {
@@ -560,6 +563,85 @@ export const dekanMenus = [
       },
     ],
   },
+  {
+    label: "Outcome-Based Education",
+    type: "section",
+    children: [
+      {
+        label: "Curriculum Management",
+        type: "collapsible",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Informatics",
+            type: "nav-item",
+            uri: "/obe/curriculum/IF",
+          },
+          {
+            label: "Information System",
+            type: "nav-item",
+            uri: "/obe/curriculum/SI",
+          },
+          {
+            label: "Information Technology",
+            type: "nav-item",
+            uri: "/obe/curriculum/TI",
+          },
+        ],
+      },
+      {
+        label: "Evaluasi CPMK",
+        type: "collapsible",
+        icon: <PublishedWithChangesIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Informatics",
+            type: "nav-item",
+            uri: "/obe/evaluasi-cpl/list/IF",
+          },
+          {
+            label: "Information System",
+            type: "nav-item",
+            uri: "/obe/evaluasi-cpl/list/SI",
+          },
+          {
+            label: "Information Technology",
+            type: "nav-item",
+            uri: "/obe/evaluasi-cpl/list/DKV",
+          },
+        ],
+      },
+      {
+        label: "RPS Management",
+        type: "nav-item",
+        icon: <DescriptionIcon sx={{ fontSize: 20 }} />,
+        uri: "/obe/all-list-rps",
+      },
+      {
+        label: "Daftar RPS",
+        type: "nav-item",
+        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+        uri: `/obe/list-rps`,
+      },
+      {
+        label: "Evaluasi CPMK",
+        type: "collapsible",
+        icon: <GradingIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Mata Kuliah",
+            type: "nav-item",
+            uri: `/obe/evaluasi-matakuliah`,
+          },
+          {
+            label: "Mahasiswa (Individu)",
+            type: "nav-item",
+            uri: `/obe/evaluasi-mahasiswa`,
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export const dosenMenus = [
@@ -752,6 +834,35 @@ export const dosenMenus = [
             label: "Skrip. Anggota",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Outcome-Based Education",
+    type: "section",
+    children: [
+      {
+        label: "Daftar RPS",
+        type: "nav-item",
+        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+        uri: `/obe/list-rps`,
+      },
+      {
+        label: "Evaluasi CPMK",
+        type: "collapsible",
+        icon: <GradingIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Mata Kuliah",
+            type: "nav-item",
+            uri: `/obe/evaluasi-matakuliah`,
+          },
+          {
+            label: "Mahasiswa (Individu)",
+            type: "nav-item",
+            uri: `/obe/evaluasi-mahasiswa`,
           },
         ],
       },
@@ -1227,6 +1338,85 @@ export const kaprodiMenus = [
             label: "Skrip. Anggota",
             type: "nav-item",
             icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Outcome-Based Education",
+    type: "section",
+    children: [
+      {
+        label: "Curriculum Management",
+        type: "collapsible",
+        icon: <SchoolIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Informatics",
+            type: "nav-item",
+            uri: "/obe/curriculum/IF",
+          },
+          {
+            label: "Information System",
+            type: "nav-item",
+            uri: "/obe/curriculum/SI",
+          },
+          {
+            label: "Information Technology",
+            type: "nav-item",
+            uri: "/obe/curriculum/TI",
+          },
+        ],
+      },
+      {
+        label: "CPMK Evaluation",
+        type: "collapsible",
+        icon: <PublishedWithChangesIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Informatics",
+            type: "nav-item",
+            uri: "/obe/evaluasi-cpl/list/IF",
+          },
+          {
+            label: "Information System",
+            type: "nav-item",
+            uri: "/obe/evaluasi-cpl/list/SI",
+          },
+          {
+            label: "Information Technology",
+            type: "nav-item",
+            uri: "/obe/evaluasi-cpl/list/DKV",
+          },
+        ],
+      },
+      {
+        label: "RPS Management",
+        type: "nav-item",
+        icon: <DescriptionIcon sx={{ fontSize: 20 }} />,
+        uri: "/obe/all-list-rps",
+      },
+      {
+        label: "Daftar RPS",
+        type: "nav-item",
+        icon: <AssignmentIcon sx={{ fontSize: 20 }} />,
+        uri: `/obe/list-rps`,
+      },
+      {
+        label: "Evaluasi CPMK",
+        type: "collapsible",
+        icon: <GradingIcon sx={{ fontSize: 20 }} />,
+        children: [
+          {
+            label: "Mata Kuliah",
+            type: "nav-item",
+            uri: `/obe/evaluasi-matakuliah`,
+          },
+          {
+            label: "Mahasiswa (Individu)",
+            type: "nav-item",
+            uri: `/obe/evaluasi-mahasiswa`,
           },
         ],
       },

@@ -1,14 +1,18 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import reportWebVitals from "./reportWebVitals";
 import App from "./app/App";
 import "./app/config/i18n";
+import "./index.css";
 
-ReactDOM.render(
+import { createRoot } from "react-dom/client";
+
+const domNode = document.getElementById("root");
+const root = createRoot(domNode);
+
+root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );
 
 // trigger deployment

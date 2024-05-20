@@ -26,7 +26,6 @@ yarn-error.log*
 yarn.lock*
 /yarn.lock*
 
-
-# next
-.next/
+# Next.js
 next-env.d.ts
+.next
