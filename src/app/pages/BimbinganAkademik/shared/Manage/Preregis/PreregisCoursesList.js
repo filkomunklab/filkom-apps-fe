@@ -18,8 +18,9 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const PreregisCoursesList = () => {
   //abort
@@ -27,9 +28,8 @@ const PreregisCoursesList = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  const { id } = useParams();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const location = useLocation();
+  const { id, major } = location.state || "-";
   const [searchValue, setSearchValue] = useState("");
   const [dataCourses, setDataCourses] = useState([]);
 
@@ -41,23 +41,18 @@ const PreregisCoursesList = () => {
       });
 
       const filteredData = result.data.data.filter((item) => {
-        const subjectName = item.name.toLowerCase();
+        const subjectName = item?.name?.toLowerCase();
         return subjectName.includes(searchValue.toLowerCase());
       });
 
       setDataCourses(filteredData);
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
       }
     }
   };
@@ -104,7 +99,7 @@ const PreregisCoursesList = () => {
             sx={{ marginRight: { xs: 0, sm: 2 } }}
           >
             <TextField
-              label="Search by Subject"
+              label="Search by Subject Name"
               variant="outlined"
               size="small"
               sx={{
@@ -126,14 +121,15 @@ const PreregisCoursesList = () => {
         </Grid>
       </Div>
       <Grid item xs={12}>
-        <TableContainer sx={{ maxHeight: 640 }} component={Paper}>
+        <TableContainer sx={{ maxHeight: 600 }} component={Paper}>
           <Table>
             <TableHead
               style={{
                 position: "-webkit-sticky",
                 position: "sticky",
                 top: 0,
-                backgroundColor: "rgba(26, 56, 96, 0.1)",
+                backgroundColor: "#e8ecf2",
+                zIndex: 1,
               }}
             >
               <TableRow>
@@ -163,18 +159,6 @@ const PreregisCoursesList = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          component="div"
-          count={dataCourses.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={(_, newPage) => setPage(newPage)}
-          onRowsPerPageChange={(event) => {
-            setRowsPerPage(+event.target.value);
-            setPage(0);
-          }}
-        />
       </Grid>
     </Div>
   );

@@ -1,47 +1,63 @@
 import React, { useEffect, useState } from "react";
 import GradeSubmission from "./GradeSubmission";
 import GradeSubmissionClosed from "./GradeSubmissionClosed";
+import GradeSubmitted from "./GradeSubmitted";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import { useNavigate } from "react-router-dom";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const Grade = () => {
-  //abort
   const controller = new AbortController();
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  const [dataGrade, setDataGrade] = useState(null);
+  const [dataGrade, setDataGrade] = useState([]);
+  const [submissionStatus, setSubmissionStatus] = useState("");
 
   const getDataGrade = async () => {
     try {
-      const nim = JSON.parse(localStorage.getItem("user")).nim;
+      const { nim, id } = JSON.parse(localStorage.getItem("user"));
       const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
       });
       const major = studentData.data.data.major;
+
       const result = await jwtAuthAxios.get(`/access/isOpen/${major}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
       });
+      setDataGrade(result.data.data);
 
-      const gradeData = result.data.data;
-      setDataGrade(gradeData);
+      const resultCurrent = await jwtAuthAxios.get(
+        `/transaction/student/currentGrades/${id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
+      const transactionId = resultCurrent.data.data[0].id;
 
-      console.log("ini panjang gradedata", result);
-    } catch (error) {
-      if (error.code === "ERR_CANCELED") {
-        console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      const checkTransactionId = await jwtAuthAxios.get(
+        `/transaction/grades/check/${transactionId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          signal,
+        }
+      );
+
+      if (checkTransactionId.data.data !== null) {
+        setSubmissionStatus("success");
       } else {
-        console.log("ini error: ", error);
+        setSubmissionStatus("error cuyy");
+      }
+    } catch (error) {
+      if (error && error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.error("error: ");
         return;
       }
     }
@@ -54,10 +70,12 @@ const Grade = () => {
 
   return (
     <div>
-      {console.log("ini isi dari dataGrade", dataGrade)}
-
-      {dataGrade === null || dataGrade.length === 0 ? (
+      {dataGrade === null ||
+      dataGrade?.length === 0 ||
+      dataGrade?.isOpen === false ? (
         <GradeSubmissionClosed />
+      ) : submissionStatus === "success" ? (
+        <GradeSubmitted />
       ) : (
         <GradeSubmission />
       )}

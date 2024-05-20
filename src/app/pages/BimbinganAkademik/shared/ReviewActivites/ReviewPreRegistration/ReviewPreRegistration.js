@@ -17,6 +17,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const ReviewPreRegistration = () => {
   //abort
@@ -49,7 +50,14 @@ const ReviewPreRegistration = () => {
       });
       setDataWaiting(filteredData);
     } catch (error) {
-      console.log(error.message);
+      if (error && error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
+      } else {
+        console.error("error: ");
+        return;
+      }
     }
   };
 
@@ -69,8 +77,6 @@ const ReviewPreRegistration = () => {
       const detail = preregisDetailsResult.data.data;
       const { role } = JSON.parse(localStorage.getItem("user"));
       let path = "";
-      console.log("hai ini role KAPRODI", role.includes("KAPRODI"));
-      console.log("hai ini role DEKAN", role.includes("DEKAN"));
       if (role.includes("DEKAN")) {
         path = "/bimbingan-akademik/dekan/review-activities/pre-registration/";
       } else if (role.includes("KAPRODI")) {
@@ -97,18 +103,12 @@ const ReviewPreRegistration = () => {
         },
       });
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         return;
       }
     }
@@ -184,6 +184,7 @@ const ReviewPreRegistration = () => {
                 position: "sticky",
                 top: 0,
                 backgroundColor: "rgba(26, 56, 96, 0.1)",
+                zIndex: 1,
               }}
             >
               <TableRow>

@@ -4,34 +4,30 @@ import PreRegistrationSubmission from "./PreRegistrationSubmission";
 import PreRegistrationSubmitted from "./PreRegistrationSubmitted";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const PreRegistration = () => {
-  //abort
-  const controller = new AbortController();
-  const signal = controller.signal;
   const navigate = useNavigate();
 
-  const [dataPreregis, setDataPreregis] = useState(null);
+  const [dataPreregis, setDataPreregis] = useState([]);
   const [submissionStatus, setSubmissionStatus] = useState("");
 
   const getDataPreregis = async () => {
     try {
-      const nim = JSON.parse(localStorage.getItem("user")).nim;
+      const { nim, id } = JSON.parse(localStorage.getItem("user"));
       const studentData = await jwtAuthAxios.get(`/student/${nim}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal,
       });
       const major = studentData.data.data.major;
 
       const result = await jwtAuthAxios.get(
-        `/pre-regist/status/${major}/${nim}`,
+        `/pre-regist/status/${major}/${id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
       const preregisData = result.data.data;
       setDataPreregis(preregisData);
-
       if (
         preregisData &&
         Array.isArray(preregisData.PreRegistrationData) &&
@@ -41,31 +37,36 @@ const PreRegistration = () => {
         setSubmissionStatus("success");
       }
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         return;
       }
     }
   };
 
   useEffect(() => {
-    getDataPreregis();
-    return () => controller.abort();
+    const fetchData = async () => {
+      try {
+        await getDataPreregis();
+      } catch (error) {
+        console.log("An error occurred while fetching data: ", error);
+      }
+    };
+
+    fetchData();
+
+    return () => {};
   }, [submissionStatus]);
 
   return (
     <div>
-      {dataPreregis === null || dataPreregis.length === 0 ? (
+      {dataPreregis === null ||
+      dataPreregis?.length === 0 ||
+      dataPreregis.isOpen === false ? (
         <PreRegistrationClosedCase />
       ) : submissionStatus === "success" ? (
         <PreRegistrationSubmitted />

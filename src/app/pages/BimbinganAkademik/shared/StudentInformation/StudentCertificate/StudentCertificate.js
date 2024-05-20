@@ -17,6 +17,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -37,34 +38,27 @@ const StudentCertificate = () => {
   const [dataWaiting, setDataWaiting] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const location = useLocation();
-  const { studentNim, firstName, lastName } = location.state
+  const { studentNim, firstName, lastName, studentId } = location.state
     ? location.state
     : "";
 
   //handle error
   const handleError = (error) => {
-    if (error.code === "ERR_CANCELED") {
+    if (error && error.code === "ERR_CANCELED") {
       console.log("request canceled");
-    } else if (
-      error.response &&
-      error.response.status >= 401 &&
-      error.response.status <= 403
-    ) {
-      console.log("You don't have permission to access this page");
-      navigate(`/`);
+    } else if (error && error.response && error.response.status === 401) {
+      handleAuthenticationError();
     } else {
-      console.log("ini error: ", error);
+      console.error("error: ");
     }
   };
 
   const getDataWaiting = async () => {
     try {
-      const result = await jwtAuthAxios.get(`/certificate/all/${studentNim}`, {
+      const result = await jwtAuthAxios.get(`/certificate/all/${studentId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
       });
-
-      console.log("ini isi result data di certi", result);
 
       if (result.data && result.data.data) {
         setDataWaiting(result.data.data);
@@ -91,45 +85,41 @@ const StudentCertificate = () => {
         }
       );
 
-      console.log("ini detail certi result:", certificateDetailsResult);
-
       const {
         student,
         submitDate,
         path,
         category,
         description,
-        approval_status,
+        level,
+        approvalStatus,
         approvalDate,
         title,
         id,
         comments,
       } = certificateDetailsResult.data.data;
-      navigate(
-        `${value.id}`,
-        {
-          state: {
-            certificateDetails: {
-              firstName: student.firstName,
-              lastName: student.lastName,
-              SupervisorFirstName:
-                student.GuidanceClassMember?.gudianceClass?.teacher?.firstName,
-              SupervisorLastName:
-                student.GuidanceClassMember?.gudianceClass?.teacher?.lastName,
-              submissionDate: submitDate,
-              pathFile: path,
-              category: category,
-              description: description,
-              status: approval_status,
-              title: title,
-              id: id,
-              approvalDate: approvalDate,
-              comments: comments,
-            },
+      navigate(`${value.id}`, {
+        state: {
+          certificateDetails: {
+            firstName: student.firstName,
+            lastName: student.lastName,
+            SupervisorFirstName:
+              student.GuidanceClassMember?.gudianceClass?.teacher?.firstName,
+            SupervisorLastName:
+              student.GuidanceClassMember?.gudianceClass?.teacher?.lastName,
+            submissionDate: submitDate,
+            pathFile: path,
+            category: category,
+            level: level,
+            description: description,
+            status: approvalStatus,
+            title: title,
+            id: id,
+            approvalDate: approvalDate,
+            comments: comments,
           },
         },
-        console.log("ini pathFile", path)
-      );
+      });
     } catch (error) {
       handleError(error);
     }
@@ -147,6 +137,23 @@ const StudentCertificate = () => {
   const handleClick = (event, step) => {
     event.preventDefault();
     navigate(step);
+  };
+
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case "PENALARAN_KEILMUAN":
+        return "Reasoning and Scholarship";
+      case "ORGANISASI_KEPEMIMPINAN":
+        return "Organization and Leadership";
+      case "BAKAT_MINAT":
+        return "Talents and Interests";
+      case "PENGABDIAN_MASYARAKAT":
+        return "Community Service";
+      case "OTHER":
+        return "Others";
+      default:
+        return category;
+    }
   };
 
   return (
@@ -183,6 +190,7 @@ const StudentCertificate = () => {
                     position: "sticky",
                     top: 0,
                     backgroundColor: "rgba(26, 56, 96, 0.1)",
+                    zIndex: 1,
                   }}
                 >
                   <TableRow>
@@ -242,28 +250,26 @@ const StudentCertificate = () => {
                           {value.title}
                         </TableCell>
                         <TableCell>
-                          {value.category &&
-                            value.category.charAt(0).toUpperCase() +
-                              value.category.slice(1)}
+                          {getCategoryLabel(value.category)}
                         </TableCell>
                         <TableCell>{value.description}</TableCell>
                         <TableCell
                           sx={{
                             color:
-                              value.approval_status === "WAITING"
+                              value.approvalStatus === "WAITING"
                                 ? "#FFCC00"
-                                : value.approval_status === "APPROVED"
+                                : value.approvalStatus === "APPROVED"
                                 ? "#005FDB"
-                                : value.approval_status === "REJECTED"
+                                : value.approvalStatus === "REJECTED"
                                 ? "#E21D12"
                                 : "inherit",
                             align: "left",
                             width: "100px",
                           }}
                         >
-                          {value.approval_status &&
-                            value.approval_status.charAt(0) +
-                              value.approval_status.slice(1).toLowerCase()}
+                          {value.approvalStatus &&
+                            value.approvalStatus.charAt(0) +
+                              value.approvalStatus.slice(1).toLowerCase()}
                         </TableCell>
                       </TableRow>
                     ))

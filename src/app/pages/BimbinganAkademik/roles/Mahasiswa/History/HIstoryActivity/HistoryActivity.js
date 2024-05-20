@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -26,7 +27,6 @@ const Activity = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
-  console.log("loca", location);
   const { activityId } = location?.state || "-";
   const [activityDetail, setActivityDetail] = useState("");
 
@@ -42,22 +42,14 @@ const Activity = () => {
       const { status, data } = response.data;
       if (status === "OK") {
         setActivityDetail(data);
-      } else {
-        console.log("status result tidak ok", response);
       }
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         return;
       }
     }

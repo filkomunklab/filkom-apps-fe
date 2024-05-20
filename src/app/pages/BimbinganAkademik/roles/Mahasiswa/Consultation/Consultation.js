@@ -14,6 +14,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const requiredStyle = {
   color: "red",
@@ -45,12 +46,10 @@ const style = {
 const Consultation = () => {
   const navigate = useNavigate();
 
-  //inisialisasi get data
   const [supervisorData, setSupervisorData] = useState("");
   const [kaprodiData, setKaprodiData] = useState("");
   const [dekanData, setDekanData] = useState("");
 
-  //inisialisasi
   const [topic, setTopic] = useState("");
   const [receiver, setReceiver] = useState("");
   const [description, setDescription] = useState("");
@@ -70,80 +69,80 @@ const Consultation = () => {
   const handleOpenErrorModal = () => setOpenErrorModal(true);
   const handleCloseErrorModal = () => setOpenErrorModal(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleCloseSuccessModal();
-    }, 5000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [handleOpenSuccessModal]);
-
   const handleSubmitFirstModal = async () => {
-    //validasi
-    if (!topic || !receiver || !description) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-    const trimmedValue = description.trim();
-    if (trimmedValue !== "") {
-      handleCloseFirstModal();
-      setLoading(true);
-      const arrayReceiver = receiver.split("|");
-      const receiver_nik = arrayReceiver[0];
-      const receiver_name = arrayReceiver[1];
-      //bodyRequest
-      const consultationData = {
-        topic,
-        receiver_name,
-        receiver_nik,
-        student_arrival_year: informationStudent.arrivalYear,
-        student_major: informationStudent.major,
-        student_name: `${informationStudent.firstName} ${informationStudent.lastName}`,
-        student_nim: informationStudent.nim,
-        supervisor_name: `${supervisorData.teacher.firstName} ${supervisorData.teacher.lastName}`,
-        description: trimmedValue,
-      };
-
-      try {
-        const consultationResult = await jwtAuthAxios.post(
-          `/academic-consultation`,
-          consultationData,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-
-        if (consultationResult.data.status === "OK") {
-          handleOpenSuccessModal();
-          setTopic("");
-          setReceiver("");
-          setShowLabel(true);
-          setShowLabel2(true);
-          setDescription("");
-          setLoading(false);
-        }
-      } catch (error) {
-        if (error.code === "ERR_CANCELED") {
-          console.log("request canceled");
-        } else if (
-          error.response &&
-          error.response.status >= 401 &&
-          error.response.status <= 403
-        ) {
-          console.log("You don't have permission to access this page");
-          navigate(`/`);
-        } else {
-          console.log("ini error: ", error);
-          handleOpenErrorModal();
-          setLoading(false);
-        }
+    try {
+      //validasi
+      if (!topic || !receiver || !description) {
+        alert("Please fill in all required fields.");
+        return;
       }
-    } else {
-      alert("Input tidak valid. Mohon masukkan pesan yang valid.");
+      const { id } = JSON.parse(localStorage.getItem("user"));
+      const trimmedValue = description.trim();
+      if (trimmedValue !== "") {
+        handleCloseFirstModal();
+        setLoading(true);
+        const arrayReceiver = receiver.split("|");
+        const receiverId = arrayReceiver[0];
+        const receiver_name = arrayReceiver[1];
+        //bodyRequest
+        const consultationData = {
+          topic,
+          receiver_name,
+          receiverId,
+          student_arrival_year: informationStudent.arrivalYear,
+          student_major: informationStudent.major,
+          student_name: `${informationStudent.firstName} ${informationStudent.lastName}`,
+          studentId: id,
+          supervisor_name: `${supervisorData.teacher.firstName} ${supervisorData.teacher.lastName}`,
+          description: trimmedValue,
+        };
+        try {
+          const consultationResult = await jwtAuthAxios.post(
+            `/academic-consultation`,
+            consultationData,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+
+          if (consultationResult.data.status === "OK") {
+            handleOpenSuccessModal();
+            setTopic("");
+            setReceiver("");
+            setShowLabel(true);
+            setShowLabel2(true);
+            setDescription("");
+            setLoading(false);
+          }
+        } catch (error) {
+          if (error && error.code === "ERR_CANCELED") {
+            console.log("request canceled");
+          } else if (error && error.response && error.response.status === 401) {
+            handleAuthenticationError();
+          } else {
+            console.error("error: ");
+            handleOpenErrorModal();
+            setLoading(false);
+          }
+        }
+      } else {
+        alert("Input tidak valid. Mohon masukkan pesan yang valid.");
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.status >= 401 &&
+        error.response.status <= 403
+      ) {
+        console.log("You don't have permission to access this page");
+        navigate(`/`);
+        return;
+      } else {
+        console.error("error: ");
+        return;
+      }
     }
   };
 
@@ -178,8 +177,6 @@ const Consultation = () => {
         if (response1.data.status === "OK") {
           const supervisorData = response1.data.data;
           setSupervisorData(supervisorData);
-        } else {
-          console.log(response1);
         }
 
         if (response2.data.status === "OK") {
@@ -191,25 +188,16 @@ const Consultation = () => {
             (item) => item.role === "dekan"
           );
           setDekanData(dekanData);
-        } else {
-          console.log(response2);
         }
         setInformationStudent(result.data.data);
-      } else {
-        console.log("status result tidak ok", result);
       }
     } catch (error) {
-      if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      if (error && error.code === "ERR_CANCELED") {
+        console.log("request canceled");
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
-        return;
+        console.error("error: ");
       }
     }
   };
@@ -286,7 +274,7 @@ const Consultation = () => {
                   ? "Informatics"
                   : informationStudent?.major === "SI"
                   ? "Information System"
-                  : informationStudent?.major === "DKV"
+                  : informationStudent?.major === "TI"
                   ? "Information Technology"
                   : informationStudent?.major}
               </Typography>
@@ -361,21 +349,21 @@ const Consultation = () => {
                   <MenuItem
                     value={`${supervisorData?.teacherId}|${supervisorData?.teacher?.lastName}, ${supervisorData?.teacher?.firstName}`}
                   >
-                    {`${supervisorData?.teacher?.lastName}, ${supervisorData?.teacher?.firstName}`}
+                    Academic Supervisor
                   </MenuItem>
                 )
               ) : (
                 ""
               )}
               <MenuItem
-                value={`${kaprodiData?.nik}|${kaprodiData?.lastName}, ${kaprodiData?.firstName}`}
+                value={`${kaprodiData?.id}|${kaprodiData?.lastName}, ${kaprodiData?.firstName}`}
               >
-                {kaprodiData?.lastName}, {kaprodiData?.firstName}
+                Head of Study Program
               </MenuItem>
               <MenuItem
-                value={`${dekanData?.nik}|${dekanData?.lastName}, ${dekanData?.firstName}`}
+                value={`${dekanData?.id}|${dekanData?.lastName}, ${dekanData?.firstName}`}
               >
-                {dekanData?.lastName}, {dekanData?.firstName}
+                Faculty Dean
               </MenuItem>
             </TextField>
           </Stack>

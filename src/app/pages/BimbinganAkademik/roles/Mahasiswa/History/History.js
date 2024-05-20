@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -46,14 +47,12 @@ const History = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //get data
   const [dataActivity, setDataActivity] = useState([]);
   const [dataConsultation, setDataConsultation] = useState([]);
   const [dataCertificate, setDataCertificate] = useState([]);
   const [dataPreregis, setDataPreregis] = useState([]);
   const [dataGrade, setDataGrade] = useState([]);
 
-  //set tab value
   const [value, setValue] = useState(0);
 
   useEffect(() => {
@@ -69,27 +68,23 @@ const History = () => {
 
   //handle error
   const handleError = (error) => {
-    if (error.code === "ERR_CANCELED") {
+    if (error && error.code === "ERR_CANCELED") {
       console.log("request canceled");
-    } else if (
-      error.response &&
-      error.response.status >= 401 &&
-      error.response.status <= 403
-    ) {
-      console.log("You don't have permission to access this page");
-      navigate(`/`);
+    } else if (error && error.response && error.response.status === 401) {
+      handleAuthenticationError();
     } else {
-      console.log("ini error: ", error);
+      console.error("error: ");
     }
   };
 
-  //get history
   const getHistory = async () => {
     try {
       const { nim } = JSON.parse(localStorage.getItem("user"));
 
       const resultConsultation = await jwtAuthAxios.get(
-        `/academic-consultation/student/${nim}`,
+        `/academic-consultation/student/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -105,7 +100,9 @@ const History = () => {
       );
 
       const resultCertificate = await jwtAuthAxios.get(
-        `/certificate/history/student/${nim}`,
+        `/certificate/history/student/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -121,7 +118,9 @@ const History = () => {
       );
 
       const resultGrade = await jwtAuthAxios.get(
-        `/transaction/student/history/${nim}`,
+        `/transaction/student/history/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -140,37 +139,24 @@ const History = () => {
 
       if (activityStatus === "OK") {
         setDataActivity(activityData);
-      } else {
-        console.log("error activity:", resultActivity);
       }
 
       if (consultationStatus === "OK") {
         setDataConsultation(
           consultationData.filter((value) => value.status === "Complete")
         );
-      } else {
-        console.log(resultConsultation);
       }
 
       if (certificateStatus === "OK") {
         setDataCertificate(certificateData);
-      } else {
-        console.log(resultCertificate);
-        console.log(resultCertificate.data);
       }
 
       if (preregisStatus === "OK") {
         setDataPreregis(preregisData);
-      } else {
-        console.log(resultCertificate);
-        console.log(resultCertificate.data);
       }
 
       if (gradeStatus === "OK") {
         setDataGrade(gradeData);
-      } else {
-        console.log(resultGrade);
-        console.log(resultGrade.data);
       }
     } catch (error) {
       handleError(error);
@@ -217,18 +203,22 @@ const History = () => {
     groupedDataConsultation[dateConsultation].push(value);
   });
 
-  dataCertificate.forEach((value) => {
-    const date = new Date(value.approvalDate).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
+  if (Array.isArray(dataCertificate)) {
+    dataCertificate.forEach((value) => {
+      const date = new Date(value.approvalDate).toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+      if (!groupedDataCertificate[date]) {
+        groupedDataCertificate[date] = [];
+      }
+      groupedDataCertificate[date].push(value);
     });
-    if (!groupedDataCertificate[date]) {
-      groupedDataCertificate[date] = [];
-    }
-    groupedDataCertificate[date].push(value);
-  });
+  } else {
+    console.error("dataCertificate bukan array");
+  }
 
   dataPreregis.forEach((value) => {
     const date = new Date(value.submitDate).toLocaleDateString("en-US", {
@@ -291,7 +281,6 @@ const History = () => {
         }
       );
 
-      console.log("ini detail Consutation result:", consultationDetailsResult);
       let path = "/bimbingan-akademik/history/consultation/";
 
       navigate(`${path}${value.id}`, {
@@ -332,37 +321,35 @@ const History = () => {
         path,
         category,
         description,
-        approval_status,
+        level,
+        approvalStatus,
         approvalDate,
         title,
         id,
         comments,
       } = certificateDetailsResult.data.data;
-      navigate(
-        `${pathh}${value.id}`,
-        {
-          state: {
-            certificateDetails: {
-              firstName: student.firstName,
-              lastName: student.lastName,
-              SupervisorFirstName:
-                student.GuidanceClassMember.gudianceClass.teacher.firstName,
-              SupervisorLastName:
-                student.GuidanceClassMember.gudianceClass.teacher.lastName,
-              submissionDate: submitDate,
-              pathFile: path,
-              category: category,
-              description: description,
-              status: approval_status,
-              title: title,
-              id: id,
-              approvalDate: approvalDate,
-              comments: comments,
-            },
+      navigate(`${pathh}${value.id}`, {
+        state: {
+          certificateDetails: {
+            firstName: student.firstName,
+            lastName: student.lastName,
+            SupervisorFirstName:
+              student.GuidanceClassMember.gudianceClass.teacher.firstName,
+            SupervisorLastName:
+              student.GuidanceClassMember.gudianceClass.teacher.lastName,
+            submissionDate: submitDate,
+            pathFile: path,
+            category: category,
+            level: level,
+            description: description,
+            status: approvalStatus,
+            title: title,
+            id: id,
+            approvalDate: approvalDate,
+            comments: comments,
           },
         },
-        console.log("ini pathFile", path)
-      );
+      });
     } catch (error) {
       handleError(error);
     }
@@ -414,7 +401,6 @@ const History = () => {
 
       const detail = gradeDetailsResult.data.data;
       let path = "/bimbingan-akademik/history/grade/";
-      console.log("isi detail", detail);
       navigate(`${path}${value.id}`, {
         state: {
           gradeDetails: {
@@ -437,6 +423,23 @@ const History = () => {
       });
     } catch (error) {
       handleError(error);
+    }
+  };
+
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case "PENALARAN_KEILMUAN":
+        return "Reasoning and Scholarship";
+      case "ORGANISASI_KEPEMIMPINAN":
+        return "Organization and Leadership";
+      case "BAKAT_MINAT":
+        return "Talents and Interests";
+      case "PENGABDIAN_MASYARAKAT":
+        return "Community Service";
+      case "OTHER":
+        return "Others";
+      default:
+        return category;
     }
   };
 
@@ -523,7 +526,7 @@ const History = () => {
                       key={index}
                       sx={{
                         width: "100%",
-                        maxWidth: 2000,
+
                         bgcolor: "background.paper",
                         paddingTop: "0px",
                         paddingBottom: "0px",
@@ -558,16 +561,23 @@ const History = () => {
                             <>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   color: "rgba(0, 0, 0, 1)",
                                   paddingLeft: "8px",
                                   paddingTop: "5px",
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
                               >
-                                {value.title}
+                                {value.title.charAt(0).toUpperCase() +
+                                  value.title.slice(1)}
                               </Typography>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   paddingLeft: "8px",
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
@@ -587,6 +597,7 @@ const History = () => {
                             secondary={
                               <Typography
                                 sx={{
+                                  width: "70px",
                                   fontSize: { xs: "10px", md: "14px" },
                                   color: "rgba(27, 43, 65, 0.69)",
                                 }}
@@ -658,7 +669,7 @@ const History = () => {
                       key={index}
                       sx={{
                         width: "100%",
-                        maxWidth: 2000,
+
                         bgcolor: "background.paper",
                         paddingTop: "0px",
                         paddingBottom: "0px",
@@ -693,6 +704,9 @@ const History = () => {
                             <>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   color: "rgba(0, 0, 0, 1)",
                                   paddingLeft: "8px",
                                   paddingTop: "5px",
@@ -704,6 +718,9 @@ const History = () => {
                               </Typography>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   paddingLeft: "8px",
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
@@ -725,6 +742,7 @@ const History = () => {
                             secondary={
                               <Typography
                                 sx={{
+                                  width: "70px",
                                   fontSize: { xs: "10px", md: "14px" },
                                   color: "rgba(27, 43, 65, 0.69)",
                                 }}
@@ -796,7 +814,7 @@ const History = () => {
                       <List
                         sx={{
                           width: "100%",
-                          maxWidth: 2000,
+
                           bgcolor: "background.paper",
                           paddingTop: "0px",
                           paddingBottom: "0px",
@@ -814,7 +832,6 @@ const History = () => {
                           sx={{ padding: "10px 50px" }}
                           onClick={() => {
                             handleNavigateCertificate(value);
-                            // console.log("ini isi dari value certi: ", value);
                           }}
                         >
                           <ListItemText
@@ -832,22 +849,27 @@ const History = () => {
                               <>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     color: "rgba(0, 0, 0, 1)",
                                     paddingLeft: "8px",
                                     paddingTop: "5px",
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
                                 >
-                                  {value.student.lastName},{" "}
-                                  {value.student.firstName}
+                                  {value.title}
                                 </Typography>
                                 <Typography
                                   sx={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
                                     paddingLeft: "8px",
                                     fontSize: { xs: "12px", md: "14px" },
                                   }}
                                 >
-                                  {value.title}
+                                  {getCategoryLabel(value.category)}
                                 </Typography>
                               </>
                             }
@@ -862,6 +884,7 @@ const History = () => {
                               secondary={
                                 <Typography
                                   sx={{
+                                    width: "70px",
                                     fontSize: { xs: "10px", md: "14px" },
                                     color: "rgba(27, 43, 65, 0.69)",
                                   }}
@@ -931,7 +954,7 @@ const History = () => {
                     <List
                       sx={{
                         width: "100%",
-                        maxWidth: 2000,
+
                         bgcolor: "background.paper",
                         paddingTop: "0px",
                         paddingBottom: "0px",
@@ -966,6 +989,9 @@ const History = () => {
                             <>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   color: "rgba(0, 0, 0, 1)",
                                   paddingLeft: "8px",
                                   paddingTop: "5px",
@@ -977,6 +1003,9 @@ const History = () => {
                               </Typography>
                               <Typography
                                 sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
                                   paddingLeft: "8px",
                                   fontSize: { xs: "12px", md: "14px" },
                                 }}
@@ -996,6 +1025,7 @@ const History = () => {
                             secondary={
                               <Typography
                                 sx={{
+                                  width: "70px",
                                   fontSize: { xs: "10px", md: "14px" },
                                   color: "rgba(27, 43, 65, 0.69)",
                                 }}
@@ -1067,7 +1097,7 @@ const History = () => {
                         <List
                           sx={{
                             width: "100%",
-                            maxWidth: 2000,
+
                             bgcolor: "background.paper",
                             paddingTop: "0px",
                             paddingBottom: "0px",
@@ -1102,6 +1132,9 @@ const History = () => {
                                 <>
                                   <Typography
                                     sx={{
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      whiteSpace: "nowrap",
                                       color: "rgba(0, 0, 0, 1)",
                                       paddingLeft: "8px",
                                       paddingTop: "5px",
@@ -1112,6 +1145,9 @@ const History = () => {
                                   </Typography>
                                   <Typography
                                     sx={{
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      whiteSpace: "nowrap",
                                       paddingLeft: "8px",
                                       fontSize: { xs: "12px", md: "14px" },
                                     }}
@@ -1135,6 +1171,7 @@ const History = () => {
                                 secondary={
                                   <Typography
                                     sx={{
+                                      width: "70px",
                                       fontSize: { xs: "10px", md: "14px" },
                                       color: "rgba(27, 43, 65, 0.69)",
                                     }}

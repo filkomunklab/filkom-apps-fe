@@ -21,6 +21,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import React, { useEffect, useState } from "react";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import { useNavigate } from "react-router-dom";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StudentInformationMentored = () => {
   //abort
@@ -57,24 +58,15 @@ const StudentInformationMentored = () => {
       const { status, data } = result.data;
 
       if (status === "OK") {
-        console.log("ini isi result.data dalam status ok mentored", result);
         setResultData(data.GuidanceClassMember);
-      } else {
-        console.error("error, ini data result: ", result);
       }
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         return;
       }
     }
@@ -96,19 +88,18 @@ const StudentInformationMentored = () => {
   const filterAndSetStudents = () => {
     const filteredData = originalDataStudent.filter((item) => {
       const nameMatches =
-        (item.student.firstName &&
-          item.student.firstName
+        (item?.student?.firstName &&
+          item?.student?.firstName
             .toLowerCase()
             .includes(search.toLowerCase())) ||
-        (item.student.lastName &&
-          item.student.lastName.toLowerCase().includes(search.toLowerCase()));
+        (item?.student?.lastName &&
+          item?.student?.lastName.toLowerCase().includes(search.toLowerCase()));
       const nimMatches =
-        item.student.nim &&
-        item.student.nim.toLowerCase().includes(search.toLowerCase());
+        item?.student?.nim &&
+        item?.student.nim.toLowerCase().includes(search.toLowerCase());
       const majorMatches =
         filter === "" ||
-        (item.student.status && item.student.status === filter);
-      console.log("ini isi item", item);
+        (item?.student?.status && item?.student?.status === filter);
       return (nameMatches || nimMatches) && majorMatches;
     });
 
@@ -188,8 +179,6 @@ const StudentInformationMentored = () => {
             }}
             value={search}
             onChange={handleSearch}
-            // value={search}
-            // onChange={handleSearch}
           />
         </Grid>
 
@@ -246,7 +235,7 @@ const StudentInformationMentored = () => {
         </Grid>
       </Grid>
 
-      <Grid container xs={12}>
+      <Grid container>
         <TableContainer sx={{ maxHeight: 540 }} component={Paper}>
           <Table>
             <TableHead
@@ -313,28 +302,17 @@ const TableHeading = ({}) => {
 
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
-  const { firstName, lastName, major, arrivalYear, nim, status } = item.student;
-  const role = JSON.parse(localStorage.getItem("user")).role;
-  console.log("test role", role);
-
-  const getRole = () => {
-    const filter = role.includes("KAPRODI")
-      ? "kaprodi"
-      : role.includes("DEKAN")
-      ? "dekan"
-      : role.includes("OPERATOR_FAKULTAS")
-      ? "sekretaris"
-      : "dosen-pembimbing";
-
-    return filter;
-  };
+  const { firstName, lastName, major, arrivalYear, nim, status, id } =
+    item.student;
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
 
     switch (name) {
       case "profile":
-        navigate(`${nim}`, { state: { studentNim: nim } });
+        navigate(`${nim}`, {
+          state: { studentNim: nim, studentId: id },
+        });
         break;
       case "grade":
         navigate(`${nim}/grade`, {
@@ -342,6 +320,7 @@ const TableItem = ({ item, index }) => {
             studentNim: nim,
             firstName: firstName,
             lastName: lastName,
+            studentId: id,
           },
         });
         break;
@@ -351,12 +330,10 @@ const TableItem = ({ item, index }) => {
             studentNim: nim,
             firstName: firstName,
             lastName: lastName,
+            studentId: id,
           },
         });
         break;
-
-      default:
-        console.log("Path not found");
     }
   };
 
@@ -388,7 +365,7 @@ const TableItem = ({ item, index }) => {
           ? "Informatics"
           : major === "SI"
           ? "Information System"
-          : major === "DKV"
+          : major === "TI"
           ? "Information Technology"
           : "-"}
       </TableCell>

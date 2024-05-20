@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Typography, Paper } from "@mui/material";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import { useNavigate } from "react-router-dom";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const PreRegistrationSubmitted = () => {
   //abort
@@ -9,7 +10,6 @@ const PreRegistrationSubmitted = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //get data
   const [dataPreregis, setDataPreregis] = useState([]);
   const getDataPreregis = async () => {
     try {
@@ -29,18 +29,12 @@ const PreRegistrationSubmitted = () => {
       );
       setDataPreregis(result.data.data);
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         return;
       }
     }

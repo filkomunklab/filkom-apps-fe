@@ -16,6 +16,7 @@ import Div from "@jumbo/shared/Div";
 import SendIcon from "@mui/icons-material/Send";
 import { format } from "date-fns";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
@@ -67,11 +68,6 @@ const ViewConsultation = () => {
 
   const [inputValue, setInputValue] = useState("");
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSubmit();
-    }
-  };
   const handleIconClick = () => {
     handleSubmit();
   };
@@ -90,21 +86,16 @@ const ViewConsultation = () => {
     getCurrentStatus();
     getMessage();
     return () => controller.abort();
-  }, [messages]);
+  }, []);
 
   //handle error
   const handleError = (error) => {
-    if (error.code === "ERR_CANCELED") {
+    if (error && error.code === "ERR_CANCELED") {
       console.log("request canceled");
-    } else if (
-      error.response &&
-      error.response.status >= 401 &&
-      error.response.status <= 403
-    ) {
-      console.log("You don't have permission to access this page");
-      navigate(`/`);
+    } else if (error && error.response && error.response.status === 401) {
+      handleAuthenticationError();
     } else {
-      console.log("ini error: ", error);
+      console.error("error: ");
     }
   };
 
@@ -149,6 +140,8 @@ const ViewConsultation = () => {
           signal,
         }
       );
+      getCurrentStatus();
+      getMessage();
     } catch (error) {
       handleError(error);
     }
@@ -161,6 +154,8 @@ const ViewConsultation = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
       });
+      getCurrentStatus();
+      getMessage();
     } catch (error) {
       handleError(error);
     }
@@ -219,7 +214,7 @@ const ViewConsultation = () => {
                   ? "Informatika"
                   : studentMajor === "SI"
                   ? "Sistem Informasi"
-                  : studentMajor === "DKV"
+                  : studentMajor === "TI"
                   ? "Teknologi Informasi"
                   : studentMajor}
               </Typography>
@@ -394,7 +389,6 @@ const ViewConsultation = () => {
                           </IconButton>
                         ),
                       }}
-                      onKeyPress={handleKeyPress}
                     />
                     <Grid
                       container

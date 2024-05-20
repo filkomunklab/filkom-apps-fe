@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Typography, Paper } from "@mui/material";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import { useNavigate } from "react-router-dom";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const GradeSubmitted = () => {
   //abort
@@ -9,7 +10,6 @@ const GradeSubmitted = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //get data
   const [dataGrade, setDataGrade] = useState([]);
   const getDataGrade = async () => {
     try {
@@ -26,21 +26,13 @@ const GradeSubmitted = () => {
 
       const gradeData = result.data.data;
       setDataGrade(gradeData);
-
-      console.log("ini panjang gradedata", result);
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         return;
       }
     }
@@ -74,7 +66,7 @@ const GradeSubmitted = () => {
             year: "numeric",
           })}{" "}
           -{" "}
-          {new Date(dataGrade.due_date).toLocaleDateString("en-US", {
+          {new Date(dataGrade.dueDate).toLocaleDateString("en-US", {
             month: "long",
             day: "2-digit",
             year: "numeric",
@@ -91,14 +83,14 @@ const GradeSubmitted = () => {
         }}
       >
         <Typography variant="body1">
-          You have pre-registered for courses for next semester. Please wait for
-          a response from your Supervisor. If you have any questions regarding
-          this matter, please contact your Supervisor. You can also consult on
-          the Consultation page. <br />
+          You have successfully submitted your grades. Please wait for a
+          response from the Head of Study Program. If you have any inquiries
+          regarding this matter, kindly contact the Head of Study Program. You
+          can also seek further assistance on the Consultation page. <br />
           <br />
-          If you want to see a list of pre-registration courses that you have
-          entered, then please go to the Current Activities page or History
-          page.
+          If you wish to view the list of course grades you've submitted, please
+          navigate to the History page. Alternatively, if you want to view the
+          approved grades, please visit the Grades page.
         </Typography>
       </Paper>
     </div>

@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const CurrentActivities = () => {
   //abort
@@ -16,41 +17,31 @@ const CurrentActivities = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //get data
   const [dataActivity, setDataActivity] = useState([]);
   const [dataConsultation, setDataConsultation] = useState([]);
 
   //handle error
   const handleError = (error) => {
-    if (error.code === "ERR_CANCELED") {
+    if (error && error.code === "ERR_CANCELED") {
       console.log("request canceled");
-    } else if (
-      error.response &&
-      error.response.status >= 401 &&
-      error.response.status <= 403
-    ) {
-      console.log("You don't have permission to access this page");
-      navigate(`/`);
+    } else if (error && error.response && error.response.status === 401) {
+      handleAuthenticationError();
     } else {
-      console.log("ini error: ", error);
+      console.error("error: ");
     }
   };
 
   const getActivity = async () => {
     try {
-      const { nik } = JSON.parse(localStorage.getItem("user"));
-      const result = await jwtAuthAxios.get(`/activity/current/${nik}`, {
+      const { id } = JSON.parse(localStorage.getItem("user"));
+      const result = await jwtAuthAxios.get(`/activity/current/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         signal,
       });
 
-      console.log("ini result di get activity", result);
       const { status: activityStatus, data } = result.data;
       if (activityStatus === "OK") {
         setDataActivity(data);
-      } else {
-        console.error("Error in activityStatus: ", activityStatus);
-        console.log("ini isi result", result);
       }
     } catch (error) {
       handleError(error);
@@ -61,7 +52,9 @@ const CurrentActivities = () => {
     try {
       const { nik } = JSON.parse(localStorage.getItem("user"));
       const result = await jwtAuthAxios.get(
-        `/academic-consultation/employee/${nik}`,
+        `/academic-consultation/employee/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -74,9 +67,6 @@ const CurrentActivities = () => {
         );
 
         setDataConsultation(onProcessConsultations);
-      } else {
-        console.error("Error in consultationStatus: ", consultationStatus);
-        console.log("ini isi result", result);
       }
     } catch (error) {
       handleError(error);
@@ -246,7 +236,6 @@ const CurrentActivities = () => {
                 key={index}
                 sx={{
                   width: "100%",
-                  maxWidth: 2000,
                   bgcolor: "background.paper",
                   paddingTop: "0px",
                   paddingBottom: "0px",
@@ -272,6 +261,9 @@ const CurrentActivities = () => {
                       <Typography
                         variant="body1"
                         sx={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
                           fontSize: { xs: "12px", md: "14px" },
                           "&:hover": {
                             textDecorationLine: ["none"],
@@ -300,21 +292,15 @@ const CurrentActivities = () => {
 
                   <Box
                     sx={{
-                      marginRight: "-72px",
+                      marginLeft: { xs: "auto", md: 0 },
                       textAlign: "right",
-                      width: "300px",
-                      "@media (max-width: 630px)": {
-                        width: "400px",
-                      },
-                      "@media (max-width: 400px)": {
-                        width: "600px",
-                      },
                     }}
                   >
                     <ListItemText
                       secondary={
                         <Typography
                           sx={{
+                            width: "70px",
                             fontSize: { xs: "10px", md: "14px" },
                             color: "rgba(27, 43, 65, 0.69)",
                           }}
@@ -331,8 +317,8 @@ const CurrentActivities = () => {
                       }
                     />
                   </Box>
-                  <Divider component="li" variant="inset" />
                 </ListItem>
+                <Divider component="li" />
               </List>
             ))}
           </div>

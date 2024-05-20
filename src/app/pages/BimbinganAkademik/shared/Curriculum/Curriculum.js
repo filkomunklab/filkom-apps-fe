@@ -32,6 +32,8 @@ import FileSaver from "file-saver";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import SuccessOrError from "../../components/Modal/SuccessOrError";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+import CustomAlert from "../../components/Alert/Alert";
 
 const styleCurriculum = {
   position: "absolute",
@@ -45,10 +47,10 @@ const styleCurriculum = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -64,23 +66,12 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
-};
-
-const style2 = {
-  position: "fixed",
-  top: "15%",
-  right: "2%",
-  width: 400,
-  boxShadow: 24,
-  padding: 24,
-  backgroundColor: "white",
-  borderRadius: 10,
 };
 
 const Curriculum = () => {
@@ -89,16 +80,25 @@ const Curriculum = () => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //inisialisasi
   const [curriculum, setCurriculum] = useState("selectCurriculum");
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileName, setSelectedFileName] = useState("");
+  const [showLabel, setShowLabel] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const [listCurriculum, setListCurriculum] = useState([]);
   const [listSubject, setListSubject] = useState([]);
+
+  // Alert
+  const [alert, setAlert] = useState(null);
+  const showAlert = (message) => {
+    setAlert({ message });
+  };
+  const hideAlert = () => {
+    setAlert(null);
+  };
 
   //modal
   const [selectedProdi, setSelectedProdi] = useState("");
@@ -139,18 +139,12 @@ const Curriculum = () => {
       getCurriculum();
       setCurriculum("selectCurriculum");
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         return;
       }
     }
@@ -159,7 +153,6 @@ const Curriculum = () => {
   const handleSubmitFirstModal = async () => {
     setLoading(true);
 
-    console.log("ini selected file: ", selectedFile);
     const file = selectedFile;
     const reader = new FileReader();
 
@@ -189,7 +182,7 @@ const Curriculum = () => {
         });
 
         if (response.data.status === "OK") {
-          console.log("Successful response:", response.data);
+          hideAlert();
           setSelectedProdi("");
           setSelectedYear("");
           setSelectedFile(null);
@@ -201,8 +194,8 @@ const Curriculum = () => {
           setLoading(false);
         }
       } catch (error) {
-        console.error("Error:", error);
-        console.error("Error response:", error.response);
+        console.error("Error:");
+        hideAlert();
         setSelectedProdi("");
         setSelectedYear("");
         setSelectedFile(null);
@@ -216,20 +209,6 @@ const Curriculum = () => {
 
     reader.readAsArrayBuffer(file);
   };
-
-  useEffect(() => {
-    let timer;
-
-    if (openSuccessModal) {
-      timer = setTimeout(() => {
-        handleCloseSuccessModal();
-      }, 5000);
-    }
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [openSuccessModal, handleCloseSuccessModal]);
 
   useEffect(() => {
     getCurriculum();
@@ -250,18 +229,12 @@ const Curriculum = () => {
         setListSubject(result.data.data);
       }
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.log("error: ");
         return;
       }
     }
@@ -278,18 +251,12 @@ const Curriculum = () => {
         setListCurriculum(result.data.data);
       }
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         return;
       }
     }
@@ -314,17 +281,13 @@ const Curriculum = () => {
           setSelectedFileName("");
         }
       } else {
-        alert("Only Excel files (xlsx, xls) are allowed.");
+        showAlert("Only Excel files (xlsx, xls) are allowed.");
         event.target.value = "";
       }
     } else {
       setSelectedFile(null);
       setSelectedFileName("");
     }
-  };
-
-  const handleOnChange = (e) => {
-    setCurriculum(e.target.value);
   };
 
   const handleProdiChange = (event) => {
@@ -335,13 +298,17 @@ const Curriculum = () => {
     const inputValue = event.target.value;
 
     if (!isNaN(Number(inputValue))) {
-      setSelectedYear(inputValue);
+      const formattedValue = inputValue.slice(0, 4);
+      setSelectedYear(formattedValue);
     }
   };
 
   const handleOpenFirstModal = (event) => {
     if (!selectedProdi || !selectedYear || !selectedFile) {
-      alert("Please fill the field first");
+      showAlert("Please fill the field first");
+      return;
+    } else if (selectedYear.length !== 4) {
+      showAlert("Year must have exactly 4 digits");
       return;
     } else {
       setOpenFirstModal(true);
@@ -536,19 +503,12 @@ const Curriculum = () => {
                 </Button>
                 <Modal open={isAddModalOpen} onClose={handleAddModalClose}>
                   <Box style={styleCurriculum}>
-                    <IconButton
-                      edge="end"
-                      color="#D9D9D9"
-                      onClick={closeModal}
-                      aria-label="close"
-                      sx={{
-                        position: "absolute",
-                        top: "10px",
-                        right: "20px",
-                      }}
-                    >
-                      <CloseIcon />
-                    </IconButton>
+                    {alert && (
+                      <CustomAlert
+                        message={alert.message}
+                        onClose={hideAlert}
+                      />
+                    )}
                     <Grid container paddingTop={2}>
                       <Grid item md={8} xs={8}>
                         <Typography
@@ -588,25 +548,24 @@ const Curriculum = () => {
                         width: "100%",
                         marginBottom: 3,
                       }}
-                      label="Program Studi"
                     >
-                      <InputLabel>Program Studi</InputLabel>
+                      <InputLabel>Program of Study</InputLabel>
                       <Select
-                        label="Program Studi"
+                        label="Program of Study"
                         value={selectedProdi}
                         onChange={handleProdiChange}
                       >
-                        <MenuItem value="Informatika">Informatika</MenuItem>
+                        <MenuItem value="Informatika">Informatics</MenuItem>
                         <MenuItem value="Sistem Informasi">
-                          Sistem Informasi
+                          Information System
                         </MenuItem>
                         <MenuItem value="Teknologi Informasi">
-                          Teknologi Informasi
+                          Information Technology
                         </MenuItem>
                       </Select>
                     </FormControl>
                     <TextField
-                      label="Tahun"
+                      label="Year (e.g., 2020)"
                       variant="outlined"
                       fullWidth
                       value={selectedYear}
@@ -670,15 +629,28 @@ const Curriculum = () => {
                     >
                       <Button
                         size="small"
+                        variant="outlined"
+                        sx={{
+                          borderRadius: "24px",
+                          fontSize: "12px",
+                          padding: "7px 20px",
+                          borderColor: "#E0E0E0",
+                          color: "#0A0A0A",
+                          mr: 1,
+                        }}
+                        onClick={closeModal}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        size="small"
                         onClick={handleOpenFirstModal}
                         sx={{
                           backgroundColor: "#006AF5",
                           borderRadius: "24px",
                           color: "white",
                           fontSize: "12px",
-                          padding: "7px",
-                          paddingLeft: "20px",
-                          paddingRight: "20px",
+                          padding: "7px 20px",
                           gap: "5px",
                           "&:hover": {
                             backgroundColor: "#025ED8",
@@ -688,6 +660,7 @@ const Curriculum = () => {
                         Submit
                       </Button>
                     </Grid>
+
                     <Modal
                       open={openFirstModal}
                       onClose={handleCloseFirstModal}
@@ -769,25 +742,30 @@ const Curriculum = () => {
         </Grid>
       </div>
       <div>
-        <Select
+        <TextField
           value={curriculum}
-          onChange={handleOnChange}
+          id="outlined-select-topic"
+          select
+          onChange={(event) => {
+            setCurriculum(event.target.value);
+            setShowLabel(false);
+          }}
+          label={showLabel ? "View Curriculum" : ""}
           sx={{
             width: "100%",
             backgroundColor: "rgba(26, 56, 96, 0.1)",
           }}
+          InputLabelProps={{
+            shrink: false,
+          }}
           MenuProps={{
             PaperProps: {
               style: {
-                maxHeight: "40%",
+                maxHeight: "30vh",
               },
             },
           }}
         >
-          <MenuItem value="selectCurriculum">
-            <Typography sx={{ fontWeight: 400 }}>View Curriculum</Typography>
-          </MenuItem>
-
           {listCurriculum.map((value, index) => (
             <MenuItem
               key={value.id}
@@ -828,14 +806,14 @@ const Curriculum = () => {
               </div>
             </MenuItem>
           ))}
-        </Select>
+        </TextField>
         <Modal
           open={isDeleteConfirmationModalOpen}
           onClose={handleCloseDeleteConfirmationModal}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <div style={style2}>
+          <div style={style}>
             <IconButton
               edge="end"
               color="#D9D9D9"
@@ -907,7 +885,7 @@ const Curriculum = () => {
         {curriculum === "selectCurriculum" ? (
           ""
         ) : (
-          <TableContainer sx={{ maxHeight: 440 }} component={Paper}>
+          <TableContainer sx={{ maxHeight: "85vh" }} component={Paper}>
             <Table>
               <TableHead
                 sx={{
@@ -915,6 +893,7 @@ const Curriculum = () => {
                   position: "sticky",
                   top: 0,
                   backgroundColor: "#dfe4eb",
+                  zIndex: 1,
                 }}
               >
                 <TableRow>

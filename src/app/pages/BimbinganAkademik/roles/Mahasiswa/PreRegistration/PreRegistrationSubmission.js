@@ -23,6 +23,7 @@ import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const style = {
   position: "absolute",
@@ -36,10 +37,10 @@ const style = {
   backgroundColor: "white",
   borderRadius: 10,
   maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -93,12 +94,10 @@ const PreviewPopup = ({ open, onClose, previewRows, totalCredits }) => {
                       <TableCell>{data.code}</TableCell>
                       <TableCell>{data.name}</TableCell>
                       <TableCell>{data.credits}</TableCell>
-                      <TableCell>{data.grade ? data.grade : "-"}</TableCell>
                       <TableCell>{data.type}</TableCell>
                       <TableCell>
                         {data.prerequisite ? data.prerequisite : "-"}
                       </TableCell>
-                      <TableCell>{data.status ? data.status : "-"}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -124,7 +123,6 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
   const [showWarning, setShowWarning] = useState(false);
 
   const handleShowPreview = () => {
-    console.log("ahem", selectedRows);
     setPreviewRows(selectedRows);
     setDivVisible(true);
   };
@@ -200,7 +198,7 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
                 sx={{
                   color: "white",
                   backgroundColor: "#006AF5",
-                  "@media (maxWidth: 650px)": { fontSize: "9px" },
+                  "@media (max-width: 650px)": { fontSize: "9px" },
                   "&:hover": {
                     backgroundColor: "#025ED8",
                   },
@@ -208,7 +206,7 @@ const Popup = ({ open, onClose, selectedRows, totalCredits }) => {
               >
                 See Preview
                 <ArrowRightAltIcon
-                  sx={{ "@media (maxWidth: 650px)": { fontSize: "14px" } }}
+                  sx={{ "@media (max-width: 650px)": { fontSize: "14px" } }}
                 />
               </Button>
             </div>
@@ -236,7 +234,6 @@ const PreRegistrationSubmission = ({}) => {
   const signal = controller.signal;
   const navigate = useNavigate();
 
-  //inisialisasi
   const [listSubject, setListSubject] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [totalCredits, setTotalCredits] = useState(0);
@@ -245,7 +242,6 @@ const PreRegistrationSubmission = ({}) => {
   const [showWarning, setShowWarning] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  //get data
   const [dataPreregis, setDataPreregis] = useState([]);
   const [curriculumDetails, setCurriculumDetails] = useState({
     name: "",
@@ -262,17 +258,12 @@ const PreRegistrationSubmission = ({}) => {
 
   //handle error
   const handleError = (error) => {
-    if (error.code === "ERR_CANCELED") {
+    if (error && error.code === "ERR_CANCELED") {
       console.log("request canceled");
-    } else if (
-      error.response &&
-      error.response.status >= 401 &&
-      error.response.status <= 403
-    ) {
-      console.log("You don't have permission to access this page");
-      navigate(`/`);
+    } else if (error && error.response && error.response.status === 401) {
+      handleAuthenticationError();
     } else {
-      console.log("ini error: ", error);
+      console.error("error: ");
     }
   };
 
@@ -293,9 +284,6 @@ const PreRegistrationSubmission = ({}) => {
       );
       const preregisData = result.data.data;
       setDataPreregis(preregisData);
-
-      console.log("ini panjang preregisdata", preregisData.PreRegistrationData);
-      console.log("Data preregistration:", preregisData);
     } catch (error) {
       handleError(error);
     }
@@ -309,7 +297,6 @@ const PreRegistrationSubmission = ({}) => {
         signal,
       });
       const curriculumId = studentData.data.data.curriculumId;
-      // const curriculumId = "790021f2-9d25-4d65-a637-f4e883ad1885";
 
       if (!curriculumId) {
         console.error("Curriculum ID is null.");
@@ -362,7 +349,7 @@ const PreRegistrationSubmission = ({}) => {
 
       const listOfSubject = selectedRows.map((row) => ({ subjectId: row.id }));
       const requestBody = {
-        studentId: user.nim,
+        studentId: user.id,
         employeeId: employeeId,
         listOfSubject: listOfSubject,
         description: "",
@@ -388,18 +375,11 @@ const PreRegistrationSubmission = ({}) => {
         setLoading(false);
       }
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("Error submitting courses:", error.response);
         setSelectedRows([]);
         setTotalCredits(0);
         setShowPopup(true);
@@ -483,7 +463,6 @@ const PreRegistrationSubmission = ({}) => {
           <TableCell>{value.code}</TableCell>
           <TableCell>{value.name}</TableCell>
           <TableCell>{value.credits}</TableCell>
-          <TableCell>{value.grade ? value.grade : "-"}</TableCell>
           <TableCell>{value.type}</TableCell>
           <TableCell sx={{ width: "400px" }}>
             {value.prerequisite === null || value.prerequisite === ""
@@ -501,7 +480,6 @@ const PreRegistrationSubmission = ({}) => {
                     </React.Fragment>
                   ))}
           </TableCell>
-          <TableCell>{value.status ? value.status : "-"}</TableCell>
         </TableRow>
       );
     });
@@ -608,20 +586,6 @@ const PreRegistrationSubmission = ({}) => {
           <Table stickyHeader>
             <TableHead>
               <TableHeading />
-              {/* <TableRow>
-                <TableCell sx={{ width: "80px" }}> </TableCell>
-                <TableCell sx={{ width: "80px" }}>Code</TableCell>
-                <TableCell sx={{ width: "400px" }}>Name</TableCell>
-                <TableCell sx={{ width: "80px", textAlign: "right" }}>
-                  Credit(s)
-                </TableCell>
-                <TableCell sx={{ width: "80px", lign: "right" }}>
-                  Grade
-                </TableCell>
-                <TableCell sx={{ width: "130px" }}>Type</TableCell>
-                <TableCell sx={{ width: "400px" }}>Prerequisite</TableCell>
-                <TableCell sx={{ width: "400px" }}>Status</TableCell>
-              </TableRow> */}
             </TableHead>
             <TableBody>{renderRows()}</TableBody>
           </Table>
@@ -719,7 +683,7 @@ const PreRegistrationSubmission = ({}) => {
             open={openErrorModal}
             handleClose={handleCloseErrorModal}
             title="Error Submission!"
-            description="Error: Failed to submit grade. Please try again."
+            description="Error: Failed to submit pre-registration. Please try again."
           />
         </Box>
       </Grid>
@@ -727,17 +691,15 @@ const PreRegistrationSubmission = ({}) => {
   );
 };
 const TableHeading = () => {
-  const style = { fontWeight: 500 };
+  const style = { fontWeight: 500, backgroundColor: "#dfe4eb" };
   return (
-    <TableRow sx={{ backgroundColor: "#1A38601A" }}>
+    <TableRow>
       <TableCell sx={[style]}>No</TableCell>
       <TableCell sx={[style]}>Code</TableCell>
       <TableCell sx={[style]}>Subject Name</TableCell>
       <TableCell sx={[style]}>Credit(s)</TableCell>
-      <TableCell sx={[style]}>Grades</TableCell>
       <TableCell sx={[style]}>Type</TableCell>
       <TableCell sx={[style]}>Prerequisite</TableCell>
-      <TableCell sx={[style]}>Status</TableCell>
     </TableRow>
   );
 };

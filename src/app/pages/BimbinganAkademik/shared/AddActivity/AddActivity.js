@@ -9,7 +9,6 @@ import {
   Select,
   MenuItem,
   Button,
-  IconButton,
   Autocomplete,
   Checkbox,
   Modal,
@@ -23,6 +22,8 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
 import SuccessOrError from "app/pages/BimbinganAkademik/components/Modal/SuccessOrError";
 import { useNavigate } from "react-router-dom";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
+import CustomAlert from "app/pages/BimbinganAkademik/components/Alert/Alert";
 
 const requiredStyle = {
   color: "red",
@@ -48,11 +49,11 @@ const style = {
   padding: 24,
   backgroundColor: "white",
   borderRadius: 10,
-  maxWidth: "90%",
-  "@media (maxWidth: 768px)": {
+  maxWidth: "100%",
+  "@media (max-width: 768px)": {
     maxWidth: "80%",
   },
-  "@media (maxWidth: 480px)": {
+  "@media (max-width: 480px)": {
     maxWidth: "80%",
   },
 };
@@ -67,7 +68,15 @@ const AddActivity = () => {
     ? JSON.parse(localStorage.getItem("user")).role
     : [];
 
-  //inisialisasi
+  // Alert
+  const [alert, setAlert] = useState(null);
+  const showAlert = (message) => {
+    setAlert({ message });
+  };
+  const hideAlert = () => {
+    setAlert(null);
+  };
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState(null);
@@ -148,46 +157,38 @@ const AddActivity = () => {
       }
 
       const { status, data } = response.data;
-      console.log("ini data getStudentList", response);
 
       if (status === "OK" && data) {
         if (valueStudent === "GUIDANCE_CLASS") {
           setStudentOptions([
             "All students",
             ...data.GuidanceClassMember?.filter(
-              (item) => item.student.status === "ACTIVE"
-            ).map((item) => item.student),
+              (item) => item?.student?.status === "ACTIVE"
+            ).map((item) => item?.student),
           ]);
         } else if (valueStudent === "MAJOR") {
           setStudentOptions([
             "All students",
             ...data.filter(
               (item) =>
-                item.status === "ACTIVE" &&
-                item.major === responseMajor.data.data.major
+                item?.status === "ACTIVE" &&
+                item?.major === responseMajor?.data?.data?.major
             ),
           ]);
         } else {
-          console.log("masok");
           setStudentOptions([
             "All students",
-            ...data.filter((item) => item.status === "ACTIVE"),
+            ...data.filter((item) => item?.status === "ACTIVE"),
           ]);
         }
       }
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         handleOpenErrorModal();
         setIsLoading(false);
         return;
@@ -199,32 +200,30 @@ const AddActivity = () => {
     try {
       setIsLoading(true);
       if (validation()) {
-        const { nik } = JSON.parse(localStorage.getItem("user"));
+        const { id } = JSON.parse(localStorage.getItem("user"));
 
-        const response = await jwtAuthAxios.post(
-          `/activity`,
-          {
-            title: title,
-            description: description ? description : "-",
-            dueDate: dueDate,
-            isAttendance: attendance,
-            activityType: valueStudent,
-            employeeNik: nik,
-            members: selectedStudent
-              .filter((item) => item !== "All students")
-              .map((item) => ({ studentNim: item.nim })),
+        const requestBody = {
+          title: title,
+          description: description ? description : "-",
+          dueDate: dueDate,
+          isAttendance: attendance,
+          activityType: valueStudent,
+          employeeId: id,
+          members: selectedStudent
+            .filter((item) => item !== "All students")
+            .map((item) => ({ studentId: item.id })),
+        };
+
+        const response = await jwtAuthAxios.post(`/activity`, requestBody, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            signal,
-          }
-        );
-        console.log("ini itu", response);
+          signal,
+        });
 
-        const { status, data } = response.data;
+        const { status } = response.data;
         if (status === "OK") {
+          hideAlert();
           handleSubmitFirstModal();
           setTitle("");
           setDescription("");
@@ -239,25 +238,18 @@ const AddActivity = () => {
           setShowLabel2(true);
         }
       } else {
-        console.log("data tidak valid");
-        setOpenFirstModal(false);
-        alert("Data tidak valid");
+        showAlert("Fill in all the fields or make sure the data is valid.");
       }
       setIsLoading(false);
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         handleOpenErrorModal();
+        handleCloseFirstModal();
         setIsLoading(false);
         return;
       }
@@ -266,7 +258,6 @@ const AddActivity = () => {
 
   const validation = () => {
     const current = new Date();
-    console.log("waktu skarang", current);
     return (
       title !== "" &&
       dueDate !== null &&
@@ -286,26 +277,16 @@ const AddActivity = () => {
   }, [valueStudent]);
 
   useEffect(() => {
-    console.log("ini time", time);
-    console.log("ini date", date);
     combinedDateTime();
   }, [time, date]);
 
-  useEffect(() => {
-    console.log("due date: ", dueDate);
-  }, [dueDate]);
-
   const combinedDateTime = () => {
     if (!date || isNaN(date)) {
-      console.log("Invalid date");
-      return null; // atau nilai default yang sesuai
+      return null;
     }
 
     const combinedDateTime = new Date(date);
     const [hours, minutes] = time.split(":");
-
-    console.log("isi hours", hours);
-    console.log("isi minutes", minutes);
 
     combinedDateTime.setHours(hours);
     combinedDateTime.setMinutes(minutes);
@@ -313,7 +294,6 @@ const AddActivity = () => {
   };
 
   const handleSelectStudent = (_, newValue) => {
-    console.log("yaho", newValue);
     const wasAllSelected =
       prevSelectedStudentRef.current.includes("All students");
     if (newValue.includes("All students")) {
@@ -378,21 +358,20 @@ const AddActivity = () => {
       </Stack>
 
       <Grid container spacing={2}>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={6}>
           <RTypography sx={{ paddingBottom: "15px" }}>Date</RTypography>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DesktopDatePicker
               sx={{ backgroundColor: "white", width: "100%" }}
-              label={date ? "" : "No Due Date"}
+              label={date ? "" : "Due Date"}
               value={date}
               onChange={(e) => setDate(e)}
-              // renderInput={(params) => <TextField {...params} />}
               text
             />
           </LocalizationProvider>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={6}>
           <Typography sx={{ paddingBottom: "15px" }}>
             Clock (Optional)
           </Typography>
@@ -402,7 +381,6 @@ const AddActivity = () => {
             type="time"
             value={time}
             onChange={(e) => {
-              console.log("wkwk", e);
               setTime(e.target.value);
             }}
             inputProps={{
@@ -411,7 +389,10 @@ const AddActivity = () => {
             sx={{ backgroundColor: "white" }}
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+      </Grid>
+
+      <Grid container spacing={2} sx={{ paddingBottom: 3, paddingTop: 3 }}>
+        <Grid item xs={12} md={6}>
           <RTypography sx={{ paddingBottom: "15px" }}>
             Form Attendance
           </RTypography>
@@ -435,9 +416,6 @@ const AddActivity = () => {
             </Select>
           </FormControl>
         </Grid>
-      </Grid>
-
-      <Grid container spacing={2} paddingTop={3}>
         <Grid item xs={12} md={6}>
           <RTypography sx={{ paddingBottom: "15px" }}>For</RTypography>
           <FormControl sx={{ backgroundColor: "white" }} fullWidth>
@@ -465,52 +443,52 @@ const AddActivity = () => {
             </Select>
           </FormControl>
         </Grid>
-
-        <Grid item xs={12} md={6}>
-          <RTypography sx={{ paddingBottom: "15px" }}>Student</RTypography>
-          <Autocomplete
-            sx={{ backgroundColor: "white" }}
-            multiple
-            value={selectedStudent}
-            key={studentOptions[1] ? "All students" : studentOptions.id}
-            onChange={handleSelectStudent}
-            id="checkboxes-tags-demo"
-            options={studentOptions}
-            disableCloseOnSelect
-            getOptionLabel={(option) =>
-              option === "All students"
-                ? option
-                : `${option.lastName}, ${option.firstName}`
-            }
-            renderOption={(props, option, { selected }) => (
-              <li {...props}>
-                <Checkbox
-                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                  checkedIcon={<CheckBoxIcon fontSize="small" />}
-                  style={{ marginRight: 8 }}
-                  checked={selected}
-                />
-                {option === "All students"
-                  ? option
-                  : `${option.lastName}, ${option.firstName}`}
-              </li>
-            )}
-            renderInput={(params) => {
-              params.InputProps.startAdornment =
-                params.InputProps.startAdornment?.filter(
-                  (adornment) => !adornment.props.label.includes("All students")
-                );
-              return (
-                <TextField
-                  {...params}
-                  label="Students"
-                  placeholder="Add Student"
-                />
-              );
-            }}
-          />
-        </Grid>
       </Grid>
+
+      <Stack spacing={2}>
+        <RTypography>Student</RTypography>
+        <Autocomplete
+          sx={{ backgroundColor: "white" }}
+          multiple
+          value={selectedStudent}
+          key={studentOptions[1] ? "All students" : studentOptions.id}
+          onChange={handleSelectStudent}
+          id="checkboxes-tags-demo"
+          options={studentOptions}
+          disableCloseOnSelect
+          getOptionLabel={(option) =>
+            option === "All students"
+              ? option
+              : `${option.lastName}, ${option.firstName}`
+          }
+          renderOption={(props, option, { selected }) => (
+            <li {...props}>
+              <Checkbox
+                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                checkedIcon={<CheckBoxIcon fontSize="small" />}
+                style={{ marginRight: 8 }}
+                checked={selected}
+              />
+              {option === "All students"
+                ? option
+                : `${option.lastName}, ${option.firstName}`}
+            </li>
+          )}
+          renderInput={(params) => {
+            params.InputProps.startAdornment =
+              params.InputProps.startAdornment?.filter(
+                (adornment) => !adornment.props.label.includes("All students")
+              );
+            return (
+              <TextField
+                {...params}
+                label="Students"
+                placeholder="Add Student"
+              />
+            );
+          }}
+        />
+      </Stack>
 
       <Grid
         sx={{
@@ -548,12 +526,14 @@ const AddActivity = () => {
         aria-describedby="modal-modal-description"
       >
         <div style={style}>
+          {alert && <CustomAlert message={alert.message} onClose={hideAlert} />}
           <Typography
             id="modal-modal-title"
             variant="h4"
             component="h2"
             sx={{
               fontWeight: 600,
+              paddingTop: 2,
             }}
           >
             Send Activity?
@@ -612,7 +592,7 @@ const AddActivity = () => {
         open={openErrorModal}
         handleClose={handleCloseErrorModal}
         title="Error Submission!"
-        description="Error: Failed to submit the certificate. Please try again."
+        description="Error: Failed to create activity. Please try again."
       />
     </div>
   );

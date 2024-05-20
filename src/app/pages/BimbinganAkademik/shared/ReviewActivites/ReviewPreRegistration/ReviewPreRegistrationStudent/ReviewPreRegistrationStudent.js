@@ -20,6 +20,7 @@ import {
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const style = {
   position: "absolute",
@@ -48,7 +49,6 @@ const ReviewPreRegistrationStudent = () => {
   const navigate = useNavigate();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isReject, setIsReject] = useState(false);
   const [isApprove, setIsApprove] = useState(false);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
@@ -74,7 +74,7 @@ const ReviewPreRegistrationStudent = () => {
       setIsModalVisible(!isModalVisible);
       const currentDate = new Date().toISOString();
       const bodyData = {
-        status: isApprove ? "APPROVED" : "REJECTED",
+        status: "APPROVED",
         comments: commentText || null,
         approveDate: currentDate,
       };
@@ -97,28 +97,19 @@ const ReviewPreRegistrationStudent = () => {
       navigate(path);
     } catch (error) {
       setLoading(false);
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         return;
       }
     }
   };
 
-  const handleReject = () => {
-    setIsReject(!isReject);
-  };
   const handleApprove = () => {
-    setIsApprove(!isApprove);
+    setIsApprove(true);
   };
 
   const renderRows = () => {
@@ -292,12 +283,60 @@ const ReviewPreRegistrationStudent = () => {
           <Table stickyHeader>
             <TableHead sx={{ backgroundColor: "rgba(26, 56, 96, 0.1)" }}>
               <TableRow>
-                <TableCell sx={{ width: "40px" }}>Number</TableCell>
-                <TableCell sx={{ width: "40px" }}>Code</TableCell>
-                <TableCell sx={{ width: "400px" }}>Subject Name</TableCell>
-                <TableCell sx={{ width: "40px" }}>Credit(s)</TableCell>
-                <TableCell sx={{ width: "40px" }}>Type </TableCell>
-                <TableCell sx={{ width: "380px" }}>Prerequisite</TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Number
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Code
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "400px",
+                    textAlign: "center",
+                  }}
+                >
+                  Subject Name
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Credit(s)
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "40px",
+                    textAlign: "center",
+                  }}
+                >
+                  Type
+                </TableCell>
+                <TableCell
+                  sx={{
+                    backgroundColor: "#e8ecf2",
+                    width: "380px",
+                    textAlign: "center",
+                  }}
+                >
+                  Prerequisite
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -305,21 +344,25 @@ const ReviewPreRegistrationStudent = () => {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((data, index) => (
                   <TableRow key={index}>
-                    <TableCell sx={{ width: "40px" }}>{index + 1}</TableCell>
-                    <TableCell sx={{ width: "40px" }}>
-                      {data.subject?.code}
+                    <TableCell sx={{ textAlign: "center", width: "40px" }}>
+                      {index + 1}
                     </TableCell>
-                    <TableCell sx={{ width: "400px" }}>
-                      {data.subject?.name}
+                    <TableCell sx={{ textAlign: "center", width: "40px" }}>
+                      {data.subject.code}
                     </TableCell>
-                    <TableCell sx={{ width: "40px" }}>
-                      {data.subject?.credits}
+                    <TableCell sx={{ textAlign: "center", width: "400px" }}>
+                      {data.subject.name}
                     </TableCell>
-                    <TableCell sx={{ width: "200px" }}>
-                      {data.subject?.type}
+                    <TableCell sx={{ textAlign: "center", width: "40px" }}>
+                      {data.subject.credits}
                     </TableCell>
-                    <TableCell sx={{ width: "380px" }}>
-                      {data.subject?.prerequisite}
+                    <TableCell sx={{ textAlign: "center", width: "200px" }}>
+                      {data.subject.type}
+                    </TableCell>
+                    <TableCell sx={{ textAlign: "center", width: "380px" }}>
+                      {data.subject.prerequisite
+                        ? data.subject.prerequisite
+                        : "-"}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -353,70 +396,11 @@ const ReviewPreRegistrationStudent = () => {
       >
         <Button
           variant="contained"
-          color="error"
-          sx={{ borderRadius: 50, textTransform: "capitalize", width: "152px" }}
-          onClick={handleReject}
-        >
-          Reject
-        </Button>
-        <Button
-          variant="contained"
           sx={{ borderRadius: 50, textTransform: "capitalize", width: "152px" }}
           onClick={handleApprove}
         >
           Approve
         </Button>
-        <Modal
-          open={isReject}
-          onClose={handleReject}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Div sx={{ py: 2, px: 3 }}>
-              <Typography id="modal-modal-title" variant="h3" color={`#0A0A0A`}>
-                Reject this course pre-registration?
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Please remember to leave comments for the student regarding the
-                reasons of the rejection.
-              </Typography>
-            </Div>
-            <Div
-              sx={{
-                display: "flex",
-                columnGap: 2,
-                justifyContent: "flex-end",
-                bgcolor: "#F5F5F5",
-                px: 2,
-                py: 1,
-              }}
-            >
-              <Button
-                variant="outlined"
-                sx={{
-                  borderColor: "#E0E0E0",
-                  color: "#0A0A0A",
-                  textTransform: "capitalize",
-                }}
-                onClick={() => setIsReject(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                sx={{ textTransform: "capitalize" }}
-                onClick={() => {
-                  handleSubmitPreregis();
-                  setIsReject(false);
-                }}
-              >
-                Submit
-              </Button>
-            </Div>
-          </Box>
-        </Modal>
         <Modal
           open={isApprove}
           onClose={handleApprove}
@@ -439,7 +423,6 @@ const ReviewPreRegistrationStudent = () => {
                 display: "flex",
                 columnGap: 2,
                 justifyContent: "flex-end",
-                bgcolor: "#F5F5F5",
                 px: 2,
                 py: 1,
               }}
@@ -479,7 +462,8 @@ const ReviewPreRegistrationStudent = () => {
                 position: "-webkit-sticky",
                 position: "sticky",
                 top: 0,
-                backgroundColor: "rgb(245, 247, 250)",
+                backgroundColor: "#e8ecf2",
+                zIndex: 1,
               }}
             >
               <TableRow>

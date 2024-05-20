@@ -19,6 +19,7 @@ import {
   InputAdornment,
   MenuItem,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import SearchIcon from "@mui/icons-material/Search";
@@ -26,10 +27,7 @@ import SwapVertIcon from "@mui/icons-material/SwapVert";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
-
-const role = Boolean(localStorage.getItem("user"))
-  ? JSON.parse(localStorage.getItem("user")).role
-  : [];
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StudentInformationFaculty = () => {
   //abort
@@ -71,18 +69,12 @@ const StudentInformationFaculty = () => {
         result.data.data.filter((item) => item.status !== "GRADUATE")
       );
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         return;
       }
     }
@@ -104,36 +96,18 @@ const StudentInformationFaculty = () => {
   const filterAndSetStudents = () => {
     const filteredData = originalDataStudent.filter((item) => {
       const nameMatches =
-        item.firstName.toLowerCase().includes(search.toLowerCase()) ||
-        item.lastName.toLowerCase().includes(search.toLowerCase());
-      const nimMatches = item.nim.toLowerCase().includes(search.toLowerCase());
+        item?.firstName?.toLowerCase().includes(search.toLowerCase()) ||
+        item?.lastName?.toLowerCase().includes(search.toLowerCase());
+      const nimMatches = item?.nim
+        ?.toLowerCase()
+        .includes(search.toLowerCase());
       const combinedMatches =
         combinedFilter === "" ||
-        item.status === combinedFilter ||
-        item.major === combinedFilter;
+        item?.status === combinedFilter ||
+        item?.major === combinedFilter;
 
       return (nameMatches || nimMatches) && combinedMatches;
     });
-    // .sort((a, b) => {
-    //   // Sort by entrance year
-    //   const entranceYearA = a.arrivalYear;
-    //   const entranceYearB = b.arrivalYear;
-
-    //   if (sortOrder === "asc") {
-    //     return entranceYearA - entranceYearB;
-    //   } else {
-    //     return entranceYearB - entranceYearA;
-    //   }
-    // });
-
-    // .sort((a, b) => {
-    //   // Sort alphabetically by last name
-    //   const lastNameA = a.lastName.toLowerCase();
-    //   const lastNameB = b.lastName.toLowerCase();
-    //   if (lastNameA < lastNameB) return -1;
-    //   if (lastNameA > lastNameB) return 1;
-    //   return 0;
-    // });
 
     const sortedData = sortData(filteredData);
     setSearchFilteredData(sortedData);
@@ -210,7 +184,7 @@ const StudentInformationFaculty = () => {
           >
             <Grid container>
               <Grid item>
-                <CardHeader title="Informatics Student " />
+                <CardHeader title="Informatics Students " />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
                   <Typography variant="h3" color="#006AF5" fontSize="20px">
                     {dataStudent
@@ -243,7 +217,7 @@ const StudentInformationFaculty = () => {
           >
             <Grid container>
               <Grid item>
-                <CardHeader title="Information System Student" />
+                <CardHeader title="Information System Students" />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
                   <Typography variant="h3" color="#006AF5" fontSize="20px">
                     {dataStudent
@@ -270,17 +244,17 @@ const StudentInformationFaculty = () => {
             }}
             onClick={() =>
               navigate(`information-technology`, {
-                state: { major: "DKV" },
+                state: { major: "TI" },
               })
             }
           >
             <Grid container>
               <Grid item>
-                <CardHeader title="Information Technology Student " />
+                <CardHeader title="Information Technology Students" />
                 <CardContent sx={{ position: "relative", paddingY: 0 }}>
                   <Typography variant="h3" color="#006AF5" fontSize="20px">
                     {dataStudent
-                      .filter((student) => student.major === "DKV")
+                      .filter((student) => student.major === "TI")
                       .reduce((total) => total + 1, 0)}{" "}
                     People
                   </Typography>
@@ -313,7 +287,7 @@ const StudentInformationFaculty = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon sx={{ color: "#1C304A85" }} />
+                  <SearchIcon sx={{ color: "#BDBDBD" }} />
                 </InputAdornment>
               ),
               style: {
@@ -326,12 +300,10 @@ const StudentInformationFaculty = () => {
             }}
             value={search}
             onChange={handleSearch}
-            // value={search}
-            // onChange={handleSearch}
           />
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={10} sm={5} md={4}>
           <TextField
             size="small"
             fullWidth
@@ -340,23 +312,23 @@ const StudentInformationFaculty = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{ zIndex: -2 }}>
-                  <FilterListIcon sx={{ color: "#1C304A85" }} />
+                  <FilterListIcon sx={{ color: "#BDBDBD" }} />
 
-                  <Typography sx={{ marginLeft: "16px", color: "#1C304A85" }}>
+                  <Typography sx={{ marginLeft: "16px", color: "#BDBDBD" }}>
                     Filter:
                   </Typography>
                 </InputAdornment>
               ),
               style: {
                 borderRadius: "65px",
-                borderColor: "#E0E0E0",
+                borderColor: "#BDBDBD",
               },
             }}
             sx={{
               m: 0,
               borderRadius: "65px",
               width: "100%",
-              borderColor: "#E0E0E0",
+              borderColor: "#BDBDBD",
             }}
             value={combinedFilter ? combinedFilter : "Nonactive Filter"}
             onChange={handleFilter}
@@ -396,31 +368,35 @@ const StudentInformationFaculty = () => {
             <MenuItem key={"SI"} value={"SI"}>
               Information System
             </MenuItem>
-            <MenuItem key={"DKV"} value={"DKV"}>
+            <MenuItem key={"TI"} value={"TI"}>
               Information Technology
             </MenuItem>
           </TextField>
         </Grid>
 
-        <Grid item xs={4}>
-          <IconButton
-            onClick={handleSortClick}
-            sx={{
-              borderColor: "#d3d5d8fa",
-              borderWidth: "1px",
-              borderStyle: "solid",
-              borderRadius: "30px",
-              width: "45px",
-              color: "#1C304A85",
-              "&:hover": {
-                borderColor: "black",
-                backgroundColor: "transparent",
-              },
-              height: "38px",
-            }}
-          >
-            <SwapVertIcon />
-          </IconButton>
+        <Grid item xs={2} sm={1} md={4}>
+          <Tooltip title="Sort by NIM">
+            <IconButton
+              alignItems="right"
+              justifyContent="right"
+              onClick={handleSortClick}
+              sx={{
+                borderColor: "#BDBDBD",
+                borderWidth: "1.5px",
+                borderStyle: "solid",
+                borderRadius: "20px",
+                width: "40px",
+                color: "#BDBDBD",
+                "&:hover": {
+                  borderColor: "black",
+                  backgroundColor: "transparent",
+                },
+                height: "38px",
+              }}
+            >
+              <SwapVertIcon />
+            </IconButton>
+          </Tooltip>
         </Grid>
       </Grid>
 
@@ -480,19 +456,7 @@ const StudentInformationFaculty = () => {
   );
 };
 
-const getRole = () => {
-  const filter = role.includes("KAPRODI")
-    ? "kaprodi"
-    : role.includes("DEKAN")
-    ? "dekan"
-    : role.includes("OPERATOR_FAKULTAS")
-    ? "sekretaris"
-    : "dosen-pembimbing";
-
-  return filter;
-};
-
-const TableHeading = ({ index }) => {
+const TableHeading = () => {
   return (
     <TableRow>
       <TableCell sx={{ textAlign: "center" }}>No</TableCell>
@@ -509,14 +473,14 @@ const TableHeading = ({ index }) => {
 
 const TableItem = ({ item, index }) => {
   const navigate = useNavigate();
-  const { nim, firstName, lastName, major, arrivalYear, status } = item;
+  const { nim, firstName, lastName, major, arrivalYear, status, id } = item;
 
   const handleButtonNavigate = (event) => {
     const { name } = event.currentTarget;
 
     switch (name) {
       case "profile":
-        navigate(`${nim}`, { state: { studentNim: nim } });
+        navigate(`${nim}`, { state: { studentId: id, studentNim: nim } });
         break;
       case "grade":
         navigate(`${nim}/grade`, {
@@ -524,6 +488,7 @@ const TableItem = ({ item, index }) => {
             studentNim: nim,
             firstName: firstName,
             lastName: lastName,
+            studentId: id,
           },
         });
         break;
@@ -533,12 +498,10 @@ const TableItem = ({ item, index }) => {
             studentNim: nim,
             firstName: firstName,
             lastName: lastName,
+            studentId: id,
           },
         });
         break;
-
-      default:
-        console.log("Path not found");
     }
   };
 
@@ -570,7 +533,7 @@ const TableItem = ({ item, index }) => {
           ? "Informatics"
           : major === "SI"
           ? "Information System"
-          : major === "DKV"
+          : major === "TI"
           ? "Information Technology"
           : "-"}
       </TableCell>

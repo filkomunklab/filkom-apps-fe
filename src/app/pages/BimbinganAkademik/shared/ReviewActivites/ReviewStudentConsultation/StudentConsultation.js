@@ -16,6 +16,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import jwtAuthAxios from "app/services/Auth/jwtAuth";
+import { handleAuthenticationError } from "app/pages/BimbinganAkademik/components/HandleErrorCode/HandleErrorCode";
 
 const StudentConsultation = () => {
   //abort
@@ -32,7 +33,9 @@ const StudentConsultation = () => {
     try {
       const { nik } = JSON.parse(localStorage.getItem("user"));
       const result = await jwtAuthAxios.get(
-        `/academic-consultation/employee/${nik}`,
+        `/academic-consultation/employee/${
+          JSON.parse(localStorage.getItem("user")).id
+        }`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           signal,
@@ -40,29 +43,22 @@ const StudentConsultation = () => {
       );
 
       const filteredData = result.data.data.filter((item) => {
-        const studentFullName = `${item.student_name}`.toLowerCase();
-        const includesSearch = studentFullName.includes(
+        const studentFullName = `${item?.student_name}`.toLowerCase();
+        const includesSearch = studentFullName?.includes(
           searchValue.toLowerCase()
         );
 
-        return includesSearch && item.status === "Waiting";
+        return includesSearch && item?.status === "Waiting";
       });
 
-      console.log("Filtered data:", filteredData);
       setDataWaiting(filteredData);
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         return;
       }
     }
@@ -94,7 +90,6 @@ const StudentConsultation = () => {
 
       const { role } = JSON.parse(localStorage.getItem("user"));
       let path = "";
-      console.log("hai ini role", role.includes === "KAPRODI");
       if (role.includes("DEKAN")) {
         path = "/bimbingan-akademik/dekan/review-activities/consultation/";
       } else if (role.includes("KAPRODI")) {
@@ -120,18 +115,12 @@ const StudentConsultation = () => {
         },
       });
     } catch (error) {
-      if (error.code === "ERR_CANCELED") {
+      if (error && error.code === "ERR_CANCELED") {
         console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
+      } else if (error && error.response && error.response.status === 401) {
+        handleAuthenticationError();
       } else {
-        console.log("ini error: ", error);
+        console.error("error: ");
         return;
       }
     }
@@ -193,6 +182,7 @@ const StudentConsultation = () => {
                 position: "sticky",
                 top: 0,
                 backgroundColor: "rgba(26, 56, 96, 0.1)",
+                zIndex: 1,
               }}
             >
               <TableRow>

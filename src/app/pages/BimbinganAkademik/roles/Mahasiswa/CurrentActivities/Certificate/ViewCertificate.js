@@ -28,6 +28,7 @@ const CertificateWaiting = () => {
     SupervisorLastName,
     submissionDate,
     pathFile,
+    level,
     category,
     description,
     status,
@@ -35,54 +36,40 @@ const CertificateWaiting = () => {
     title,
   } = certificateDetails;
   const pdfURL = pathFile;
-  console.log("ini pdf url", pdfURL);
 
-  //ini test for lgsg tarek dpe data dari server
-  {
-    /* const controller = new AbortController();
-  const signal = controller.signal;
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { id } = location?.state || "-";
-  const [certificateDetailsData, setCertificateDetailsData] = useState(null);
-
-  const getCertificateDetails = async () => {
-    try {
-      const response = await jwtAuthAxios.get(`/certificate/student/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        signal,
-      });
-
-      const { status, data } = response.data;
-      if (status === "OK") {
-        setCertificateDetailsData(data);
-      } else {
-        console.log("status result tidak ok", response);
-      }
-    } catch (error) {
-      if (error.code === "ERR_CANCELED") {
-        console.log("request canceled");
-      } else if (
-        error.response &&
-        error.response.status >= 401 &&
-        error.response.status <= 403
-      ) {
-        console.log("You don't have permission to access this page");
-        navigate(`/`);
-        return;
-      } else {
-        console.log("ini error: ", error);
-        return;
-      }
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case "PENALARAN_KEILMUAN":
+        return "Reasoning and Scholarship";
+      case "ORGANISASI_KEPEMIMPINAN":
+        return "Organization and Leadership";
+      case "BAKAT_MINAT":
+        return "Talents and Interests";
+      case "PENGABDIAN_MASYARAKAT":
+        return "Community Service";
+      case "OTHER":
+        return "Others";
+      default:
+        return category;
     }
   };
 
-  useEffect(() => {
-    getCertificateDetails();
-    return () => controller.abort();
-  }, [id]);
-  const pdfURL = certificateDetailsData?.pathFile; */
-  }
+  const getLevelLabel = (level) => {
+    switch (level) {
+      case "REGION":
+        return "Region";
+      case "NATIONAL":
+        return "National";
+      case "INTERNATIONAL":
+        return "International";
+      case "UNIVERSITY":
+        return "University";
+      case "MAJOR":
+        return "Study Program";
+      default:
+        return level;
+    }
+  };
 
   const handleClick = (event) => {
     navigate("/bimbingan-akademik/current-activities");
@@ -118,10 +105,7 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5">
-                  {/* {certificateDetailsData?.title.charAt(0).toUpperCase() +
-                    certificateDetailsData?.title.slice(1)} */}
-
-                  {title.charAt(0).toUpperCase() + title.slice(1)}
+                  {title?.charAt(0).toUpperCase() + title?.slice(1)}
                 </Typography>
               </Grid>
             </Grid>
@@ -136,8 +120,6 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5">
-                  {/* {certificateDetailsData?.lastName},{" "}
-                  {certificateDetailsData?.firstName} */}
                   {lastName}, {firstName}
                 </Typography>
               </Grid>
@@ -154,8 +136,6 @@ const CertificateWaiting = () => {
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5">
                   {SupervisorLastName}, {SupervisorFirstName}
-                  {/* {certificateDetailsData?.SupervisorLastName},{" "}
-                  {certificateDetailsData?.SupervisorFirstName} */}
                 </Typography>
               </Grid>
             </Grid>
@@ -189,11 +169,22 @@ const CertificateWaiting = () => {
               </Grid>
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5">
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-
-                  {/* {certificateDetailsData?.category.charAt(0).toUpperCase() +
-                    certificateDetailsData?.category.slice(1)} */}
+                  {getCategoryLabel(category)}
                 </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={4} md={4} xl={3} pb={1}>
+                <Typography variant="h5">Level</Typography>
+              </Grid>
+              <Grid item xs={1} xl={0.5}>
+                <Typography variant="h5">:</Typography>
+              </Grid>
+              <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
+                <Typography variant="h5">{getLevelLabel(level)}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -208,8 +199,6 @@ const CertificateWaiting = () => {
               <Grid item xs={7} md={7} xl={8.5} paddingLeft={1}>
                 <Typography variant="h5" sx={{ color: "#FFCC00" }}>
                   {status.charAt(0) + status.slice(1).toLowerCase()}
-                  {/* {certificateDetailsData?.status.charAt(0) +
-                    certificateDetailsData?.status.slice(1).toLowerCase()} */}
                 </Typography>
               </Grid>
             </Grid>
@@ -231,8 +220,6 @@ const CertificateWaiting = () => {
               >
                 <Typography variant="h5" sx={{ textAlign: "justify" }}>
                   {description.charAt(0).toUpperCase() + description.slice(1)}
-                  {/* {certificateDetailsData?.description.charAt(0).toUpperCase() +
-                    certificateDetailsData?.description.slice(1)} */}
                 </Typography>
               </Grid>
             </Grid>
@@ -243,7 +230,7 @@ const CertificateWaiting = () => {
         <iframe
           src={pdfURL}
           title="Certificate-pdf"
-          style={{ width: "100%", height: "55vh" }}
+          style={{ width: "100%", height: "75vh" }}
         />
       </Grid>
     </Grid>
