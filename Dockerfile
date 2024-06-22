@@ -1,13 +1,6 @@
 # Use an official Node.js runtime as the base image
 FROM node:18
 
-# Set the environment variable
-ARG REACT_APP_IMAGES_PATH
-ARG REACT_APP_BASE_URL_API
-
-ENV REACT_APP_IMAGES_PATH=$REACT_APP_IMAGES_PATH
-ENV REACT_APP_BASE_URL_API=$REACT_APP_BASE_URL_API
-
 # Set the working directory in the container
 WORKDIR /app
 
@@ -15,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN yarn install
+RUN yarn install --production
 
 # Copy the entire project to the container
 COPY . .
