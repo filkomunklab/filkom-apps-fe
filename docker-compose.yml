@@ -1,6 +1,5 @@
 services:
   app:
-    env_file: .env
     image: filkomunklab/filkom-apps-fe:latest
     build: .
     restart: always
