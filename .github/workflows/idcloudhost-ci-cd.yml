@@ -45,6 +45,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           source: "./docker-compose.yml"
           target: fe
+          overwrite: true
 
       - name: Deploy using Docker Compose
         uses: appleboy/ssh-action@v1.0.3
