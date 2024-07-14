@@ -26,8 +26,10 @@ jobs:
           push: true
           tags: filkomunklab/filkom-apps-fe:latest
           build-args: |
+            DISABLE_ESLINT_PLUGIN=${{secrets.DISABLE_ESLINT_PLUGIN}}
+            REACT_APP_IMAGES_PATH=${{secrets.REACT_APP_IMAGES_PATH}}
             REACT_APP_BASE_URL_API=${{secrets.REACT_APP_BASE_URL_API}}
-            REACT_APP_OBE_BASE_URL_API=${{secrets.REACT_APP_OBE_BASE_URL_API}}"
+            REACT_APP_OBE_BASE_URL_API=${{secrets.REACT_APP_OBE_BASE_URL_API}}
 
   deploy:
     runs-on: ubuntu-latest

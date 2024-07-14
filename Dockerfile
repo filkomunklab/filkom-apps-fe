@@ -2,8 +2,8 @@
 FROM node:18
 
 # Set environment variables
-ARG DISABLE_ESLINT_PLUGIN=true
-ARG REACT_APP_IMAGES_PATH="/images"
+ARG DISABLE_ESLINT_PLUGIN
+ARG REACT_APP_IMAGES_PATH
 ARG REACT_APP_BASE_URL_API
 ARG REACT_APP_OBE_BASE_URL_API
 
@@ -13,7 +13,7 @@ ENV REACT_APP_BASE_URL_API=$REACT_APP_BASE_URL_API
 ENV REACT_APP_OBE_BASE_URL_API=$REACT_APP_OBE_BASE_URL_API
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json to the container
 COPY package*.json ./
