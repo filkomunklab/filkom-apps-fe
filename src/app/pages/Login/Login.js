@@ -254,7 +254,7 @@ const Login = () => {
                       ]}
                     />
                   </Grid>
-                  <Grid container justifyContent={"space-between"}>
+                  {/* <Grid container justifyContent={"space-between"}>
                     <Grid item>
                       <FormControlLabel
                         control={<Checkbox />}
@@ -280,7 +280,7 @@ const Login = () => {
                         Forgot Password?
                       </Button>
                     </Grid>
-                  </Grid>
+                  </Grid> */}
                   <Grid item>
                     <LoadingButton
                       loading={isSubmitting}
@@ -295,7 +295,7 @@ const Login = () => {
                       Login
                     </LoadingButton>
                   </Grid>
-                  <Grid item alignSelf={"center"}>
+                  {/* <Grid item alignSelf={"center"}>
                     <Button
                       sx={{
                         fontSize: maxWidth515 ? "12px" : "14px",
@@ -318,7 +318,7 @@ const Login = () => {
                         Daftar Judul Skripsi
                       </Button>
                     </a>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </Stack>
             </Form>
