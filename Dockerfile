@@ -1,5 +1,5 @@
-# Use an official Node.js runtime as the base image
-FROM node:18
+# Stage 1: Build the React app
+FROM node:18 AS builder
 
 # Set environment variables
 ARG DISABLE_ESLINT_PLUGIN
@@ -27,11 +27,20 @@ COPY . .
 # Build the React app
 RUN yarn build
 
+# Stage 2: Serve the React app
+FROM node:18-slim
+
 # Install serve to run the app
 RUN yarn global add serve
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Copy the built React app from the builder stage
+COPY --from=builder /usr/src/app/build ./build
 
 # Expose the port that the app will run on
 EXPOSE 3000
 
 # Define the command to run the app
-CMD serve -s build
+CMD ["serve", "-s", "build"]
