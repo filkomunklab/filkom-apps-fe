@@ -4,6 +4,7 @@
 name: filkomapp CI/CD Pipeline
 
 on:
+  workflow_dispatch: # Manually trigger the workflow
   push:
     branches: ["master"]
 
